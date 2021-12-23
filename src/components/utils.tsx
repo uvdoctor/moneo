@@ -714,7 +714,7 @@ export const calculateDifferenceInYears = (em: number, ey: number, sm: number, s
 }
 
 export const calculateDifferenceInMonths = (em: number, ey: number, sm: number, sy: number) => {
-  const diff = differenceInCalendarMonths(new Date(ey, em-1, 30), new Date(sy, sm-1, 1));
+  const diff = differenceInCalendarMonths(new Date(ey, em, 30), new Date(sy, sm-1, 1));
   return diff;
 }
 
