@@ -87,10 +87,10 @@ export const getCurrencySymbol = (currency: string) =>
 
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
   const formatter = new Intl.NumberFormat(navigator.language, {
-    minimumFractionDigits: decimalDigits,
-    maximumFractionDigits: decimalDigits,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimalDigits
   });
-  return num ? formatter.format(num) : formatter.format(0);
+  return formatter.format(num ? num : 0);
 };
 
 export const parseNumber = (str: string, currency: string | null = null) => {
