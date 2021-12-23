@@ -63,8 +63,8 @@ export default function ViewHoldingInput({
 	};
 
 	const changeQty = (qty: number) => {
-			record.qty = qty;
-			changeData([...data]);
+		record.qty = qty;
+		changeData([...data]);
 	}
 
 	const changeChg = (chg: number) => {
@@ -147,7 +147,7 @@ export default function ViewHoldingInput({
 			{hasName(childTab) && (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 					<Row align="middle" gutter={[5, 0]}>
-						<Col>Name</Col>
+						<Col>Label</Col>
 						<Col>
 							<TextInput
 								pre=""

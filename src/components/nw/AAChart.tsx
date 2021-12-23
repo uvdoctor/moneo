@@ -57,7 +57,7 @@ export default function AAChart() {
 	const [ liquidFunds, setLiquidFunds ] = useState<number>(0);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
-		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed },
+		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed - liquidFunds },
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
 		'REITs': { color: '#7cd9fd', total: totalFRE },
 		'Other Investment Trusts': { color: COLORS.SILVER, total: totalFInv },
@@ -144,15 +144,15 @@ export default function AAChart() {
 		[ instruments ]
 	);
 
-	const pattern = (records: Array<any>) => {
+	const getTooltipDesc = (records: Array<any>) => {
 		let data: any = '';
 		let doesValueExist: boolean = false;
 		records.map((record) => { 
 			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
 			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
 			if(record.value) {
-				doesValueExist = (true);
-				data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
+				doesValueExist = true;
+				data += `${amount} (${percentage}%) of ${record.desc}<br/><br/>`;
 			}
 		});
 		return doesValueExist ? `<br/><br/>Includes<br/><br/>${data}` : '';
@@ -160,9 +160,9 @@ export default function AAChart() {
 
 	const breakdownAssetInfo = (asset: string) => {
 		if (asset === 'Gold')
-			return pattern([ { value: totalPGold, desc: 'Physical Gold' }, { value: totalFGold, desc: 'Gold Bonds' } ]);
+			return getTooltipDesc([ { value: totalPGold, desc: 'Physical Gold' }, { value: totalFGold, desc: 'Gold Bonds' } ]);
 		if (asset === 'Equity')
-			return pattern([
+			return getTooltipDesc([
 				{ value: largeCap + totalNPSEquity, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
 				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
 				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
@@ -170,29 +170,28 @@ export default function AAChart() {
 				{ value: totalAngel, desc: 'Start-up Investments' },
 			]);
 		if (asset === 'Fixed')
-			return pattern([
+			return getTooltipDesc([
 				{ value: fmp, desc: 'Fixed Maturity Plan' },
 				{ value: intervalFunds, desc: 'Interval Funds' },
 				{ value: bonds, desc: 'Bonds'},
 				{ value: indexFunds, desc: 'Index Funds' },
-				{ value: liquidFunds, desc: 'Liquid Funds' },
 			]);
 		if (asset === 'Real-estate')
-			return pattern([
+			return getTooltipDesc([
 				{ value: totalCommercial, desc: 'Commercial' },
 				{ value: totalResidential, desc: 'Residential' },
 				{ value: totalPlot, desc: 'Plot' },
 				{ value: totalOtherProperty, desc: 'Other' },
 			]);
 		if (asset === 'Others')
-			return pattern([ { value: totalOthers, desc: 'Others' }, { value: totalVehicles, desc: 'Vehicles' } ]);
+			return getTooltipDesc([ { value: totalOthers, desc: 'Others' }, { value: totalVehicles, desc: 'Vehicles' } ]);
 		if (asset === 'PF')
 			return (<>Includes<br/><br/>
-				<strong>${toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
+				<strong>{toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
 				({toReadableNumber(totalPPF / totalAssets * 100, 2)}%) of Pension PF<br/><br/>
-				<strong>${toHumanFriendlyCurrency(totalVPF, selectedCurrency)}</strong>
+				<strong>{toHumanFriendlyCurrency(totalVPF, selectedCurrency)}</strong>
 				({toReadableNumber(totalVPF / totalAssets * 100, 2)}%) of Voluntary PF<br/><br/>
-				<strong>${toHumanFriendlyCurrency(totalEPF, selectedCurrency)}</strong>
+				<strong>{toHumanFriendlyCurrency(totalEPF, selectedCurrency)}</strong>
 				({toReadableNumber(totalEPF / totalAssets * 100, 2)}%) of Employee PF<br/><br/>
 			</> );
 		return '';
@@ -200,21 +199,43 @@ export default function AAChart() {
 
 	return !loadingHoldings ? totalAssets ? (
 		<div className="container chart">
-			<p>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</p>
+			<h3>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</h3>
 			<Row>
-				<Col xs={24} sm={8}>
+				<Col xs={24} lg={8}>
+					<div className='cash active'>
+						<span className="arrow-right" />
+						Emergency Cash <Badge count={`${toReadableNumber((totalSavings + liquidFunds) / totalAssets * 100, 2)} %`} />
+						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
+					</div>
+				</Col>
+				<Col xs={24} sm={12} lg={8}>
 					<div className="cash">
 						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={8}>
+				<Col xs={24} sm={12} lg={8}>
+					<div className="cash">
+						Liquid Funds <Badge count={`${toReadableNumber(liquidFunds / totalAssets * 100, 2)} %`} />
+						<strong>{toHumanFriendlyCurrency(liquidFunds, selectedCurrency)}</strong>
+					</div>
+				</Col>
+			</Row>
+			<Row style={{marginTop: 8}}>
+				<Col xs={24} lg={8}>
+					<div className='cash active'>
+						<span className="arrow-right" />
+						Money Lent <Badge count={`${toReadableNumber((totalLendings + totalPF) / totalAssets * 100, 2)} %`} />
+						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
+					</div>
+				</Col>
+				<Col xs={24} sm={12} lg={8}>
 					<div className="cash deposits">
 						Deposits <Badge count={`${toReadableNumber(totalLendings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={8}>
+				<Col xs={24} sm={12} lg={8}>
 					<Tooltip title={breakdownAssetInfo('PF')}>
 						<div className="cash deposits">
 							Provident Fund <Badge count={`${toReadableNumber(totalPF / totalAssets * 100, 2)} %`} />
@@ -237,7 +258,7 @@ export default function AAChart() {
 				label={{
 					visible: true,
 					formatter: (v: any) => {
-						return v.name;
+						return `<b>${v.name}</b>`;
 					},
 					style: {
 						fontFamily: "'Jost', sans-serif",
@@ -253,15 +274,15 @@ export default function AAChart() {
 					formatter: ({ name, value }: any) => {
 						return {
 							name,
-							value: `<strong>${toHumanFriendlyCurrency(
+							value: categories[name].total ? `<b>${toHumanFriendlyCurrency(
 								categories[name].total,
 								selectedCurrency
-							)}</strong> (${toReadableNumber(
+							)}</b> (${toReadableNumber(
 								value,
 								2
-							)}%)${breakdownAssetInfo(name)}`
+							)}%)${breakdownAssetInfo(name)}` : ''
 						};
-					}
+					},
 				}}
 				interactions={[
 					{

@@ -107,7 +107,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 										)}
 										{allocationPer ? (
 											<Badge
-												count={toReadableNumber(allocationPer) + '%'}
+												count={toReadableNumber(allocationPer, 2) + '%'}
 												offset={[
 													0,
 													-5

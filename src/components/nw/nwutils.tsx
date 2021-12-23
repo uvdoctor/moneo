@@ -3,7 +3,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
-import { GOLD } from "./NWContext";
+import { GOLD, PALLADIUM, PLATINUM, SILVER } from "./NWContext";
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
@@ -104,9 +104,14 @@ export const doesHoldingMatch = (
   instrument: APIt.HoldingInput | APIt.InstrumentInput,
   selectedMembers: Array<string>,
   selectedCurrency: string
-) =>
-  doesMemberMatch(instrument, selectedMembers) &&
-  instrument.curr === selectedCurrency;
+) => {
+  //@ts-ignore
+  const subType = instrument.subt;
+  if(!subType || ![APIt.AssetSubType.C, APIt.AssetSubType.Gold, SILVER, PALLADIUM, PLATINUM].includes(subType)) {
+    return instrument.curr !== selectedCurrency;
+  }
+  return doesMemberMatch(instrument, selectedMembers);
+}
 
 export const doesPropertyMatch = (
     property: APIt.PropertyInput,

@@ -76,8 +76,7 @@ body.no-scrollbar {
 	}
 
 	& .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
-	&
-		.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+	& .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
 		background: @primary-color;
 		color: #fff;
 	}
@@ -204,44 +203,43 @@ svg {
 		box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
 		border-radius: 4px;
 		padding: 5px 15px;
-	
-		& .deposits {
-			background-color: #82d949;
-		}
-	
-		& .ant-badge {
-			vertical-align: sub;
-		}
-	
-		& .active {
-			position: relative;
-			background: @primary-color;
-			color: #fff;
-			margin-right: 25px;
-	
-			& strong {
-				color: #fff;
-			}
-	
-			& .arrow-right {
-				position: absolute;
-				width: 0;
-				height: 0;
-				border-top: 15px solid transparent;
-				border-bottom: 15px solid transparent;
-				border-left: 15px solid @primary-color;
-				top: 50%;
-				margin-top: -15px;
-				right: -8px;
-			}
-		}
+	}
+	& .deposits {
+		background-color: #82d949;
+	}
+
+	& .ant-badge {
+		vertical-align: sub;
+	}
+
+	& .active {
+		position: relative;
+		background: @primary-color;
+		color: #fff;
+		margin-right: 25px;
+
 		& strong {
-			font-size: 14px;
-			font-weight: bold;
-			float: right;
+			color: #fff;
+		}
+
+		& .arrow-right {
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-top: 15px solid transparent;
+			border-bottom: 15px solid transparent;
+			border-left: 15px solid @primary-color;
+			top: 50%;
+			margin-top: -15px;
+			right: -8px;
 		}
 	}
-} 
+	& strong {
+		font-size: 14px;
+		font-weight: bold;
+		float: right;
+	}
+}
 
 @media all and (max-width: 1199.98px) {
 	.chart {
@@ -249,23 +247,23 @@ svg {
 			& .ant-badge > sup {
 				font-size: 11px;
 			}
+		}
 
-			&.active {
-				margin-right: 0;
+		&.active {
+			margin-right: 0;
 
-				& .arrow-right {
-					display: none;
-				}
-			}
-
-			& strong {
-				font-size: 12px;
+			& .arrow-right {
+				display: none;
 			}
 		}
 
-		& .ant-radio-button-wrapper {
-			padding: 0 5px;
+		& strong {
+			font-size: 12px;
 		}
+	}
+
+	& .ant-radio-button-wrapper {
+		padding: 0 5px;
 	}
 }
 
@@ -325,82 +323,63 @@ svg {
 
 .scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	background-image: linear-gradient(
-		to top,
-		@layout-body-background,
-		@primary-color
-	);
+	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
 }
-
-//Make captcha badge invisible
+// Make captcha badge invisible
 .grecaptcha-badge {
 	visibility: hidden;
 }
-
 .steps-start-btn {
 	height: auto;
 	font-size: 16px;
 	padding: 5px 30px;
-
 	& .anticon {
 		transform: scale(1.5);
 	}
-
 	&:hover {
 		transform: scale(1.2);
-
 		& .anticon {
 			transform: scale(1.7) rotate(20deg);
 		}
 	}
 }
-
 .primary-header {
 	background-color: @primary-color;
 	border-bottom: @primary-color 2px solid;
-
 	& .ant-page-header-heading-title {
 		color: #fff;
 	}
-
-	/*& .ant-page-header-heading-left {
+	/* & .ant-page-header-heading-left {
 		max-width: 75%;
-	}*/
-
+	} */
 	& .secondary-header {
 		background-color: #3d4a53;
 		color: #fff;
 		text-align: left;
 		padding: 1px 22px;
-
 		& .anticon-share-alt {
 			cursor: pointer;
 			font-size: 20px;
 		}
 	}
 }
-
-//Carousel custom style start
+// Carousel custom style start
 .rec-carousel-wrapper {
 	padding: 0 15px;
 	margin-bottom: 10px;
 }
-
 .rec-pagination {
 	margin: 0;
-
 	& button {
 		height: 12px;
 		background-color: #dcdcdc;
 		box-shadow: none;
 		transform: scale(0.6);
-
 		&.rec-dot_active {
 			background-color: @primary-color;
 		}
 	}
 }
-
 .rec-slider-container {
 	margin: 0;
 }
@@ -411,11 +390,10 @@ svg {
 	background: none;
 	box-shadow: none;
 }
-//Carousel custom style end
-
-/************************************************
+// Carousel custom style end
+/* ***********************************************
 						react-responsive-carousel
-************************************************/
+*********************************************** */
 .carousel.carousel-slider {
 	& .control-arrow {
 		height: 35px !important;
@@ -423,30 +401,25 @@ svg {
 		border-radius: 20px;
 		color: #000 !important;
 		top: 50% !important;
-
 		&:before {
 			border-left: 14px solid #000 !important;
 			margin: 0px 3px 9px 8px !important;
 		}
-
 		&:hover,
 		&:focus {
 			background: @primary-color !important;
 			border-color: @primary-color !important;
-
 			&:before {
 				border-left-color: #fff !important;
 			}
 		}
 	}
-
 	& .control-prev.control-arrow {
 		&:before {
 			border-left: none !important;
 			border-right: 14px solid #000 !important;
 			margin: 0px 8px 9px 3px !important;
 		}
-
 		&:hover,
 		&:focus {
 			&:before {
@@ -455,14 +428,12 @@ svg {
 		}
 	}
 }
-
 @media all and (max-width: 576px) {
 	.rec-carousel-wrapper {
 		padding: 0 5px;
 	}
 	.primary-header {
 		margin-bottom: 10px;
-
 		& .secondary-header {
 			padding: 1px 16px;
 		}
@@ -470,28 +441,24 @@ svg {
 	.steps-start-btn {
 		padding: 5px 15px;
 	}
-
 	.dd-stat {
 		& .ant-statistic-content-value {
 			font-size: 20px;
 		}
 	}
 }
-
 .rec-carousel-item {
 	& .ant-select {
 		min-width: 50px;
 		font-size: 14px;
 		margin: 0 3px;
 	}
-
 	& .ant-select-selector {
 		height: 28px !important;
 		background: none !important;
 		padding: 0 4px 0 8px !important;
 	}
 }
-
 @media all and (max-width: 991.98px) {
 	.dd-header.ant-layout-header,
 	.dd-content.ant-layout-content {
@@ -504,7 +471,6 @@ svg {
 		}
 	}
 }
-
 @media all and (max-width: 767.98px) {
 	.primary-header {
 		& .ant-page-header {
