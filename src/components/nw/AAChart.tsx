@@ -59,10 +59,12 @@ export default function AAChart() {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
 		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed - liquidFunds },
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
-		'REITs': { color: '#7cd9fd', total: totalFRE },
-		'Other Investment Trusts': { color: COLORS.SILVER, total: totalFInv },
+		REITs: { color: '#7cd9fd', total: totalFRE },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
-		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE - totalCrypto - totalFInv },
+		Others: {
+			color: '#aa8dfa',
+			total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE - totalCrypto
+		},
 		Crypto: { color: COLORS.RED, total: totalCrypto }
 	};
 
@@ -88,9 +90,12 @@ export default function AAChart() {
 		[ totalSavings, totalDeposits, totalLendings ]
 	);
 
-	useEffect(() => {
-		initChartData();
-	},[ totalAssets ]);
+	useEffect(
+		() => {
+			initChartData();
+		},
+		[ totalAssets ]
+	);
 
 	useEffect(
 		() => {
@@ -105,7 +110,7 @@ export default function AAChart() {
 			let liquidFunds = 0;
 			instruments.map((instrument: InstrumentInput) => {
 				const data = insData[instrument.id];
-				if(data){
+				if (data) {
 					const price = instrument.qty * (data ? data.price : 0);
 					if (data.type === AssetType.E) {
 						if (data.meta) {
@@ -121,13 +126,19 @@ export default function AAChart() {
 						if (data.mcap === MCap.H) hybridCap += price;
 					}
 					if (data.type === AssetType.F) {
-						if (data.subt === AssetSubType.CB || data.subt === AssetSubType.GB || data.subt === AssetSubType.GBO || data.subt === AssetSubType.HB) bonds += price;
+						if (
+							data.subt === AssetSubType.CB ||
+							data.subt === AssetSubType.GB ||
+							data.subt === AssetSubType.GBO ||
+							data.subt === AssetSubType.HB
+						)
+							bonds += price;
 						if (data.subt === AssetSubType.I) indexFunds += price;
 						if (data.subt === AssetSubType.L) liquidFunds += price;
 						if (data.mftype && data.subt === AssetSubType.HB) {
-							if(data.mftype === MFSchemeType.I) intervalFunds += price;
-							if(data.mftype === MFSchemeType.C) fmp += price;
-						} 
+							if (data.mftype === MFSchemeType.I) intervalFunds += price;
+							if (data.mftype === MFSchemeType.C) fmp += price;
+						}
 					}
 				}
 			});
@@ -147,10 +158,10 @@ export default function AAChart() {
 	const getTooltipDesc = (records: Array<any>) => {
 		let data: any = '';
 		let doesValueExist: boolean = false;
-		records.map((record) => { 
+		records.map((record) => {
 			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
 			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
-			if(record.value) {
+			if (record.value) {
 				doesValueExist = true;
 				data += `${amount} (${percentage}%) of ${record.desc}<br/><br/>`;
 			}
@@ -159,33 +170,45 @@ export default function AAChart() {
 	};
 
 	const breakdownAssetInfo = (asset: string) => {
-		if (asset === 'Gold')
-			return getTooltipDesc([ { value: totalPGold, desc: 'Physical Gold' }, { value: totalFGold, desc: 'Gold Bonds' } ]);
-		if (asset === 'Equity')
+		if (asset === 'Gold') {
+			return getTooltipDesc([
+				{ value: totalPGold, desc: 'Physical Gold' },
+				{ value: totalFGold, desc: 'Gold Bonds' }
+			]);
+		}
+		if (asset === 'Equity') {
 			return getTooltipDesc([
 				{ value: largeCap + totalNPSEquity, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
 				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
 				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
 				{ value: hybridCap, desc: 'Funds consisting of large, medium and small company stocks' },
-				{ value: totalAngel, desc: 'Start-up Investments' },
+				{ value: totalAngel, desc: 'Start-up Investments' }
 			]);
-		if (asset === 'Fixed')
+		}
+		if (asset === 'Fixed') {
 			return getTooltipDesc([
 				{ value: fmp, desc: 'Fixed Maturity Plan' },
 				{ value: intervalFunds, desc: 'Interval Funds' },
-				{ value: bonds, desc: 'Bonds'},
-				{ value: indexFunds, desc: 'Index Funds' },
+				{ value: bonds, desc: 'Bonds' },
+				{ value: indexFunds, desc: 'Index Funds' }
 			]);
-		if (asset === 'Real-estate')
+		}
+		if (asset === 'Real-estate') {
 			return getTooltipDesc([
 				{ value: totalCommercial, desc: 'Commercial' },
 				{ value: totalResidential, desc: 'Residential' },
 				{ value: totalPlot, desc: 'Plot' },
-				{ value: totalOtherProperty, desc: 'Other' },
+				{ value: totalOtherProperty, desc: 'Other' }
 			]);
-		if (asset === 'Others')
-			return getTooltipDesc([ { value: totalOthers, desc: 'Others' }, { value: totalVehicles, desc: 'Vehicles' } ]);
-		if (asset === 'PF')
+		}
+		if (asset === 'Others') {
+			return getTooltipDesc([
+				{ value: totalOthers, desc: 'Others' },
+				{ value: totalVehicles, desc: 'Vehicles' },
+				{ value: totalFInv, desc: 'Other Investment Trusts' }
+			]);
+		}
+		if (asset === 'PF') {
 			return (<>Includes<br/><br/>
 				<strong>{toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
 				({toReadableNumber(totalPPF / totalAssets * 100, 2)}%) of Pension PF<br/><br/>
@@ -194,6 +217,7 @@ export default function AAChart() {
 				<strong>{toHumanFriendlyCurrency(totalEPF, selectedCurrency)}</strong>
 				({toReadableNumber(totalEPF / totalAssets * 100, 2)}%) of Employee PF<br/><br/>
 			</> );
+		}
 		return '';
 	};
 
@@ -202,9 +226,10 @@ export default function AAChart() {
 			<h3>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</h3>
 			<Row>
 				<Col xs={24} lg={8}>
-					<div className='cash active'>
+					<div className="cash active">
 						<span className="arrow-right" />
-						Emergency Cash <Badge count={`${toReadableNumber((totalSavings + liquidFunds) / totalAssets * 100, 2)} %`} />
+						Emergency Cash{' '}
+						<Badge count={`${toReadableNumber((totalSavings + liquidFunds) / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
 				</Col>
@@ -221,11 +246,12 @@ export default function AAChart() {
 					</div>
 				</Col>
 			</Row>
-			<Row style={{marginTop: 8}}>
+			<Row style={{ marginTop: 8 }}>
 				<Col xs={24} lg={8}>
-					<div className='cash active'>
+					<div className="cash active">
 						<span className="arrow-right" />
-						Money Lent <Badge count={`${toReadableNumber((totalLendings + totalPF) / totalAssets * 100, 2)} %`} />
+						Money Lent{' '}
+						<Badge count={`${toReadableNumber((totalLendings + totalPF) / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
 				</Col>
@@ -272,15 +298,14 @@ export default function AAChart() {
 					formatter: ({ name, value }: any) => {
 						return {
 							name,
-							value: categories[name].total ? `<b>${toHumanFriendlyCurrency(
-								categories[name].total,
-								selectedCurrency
-							)}</b> (${toReadableNumber(
-								value,
-								2
-							)}%)${breakdownAssetInfo(name)}` : ''
+							value: categories[name].total
+								? `<b>${toHumanFriendlyCurrency(
+										categories[name].total,
+										selectedCurrency
+									)}</b> (${toReadableNumber(value, 2)}%)${breakdownAssetInfo(name)}`
+								: ''
 						};
-					},
+					}
 				}}
 				interactions={[
 					{
