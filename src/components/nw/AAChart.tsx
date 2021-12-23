@@ -242,7 +242,7 @@ export default function AAChart() {
 						<span className="arrow-right" />
 						Money Lent{' '}
 						<Badge count={`${toReadableNumber((totalLendings + totalPF) / totalAssets * 100, 2)} %`} />
-						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
+						<strong>{toHumanFriendlyCurrency((totalLendings + totalPF), selectedCurrency)}</strong>
 					</div>
 				</Col>
 				<Col xs={24} sm={12} lg={8}>

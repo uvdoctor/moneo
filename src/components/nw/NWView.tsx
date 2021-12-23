@@ -69,7 +69,7 @@ export default function NWView() {
 										<Radio.Button value={LIABILITIES_VIEW} className="dd-stat">
 											<ItemDisplay
 												label="You Owe"
-												result={totalLiabilities}
+												result={-totalLiabilities}
 												currency={selectedCurrency}
 												info="This is the total valuation of all the money you owe."
 												pl
