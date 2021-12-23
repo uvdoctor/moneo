@@ -34,7 +34,7 @@ export default function AddHoldingInput({
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ startdate, setStartdate ] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
+	const [ startdate, setStartdate ] = useState<string>(`Apr-${new Date().getFullYear() - 2}`);
 	const [ enddate, setEnddate ] = useState<any>(`Mar-${new Date().getFullYear() + 1}`);
 	const [ duration, setDuration ] = useState<number>(5);
 
@@ -64,6 +64,7 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				break;
 			case LENT:
+				newRec.type = AssetType.F;
 				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
@@ -93,16 +94,23 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				break;
 			case PM:
-			case CRYPTO:
 				newRec.qty = qty;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = subCat;
 				break;
+			case CRYPTO:
+				newRec.qty = qty;
+				newRec.type = AssetType.A;
+				newRec.subt = AssetSubType.C;
+				newRec.name = category;
+				break;
 			case OTHER:
+				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = name;
 				newRec.qty = qty;
+				break;
 			default:
 				newRec.name = name;
 				newRec.qty = qty;
@@ -199,12 +207,12 @@ export default function AddHoldingInput({
 		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
 			if (opts && Object.keys(opts).length && !opts[subCat]) {
-				let defaultVal: string = Object.keys(opts)[0];
-				setSubCat(defaultVal);
+				setSubCat(Object.keys(opts)[0]);
 			}
 		}
 		let rec = getNewRec();
-		rec.subt = subtype;
+		if(rec.subt === AssetSubType.C) rec.name = subtype;
+		else rec.subt = subtype;
 		return rec;
 	};
 

@@ -340,6 +340,11 @@ export const getAssetSubTypes = () => {
     [APIt.AssetSubType.L]: "Liquid",
     [APIt.AssetSubType.R]: "Real-estate",
     [APIt.AssetSubType.S]: "Stock",
+    [APIt.AssetSubType.C]: "Crypto",
+    [APIt.AssetSubType.V]: "Vehicle",
+    [APIt.AssetSubType.O]: "Other",
+    [APIt.AssetSubType.M]: "Membership",
+    [APIt.AssetSubType.Cash]: "Cash"
   };
 };
 

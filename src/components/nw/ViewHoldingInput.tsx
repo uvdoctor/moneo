@@ -73,7 +73,9 @@ export default function ViewHoldingInput({
 	};
 
 	const changeCategory = (subtype: string) => {
-		record.subt = subtype;
+		if(childTab === CRYPTO) 
+			record.name = subtype;
+		else record.subt = subtype;
 		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
 			if (!opts) return changeData([...data]);
