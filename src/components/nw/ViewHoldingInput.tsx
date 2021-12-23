@@ -192,9 +192,10 @@ export default function ViewHoldingInput({
 				</Col>
 			)}
 			{(hasRate(childTab) || (childTab === INS && record.subt === "H")) && (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 				<Row align="middle" gutter={[5, 0]}>
 				<Col>Rate</Col>
-				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+				<Col>
 					<NumberInput
 						isBasic={true}
 						pre=""
@@ -208,6 +209,7 @@ export default function ViewHoldingInput({
 					/>
 				</Col>
 				</Row>
+				</Col>
 			)}
 			{hasDate(childTab) && (
 				<>
