@@ -224,6 +224,7 @@ export default function UploadHoldings() {
 			for (let j = 0; j < textContent.items.length; j++) {
 				let value = textContent.items[j].str.trim();
 				if (!value.length || value.length > 100) continue;
+				console.log("Value is: ", value);
 				if (!taxId && value.length >= 10) {
 					taxId = extractPAN(value);
 					if (taxId) {
@@ -237,7 +238,7 @@ export default function UploadHoldings() {
 					if(holdingStarted) console.log("holding started...", value);
 					continue;
 				}
-				if (includesAny(value, [ 'end of report' ])) {
+				if (includesAny(value, [ 'end of report', 'end of statement' ])) {
 					eof = true;
 					break;
 				}
@@ -251,11 +252,11 @@ export default function UploadHoldings() {
 						'txn:'
 					])
 				) {
+					console.log("Ending holdings: ", value);
 					isin = null;
 					holdingStarted = false;
 					continue;
 				}
-				console.log("Value: ", value);
 				if (holdingStarted && !isin) {
 					if(includesAny(value, [ 'nav', 'bonds', 'face value per bond', 'face value per unit' ])) {
 						skipFirstNumber = false;
@@ -266,6 +267,7 @@ export default function UploadHoldings() {
 					}
 				}
 				if(!isin) {
+					console.log("Going to check for isin: ", value);
 					isin = extractISIN(value);
 					if (isin) {
 						console.log('Detected ISIN: ', isin);
