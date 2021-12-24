@@ -100,7 +100,7 @@ export default function ViewHoldingInput({
 		changeData([...data]);
 	};
 
-	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
+	const hasRate = (childTab: string) => [PF, LENT].includes(childTab);
 
 	const hasRangePicker = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
 

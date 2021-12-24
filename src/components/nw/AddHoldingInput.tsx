@@ -39,7 +39,7 @@ export default function AddHoldingInput({
 	const [ duration, setDuration ] = useState<number>(5);
 	const [ amt, setAmt ] = useState<number>(0);
 
-	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
+	const hasRate = (childTab: string) => [ PF, LENT ].includes(childTab);
 
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 
