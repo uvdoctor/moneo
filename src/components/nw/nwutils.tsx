@@ -541,7 +541,8 @@ export const getCashFlows = (amt: number, durationEnded: number, cashflows: any,
   const today = new Date();
   let count = 0;
   let time = 0;
-  amt = getCompoundedIncome(rate, amt, isMonth ? durationEnded / 12 : durationEnded, isMonth ? 12 : 1);
+  let yrs = durationEnded - (durationEnded%1);  
+  amt = getCompoundedIncome(rate, amt, isMonth ? yrs : durationEnded, isMonth ? 12 : 1);
   if (isMonth) {
     let monthLeftForCY = 12 - (today.getMonth());
     const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
