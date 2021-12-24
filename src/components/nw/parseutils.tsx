@@ -45,6 +45,7 @@ export const getQty = (val: string) => {
 		return null;
 	}
 	if (result < 0) return null;
+	if (result === 0) return 0;
 	if (!val.includes(".")) 
 		return val.length > 6 || !result ? null : result;
 	let numbers = val.split(".");
