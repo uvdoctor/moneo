@@ -8,7 +8,6 @@ import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
-import { getCompoundedIncome } from "../calc/finance";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -524,55 +523,4 @@ export const getInstrumentDataWithKey = async (
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
   }
-};
-
-export const getCashFlows = (
-	amt: number,
-	durationEnded: number,
-	cashflows: any,
-	durationLeft: number,
-	rate: number,
-	isMonth: boolean
-) => {
-	const today = new Date();
-	let count = 0;
-	let time = 0;
-	let monthLeftForCY = 0;
-	if (isMonth) {
-		if (durationEnded > 0) {
-			monthLeftForCY = 12 - today.getMonth();
-			amt = getCompoundedIncome(rate, amt, (monthLeftForCY + durationEnded) / 12, 12);
-			const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
-			time = durationEnded + monthLeftForCY;
-			cashflows = cashflows.concat(cfs);
-		}
-		for (let index = 0; index <= durationLeft - monthLeftForCY; index++) {
-			count++;
-			if (count === 12) {
-				time += count;
-				amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
-				const cfs = Array(Math.round(12)).fill(amt);
-				cashflows = cashflows.concat(cfs);
-				count = 0;
-			}
-		}
-		if (count < 12 && count > 0) {
-			time += count;
-			amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
-			const cfs = Array(Math.round(count)).fill(amt);
-			cashflows = cashflows.concat(cfs);
-		}
-	} else {
-		if (durationEnded > 0) {
-			amt = getCompoundedIncome(rate, amt, durationEnded, 1);
-      time += durationEnded;
-		}
-		for (let index = 0; index <= durationLeft; index++) {
-			time += 1;
-			amt = getCompoundedIncome(rate as number, amt, time, 1);
-			const cfs = Array(Math.round(1)).fill(amt);
-			cashflows = cashflows.concat(cfs);
-		}
-	}
-	return cashflows;
 };

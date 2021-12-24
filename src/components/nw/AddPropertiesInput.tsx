@@ -16,12 +16,13 @@ import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
-import { calculateDifferenceInYears, getMonthIndex } from "../utils";
+import { getMonthIndex } from "../utils";
 import { NWContext } from "./NWContext";
 import {
 	getDefaultMember,
 	getFamilyOptions,
 } from "./nwutils";
+import { calculateDifferenceInYears } from "./valuationutils";
 
 interface AddPropertiesInputProps {
 	setInput: Function;

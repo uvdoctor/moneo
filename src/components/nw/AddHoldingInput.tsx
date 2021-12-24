@@ -6,10 +6,11 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { calculateAddYears, getMonthIndex } from '../utils';
+import { getMonthIndex } from '../utils';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
+import { calculateAddYears } from './valuationutils';
 
 interface AddHoldingInputProps {
 	setInput: Function;

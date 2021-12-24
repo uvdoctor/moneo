@@ -5,9 +5,10 @@ import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
-import { calculateAddYears, calculateDifferenceInYears, getMonthIndex, getMonthName } from "../utils";
+import { getMonthIndex, getMonthName } from "../utils";
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from "./NWContext";
 import QuantityWithRate from "./QuantityWithRate";
+import { calculateAddYears, calculateDifferenceInYears } from "./valuationutils";
 
 interface ViewHoldingInputProps {
 	data: Array<HoldingInput>;

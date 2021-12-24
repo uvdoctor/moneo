@@ -24,6 +24,7 @@ import DatePickerInput from "../form/DatePickerInput";
 import { COLORS } from "../../CONSTANTS";
 import { getMonthName, getMonthIndex } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
+import { calculateDifferenceInYears } from "./valuationutils";
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
@@ -103,7 +104,6 @@ export default function ListProperties({
 
 	useEffect(() => {
 		if (indexForMv !== null) {
-			// @ts-ignore
 			const duration = calculateDifferenceInYears(
 				today.getMonth()+1, 
 				today.getFullYear(), 
@@ -113,8 +113,7 @@ export default function ListProperties({
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,
-					// @ts-ignore
-					data[indexForMv].purchase?.amt,
+					data[indexForMv].purchase?.amt as number,
 					duration
 				)
 			);

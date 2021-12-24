@@ -8,7 +8,6 @@ import {
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesPropertyMatch,
-	getCashFlows,
 	getCommodityRate,
 	getCryptoRate,
 	getNPSData,
@@ -42,11 +41,13 @@ import {
 	PropertyType
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import { calculateDifferenceInMonths, calculateDifferenceInYears, includesAny, initOptions } from '../utils';
+import { includesAny, initOptions } from '../utils';
+import { calculateDifferenceInMonths, calculateDifferenceInYears } from './valuationutils'
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
 import { ROUTES } from '../../CONSTANTS';
+import { getCashFlows } from './valuationutils';
 
 const NWContext = createContext({});
 
