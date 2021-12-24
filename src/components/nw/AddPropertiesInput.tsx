@@ -16,12 +16,11 @@ import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
-import { getMonthIndex } from "../utils";
+import { calculateDifferenceInYears, getMonthIndex } from "../utils";
 import { NWContext } from "./NWContext";
 import {
 	getDefaultMember,
 	getFamilyOptions,
-	getRemainingDuration,
 } from "./nwutils";
 
 interface AddPropertiesInputProps {
@@ -60,10 +59,10 @@ export default function AddPropertyInput({
 	const [error, setError] = useState<boolean>(false);
 
 	const duration = () => {
+		const today = new Date();
 		let rec = getNewRec();
 		if (rec.purchase) {
-			const data = getRemainingDuration(rec.purchase.year, rec.purchase.month);
-			return data?.years;
+			return calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), rec.purchase.month, rec.purchase.year);
 		}
 	};
 

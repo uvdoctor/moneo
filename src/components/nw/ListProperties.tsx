@@ -17,7 +17,6 @@ import {
 	doesPropertyMatch,
 	getDefaultMember,
 	getFamilyOptions,
-	getRemainingDuration,
 } from "./nwutils";
 import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
@@ -45,6 +44,7 @@ export default function ListProperties({
 		getDefaultMember(allFamily, selectedMembers)
 	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
+	const today = new Date();
 
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
@@ -96,28 +96,30 @@ export default function ListProperties({
 
 	const changeMv = (i: number, val: number) => {
 		data[i].mv = val;
-		data[i].mvm = new Date().getMonth() + 1;
-		data[i].mvy = new Date().getFullYear();
+		data[i].mvm = today.getMonth() + 1;
+		data[i].mvy = today.getFullYear();
 		changeData([...data]);
 	};
 
 	useEffect(() => {
 		if (indexForMv !== null) {
 			// @ts-ignore
-			const duration = getRemainingDuration(
-				data[indexForMv].purchase?.year as number,
-				data[indexForMv].purchase?.month as number
-			);
+			const duration = calculateDifferenceInYears(
+				today.getMonth()+1, 
+				today.getFullYear(), 
+				data[indexForMv].purchase?.month as number, 
+				data[indexForMv].purchase?.year as number);
+
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,
 					// @ts-ignore
 					data[indexForMv].purchase?.amt,
-					duration?.years
+					duration
 				)
 			);
-			data[indexForMv].mvm = new Date().getMonth() + 1;
-			data[indexForMv].mvy = new Date().getFullYear();
+			data[indexForMv].mvm = today.getMonth() + 1;
+			data[indexForMv].mvy = today.getFullYear();
 			changeData([...data]);
 			setIndexForMv(null);
 		}

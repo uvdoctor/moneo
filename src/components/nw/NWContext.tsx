@@ -882,10 +882,11 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 		let totalPlot = 0;
 		properties.forEach((property: PropertyInput) => {
 			if(!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
+			const today = new Date();
 			// @ts-ignore
-			const duration = getRemainingDuration(property.mvy, property.mvm);
+			const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), property.mvm, property.mvy);
 			// @ts-ignore
-			const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
+			const value = getCompoundedIncome(property.rate, property.mv, duration);
 			total += value;
 			if(property.type === PropertyType.P) totalPlot += value;
 			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
