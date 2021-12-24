@@ -8,6 +8,7 @@ import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
+import { getCompoundedIncome } from "../calc/finance";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -534,4 +535,41 @@ export const getRemainingDuration = (yr: number, mon: number, dur?: number, isMo
     if (months > duration) return;
   }
   return { months, years };
+};
+
+export const getCashFlows = (amt: number, durationEnded: number, cashflows: any, durationLeft: number, rate: number, isMonth: boolean) => {
+  const today = new Date();
+  let count = 0;
+  let time = 0;
+  amt = getCompoundedIncome(rate, amt, isMonth ? durationEnded / 12 : durationEnded, isMonth ? 12 : 1);
+  if (isMonth) {
+    let monthLeftForCY = 12 - (today.getMonth());
+    const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
+    time = durationEnded + monthLeftForCY;
+    cashflows = cashflows.concat(cfs);
+    for (let index = 0; index < (durationLeft - monthLeftForCY); index++) {
+      count++;
+      if (count === 12) {
+        time += count;
+        amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+        const cfs = Array(Math.round(12)).fill(amt);
+        cashflows = cashflows.concat(cfs);
+        count = 0;
+      }
+    }
+    if (count < 12 && count > 0) {
+      time += count;
+      amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+      const cfs = Array(Math.round(count)).fill(amt);
+      cashflows = cashflows.concat(cfs);
+    }
+  } else {
+    for (let index = 0; index < durationLeft; index++) {
+        time += index+1;
+        amt = getCompoundedIncome(rate as number, amt, time, 1);
+        const cfs = Array(Math.round(1)).fill(amt);
+        cashflows = cashflows.concat(cfs);
+    }
+  }
+  return cashflows;
 };

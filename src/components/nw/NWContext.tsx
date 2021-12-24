@@ -8,6 +8,7 @@ import {
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesPropertyMatch,
+	getCashFlows,
 	getCommodityRate,
 	getCryptoRate,
 	getNPSData,
@@ -47,6 +48,7 @@ import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
 import { ROUTES } from '../../CONSTANTS';
+import { P } from '@antv/g2plot';
 
 const NWContext = createContext({});
 
@@ -160,7 +162,7 @@ function NWContextProvider() {
 	const [ uname, setUname ] = useState<string | null | undefined>(owner);
 	const [ insUname, setInsUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
-	const [ npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);	
+	const [ npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);
 	const [ isDirty, setIsDirty]  = useState<boolean>(false);
 	const [ totalOtherProperty, setTotalOtherProperty ] = useState<number>(0);
 	const [ totalResidential, setTotalResidential ] = useState<number>(0);
@@ -197,11 +199,11 @@ function NWContextProvider() {
 					setData: setLendings,
 					total: totalLendings,
 					categoryOptions: {
-						BD: 'Deposit', 
+						BD: 'Deposit',
 						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate',
-						P2P: 'Lent to an individual', 
+						P2P: 'Lent to an individual',
 					},
-					subCategoryOptions:{ 
+					subCategoryOptions:{
 						BD: {
 							0: 'Pay Out',
 							1: 'Accumulates Every Year',
@@ -243,7 +245,7 @@ function NWContextProvider() {
 						[PropertyType.P]: "Plot",
 						[PropertyType.A]: "Apartment",
 						[PropertyType.H]: "Home",
-						[PropertyType.C]: "Condominium",	
+						[PropertyType.C]: "Condominium",
 						[PropertyType.O]: "Office",
 						[PropertyType.T]: "Townhouse",
 						[PropertyType.OTHER]: 'Others'
@@ -319,7 +321,7 @@ function NWContextProvider() {
 						Other: 'Other'
 					},
 					viewComp: ViewHoldingInput,
-				}, 
+				},
 			},
 		},
 		Financial: {
@@ -415,7 +417,7 @@ function NWContextProvider() {
 					setData: setAngel,
 					total: totalAngel,
 					viewComp: ViewHoldingInput,
-				}, 
+				},
 				[TAB.OIT]: {
 					label: TAB.OIT,
 					info: "Investment Trust",
@@ -564,7 +566,7 @@ function NWContextProvider() {
 		setCurrencyList(currencyList);
 		setUname(allHoldings?.uname);
 		setInsUname(insHoldings?.uname);
-		if(insHoldings?.uname && insHoldings?.ins?.length) 
+		if(insHoldings?.uname && insHoldings?.ins?.length)
 			await initializeInsData(insHoldings?.ins);
 		setInstruments([ ...(insHoldings?.ins ? insHoldings.ins : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
@@ -627,7 +629,7 @@ function NWContextProvider() {
 					totalCash +
 					totalPhysical +
 					totalFinancial +
-					totalRetirement	
+					totalRetirement
 			);
 		},
 		[totalCash, totalPhysical, totalFinancial, totalRetirement]
@@ -679,9 +681,9 @@ function NWContextProvider() {
 				if(data.itype === InsType.ETF) totalETFs += value;
 				else if(isFund(instrument.id)) totalMFs += value;
 				if(data.subt === AssetSubType.GoldB) totalFGold += value;
-				else if(data.itype && cachedData[instrument.id].itype === InsType.REIT) 
+				else if(data.itype && cachedData[instrument.id].itype === InsType.REIT)
 					totalFRE += value;
-				else if(data.itype && cachedData[instrument.id].itype === InsType.InvIT) 
+				else if(data.itype && cachedData[instrument.id].itype === InsType.InvIT)
 					totalInv += value;
 				else if(data.type === AssetType.E) {
 					totalFEquity += value;
@@ -736,8 +738,10 @@ function NWContextProvider() {
 		updatedHoldings.other = others;
 		updatedHoldings.nps = nps;
 		updatedHoldings.crypto = crypto;
-		updatedHoldings.credit = credit; 
+		updatedHoldings.credit = credit;
 		updatedHoldings.ins = insurance;
+		if (uname) updatedHoldings.uname = uname;
+		if (insUname) updatedInsHoldings.uname = insUname;
 		try {
 			uname ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput) : await addHoldings(updatedHoldings);
 			if (instruments.length)  {
@@ -751,49 +755,57 @@ function NWContextProvider() {
 		setIsDirty(false);
 	};
 
-	const calculateNPV = (records: Array<HoldingInput>, setTotal: Function,) => {
-		if(!records.length) return setTotal(0);			
-		let total = 0;
-		let isMonth = true;
-		let cashflows: any = [];
-		records.forEach((record: HoldingInput) => {
-			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				if ( record.chg ) {
-					if(record.chgF === 1) isMonth = false;
-					const today = new Date();
-					const duration = isMonth 
-						? calculateDifferenceInMonths(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
-						: calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
-						if(duration) {
-							// let amt = record.amt as number; 
-							// let mon = today.getMonth()+1;
-								if (record.subt === "H") {
-									//  for (let index = 0; index <= duration; index++ ) {
-									// 	 if (isMonth) {
-									// 			if(index%12===0){
-									// 				const compoundedIncome = getCompoundedIncome(record.chg, amt, index+1,  12);
-									// 				amt = compoundedIncome;
-									// 				const cfs = Array(Math.round(12-mon)).fill(amt);
-									// 				cashflows = cashflows.concat(cfs);
-									// 				mon = 0
-									// 		 }
-									// 	 }else {
-									// 		const ci = getCompoundedIncome(record.chg, amt, index+1,  1);
-									// 		amt = ci;
-									// 		cashflows.push(amt);
-									// 	 }
-									//  }
-								} else {
-									cashflows = Array(Math.round(duration)).fill(record.amt);
-								}
-								const npv = getNPV(10, cashflows, 0, (isMonth ? true : false), true);
-								total += npv;
-							}
-					}
+const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
+	if (!records.length) return setTotal(0);
+	let total = 0;
+	let isMonth = true;
+	let cashflows: any = [];
+	records.forEach((record: HoldingInput) => {
+		if (record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
+			if (record.chg) {
+				if (record.chgF === 1) isMonth = false;
+				const today = new Date();
+				const durationSinceStart = isMonth
+					? calculateDifferenceInMonths(
+							record.em as number,
+							record.ey as number,
+							record.sm as number,
+							record.sy as number
+						)
+					: calculateDifferenceInYears(
+							record.em as number,
+							record.ey as number,
+							record.sm as number,
+							record.sy as number
+						);
+				const durationLeft = isMonth
+					? calculateDifferenceInMonths(
+							record.em as number,
+							record.ey as number,
+							today.getMonth() + 1,
+							today.getFullYear()
+						)
+					: calculateDifferenceInYears(
+							record.em as number,
+							record.ey as number,
+							today.getMonth() + 1,
+							today.getFullYear()
+						);
+  			let durationEnded = durationSinceStart - durationLeft;
+				if (record.subt !== 'L') {
+					let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft, record.chg as number, isMonth);
+					const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
+					total += npv;
+				} else {
+					let cfs = Array(Math.round(durationLeft)).fill(record.amt);
+					const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
+					total += npv;
 				}
-			})
-		setTotal(total);
-	};
+			}
+		}
+	});
+	setTotal(total);
+};
 
 	const priceLoans = () => {
 		calculateNPV(loans, setTotalLoans);
@@ -833,7 +845,7 @@ function NWContextProvider() {
 	};
 
 	const calculateBalance = (records: Array<HoldingInput>, setTotal: Function) => {
-		if(!records.length) return setTotal(0);			
+		if(!records.length) return setTotal(0);
 		let total = 0;
 		records.forEach((record: HoldingInput) => {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
@@ -875,7 +887,7 @@ function NWContextProvider() {
 			total += value;
 			if(property.type === PropertyType.P) totalPlot += value;
 			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
-			if(property.type === PropertyType.A || property.type === PropertyType.H || 
+			if(property.type === PropertyType.A || property.type === PropertyType.H ||
 				property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
 			if(property.type === PropertyType.O) totalCommercial += value;
 		})
@@ -1062,19 +1074,19 @@ function NWContextProvider() {
 
 	useEffect(()=>{
 		setIsDirty(true);
-	},[instruments, 
-		savings, 
-		lendings, 
-		properties, 
-		preciousMetals, 
+	},[instruments,
+		savings,
+		lendings,
+		properties,
+		preciousMetals,
 		crypto,
-		pf, 
-		loans, 
-		insurance, 
-		credit, 
-		angel, 
-		others, 
-		nps, 
+		pf,
+		loans,
+		insurance,
+		credit,
+		angel,
+		others,
+		nps,
 		vehicles])
 
 	return (
