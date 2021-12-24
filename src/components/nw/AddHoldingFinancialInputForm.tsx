@@ -39,8 +39,8 @@ const optionTableMap: OptionTableMap = {
   ETFs: "listInExchgPrices",
   Bonds: "listInBondPrices",
   "Mutual Funds": "listInmfPrices",
-  'Real Estate Investment Trusts': "listInExchgPrices",
-  'Other Investment Trusts': "listInExchgPrices"
+  'REITs': "listInExchgPrices",
+  'Other Investments': "listInExchgPrices"
 } as const;
 
 const holdingReducer = (

@@ -798,14 +798,11 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 			let durationEnded = durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd - durationLeft;
 			if (record.subt !== 'L') {
 				let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft > durationFromStartToEnd ? durationFromStartToEnd: durationLeft, record.chg as number, isMonth);
-				console.log(cfs);
 				const npv = getNPV(10, cfs, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
 				total += npv;
 			} else {
 				let cfs = Array(Math.round(durationLeft)).fill(record.amt);
-				console.log(cfs);					
 				const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
-				console.log(npv);
 				total += npv;
 			}
 		}
