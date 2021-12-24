@@ -64,6 +64,10 @@ export default function ViewHoldingInput({
 
 	const changeQty = (qty: number) => {
 		record.qty = qty;
+		if (hasPF(childTab)) {
+			record.sm = new Date().getMonth() + 1;
+			record.sy = new Date().getFullYear();
+		}
 		changeData([...data]);
 	}
 
@@ -126,7 +130,7 @@ export default function ViewHoldingInput({
 								<SelectInput
 									pre=""
 									value={
-										childTab === LENT
+										(childTab === LENT || childTab === INS) 
 											? (record.chgF as number)
 											: (record.name as string)
 									}
@@ -136,14 +140,6 @@ export default function ViewHoldingInput({
 								/>
 						  )
 						: null}
-					{childTab === INS && (
-						<SelectInput
-							pre={""}
-							options={{ 1: "Yearly", 12: "Monthly" }}
-							value={record.chgF as number}
-							changeHandler={(val: string) => changeSubCategory(val)}
-						/>
-					)}
 				</Col>
 			)}
 			{hasName(childTab) && (
@@ -174,7 +170,7 @@ export default function ViewHoldingInput({
 			) : (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 					<Row align="middle" gutter={[5, 0]}>
-						<Col>{hasPF(childTab) ? "Contribution per year" : "Amount"}</Col>
+						<Col>Amount</Col>
 						<Col>
 							<NumberInput
 								isBasic={true}
@@ -191,7 +187,27 @@ export default function ViewHoldingInput({
 					</Row>
 				</Col>
 			)}
-			{(hasRate(childTab) || (childTab === INS && record.subt === "H")) && (
+			{hasPF(childTab) && (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+				<Row align="middle" gutter={[5, 0]}>
+					<Col>Contribution per year</Col>
+					<Col>
+						<NumberInput
+							isBasic={true}
+							pre=""
+							min={10}
+							max={100000000}
+							value={record.qty as number}
+							changeHandler={(val: number) => changeQty(val)}
+							currency={record.curr as string}
+							step={1}
+							noSlider
+						/>
+					</Col>
+				</Row>
+			</Col>
+				)}
+			{(hasRate(childTab) || (childTab === INS && record.subt !== "L")) && (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 				<Row align="middle" gutter={[5, 0]}>
 				<Col>Rate</Col>

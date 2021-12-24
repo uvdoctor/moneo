@@ -37,6 +37,7 @@ export default function AddHoldingInput({
 	const [ startdate, setStartdate ] = useState<string>(`Apr-${new Date().getFullYear() - 2}`);
 	const [ enddate, setEnddate ] = useState<any>(`Mar-${new Date().getFullYear() + 1}`);
 	const [ duration, setDuration ] = useState<number>(5);
+	const [ amt, setAmt ] = useState<number>(0);
 
 	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
 
@@ -55,15 +56,16 @@ export default function AddHoldingInput({
 		const today = new Date();
 		switch (childTab) {
 			case INS:
-				newRec.amt = qty
-				newRec.chg = category === 'H' ? rate : 0;
+				newRec.amt = amt;
+				newRec.chg = category !== 'L' ? rate : 0;
 				newRec.chgF = Number(subCat);
+				newRec.subt = category;
 				break;
 			case LOAN:
 				newRec.chg = rate;
 				newRec.chgF = 12;
 				newRec.name = name;
-				newRec.amt = qty
+				newRec.amt = amt;
 				break;
 			case LENT:
 				newRec.type = AssetType.F;
@@ -71,7 +73,7 @@ export default function AddHoldingInput({
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
 				newRec.name = name;
-				newRec.amt = qty
+				newRec.amt = amt;
 				break;
 			case NPS:
 				newRec.qty = qty;
@@ -86,7 +88,8 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				newRec.sm = today.getMonth() + 1;
 				newRec.sy = today.getFullYear();
-				newRec.amt = qty
+				newRec.amt = amt;
+				newRec.qty = qty;
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
@@ -96,7 +99,7 @@ export default function AddHoldingInput({
 				newRec.sm = getMonthIndex(startdate.substring(0, 3));
 				newRec.sy = Number(startdate.substring(startdate.length - 4));
 				newRec.name = name;
-				newRec.amt = qty
+				newRec.amt = amt;
 				break;
 			case PM:
 				newRec.qty = qty;
@@ -114,11 +117,11 @@ export default function AddHoldingInput({
 				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = name;
-				newRec.amt = qty
+				newRec.amt = amt;
 				break;
 			default:
 				newRec.name = name;
-				newRec.amt = qty
+				newRec.amt = amt;
 				break;
 		}
 		if (hasRangePicker(childTab)) {
@@ -132,9 +135,6 @@ export default function AddHoldingInput({
 				newRec.em = getMonthIndex(enddate.substring(0, 3));
 				newRec.ey = Number(enddate.substring(enddate.length - 4));
 			}
-		}
-		if (childTab === INS) {
-			newRec.subt = category;
 		}
 		if (childTab === PM || childTab === CRYPTO) {
 			newRec.curr = 'USD';
@@ -200,7 +200,7 @@ export default function AddHoldingInput({
 	};
 
 	const changeAmt = (amt: number) => {
-		setQty(amt);
+		setAmt(amt);
 		disableOk(amt <= 0);
 		let rec = getNewRec();
 		rec.amt = amt;
@@ -216,7 +216,7 @@ export default function AddHoldingInput({
 			}
 		}
 		let rec = getNewRec();
-		if(rec.subt === AssetSubType.C) rec.name = subtype;
+		if (rec.subt === AssetSubType.C) rec.name = subtype;
 		else rec.subt = subtype;
 		return rec;
 	};
@@ -259,16 +259,6 @@ export default function AddHoldingInput({
 										/>
 									)}
 								</Col>
-								<Col>
-									{childTab === INS && (
-										<SelectInput
-											pre={''}
-											options={{ 1: 'Yearly', 12: 'Monthly' }}
-											value={subCat as string}
-											changeHandler={(val: string) => changeSubCat(val)}
-										/>
-									)}
-								</Col>
 							</Row>
 						</FormItem>
 					</Col>
@@ -288,12 +278,25 @@ export default function AddHoldingInput({
 					</Col>
 				) : (
 					<Col xs={24} md={12}>
-						<FormItem label={hasPF(childTab) ? 'Contribution per year' : 'Amount'}>
+						<FormItem label="Amount">
+							<NumberInput
+								isBasic
+								pre=""
+								value={amt}
+								changeHandler={changeAmt}
+								currency={selectedCurrency}
+							/>
+						</FormItem>
+					</Col>
+				)}
+				{hasPF(childTab) && (
+					<Col xs={24} md={12}>
+						<FormItem label="Contribution per year">
 							<NumberInput
 								isBasic
 								pre=""
 								value={qty}
-								changeHandler={changeAmt}
+								changeHandler={changeQty}
 								currency={selectedCurrency}
 							/>
 						</FormItem>
@@ -340,7 +343,7 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{(hasRate(childTab) || (category === 'H' && childTab === INS)) && (
+				{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
 							<NumberInput

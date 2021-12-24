@@ -486,6 +486,13 @@ function NWContextProvider() {
 						V: 'Vehicle',
 						O: 'Others'
 					},
+					subCategoryOptions: {
+						L: { 1: 'Yearly', 12: 'Monthly' },
+						H: { 1: 'Yearly', 12: 'Monthly' },
+						P: { 1: 'Yearly', 12: 'Monthly' },
+						V: { 1: 'Yearly', 12: 'Monthly' },
+						O: { 1: 'Yearly', 12: 'Monthly' }
+					},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.CREDIT]:{
@@ -933,14 +940,17 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 		const month = new Date().getMonth()+1;
 		records.forEach((record: HoldingInput) => {
 			if(doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				const amount = record.amt as number;
 				const today = new Date();
+				let value = record.amt as number;
 				if (month === 4) {
-					const duration = calculateDifferenceInMonths(today.getMonth()+1, today.getFullYear(), record.sm as number, record.sy as number)
+					const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), record.sm as number, record.sy as number)
 					if(!duration) return;
-					const value = amount + (amount * (1+(record.chg as number*(duration/12))));
-					total += value;
-				}else total+= amount;
+					for(let i=0; i<duration; i++) {
+						value += record.qty as number;
+						value += value+(value*((record.chg as number)/100));
+					}
+				}
+				total += value;
 				if(record.subt === 'PF') totalPPF += total;
 				if(record.subt === 'VF') totalVPF += total;
 				if(record.subt === 'EF') totalEPF += total;
