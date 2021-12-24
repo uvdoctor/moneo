@@ -2,7 +2,7 @@ import { Menu } from "antd";
 import Link from "next/link";
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 import { getQty } from "./nw/parseutils";
-import { differenceInCalendarYears, addYears, differenceInCalendarMonths } from 'date-fns'
+import { differenceInCalendarYears, addYears, differenceInMonths } from 'date-fns'
 
 export function getCurrencyList() {
   return {
@@ -714,7 +714,7 @@ export const calculateDifferenceInYears = (em: number, ey: number, sm: number, s
 }
 
 export const calculateDifferenceInMonths = (em: number, ey: number, sm: number, sy: number) => {
-  const diff = differenceInCalendarMonths(new Date(ey, em-1, 30), new Date(sy, sm-1, 1));
+  const diff = differenceInMonths(new Date(ey, em-1, 30), new Date(sy, sm-1, 1));
   return diff;
 }
 
