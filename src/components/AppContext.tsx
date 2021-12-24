@@ -117,15 +117,10 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 	useEffect(() => {
 		if(user) {
 			initData().then(() => setAppContextLoaded(true));
+			user.signInUserSession.accessToken && setOwner(user.signInUserSession.accessToken.payload.username);
 		}
 	}, [user]);
-
-	useEffect(() => {
-		if(user && user.storage[user.userDataKey]) {
-			setOwner((JSON.parse(user.storage[user.userDataKey])).Username)
-		}
-	}, [owner, user]);
-
+	
 	return (
 		<AppContext.Provider
 			value={{
