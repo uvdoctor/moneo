@@ -767,47 +767,47 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 	let cashflows: any = [];
 	records.forEach((record: HoldingInput) => {
 		if (record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-			if (record.chg) {
-				if (record.chgF === 1) isMonth = false;
-				const today = new Date();
-				const durationFromStartToEnd = isMonth
-					? calculateDifferenceInMonths(
-							record.em as number,
-							record.ey as number,
-							record.sm as number,
-							record.sy as number
-						)
-					: calculateDifferenceInYears(
-							record.em as number,
-							record.ey as number,
-							record.sm as number,
-							record.sy as number
-						);
-				const durationLeft = isMonth
-					? calculateDifferenceInMonths(
-							record.em as number,
-							record.ey as number,
-							today.getMonth() + 1,
-							today.getFullYear()
-						)
-					: calculateDifferenceInYears(
-							record.em as number,
-							record.ey as number,
-							today.getMonth() + 1,
-							today.getFullYear()
-						);				
-				if(durationLeft <= 0) return total = 0;
-  			let durationEnded = durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd - durationLeft;
-				if (record.subt !== 'L') {
-					let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft > durationFromStartToEnd ? durationFromStartToEnd: durationLeft, record.chg as number, isMonth);
-					console.log(cfs);
-					const npv = getNPV(10, cfs, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
-					total += npv;
-				} else {
-					let cfs = Array(Math.round(durationLeft)).fill(record.amt);
-					const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
-					total += npv;
-				}
+			if (record.chgF === 1) isMonth = false;
+			const today = new Date();
+			const durationFromStartToEnd = isMonth
+				? calculateDifferenceInMonths(
+						record.em as number,
+						record.ey as number,
+						record.sm as number,
+						record.sy as number
+					)
+				: calculateDifferenceInYears(
+						record.em as number,
+						record.ey as number,
+						record.sm as number,
+						record.sy as number
+					);
+			const durationLeft = isMonth
+				? calculateDifferenceInMonths(
+						record.em as number,
+						record.ey as number,
+						today.getMonth() + 1,
+						today.getFullYear()
+					)
+				: calculateDifferenceInYears(
+						record.em as number,
+						record.ey as number,
+						today.getMonth() + 1,
+						today.getFullYear()
+					);				
+			if(durationLeft <= 0) return total = 0;
+			let durationEnded = durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd - durationLeft;
+			if (record.subt !== 'L') {
+				let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft > durationFromStartToEnd ? durationFromStartToEnd: durationLeft, record.chg as number, isMonth);
+				console.log(cfs);
+				const npv = getNPV(10, cfs, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
+				total += npv;
+			} else {
+				let cfs = Array(Math.round(durationLeft)).fill(record.amt);
+				console.log(cfs);					
+				const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
+				console.log(npv);
+				total += npv;
 			}
 		}
 	});
