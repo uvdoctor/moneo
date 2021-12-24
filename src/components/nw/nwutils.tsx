@@ -541,13 +541,19 @@ export const getCashFlows = (amt: number, durationEnded: number, cashflows: any,
   const today = new Date();
   let count = 0;
   let time = 0;
-  let yrs = durationEnded - (durationEnded%1);  
-  amt = getCompoundedIncome(rate, amt, isMonth ? yrs : durationEnded, isMonth ? 12 : 1);
+  let monthLeftForCY = 0;
+  let yrs = durationEnded - (durationEnded%1);
+  if(durationEnded) {  
+    amt = getCompoundedIncome(rate, amt, isMonth ? yrs/12 : durationEnded, isMonth ? 12 : 1);
+  }
   if (isMonth) {
-    let monthLeftForCY = 12 - (today.getMonth());
-    const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
-    time = durationEnded + monthLeftForCY;
-    cashflows = cashflows.concat(cfs);
+    if (durationEnded) { 
+      monthLeftForCY = 12 - (today.getMonth());
+      
+      const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
+      time = durationEnded + monthLeftForCY;
+      cashflows = cashflows.concat(cfs);
+    }
     for (let index = 0; index < (durationLeft - monthLeftForCY); index++) {
       count++;
       if (count === 12) {

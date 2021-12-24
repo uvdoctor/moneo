@@ -106,7 +106,8 @@ export default function InstrumentValuation() {
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
-		filteredInstruments.map((instrument: InstrumentInput) => {
+		const dataToFilter = selectedTags.length ? filterByTag : filteredInstruments;
+		dataToFilter.map((instrument: InstrumentInput) => {
 			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			if (filteredInfo.id) {
 				const id = filteredInfo.id.some((item: string) => item === instrument.id);
@@ -119,7 +120,7 @@ export default function InstrumentValuation() {
 
 	useEffect(() => {
 		setTotal();
-	},[ filteredInstruments, filteredInfo, instruments ]);
+	},[ filteredInstruments, filteredInfo, instruments, filterByTag ]);
 
 	useEffect(
 		() => {

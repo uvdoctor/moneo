@@ -739,8 +739,7 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit;
 		updatedHoldings.ins = insurance;
-		if (uname) updatedHoldings.uname = uname;
-		if (insUname) updatedInsHoldings.uname = insUname;
+		
 		try {
 			uname ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput) : await addHoldings(updatedHoldings);
 			if (instruments.length)  {
@@ -764,7 +763,7 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 			if (record.chg) {
 				if (record.chgF === 1) isMonth = false;
 				const today = new Date();
-				const durationSinceStart = isMonth
+				const durationFromStartToEnd = isMonth
 					? calculateDifferenceInMonths(
 							record.em as number,
 							record.ey as number,
@@ -789,11 +788,13 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 							record.ey as number,
 							today.getMonth() + 1,
 							today.getFullYear()
-						);
-  			let durationEnded = durationSinceStart - durationLeft;
+						);				
+				if(durationLeft <= 0) return total = 0;
+  			let durationEnded = durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd - durationLeft;
 				if (record.subt !== 'L') {
-					let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft, record.chg as number, isMonth);
-					const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
+					let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft > durationFromStartToEnd ? durationFromStartToEnd: durationLeft, record.chg as number, isMonth);
+					console.log(cfs);
+					const npv = getNPV(10, cfs, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
 					total += npv;
 				} else {
 					let cfs = Array(Math.round(durationLeft)).fill(record.amt);
@@ -823,10 +824,6 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 					const today = new Date();
 					const duration = calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
 					if(!duration) return;
-					// if(record.chgF===1 && duration <= 0) return;
-					// if(record.chgF===2 && duration/6 <= 0) return;
-					// if(record.chgF===4 && duration/4 <= 0) return;
-					// if(record.chgF===12 && duration <= 0) return;
 					if(!record.chgF) {
 						total+=record.amt as number;
 						return setTotal(total);
