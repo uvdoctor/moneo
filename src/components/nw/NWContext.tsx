@@ -48,7 +48,6 @@ import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
 import { ROUTES } from '../../CONSTANTS';
-import { P } from '@antv/g2plot';
 
 const NWContext = createContext({});
 
