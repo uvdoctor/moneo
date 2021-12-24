@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Row, Col, Button, Badge, InputNumber, Tooltip, Rate } from 'antd';
 import {
 	DeleteOutlined,
@@ -30,11 +30,8 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 	const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+	const price = insData[holding.id] ? insData[holding.id].price : 0;
 	const { allFamily }: any = useContext(NWContext);
-	const [
-		price,
-		setPrice
-	] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
 	const [
 		total,
 		setTotal
@@ -117,12 +114,15 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 			</Col>
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col>{insData[holding.id] ? insData[holding.id].name : 
-					<h4 style={{ color: COLORS.RED }}>Not listed</h4>}</Col>
+					<Col>
+						{insData[holding.id] ? (
+							insData[holding.id].name
+						) : (
+							<h4 style={{ color: COLORS.RED }}>Not listed</h4>
+						)}
+					</Col>
 					<Col className="quantity">
-						{total ? 
-							<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
-						: ''}
+						{total ? <strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong> : ''}
 					</Col>
 				</Row>
 			</Col>
@@ -139,20 +139,11 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 			</Col>
 			<Col>
 				<Row align="middle">
-					{isEditMode ? (
-						<Fragment>
-							<Col>
-								<InputNumber
-									value={price}
-									size="small"
-									onChange={(val) => {
-										setPrice(val);
-									}}
-								/>
-							</Col>
-							<Col>&nbsp;</Col>
+					<Col>
+						<span className="quantity">
+							{price ? toCurrency(price, holding.curr as string, true) : ''}
 							<ShoppingCartOutlined />{' '}
-							<Col>
+							{price && isEditMode ? (
 								<InputNumber
 									value={holding.qty}
 									size="small"
@@ -161,23 +152,19 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 										if (onChange) onChange(holding);
 									}}
 								/>
-							</Col>
-						</Fragment>
-					) : (
-						<Col>
-							<span className="quantity">
-								{price ? toCurrency(price, holding.curr as string, true) : ''}
-								<ShoppingCartOutlined />{' '}
-								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
-							</span>
-						</Col>
-					)}
+							) : (
+								toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)
+							)}
+						</span>
+					</Col>
 					<Col>
-						{insData[holding.id] && <Button
-							type="link"
-							icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
-							onClick={isEditMode ? onCancel : onEdit}
-						/>}
+						{insData[holding.id] && (
+							<Button
+								type="link"
+								icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+								onClick={isEditMode ? onCancel : onEdit}
+							/>
+						)}
 						<Button
 							type="link"
 							icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}

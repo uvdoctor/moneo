@@ -219,12 +219,12 @@ export default function UploadHoldings() {
 		let insMap: Map<string, number> = new Map();
 		let eof = false;
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
+			if(eof) break;
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
 			for (let j = 0; j < textContent.items.length; j++) {
 				let value = textContent.items[j].str.trim();
-				if (!value.length || value.length > 100) continue;
-				console.log("Value is: ", value);
+				if (!value.length || value.length > 50) continue;
 				if (!taxId && value.length >= 10) {
 					taxId = extractPAN(value);
 					if (taxId) {
@@ -257,6 +257,7 @@ export default function UploadHoldings() {
 					holdingStarted = false;
 					continue;
 				}
+				console.log("Value is: ", value);
 				if (holdingStarted && !isin) {
 					if(includesAny(value, [ 'nav', 'bonds', 'face value per bond', 'face value per unit' ])) {
 						skipFirstNumber = false;
@@ -267,7 +268,6 @@ export default function UploadHoldings() {
 					}
 				}
 				if(!isin) {
-					console.log("Going to check for isin: ", value);
 					isin = extractISIN(value);
 					if (isin) {
 						console.log('Detected ISIN: ', isin);
