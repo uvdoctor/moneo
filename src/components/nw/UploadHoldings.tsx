@@ -238,9 +238,9 @@ export default function UploadHoldings() {
 					if(holdingStarted) console.log("holding started...", value);
 					continue;
 				}
-				if (includesAny(value, [ 'end of report', 'end of statement' ])) {
+				if (!eof && includesAny(value, [ 'end of report', 'end of statement' ])) {
+					console.log("Detected end: ", value);
 					eof = true;
-					break;
 				}
 				if (
 					includesAny(value, [
