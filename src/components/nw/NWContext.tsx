@@ -14,7 +14,6 @@ import {
 	getNPSData,
 	getNPSFundManagers,
 	getRelatedCurrencies,
-	getRemainingDuration,
 	loadAllFamilyMembers,
 	loadAllHoldings,
 	loadInsHoldings,

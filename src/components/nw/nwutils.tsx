@@ -45,7 +45,7 @@ export const loadAllFamilyMembers = async () => {
 };
 
 export const loadAllHoldings = async (uname: string) => {
-  const { data: { getUserHoldings }} = 
+  const { data: { getUserHoldings }} =
     await API.graphql(graphqlOperation(queries.getUserHoldings, { uname: uname })) as {
     data: APIt.GetUserHoldingsQuery;
   };
@@ -53,7 +53,7 @@ export const loadAllHoldings = async (uname: string) => {
 };
 
 export const loadInsHoldings = async (uname: string) => {
-  const { data: { getUserIns }} = 
+  const { data: { getUserIns }} =
     await API.graphql(graphqlOperation(queries.getUserIns, { uname: uname })) as {
     data: APIt.GetUserInsQuery;
   };
@@ -321,7 +321,7 @@ export const getMarketCap = () => {
 
 export const getFixedCategories = () => {
   return {
-    CB: 'Corporate Bonds', 
+    CB: 'Corporate Bonds',
 		GovB: 'Government Bonds',
 		LF: 'Liquid Funds',
 		I: 'Index Funds',
@@ -526,57 +526,53 @@ export const getInstrumentDataWithKey = async (
   }
 };
 
-export const getRemainingDuration = (yr: number, mon: number, dur?: number, isMonth: boolean = true) => {
-  const today = new Date();		
-  const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
-  const years = months/12;
-  if (dur) {
-    let duration = isMonth ? dur : dur*12;
-    if (months > duration) return;
-  }
-  return { months, years };
-};
-
-export const getCashFlows = (amt: number, durationEnded: number, cashflows: any, durationLeft: number, rate: number, isMonth: boolean) => {
-  const today = new Date();
-  let count = 0;
-  let time = 0;
-  let monthLeftForCY = 0;
-  let yrs = durationEnded - (durationEnded%1);
-  if(durationEnded) {  
-    amt = getCompoundedIncome(rate, amt, isMonth ? yrs/12 : durationEnded, isMonth ? 12 : 1);
-  }
-  if (isMonth) {
-    if (durationEnded) { 
-      monthLeftForCY = 12 - (today.getMonth());
-      
-      const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
-      time = durationEnded + monthLeftForCY;
-      cashflows = cashflows.concat(cfs);
-    }
-    for (let index = 0; index < (durationLeft - monthLeftForCY); index++) {
-      count++;
-      if (count === 12) {
-        time += count;
-        amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
-        const cfs = Array(Math.round(12)).fill(amt);
-        cashflows = cashflows.concat(cfs);
-        count = 0;
-      }
-    }
-    if (count < 12 && count > 0) {
-      time += count;
-      amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
-      const cfs = Array(Math.round(count)).fill(amt);
-      cashflows = cashflows.concat(cfs);
-    }
-  } else {
-    for (let index = 0; index < durationLeft; index++) {
-        time += index+1;
-        amt = getCompoundedIncome(rate as number, amt, time, 1);
-        const cfs = Array(Math.round(1)).fill(amt);
-        cashflows = cashflows.concat(cfs);
-    }
-  }
-  return cashflows;
+export const getCashFlows = (
+	amt: number,
+	durationEnded: number,
+	cashflows: any,
+	durationLeft: number,
+	rate: number,
+	isMonth: boolean
+) => {
+	const today = new Date();
+	let count = 0;
+	let time = 0;
+	let monthLeftForCY = 0;
+	if (isMonth) {
+		if (durationEnded > 0) {
+			monthLeftForCY = 12 - today.getMonth();
+			amt = getCompoundedIncome(rate, amt, (monthLeftForCY + durationEnded) / 12, 12);
+			const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
+			time = durationEnded + monthLeftForCY;
+			cashflows = cashflows.concat(cfs);
+		}
+		for (let index = 0; index <= durationLeft - monthLeftForCY; index++) {
+			count++;
+			if (count === 12) {
+				time += count;
+				amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+				const cfs = Array(Math.round(12)).fill(amt);
+				cashflows = cashflows.concat(cfs);
+				count = 0;
+			}
+		}
+		if (count < 12 && count > 0) {
+			time += count;
+			amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+			const cfs = Array(Math.round(count)).fill(amt);
+			cashflows = cashflows.concat(cfs);
+		}
+	} else {
+		if (durationEnded > 0) {
+			amt = getCompoundedIncome(rate, amt, durationEnded, 1);
+      time += durationEnded;
+		}
+		for (let index = 0; index <= durationLeft; index++) {
+			time += 1;
+			amt = getCompoundedIncome(rate as number, amt, time, 1);
+			const cfs = Array(Math.round(1)).fill(amt);
+			cashflows = cashflows.concat(cfs);
+		}
+	}
+	return cashflows;
 };
