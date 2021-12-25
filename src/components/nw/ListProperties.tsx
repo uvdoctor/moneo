@@ -45,7 +45,6 @@ export default function ListProperties({
 		getDefaultMember(allFamily, selectedMembers)
 	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
-	const [valuation, setValuation] = useState<number>(0);
 	const today = new Date();
 
 	const removeHolding = (i: number) => {
@@ -120,8 +119,6 @@ export default function ListProperties({
 			);
 			data[indexForMv].mvm = today.getMonth() + 1;
 			data[indexForMv].mvy = today.getFullYear();
-			const value = calculateProperty(data[indexForMv])
-			setValuation(value);
 			changeData([...data]);
 			setIndexForMv(null);
 		}
@@ -350,7 +347,7 @@ export default function ListProperties({
 					/>
 				),
 				Valuation: (
-					<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
+					<label>{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}</label>
 				),
 				del: (
 					<Button type="link" onClick={() => removeHolding(i)} danger>
