@@ -2,7 +2,7 @@ import { Badge, Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { NWContext, TAB } from './NWContext';
 import Holding from './Holding';
-import { doesHoldingMatch, getAssetTypes, getColourForAssetType, getMarketCap, getFixedCategories } from './nwutils';
+import { doesHoldingMatch, getAssetTypes, getColourForAssetType, getMarketCap, getFixedCategories, isFund, isBond } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
@@ -35,10 +35,6 @@ export default function InstrumentValuation() {
 		'Mutual Funds': { tags: getAssetTypes(), subt: { E: getMarketCap(), F: getFixedCategories() } },
 		Bonds: { tags: bondTags },
 	};
-
-	const isFund = (id: string) => id.substring(2, 3) === 'F';
-
-	const isBond = (id: string) => id.substring(2, 3) === '0';
 
 	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
 

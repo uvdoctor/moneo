@@ -15,6 +15,8 @@ import { includesAny } from '../utils';
 import {
 	addMemberIfNeeded,
 	getFamilyOptions,
+	isBond,
+	isFund,
 	loadMatchingINBond,
 	loadMatchingINExchange,
 	loadMatchingINMutual
@@ -166,10 +168,6 @@ export default function UploadHoldings() {
 		}
 		resetState();
 	};
-
-	const isFund = (id: string) => id.substring(2, 3) === 'F';
-
-	const isBond = (id: string) => id.substring(2, 3) === '0';
 
 	const loadInstruments = async (ids: Array<string>) => {
 		let mfIds: Array<string> = [];

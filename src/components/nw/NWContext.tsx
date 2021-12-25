@@ -13,6 +13,7 @@ import {
 	getNPSData,
 	getNPSFundManagers,
 	getRelatedCurrencies,
+	isFund,
 	loadAllFamilyMembers,
 	loadAllHoldings,
 	loadInsHoldings,
@@ -663,8 +664,6 @@ function NWContextProvider() {
 		setTotalPM(total);
 		setTotalPGold(totalPGold);
 	};
-
-	const isFund = (id: string) => id.substring(2, 3) === 'F';
 
 	const priceInstruments = () => {
 		let total = 0;

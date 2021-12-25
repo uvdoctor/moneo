@@ -524,3 +524,7 @@ export const getInstrumentDataWithKey = async (
     console.log("Error while fetching instrument data: ", e);
   }
 };
+
+export const isFund = (id: string) => id.substring(2, 3) === 'F';
+
+export const isBond = (id: string) => id.substring(2, 3) === '0';
