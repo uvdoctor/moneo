@@ -1,14 +1,25 @@
-import { Row, Col } from "antd";
-import React, { Fragment, useContext, useState } from "react";
-import { AssetSubType, HoldingInput } from "../../api/goals";
-import DatePickerInput from "../form/DatePickerInput";
-import NumberInput from "../form/numberinput";
-import SelectInput from "../form/selectinput";
-import TextInput from "../form/textinput";
-import { getMonthIndex, getMonthName } from "../utils";
-import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from "./NWContext";
-import QuantityWithRate from "./QuantityWithRate";
-import { calculateAddYears, calculateDifferenceInYears } from "./valuationutils";
+import { Row, Col } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { AssetSubType, HoldingInput } from '../../api/goals';
+import { AppContext } from '../AppContext';
+import DatePickerInput from '../form/DatePickerInput';
+import NumberInput from '../form/numberinput';
+import SelectInput from '../form/selectinput';
+import TextInput from '../form/textinput';
+import { getMonthIndex, getMonthName, toHumanFriendlyCurrency } from '../utils';
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
+import QuantityWithRate from './QuantityWithRate';
+import {
+	calculateAddYears,
+	calculateCompundingIncome,
+	calculateCrypto,
+	calculateDifferenceInYears,
+	calculateNPS,
+	calculateNPVAmt,
+	calculatePM,
+	calculateProvidentFund,
+	calculateVehicle
+} from './valuationutils';
 
 interface ViewHoldingInputProps {
 	data: Array<HoldingInput>;
@@ -23,35 +34,39 @@ export default function ViewHoldingInput({
 	changeData,
 	categoryOptions,
 	subCategoryOptions,
-	record,
+	record
 }: ViewHoldingInputProps) {
-	const { childTab }: any = useContext(NWContext);
+	const { childTab, npsData, selectedCurrency }: any = useContext(NWContext);
+	const { ratesData }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
-	const [duration, setDuration] = useState<number>(calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number));
+	const [ duration, setDuration ] = useState<number>(
+		calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number)
+	);
+	const [ valuation, setValuation ] = useState<number>(0);
 
 	const changeDuration = (val: number) => {
-		setDuration(val)
+		setDuration(val);
 		const { year, month } = calculateAddYears(record.sm as number, record.sy as number, duration);
 		record.em = month;
 		record.ey = year;
-		changeData([...data]);
-	}
+		changeData([ ...data ]);
+	};
 
 	const changeEnddate = (val: any) => {
 		record.ey = Number(val.substring(val.length - 4));
 		record.em = getMonthIndex(val.substring(0, 3));
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeStartdate = (val: string) => {
 		record.sy = Number(val.substring(val.length - 4));
 		record.sm = getMonthIndex(val.substring(0, 3));
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeName = (val: any) => {
 		record.name = val;
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeAmt = (amt: number) => {
@@ -60,7 +75,7 @@ export default function ViewHoldingInput({
 			record.sm = new Date().getMonth() + 1;
 			record.sy = new Date().getFullYear();
 		}
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeQty = (qty: number) => {
@@ -69,52 +84,85 @@ export default function ViewHoldingInput({
 			record.sm = new Date().getMonth() + 1;
 			record.sy = new Date().getFullYear();
 		}
-		changeData([...data]);
-	}
+		changeData([ ...data ]);
+	};
 
 	const changeChg = (chg: number) => {
 		record.chg = chg;
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeCategory = (subtype: string) => {
-		if(childTab === CRYPTO) 
-			record.name = subtype;
+		if (childTab === CRYPTO) record.name = subtype;
 		else record.subt = subtype;
 		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
-			if (!opts) return changeData([...data]);
+			if (!opts) return changeData([ ...data ]);
 			if (childTab === LENT) {
-				if (!opts[record.chgF as number])
-					record.chgF = Number(Object.keys(opts)[0]);
+				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
 			} else {
 				if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 			}
 		}
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const changeSubCategory = (val: string) => {
-		childTab === LENT || childTab === INS
-			? (record.chgF = Number(val))
-			: (record.name = val);
-		changeData([...data]);
+		childTab === LENT || childTab === INS ? (record.chgF = Number(val)) : (record.name = val);
+		changeData([ ...data ]);
 	};
 
-	const hasRate = (childTab: string) => [PF, LENT].includes(childTab);
+	const hasRate = (childTab: string) => [ PF, LENT ].includes(childTab);
 
 	const hasRangePicker = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
 
-	const hasName = (childTab: string) =>
-		![PM, NPS, CRYPTO, INS].includes(childTab);
+	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 
-	const hasQtyWithRate = (childTab: string) =>
-		[PM, NPS, CRYPTO].includes(childTab);
+	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
-	const hasDate = (childTab: string) =>
-		[VEHICLE, LENT, LOAN, INS].includes(childTab);
+	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
-	const hasPF = (childTab: string) => [PF].includes(childTab);
+	const hasPF = (childTab: string) => [ PF ].includes(childTab);
+
+	const calculateValuation = (childTab: string) => {
+		let value = 0;
+		switch (childTab) {
+			case INS:
+			case LOAN:
+				value = calculateNPVAmt(record);
+				break;
+			case CRYPTO:
+				value = calculateCrypto(record, ratesData, selectedCurrency);
+				break;
+			case PM:
+				value = calculatePM(record, ratesData, selectedCurrency);
+				break;
+			case LENT:
+				value = calculateCompundingIncome(record);
+				break;
+			case NPS:
+				const result = calculateNPS(record, npsData);
+				value = result.value;
+				break;
+			case VEHICLE:
+				value = calculateVehicle(record);
+				break;
+			case PF:
+				value = calculateProvidentFund(record);
+			default:
+				value = record.amt as number;
+				break;
+		}
+		return value;
+	};
+
+	useEffect(
+		() => {
+			const amount = calculateValuation(childTab);
+			setValuation(amount);
+		},
+		[ childTab, data, record ]
+	);
 
 	return (
 		<Fragment>
@@ -262,6 +310,14 @@ export default function ViewHoldingInput({
 					)}
 				</>
 			)}
+			<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+				<Row align="middle" gutter={[ 5, 0 ]}>
+					<Col>Valuation</Col>
+					<Col>
+						<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
+					</Col>
+				</Row>
+			</Col>
 		</Fragment>
 	);
 }

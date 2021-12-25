@@ -8,8 +8,6 @@ import {
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesPropertyMatch,
-	getCommodityRate,
-	getCryptoRate,
 	getNPSData,
 	getNPSFundManagers,
 	getRelatedCurrencies,
@@ -43,12 +41,10 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
-import { calculateDifferenceInMonths, calculateDifferenceInYears } from './valuationutils'
+import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateNPVAmt, calculatePM } from './valuationutils'
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
-import { getCompoundedIncome, getNPV } from '../calc/finance';
 import { ROUTES } from '../../CONSTANTS';
-import { getCashFlows } from './valuationutils';
 
 const NWContext = createContext({});
 
@@ -654,11 +650,11 @@ function NWContextProvider() {
 		}
 		let total = 0;
 		let totalPGold = 0;
-		preciousMetals.forEach((instrument: HoldingInput) => {
-			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
-			if(rate && doesMemberMatch(instrument, selectedMembers)) {
-				total += instrument.qty * rate;
-				if(instrument.subt === AssetSubType.Gold) totalPGold += instrument.qty * rate;
+		preciousMetals.forEach((holding: HoldingInput) => {
+			if(doesMemberMatch(holding, selectedMembers)) {
+				const value = calculatePM(holding, ratesData, selectedCurrency);
+				total += value
+				if(holding.subt === AssetSubType.Gold) totalPGold += value;
 			}
 		})
 		setTotalPM(total);
@@ -759,52 +755,12 @@ function NWContextProvider() {
 		setIsDirty(false);
 	};
 
-const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
-	if (!records.length) return setTotal(0);
+const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
+	if (!holdings.length) return setTotal(0);
 	let total = 0;
-	let isMonth = true;
-	let cashflows: any = [];
-	records.forEach((record: HoldingInput) => {
-		if (record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-			if (record.chgF === 1) isMonth = false;
-			const today = new Date();
-			const durationFromStartToEnd = isMonth
-				? calculateDifferenceInMonths(
-						record.em as number,
-						record.ey as number,
-						record.sm as number,
-						record.sy as number
-					)
-				: calculateDifferenceInYears(
-						record.em as number,
-						record.ey as number,
-						record.sm as number,
-						record.sy as number
-					);
-			const durationLeft = isMonth
-				? calculateDifferenceInMonths(
-						record.em as number,
-						record.ey as number,
-						today.getMonth() + 1,
-						today.getFullYear()
-					)
-				: calculateDifferenceInYears(
-						record.em as number,
-						record.ey as number,
-						today.getMonth() + 1,
-						today.getFullYear()
-					);				
-			if(durationLeft <= 0) return total = 0;
-			let durationEnded = durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd - durationLeft;
-			if (record.subt !== 'L') {
-				let cfs = getCashFlows(record.amt as number, durationEnded, cashflows, durationLeft > durationFromStartToEnd ? durationFromStartToEnd: durationLeft, record.chg as number, isMonth);
-				const npv = getNPV(10, cfs, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
-				total += npv;
-			} else {
-				let cfs = Array(Math.round(durationLeft)).fill(record.amt);
-				const npv = getNPV(10, cfs, 0, isMonth ? true : false, true);
-				total += npv;
-			}
+	holdings.forEach((holding: HoldingInput) => {
+		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+			total += calculateNPVAmt(holding);
 		}
 	});
 	setTotal(total);
@@ -818,29 +774,15 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 		calculateNPV(insurance, setTotalInsurance);
 	};
 
-	const calculateCompundingIncome = (records: Array<HoldingInput>, setTotal: Function) => {
-		if(!records.length) return setTotal(0);
+	const priceLendings = () => {
+		if(!lendings.length) return setTotalLendings(0);
 		let total = 0;
-		records.forEach((record: HoldingInput)=>{
-			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				if(record.chg) {
-					const today = new Date();
-					const duration = calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
-					if(!duration) return;
-					if(!record.chgF) {
-						total+=record.amt as number;
-						return setTotal(total);
-					};
-					const value = getCompoundedIncome(record.chg, record.amt as number, duration, record.chgF );
-					total+= value;
-				}
+		lendings.forEach((holding: HoldingInput)=>{
+			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				total += calculateCompundingIncome(holding);
 			};
 		})
-		setTotal(total);
-	};
-
-	const priceLendings = () => {
-		calculateCompundingIncome(lendings, setTotalLendings);
+		setTotalLendings(total);
 	};
 
 	const calculateBalance = (records: Array<HoldingInput>, setTotal: Function) => {
@@ -871,7 +813,7 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 	}
 
 	const priceProperties = () => {
-		if(!properties.length) return setTotalProperties(0);
+		if(!properties.length) return;
 		let total = 0;
 		let totalOtherProperty = 0;
 		let totalCommercial = 0;
@@ -879,11 +821,7 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 		let totalPlot = 0;
 		properties.forEach((property: PropertyInput) => {
 			if(!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
-			const today = new Date();
-			// @ts-ignore
-			const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), property.mvm, property.mvy);
-			// @ts-ignore
-			const value = getCompoundedIncome(property.rate, property.mv, duration);
+			const value = calculateProperty(property);
 			total += value;
 			if(property.type === PropertyType.P) totalPlot += value;
 			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
@@ -899,91 +837,58 @@ const calculateNPV = (records: Array<HoldingInput>, setTotal: Function) => {
 	};
 
 	const priceVehicles = () => {
-		if(!vehicles.length) return setTotalVehicles(0);
+		if(!vehicles.length) return;
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
 			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-				const today = new Date();
-				if(vehicle.chg) {
-					const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), vehicle.sm as number, vehicle.sy as number)
-					if(duration) {
-						const value = getCompoundedIncome(-(vehicle.chg), vehicle.amt as number, duration) ;
-						total += value;
-					}
-				}
+				total += calculateVehicle(vehicle)
 			}
 		})
 		setTotalVehicles(total);
 	};
 
 	const priceCrypto = () => {
-		if(!crypto.length) return setTotalCrypto(0);
+		if(!crypto.length) return;
 		let total = 0;
-		crypto.forEach((instrument: HoldingInput) => {
-			let rate = getCryptoRate(ratesData, instrument.subt as string, selectedCurrency);
-			if(rate && doesMemberMatch(instrument, selectedMembers)) {
-				total += instrument.qty * rate;
+		crypto.forEach((holding: HoldingInput) => {
+			if(doesMemberMatch(holding, selectedMembers)) {
+				total += calculateCrypto(holding, ratesData, selectedCurrency);
 			}
 		})
 		setTotalCrypto(total);
 	};
 
-	const calculatePensionFund = (records: Array<HoldingInput>, setTotal: Function) => {
-		if(!records.length) return setTotal(0);
+	const pricePF = () => {
+		if(!pf.length) return;
 		let total = 0;
 		let totalPPF = 0;
 		let totalVPF = 0;
 		let totalEPF = 0;
-		const month = new Date().getMonth()+1;
-		records.forEach((record: HoldingInput) => {
+		pf.forEach((record: HoldingInput) => {
 			if(doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				const today = new Date();
-				let value = record.amt as number;
-				if (month === 4) {
-					const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), record.sm as number, record.sy as number)
-					if(!duration) return;
-					for(let i=0; i<duration; i++) {
-						value += record.qty as number;
-						value += value+(value*((record.chg as number)/100));
-					}
-				}
-				total += value;
+				total = calculateProvidentFund(record);
 				if(record.subt === 'PF') totalPPF += total;
 				if(record.subt === 'VF') totalVPF += total;
 				if(record.subt === 'EF') totalEPF += total;
 			}
 		})
-		setTotal(total);
+		setTotalPF(total);
 		setTotalPPF(totalPPF);
 		setTotalVPF(totalVPF);
 		setTotalEPF(totalEPF);
-	}
-
-	const pricePF = () => {
-		calculatePensionFund(pf, setTotalPF);
 	};
 
 	const priceNPS = () => {
-		if(!nps.length) {
-			setTotalNPS(0);
-			setTotalNPSEquity(0);
-			setTotalNPSFixed(0);
-			return;
-		}
+		if(!nps.length) return;
 		let total = 0;
 		let totalNPSFixed = 0;
 		let totalNPSEquity = 0;
-		nps.forEach((npsItem: HoldingInput) => {
-			const data = npsData.find((item)=>item.id === npsItem.name);
-			if(data && doesHoldingMatch(npsItem, selectedMembers, selectedCurrency)) {
-				let value = npsItem.qty * data.price;
+		nps.forEach((holding: HoldingInput) => {
+			if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				const { value, fixed, equity } = calculateNPS(holding, npsData);
 				total += value;
-			if(data.type === AssetType.E) totalNPSEquity += value;
-			else if(data.type === AssetType.F) totalNPSFixed += value;
-			else if(data.type === AssetType.H) {
-				totalNPSFixed += 0.8 * value;
-				totalNPSEquity += 0.2 * value;
-				}
+				totalNPSFixed += fixed;
+				totalNPSEquity += equity;
 			}
 		})
 		setTotalNPS(total);
