@@ -120,7 +120,8 @@ export default function ListProperties({
 			);
 			data[indexForMv].mvm = today.getMonth() + 1;
 			data[indexForMv].mvy = today.getFullYear();
-			setValuation(calculateProperty(data[indexForMv]));
+			const value = calculateProperty(data[indexForMv])
+			setValuation(value);
 			changeData([...data]);
 			setIndexForMv(null);
 		}
