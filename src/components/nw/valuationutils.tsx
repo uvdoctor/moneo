@@ -16,16 +16,16 @@ export const getCashFlows = (
 	let cashflows: any = [];
 	let count = 0;
 	let time = 0;
-	let monthLeftForCY = 0;
+	let monthLeftForCurrentYear = 0;
 	if (isMonth) {
 		if (durationEnded > 0) {
-			monthLeftForCY = 12 - today.getMonth();
-			amt = getCompoundedIncome(rate, amt, (monthLeftForCY + durationEnded) / 12, 12);
-			const cfs = Array(Math.round(monthLeftForCY)).fill(amt);
-			time = durationEnded + monthLeftForCY;
+			monthLeftForCurrentYear = 12 - today.getMonth();
+			amt = getCompoundedIncome(rate, amt, (monthLeftForCurrentYear + durationEnded) / 12, 12);
+			const cfs = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
+			time = durationEnded + monthLeftForCurrentYear;
 			cashflows = cashflows.concat(cfs);
 		}
-		for (let index = 0; index <= durationLeft - monthLeftForCY; index++) {
+		for (let index = 0; index <= durationLeft - monthLeftForCurrentYear; index++) {
 			count++;
 			if (count === 12) {
 				time += count;
