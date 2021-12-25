@@ -346,7 +346,7 @@ export default function ListProperties({
 						step={0.1}
 					/>
 				),
-				Valuation: (
+				value: (
 					<label>{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}</label>
 				),
 				del: (
