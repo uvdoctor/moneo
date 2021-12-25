@@ -145,9 +145,9 @@ export default function HoldingInput(props: any) {
         return { prop: "subt", value: "GoldB" };
       case "ETFs":
         return { prop: "itype", value: "ETF" };
-      case "Real Estate Investment Trusts":
+      case "REITs":
         return { prop: 'itype', value: 'REIT'};
-      case "Other Investment Trusts":
+      case "Other Investments":
         return { prop: 'itype', value: 'InvIT'};
       default:
         return null;
