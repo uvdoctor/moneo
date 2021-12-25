@@ -25,7 +25,6 @@ import { COLORS } from "../../CONSTANTS";
 import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
-import { index } from "simplestorage.js";
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
