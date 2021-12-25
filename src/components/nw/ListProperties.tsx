@@ -22,9 +22,10 @@ import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import DatePickerInput from "../form/DatePickerInput";
 import { COLORS } from "../../CONSTANTS";
-import { getMonthName, getMonthIndex } from "../utils";
+import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
-import { calculateDifferenceInYears } from "./valuationutils";
+import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
+import { index } from "simplestorage.js";
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
@@ -45,6 +46,7 @@ export default function ListProperties({
 		getDefaultMember(allFamily, selectedMembers)
 	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
+	const [valuation, setValuation] = useState<number>(0);
 	const today = new Date();
 
 	const removeHolding = (i: number) => {
@@ -119,6 +121,7 @@ export default function ListProperties({
 			);
 			data[indexForMv].mvm = today.getMonth() + 1;
 			data[indexForMv].mvy = today.getFullYear();
+			setValuation(calculateProperty(data[indexForMv]));
 			changeData([...data]);
 			setIndexForMv(null);
 		}
@@ -344,6 +347,9 @@ export default function ListProperties({
 						value={data[i].rate as number}
 						step={0.1}
 					/>
+				),
+				Valuation: (
+					<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
 				),
 				del: (
 					<Button type="link" onClick={() => removeHolding(i)} danger>
