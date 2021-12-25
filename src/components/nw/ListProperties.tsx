@@ -301,6 +301,7 @@ export default function ListProperties({
 		{ title: "Type", dataIndex: "type", key: "type" },
 		{ title: "Market value", key: "mv", dataIndex: "mv" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
+		{ title: "Valuation", dataIndex: "value", key: "value"},
 		{ title: "Delete", key: "del", dataIndex: "del" },
 	];
 
