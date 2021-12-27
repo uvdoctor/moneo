@@ -81,17 +81,22 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 	};
 
 	return (
-		<Row justify="start">
+		<Row justify="center">
 			<Col>
-				<Row>
-					<SelectInput
-						pre={<UserOutlined />}
-						value={record.fId ? record.fId : ''}
-						options={getFamilyOptions(allFamily)}
-						changeHandler={(key: string) => changeOwner(key, index)}
-					/>
+				<Row align="middle">
+					<Col>
+						<UserOutlined />
+					</Col>
+					<Col>
+						<SelectInput
+							pre=""
+							value={record.fId ? record.fId : ''}
+							options={getFamilyOptions(allFamily)}
+							changeHandler={(key: string) => changeOwner(key, index)}
+						/>
+					</Col>
 				</Row>
-				<Row>
+				<Row align="middle">
 					<Col>
 						<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
 					</Col>
@@ -105,4 +110,3 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		</Row>
 	);
 }
-
