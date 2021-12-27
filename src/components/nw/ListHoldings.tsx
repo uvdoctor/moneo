@@ -19,7 +19,7 @@ interface ListHoldingsProps {
 
 export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 
 	const changeName = (val: any, i: number) => {
@@ -27,10 +27,14 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 		changeData([ ...data ]);
 	};
 
+	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 
 	const expandedRow = (i: number) => {
-		const columns: any = [];
+		const columns: any = [
+			{ title: 'Date', dataIndex: 'date', key: 'date' },
+			{ title: 'Label', dataIndex: 'label', key: 'label' }
+		];
 
 		const expandedRowData: any = {
 			key: i,
@@ -48,16 +52,15 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 			)
 		};
 
-		Object.keys(expandedRowData).map((title) => {
-			if (title === 'date') {
-				expandedRowData.date ? columns.push({ title: 'Date', dataIndex: 'date', key: 'date' }) : null;
-			}
-			if (title === 'label') {
-				expandedRowData.label ? columns.push({ title: 'Label', dataIndex: 'label', key: 'label' }) : null;
-			}
-		});
-
-		return columns.length ? <Table columns={columns} dataSource={[ expandedRowData ]} /> : null;
+		return (
+			<Table
+				columns={columns.filter((col: any) => {
+					if (col.dataIndex === 'date') return hasDate(childTab);
+					if (col.dataIndex === 'label') return hasName(childTab);
+				})}
+				dataSource={[ expandedRowData ]}
+			/>
+		);
 	};
 
 	const columns = [
