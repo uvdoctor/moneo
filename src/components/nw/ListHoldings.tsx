@@ -106,6 +106,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 			size="small"
 		/>
 	) : (
-		<Empty description={<p>No property found.</p>} />
+		<Empty description={<p>No data found.</p>} />
 	);
 }
