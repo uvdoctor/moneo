@@ -165,7 +165,6 @@ export default function NumberInput({
 			{!noSlider && (
 				<Col flex="none">
 					{pre}
-					{post && ` ${post}`}
 					{info && (
 						<Tooltip title={info}>
 							<span>
@@ -179,11 +178,12 @@ export default function NumberInput({
 							step && step < 1 ? 2 : 0
 						)} ${unit}`}</b>
 					)}
+					{post}
 				</Col>
 			)}
 			<Col flex="auto">
 				<Row gutter={[15, 15]}>
-					{noSlider && <Col>{pre} </Col>}
+					{noSlider && pre && <Col>{pre} </Col>}
 					<Col className="number-input">
 						{(currency || step < 1) && (
 							<Row align="middle" gutter={[15, 0]}>
@@ -196,6 +196,7 @@ export default function NumberInput({
 							</Row>
 						)}
 					</Col>
+					{noSlider && post && <Col>{post}</Col>}
 					<Col span={currency || step < 1 ? 13 : 24}>
 						{!noSlider && (
 							<>
