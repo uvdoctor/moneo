@@ -5,13 +5,13 @@ import NumberInput from '../form/numberinput';
 import { NWContext, TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
-interface AmountColumnProps {
+interface AmountWithRateProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	record: HoldingInput;
 }
 
-export default function AmountColumn({ data, changeData, record }: AmountColumnProps) {
+export default function AmountWithRate({ data, changeData, record }: AmountWithRateProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, NPS, PF, LENT, INS } = TAB;
 
@@ -45,7 +45,7 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
 	return (
-		<Row>
+		<Row align='middle' justify='space-between'>
 			{hasQtyWithRate(childTab) ? (
 				<Col>
 					<QuantityWithRate

@@ -4,7 +4,7 @@ import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import { doesHoldingMatch } from './nwutils';
 import CategoryColumn from './CategoryColumn';
-import AmountColumn from './AmountColumn';
+import AmountWithRate from './AmountWithRate';
 import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
@@ -110,7 +110,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 								record={holding}
 							/>
 						),
-						amt: <AmountColumn data={data} changeData={changeData} record={holding} />,
+						amt: <AmountWithRate data={data} changeData={changeData} record={holding} />,
 						fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={index} />
 					});
 				}
