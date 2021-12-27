@@ -183,7 +183,7 @@ export default function NumberInput({
 			)}
 			<Col flex="auto">
 				<Row gutter={[15, 15]}>
-					{noSlider && pre && <Col>{pre} </Col>}
+					{pre && <Col>{pre} </Col>}
 					<Col className="number-input">
 						{(currency || step < 1) && (
 							<Row align="middle" gutter={[15, 0]}>
@@ -196,7 +196,7 @@ export default function NumberInput({
 							</Row>
 						)}
 					</Col>
-					{noSlider && post && <Col>{post}</Col>}
+					{post && <Col>{post}</Col>}
 					<Col span={currency || step < 1 ? 13 : 24}>
 						{!noSlider && (
 							<>
