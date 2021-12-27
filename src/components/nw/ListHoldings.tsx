@@ -65,7 +65,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 			qty: hasPF(childTab) && (
 				<Col>
 					<NumberInput
-						isBasic={true}
 						pre=""
 						value={data[i].qty as number}
 						changeHandler={(val: number) => changeQty(val, i)}
