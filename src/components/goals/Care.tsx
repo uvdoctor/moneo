@@ -124,7 +124,7 @@ export default function CareInsurance() {
 					min={0}
 					max={5000}
 					step={500}
-					note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} pl />}
+					post={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} pl />}
 				/>
 			)}
 		</Section>

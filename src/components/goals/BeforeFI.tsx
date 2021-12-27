@@ -71,7 +71,7 @@ export function BeforeFI() {
 					min={0}
 					max={3}
 					step={0.1}
-					note={
+					post={
 						monthlySavingsRate ? (
 							<NumberInput
 								pre="Up to Maximum Monthly Investment of"
@@ -105,7 +105,7 @@ export function BeforeFI() {
 					step={0.1}
 					pre="Investment Earns Yearly"
 					unit="%"
-					note="after taxes & fees"
+					post="after taxes & fees"
 				/>
 			)}
 			<NumberInput

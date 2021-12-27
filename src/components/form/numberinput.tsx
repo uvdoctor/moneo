@@ -11,7 +11,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 interface NumberInputProps {
 	info?: string;
 	pre: any;
-	post?: string;
+	post?: any;
 	min?: number;
 	max?: number;
 	value: number;

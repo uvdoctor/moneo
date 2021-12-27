@@ -99,7 +99,7 @@ export default function Cost() {
 				min={100}
 				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
 				step={100}
-				note={
+				post={
 					goal.type === GoalType.E ? (
 						<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" />
 					) : null

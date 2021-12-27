@@ -64,7 +64,7 @@ export default function TaxAdjustment() {
 					min={0}
 					max={30000}
 					step={1000}
-					note={
+					post={
 						<ItemDisplay
 							label={`Total ${loanBorrowAmt && manualMode < 1 ? 'Loan Principal' : ''} Tax Benefit`}
 							result={totalPTaxBenefit}
@@ -91,7 +91,7 @@ export default function TaxAdjustment() {
 					min={0}
 					max={30000}
 					step={1000}
-					note={
+					post={
 						<ItemDisplay
 							label="Total Loan Interest Tax Benefit"
 							result={totalITaxBenefit}
