@@ -81,7 +81,7 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 						changeHandler={(val: number) => changeChg(val)}
 						step={0.1}
 						noSlider
-						unit="%"
+						post='%'
 					/>
 				</Col>
 			)}
