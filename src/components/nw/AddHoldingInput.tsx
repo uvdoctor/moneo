@@ -348,7 +348,6 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
 							<NumberInput
-								isBasic={true}
 								pre={''}
 								min={0}
 								max={50}
