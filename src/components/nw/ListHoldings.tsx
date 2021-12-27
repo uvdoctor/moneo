@@ -8,6 +8,7 @@ import AmountColumn from './AmountColumn';
 import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
+import NumberInput from '../form/numberinput';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -19,7 +20,7 @@ interface ListHoldingsProps {
 
 export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 
 	const changeName = (val: any, i: number) => {
@@ -27,13 +28,24 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 		changeData([ ...data ]);
 	};
 
+	const changeQty = (qty: number, i: number) => {
+		data[i].qty = qty;
+		if (hasPF(childTab)) {
+			data[i].sm = new Date().getMonth() + 1;
+			data[i].sy = new Date().getFullYear();
+		}
+		changeData([ ...data ]);
+	};
+
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
+	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
 	const expandedRow = (i: number) => {
 		const columns: any = [
 			{ title: 'Date', dataIndex: 'date', key: 'date' },
-			{ title: 'Label', dataIndex: 'label', key: 'label' }
+			{ title: 'Label', dataIndex: 'label', key: 'label' },
+			{ title: 'Contribution Per Year', dataIndex: 'qty', key: 'qty' }
 		];
 
 		const expandedRowData: any = {
@@ -49,6 +61,21 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 						width={200}
 					/>
 				</Col>
+			),
+			qty: hasPF(childTab) && (
+				<Col>
+					<NumberInput
+						isBasic={true}
+						pre=""
+						min={10}
+						max={100000000}
+						value={data[i].qty as number}
+						changeHandler={(val: number) => changeQty(val, i)}
+						currency={data[i].curr as string}
+						step={1}
+						noSlider
+					/>
+				</Col>
 			)
 		};
 
@@ -57,6 +84,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 				columns={columns.filter((col: any) => {
 					if (col.dataIndex === 'date') return hasDate(childTab);
 					if (col.dataIndex === 'label') return hasName(childTab);
+					if (col.dataIndex === 'qty') return hasPF(childTab);
 				})}
 				dataSource={[ expandedRowData ]}
 			/>

@@ -85,26 +85,6 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 					/>
 				</Col>
 			)}
-			{/* {hasPF(childTab) && (
-				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
-					<Row align="middle" gutter={[ 5, 0 ]}>
-						<Col>Contribution per year</Col>
-						<Col>
-							<NumberInput
-								isBasic={true}
-								pre=""
-								min={10}
-								max={100000000}
-								value={record.qty as number}
-								changeHandler={(val: number) => changeQty(val)}
-								currency={record.curr as string}
-								step={1}
-								noSlider
-							/>
-						</Col>
-					</Row>
-				</Col>
-			)} */}
 		</Row>
 	);
 }
