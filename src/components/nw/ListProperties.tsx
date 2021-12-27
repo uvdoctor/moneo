@@ -346,7 +346,7 @@ export default function ListProperties({
 					/>
 				),
 				del: (
-					<Row justify="space-between">
+					<Row justify="center">
 						<Col>
 						{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}
 						</Col>
