@@ -299,8 +299,7 @@ export default function ListProperties({
 		{ title: "Type", dataIndex: "type", key: "type" },
 		{ title: "Market value", key: "mv", dataIndex: "mv" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
-		{ title: "Valuation", dataIndex: "value", key: "value"},
-		{ title: "Delete", key: "del", dataIndex: "del" },
+		{ title: "", key: "del", dataIndex: "del" },
 	];
 
 	useEffect(() => {
@@ -346,13 +345,17 @@ export default function ListProperties({
 						step={0.1}
 					/>
 				),
-				value: (
-					<label>{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}</label>
-				),
 				del: (
-					<Button type="link" onClick={() => removeHolding(i)} danger>
-						<DeleteOutlined />
-					</Button>
+					<Row justify="center">
+						<Col>
+						{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}
+						</Col>
+						<Col>
+							<Button type="link" onClick={() => removeHolding(i)} danger>
+								<DeleteOutlined />
+							</Button>
+						</Col>
+					</Row>
 				),
 			});
 		}
