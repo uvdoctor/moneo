@@ -58,7 +58,6 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 			) : (
 				<Col>
 					<NumberInput
-						isBasic={true}
 						pre=""
 						min={10}
 						max={100000000}
@@ -73,7 +72,6 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 			{(hasRate(childTab) || (childTab === INS && record.subt !== 'L')) && (
 				<Col>
 					<NumberInput
-						isBasic={true}
 						pre=""
 						min={0}
 						max={50}

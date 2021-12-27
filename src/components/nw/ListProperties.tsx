@@ -158,7 +158,6 @@ export default function ListProperties({
 								<Col>
 									<NumberInput
 										pre=""
-										isBasic={true}
 										min={10}
 										max={1000000000}
 										value={data[i].purchase?.amt as number}
