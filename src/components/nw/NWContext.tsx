@@ -42,7 +42,6 @@ import {
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
 import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateNPVAmt, calculatePM } from './valuationutils'
-import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from '../../CONSTANTS';
 
@@ -213,7 +212,6 @@ function NWContextProvider() {
 							4: 'Accumulates Every Three Months',
 							12: 'Accumulates Every Month' },
 						},
-					viewComp: ViewHoldingInput
 				},
 				[TAB.SAV]: {
 					label: TAB.SAV,
@@ -222,7 +220,6 @@ function NWContextProvider() {
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
-					viewComp: ViewHoldingInput,
 				},
 			}
 		},
@@ -259,7 +256,6 @@ function NWContextProvider() {
 						3: 'Three-Wheeler',
 						4: 'Four-Wheeler'
 					},
-					viewComp: ViewHoldingInput,
 				},
 				[TAB.PM]: {
 					label: TAB.PM,
@@ -300,7 +296,6 @@ function NWContextProvider() {
 						[PLATINUM]: 'Platinum',
 						[PALLADIUM]: 'Palladium',
 					},
-					viewComp: ViewHoldingInput,
 				},
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
@@ -316,7 +311,6 @@ function NWContextProvider() {
 						Time: 'Time Sharing Membership',
 						Other: 'Other'
 					},
-					viewComp: ViewHoldingInput,
 				},
 			},
 		},
@@ -391,7 +385,6 @@ function NWContextProvider() {
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					viewComp: ViewHoldingInput,
 					categoryOptions: {
 						[BTC]: 'Bitcoin',
 						[BTC_CASH]: 'Bitcoin Cash',
@@ -412,7 +405,6 @@ function NWContextProvider() {
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
-					viewComp: ViewHoldingInput,
 				},
 				[TAB.OIT]: {
 					label: TAB.OIT,
@@ -442,7 +434,6 @@ function NWContextProvider() {
 						EF: 'Employee Fund',
 						VF: 'Voluntary Fund',
 					},
-					viewComp: ViewHoldingInput
 				},
 				[TAB.NPS]: {
 					label: TAB.NPS,
@@ -453,7 +444,6 @@ function NWContextProvider() {
 					total: totalNPS,
 					categoryOptions: getNPSFundManagers(),
 					subCategoryOptions: loadNPSSubCategories,
-					viewComp: ViewHoldingInput
 				},
 			}
 		},
@@ -467,7 +457,6 @@ function NWContextProvider() {
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
-					viewComp: ViewHoldingInput,
 				},
 				[TAB.INS]: {
 					label: TAB.INS,
@@ -490,7 +479,6 @@ function NWContextProvider() {
 						V: { 1: 'Yearly', 12: 'Monthly' },
 						O: { 1: 'Yearly', 12: 'Monthly' }
 					},
-					viewComp: ViewHoldingInput
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
@@ -499,7 +487,6 @@ function NWContextProvider() {
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
-					viewComp: ViewHoldingInput
 				}
 			}
 		}

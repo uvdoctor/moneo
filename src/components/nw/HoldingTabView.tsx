@@ -158,7 +158,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 											<ListHoldings
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
-												viewComp={tabsData[tabName].viewComp}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												subCategoryOptions={
 													childTab === TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions

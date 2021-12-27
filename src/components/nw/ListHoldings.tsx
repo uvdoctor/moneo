@@ -1,80 +1,76 @@
-import { Button, Col, Row } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import { HoldingInput } from "../../api/goals";
-import SelectInput from "../form/selectinput";
-import { NWContext } from "./NWContext";
-import { doesHoldingMatch, getFamilyOptions } from "./nwutils";
-import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { Empty, Table } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { HoldingInput } from '../../api/goals';
+import { NWContext } from './NWContext';
+import { doesHoldingMatch } from './nwutils';
 
-require("./ListHoldings.less");
+import CategoryColumn from './CategoryColumn';
+import AmountColumn from './AmountColumn';
+import MemberAndValuation from './MemberAndValuation';
+
+require('./ListHoldings.less');
 
 interface ListHoldingsProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	categoryOptions: any;
-	viewComp: any;
 	subCategoryOptions?: any;
 }
 
-export default function ListHoldings({
-	data,
-	changeData,
-	categoryOptions,
-	viewComp,
-	subCategoryOptions,
-}: ListHoldingsProps) {
-	const { allFamily, selectedMembers , selectedCurrency }: any = useContext(NWContext);
-	const [ filteredHoldings, setFilteredHoldings ] = useState<Array<HoldingInput>>([]);
+export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions }: ListHoldingsProps) {
+	const { selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 
-	const changeOwner = (ownerKey: string, i: number) => {
-		data[i].fId = ownerKey;
-		changeData([...data]);
+	const expandedRow = (i: number) => {
+		const columns = [
+      { title: 'Date', dataIndex: 'date', key: 'date' },
+      { title: 'Name', dataIndex: 'name', key: 'name' },
+    ];
+
+    const data = [{
+			key: i,
+			date: '2014-12-24 23:12:00',
+			name: 'This is production name',
+		}];
+    return <Table columns={columns} dataSource={data} />;
 	};
 
-	const removeHolding = (i: number) => {
-		data.splice(i, 1);
-		changeData([...data]);
-	};
+	const columns = [
+		{ title: 'Category', dataIndex: 'cat', key: 'cat' },
+		{ title: 'Amount', dataIndex: 'amt', key: 'amt' },
+		{ title: 'Family Member', key: 'fid', dataIndex: 'fid' }
+	];
 
-	useEffect(() => {
-		setFilteredHoldings([...data.filter((holding: HoldingInput) => doesHoldingMatch(holding, selectedMembers, selectedCurrency))]);
-	}, [selectedCurrency, selectedMembers, data])
+	useEffect(
+		() => {
+			let dataSource: Array<any> = [];
+			data.map((holding: HoldingInput, index: number) => {
+				if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+					dataSource.push({
+						key: index,
+						cat: <CategoryColumn data={data} changeData={changeData} categoryOptions={categoryOptions} subCategoryOptions={subCategoryOptions} record={holding}/>,
+						amt: <AmountColumn data={data} changeData={changeData} record={holding}/>,
+						fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={index}/>
+			});
+		}})
+			setDataSource([ ...dataSource ]);
+		},
+		[ data, selectedMembers, selectedCurrency ]
+	);
 
-	return (
-		<Row
-			className="list-holdings"
-			gutter={[
-				{ xs: 10, sm: 10, md: 10 },
-				{ xs: 10, sm: 10, md: 10 },
-			]}
-		>
-			{filteredHoldings &&
-				filteredHoldings[0] &&
-				filteredHoldings.map((holding: HoldingInput, i: number) => (
-					<Fragment key={"" + i}>
-						<Col span={24} className="fields-divider" />
-						{React.createElement(viewComp, {
-							record: holding,
-							data: data,
-							changeData: changeData,
-							categoryOptions: categoryOptions,
-							subCategoryOptions: subCategoryOptions,
-						})}
-						<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
-							<SelectInput
-								pre={<UserOutlined />}
-								value={holding.fId ? holding.fId : ""}
-								options={getFamilyOptions(allFamily)}
-								changeHandler={(key: string) => changeOwner(key, i)}
-								post={
-									<Button type="link" onClick={() => removeHolding(i)} danger>
-										<DeleteOutlined />
-									</Button>
-								}
-							/>
-						</Col>
-					</Fragment>
-				))}
-		</Row>
+	return dataSource.length ? (
+		<Table
+			className="property-nested-table"
+			columns={columns.filter(col => {
+				if(col.dataIndex === 'cat') return categoryOptions;
+				else return col}) }
+			expandable={{
+				expandedRowRender: (record) => expandedRow(record.key),
+			}}
+			dataSource={dataSource}
+			size="small"
+		/>
+	) : (
+		<Empty description={<p>No property found.</p>} />
 	);
 }
