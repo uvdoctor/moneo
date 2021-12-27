@@ -59,8 +59,6 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 				<Col>
 					<NumberInput
 						pre=""
-						min={10}
-						max={100000000}
 						value={record.amt as number}
 						changeHandler={(val: number) => changeAmt(val)}
 						currency={record.curr as string}

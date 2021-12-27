@@ -67,8 +67,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 					<NumberInput
 						isBasic={true}
 						pre=""
-						min={10}
-						max={100000000}
 						value={data[i].qty as number}
 						changeHandler={(val: number) => changeQty(val, i)}
 						currency={data[i].curr as string}
@@ -94,7 +92,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	const columns = [
 		{ title: 'Category', dataIndex: 'cat', key: 'cat' },
 		{ title: 'Amount', dataIndex: 'amt', key: 'amt' },
-		{ title: 'Family Member', key: 'fid', dataIndex: 'fid' }
+		{ title: 'Valuation', key: 'fid', dataIndex: 'fid' }
 	];
 
 	useEffect(
