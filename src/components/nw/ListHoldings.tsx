@@ -65,7 +65,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 			qty: hasPF(childTab) && (
 				<Col>
 					<NumberInput
-						isBasic={true}
 						pre=""
 						min={10}
 						max={100000000}
@@ -73,7 +72,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 						changeHandler={(val: number) => changeQty(val, i)}
 						currency={data[i].curr as string}
 						step={1}
-						isBasic
 					/>
 				</Col>
 			)

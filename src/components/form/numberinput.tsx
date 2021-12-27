@@ -6,11 +6,9 @@ import {
 	toHumanFriendlyCurrency,
 	toReadableNumber,
 } from "../utils";
-import { COLORS } from "../../CONSTANTS";
-import { Tooltip, InputNumber, Row, Col, Slider } from "antd";
+import { Tooltip, InputNumber } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 interface NumberInputProps {
-	isBasic?: boolean;
 	info?: string;
 	pre: any;
 	post?: string;
@@ -20,16 +18,11 @@ interface NumberInputProps {
 	currency?: string;
 	unit?: string;
 	changeHandler: any;
-	note?: any;
 	step?: number;
-	feedback?: any;
-	additionalMarks?: Array<number>;
 	noRangeFactor?: boolean;
-	noSlider?: boolean;
 }
 
 export default function NumberInput({
-	isBasic = false,
 	info,
 	pre,
 	post,
@@ -39,39 +32,16 @@ export default function NumberInput({
 	currency,
 	unit,
 	changeHandler,
-	note,
 	step = 1,
-	feedback,
-	additionalMarks,
-	noRangeFactor,
-	noSlider,
+	noRangeFactor
 }: NumberInputProps) {
 	const inputRef = useRef(null);
 	const [rangeFactor, setRangeFactor] = useState<number>(
 		currency && !noRangeFactor ? getRangeFactor(currency) : 1
 	);
-	const [sliderBorderColor, setSliderBorderColor] = useState<string>(
-		COLORS.GREEN
-	);
-	const [feedbackText, setFeedbackText] = useState<string>("");
 	const [minNum, setMinNum] = useState<number>(min * rangeFactor);
 	const [maxNum, setMaxNum] = useState<number>(max * rangeFactor);
 	const [stepNum, setStepNum] = useState<number>(step * rangeFactor);
-
-	const getSliderMarks = (min: number, max: number) => {
-		let marks: any = {
-			[min]: toReadableNumber(min),
-		};
-		if (min < 0) marks[0] = toReadableNumber(0);
-		if (additionalMarks)
-			additionalMarks.forEach(
-				(val: number) => (marks[val] = toReadableNumber(val))
-			);
-		marks[max] = toReadableNumber(max);
-		return marks;
-	};
-
-	const [marks, setMarks] = useState<any>(getSliderMarks(min, max));
 
 	useEffect(() => {
 		let minNum = min * rangeFactor;
@@ -80,7 +50,6 @@ export default function NumberInput({
 		setMinNum(minNum);
 		setMaxNum(maxNum);
 		setStepNum(stepNum);
-		setMarks(getSliderMarks(minNum, maxNum));
 	}, [rangeFactor, min, max]);
 
 	useEffect(() => {
@@ -89,42 +58,24 @@ export default function NumberInput({
 		if (rf !== rangeFactor) setRangeFactor(rf);
 	}, [currency]);
 
-	const getClosestKey = (value: number, keys: Array<number>) => {
-		let result: number = keys[0];
-		keys.forEach((k) => {
-			if (value >= k) result = k;
-			else return result;
-		});
-		return result;
-	};
-
-	const provideFeedback = (val: number) => {
-		if (feedback) {
-			let allKeys = Object.keys(feedback);
-			let allSortedKeys = allKeys
-				.map((k) => parseFloat(k))
-				.sort((a, b) => a - b);
-			let closestFeedback: any = feedback[getClosestKey(val, allSortedKeys)];
-			if (!closestFeedback || !closestFeedback.label) {
-				setSliderBorderColor("white");
-				setFeedbackText("");
-			} else {
-				setSliderBorderColor(closestFeedback.color);
-				setFeedbackText(closestFeedback.label);
-			}
-		}
-	};
-
+	const createAddOnBefore = () => 
+		<>
+			{pre}
+			{info && 
+			<Tooltip title={info}>
+				<InfoCircleOutlined />
+			</Tooltip>}
+		</>
+	
 	const inputConfig = {
 		ref: inputRef,
 		value,
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
-		onChange: (val: number) => {
-			provideFeedback(val as number);
-			changeHandler(val as number);
-		},
+		addOnBefore: createAddOnBefore(),
+		addOnAfter: unit,
+		onChange: (val: number) => changeHandler(val as number),
 		formatter: (val: number) =>
 			currency
 				? toCurrency(val as number, currency as string)
@@ -154,79 +105,12 @@ export default function NumberInput({
 			: null;
 	};
 
-	return isBasic ? (
+	return (
 		<>
-			{pre}
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{post}
 			{convertInputToString() && <div>{convertInputToString()}</div>}
 		</>
-	) : (
-		<Row gutter={[10, 10]}>
-			{!noSlider && (
-				<Col flex="none">
-					{pre}
-					{info && (
-						<Tooltip title={info}>
-							<span>
-								<InfoCircleOutlined />
-							</span>
-						</Tooltip>
-					)}
-					{!currency && step >= 1 && (
-						<b>{`${toReadableNumber(
-							value,
-							step && step < 1 ? 2 : 0
-						)} ${unit}`}</b>
-					)}
-					{post}
-				</Col>
-			)}
-			<Col flex="auto">
-				<Row gutter={[15, 15]}>
-					{pre && <Col>{pre} </Col>}
-					<Col className="number-input">
-						{(currency || step < 1) && (
-							<Row align="middle" gutter={[15, 0]}>
-								<Col xs={24}>
-									{/*@ts-ignore*/}
-									<InputNumber {...inputConfig} />
-								</Col>
-
-								{convertInputToString() && <Col>{convertInputToString()}</Col>}
-							</Row>
-						)}
-					</Col>
-					{post && <Col>{post}</Col>}
-					<Col span={currency || step < 1 ? 13 : 24}>
-						{!noSlider && (
-							<>
-								{/*<Col >*/}
-								{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-								<Slider
-									min={min * rangeFactor}
-									max={max * rangeFactor}
-									marks={marks}
-									step={step * rangeFactor}
-									value={value}
-									onChange={(val: number) => {
-										provideFeedback(val);
-										changeHandler(val);
-									}}
-									handleStyle={{
-										cursor: "grab",
-										borderColor: sliderBorderColor,
-									}}
-								/>
-								{feedbackText && <>{feedbackText}</>}
-								{/*</Col>*/}
-							</>
-						)}
-						{note && <>{note}</>}
-					</Col>
-				</Row>
-			</Col>
-		</Row>
 	);
 }

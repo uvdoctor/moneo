@@ -302,7 +302,6 @@ export default function AddPropertyInput({
 							changeHandler={changeAmount}
 							currency={selectedCurrency}
 							step={1}
-							isBasic
 						/>
 					</FormItem>
 				</Col>
@@ -320,7 +319,6 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Appreciation Rate">
 						<NumberInput
-							isBasic={true}
 							pre={""}
 							min={1}
 							max={50}
@@ -340,7 +338,6 @@ export default function AddPropertyInput({
 							changeHandler={changeMv}
 							currency={selectedCurrency}
 							step={1}
-							isBasic
 						/>
 					</FormItem>
 				</Col>

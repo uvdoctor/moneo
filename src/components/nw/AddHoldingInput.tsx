@@ -281,7 +281,6 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label="Amount">
 							<NumberInput
-								isBasic
 								pre=""
 								value={amt}
 								changeHandler={changeAmt}
@@ -294,7 +293,6 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label="Contribution per year">
 							<NumberInput
-								isBasic
 								pre=""
 								value={qty}
 								changeHandler={changeQty}
@@ -348,14 +346,12 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
 							<NumberInput
-								isBasic={true}
 								pre={''}
 								min={0}
 								max={50}
 								value={rate}
 								changeHandler={changeRate}
 								step={0.1}
-								isBasic
 								unit="%"
 							/>
 						</FormItem>
