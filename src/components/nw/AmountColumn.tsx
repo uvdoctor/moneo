@@ -66,7 +66,7 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 						changeHandler={(val: number) => changeAmt(val)}
 						currency={record.curr as string}
 						step={1}
-						noSlider
+						isBasic
 					/>
 				</Col>
 			)}
@@ -80,7 +80,7 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 						value={record.chg as number}
 						changeHandler={(val: number) => changeChg(val)}
 						step={0.1}
-						noSlider
+						isBasic
 						post='%'
 					/>
 				</Col>

@@ -355,7 +355,7 @@ export default function AddHoldingInput({
 								value={rate}
 								changeHandler={changeRate}
 								step={0.1}
-								noSlider
+								isBasic
 								unit="%"
 							/>
 						</FormItem>

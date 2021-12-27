@@ -296,15 +296,13 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Purchase Amount">
 						<NumberInput
-							isBasic={true}
 							pre=""
 							min={1}
-							max={1000000000}
 							value={amount}
 							changeHandler={changeAmount}
 							currency={selectedCurrency}
 							step={1}
-							noSlider
+							isBasic
 						/>
 					</FormItem>
 				</Col>
@@ -329,7 +327,6 @@ export default function AddPropertyInput({
 							value={rate}
 							changeHandler={changeRate}
 							step={0.1}
-							noSlider
 							unit="%"
 						/>
 					</FormItem>
@@ -337,15 +334,13 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Market Value">
 						<NumberInput
-							isBasic={true}
 							pre=""
 							min={1}
-							max={1000000000}
 							value={mv}
 							changeHandler={changeMv}
 							currency={selectedCurrency}
 							step={1}
-							noSlider
+							isBasic
 						/>
 					</FormItem>
 				</Col>
@@ -418,7 +413,7 @@ export default function AddPropertyInput({
 											value={own.per} 
 											changeHandler={(val:number)=>changePer(i,val)} 
 											step={0.1} 
-											noSlider 
+											isBasic 
 											unit='%'/> */}
 										<InputNumber
 											placeholder="Percentage"

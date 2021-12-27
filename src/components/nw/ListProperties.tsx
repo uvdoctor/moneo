@@ -165,7 +165,7 @@ export default function ListProperties({
 										changeHandler={(val: number) => changeAmt(i, val)}
 										currency={selectedCurrency}
 										step={10}
-										noSlider
+										isBasic
 									/>
 								</Col>
 							</Row>

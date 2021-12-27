@@ -73,7 +73,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 						changeHandler={(val: number) => changeQty(val, i)}
 						currency={data[i].curr as string}
 						step={1}
-						noSlider
+						isBasic
 					/>
 				</Col>
 			)
