@@ -81,7 +81,7 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 	};
 
 	return (
-		<Row justify="center">
+		<Row>
 			<Col>
 				<Row align="middle">
 					<Col>
