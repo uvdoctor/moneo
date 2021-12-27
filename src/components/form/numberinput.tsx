@@ -156,8 +156,10 @@ export default function NumberInput({
 
 	return isBasic ? (
 		<>
+			{pre}
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
+			{post}
 			{convertInputToString() && <div>{convertInputToString()}</div>}
 		</>
 	) : (
