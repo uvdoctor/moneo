@@ -2,7 +2,6 @@ import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import {
 	Form,
 	Button,
-	Checkbox,
 	Col,
 	InputNumber,
 	Row,
@@ -16,6 +15,7 @@ import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
+import HSwitch from "../HSwitch";
 import { getMonthIndex } from "../utils";
 import { NWContext } from "./NWContext";
 import {
@@ -82,7 +82,7 @@ export default function AddPropertyInput({
 	};
 
 	const changeRes = (val: boolean) => {
-		setRes(val);
+		setRes(val)
 		let rec = getNewRec();
 		rec.res = val;
 		setInput(rec);
@@ -284,11 +284,10 @@ export default function AddPropertyInput({
 								)}
 							</Col>
 							<Col xs={24} md={12}>
-								{subtype === "O" ? null : (
-									<Checkbox onChange={(e) => changeRes(e.target.checked)}>
-										Residential
-									</Checkbox>
-								)}
+							{!(subtype === "O" || subtype === "P" ) &&
+							// @ts-ignore
+									<HSwitch value={res} setter={(val: boolean)=>changeRes(val)} rightText="I live here"/>
+							}
 							</Col>
 						</Row>
 					</FormItem>

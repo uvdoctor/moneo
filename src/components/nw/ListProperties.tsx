@@ -1,6 +1,5 @@
 import {
 	Button,
-	Checkbox,
 	Col,
 	Empty,
 	InputNumber,
@@ -25,6 +24,7 @@ import { COLORS } from "../../CONSTANTS";
 import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
+import HSwitch from "../HSwitch";
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
@@ -140,161 +140,155 @@ export default function ListProperties({
 	const expandedRow = (i: number) => {
 		const owners = data[i].own;
 		return (
+			<>
+			{!(data[i].type === "O" || data[i].type ==="P") &&
+			<Row>
+				{/* @ts-ignore */}
+				<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>
+			</Row>}
 			<Row
 				gutter={[
 					{ xs: 0, sm: 10, md: 30 },
 					{ xs: 20, sm: 10, md: 0 },
 				]}
 			>
-				<Col xs={24} sm={12} md={8}>
-					<Row gutter={[0, 10]}>
-						<Col xs={24}>
-							<strong>Purchase</strong>
-							<hr />
-						</Col>
-						<Col xs={24}>
-							<Row gutter={[10, 0]}>
-								<Col>Amount</Col>
-								<Col>
-									<NumberInput
-										pre=""
-										min={10}
-										max={1000000000}
-										value={data[i].purchase?.amt as number}
-										changeHandler={(val: number) => changeAmt(i, val)}
-										currency={selectedCurrency}
-										step={10}
-										isBasic
-									/>
-								</Col>
-							</Row>
-						</Col>
-						<Col xs={24}>
-							<DatePickerInput
-								picker="month"
-								title={"Date"}
-								changeHandler={(val: string) => changePurchaseDate(val, i)}
-								value={
-									// @ts-ignore
-									`${getMonthName(data[i].purchase?.month, true)}-${
-										data[i].purchase?.year
-									}` as string
-								}
-								size={"middle"}
-							/>
-						</Col>
-						<Col xs={24}>
-							<Row gutter={[10, 0]}>
-								<Col>Name</Col>
-								<Col>
-									<TextInput
-										pre=""
-										value={data[i].name as string}
-										changeHandler={(val: string) => {
-											data[i].name = val;
-											changeData([...data]);
-										}}
-										size={"middle"}
-									/>
-								</Col>
-							</Row>
-						</Col>
-					</Row>
-				</Col>
-				<Col xs={24} sm={12} md={8}>
-					<Row gutter={[0, 10]}>
-						<Col xs={24}>
-							<strong>Address</strong>
-							<hr />
-						</Col>
-						<Col xs={24}>
-							<TextInput
-								pre={""}
-								value={data[i].address as string}
-								changeHandler={(val: string) => {
-									data[i].address = val;
-									changeData([...data]);
-								}}
-								size={"middle"}
-							/>
-						</Col>
-						<Col xs={24}>
-							<TextInput
-								pre={""}
-								value={String(data[i].pin)}
-								changeHandler={(val: string) => {
-									changePin(val, i);
-								}}
-								size={"middle"}
-							/>
-						</Col>
-						<Col>
-							<label>{data[i].city}</label>
-						</Col>
-						<Col>
-							<label>{data[i].state}</label>
-						</Col>
-					</Row>
-				</Col>
-				<Col xs={24} sm={12} md={8}>
-					<Row gutter={[0, 10]}>
-						<Col xs={24}>
-							<strong>Own By</strong>
-							<hr />
-						</Col>
-						{owners &&
-							owners.map((own: OwnershipInput, ind: number) => {
-								return (
-									<Col key={`owners-${ind}`}>
-										<SelectInput
-											pre={<UserOutlined />}
-											value={own.fId as string}
-											options={getFamilyOptions(allFamily)}
-											changeHandler={(val: string) => {
-												own.fId = val;
-												setMemberKey(val);
-												changeData([...data]);
-											}}
-										/>
-										<InputNumber
-											min={1}
-											max={100}
-											value={own.per}
-											onChange={(val: number) => {
-												own.per = val;
-												changeData([...data]);
-											}}
-										/>
-										<Button
-											type="link"
-											onClick={() => removeOwners(i, ind)}
-											danger
-										>
-											<DeleteOutlined />
-										</Button>
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[0, 10]}>
+							<Col xs={24}>
+								<strong>Purchase</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[10, 0]}>
+									<Col>Amount</Col>
+									<Col>
+										<NumberInput
+											pre=""
+											min={10}
+											max={1000000000}
+											value={data[i].purchase?.amt as number}
+											changeHandler={(val: number) => changeAmt(i, val)}
+											currency={selectedCurrency}
+											step={10}
+											isBasic />
 									</Col>
-								);
-							})}
-						&nbsp;&nbsp;
-						<Col>
-							<Tooltip title="Add Owners">
-								<Button
-									shape={"circle"}
-									onClick={() => onAddBtnClick(i)}
-									style={{ background: COLORS.GREEN }}
-									icon={<PlusOutlined />}
-									disabled={Object.keys(allFamily).length === 1}
-								/>
-							</Tooltip>
-						</Col>
-					</Row>
-				</Col>
-			</Row>
+								</Row>
+							</Col>
+							<Col xs={24}>
+								<DatePickerInput
+									picker="month"
+									title={"Date"}
+									changeHandler={(val: string) => changePurchaseDate(val, i)}
+									value={
+										// @ts-ignore
+										`${getMonthName(data[i].purchase?.month, true)}-${data[i].purchase?.year}` as string}
+									size={"middle"} />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[10, 0]}>
+									<Col>Name</Col>
+									<Col>
+										<TextInput
+											pre=""
+											value={data[i].name as string}
+											changeHandler={(val: string) => {
+												data[i].name = val;
+												changeData([...data]);
+											} }
+											size={"middle"} />
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[0, 10]}>
+							<Col xs={24}>
+								<strong>Address</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<TextInput
+									pre={""}
+									value={data[i].address as string}
+									changeHandler={(val: string) => {
+										data[i].address = val;
+										changeData([...data]);
+									} }
+									size={"middle"} />
+							</Col>
+							<Col xs={24}>
+								<TextInput
+									pre={""}
+									value={String(data[i].pin)}
+									changeHandler={(val: string) => {
+										changePin(val, i);
+									} }
+									size={"middle"} />
+							</Col>
+							<Col>
+								<label>{data[i].city}</label>
+							</Col>
+							<Col>
+								<label>{data[i].state}</label>
+							</Col>
+						</Row>
+					</Col>
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[0, 10]}>
+							<Col xs={24}>
+								<strong>Own By</strong>
+								<hr />
+							</Col>
+							{owners &&
+								owners.map((own: OwnershipInput, ind: number) => {
+									return (
+										<Col key={`owners-${ind}`}>
+											<SelectInput
+												pre={<UserOutlined />}
+												value={own.fId as string}
+												options={getFamilyOptions(allFamily)}
+												changeHandler={(val: string) => {
+													own.fId = val;
+													setMemberKey(val);
+													changeData([...data]);
+												} } />
+											<InputNumber
+												min={1}
+												max={100}
+												value={own.per}
+												onChange={(val: number) => {
+													own.per = val;
+													changeData([...data]);
+												} } />
+											<Button
+												type="link"
+												onClick={() => removeOwners(i, ind)}
+												danger
+											>
+												<DeleteOutlined />
+											</Button>
+										</Col>
+									);
+								})}
+							&nbsp;&nbsp;
+							<Col>
+								<Tooltip title="Add Owners">
+									<Button
+										shape={"circle"}
+										onClick={() => onAddBtnClick(i)}
+										style={{ background: COLORS.GREEN }}
+										icon={<PlusOutlined />}
+										disabled={Object.keys(allFamily).length === 1} />
+								</Tooltip>
+							</Col>
+						</Row>
+					</Col>
+				</Row></>
 		);
 	};
 
 	const columns = [
-		{ title: "Residential", dataIndex: "res", key: "res" },
 		{ title: "Type", dataIndex: "type", key: "type" },
 		{ title: "Market value", key: "mv", dataIndex: "mv" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
@@ -308,13 +302,6 @@ export default function ListProperties({
 				continue;
 			dataSource.push({
 				key: i,
-				res: (
-					<Checkbox
-						checked={data[i].res}
-						disabled={data[i].type === "O"}
-						onChange={(e) => changeRes(e.target.checked, i)}
-					/>
-				),
 				type: categoryOptions && (
 					<SelectInput
 						pre=""
@@ -345,7 +332,7 @@ export default function ListProperties({
 					/>
 				),
 				del: (
-					<Row justify="center">
+					<Row justify="center" align="middle">
 						<Col>
 						{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}
 						</Col>
