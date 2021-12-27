@@ -77,7 +77,7 @@ export default function AmountColumn({ data, changeData, record }: AmountColumnP
 						value={record.chg as number}
 						changeHandler={(val: number) => changeChg(val)}
 						step={0.1}
-						post='%'
+						unit='%'
 					/>
 				</Col>
 			)}
