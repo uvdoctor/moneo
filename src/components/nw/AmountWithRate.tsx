@@ -45,7 +45,7 @@ export default function AmountWithRate({ data, changeData, record }: AmountWithR
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
 	return (
-		<Row align='middle' justify='space-between'>
+		<Row align='middle' justify='space-around'>
 			{hasQtyWithRate(childTab) ? (
 				<Col>
 					<QuantityWithRate
