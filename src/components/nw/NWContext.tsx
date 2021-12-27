@@ -440,16 +440,12 @@ function NWContextProvider() {
 			children: {
 				[TAB.LOAN] : {
 					label: TAB.LOAN,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
 				},
 				[TAB.INS]: {
 					label: TAB.INS,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
@@ -470,8 +466,6 @@ function NWContextProvider() {
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
