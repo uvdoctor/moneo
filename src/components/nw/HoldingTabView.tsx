@@ -99,7 +99,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 								tab={
 									<Fragment>
 										{label}
-										{!children &&
+										{!children && 
+										(activeTab === "Financial" || activeTab === "Retirement") &&
 										!liabilities && (
 											<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
 												<InfoCircleOutlined />

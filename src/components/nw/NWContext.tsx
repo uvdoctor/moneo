@@ -188,8 +188,6 @@ function NWContextProvider() {
 			children: {
 				[TAB.LENT]: {
 					label: TAB.LENT,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -215,8 +213,6 @@ function NWContextProvider() {
 				},
 				[TAB.SAV]: {
 					label: TAB.SAV,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
@@ -229,8 +225,6 @@ function NWContextProvider() {
 			children: {
 				[TAB.PROP]: {
 					label: TAB.PROP,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -246,8 +240,6 @@ function NWContextProvider() {
 				},
 				[TAB.VEHICLE]: {
 					label: TAB.VEHICLE,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -259,8 +251,6 @@ function NWContextProvider() {
 				},
 				[TAB.PM]: {
 					label: TAB.PM,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -299,8 +289,6 @@ function NWContextProvider() {
 				},
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
-					info: "Example",
-					link: ROUTES.PRIVACY,
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
