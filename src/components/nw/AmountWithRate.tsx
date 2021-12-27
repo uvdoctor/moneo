@@ -45,42 +45,48 @@ export default function AmountWithRate({ data, changeData, record }: AmountWithR
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
 	return (
-		<Row align='middle' justify='space-around'>
-			{hasQtyWithRate(childTab) ? (
-				<Col>
-					<QuantityWithRate
-						quantity={record.qty}
-						name={record.name as string}
-						subtype={record.subt as string}
-						onChange={(val: number) => changeQty(val)}
-					/>
-				</Col>
-			) : (
-				<Col>
-					<NumberInput
-						pre=""
-						value={record.amt as number}
-						changeHandler={(val: number) => changeAmt(val)}
-						currency={record.curr as string}
-						step={1}
-						isBasic
-					/>
-				</Col>
-			)}
-			{(hasRate(childTab) || (childTab === INS && record.subt !== 'L')) && (
-				<Col>
-					<NumberInput
-						pre=""
-						min={0}
-						max={50}
-						value={record.chg as number}
-						changeHandler={(val: number) => changeChg(val)}
-						step={0.1}
-						isBasic
-						post='%'
-					/>
-				</Col>
-			)}
+		<Row align="middle">
+			<Col>
+				<Row>
+					{hasQtyWithRate(childTab) ? (
+						<Col>
+							<QuantityWithRate
+								quantity={record.qty}
+								name={record.name as string}
+								subtype={record.subt as string}
+								onChange={(val: number) => changeQty(val)}
+							/>
+						</Col>
+					) : (
+						<Col>
+							<NumberInput
+								pre=""
+								value={record.amt as number}
+								changeHandler={(val: number) => changeAmt(val)}
+								currency={record.curr as string}
+								step={1}
+								isBasic
+							/>
+						</Col>
+					)}
+				</Row>
+				<Row>
+					{(hasRate(childTab) || (childTab === INS && record.subt !== 'L')) && (
+						<Col>
+							<NumberInput
+								pre=""
+								min={0}
+								max={50}
+								value={record.chg as number}
+								changeHandler={(val: number) => changeChg(val)}
+								step={0.1}
+								isBasic
+								post="%"
+							/>
+						</Col>
+					)}
+				</Row>
+			</Col>
 		</Row>
 	);
 }

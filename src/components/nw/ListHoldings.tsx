@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import { doesHoldingMatch } from './nwutils';
-import CategoryColumn from './CategoryColumn';
+import Category from './Category';
 import AmountWithRate from './AmountWithRate';
 import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
@@ -102,7 +102,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 					dataSource.push({
 						key: index,
 						cat: (
-							<CategoryColumn
+							<Category
 								data={data}
 								changeData={changeData}
 								categoryOptions={categoryOptions}

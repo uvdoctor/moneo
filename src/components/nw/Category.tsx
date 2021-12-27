@@ -4,7 +4,7 @@ import { AssetSubType, HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext, TAB } from './NWContext';
 
-interface CategoryColumnProps {
+interface CategoryProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	categoryOptions: any;
@@ -12,13 +12,7 @@ interface CategoryColumnProps {
 	record: HoldingInput;
 }
 
-export default function CategoryColumn({
-	data,
-	changeData,
-	categoryOptions,
-	subCategoryOptions,
-	record
-}: CategoryColumnProps) {
+export default function Category({ data, changeData, categoryOptions, subCategoryOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, LENT, INS } = TAB;
 
@@ -45,29 +39,35 @@ export default function CategoryColumn({
 	return (
 		<Row>
 			<Col>
-				{categoryOptions && (
-					<SelectInput
-						pre=""
-						value={record.subt as string}
-						options={categoryOptions}
-						changeHandler={(val: string) => changeCategory(val)}
-					/>
-				)}
-			</Col>
-			<Col>
-				{subCategoryOptions ? (
-					subCategoryOptions[record.subt as string] && (
+				<Row>
+					{categoryOptions && (
 						<SelectInput
 							pre=""
-							value={
-								childTab === LENT || childTab === INS ? record.chgF as number : record.name as string
-							}
-							options={subCategoryOptions[record.subt as string]}
-							changeHandler={(val: string) => changeSubCategory(val)}
-							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
+							value={record.subt as string}
+							options={categoryOptions}
+							changeHandler={(val: string) => changeCategory(val)}
 						/>
-					)
-				) : null}
+					)}
+				</Row>
+				<Row>
+					{subCategoryOptions ? (
+						subCategoryOptions[record.subt as string] && (
+							<SelectInput
+								pre=""
+								value={
+									childTab === LENT || childTab === INS ? (
+										record.chgF as number
+									) : (
+										record.name as string
+									)
+								}
+								options={subCategoryOptions[record.subt as string]}
+								changeHandler={(val: string) => changeSubCategory(val)}
+								post={record.subt === AssetSubType.Gold ? 'karat' : ''}
+							/>
+						)
+					) : null}
+				</Row>
 			</Col>
 		</Row>
 	);
