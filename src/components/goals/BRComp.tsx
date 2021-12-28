@@ -45,7 +45,6 @@ export default function BRComp() {
 					min={-5}
 					max={10}
 					step={0.5}
-					additionalMarks={[5]}
 					unit="%"
 				/>
 			)}
@@ -58,7 +57,6 @@ export default function BRComp() {
 					step={0.1}
 					pre="After taxes & fees, Remaining Money Earns"
 					unit="% Yearly"
-					additionalMarks={[4, 7]}
 				/>
 			)}
 		</Section>

@@ -73,7 +73,6 @@ export default function BasicLineChart({
 							max={50}
 							step={1}
 							unit="Years"
-							additionalMarks={[ 10, 15, 20, 25, 30, 35, 40, 45 ]}
 						/>
 					</Col>
 				</Row>

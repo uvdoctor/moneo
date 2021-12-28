@@ -45,7 +45,6 @@ export default function TaxAdjustment() {
 					unit="%"
 					value={taxRate}
 					changeHandler={setTaxRate}
-					additionalMarks={[10, 20, 30]}
 				/>
 			)}
 			{(isTaxCreditEligible(goal.type) || taxRate) && goal.type !== GoalType.E && (

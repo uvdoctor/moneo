@@ -361,13 +361,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 													}
 													step={0.01}
 													unit="%"
-													additionalMarks={[
-														getClosestTargetVal(
-															loanIRAdjustments,
-															num,
-															loanIntRate
-														)
-													]}
 												/>
 											) : null}
 										</Section>

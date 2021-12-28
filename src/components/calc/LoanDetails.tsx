@@ -52,7 +52,6 @@ export default function LoanDetails() {
 						step={1}
 						min={loanMinLimitPer}
 						max={loanMaxLimitPer}
-						additionalMarks={[ 20, 30, 40, 50, 60, 70, 80 ]}
 					/>
 				)}
 				{loanBorrowAmt && (
@@ -64,7 +63,6 @@ export default function LoanDetails() {
 						min={6}
 						max={360}
 						step={1}
-						additionalMarks={[ 60, 120, 180, 240 ]}
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}
