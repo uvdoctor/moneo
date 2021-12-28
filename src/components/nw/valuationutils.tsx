@@ -15,40 +15,34 @@ export const getCashFlows = (
 ) => {
 	let cashflows: any = [];
 	let count = 0;
-	let time = 0;
 	let monthLeftForCurrentYear = 0;
 	if (isMonth) {
 		if (durationEnded > 0) {
 			monthLeftForCurrentYear = 12 - today.getMonth();
 			amt = getCompoundedIncome(rate, amt, (monthLeftForCurrentYear + durationEnded) / 12, 12);
 			const cfs = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
-			time = durationEnded + monthLeftForCurrentYear;
 			cashflows = cashflows.concat(cfs);
 		}
 		for (let index = 0; index <= durationLeft - monthLeftForCurrentYear; index++) {
 			count++;
 			if (count === 12) {
-				time += count;
-				amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+				amt = getCompoundedIncome(rate as number, amt, 1, 12);
 				const cfs = Array(Math.round(12)).fill(amt);
 				cashflows = cashflows.concat(cfs);
 				count = 0;
 			}
 		}
 		if (count < 12 && count > 0) {
-			time += count;
-			amt = getCompoundedIncome(rate as number, amt, time / 12, 12);
+			amt = getCompoundedIncome(rate as number, amt, 1, 12);
 			const cfs = Array(Math.round(count)).fill(amt);
 			cashflows = cashflows.concat(cfs);
 		}
 	} else {
 		if (durationEnded > 0) {
 			amt = getCompoundedIncome(rate, amt, durationEnded, 1);
-			time += durationEnded;
 		}
 		for (let index = 0; index <= durationLeft; index++) {
-			time += 1;
-			amt = getCompoundedIncome(rate as number, amt, time, 1);
+			amt = getCompoundedIncome(rate as number, amt, 1, 1);
 			const cfs = Array(Math.round(1)).fill(amt);
 			cashflows = cashflows.concat(cfs);
 		}
