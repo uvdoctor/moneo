@@ -102,12 +102,12 @@ export default function InstrumentValuation() {
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
-		const dataToFilter = selectedTags.length ? filterByTag : filteredInstruments;
-		dataToFilter.map((instrument: InstrumentInput) => {
+		filteredInstruments.map((instrument: InstrumentInput) => {
 			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
-			if (filteredInfo.id) {
-				const id = filteredInfo.id.some((item: string) => item === instrument.id);
-				if (id) filterAmt += price;
+			if (filteredInfo.id || selectedTags.length) {
+				const idByName = filteredInfo.id.some((item: string) => item === instrument.id);
+				const idByTags = filterByTag.some((data: InstrumentInput) => data.id === instrument.id);
+				if (idByName || idByTags) filterAmt += price;
 			}
 			total += price;
 		});
