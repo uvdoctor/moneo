@@ -33,7 +33,7 @@ export const getCashFlows = (
 			}
 		}
 		if (count < 12 && count > 0) {
-			amt = getCompoundedIncome(rate as number, amt, 1, 12);
+			amt = getCompoundedIncome(rate as number, amt, count/12, 12);
 			const cfs = Array(Math.round(count)).fill(amt);
 			cashflows = cashflows.concat(cfs);
 		}
