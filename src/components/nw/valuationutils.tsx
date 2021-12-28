@@ -8,43 +8,38 @@ const presentYear = today.getFullYear();
 
 export const getCashFlows = (
 	amt: number,
-	durationEnded: number,
-	durationLeft: number,
+	bygoneDuration: number,
+	remainingDuration: number,
 	rate: number,
 	isMonth: boolean
 ) => {
 	let cashflows: any = [];
 	let count = 0;
-	let monthLeftForCurrentYear = 0;
-	if (isMonth) {
-		if (durationEnded > 0) {
-			monthLeftForCurrentYear = 12 - today.getMonth();
-			amt = getCompoundedIncome(rate, amt, (monthLeftForCurrentYear + durationEnded) / 12, 12);
-			const cfs = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
-			cashflows = cashflows.concat(cfs);
+	let monthLeftForCurrentYear = 12 - today.getMonth();
+	let bygoneTimeToCalculateForCI = isMonth ? (monthLeftForCurrentYear + bygoneDuration) / 12 : bygoneDuration;
+	if (bygoneDuration > 0) {
+		amt = getCompoundedIncome(rate, amt, bygoneTimeToCalculateForCI, isMonth ? 12 : 1);
+		if (isMonth && monthLeftForCurrentYear > 0) {
+			cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
 		}
-		for (let index = 0; index <= durationLeft - monthLeftForCurrentYear; index++) {
+	}
+	if (isMonth) {
+		for (let index = 0; index <= remainingDuration - monthLeftForCurrentYear; index++) {
 			count++;
 			if (count === 12) {
 				amt = getCompoundedIncome(rate as number, amt, 1, 12);
-				const cfs = Array(Math.round(12)).fill(amt);
-				cashflows = cashflows.concat(cfs);
+				cashflows = [ ...cashflows, ...Array(Math.round(12)).fill(amt) ];
 				count = 0;
 			}
 		}
 		if (count < 12 && count > 0) {
-			amt = getCompoundedIncome(rate as number, amt, count/12, 12);
-			const cfs = Array(Math.round(count)).fill(amt);
-			cashflows = cashflows.concat(cfs);
+			amt = getCompoundedIncome(rate as number, amt, count / 12, 12);
+			cashflows = [ ...cashflows, ...Array(Math.round(count)).fill(amt) ];
 		}
 	} else {
-		if (durationEnded > 0) {
-			amt = getCompoundedIncome(rate, amt, durationEnded, 1);
-		}
-		for (let index = 0; index <= durationLeft; index++) {
+		for (let index = 0; index <= remainingDuration; index++) {
 			amt = getCompoundedIncome(rate as number, amt, 1, 1);
-			const cfs = Array(Math.round(1)).fill(amt);
-			cashflows = cashflows.concat(cfs);
+			cashflows = Array(Math.round(1)).fill(amt);
 		}
 	}
 	return cashflows;
@@ -80,21 +75,27 @@ export const calculateNPVAmt = (holding: HoldingInput) => {
 		holding.sm as number,
 		holding.sy as number
 	);
-	const durationLeft = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
-	if (durationLeft <= 0 || isNaN(durationLeft)) return 0;
-	let durationEnded = (durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd) - durationLeft;
+	const remainingDuration = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
+	if (remainingDuration <= 0 || isNaN(remainingDuration)) return 0;
+	let bygoneDuration = (remainingDuration > durationFromStartToEnd ? 0 : durationFromStartToEnd) - remainingDuration;
 	if (holding.subt && holding.subt !== 'L') {
 		cashflows = getCashFlows(
 			holding.amt as number,
-			durationEnded,
-			durationLeft > durationFromStartToEnd ? durationFromStartToEnd : durationLeft,
+			bygoneDuration,
+			remainingDuration > durationFromStartToEnd ? durationFromStartToEnd : remainingDuration,
 			holding.chg as number,
 			isMonth
 		);
 	} else {
-		cashflows = Array(Math.round(durationLeft)).fill(holding.amt);
+		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	}
-	const npv = getNPV(10, cashflows, 0, isMonth ? true : false, durationLeft > durationFromStartToEnd ? false : true);
+	const npv = getNPV(
+		10,
+		cashflows,
+		0,
+		isMonth ? true : false,
+		remainingDuration > durationFromStartToEnd ? false : true
+	);
 	return npv;
 };
 
