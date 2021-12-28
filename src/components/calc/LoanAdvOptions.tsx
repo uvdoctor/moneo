@@ -48,7 +48,7 @@ export default function LoanAdvOptions() {
 			min={0}
 			max={pmiMax}
 			step={1}
-			note={
+			post={
 				loanPMI ? (
 					<SelectInput
 						pre="Ends when Principal Due is"

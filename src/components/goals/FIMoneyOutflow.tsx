@@ -47,7 +47,7 @@ export default function FIMoneyOutflow() {
 						value={successionTaxRate}
 						changeHandler={setSuccessionTaxRate}
 						unit="%"
-						note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`}
+						post={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`}
 					/>
 				)}
 			</Section>
