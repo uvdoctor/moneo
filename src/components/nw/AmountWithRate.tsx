@@ -64,8 +64,6 @@ export default function AmountWithRate({ data, changeData, record }: AmountWithR
 								value={record.amt as number}
 								changeHandler={(val: number) => changeAmt(val)}
 								currency={record.curr as string}
-								step={1}
-								isBasic
 							/>
 						</Col>
 					)}
@@ -80,8 +78,7 @@ export default function AmountWithRate({ data, changeData, record }: AmountWithR
 								value={record.chg as number}
 								changeHandler={(val: number) => changeChg(val)}
 								step={0.1}
-								isBasic
-								post="%"
+								unit="%"
 							/>
 						</Col>
 					)}

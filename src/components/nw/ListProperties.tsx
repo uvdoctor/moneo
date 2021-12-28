@@ -165,12 +165,10 @@ export default function ListProperties({
 										<NumberInput
 											pre=""
 											min={10}
-											max={1000000000}
 											value={data[i].purchase?.amt as number}
 											changeHandler={(val: number) => changeAmt(i, val)}
 											currency={selectedCurrency}
-											step={10}
-											isBasic />
+											step={10} />
 									</Col>
 								</Row>
 							</Col>
