@@ -233,7 +233,7 @@ function NWContextProvider() {
 						[PropertyType.A]: "Apartment",
 						[PropertyType.H]: "Home",
 						[PropertyType.C]: "Condominium",
-						[PropertyType.O]: "Office",
+						[PropertyType.COMM]: "Commercial",
 						[PropertyType.T]: "Townhouse",
 						[PropertyType.OTHER]: 'Others'
 					},
@@ -796,7 +796,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
 			if(property.type === PropertyType.A || property.type === PropertyType.H ||
 				property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
-			if(property.type === PropertyType.O) totalCommercial += value;
+			if(property.type === PropertyType.COMM) totalCommercial += value;
 		})
 		setTotalProperties(total);
 		setTotalOtherProperty(totalOtherProperty);

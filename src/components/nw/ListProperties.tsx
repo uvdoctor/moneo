@@ -8,7 +8,7 @@ import {
 	Tooltip,
 } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { OwnershipInput, PropertyInput } from "../../api/goals";
+import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import SelectInput from "../form/selectinput";
 import { NWContext } from "./NWContext";
 import TextInput from "../form/textinput";
@@ -142,7 +142,7 @@ export default function ListProperties({
 		const owners = data[i].own;
 		return (
 			<>
-			{!(data[i].type === "O" || data[i].type ==="P") &&
+			{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) &&
 			<Row>
 				{/* @ts-ignore */}
 				<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>

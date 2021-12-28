@@ -9,7 +9,7 @@ import {
 	Tooltip,
 } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { OwnershipInput, PropertyInput } from "../../api/goals";
+import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
@@ -284,7 +284,7 @@ export default function AddPropertyInput({
 								)}
 							</Col>
 							<Col xs={24} md={12}>
-							{!(subtype === "O" || subtype === "P" ) &&
+							{!(subtype === PropertyType.COMM || subtype === PropertyType.P ) &&
 							// @ts-ignore
 									<HSwitch value={res} setter={(val: boolean)=>changeRes(val)} rightText="I live here"/>
 							}
