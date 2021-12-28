@@ -115,8 +115,8 @@ export const calculateProperty = (property: PropertyInput) => {
 	const duration = calculateDifferenceInYears(
 		presentMonth,
 		presentYear,
-		property.purchase?.month as number,
-		property.purchase?.year as number
+		property.mvm as number,
+		property.mvy as number
 	);
 	if (duration < 0) return property.mv as number;
 	return getCompoundedIncome(property.rate, property.mv as number, duration);
