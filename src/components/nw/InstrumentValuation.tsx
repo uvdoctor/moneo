@@ -106,7 +106,7 @@ export default function InstrumentValuation() {
 			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			if (filteredInfo.id || selectedTags.length) {
 				const idByName = filteredInfo.id.some((item: string) => item === instrument.id);
-				const idByTags = filterByTag.some((data: InstrumentInput) => data.id === instrument.id);
+				const idByTags = filterByTag.length ? filterByTag.some((data: InstrumentInput) => data.id === instrument.id) : false;
 				if (idByName || idByTags) filterAmt += price;
 			}
 			total += price;
