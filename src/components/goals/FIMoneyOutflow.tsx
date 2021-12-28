@@ -39,9 +39,7 @@ export default function FIMoneyOutflow() {
 				/>
 				{leaveBehind > 0 && (
 					<NumberInput
-						pre="Inheritance"
-						post="Tax Rate"
-						min={0}
+						pre="Inheritance Tax Rate"
 						max={20}
 						step={0.1}
 						value={successionTaxRate}
