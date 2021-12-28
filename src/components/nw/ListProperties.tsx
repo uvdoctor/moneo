@@ -45,7 +45,7 @@ export default function ListProperties({
 		getDefaultMember(allFamily, selectedMembers)
 	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
-	const [isEditMode, setIsEditMode] = useState<boolean>(true);
+	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 	const today = new Date();
 
 	const removeHolding = (i: number) => {
