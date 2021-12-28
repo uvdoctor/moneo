@@ -17,13 +17,13 @@ import {
 	getDefaultMember,
 	getFamilyOptions,
 } from "./nwutils";
-import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import DatePickerInput from "../form/DatePickerInput";
 import { COLORS } from "../../CONSTANTS";
-import { getMonthName, getMonthIndex } from "../utils";
+import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
-import { calculateDifferenceInYears } from "./valuationutils";
+import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
 
 interface ListPropertiesProps {
@@ -45,6 +45,7 @@ export default function ListProperties({
 		getDefaultMember(allFamily, selectedMembers)
 	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
+	const [isEditMode, setIsEditMode] = useState<boolean>(true);
 	const today = new Date();
 
 	const removeHolding = (i: number) => {
@@ -286,6 +287,9 @@ export default function ListProperties({
 		);
 	};
 
+	console.log(isEditMode);
+	
+
 	const columns = [
 		{ title: "Type", dataIndex: "type", key: "type" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
@@ -297,6 +301,13 @@ export default function ListProperties({
 		for (let i = 0; i < data.length; ++i) {
 			if (!doesPropertyMatch(data[i], selectedMembers, selectedCurrency))
 				continue;
+			const valuation = calculateProperty(data[i]);
+			if (valuation !== data[i].mv) {
+				data[i].mv = valuation;
+				data[i].mvm = today.getMonth() + 1;
+				data[i].mvy = today.getFullYear();
+				changeData([...data])
+			}
 			dataSource.push({
 				key: i,
 				type: categoryOptions && (
@@ -322,16 +333,27 @@ export default function ListProperties({
 					/>
 				),
 				val: (
-					<Row justify="start" align="middle">
+					<Row justify="space-between" align="middle">
 						<Col>
-							<NumberInput
+						<Row align={isEditMode ? 'top': 'middle'}>
+							<Col>
+							{isEditMode ? <NumberInput
 							changeHandler={(val: number) => changeMv(i, val)}
 							min={100}
 							value={data[i].mv as number}
 							step={100}
 							pre=""
-							currency={selectedCurrency}
-						/>
+							currency={selectedCurrency}/>
+							: toHumanFriendlyCurrency(data[i].mv as number, selectedCurrency)}
+						</Col>
+						<Col>
+							<Button
+								type="link"
+								icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+								onClick={()=>isEditMode ? setIsEditMode(false) : setIsEditMode(true)}
+							/>
+						</Col>
+						</Row>
 						</Col>
 						<Col>
 							<Button type="link" onClick={() => removeHolding(i)} danger>
@@ -343,7 +365,7 @@ export default function ListProperties({
 			});
 		}
 		setDataSource([...dataSource]);
-	}, [data, selectedMembers, selectedCurrency]);
+	}, [data, selectedMembers, selectedCurrency, isEditMode]);
 
 	return dataSource.length ? (
 		<Table
