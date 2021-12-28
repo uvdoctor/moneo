@@ -21,9 +21,9 @@ import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import DatePickerInput from "../form/DatePickerInput";
 import { COLORS } from "../../CONSTANTS";
-import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
+import { getMonthName, getMonthIndex } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
-import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
+import { calculateDifferenceInYears } from "./valuationutils";
 import HSwitch from "../HSwitch";
 
 interface ListPropertiesProps {
@@ -288,9 +288,8 @@ export default function ListProperties({
 
 	const columns = [
 		{ title: "Type", dataIndex: "type", key: "type" },
-		{ title: "Market Value", key: "mv", dataIndex: "mv" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
-		{ title: "", key: "del", dataIndex: "del" },
+		{ title: "Valuation", key: "val", dataIndex: "val" },
 	];
 
 	useEffect(() => {
@@ -311,16 +310,6 @@ export default function ListProperties({
 						}}
 					/>
 				),
-				mv: (
-					<NumberInput
-						changeHandler={(val: number) => changeMv(i, val)}
-						min={100}
-						value={data[i].mv as number}
-						step={100}
-						pre=""
-						currency={selectedCurrency}
-					/>
-				),
 				rate: (
 					<NumberInput
 						changeHandler={(val: number) => changeRate(i, val)}
@@ -332,10 +321,17 @@ export default function ListProperties({
 						pre=""
 					/>
 				),
-				del: (
-					<Row justify="center" align="middle">
+				val: (
+					<Row justify="start" align="middle">
 						<Col>
-						{toHumanFriendlyCurrency(calculateProperty(data[i]), selectedCurrency)}
+							<NumberInput
+							changeHandler={(val: number) => changeMv(i, val)}
+							min={100}
+							value={data[i].mv as number}
+							step={100}
+							pre=""
+							currency={selectedCurrency}
+						/>
 						</Col>
 						<Col>
 							<Button type="link" onClick={() => removeHolding(i)} danger>
