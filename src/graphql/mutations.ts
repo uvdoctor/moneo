@@ -297,6 +297,9 @@ export const createUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      rp
+      dr
+      tc
       createdAt
       updatedAt
     }
@@ -313,6 +316,9 @@ export const updateUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      rp
+      dr
+      tc
       createdAt
       updatedAt
     }
@@ -329,6 +335,9 @@ export const deleteUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      rp
+      dr
+      tc
       createdAt
       updatedAt
     }

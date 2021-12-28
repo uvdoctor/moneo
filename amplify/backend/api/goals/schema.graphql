@@ -130,6 +130,14 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 	img: String
 }
 
+enum RiskProfile {
+	VC
+	C
+	M
+	A
+	VA
+}
+
 type UserInfo
 	@model
 	@aws_iam
@@ -149,6 +157,9 @@ type UserInfo
 	im: Float
 	mob: Float
 	notify: Boolean!
+	rp: RiskProfile!
+	dr: Float!
+	tc: AWSDateTime!
 }
 
 type InsAnalytics
@@ -453,7 +464,7 @@ enum PropertyType {
 	A
 	H
 	C
-	O
+	COMM
 	T
 	OTHER
 }
