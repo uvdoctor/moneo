@@ -288,7 +288,7 @@ export default function ListProperties({
 
 	const columns = [
 		{ title: "Type", dataIndex: "type", key: "type" },
-		{ title: "Market value", key: "mv", dataIndex: "mv" },
+		{ title: "Market Value", key: "mv", dataIndex: "mv" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
 		{ title: "", key: "del", dataIndex: "del" },
 	];
@@ -312,21 +312,24 @@ export default function ListProperties({
 					/>
 				),
 				mv: (
-					<InputNumber
-						onChange={(val: number) => changeMv(i, val)}
-						min={10}
-						max={100000000000}
+					<NumberInput
+						changeHandler={(val: number) => changeMv(i, val)}
+						min={100}
 						value={data[i].mv as number}
 						step={100}
+						pre=""
+						currency={selectedCurrency}
 					/>
 				),
 				rate: (
-					<InputNumber
-						onChange={(val: number) => changeRate(i, val)}
+					<NumberInput
+						changeHandler={(val: number) => changeRate(i, val)}
 						min={1}
 						max={50}
 						value={data[i].rate as number}
 						step={0.1}
+						unit="%"
+						pre=""
 					/>
 				),
 				del: (
