@@ -287,9 +287,6 @@ export default function ListProperties({
 		);
 	};
 
-	console.log(isEditMode);
-	
-
 	const columns = [
 		{ title: "Type", dataIndex: "type", key: "type" },
 		{ title: "Rate", dataIndex: "rate", key: "rate" },
