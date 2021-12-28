@@ -87,7 +87,7 @@ export const calculateNPVAmt = (holding: HoldingInput) => {
 		holding.sy as number
 	);
 	const durationLeft = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
-	if (durationLeft <= 0) return 0;
+	if (durationLeft <= 0 || isNaN(durationLeft)) return 0;
 	let durationEnded = (durationLeft > durationFromStartToEnd ? 0 : durationFromStartToEnd) - durationLeft;
 	if (holding.subt && holding.subt !== 'L') {
 		cashflows = getCashFlows(
