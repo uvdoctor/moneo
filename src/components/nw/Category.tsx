@@ -17,8 +17,7 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 	const { CRYPTO, LENT, INS } = TAB;
 
 	const changeCategory = (subtype: string) => {
-		if (childTab === CRYPTO) record.name = subtype;
-		else record.subt = subtype;
+		(childTab === CRYPTO) ? record.name = subtype : record.subt = subtype;
 		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
 			if (!opts) return changeData([ ...data ]);
@@ -43,7 +42,7 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 					{categoryOptions && (
 						<SelectInput
 							pre=""
-							value={record.subt as string}
+							value={childTab === CRYPTO ? record.name as string : record.subt as string}
 							options={categoryOptions}
 							changeHandler={(val: string) => changeCategory(val)}
 						/>

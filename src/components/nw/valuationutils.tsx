@@ -129,7 +129,7 @@ export const calculateVehicle = (holding: HoldingInput) => {
 };
 
 export const calculateCrypto = (holding: HoldingInput, ratesData: any, selectedCurrency: string) => {
-	const rate = getCryptoRate(ratesData, holding.subt as string, selectedCurrency);
+	const rate = getCryptoRate(ratesData, holding.name as string, selectedCurrency);
 	return holding.qty * rate;
 };
 

@@ -53,7 +53,7 @@ export default function AmountWithRate({ data, changeData, record }: AmountWithR
 							<QuantityWithRate
 								quantity={record.qty}
 								name={record.name as string}
-								subtype={record.subt as string}
+								subtype={childTab === CRYPTO ? record.name as string : record.subt as string}
 								onChange={(val: number) => changeQty(val)}
 							/>
 						</Col>
