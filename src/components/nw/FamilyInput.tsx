@@ -122,7 +122,7 @@ export default function FamilyInput() {
                     >
                         {memberKeys.length > 1 && (memberKeys.map((key: string) => (
                             <Option key={key} value={key}>
-                                {allFamily[key].name}
+                                {allFamily[key] && allFamily[key].name}
                             </Option>
                         )))}
                         <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
