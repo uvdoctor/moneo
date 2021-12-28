@@ -129,7 +129,7 @@ export default function FamilyInput() {
                             All Members
                         </Option>
                     </Select>
-                    : memberKeys.length && allFamily && <label>{allFamily[memberKeys[0]].name}</label>}
+                    : <label>{memberKeys.length && allFamily && allFamily[memberKeys[0]].name}</label>}
                     </Col>
                     <Col>
                     <Tooltip title='Add Family Member'>
