@@ -6,8 +6,9 @@ import { doesHoldingMatch, getAssetTypes, getColourForAssetType, getMarketCap, g
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
-import { AppContext } from '../AppContext';
+import { AppContext, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { AssetSubType, AssetType, InstrumentInput, InsType, MCap, MFSchemeType } from '../../api/goals';
+import simpleStorage from 'simplestorage.js';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
@@ -102,23 +103,23 @@ export default function InstrumentValuation() {
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
-		let isNameFilter = false;
-		let isTagFilter = false;
-		filteredInstruments.map((instrument: InstrumentInput) => {
-			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
-			isNameFilter = filteredInfo.id ? filteredInfo.id.some((item: string) => item === instrument.id) : false;
-			isTagFilter = selectedTags.length ? filterByTag.some((data: InstrumentInput) => data.id === instrument.id) : false;
-			if (isNameFilter || isTagFilter) {
-				filterAmt += price;
+		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		if(!cachedData) cachedData = insData;
+		const dataToFilter = selectedTags.length ? filterByTag : filteredInstruments;
+		dataToFilter.map((instrument: InstrumentInput) => {
+			const price = instrument.qty * (cachedData[instrument.id] ? cachedData[instrument.id].price : 0);
+			if (filteredInfo.id) {
+				const id = filteredInfo.id.some((item: string) => item === instrument.id);
+				if (id) filterAmt += price;
 			}
-			total += price;
-		});
-		(filteredInfo.id || selectedTags.length) ? setTotalFilterAmt(filterAmt) : setTotalFilterAmt(total);
+			total += price
+		})
+		filteredInfo.id ? setTotalFilterAmt(filterAmt) : setTotalFilterAmt(total);
 	}
 
 	useEffect(() => {
 		setTotal();
-	},[ filteredInstruments, filteredInfo, instruments, filterByTag ]);
+	},[ filteredInstruments, filteredInfo, instruments, selectedTags, filterByTag ]);
 
 	useEffect(
 		() => {
@@ -149,7 +150,7 @@ export default function InstrumentValuation() {
 				else if (childTab === TAB.MF) return isFund(instrument.id) && !data.itype;
 				else if (childTab === TAB.GOLDB) return data.subt === AssetSubType.GoldB;
 				else if (childTab === TAB.BOND) return data.type === AssetType.F;
-				else if (childTab === TAB.STOCK) return data.subt === AssetSubType.S && !isFund(instrument.id) && !isBond(instrument.id);
+				else if (childTab === TAB.STOCK) return data.type === AssetType.E && !isFund(instrument.id) && !isBond(instrument.id);
 			}
 		});
 		setFilteredInstruments([ ...filteredData ]);
