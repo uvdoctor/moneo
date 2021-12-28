@@ -120,7 +120,7 @@ export default function FamilyInput() {
                         size="middle"
                         maxTagCount={1}
                     >
-                        {memberKeys.length && memberKeys.map((key: string) => (
+                        {memberKeys.length > 1 && memberKeys.map((key: string) => (
                             allFamily[key] && <Option key={key} value={key}>
                                 {allFamily[key].name}
                             </Option>
@@ -129,7 +129,7 @@ export default function FamilyInput() {
                             All Members
                         </Option>
                     </Select>
-                    : <label>{memberKeys.length && allFamily && allFamily[memberKeys[0]].name}</label>}
+                    : memberKeys.length && allFamily && <label>{allFamily[memberKeys[0]].name}</label>}
                     </Col>
                     <Col>
                     <Tooltip title='Add Family Member'>
