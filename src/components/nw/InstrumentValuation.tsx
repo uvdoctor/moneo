@@ -102,16 +102,18 @@ export default function InstrumentValuation() {
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
+		let isNameFilter = false;
+		let isTagFilter = false;
 		filteredInstruments.map((instrument: InstrumentInput) => {
 			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
-			if (filteredInfo.id || selectedTags.length) {
-				const idByName = filteredInfo.id.some((item: string) => item === instrument.id);
-				const idByTags = filterByTag.length ? filterByTag.some((data: InstrumentInput) => data.id === instrument.id) : false;
-				if (idByName || idByTags) filterAmt += price;
+			isNameFilter = filteredInfo.id ? filteredInfo.id.some((item: string) => item === instrument.id) : false;
+			isTagFilter = selectedTags.length ? filterByTag.some((data: InstrumentInput) => data.id === instrument.id) : false;
+			if (isNameFilter || isTagFilter) {
+				filterAmt += price;
 			}
 			total += price;
 		});
-		!filteredInfo.id ? setTotalFilterAmt(total) : setTotalFilterAmt(filterAmt);
+		(filteredInfo.id || selectedTags.length) ? setTotalFilterAmt(filterAmt) : setTotalFilterAmt(total);
 	}
 
 	useEffect(() => {
