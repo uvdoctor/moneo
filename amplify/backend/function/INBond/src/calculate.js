@@ -66,8 +66,7 @@ const calc = {
 };
 
 const calcYTM = (record, codes) => {
-	const reset = record[codes.rate];
-	const rate = reset.includes('RESET') || reset >= 20 ? 0 : parseFloat(reset);
+	const rate = getRate(record, codes);
 	const fv = 100;
 	const matrMonth = calc.calcMM(record[codes.mDate]);
 	const matrYear = calc.calcMY(record[codes.mDate]);
@@ -82,10 +81,20 @@ const calcYTM = (record, codes) => {
 	return ytmFinal;
 };
 
+const getRate = (record, codes) => {
+	const reset = record[codes.rate];
+	const name = record[codes.name];
+	let rate = reset.includes('RESET') || reset > 20 ? 0 : parseFloat(reset);
+	if (isNaN(rate)) {
+		name.startsWith('0') ? (rate = parseFloat(0)) : (rate = -1);
+	}
+	return rate;
+};
+
 const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	if (!record[codes.id] || record[codes.subt] === 'MC') return;
 	schema.id = record[codes.id];
-  	if(!schema.id.startsWith('IN')) return;
+	if (!schema.id.startsWith('IN')) return;
 	schema.sid = record[codes.sid];
 	schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];
 	schema.price = calc.calcPrice(record[codes.price]);
@@ -99,13 +108,11 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	schema.fr = calc.calcFR(record[codes.frate]);
 	schema.tf = calc.calcTF(record[codes.subt]);
 	schema.cr = calc.calcCR(record[codes.crstr]);
-	const reset = record[codes.rate];
-	schema.rate = reset.includes('RESET') || reset > 20 ? 0 : reset === '' ? null : parseFloat(reset);
+	schema.rate = getRate(record, codes);
 	schema.fv = 100;
 	schema.ytm = calcYTM(record, codes);
 	appendGenericFields(schema, table);
 	isinMap[record[codes.id]] = record[codes.id];
-	if (schema.rate === null) schema.name.startsWith('0') ? (schema.rate = parseFloat(0)) : schema.rate = -1;
 	return schema;
 };
 module.exports = { calcSchema, calc, calcYTM };
