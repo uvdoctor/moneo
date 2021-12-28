@@ -108,7 +108,7 @@ export default function FamilyInput() {
             {memberKeys.length ? <Row align="middle">
                     <Col>
                     {memberKeys.length > 1 ? 
-                    <Select showSearch
+                    (<Select showSearch
                         mode="multiple"
                         value={selectedMembers}
                         onChange={(val: string[]) => selectMember(val)}
@@ -120,16 +120,16 @@ export default function FamilyInput() {
                         size="middle"
                         maxTagCount={1}
                     >
-                        {memberKeys.length && memberKeys.map((key: string) => (
-                            allFamily[key] && <Option key={key} value={key}>
+                        {memberKeys.length > 1 && (memberKeys.map((key: string) => (
+                            <Option key={key} value={key}>
                                 {allFamily[key].name}
                             </Option>
-                        ))}
+                        )))}
                         <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
                             All Members
                         </Option>
-                    </Select>
-                    : <label>{memberKeys.length && allFamily && allFamily[memberKeys[0]].name}</label>}
+                    </Select>)
+                    : (<label>{memberKeys.length && allFamily && allFamily[memberKeys[0]].name}</label>)}
                     </Col>
                     <Col>
                     <Tooltip title='Add Family Member'>
