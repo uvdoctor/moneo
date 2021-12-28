@@ -153,7 +153,7 @@ export default function FamilyInput() {
                             <p>&nbsp;</p> 
                         </Fragment>
                     : null}
-                    {memberKeys.length && id ? 
+                    {memberKeys.length > 1 && id ? 
                         <SelectInput pre="Family Member" value={id}
                             changeHandler={setId} options={getFamilyMemberOptions()}
                         />

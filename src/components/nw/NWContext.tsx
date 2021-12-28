@@ -560,9 +560,7 @@ function NWContextProvider() {
 	useEffect(
 		() => {
 			if (user) initializeHoldings();
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ user ]
+		},[ user ]
 	);
 
 	useEffect(
