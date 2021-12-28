@@ -231,7 +231,7 @@ function NWContextProvider() {
 					categoryOptions: {
 						[PropertyType.P]: "Plot",
 						[PropertyType.A]: "Apartment",
-						[PropertyType.H]: "Home",
+						[PropertyType.H]: "House",
 						[PropertyType.C]: "Condominium",
 						[PropertyType.COMM]: "Commercial",
 						[PropertyType.T]: "Townhouse",
