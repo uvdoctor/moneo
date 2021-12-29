@@ -19,17 +19,7 @@
     "moneobacb277ebacb277e": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneobacb277ebacb277ePostConfirmation",
-          "triggerProvider": "Cognito",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
-        }
-      ],
+      "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
         "socialProviders": [],
@@ -231,11 +221,6 @@
           ]
         }
       ]
-    },
-    "moneobacb277ebacb277ePostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     },
     "moneopricelayer": {
       "providerPlugin": "awscloudformation",
