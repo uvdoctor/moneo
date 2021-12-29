@@ -162,9 +162,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
        formFields={[
         {
           type: "username",
-          value: uname,
-          disabled: true,
-          required: true,
+          hint: `Your username:- ${uname}`
         },
         {
           type: "code"
