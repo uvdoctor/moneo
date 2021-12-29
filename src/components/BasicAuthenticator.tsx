@@ -14,7 +14,6 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import SelectInput from "./form/selectinput";
 import { getRiskProfileOptions } from "./utils";
 import { RiskProfile } from "../api/goals";
-import { addFamilyMember } from "./nw/nwutils";
 
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
@@ -100,7 +99,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const handleConfirmSignUp = async () => {
     await Auth.signIn(uname, password);
     await createUserinfo(uname, email, notify, riskProfile, 5, new Date().toISOString());
-    await addFamilyMember("Self", "XXXXX1234X")
   }
 
   const handleRegistrationSubmit = async () => {
