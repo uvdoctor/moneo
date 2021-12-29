@@ -1,9 +1,8 @@
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile } from '../api/goals';
-import * as APIt from "../api/goals"
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
