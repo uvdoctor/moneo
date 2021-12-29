@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API } from 'aws-amplify';
-import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from '../api/goals';
+import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile } from '../api/goals';
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
@@ -112,3 +112,15 @@ export const deleteContact = async (uname: string) => {
 		console.log('Error while deleting contacts in table', e);
 	}
 };
+
+export const createUserinfo = async (uname: string, email: string, notify: boolean, rp: RiskProfile, dr: number, tc: string) => {
+	try {
+		const data = await API.graphql({
+			query: mutations.createUserInfo,
+			variables: { input: { uname, email, notify, rp, dr, tc }}
+		})
+		console.log(data);
+	} catch(e) {
+		console.log('Error while deleting contacts in table', e);
+	}
+}

@@ -1,5 +1,6 @@
 import { Menu } from "antd";
 import Link from "next/link";
+import { RiskProfile } from "../api/goals";
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 import { getQty } from "./nw/parseutils";
 
@@ -706,3 +707,13 @@ export const countrylist = [
 	{ countryCode: 'ZM', value: '+260', label: 'Zambia (+260)' },
 	{ countryCode: 'ZW', value: '+263', label: 'Zimbabwe (+263)' },
 ];
+
+export const getRiskProfileOptions = () => {
+  return {
+    [RiskProfile.VC]: "Up to 0%",
+    [RiskProfile.C]: "Up to 10%",
+    [RiskProfile.M]: "Up to 20%",
+    [RiskProfile.A]: "Up to 30%",
+    [RiskProfile.VA]: "Up to 50%",
+  };
+};

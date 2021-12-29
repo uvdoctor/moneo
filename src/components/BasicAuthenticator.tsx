@@ -3,14 +3,17 @@ import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
-import { Alert, Checkbox, Row } from "antd";
+import { Alert, Checkbox, Col, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
-import { doesEmailExist } from "./userinfoutils";
+import { createUserinfo, doesEmailExist } from "./userinfoutils";
 import Nav from "./Nav";
 import { AppContext } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import SelectInput from "./form/selectinput";
+import { getRiskProfileOptions } from "./utils";
+import { RiskProfile } from "../api/goals";
 
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
@@ -28,10 +31,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [email, setEmail] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
   const [disabledNext, setDisabledNext] = useState<boolean>(true);
-  const [back, setBack] = useState<boolean>(true);
-  const [next, setNext] = useState<boolean>(false);
+  const [stepOne, setStepOne] = useState<boolean>(true);
+  const [stepThree, setStepThree] = useState<boolean>(false);
+  const [stepTwo, setStepTwo] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [authState, setAuthState] = useState<string>('signin');
+  const [riskProfile, setRiskProfile] = useState<RiskProfile>(RiskProfile.VC);
   const [form] = useForm();
 
   const validateCaptcha = async (action: string) => {
@@ -79,22 +84,16 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       setEmailError("");
       let exists = await doesEmailExist(email, "AWS_IAM");
       if (!exists) {
-        setBack(false);
-        setNext(true);
+        setStepOne(false);
+        setStepTwo(true);
       } else {
-        setNext(false);
+        setStepTwo(false);
         setEmailError(
           "Please use another email address as this one is already used by another account."
         );
       }
       setLoading(false);
     });
-  };
-
-  const onBackClick = () => {
-    setLoading(false);
-    setNext(false);
-    setBack(true);
   };
 
   const handleRegistrationSubmit = async () => {
@@ -105,12 +104,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       Auth.signUp({
         username: username,
         password: password,
-        attributes: {
-          email: email,
-          zoneinfo: new Date().toISOString(),  //Terms and condition
-          website: notify ? new Date().toISOString() : "N", //Notify
-        },
-      })
+        attributes: { email: email } })
         .then(async (response) => {
           setLoading(false);
           Hub.dispatch("UI Auth", {
@@ -120,13 +114,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               ...response.user,
               username: username,
               password: password,
-              attributes: {
-                email: email,
-                zoneinfo: new Date().toISOString(),  //Terms and condition
-                website: notify ? new Date().toISOString() : "N",  //Notify
-              },
+              attributes: { email: email },
             },
-          });
+          })
+          await createUserinfo(username, email, notify, riskProfile, 5, new Date().toISOString());
         })
         .catch((error) => {
           setLoading(false);
@@ -169,9 +160,9 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               onFieldsChange={handleFormChange}
               layout="vertical"
             >
-              {back && (
+              {stepOne && (
                 <>
-                  <h4>Step 1/2</h4>
+                  <h4>Step 1/3</h4>
                   <p>&nbsp;</p>
                   <Form.Item
                     name="email"
@@ -189,12 +180,59 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                   >
                     <Input onChange={(e) => setEmail(e.currentTarget.value)} />
                   </Form.Item>{" "}
+                  <Row justify="end">
+                    <Button type="link" htmlType="button" onClick={onCancel}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={verifyEmail}
+                      disabled={disabledNext}
+                      loading={loading}
+                    >
+                      Next
+                    </Button>
+                  </Row>
                 </>
               )}
-
-              {next && (
+              {stepTwo && ( 
+                <><h4>Step 2/3</h4>
+                <p>&nbsp;</p>
+                <Row align="middle">
+                  <Col>
+                  <SelectInput
+                    info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+                    pre="Can Tolerate"
+                    unit="Loss"
+                    value={riskProfile}
+                    changeHandler={setRiskProfile}
+                    options={getRiskProfileOptions()}
+                  />
+                  </Col>
+                </Row>
+                <p>&nbsp;</p>
+                <Row justify="end">
+                  <Button type="link" htmlType="button" onClick={()=>{
+                    setStepTwo(false)
+                    setStepOne(true)}}>
+                    Back
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={()=>{
+                      setStepThree(true)
+                      setStepTwo(false)
+                    }}
+                    loading={loading}
+                  >
+                    Next
+                  </Button>
+                </Row>
+                </>
+              )}
+              {stepThree && (
                 <>
-                  <h4>Step 2/2</h4>
+                  <h4>Step 3/3</h4>
                   <p>&nbsp;</p>
                   <Row>
                     {error ? <Alert type="error" message={error} /> : null}
@@ -290,7 +328,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       <Button type="link" htmlType="button" onClick={onCancel}>
                         Cancel
                       </Button>
-                      <Button type="link" onClick={onBackClick}>
+                      <Button type="link" onClick={()=>{
+                        setStepThree(false)
+                        setStepTwo(true)
+                      }
+                      }>
                         Back
                       </Button>
                       <Button
@@ -305,21 +347,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                     </Form.Item>
                   </Row>
                 </>
-              )}
-              {back && (
-                <Row justify="end">
-                  <Button type="link" htmlType="button" onClick={onCancel}>
-                    Cancel
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={verifyEmail}
-                    disabled={disabledNext}
-                    loading={loading}
-                  >
-                    Next
-                  </Button>
-                </Row>
               )}
             </Form>
         </AmplifySection>}
