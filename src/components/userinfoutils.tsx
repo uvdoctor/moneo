@@ -118,7 +118,6 @@ export const createUserinfo = async (uname: string, email: string, notify: boole
 		const data = await API.graphql({
 			query: mutations.createUserInfo,
 			variables: { input: {  uname, email, notify, rp, dr, tc } },
-			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 		});
 		console.log(data);
 	} catch(e) {

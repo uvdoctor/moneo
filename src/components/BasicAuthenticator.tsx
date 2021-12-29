@@ -1,4 +1,4 @@
-import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifyConfirmSignUp, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useContext, useEffect, useState } from "react";
@@ -37,6 +37,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [loading, setLoading] = useState<boolean>(false);
   const [authState, setAuthState] = useState<string>('signin');
   const [riskProfile, setRiskProfile] = useState<RiskProfile>(RiskProfile.VC);
+  const [uname, setUname] = useState<string>('');
   const [form] = useForm();
 
   const validateCaptcha = async (action: string) => {
@@ -71,8 +72,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authData) => {
-      console.log("Next auth state: ", nextAuthState);
-      console.log("Auth data: ", authData);
+      console.log("Next auth state: ", nextAuthState, authData);
       setAuthState(nextAuthState);
     });
   }, []);
@@ -96,16 +96,22 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     });
   };
 
+  const handleConfirmSignUp = async () => {
+    await Auth.signIn(uname, password);
+    await createUserinfo(uname, email, notify, riskProfile, 5, new Date().toISOString());
+  }
+
   const handleRegistrationSubmit = async () => {
     validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
       if (!success) return;
       setLoading(true);
       const username = generateFromEmail(email);
+      setUname(username)
       Auth.signUp({
         username: username,
         password: password,
         attributes: { email: email } })
-        .then(async (response) => {
+        .then((response) => {
           setLoading(false);
           Hub.dispatch("UI Auth", {
             event: "AuthStateChange",
@@ -122,7 +128,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
           setLoading(false);
           setError(error.message);
         });
-        await createUserinfo(username, email, notify, riskProfile, 5, new Date().toISOString());
     });
   };
 
@@ -151,6 +156,21 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthContainer>
       <AmplifyAuthenticator>
+      { authState === AuthState.ConfirmSignUp && (
+       <AmplifyConfirmSignUp slot='confirm-sign-up'
+       handleAuthStateChange={handleConfirmSignUp}
+       formFields={[
+         {
+           type: 'username',
+           label: Translations.USERNAME_LABEL,
+           value: uname,
+           required: true,
+           disabled: uname ? true: false,
+           inputProps: { autocomplete: 'username' },
+         },
+         {type: 'code'}
+       ]}/> 
+      )}
       {authState !== 'signin' && 
         <AmplifySection slot="sign-up">
           <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
