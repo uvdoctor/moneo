@@ -117,12 +117,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               attributes: { email: email },
             },
           })
-          await createUserinfo(username, email, notify, riskProfile, 5, new Date().toISOString());
         })
         .catch((error) => {
           setLoading(false);
           setError(error.message);
         });
+        await createUserinfo(username, email, notify, riskProfile, 5, new Date().toISOString());
     });
   };
 

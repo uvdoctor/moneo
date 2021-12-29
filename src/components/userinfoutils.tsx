@@ -116,13 +116,11 @@ export const deleteContact = async (uname: string) => {
 
 export const createUserinfo = async (uname: string, email: string, notify: boolean, rp: RiskProfile, dr: number, tc: string) => {
 	try {
-		const { data } = (await API.graphql(
-      graphqlOperation(mutations.createUserInfo, {
-        input: { uname, email, notify, rp, dr, tc },
-      })
-    )) as {
-      data: APIt.CreateUserInfoMutation;
-    };
+		const data = await API.graphql({
+			query: mutations.createUserInfo,
+			variables: { input: {  uname, email, notify, rp, dr, tc } },
+			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+		});
 		console.log(data);
 	} catch(e) {
 		console.log('Error while creating contacts in table', e);
