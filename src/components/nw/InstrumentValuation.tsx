@@ -9,7 +9,6 @@ import { FilterTwoTone } from '@ant-design/icons';
 import { AppContext, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { AssetSubType, AssetType, InstrumentInput, InsType, MCap, MFSchemeType } from '../../api/goals';
 import simpleStorage from 'simplestorage.js';
-
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
 	const {
@@ -20,25 +19,24 @@ export default function InstrumentValuation() {
 		selectedMembers,
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
-	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<InstrumentInput>>([ ...instruments ]);
-	const [ filterByTag, setFilterByTag ] = useState<Array<InstrumentInput>>([]);
-	const [ nameFilterValues, setNameFilterValues ] = useState<Array<Object>>([ {} ]);
+	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
+	const [ filterByTag, setFilterByTag ] = useState<Array<any>>([]);
+	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
-	const [ tags, setTags ] = useState<Object>({});
+	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ subtTags, setSubtTags ] = useState<Object>({});
+	const [ subtTags, setSubtTags ] = useState<any>({});
 	const [ selectedSubtTags, setSelectedSubtTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
-	const { E, F, A, H } = AssetType;
 
 	const bondTags = { CB: 'Corporate Bond', GB: 'Government Bond' };
-	const tagsData: {Stocks: { tags: {}}, 'Mutual Funds': {tags: {}, subt: {}}, Bonds: {tags: {}}} = {
+	const tagsData: any = {
 		Stocks: { tags: getMarketCap() },
 		'Mutual Funds': { tags: getAssetTypes(), subt: { E: getMarketCap(), F: getFixedCategories() } },
 		Bonds: { tags: bondTags },
 	};
 
-	const hasTags = (childTab: string): Boolean => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
+	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -55,28 +53,24 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={setTotal}/>
+				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={()=>setTotal()}/>
 			}
 		}
 	];
-
 	//@ts-ignore
 	const handleChange = (pagination: any, filters: any, sorters: any) => setFilteredInfo(filters);
 
 	useEffect(
 		() => {
-			let filteredNames: Array<{text: String, value: String}> = [];
+			let filteredNames: Array<any> = [];
 			let ids: Set<string> = new Set();
 			filteredInstruments.forEach((instrument: InstrumentInput) => {
-				const id = instrument.id;
-				if (!ids.has(id)) {
-					filteredNames.push({ text: insData[id] ? insData[id].name : id, value: id });
-				}
-				ids.add(id);
+				if (!ids.has(instrument.id)) filteredNames.push({ text: insData[instrument.id] ? insData[instrument.id].name : instrument.id, value: instrument.id });
+				ids.add(instrument.id);
 			});
 			setNameFilterValues([ ...filteredNames ]);
 		},
-		[filteredInstruments, insData]
+		[ filteredInstruments ]
 	);
 
 	const subtTagsData = () => {
@@ -103,7 +97,6 @@ export default function InstrumentValuation() {
 		setSelectedSubtTags([]);
 		return;
 	};
-
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
@@ -120,25 +113,21 @@ export default function InstrumentValuation() {
 		})
 		filteredInfo.id ? setTotalFilterAmt(filterAmt) : setTotalFilterAmt(total);
 	}
-
 	useEffect(() => {
 		setTotal();
 	},[ filteredInstruments, filteredInfo, instruments, selectedTags, filterByTag ]);
-
 	useEffect(
 		() => {
 			hasTags(childTab) ? setTags(tagsData[childTab].tags) : setTags({});
 		},
 		[ childTab ]
 	);
-
 	useEffect(
 		() => {
 			if (childTab === TAB.MF) subtTagsData();
 		},
 		[ selectedTags ]
 	);
-
 	const filterInstrumentsByTabs = () => {
 		if (!instruments.length) return;
 		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
@@ -159,7 +148,6 @@ export default function InstrumentValuation() {
 		});
 		setFilteredInstruments([ ...filteredData ]);
 	};
-
 	const filterInstrumentsByTags = () => {
 		if (!selectedTags.length) return;
 		let filterDataByTag = filteredInstruments.filter((instrument: InstrumentInput) => {
@@ -194,25 +182,21 @@ export default function InstrumentValuation() {
 				}
 			}
 		});
-
 		
 		setFilterByTag([ ...filterDataByTag ]);
 	};
-
 	useEffect(
 		() => {
 			filterInstrumentsByTabs();
 		},
 		[ childTab, instruments, selectedMembers, selectedCurrency ]
 	);
-
 	useEffect(
 		() => {
 			filterInstrumentsByTags();
 		},
 		[ selectedTags, selectedSubtTags ]
 	);
-
 	return instruments.length ? (
 		<Fragment>
 			<p style={{ textAlign: 'center' }}>
