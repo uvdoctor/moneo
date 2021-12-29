@@ -20,24 +20,25 @@ export default function InstrumentValuation() {
 		selectedMembers,
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
-	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
-	const [ filterByTag, setFilterByTag ] = useState<Array<any>>([]);
-	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
+	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<InstrumentInput>>([ ...instruments ]);
+	const [ filterByTag, setFilterByTag ] = useState<Array<InstrumentInput>>([]);
+	const [ nameFilterValues, setNameFilterValues ] = useState<Array<Object>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
-	const [ tags, setTags ] = useState<any>({});
+	const [ tags, setTags ] = useState<Object>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ subtTags, setSubtTags ] = useState<any>({});
+	const [ subtTags, setSubtTags ] = useState<Object>({});
 	const [ selectedSubtTags, setSelectedSubtTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
+	const { E, F, A, H } = AssetType;
 
 	const bondTags = { CB: 'Corporate Bond', GB: 'Government Bond' };
-	const tagsData: any = {
+	const tagsData: {Stocks: { tags: {}}, 'Mutual Funds': {tags: {}, subt: {}}, Bonds: {tags: {}}} = {
 		Stocks: { tags: getMarketCap() },
 		'Mutual Funds': { tags: getAssetTypes(), subt: { E: getMarketCap(), F: getFixedCategories() } },
 		Bonds: { tags: bondTags },
 	};
 
-	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
+	const hasTags = (childTab: string): Boolean => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -54,7 +55,7 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={()=>setTotal()}/>
+				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={setTotal}/>
 			}
 		}
 	];
@@ -64,15 +65,18 @@ export default function InstrumentValuation() {
 
 	useEffect(
 		() => {
-			let filteredNames: Array<any> = [];
+			let filteredNames: Array<{text: String, value: String}> = [];
 			let ids: Set<string> = new Set();
 			filteredInstruments.forEach((instrument: InstrumentInput) => {
-				if (!ids.has(instrument.id)) filteredNames.push({ text: insData[instrument.id] ? insData[instrument.id].name : instrument.id, value: instrument.id });
-				ids.add(instrument.id);
+				const id = instrument.id;
+				if (!ids.has(id)) {
+					filteredNames.push({ text: insData[id] ? insData[id].name : id, value: id });
+				}
+				ids.add(id);
 			});
 			setNameFilterValues([ ...filteredNames ]);
 		},
-		[ filteredInstruments ]
+		[filteredInstruments, insData]
 	);
 
 	const subtTagsData = () => {

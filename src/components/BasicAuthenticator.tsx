@@ -160,15 +160,15 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
        <AmplifyConfirmSignUp slot='confirm-sign-up'
        handleAuthStateChange={handleConfirmSignUp}
        formFields={[
-         {
-           type: 'username',
-           label: Translations.USERNAME_LABEL,
-           value: uname,
-           required: true,
-           disabled: uname ? true: false,
-           inputProps: { autocomplete: 'username' },
-         },
-         {type: 'code'}
+        {
+          type: "username",
+          value: uname,
+          disabled: true,
+          required: true,
+        },
+        {
+          type: "code"
+        }
        ]}/> 
       )}
       {authState !== 'signin' && 
