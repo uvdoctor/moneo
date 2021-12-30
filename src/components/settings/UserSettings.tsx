@@ -28,7 +28,7 @@ const initialState = {
   whatsapp: "",
   riskProfile: "",
   dr: 0,
-  isDrAuto: 0,
+  isDrManual: 0,
   notify: 0
 }
 
@@ -50,7 +50,7 @@ const userReducer = ( userState: any, { type, data }: { type: string; data: any 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
-  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrAuto } = userState;
+  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrManual } = userState;
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
   
@@ -111,7 +111,7 @@ export default function UserSettings(): JSX.Element {
   };
 
   const updateOthersTab = async () => {
-   await updateUserDetails({uname: owner, dr: isDrAuto ? 0 : dr, rp: riskProfile, notify: notify})
+   await updateUserDetails({uname: owner, dr: isDrManual ? dr : 0, rp: riskProfile, notify: notify})
   }
   
   useEffect(() => {
@@ -135,7 +135,7 @@ export default function UserSettings(): JSX.Element {
         dr: getDiscountRate(response?.rp as string),
         riskProfile: response?.rp,
         notify: response?.notify, 
-        isDrAuto: response?.dr === 0 ? 1 : 0 
+        isDrManual: response?.dr === 0 ? 0 : 1 
       }
       });
     }).catch(err=>console.log(err))))();
@@ -374,10 +374,10 @@ export default function UserSettings(): JSX.Element {
                   <Row align="middle">
                   <Col>Discount Rate:-</Col>
                   <Col className="nested-col">
-                    <HSwitch value={isDrAuto} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "isDrAuto", value}})} rightText="Manual" leftText="Auto"/>
+                    <HSwitch value={isDrManual} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "isDrManual", value}})} rightText="Manual" leftText="Auto"/>
                   </Col>
                   <Col className="nested-col">
-                    {isDrAuto ? <NumberInput pre={''} value={dr} changeHandler={(value: number)=>dispatch({ type: "updateSingly", data: { field: "dr", value}})} /> :
+                    {isDrManual ? <NumberInput pre={''} value={dr} changeHandler={(value: number)=>dispatch({ type: "updateSingly", data: { field: "dr", value}})} /> :
                     <label><strong>{dr}%</strong></label>}
                   </Col>
                   </Row>
