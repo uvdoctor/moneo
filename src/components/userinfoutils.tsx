@@ -102,6 +102,18 @@ export const updateEmail = async (uname: string, email: string) => {
 	}
 };
 
+export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
+	try {
+		const data = await API.graphql({
+			query: mutations.updateUserInfo,
+			variables: { input: input }
+		});
+		console.log(data);
+	} catch (e) {
+		console.log('Error while updating table', e);
+	}
+};
+
 export const deleteContact = async (uname: string) => {
 	try {
 		const data = await API.graphql({
@@ -133,3 +145,4 @@ export const getUserDetails = async (uname: string) => {
   };
   return getUserInfo ? getUserInfo : null;
 };
+

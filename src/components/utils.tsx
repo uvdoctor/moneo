@@ -717,3 +717,19 @@ export const getRiskProfileOptions = () => {
     [RiskProfile.VA]: "Up to 50%",
   };
 };
+
+export const getDiscountRate = (key: string) => {
+  const percent = 5;
+  switch (key) {
+    case RiskProfile.VC:
+      return percent;
+    case RiskProfile.C:
+      return percent+2;
+    case RiskProfile.M:
+      return percent+4;
+    case RiskProfile.A:
+      return percent+6;
+    case RiskProfile.VA:
+      return percent+11;
+  }
+}

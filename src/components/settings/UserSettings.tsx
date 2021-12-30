@@ -2,7 +2,7 @@ import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Chec
 import React, { useContext, useEffect, useReducer } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { countrylist, getRiskProfileOptions, isMobileDevice } from "../utils";
+import { countrylist, getDiscountRate, getRiskProfileOptions, isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import PasswordInput from "./PasswordInput";
@@ -10,7 +10,7 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { doesEmailExist, doesImExist, doesMobExist, getUserDetails, updateIm } from "../userinfoutils";
+import { doesEmailExist, doesImExist, doesMobExist, getUserDetails, updateIm, updateUserDetails } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
 import SelectInput from "../form/selectinput";
 import HSwitch from "../HSwitch";
@@ -28,7 +28,7 @@ const initialState = {
   whatsapp: "",
   riskProfile: "",
   dr: 0,
-  isDrAuto: 1,
+  isDrAuto: 0,
   notify: 0
 }
 
@@ -109,6 +109,10 @@ export default function UserSettings(): JSX.Element {
       failure(`Unable to update ${error}`);
     }
   };
+
+  const updateOthersTab = async () => {
+   await updateUserDetails({uname: owner, dr: isDrAuto ? 0 : dr, rp: riskProfile, notify: notify})
+  }
   
   useEffect(() => {
     if (!user) return;
@@ -128,12 +132,18 @@ export default function UserSettings(): JSX.Element {
   useEffect(()=>{
     owner && (async () => (await getUserDetails(owner).then(response=>{
       dispatch({ type: "userUpdate", data: { 
-        dr: response?.dr,
+        dr: getDiscountRate(response?.rp as string),
         riskProfile: response?.rp,
-        notify: response?.notify }
+        notify: response?.notify, 
+        isDrAuto: response?.dr === 0 ? 1 : 0 
+      }
       });
     }).catch(err=>console.log(err))))();
   },[owner])
+
+  useEffect(()=>{
+    dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile)}})
+  },[riskProfile])
 
   return (
     <>
@@ -340,11 +350,12 @@ export default function UserSettings(): JSX.Element {
               <TabPane tab="Others" key="4">
                 <Row justify='start' className="tabPane">
                   <Col>
-                  <Row justify="start">
-                  <Col className="first-col-view">
+                  <Row justify="start" align="middle">
+                  <Col>Risk Profile:-</Col>
+                  <Col className='nested-col'>
                     <SelectInput
                       info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-                      pre="Risk Profile:-"
+                      pre="Can Tolerate"
                       unit="Loss"
                       value={riskProfile}
                       changeHandler={(value: string)=>dispatch({ type: "updateSingly", data: { field: "riskProfile", value}})}
@@ -354,24 +365,41 @@ export default function UserSettings(): JSX.Element {
                   </Row>
                   <p>&nbsp;</p>
                   <Row>
-                  <Col>Offer and News Letters:-</Col>
-                  <span>&nbsp;</span>
-                  <Col><HSwitch value={notify} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "notify", value}})}/>
+                  <Col>Notification:-</Col>
+                  <Col className="nested-col">
+                    <HSwitch value={notify} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "notify", value}})} rightText="Offer and News Letters"/>
                   </Col>
                   </Row>
                   <p>&nbsp;</p>
-                  <Row justify="space-between">
+                  <Row align="middle">
                   <Col>Discount Rate:-</Col>
-                  <span>&nbsp;</span>
-                  <Col>
+                  <Col className="nested-col">
                     <HSwitch value={isDrAuto} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "isDrAuto", value}})} rightText="Manual" leftText="Auto"/>
                   </Col>
-                  <span>&nbsp;</span>
-                  <Col>
+                  <Col className="nested-col">
                     {isDrAuto ? <NumberInput pre={''} value={dr} changeHandler={(value: number)=>dispatch({ type: "updateSingly", data: { field: "dr", value}})} /> :
-                    <label><strong>{dr}</strong></label>}
+                    <label><strong>{dr}%</strong></label>}
                   </Col>
                   </Row>
+                  <p>&nbsp;</p>
+                    <Row justify="center">
+                      <Col>
+                        <Button
+                          type="primary"
+                          style={{ color: COLORS.WHITE }}
+                          icon={<SaveOutlined />}
+                          onClick={()=>{
+                            validateCaptcha("othersTab_change").then((success: boolean) => {
+                              if (!success) return;
+                              updateOthersTab();
+                            })
+                          }
+                        }
+                        >
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </TabPane>
