@@ -1,8 +1,9 @@
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
-import { API } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile } from '../api/goals';
+import * as APIt from "../api/goals";
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
@@ -124,3 +125,11 @@ export const createUserinfo = async (uname: string, email: string, notify: boole
 		console.log('Error while creating contacts in table', e);
 	}
 }
+
+export const getUserDetails = async (uname: string) => {
+  const { data: { getUserInfo }} =
+    await API.graphql(graphqlOperation(queries.getUserInfo, { uname: uname })) as {
+    data: APIt.GetUserInfoQuery;
+  };
+  return getUserInfo ? getUserInfo : null;
+};

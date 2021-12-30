@@ -2,7 +2,7 @@ import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Chec
 import React, { useContext, useEffect, useReducer } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { countrylist, isMobileDevice } from "../utils";
+import { countrylist, getRiskProfileOptions, isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import PasswordInput from "./PasswordInput";
@@ -10,8 +10,11 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { doesEmailExist, doesImExist, doesMobExist, updateIm } from "../userinfoutils";
+import { doesEmailExist, doesImExist, doesMobExist, getUserDetails, updateIm } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
+import SelectInput from "../form/selectinput";
+import HSwitch from "../HSwitch";
+import NumberInput from "../form/numberinput";
 require("./Settings.less");
 
 const initialState = {
@@ -23,6 +26,10 @@ const initialState = {
   prefuser: "",
   dob: "",
   whatsapp: "",
+  riskProfile: "",
+  dr: 0,
+  isDrAuto: 1,
+  notify: 0
 }
 
 const userReducer = ( userState: any, { type, data }: { type: string; data: any }) => {
@@ -43,7 +50,7 @@ const userReducer = ( userState: any, { type, data }: { type: string; data: any 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
-  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp } = userState;
+  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrAuto } = userState;
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
   
@@ -105,6 +112,13 @@ export default function UserSettings(): JSX.Element {
   
   useEffect(() => {
     if (!user) return;
+    (async () => (await getUserDetails(owner).then(response=>{
+      dispatch({ type: "userUpdate", data: { 
+        dr: response?.dr,
+        riskProfile: response?.rp,
+        notify: response?.notify }
+      });
+    }).catch(err=>console.log(err))))();
     const mobile = user?.attributes?.phone_number ? user?.attributes?.phone_number.replace(countryCode?.value, "") : '';
     const whatsapp = user?.attributes?.nickname ? user?.attributes?.nickname.replace(countryCode?.value, "") : '';
     dispatch({ type: "userUpdate", data: { 
@@ -114,9 +128,9 @@ export default function UserSettings(): JSX.Element {
       lastName: user?.attributes?.family_name || '',
       prefuser: user?.attributes?.preferred_username || '',
       dob: user?.attributes?.birthdate || '',
-      whatsapp: whatsapp }});
-  }, [appContextLoaded, countryCode?.value, user]);
-
+      whatsapp: whatsapp }
+    });
+  }, [appContextLoaded, countryCode?.value, owner, user]);
   return (
     <>
       {error ? <Alert type="error" message={error} /> : null}
@@ -316,6 +330,44 @@ export default function UserSettings(): JSX.Element {
                 <Row justify="start" className="tabPane">
                   <Col>
                     <PasswordInput user={user} />
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab="Others" key="4">
+                <Row justify='start' className="tabPane">
+                  <Col>
+                  <Row justify="start">
+                  <Col className="first-col-view">
+                    <SelectInput
+                      info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+                      pre="Risk Profile:-"
+                      unit="Loss"
+                      value={riskProfile}
+                      changeHandler={(value: string)=>dispatch({ type: "updateSingly", data: { field: "riskProfile", value}})}
+                      options={getRiskProfileOptions()}
+                  />
+                  </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                  <Row>
+                  <Col>Offer and News Letters:-</Col>
+                  <span>&nbsp;</span>
+                  <Col><HSwitch value={notify} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "notify", value}})}/>
+                  </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                  <Row justify="space-between">
+                  <Col>Discount Rate:-</Col>
+                  <span>&nbsp;</span>
+                  <Col>
+                    <HSwitch value={isDrAuto} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "isDrAuto", value}})} rightText="Manual" leftText="Auto"/>
+                  </Col>
+                  <span>&nbsp;</span>
+                  <Col>
+                    {isDrAuto ? <NumberInput pre={''} value={dr} changeHandler={(value: number)=>dispatch({ type: "updateSingly", data: { field: "dr", value}})} /> :
+                    <label><strong>{dr}</strong></label>}
+                  </Col>
+                  </Row>
                   </Col>
                 </Row>
               </TabPane>
