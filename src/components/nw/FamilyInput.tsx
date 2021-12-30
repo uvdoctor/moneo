@@ -105,7 +105,7 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {memberKeys.length && allFamily ? <Row align="middle">
+            {(memberKeys.length && allFamily) ? <Row align="middle">
                     <Col>
                     {memberKeys.length > 1 ? 
                     (<Select showSearch

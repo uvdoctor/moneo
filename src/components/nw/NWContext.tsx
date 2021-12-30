@@ -477,9 +477,11 @@ function NWContextProvider() {
 	const initializeFamilyList = async () => {
 		try {
 			let allFamilyMembers = await loadAllFamilyMembers();
+			setAllFamily(allFamilyMembers);			
 			let allFamilyKeys = Object.keys(allFamilyMembers);
-			if(allFamilyKeys.length === 1) setSelectedMembers([...[allFamilyKeys[0]]]);
-			setAllFamily(allFamilyMembers);
+			if(allFamilyKeys.length === 1) {
+				setSelectedMembers([...[allFamilyKeys[0]]]);
+			}
 			setLoadingFamily(false);
 		} catch (err) {
 			notification.error({
@@ -559,7 +561,9 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if (user) (async () => (await initializeHoldings()))()
+			if (user) {
+				(async () => (await initializeHoldings()))()
+			}
 		},[ user ]
 	);
 
