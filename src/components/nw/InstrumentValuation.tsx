@@ -112,7 +112,7 @@ export default function InstrumentValuation() {
 			ids.add(id);
 		});
 		setNameFilterValues([ ...filteredNames ]);
-	},[ filteredInstruments, insData ]);
+	},[ filteredInstruments ]);
 
 	useEffect(() => {
 		setTotal();
