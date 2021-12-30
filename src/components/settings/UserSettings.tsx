@@ -112,13 +112,6 @@ export default function UserSettings(): JSX.Element {
   
   useEffect(() => {
     if (!user) return;
-    (async () => (await getUserDetails(owner).then(response=>{
-      dispatch({ type: "userUpdate", data: { 
-        dr: response?.dr,
-        riskProfile: response?.rp,
-        notify: response?.notify }
-      });
-    }).catch(err=>console.log(err))))();
     const mobile = user?.attributes?.phone_number ? user?.attributes?.phone_number.replace(countryCode?.value, "") : '';
     const whatsapp = user?.attributes?.nickname ? user?.attributes?.nickname.replace(countryCode?.value, "") : '';
     dispatch({ type: "userUpdate", data: { 
@@ -130,7 +123,18 @@ export default function UserSettings(): JSX.Element {
       dob: user?.attributes?.birthdate || '',
       whatsapp: whatsapp }
     });
-  }, [appContextLoaded, countryCode?.value, owner, user]);
+  }, [appContextLoaded, countryCode?.value, user]);
+
+  useEffect(()=>{
+    owner && (async () => (await getUserDetails(owner).then(response=>{
+      dispatch({ type: "userUpdate", data: { 
+        dr: response?.dr,
+        riskProfile: response?.rp,
+        notify: response?.notify }
+      });
+    }).catch(err=>console.log(err))))();
+  },[owner])
+
   return (
     <>
       {error ? <Alert type="error" message={error} /> : null}

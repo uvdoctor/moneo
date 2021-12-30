@@ -559,7 +559,7 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if (user) initializeHoldings();
+			if (user) (async () => (await initializeHoldings()))()
 		},[ user ]
 	);
 
