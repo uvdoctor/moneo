@@ -139,7 +139,7 @@ export default function UserSettings(): JSX.Element {
       }
       });
     }).catch(err=>console.log(err))))();
-  },[owner])
+  },[user])
 
   useEffect(()=>{
     dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile)}})
