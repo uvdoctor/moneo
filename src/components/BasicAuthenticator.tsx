@@ -103,7 +103,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 				data: user
 			});
 		});
-		await createUserinfo(uname, email, notify, riskProfile, 0, new Date().toISOString(), TaxLiability.L);
+		await createUserinfo(uname, email, notify, riskProfile, 0, new Date().toISOString(), taxLiability);
 	};
 
 	const handleRegistrationSubmit = async () => {
