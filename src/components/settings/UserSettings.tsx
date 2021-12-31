@@ -134,7 +134,7 @@ export default function UserSettings(): JSX.Element {
     userInfo && dispatch({ type: "userUpdate", data: { 
       riskProfile: userInfo?.rp,
       notify: userInfo?.notify, 
-      isDrManual: userInfo?.dr ? 0 : 1,
+      isDrManual: !userInfo?.dr ? 0 : 1,
       tax: userInfo?.tax 
     }});
   },[ userInfo ])
