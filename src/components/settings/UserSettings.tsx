@@ -2,7 +2,7 @@ import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Chec
 import React, { useContext, useEffect, useReducer } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { countrylist, getDiscountRate, getRiskProfileOptions, isMobileDevice } from "../utils";
+import { countrylist, getDiscountRate, getRiskProfileOptions, getTaxLiabilityOptions, isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import PasswordInput from "./PasswordInput";
@@ -15,12 +15,13 @@ import DatePickerInput from "../form/DatePickerInput";
 import SelectInput from "../form/selectinput";
 import HSwitch from "../HSwitch";
 import NumberInput from "../form/numberinput";
+import { TaxLiability } from "../../api/goals";
 require("./Settings.less");
 
 const initialState = {
   email: "",
   mobile: "",
-  error: "",
+  error: [],
   name: "",
   lastName: "",
   prefuser: "",
@@ -29,15 +30,16 @@ const initialState = {
   riskProfile: "",
   dr: 0,
   isDrManual: 0,
-  notify: 0
+  notify: 0,
+  tax: TaxLiability.M,
 }
 
 const userReducer = ( userState: any, { type, data }: { type: string; data: any }) => {
   switch (type) {
-    case "updateSingly":
+    case "single":
       return {
         ...userState,
-        [data.field]: data.value,
+        [data.field]: data.val,
       };
     default:
       return {
@@ -50,7 +52,7 @@ const userReducer = ( userState: any, { type, data }: { type: string; data: any 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner, userInfo }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
-  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrManual } = userState;
+  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrManual, tax } = userState;
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
   
@@ -85,7 +87,7 @@ export default function UserSettings(): JSX.Element {
 
   const updateImIfSameAsMob = async () => {
     if(user?.attributes?.phone_number) {
-      dispatch({ type: "updateSingly", data: { field: "whatsapp", mobile }});
+      dispatch({ type: "single", data: { field: "whatsapp", val: mobile }});
       await updateAccountTab(mobile, doesImExist, "Whatsapp Number", { nickname: countryCode?.value+mobile });
     }else{
       failure('Update your mobile, your mobile number is empty.');
@@ -131,15 +133,16 @@ export default function UserSettings(): JSX.Element {
 
   useEffect(()=>{
     userInfo && dispatch({ type: "userUpdate", data: { 
-      dr: getDiscountRate(userInfo.rp as string, defaultCountry),
+      dr: getDiscountRate(userInfo?.rp as string, defaultCountry),
       riskProfile: userInfo?.rp,
       notify: userInfo?.notify, 
-      isDrManual: userInfo?.dr === 0 ? 0 : 1 
+      isDrManual: userInfo?.dr === 0 ? 0 : 1,
+      tax: userInfo?.tax 
     }});
   },[userInfo, defaultCountry])
 
   useEffect(()=>{
-    dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile, defaultCountry)}})
+    dispatch({type: "single", data: { field: "dr", val: getDiscountRate(riskProfile, defaultCountry)}})
   },[riskProfile, defaultCountry])
 
   return (
@@ -172,11 +175,11 @@ export default function UserSettings(): JSX.Element {
                           pre="First Name"
                           placeholder="Name"
                           value={name}
-                          changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "name", value}})}
+                          changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "name", val}})}
                           width={300}
                           minLength={2}
                           maxLength={20}
-                          setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                          setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                           fieldName="firstname"
                           pattern="^[a-zA-Z'-.,]+$"
                         />
@@ -189,11 +192,11 @@ export default function UserSettings(): JSX.Element {
                           pre="Last Name"
                           placeholder="Last Name"
                           value={lastName}
-                          changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "lastName",  value}})}
+                          changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "lastName",  val}})}
                           width={300}
                           minLength={2}
                           maxLength={20}
-                          setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                          setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                           fieldName="lastname"
                           pattern="^[a-zA-Z'-.,]+$"
                         />
@@ -202,7 +205,7 @@ export default function UserSettings(): JSX.Element {
                     <span>&nbsp;</span>
                     <Row justify="center">
                       <Col>
-                        <DatePickerInput title={"Date of birth"} className="dob" value={dob} changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "dob", value}})}/>
+                        <DatePickerInput title={"Date of birth"} className="dob" value={dob} changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "dob", val}})}/>
                       </Col>
                     </Row>
                     <p>&nbsp;</p>
@@ -236,9 +239,9 @@ export default function UserSettings(): JSX.Element {
                     <TextInput
                       pre="Login Name"
                       value={prefuser}
-                      changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "prefuser", value}})}
+                      changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "prefuser", val}})}
                       fieldName="prefusername"
-                      setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                      setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                       post={
                         <Button
                           type="link"
@@ -263,10 +266,10 @@ export default function UserSettings(): JSX.Element {
                       pre="Mobile"
                       prefix={countryCode?.value}
                       value={mobile}
-                      changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "mobile", value}})}
+                      changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "mobile", val}})}
                       fieldName="mobile"
                       pattern="^[0-9]"
-                      setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                      setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                       minLength={10}
                       maxLength={10}
                       post={
@@ -295,10 +298,10 @@ export default function UserSettings(): JSX.Element {
                       pre="Whatsapp"
                       prefix={countryCode?.value}
                       value={whatsapp}
-                      changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "whatsapp", value}})}
+                      changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "whatsapp", val}})}
                       fieldName="whatsapp"
                       pattern="^[0-9]"
-                      setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                      setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                       minLength={10}
                       maxLength={10}
                       post={
@@ -318,9 +321,9 @@ export default function UserSettings(): JSX.Element {
                       pre="Email Id"
                       placeholder={"abc@xyz.com"}
                       value={email}
-                      changeHandler={(value: any)=>dispatch({ type: "updateSingly", data: { field: "email", value}})}
+                      changeHandler={(val: any)=>dispatch({ type: "single", data: { field: "email", val}})}
                       pattern={"^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"}
-                      setError={(value: any)=>dispatch({ type: "updateSingly", data: { field: "error", value}})}
+                      setError={(val: any)=>dispatch({ type: "single", data: { field: "error", val}})}
                       fieldName="email"
                       post={
                         <OtpDialogue
@@ -355,8 +358,21 @@ export default function UserSettings(): JSX.Element {
                       pre="Can Tolerate"
                       unit="Loss"
                       value={riskProfile}
-                      changeHandler={(value: string)=>dispatch({ type: "updateSingly", data: { field: "riskProfile", value}})}
+                      changeHandler={(val: string)=>dispatch({ type: "single", data: { field: "riskProfile", val}})}
                       options={getRiskProfileOptions()}
+                  />
+                  </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                  <Row justify="start" align="middle">
+                  <Col>Tax Liability:-</Col>
+                  <Col className='nested-col'>
+                  <SelectInput
+                    info="How much do you earn in a year?"
+                    pre="Yearly Income"
+                    value={tax}
+                    changeHandler={(val: string)=>dispatch({ type: "single", data: { field: "riskProfile", val}})}
+                    options={getTaxLiabilityOptions()}
                   />
                   </Col>
                   </Row>
@@ -364,17 +380,17 @@ export default function UserSettings(): JSX.Element {
                   <Row>
                   <Col>Notification:-</Col>
                   <Col className="nested-col">
-                    <HSwitch value={notify} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "notify", value}})} rightText="Offer and News Letters"/>
+                    <HSwitch value={notify} setter={(val: boolean)=>dispatch({ type: "single", data: { field: "notify", val}})} rightText="Offer and News Letters"/>
                   </Col>
                   </Row>
                   <p>&nbsp;</p>
                   <Row align="middle">
                   <Col>Discount Rate:-</Col>
                   <Col className="nested-col">
-                    <HSwitch value={isDrManual} setter={(value: boolean)=>dispatch({ type: "updateSingly", data: { field: "isDrManual", value}})} rightText="Manual" leftText="Auto"/>
+                    <HSwitch value={isDrManual} setter={(val: boolean)=>dispatch({ type: "single", data: { field: "isDrManual", val}})} rightText="Manual" leftText="Auto"/>
                   </Col>
                   <Col className="nested-col">
-                    {isDrManual ? <NumberInput pre={''} value={dr} changeHandler={(value: number)=>dispatch({ type: "updateSingly", data: { field: "dr", value}})} /> :
+                    {isDrManual ? <NumberInput pre={''} value={dr} changeHandler={(val: number)=>dispatch({ type: "single", data: { field: "dr", val}})} /> :
                     <label><strong>{dr}%</strong></label>}
                   </Col>
                   </Row>
