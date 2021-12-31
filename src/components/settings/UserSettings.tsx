@@ -10,7 +10,7 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { doesEmailExist, doesImExist, doesMobExist, updateIm, updateUserDetails } from "../userinfoutils";
+import { doesEmailExist, doesImExist, doesMobExist, updateUserDetails } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
 import SelectInput from "../form/selectinput";
 import HSwitch from "../HSwitch";
@@ -76,7 +76,7 @@ export default function UserSettings(): JSX.Element {
       await Auth.updateUserAttributes(user, updateAttr );
       success(`${attr} updated successfully. Enter Otp to verify`);
       if(attr === "Whatsapp Number") {
-        await updateIm(owner, data as number);
+        await updateUserDetails({uname: owner, im: data as number});
       }
       return true;
     } catch (error) {

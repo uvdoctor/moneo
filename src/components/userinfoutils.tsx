@@ -66,42 +66,6 @@ export const doesImExist = async (im: Number) => {
 	}
 };
 
-export const updateMobile = async (uname:string, mob: Number) => {
-	try {
-		const data = await API.graphql({
-			query: mutations.updateUserInfo,
-			variables: { input: { uname, mob } },
-		});
-		console.log(data);
-	} catch (e) {
-		console.log('Error while adding mobile in table', e);
-	}
-};
-
-export const updateIm = async (uname: string, im: Number) => {
-	try {
-		const data = await API.graphql({
-			query: mutations.updateUserInfo,
-			variables: { input: { uname, im } },
-		});
-		console.log(data);
-	} catch (e) {
-		console.log('Error while adding im in table', e);
-	}
-};
-
-export const updateEmail = async (uname: string, email: string) => {
-	try {
-		const data = await API.graphql({
-			query: mutations.updateUserInfo,
-			variables: { input: { uname, email } }
-		});
-		console.log(data);
-	} catch (e) {
-		console.log('Error while updating email in table', e);
-	}
-};
-
 export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
 	try {
 		const data = await API.graphql({
