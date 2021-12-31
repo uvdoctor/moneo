@@ -38,7 +38,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ disabledNext, setDisabledNext ] = useState<boolean>(true);
   const [ step, setStep ] = useState<number>(1);
 	const [ loading, setLoading ] = useState<boolean>(false);
-	const [ authState, setAuthState ] = useState<string>('signin');
+	const [ authState, setAuthState ] = useState<string>(AuthState.SignIn);
 	const [ riskProfile, setRiskProfile ] = useState<RiskProfile>(RiskProfile.VC);
   const [ taxLiability, setTaxLiability ] = useState<TaxLiability>(TaxLiability.M);
 	const [ uname, setUname ] = useState<string>('');
@@ -166,7 +166,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         }
        ]}/> 
       )}
-      {authState !== 'signin' && 
+      {authState !== AuthState.SignIn && 
         <AmplifySection slot="sign-up">
           <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form

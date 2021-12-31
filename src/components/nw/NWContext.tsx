@@ -921,7 +921,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 
 	useEffect(() => {
 		priceLoans();
-	}, [loans, userInfo]);
+	}, [loans]);
 
 	useEffect(()=>{
 		priceCredit();
