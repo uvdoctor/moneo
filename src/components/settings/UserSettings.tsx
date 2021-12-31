@@ -112,7 +112,7 @@ export default function UserSettings(): JSX.Element {
   };
 
   const updateOthersTab = async () => {
-   await updateUserDetails({uname: owner, dr: isDrManual ? discountRate : 0 , rp: riskProfile, notify: notify})
+   await updateUserDetails({uname: owner, dr: isDrManual ? discountRate : 0 , rp: riskProfile, notify: notify, tax: tax})
   }
   
   useEffect(() => {
@@ -134,7 +134,7 @@ export default function UserSettings(): JSX.Element {
     userInfo && dispatch({ type: "userUpdate", data: { 
       riskProfile: userInfo?.rp,
       notify: userInfo?.notify, 
-      isDrManual: !userInfo?.dr ? 0 : 1,
+      isDrManual: userInfo?.dr ? 0 : 1,
       tax: userInfo?.tax 
     }});
   },[ userInfo, discountRate ])
@@ -369,7 +369,7 @@ export default function UserSettings(): JSX.Element {
                     info="How much do you earn in a year?"
                     pre="Yearly Income"
                     value={tax}
-                    changeHandler={(val: string)=>dispatch({ type: "single", data: { field: "riskProfile", val}})}
+                    changeHandler={(val: string)=>dispatch({ type: "single", data: { field: "tax", val}})}
                     options={getTaxLiabilityOptions()}
                   />
                   </Col>
