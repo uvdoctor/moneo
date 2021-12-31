@@ -11,10 +11,10 @@ const returnCaptchaResponse = async(token: any, res: NextApiResponse) => {
 	}).then((captchRes: any) => 
 		captchRes.json()
 	).then((data: any) => {
+		res.setHeader('Content-Type', 'application/json');
 		if(!data || !data.score || !data.success){
 			res.status(500).end('Google captcha failed');
 		}
-		res.setHeader('Content-Type', 'application/json');
 		if(data.score < 0.5){
 			res.status(403).json({ success: false });
 		}else{
