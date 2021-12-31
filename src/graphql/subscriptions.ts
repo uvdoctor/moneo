@@ -299,6 +299,7 @@ export const onCreateFamily = /* GraphQL */ `
       id
       tid
       name
+      tax
       createdAt
       updatedAt
       owner
@@ -311,6 +312,7 @@ export const onUpdateFamily = /* GraphQL */ `
       id
       tid
       name
+      tax
       createdAt
       updatedAt
       owner
@@ -323,6 +325,7 @@ export const onDeleteFamily = /* GraphQL */ `
       id
       tid
       name
+      tax
       createdAt
       updatedAt
       owner
@@ -337,6 +340,7 @@ export const onCreateUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      tax
       rp
       dr
       tc
@@ -353,6 +357,7 @@ export const onUpdateUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      tax
       rp
       dr
       tc
@@ -369,6 +374,7 @@ export const onDeleteUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      tax
       rp
       dr
       tc

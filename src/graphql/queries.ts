@@ -215,6 +215,7 @@ export const getFamily = /* GraphQL */ `
       id
       tid
       name
+      tax
       createdAt
       updatedAt
       owner
@@ -232,6 +233,7 @@ export const listFamilys = /* GraphQL */ `
         id
         tid
         name
+        tax
         createdAt
         updatedAt
         owner
@@ -248,6 +250,7 @@ export const getUserInfo = /* GraphQL */ `
       im
       mob
       notify
+      tax
       rp
       dr
       tc
@@ -277,6 +280,7 @@ export const listUserInfos = /* GraphQL */ `
         im
         mob
         notify
+        tax
         rp
         dr
         tc
@@ -308,6 +312,7 @@ export const regByIm = /* GraphQL */ `
         im
         mob
         notify
+        tax
         rp
         dr
         tc
@@ -339,6 +344,7 @@ export const regByMob = /* GraphQL */ `
         im
         mob
         notify
+        tax
         rp
         dr
         tc
@@ -370,6 +376,7 @@ export const regByEmail = /* GraphQL */ `
         im
         mob
         notify
+        tax
         rp
         dr
         tc

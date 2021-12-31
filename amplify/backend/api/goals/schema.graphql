@@ -138,6 +138,13 @@ enum RiskProfile {
 	VA
 }
 
+enum TaxLiability {
+	NIL
+	L
+	M
+	H
+}
+
 type UserInfo
 	@model
 	@aws_iam
@@ -157,6 +164,7 @@ type UserInfo
 	im: Float
 	mob: Float
 	notify: Boolean!
+	tax: TaxLiability!
 	rp: RiskProfile!
 	dr: Float!
 	tc: AWSDateTime!
@@ -430,6 +438,7 @@ type Family @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	tid: String!
 	name: String!
+	tax: TaxLiability!
 }
 
 type Holding {
