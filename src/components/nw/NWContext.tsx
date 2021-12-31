@@ -93,7 +93,7 @@ export const LIABILITIES_VIEW = 'liabilities';
 export const NATIONAL_SAVINGS_CERTIFICATE = 'NSC';
 
 function NWContextProvider() {
-	const { defaultCurrency, insData, setInsData, ratesData, owner, user, userInfo, defaultCountry }: any = useContext(AppContext);
+	const { defaultCurrency, insData, setInsData, ratesData, owner, user, discountRate }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<InstrumentInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -731,7 +731,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	let total = 0;
 	holdings.forEach((holding: HoldingInput) => {
 		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-			total += calculateNPVAmt(holding, userInfo, defaultCountry);
+			total += calculateNPVAmt(holding, discountRate);
 		}
 	});
 	setTotal(total);
@@ -921,7 +921,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 
 	useEffect(() => {
 		priceLoans();
-	}, [loans]);
+	}, [loans, discountRate]);
 
 	useEffect(()=>{
 		priceCredit();
@@ -929,7 +929,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 
 	useEffect(() => {
 		priceInsurance();
-	}, [insurance]);
+	}, [insurance, discountRate]);
 
 	useEffect(() => {
 		priceProperties();

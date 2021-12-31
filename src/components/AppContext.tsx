@@ -7,6 +7,7 @@ import { ROUTES } from '../CONSTANTS';
 import { listEodPricess } from '../graphql/queries';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { getUserDetails } from './userinfoutils';
+import { getDiscountRate } from './utils';
 
 const AppContext = createContext({});
 export const LOCAL_INS_DATA_KEY = 'insData';
@@ -27,6 +28,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 	const [ insData, setInsData ] = useState<any>({});
 	const [ owner, setOwner ] = useState<string>('');
 	const [ userInfo, setUserInfo ] = useState<any>();
+	const [ discountRate, setDiscountRate ] = useState<number>();
 	const router = useRouter();
 
 	const validateCaptcha = async (action: string) => {
@@ -109,7 +111,13 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 	}, []);
 
 	const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
-	const loadUserInfo = async () => setUserInfo(await getUserDetails(owner));
+	const loadUserInfo = async () => {
+		const userDetails = await getUserDetails(owner); 
+		if (userDetails) {
+			setUserInfo(userDetails); 
+			setDiscountRate(!userDetails?.dr ? getDiscountRate(userDetails?.rp, defaultCountry) : userDetails?.dr);
+		};
+	}
 
 	useEffect(() => {
 		Hub.listen('auth', initUser);
@@ -151,7 +159,9 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 				handleLogout,
 				validateCaptcha,
 				owner,
-				userInfo
+				userInfo,
+				discountRate,
+				setDiscountRate
 			}}
 		>
 			{children}

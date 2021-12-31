@@ -28,7 +28,6 @@ const initialState = {
   dob: "",
   whatsapp: "",
   riskProfile: "",
-  dr: 0,
   isDrManual: 0,
   notify: 0,
   tax: TaxLiability.M,
@@ -50,9 +49,9 @@ const userReducer = ( userState: any, { type, data }: { type: string; data: any 
 };
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry, validateCaptcha, owner, userInfo }: any = useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry, validateCaptcha, owner, userInfo, discountRate, setDiscountRate }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
-  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrManual, tax } = userState;
+  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, notify, isDrManual, tax } = userState;
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
   
@@ -113,7 +112,7 @@ export default function UserSettings(): JSX.Element {
   };
 
   const updateOthersTab = async () => {
-   await updateUserDetails({uname: owner, dr: isDrManual ? dr : 0, rp: riskProfile, notify: notify})
+   await updateUserDetails({uname: owner, dr: isDrManual ? discountRate : 0 , rp: riskProfile, notify: notify})
   }
   
   useEffect(() => {
@@ -133,17 +132,19 @@ export default function UserSettings(): JSX.Element {
 
   useEffect(()=>{
     userInfo && dispatch({ type: "userUpdate", data: { 
-      dr: getDiscountRate(userInfo?.rp as string, defaultCountry),
       riskProfile: userInfo?.rp,
       notify: userInfo?.notify, 
-      isDrManual: userInfo?.dr === 0 ? 0 : 1,
+      isDrManual: !discountRate ? 0 : 1,
       tax: userInfo?.tax 
     }});
   },[userInfo, defaultCountry])
 
   useEffect(()=>{
-    dispatch({type: "single", data: { field: "dr", val: getDiscountRate(riskProfile, defaultCountry)}})
+    !isDrManual && setDiscountRate(getDiscountRate(riskProfile, defaultCountry));
   },[riskProfile, defaultCountry])
+
+  console.log(discountRate, isDrManual);
+  
 
   return (
     <>
@@ -390,8 +391,8 @@ export default function UserSettings(): JSX.Element {
                     <HSwitch value={isDrManual} setter={(val: boolean)=>dispatch({ type: "single", data: { field: "isDrManual", val}})} rightText="Manual" leftText="Auto"/>
                   </Col>
                   <Col className="nested-col">
-                    {isDrManual ? <NumberInput pre={''} value={dr} changeHandler={(val: number)=>dispatch({ type: "single", data: { field: "dr", val}})} /> :
-                    <label><strong>{dr}%</strong></label>}
+                    {isDrManual ? <NumberInput pre={''} value={discountRate} changeHandler={(val: number)=>setDiscountRate(val)} /> :
+                    <label><strong>{discountRate}%</strong></label>}
                   </Col>
                   </Row>
                   <p>&nbsp;</p>

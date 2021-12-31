@@ -1,7 +1,6 @@
 import { addYears, differenceInCalendarYears, differenceInMonths } from 'date-fns';
-import { AssetType, CreateNPSPriceInput, HoldingInput, PropertyInput, RiskProfile, UserInfo } from '../../api/goals';
+import { AssetType, CreateNPSPriceInput, HoldingInput, PropertyInput } from '../../api/goals';
 import { getCompoundedIncome, getNPV } from '../calc/finance';
-import { getDiscountRate } from '../utils';
 import { getCommodityRate, getCryptoRate } from './nwutils';
 const today = new Date();
 const presentMonth = today.getMonth() + 1;
@@ -66,7 +65,7 @@ export const calculatePM = (holding: HoldingInput, ratesData: any, selectedCurre
 	return holding.qty * rate;
 };
 
-export const calculateNPVAmt = (holding: HoldingInput, userInfo: UserInfo, country: string) => {
+export const calculateNPVAmt = (holding: HoldingInput, discountRate: number) => {
 	let cashflows: any = [];
 	let isMonth = holding.chgF === 1 ? false : true;
 	const calc = isMonth ? calculateDifferenceInMonths : calculateDifferenceInYears;
@@ -90,9 +89,8 @@ export const calculateNPVAmt = (holding: HoldingInput, userInfo: UserInfo, count
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	}
-	const discountRate = !userInfo?.dr ? getDiscountRate(userInfo?.rp as RiskProfile, country) : userInfo?.dr;
 	const npv = getNPV(
-		discountRate as number,
+		discountRate,
 		cashflows,
 		0,
 		isMonth ? true : false,
