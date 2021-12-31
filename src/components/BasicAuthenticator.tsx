@@ -17,8 +17,8 @@ import { AppContext } from './AppContext';
 import { Form, Input, Button } from 'antd';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import SelectInput from './form/selectinput';
-import { getRiskProfileOptions } from './utils';
-import { RiskProfile } from '../api/goals';
+import { getRiskProfileOptions, getTaxLiabilityOptions } from './utils';
+import { RiskProfile, TaxLiability } from '../api/goals';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
@@ -36,12 +36,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ email, setEmail ] = useState<string>('');
 	const [ notify, setNotify ] = useState<boolean>(true);
 	const [ disabledNext, setDisabledNext ] = useState<boolean>(true);
-	const [ stepOne, setStepOne ] = useState<boolean>(true);
-	const [ stepThree, setStepThree ] = useState<boolean>(false);
-	const [ stepTwo, setStepTwo ] = useState<boolean>(false);
+  const [ step, setStep ] = useState<number>(1);
 	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ authState, setAuthState ] = useState<string>('signin');
 	const [ riskProfile, setRiskProfile ] = useState<RiskProfile>(RiskProfile.VC);
+  const [ taxLiability, setTaxLiability ] = useState<TaxLiability>(TaxLiability.M);
 	const [ uname, setUname ] = useState<string>('');
 	const [ form ] = useForm();
 
@@ -88,10 +87,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			setEmailError('');
 			let exists = await doesEmailExist(email, 'AWS_IAM');
 			if (!exists) {
-				setStepOne(false);
-				setStepTwo(true);
+				setStep(step + 1);
 			} else {
-				setStepTwo(false);
 				setEmailError('Please use another email address as this one is already used by another account.');
 			}
 			setLoading(false);
@@ -178,7 +175,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               onFieldsChange={handleFormChange}
               layout="vertical"
             >
-              {stepOne && (
+              {step === 1 && (
                 <>
                   <h4>Step 1/3</h4>
                   <p>&nbsp;</p>
@@ -213,7 +210,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                   </Row>
                 </>
               )}
-              {stepTwo && ( 
+              {step === 2 && ( 
                 <><h4>Step 2/3</h4>
                 <p>&nbsp;</p>
                 <Row align="middle">
@@ -228,19 +225,25 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                   />
                   </Col>
                 </Row>
+                <Row align="middle">
+                  <Col>
+                  <SelectInput
+                    info="How much do you earn in a year?"
+                    pre="Yearly Income"
+                    value={taxLiability}
+                    changeHandler={setTaxLiability}
+                    options={getTaxLiabilityOptions()}
+                  />
+                  </Col>
+                </Row>
                 <p>&nbsp;</p>
                 <Row justify="end">
-                  <Button type="link" htmlType="button" onClick={()=>{
-                    setStepTwo(false)
-                    setStepOne(true)}}>
+                  <Button type="link" htmlType="button" onClick={()=> setStep(1)}>
                     Back
                   </Button>
                   <Button
                     type="primary"
-                    onClick={()=>{
-                      setStepThree(true)
-                      setStepTwo(false)
-                    }}
+                    onClick={()=> setStep(2)}
                     loading={loading}
                   >
                     Next
@@ -248,7 +251,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
                 </>
               )}
-              {stepThree && (
+              {step === 3 && (
                 <>
                   <h4>Step 3/3</h4>
                   <p>&nbsp;</p>
@@ -346,11 +349,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       <Button type="link" htmlType="button" onClick={onCancel}>
                         Cancel
                       </Button>
-                      <Button type="link" onClick={()=>{
-                        setStepThree(false)
-                        setStepTwo(true)
-                      }
-                      }>
+                      <Button type="link" onClick={()=> setStep(2)}>
                         Back
                       </Button>
                       <Button

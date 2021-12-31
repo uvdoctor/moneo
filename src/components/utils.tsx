@@ -1,6 +1,6 @@
 import { Menu } from "antd";
 import Link from "next/link";
-import { RiskProfile } from "../api/goals";
+import { RiskProfile, TaxLiability } from "../api/goals";
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 import { getQty } from "./nw/parseutils";
 
@@ -715,6 +715,16 @@ export const getRiskProfileOptions = () => {
     [RiskProfile.M]: "Up to 20%",
     [RiskProfile.A]: "Up to 30%",
     [RiskProfile.VA]: "Up to 50%",
+  };
+};
+
+export const getTaxLiabilityOptions = () => {
+  return {
+    [TaxLiability.NIL]: "Less than 4 lakhs",
+    [TaxLiability.L]: "Between 4 lakhs to 7 lakhs",
+    [TaxLiability.M]: "Between 7 to 10 lakhs",
+    [TaxLiability.H]: "Between 10 to 15 lakhs",
+    [TaxLiability.VH]: "More than 15 lakhs",
   };
 };
 

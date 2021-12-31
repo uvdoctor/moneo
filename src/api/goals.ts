@@ -419,6 +419,7 @@ export enum TaxLiability {
   L = "L",
   M = "M",
   H = "H",
+  VH = "VH",
 }
 
 
