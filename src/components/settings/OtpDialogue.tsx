@@ -5,7 +5,7 @@ import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import TextInput from '../form/textinput';
 import { Auth } from 'aws-amplify';
-import { updateEmail, updateMobile } from '../userinfoutils';
+import { updateUserDetails } from '../userinfoutils';
 import Countdown from 'antd/lib/statistic/Countdown';
 
 interface OtpInputProps {
@@ -31,9 +31,9 @@ export default function OtpDialogue({ onClickAction, disableButton, action, emai
 			.then(async () => {
 				notification.success({ message: 'Otp Verified Successfully' });
 				if (attr === 'phone_number') {
-					await updateMobile(owner, mob);
+					await updateUserDetails({uname: owner, mob});
 				} else {
-					await updateEmail(owner, email);
+					await updateUserDetails({uname: owner, email});
 				}
 				setLoading(false);
 				setIsModalVisible(false);
