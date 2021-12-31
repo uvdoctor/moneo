@@ -740,6 +740,6 @@ export const getDiscountRate = (rp: string, country: string) => {
     case RiskProfile.A:
       return percent+6;
     case RiskProfile.VA:
-      return percent+11;
+      return percent+10;
   }
 }
