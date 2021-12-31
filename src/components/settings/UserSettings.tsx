@@ -137,7 +137,7 @@ export default function UserSettings(): JSX.Element {
       isDrManual: userInfo?.dr ? 0 : 1,
       tax: userInfo?.tax 
     }});
-  },[ userInfo, discountRate ])
+  },[ userInfo ])
 
   useEffect(()=>{
     !isDrManual && setDiscountRate(getDiscountRate(riskProfile, defaultCountry));
