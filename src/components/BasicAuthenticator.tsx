@@ -53,6 +53,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [ taxLiability, setTaxLiability ] = useState<TaxLiability>(TaxLiability.M);
 	const [ uname, setUname ] = useState<string>('');
   const [ state, dispatch ] = useReducer(stepReducer, { step: 1 })
+  const [ cognitoUser, setCognitoUser ] = useState<any>();
 	const [ form ] = useForm();
 
 	const validateCaptcha = async (action: string) => {
@@ -130,6 +131,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			})
 				.then((response) => {
 					setLoading(false);
+          setCognitoUser(response.user)
 					Hub.dispatch('UI Auth', {
 						event: 'AuthStateChange',
 						message: AuthState.ConfirmSignUp,
@@ -166,12 +168,9 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       <AmplifyAuthenticator>
       { authState === AuthState.ConfirmSignUp && (
        <AmplifyConfirmSignUp slot='confirm-sign-up'
+       user={cognitoUser}
        handleAuthStateChange={handleConfirmSignUp}
        formFields={[
-        {
-          type: "username",
-          hint: `Your username:- ${uname}`
-        },
         {
           type: "code"
         }
