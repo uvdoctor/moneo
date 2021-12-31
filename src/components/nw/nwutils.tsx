@@ -28,7 +28,7 @@ export const getFamilysList = async () => {
 export const loadAllFamilyMembers = async () => {
   const family = await getFamilysList();
   if (!family || !family.length) {
-    let member = await addFamilyMember("Self", "XXXXX1234X");
+    let member = await addFamilyMember("Self", "XXXXX1234X", APIt.TaxLiability.L);
     if (member) {
       return {
         [member.id as string]: { name: member.name, taxId: member.tid },
@@ -63,11 +63,11 @@ export const loadInsHoldings = async (uname: string) => {
   return getUserIns ? getUserIns : null;
 };
 
-export const addFamilyMember = async (name: string, taxId: string) => {
+export const addFamilyMember = async (name: string, taxId: string, tax: APIt.TaxLiability) => {
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.createFamily, {
-        input: { name: name, tid: taxId },
+        input: { name: name, tid: taxId, tax },
       })
     )) as {
       data: APIt.CreateFamilyMutation;
@@ -143,7 +143,7 @@ export const addMemberIfNeeded = async (
 ) => {
   let id = getFamilyMemberKey(allFamily, taxId);
   if (id) return id;
-  let member = await addFamilyMember(taxId, taxId);
+  let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.L);
   allFamily[member?.id as string] = { name: member?.name, taxId: member?.tid };
   allFamilySetter(allFamily);
   return member?.id;

@@ -18,7 +18,7 @@ import { Form, Input, Button } from 'antd';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import SelectInput from './form/selectinput';
 import { getRiskProfileOptions } from './utils';
-import { RiskProfile } from '../api/goals';
+import { RiskProfile, TaxLiability } from '../api/goals';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
@@ -106,7 +106,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 				data: user
 			});
 		});
-		await createUserinfo(uname, email, notify, riskProfile, 0, new Date().toISOString());
+		await createUserinfo(uname, email, notify, riskProfile, 0, new Date().toISOString(), TaxLiability.L);
 	};
 
 	const handleRegistrationSubmit = async () => {
