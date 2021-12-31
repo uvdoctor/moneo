@@ -6,7 +6,7 @@ import {
 } from '@aws-amplify/ui-react';
 import { useForm } from 'antd/lib/form/Form';
 import { Auth, Hub } from 'aws-amplify';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useReducer, useState } from 'react';
 import { AuthState, Translations, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { Alert, Checkbox, Col, Row } from 'antd';
 import { ROUTES } from '../CONSTANTS';
@@ -26,6 +26,17 @@ interface BasicAuthenticatorProps {
 
 Auth.configure({ authenticationFlowType: 'USER_PASSWORD_AUTH' });
 
+const stepReducer = ( state: any, { type }: { type: string }) => {
+  switch (type) {
+    case 'increment':
+      return {step: state.step + 1};
+    case 'decrement':
+      return {step: state.step - 1};
+    default:
+      return {step: 1};
+  }
+};
+
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
 	const { user }: any = useContext(AppContext);
 	const { executeRecaptcha }: any = useGoogleReCaptcha();
@@ -36,12 +47,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ email, setEmail ] = useState<string>('');
 	const [ notify, setNotify ] = useState<boolean>(true);
 	const [ disabledNext, setDisabledNext ] = useState<boolean>(true);
-  const [ step, setStep ] = useState<number>(1);
 	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ authState, setAuthState ] = useState<string>(AuthState.SignIn);
 	const [ riskProfile, setRiskProfile ] = useState<RiskProfile>(RiskProfile.VC);
   const [ taxLiability, setTaxLiability ] = useState<TaxLiability>(TaxLiability.M);
 	const [ uname, setUname ] = useState<string>('');
+  const [ state, dispatch ] = useReducer(stepReducer, { step: 1 })
 	const [ form ] = useForm();
 
 	const validateCaptcha = async (action: string) => {
@@ -87,7 +98,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			setEmailError('');
 			let exists = await doesEmailExist(email, 'AWS_IAM');
 			if (!exists) {
-				setStep(step + 1);
+				dispatch({type: 'increment'});
 			} else {
 				setEmailError('Please use another email address as this one is already used by another account.');
 			}
@@ -175,7 +186,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               onFieldsChange={handleFormChange}
               layout="vertical"
             >
-              {step === 1 && (
+              {state.step === 1 && (
                 <>
                   <h4>Step 1/3</h4>
                   <p>&nbsp;</p>
@@ -210,7 +221,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                   </Row>
                 </>
               )}
-              {step === 2 && ( 
+              {state.step === 2 && ( 
                 <><h4>Step 2/3</h4>
                 <p>&nbsp;</p>
                 <Row align="middle">
@@ -238,12 +249,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
                 <p>&nbsp;</p>
                 <Row justify="end">
-                  <Button type="link" htmlType="button" onClick={()=> setStep(1)}>
+                  <Button type="link" htmlType="button" onClick={()=> dispatch({type: 'decrement'})}>
                     Back
                   </Button>
                   <Button
                     type="primary"
-                    onClick={()=> setStep(2)}
+                    onClick={()=> dispatch({type: 'increment'})}
                     loading={loading}
                   >
                     Next
@@ -251,7 +262,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
                 </>
               )}
-              {step === 3 && (
+              {state.step === 3 && (
                 <>
                   <h4>Step 3/3</h4>
                   <p>&nbsp;</p>
@@ -349,7 +360,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       <Button type="link" htmlType="button" onClick={onCancel}>
                         Cancel
                       </Button>
-                      <Button type="link" onClick={()=> setStep(2)}>
+                      <Button type="link" onClick={()=> dispatch({type: 'decrement'})}>
                         Back
                       </Button>
                       <Button
