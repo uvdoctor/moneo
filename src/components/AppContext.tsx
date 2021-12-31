@@ -139,7 +139,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
 	useEffect(
 		() => {
-			owner && loadUserInfo();
+			if(!owner) return;
+			loadUserInfo();
 		},
 		[ owner ]
 	);
