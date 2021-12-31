@@ -66,7 +66,7 @@ export const calculatePM = (holding: HoldingInput, ratesData: any, selectedCurre
 	return holding.qty * rate;
 };
 
-export const calculateNPVAmt = (holding: HoldingInput, userInfo: UserInfo) => {
+export const calculateNPVAmt = (holding: HoldingInput, userInfo: UserInfo, country: string) => {
 	let cashflows: any = [];
 	let isMonth = holding.chgF === 1 ? false : true;
 	const calc = isMonth ? calculateDifferenceInMonths : calculateDifferenceInYears;
@@ -90,8 +90,7 @@ export const calculateNPVAmt = (holding: HoldingInput, userInfo: UserInfo) => {
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	}
-
-	const discountRate = !userInfo?.dr ? getDiscountRate(userInfo?.rp as RiskProfile) : userInfo?.dr;
+	const discountRate = !userInfo?.dr ? getDiscountRate(userInfo?.rp as RiskProfile, country) : userInfo?.dr;
 	const npv = getNPV(
 		discountRate as number,
 		cashflows,

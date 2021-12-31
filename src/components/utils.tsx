@@ -728,9 +728,9 @@ export const getTaxLiabilityOptions = () => {
   };
 };
 
-export const getDiscountRate = (key: string) => {
-  const percent = 5;
-  switch (key) {
+export const getDiscountRate = (rp: string, country: string) => {
+  const percent = country === "IN" ? 5 : 1;
+  switch (rp) {
     case RiskProfile.VC:
       return percent;
     case RiskProfile.C:

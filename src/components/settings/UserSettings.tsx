@@ -131,16 +131,16 @@ export default function UserSettings(): JSX.Element {
 
   useEffect(()=>{
     userInfo && dispatch({ type: "userUpdate", data: { 
-      dr: getDiscountRate(userInfo.rp as string),
+      dr: getDiscountRate(userInfo.rp as string, defaultCountry),
       riskProfile: userInfo?.rp,
       notify: userInfo?.notify, 
       isDrManual: userInfo?.dr === 0 ? 0 : 1 
     }});
-  },[userInfo])
+  },[userInfo, defaultCountry])
 
   useEffect(()=>{
-    dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile)}})
-  },[riskProfile])
+    dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile, defaultCountry)}})
+  },[riskProfile, defaultCountry])
 
   return (
     <>

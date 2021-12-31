@@ -26,7 +26,7 @@ interface MemberAndValuationProps {
 
 export default function MemberAndValuation({ data, record, changeData, index }: MemberAndValuationProps) {
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(NWContext);
-	const { ratesData, userInfo }: any = useContext(AppContext);
+	const { ratesData, userInfo, defaultCountry }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 	const [ valuation, setValuation ] = useState<number>(0);
 
@@ -40,7 +40,7 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		switch (childTab) {
 			case INS:
 			case LOAN:
-				value = calculateNPVAmt(record, userInfo);
+				value = calculateNPVAmt(record, userInfo, defaultCountry);
 				break;
 			case CRYPTO:
 				value = calculateCrypto(record, ratesData, selectedCurrency);
