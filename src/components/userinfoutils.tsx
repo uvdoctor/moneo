@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
-import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile } from '../api/goals';
+import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile, TaxLiability } from '../api/goals';
 import * as APIt from "../api/goals";
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
@@ -126,11 +126,11 @@ export const deleteContact = async (uname: string) => {
 	}
 };
 
-export const createUserinfo = async (uname: string, email: string, notify: boolean, rp: RiskProfile, dr: number, tc: string) => {
+export const createUserinfo = async (uname: string, email: string, notify: boolean, rp: RiskProfile, dr: number, tc: string, tax: TaxLiability) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createUserInfo,
-			variables: { input: {  uname, email, notify, rp, dr, tc } },
+			variables: { input: {  uname, email, notify, rp, dr, tc, tax } },
 		});
 		console.log(data);
 	} catch(e) {

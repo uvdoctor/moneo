@@ -10,7 +10,7 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { doesEmailExist, doesImExist, doesMobExist, getUserDetails, updateIm, updateUserDetails } from "../userinfoutils";
+import { doesEmailExist, doesImExist, doesMobExist, updateIm, updateUserDetails } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
 import SelectInput from "../form/selectinput";
 import HSwitch from "../HSwitch";
@@ -48,7 +48,7 @@ const userReducer = ( userState: any, { type, data }: { type: string; data: any 
 };
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry, validateCaptcha, owner, userInfo }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const { email, mobile, error, name, lastName, prefuser, dob, whatsapp, riskProfile, dr, notify, isDrManual } = userState;
   const fsb = useFullScreenBrowser();
@@ -130,16 +130,13 @@ export default function UserSettings(): JSX.Element {
   }, [appContextLoaded, countryCode?.value, user]);
 
   useEffect(()=>{
-    owner && (async () => (await getUserDetails(owner).then(response=>{
-      dispatch({ type: "userUpdate", data: { 
-        dr: getDiscountRate(response?.rp as string),
-        riskProfile: response?.rp,
-        notify: response?.notify, 
-        isDrManual: response?.dr === 0 ? 0 : 1 
-      }
-      });
-    }).catch(err=>console.log(err))))();
-  },[user])
+    userInfo && dispatch({ type: "userUpdate", data: { 
+      dr: getDiscountRate(userInfo.rp as string),
+      riskProfile: userInfo?.rp,
+      notify: userInfo?.notify, 
+      isDrManual: userInfo?.dr === 0 ? 0 : 1 
+    }});
+  },[userInfo])
 
   useEffect(()=>{
     dispatch({type: "updateSingly", data: { field: "dr", value: getDiscountRate(riskProfile)}})

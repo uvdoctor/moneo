@@ -5,7 +5,7 @@ import { UserAddOutlined, EditOutlined, SaveOutlined, UserOutlined } from '@ant-
 import { COLORS } from '../../CONSTANTS';
 import TextInput from '../form/textinput';
 import { addFamilyMember, updateFamilyMember } from './nwutils';
-import { CreateFamilyInput, UpdateFamilyInput } from '../../api/goals';
+import { CreateFamilyInput, TaxLiability, UpdateFamilyInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 
 export const ALL_FAMILY = 'All';
@@ -75,7 +75,7 @@ export default function FamilyInput() {
     const addMember = async () => {
         let member: CreateFamilyInput | null = null;
         try {
-            member = await addFamilyMember(name, taxId);
+            member = await addFamilyMember(name, taxId, TaxLiability.L);
             if(member) allFamily[member?.id as string] = {name: member.name, taxId: member.tid};
             setMode('');
             setSelectedMembers([...[member?.id]]);
