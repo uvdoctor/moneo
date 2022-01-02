@@ -217,7 +217,7 @@ export default function HoldingInput(props: any) {
           id="familyMember"
           value={familyMember}
           style={{ width: 170 }}
-          onSelect={async (option: string, details) => {
+          onSelect={async (option: any, details) => {
             const { value, fid } = details;
             dispatch({ type: "formUpdate", data: { fId: fid } });
             dispatchDataState({
