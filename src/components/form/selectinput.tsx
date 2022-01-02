@@ -38,6 +38,7 @@ export default function SelectInput(props: SelectInputProps) {
 				value={props.currency ? props.value : selectOptions[props.value]}
 				onChange={(value: string) => props.changeHandler(value)}
 				filterOption={(input, option) =>
+					//@ts-ignore
 					option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 				}
 				disabled={props.disabled ? props.disabled : false}
