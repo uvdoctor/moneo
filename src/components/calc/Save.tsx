@@ -27,7 +27,7 @@ export default function Save() {
 				info="Amount You Save Yearly from Your Work Income after deducting taxes & all expenses."
 			/>
 			<NumberInput
-				pre="Paid work weeks"
+				pre="Yearly work weeks"
 				value={paidWeeks}
 				changeHandler={setPaidWeeks}
 				min={4}
