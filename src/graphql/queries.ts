@@ -254,6 +254,7 @@ export const getUserInfo = /* GraphQL */ `
       rp
       dr
       tc
+      le
       createdAt
       updatedAt
     }
@@ -284,6 +285,7 @@ export const listUserInfos = /* GraphQL */ `
         rp
         dr
         tc
+        le
         createdAt
         updatedAt
       }
@@ -316,6 +318,7 @@ export const regByIm = /* GraphQL */ `
         rp
         dr
         tc
+        le
         createdAt
         updatedAt
       }
@@ -348,6 +351,7 @@ export const regByMob = /* GraphQL */ `
         rp
         dr
         tc
+        le
         createdAt
         updatedAt
       }
@@ -380,6 +384,7 @@ export const regByEmail = /* GraphQL */ `
         rp
         dr
         tc
+        le
         createdAt
         updatedAt
       }

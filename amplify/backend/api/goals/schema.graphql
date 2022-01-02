@@ -169,6 +169,7 @@ type UserInfo
 	rp: RiskProfile!
 	dr: Float!
 	tc: AWSDateTime!
+	le: Int!
 }
 
 type InsAnalytics
