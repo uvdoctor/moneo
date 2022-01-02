@@ -115,6 +115,7 @@ export default function FamilyInput() {
                         showArrow={memberKeys.length > 1}
                         loading={loadingFamily}
                         filterOption={(input, option) =>
+                            //@ts-ignore
                             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                         size="middle"

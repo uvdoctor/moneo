@@ -240,7 +240,7 @@ export default function HoldingInput(props: any) {
         <Input
           id="qty"
           value={qty}
-          placeholder="Quanity"
+          placeholder="Quantity"
           min={0}
           style={{ width: 80 }}
           onChange={(e) => {
