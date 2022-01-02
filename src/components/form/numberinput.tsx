@@ -52,7 +52,7 @@ export default function NumberInput({
 		setStepNum(stepNum);
 	}, [rangeFactor, min, max]);
 
-	const PreComp =  
+	const buildPreComp = () => 
 		<>
 			{pre}
 			{info && <Tooltip title={info}>
@@ -72,8 +72,8 @@ export default function NumberInput({
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
-		addOnBefore: pre ? PreComp : null,
-		addOnAfter: unit,
+		addonBefore: pre ? buildPreComp() : null,
+		addonAfter: unit,
 		onChange: (val: number) => changeHandler(val as number),
 		formatter: (val: number) =>
 			currency
@@ -102,7 +102,7 @@ export default function NumberInput({
 		<>
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
-			{currency ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
+			{currency && value > 100000 ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
 			{post}
 		</>
 	);
