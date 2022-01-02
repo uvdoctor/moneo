@@ -21,13 +21,13 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spend Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
+		<Section title="Enter Spend Details">
 			<SelectInput
-				pre="Spend"
+				pre="Spending frequency"
 				value={freq}
 				changeHandler={setFreq}
 				options={freqOptions}
-				info="Frequency at which You wish to Spend - One time, Monthly or Yearly."
+				info="Frequency at which you wish to spend - One time, Monthly or Yearly."
 			/>
 			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
 			<NumberInput
@@ -37,9 +37,9 @@ export default function Spend() {
 				min={10}
 				step={10}
 				currency={currency}
-				info={`Amount that You wish to Spend${freq === SPEND_MONTHLY
-					? ' on Monthly basis '
-					: freq === SPEND_YEARLY ? ' on Yearly basis ' : ''}.`}
+				info={`Amount that you wish to spend${freq === SPEND_MONTHLY
+					? ' on monthly basis '
+					: freq === SPEND_YEARLY ? ' on yearly basis ' : ''}.`}
 			/>
 			{freq !== SPEND_ONCE && (
 				<NumberInput
@@ -48,9 +48,8 @@ export default function Spend() {
 					changeHandler={setDuration}
 					min={2}
 					max={freq === SPEND_MONTHLY ? 360 : 30}
-					step={1}
-					unit={freq === SPEND_MONTHLY ? 'Months' : 'Years'}
-					info={`Number of ${freq === SPEND_MONTHLY ? 'Months' : 'Years'} You wish to Spend for.`}
+					unit={freq === SPEND_MONTHLY ? 'months' : 'years'}
+					info={`Number of ${freq === SPEND_MONTHLY ? 'months' : 'years'} you wish to spend for.`}
 				/>
 			)}
 			{freq !== SPEND_ONCE && (
@@ -58,12 +57,12 @@ export default function Spend() {
 					label="Total Spend"
 					result={totalCost}
 					currency={currency}
-					footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'Months' : 'Years'}`}
-					info={`You Spend total of ${toHumanFriendlyCurrency(totalCost, currency)} over ${duration} ${freq === SPEND_MONTHLY
-						? 'Months'
-						: 'Years'} given spending of ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
-						? 'Month'
-						: 'Year'}.`}
+					footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'months' : 'years'}`}
+					info={`You spend total of ${toHumanFriendlyCurrency(totalCost, currency)} over ${duration} ${freq === SPEND_MONTHLY
+						? 'months'
+						: 'years'} given spending of ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
+						? 'month'
+						: 'year'}.`}
 				/>
 			)}
 		</Section>

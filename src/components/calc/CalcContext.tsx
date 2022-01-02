@@ -79,7 +79,6 @@ function CalcContextProvider({
   const [rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
-  const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
   const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initOptions(1960, nowYear - 15 - 1960) : initOptions(startYear, 30));
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
@@ -338,8 +337,6 @@ function CalcContextProvider({
         setShowFeedbackModal,
         feedbackText,
         setFeedbackText,
-        stepVideoUrl,
-        setStepVideoUrl,
         startYear,
         changeStartYear,
         startMonth,

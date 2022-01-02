@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, useContext, useEffect } from 'react';
+import React, { Fragment, ReactNode, useContext } from 'react';
 import ModalVideoPlayer from '../ModalVideoPlayer';
 import { Row, Col } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
@@ -13,15 +13,7 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
-
-	useEffect(
-		() => {
-			if (fsb.info.screenWidth >= 1024) setStepVideoUrl(props.videoSrc);
-			else setStepVideoUrl('');
-		},
-		[ fsb.info.screenWidth ]
-	);
+	const { fsb, allInputDone }: any = useContext(CalcContext);
 
 	return (
 		<Row>

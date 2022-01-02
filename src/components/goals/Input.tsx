@@ -3,7 +3,6 @@ import { Button, Steps, Row, Col, Space, Affix } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { CalcContext } from '../calc/CalcContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import VideoPlayer from '../VideoPlayer';
 
 require('./Input.less');
 import ResultCarousel from '../ResultCarousel';
@@ -17,7 +16,6 @@ export default function Input() {
 		setAllInputDone,
 		showOptionsForm,
 		setOptionsVisibility,
-		stepVideoUrl,
 		error,
 		handleStepChange,
 		fsb,
@@ -66,8 +64,8 @@ export default function Input() {
 						</Steps>
 					</header>
 					<section>
-						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
-							<Col span={stepVideoUrl ? 11 : 24}>
+						<Row>
+							<Col>
 								{inputTabs[inputTabIndex].content}
 								<Row align="middle">
 									<Col span={24}>
@@ -99,11 +97,6 @@ export default function Input() {
 									</Col>
 								</Row>
 							</Col>
-							{stepVideoUrl && (
-								<Col className="video-container" span={12}>
-									<VideoPlayer url={stepVideoUrl} />
-								</Col>
-							)}
 						</Row>
 					</section>
 				</div>

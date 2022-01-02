@@ -33,11 +33,11 @@ export default function NumberInput({
 	unit,
 	changeHandler,
 	step = 1,
-	noRangeFactor
+	noRangeFactor = currency ? false : true
 }: NumberInputProps) {
 	const inputRef = useRef(null);
 	const [rangeFactor, setRangeFactor] = useState<number>(
-		currency && !noRangeFactor ? getRangeFactor(currency) : 1
+		noRangeFactor || !currency ? 1 : getRangeFactor(currency)
 	);
 	const [minNum, setMinNum] = useState<number>(min * rangeFactor);
 	const [maxNum, setMaxNum] = useState<number>(max * rangeFactor);
@@ -93,9 +93,9 @@ export default function NumberInput({
 				? parseInt(parseNumber(e.currentTarget.value, currency))
 				: parseFloat(e.currentTarget.value);
 
-			if (!num || num < min) changeHandler(min);
+			if (!num || num < minNum) changeHandler(minNum);
 		},
-		style: { minWidth: max < 1000 ? "130px" : "200px" },
+		style: { minWidth: maxNum < 1000 ? "100px" : "150px" },
 	};
 
 	return (
