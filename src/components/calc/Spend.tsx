@@ -34,9 +34,8 @@ export default function Spend() {
 				pre="Amount"
 				value={amt}
 				changeHandler={setAmt}
-				min={100}
-				max={50000}
-				step={100}
+				min={10}
+				step={10}
 				currency={currency}
 				info={`Amount that You wish to Spend${freq === SPEND_MONTHLY
 					? ' on Monthly basis '

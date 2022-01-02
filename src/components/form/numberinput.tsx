@@ -98,18 +98,12 @@ export default function NumberInput({
 		style: { minWidth: max < 1000 ? "130px" : "200px" },
 	};
 
-	const convertInputToString = () => {
-		return currency && value >= 100000
-			? `~ ${toHumanFriendlyCurrency(value, currency)}`
-			: null;
-	};
-
 	return (
 		<>
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
+			{currency ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
 			{post}
-			{convertInputToString() && <div>{convertInputToString()}</div>}
 		</>
 	);
 }
