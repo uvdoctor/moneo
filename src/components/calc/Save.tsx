@@ -17,14 +17,13 @@ export default function Save() {
 	return (
 		<Section title="Savings from Work Income">
 			<NumberInput
-				pre="Yearly Savings"
+				pre="Yearly savings"
 				value={savings}
 				changeHandler={setSavings}
 				currency={currency}
-				min={1000}
-				max={200000}
-				step={1000}
-				info="Amount You Save Yearly from Your Work Income after deducting taxes & all expenses."
+				min={100}
+				step={100}
+				info="Amount you save yearly from your work income after deducting taxes & all expenses."
 			/>
 			<NumberInput
 				pre="Yearly work weeks"
