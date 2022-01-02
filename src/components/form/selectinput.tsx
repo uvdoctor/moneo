@@ -24,7 +24,7 @@ export default function SelectInput(props: SelectInputProps) {
 		<Fragment>
 			{props.pre && (
 				<Fragment>
-					{props.pre}{" "}
+					{props.pre}
 					{props.info && (
 						<Tooltip title={props.info}>
 							<InfoCircleOutlined />
