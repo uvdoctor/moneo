@@ -62,7 +62,7 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 				? 'Lose'
 				: 'Gain'} about ${toHumanFriendlyCurrency(Math.abs(oppCost), currency)} in ${numOfYears} Years
     by ${goal.type === GoalType.B ? 'Buying' : 'Spending'} instead of Investing.
-	${!isPublicCalc && ` This calculation assumes that cash flows are invested according to the the target asset allocation until ${startYear + numOfYears}. `}`}
+	${!isPublicCalc ? ` This calculation assumes that cash flows are invested according to the the target asset allocation until ${startYear + numOfYears}. ` : ''}`}
 		/>
 	);
 }
