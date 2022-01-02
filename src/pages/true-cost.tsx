@@ -69,7 +69,7 @@ export default function TrueCost() {
 					label: CHART,
 					active: true,
 					svg: faChartLine,
-					content: <BasicLineChart numberOfYears showRange />
+					content: <BasicLineChart numberOfYears showRange showFromYear={1} />
 				}
 			]}
 			title={CALC_NAMES.TC}
