@@ -52,7 +52,7 @@ export default function NumberInput({
 		setStepNum(stepNum);
 	}, [rangeFactor, min, max]);
 
-	const createPre = () => 
+	const PreComp =  
 		<>
 			{pre}
 			{info && <Tooltip title={info}>
@@ -72,7 +72,7 @@ export default function NumberInput({
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
-		addOnBefore: createPre(),
+		addOnBefore: pre ? PreComp : null,
 		addOnAfter: unit,
 		onChange: (val: number) => changeHandler(val as number),
 		formatter: (val: number) =>
@@ -95,7 +95,7 @@ export default function NumberInput({
 
 			if (!num || num < min) changeHandler(min);
 		},
-		style: { minWidth: "100%" },
+		style: { minWidth: max < 1000 ? "130px" : "200px" },
 	};
 
 	const convertInputToString = () => {
