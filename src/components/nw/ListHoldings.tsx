@@ -1,15 +1,15 @@
-import { Col, Empty, Table } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
-import { HoldingInput } from '../../api/goals';
-import { NWContext, TAB } from './NWContext';
-import { doesHoldingMatch } from './nwutils';
-import Category from './Category';
-import AmountWithRate from './AmountWithRate';
-import MemberAndValuation from './MemberAndValuation';
-import DateColumn from './DateColumn';
-import TextInput from '../form/textinput';
-import NumberInput from '../form/numberinput';
-require('./ListHoldings.less');
+import { Col, Empty, Table } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { HoldingInput } from "../../api/goals";
+import { NWContext, TAB } from "./NWContext";
+import { doesHoldingMatch } from "./nwutils";
+import Category from "./Category";
+import AmountWithRate from "./AmountWithRate";
+import MemberAndValuation from "./MemberAndValuation";
+import DateColumn from "./DateColumn";
+import TextInput from "../form/textinput";
+import NumberInput from "../form/numberinput";
+require("./ListHoldings.less");
 
 interface ListHoldingsProps {
 	data: Array<HoldingInput>;
@@ -18,14 +18,40 @@ interface ListHoldingsProps {
 	subCategoryOptions?: any;
 }
 
-export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
+export default function ListHoldings({
+	data,
+	changeData,
+	categoryOptions,
+	subCategoryOptions,
+}: ListHoldingsProps) {
+	const { selectedMembers, selectedCurrency, childTab }: any = useContext(
+		NWContext
+	);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF } = TAB;
-	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
+	const [dataSource, setDataSource] = useState<Array<any>>([]);
+
+	const allColumns = {
+		cat: { title: "Category", dataIndex: "cat", key: "cat" },
+		amt: { title: "Amount", dataIndex: "amt", key: "amt" },
+		fid: { title: "Valuation", key: "fid", dataIndex: "fid" },
+		date: { title: "Date", dataIndex: "date", key: "date" },
+		label: { title: "Label", dataIndex: "label", key: "label" },
+		qty: { title: "Contribution Per Year", dataIndex: "qty", key: "qty" },
+	};
+	const defaultColumns = [];
+	const expandedColumns = [];
+
+	if (childTab === "Deposits") {
+		defaultColumns = ["cat", "amt", "fid"];
+		//expandedColumns = ["date", "label", "qty"];
+	} else {
+		defaultColumns = ["cat", "amt", "fid"];
+		expandedColumns = ["date", "label", "qty"];
+	}
 
 	const changeName = (val: any, i: number) => {
 		data[i].name = val;
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
 	const changeQty = (qty: number, i: number) => {
@@ -34,19 +60,17 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 			data[i].sm = new Date().getMonth() + 1;
 			data[i].sy = new Date().getFullYear();
 		}
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
-	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
-	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
-	const hasPF = (childTab: string) => [ PF ].includes(childTab);
+	const hasDate = (childTab: string) =>
+		[VEHICLE, LENT, LOAN, INS].includes(childTab);
+	const hasName = (childTab: string) =>
+		![PM, NPS, CRYPTO, INS].includes(childTab);
+	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	const expandedRow = (i: number) => {
-		const columns: any = [
-			{ title: 'Date', dataIndex: 'date', key: 'date' },
-			{ title: 'Label', dataIndex: 'label', key: 'label' },
-			{ title: 'Contribution Per Year', dataIndex: 'qty', key: 'qty' }
-		];
+		const columns: any = expandedColumns.map((col) => allColumns[col]);
 
 		const expandedRowData: any = {
 			key: i,
@@ -57,7 +81,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 						pre=""
 						changeHandler={(val: string) => changeName(val, i)}
 						value={data[i].name as string}
-						size={'middle'}
+						size={"middle"}
 						width={200}
 					/>
 				</Col>
@@ -71,63 +95,73 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 						currency={data[i].curr as string}
 					/>
 				</Col>
-			)
+			),
 		};
 
 		return (
 			<Table
 				columns={columns.filter((col: any) => {
-					if (col.dataIndex === 'date') return hasDate(childTab);
-					if (col.dataIndex === 'label') return hasName(childTab);
-					if (col.dataIndex === 'qty') return hasPF(childTab);
+					if (col.dataIndex === "date") return hasDate(childTab);
+					if (col.dataIndex === "label") return hasName(childTab);
+					if (col.dataIndex === "qty") return hasPF(childTab);
 				})}
-				dataSource={[ expandedRowData ]}
+				dataSource={[expandedRowData]}
 			/>
 		);
 	};
 
-	const columns = [
-		{ title: 'Category', dataIndex: 'cat', key: 'cat' },
-		{ title: 'Amount', dataIndex: 'amt', key: 'amt' },
-		{ title: 'Valuation', key: 'fid', dataIndex: 'fid' }
-	];
+	const columns = defaultColumns.map((col) => allColumns[col]);
 
-	useEffect(
-		() => {
-			let dataSource: Array<any> = [];
-			data.map((holding: HoldingInput, index: number) => {
-				if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-					dataSource.push({
-						key: index,
-						cat: (
-							<Category
-								data={data}
-								changeData={changeData}
-								categoryOptions={categoryOptions}
-								subCategoryOptions={subCategoryOptions}
-								record={holding}
-							/>
-						),
-						amt: <AmountWithRate data={data} changeData={changeData} record={holding} />,
-						fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={index} />
-					});
-				}
-			});
-			setDataSource([ ...dataSource ]);
-		},
-		[ data, selectedMembers, selectedCurrency ]
-	);
+	useEffect(() => {
+		let dataSource: Array<any> = [];
+		data.map((holding: HoldingInput, index: number) => {
+			if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				dataSource.push({
+					key: index,
+					cat: (
+						<Category
+							data={data}
+							changeData={changeData}
+							categoryOptions={categoryOptions}
+							subCategoryOptions={subCategoryOptions}
+							record={holding}
+						/>
+					),
+					amt: (
+						<AmountWithRate
+							data={data}
+							changeData={changeData}
+							record={holding}
+						/>
+					),
+					fid: (
+						<MemberAndValuation
+							data={data}
+							changeData={changeData}
+							record={holding}
+							index={index}
+						/>
+					),
+				});
+			}
+		});
+		setDataSource([...dataSource]);
+	}, [data, selectedMembers, selectedCurrency]);
 
 	return dataSource.length ? (
 		<Table
 			className="property-nested-table"
 			columns={columns.filter((col) => {
-				if (col.dataIndex === 'cat') return categoryOptions;
+				if (col.dataIndex === "cat") return categoryOptions;
 				else return col;
 			})}
-			expandable={{
-				expandedRowRender: (record) => expandedRow(record.key)
-			}}
+			expandable={
+				expandedColumns.length
+					? {
+							expandedRowRender: (record) => expandedRow(record.key),
+					  }
+					: {}
+			}
 			dataSource={dataSource}
 			size="small"
 		/>
