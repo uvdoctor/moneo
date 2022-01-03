@@ -14,7 +14,6 @@ body,
     & input[type="file"] {
       display: none;
     }
-    
   }
   .ant-page-header-heading-title {
     display: flex;
@@ -25,7 +24,7 @@ body,
   position: relative;
   display: flex;
   text-align: center;
-  
+
   & .goal-image-loader {
     position: absolute;
     z-index: 2;
@@ -34,7 +33,7 @@ body,
   }
 
   & .preview-image {
-    flex: 1
+    flex: 1;
   }
 }
 
@@ -130,6 +129,19 @@ body,
   min-height: 100%;
   background-color: #fff;
   display: flex;
+
+  & .steps-form {
+    & .ant-row {
+      width: 100%;
+      display: inline-block;
+    }
+
+    & .ant-col {
+      min-width: 100%;
+      max-width: auto;
+      margin-bottom: 15px;
+    }
+  }
 
   & .close-btn {
     position: absolute;

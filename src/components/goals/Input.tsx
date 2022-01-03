@@ -65,7 +65,7 @@ export default function Input() {
 						)}
 					</header>
 					<section>
-						<Row align="middle" gutter={[15, 15]}>
+						<Row className="steps-form-fields" align="middle" gutter={[15, 15]}>
 							<Col span={24}>{inputTabs[inputTabIndex].content}</Col>
 							<Col span={24}>
 								<Space>
@@ -169,7 +169,9 @@ export default function Input() {
 											<ResultCarousel results={results} />
 										</div>
 									)}
-									{inputTabs[inputTabIndex].content}
+									<div class="steps-form">
+										{inputTabs[inputTabIndex].content}
+									</div>
 								</Fragment>
 							)}
 						</section>

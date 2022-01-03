@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { GoalType } from '../../api/goals';
-import BasicPage from '../BasicPage';
-import { CalcContextProvider } from './CalcContext';
-import { GoalContextProvider } from '../goals/GoalContext';
-import { FIGoalContextProvider } from '../goals/FIGoalContext';
-import { FeedbackContextProvider } from '../feedback/FeedbackContext';
-import { PlanContextProvider } from '../goals/PlanContext';
-import PublicCalcView from './PublicCalcView';
-require('./Layout.less');
+import React, { useState } from "react";
+import { GoalType } from "../../api/goals";
+import BasicPage from "../BasicPage";
+import { CalcContextProvider } from "./CalcContext";
+import { GoalContextProvider } from "../goals/GoalContext";
+import { FIGoalContextProvider } from "../goals/FIGoalContext";
+import { FeedbackContextProvider } from "../feedback/FeedbackContext";
+import { PlanContextProvider } from "../goals/PlanContext";
+import PublicCalcView from "./PublicCalcView";
+require("./Layout.less");
 
 export interface BlogInputProps {
 	elements: Array<any>;
@@ -26,7 +26,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-	const [ wip, setWIP ] = useState<any | null>(null);
+	const [wip, setWIP] = useState<any | null>(null);
 
 	return (
 		<BasicPage
@@ -54,10 +54,12 @@ export default function Layout(props: LayoutProps) {
 							tabOptions={props.tabOptions}
 							resultTabOptions={props.resultTabOptions}
 						>
-							{props.type ? props.type === GoalType.FF ? (
-								<FIGoalContextProvider />
-							) : (
-								<GoalContextProvider />
+							{props.type ? (
+								props.type === GoalType.FF ? (
+									<FIGoalContextProvider />
+								) : (
+									<GoalContextProvider />
+								)
 							) : (
 								<props.calc />
 							)}
