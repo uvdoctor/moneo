@@ -73,18 +73,16 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 						/>
 					</>
 				}
-				post={
-					<ItemDisplay
+				value={income ? aiPer : amCostPer}
+				step={0.1}
+			/>
+			<ItemDisplay
 						label={`Total ${income ? 'Income' : 'Cost'}`}
 						result={income ? totalAmt : -totalAmt}
 						currency={currency}
 						pl
 						footer={`${income ? aiStartYear : amStartYear} to ${startYear + sellAfter}`}
 					/>
-				}
-				value={income ? aiPer : amCostPer}
-				step={0.1}
-			/>
 		</Section>
 	);
 }

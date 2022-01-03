@@ -29,8 +29,8 @@ export default function SellAsset() {
 					value={sellAfter}
 					step={1}
 					changeHandler={setSellAfter}
-					post={
-						<NumberInput
+				/>
+				<NumberInput
 							info="Rate at which Price may change yearly."
 							pre="Yearly price change"
 							unit="%"
@@ -41,8 +41,6 @@ export default function SellAsset() {
 							value={assetChgRate}
 							changeHandler={setAssetChgRate}
 						/>
-					}
-				/>
 			</Section>
 			<Tabs onTabClick={(key: string) => setTabIndex(parseInt(key))} defaultActiveKey={'' + tabIndex} type="card">
 				<TabPane key={0} tab="Yearly Cost">

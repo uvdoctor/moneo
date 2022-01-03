@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import NumberInput from '../form/numberinput';
-import { toReadableNumber } from '../utils';
+import { toCurrency, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
@@ -12,6 +12,7 @@ import { Button, Modal } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 export default function LoanDetails() {
 	const { isPublicCalc }: any = useContext(PlanContext);
@@ -51,6 +52,7 @@ export default function LoanDetails() {
 						changeHandler={setLoanPer}
 						min={loanMinLimitPer}
 						max={loanMaxLimitPer}
+						post={toCurrency(loanBorrowAmt, currency)}
 					/>
 				)}
 				{loanBorrowAmt && (
@@ -70,36 +72,21 @@ export default function LoanDetails() {
 					unit="%"
 					value={loanIntRate}
 					changeHandler={setLoanIntRate}
-					min={0}
 					max={25}
 					step={0.01}
 				/>}
-				{loanBorrowAmt && 
-					<ItemDisplay
-						label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
-								result={loanBorrowAmt}
-								currency={currency}
-								precise
-								footer={
-									goal.type !== GoalType.E ? (
-										<>
-										Delay&nbsp;
-										<SelectInput
-											pre=""
-											options={{
-												0: 'None',
-												1: '1 Month',
-												2: '2 Months',
-												3: '3 Months'
-											}}
-											value={loanRepaymentMonths}
-											changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-										/>
-										</>
-									) : (
-										`${startYear} to ${endYear}`
-									)
-						}
+				{loanBorrowAmt && goal.type !== GoalType.E &&
+					<SelectInput
+					pre="Repayment delay"
+					info="Delay in starting repayment of the loan, as agreed with the lender"
+					options={{
+						0: 'None',
+						1: '1 Month',
+						2: '2 Months',
+						3: '3 Months'
+					}}
+					value={loanRepaymentMonths}
+					changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
 					/>}
 				{loanBorrowAmt && 
 					<ItemDisplay

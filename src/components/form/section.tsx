@@ -29,17 +29,21 @@ export default function Section(props: SectionProps) {
 					</h3>
 				</Col>
 			)}
-			{React.Children.map(
-				props.children,
-				(child: any, i: number) =>
-					child ? (
-						<Col xs={24} md={12} lg={8} xl={6} key={'section' + i}>
-							{child}
-						</Col>
-					) : (
-						<div />
-					)
-			)}
+			<Col span={24}>
+				<Row>
+					{React.Children.map(
+						props.children,
+						(child: any, i: number) =>
+							child ? (
+								<Col xs={24} md={12} lg={8} xl={6} key={'section' + i}>
+									{child}
+								</Col>
+							) : (
+								<div />
+							)
+					)}
+				</Row>
+			</Col>
 			{props.footer && <Col span={24}>{props.footer}</Col>}
 		</Row>
 	);

@@ -205,7 +205,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType, currency: string, is
 		};
 	}
 	if (goalType === APIt.GoalType.B) {
-		bg.sa = 5;
+		bg.sa = 10;
 		bg.achg = 3;
 		bg.amper = 2;
 		bg.amsy = bg.sy;
