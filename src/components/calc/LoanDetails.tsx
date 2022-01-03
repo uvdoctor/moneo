@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import NumberInput from '../form/numberinput';
-import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
+import { toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
@@ -21,7 +21,6 @@ export default function LoanDetails() {
 		loanRepaymentMonths,
 		loanMonths,
 		loanPer,
-		price,
 		setLoanPer,
 		setLoanMonths,
 		setLoanRepaymentMonths,
@@ -49,10 +48,8 @@ export default function LoanDetails() {
 						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
-						step={1}
 						min={loanMinLimitPer}
 						max={loanMaxLimitPer}
-						post={loanPer ? toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency) : ''}
 					/>
 				)}
 				{loanBorrowAmt && (
@@ -64,7 +61,7 @@ export default function LoanDetails() {
 						min={6}
 						max={360}
 						step={1}
-						post={`${toReadableNumber(loanMonths / 12, 2)} years`}
+						post={<div>&nbsp;&nbsp;&nbsp;{`${toReadableNumber(loanMonths / 12, 2)} years`}</div>}
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}
@@ -78,8 +75,10 @@ export default function LoanDetails() {
 								precise
 								footer={
 									goal.type !== GoalType.E ? (
+										<>
+										Delay&nbsp;
 										<SelectInput
-											pre="Delay"
+											pre=""
 											options={{
 												0: 'None',
 												1: '1 Month',
@@ -89,6 +88,7 @@ export default function LoanDetails() {
 											value={loanRepaymentMonths}
 											changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
 										/>
+										</>
 									) : (
 										`${startYear} to ${endYear}`
 									)
@@ -115,7 +115,7 @@ export default function LoanDetails() {
 			</Section>
 			{loanScheduleModal && (
 				<Modal
-					title="Adjust Loan Schedule"
+					title="Adjust loan schedule"
 					onCancel={hideLoanSchedule}
 					footer={null}
 					visible={loanScheduleModal}

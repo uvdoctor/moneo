@@ -42,7 +42,7 @@ export default function LoanAdvOptions() {
 	return goal.type !== GoalType.E ? loanPer > 80 ? (
 		<NumberInput
 			currency={currency}
-			pre="Monthly Repayment Insurance"
+			pre="Monthly repayment insurance"
 			value={loanPMI}
 			changeHandler={setLoanPMI}
 			min={0}
@@ -51,7 +51,7 @@ export default function LoanAdvOptions() {
 			post={
 				loanPMI ? (
 					<SelectInput
-						pre="Ends when Principal Due is"
+						pre="Ends when principal due is"
 						value={loanPMIEndPer}
 						changeHandler={setLoanPMIEndPer}
 						options={initOptions(75, 5)}
