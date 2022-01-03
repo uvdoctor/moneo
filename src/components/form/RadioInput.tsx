@@ -8,9 +8,10 @@ interface RadioInputProps {
 	increment?: number;
 	value: string | number;
 	changeHandler: Function;
+	unit?: string;
 }
 
-export default function RadioInput({ options, from, to, increment, value, changeHandler }: RadioInputProps) {
+export default function RadioInput({ options, from, to, increment, value, changeHandler, unit }: RadioInputProps) {
 	const buildYearsOptions = () => {
 		if (!from || !to || !increment) return [];
 		let result = [];
@@ -32,7 +33,7 @@ export default function RadioInput({ options, from, to, increment, value, change
                 )}
                 
             </Radio.Group>
-            {from ? ' years' : ''}
+            {unit ? ` ${unit}` : ''}
         </>
 	);
 }

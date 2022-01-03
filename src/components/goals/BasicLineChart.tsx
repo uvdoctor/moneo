@@ -65,7 +65,7 @@ export default function BasicLineChart({
 		<Fragment>
 			{showRange ? <Row align="middle" justify="center">
 					<Col xs={24} sm={24} md={24} lg={12}>
-						<RadioInput from={10} to={50} increment={10} value={analyzeFor} changeHandler={setAnalyzeFor} />
+						<RadioInput from={10} to={50} increment={10} value={analyzeFor} changeHandler={setAnalyzeFor} unit="years" />
 					</Col>
 				</Row>
 			: null}
