@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
-import Section from '../form/section';
-import NumberInput from '../form/numberinput';
-import HSwitch from '../HSwitch';
-import { GoalType, TargetInput } from '../../api/goals';
-import { toCurrency } from '../utils';
-import { Row, Col } from 'antd';
-import { GoalContext } from './GoalContext';
-import { CalcContext } from '../calc/CalcContext';
-import { useRouter } from 'next/router';
-import { ROUTES } from '../../CONSTANTS';
-import SelectInput from '../form/selectinput';
+import React, { useContext } from "react";
+import Section from "../form/section";
+import NumberInput from "../form/numberinput";
+import HSwitch from "../HSwitch";
+import { GoalType, TargetInput } from "../../api/goals";
+import { toCurrency } from "../utils";
+import { Row, Col } from "antd";
+import { GoalContext } from "./GoalContext";
+import { CalcContext } from "../calc/CalcContext";
+import { useRouter } from "next/router";
+import { ROUTES } from "../../CONSTANTS";
+import SelectInput from "../form/selectinput";
 
 export default function Cost() {
-	const { goal, currency, setCurrency, startYear }: any = useContext(CalcContext);
+	const { goal, currency, setCurrency, startYear }: any = useContext(
+		CalcContext
+	);
 	const {
 		startingPrice,
 		setStartingPrice,
@@ -22,10 +24,8 @@ export default function Cost() {
 		priceChgRate,
 		setPriceChgRate,
 		manualMode,
-		setManualMode,
-		isLoanMandatory,
 		eduCostSemester,
-		setEduCostSemester
+		setEduCostSemester,
 	}: any = useContext(GoalContext);
 	const router = useRouter();
 	const isLoanPublicCalc = router.pathname === ROUTES.LOAN;
@@ -33,23 +33,29 @@ export default function Cost() {
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
 		wipTargets[i].val = val;
-		setWIPTargets([ ...wipTargets ]);
+		setWIPTargets([...wipTargets]);
 	};
-
 
 	return (
 		<Section
 			title={
-				<Row align='middle'>
-					<Col>{`${isLoanPublicCalc ? 'Borrow' : 'Cost'} in `}</Col>
-					<Col><SelectInput pre="" value={currency} changeHandler={setCurrency} currency /></Col>
+				<Row align="middle">
+					<Col>{`${isLoanPublicCalc ? "Borrow" : "Cost"} in `}</Col>
+					<Col>
+						<SelectInput
+							pre=""
+							value={currency}
+							changeHandler={setCurrency}
+							currency
+						/>
+					</Col>
 				</Row>
 			}
 			manualInput={
 				wipTargets && (
 					<Row align="middle" justify="space-between">
 						{wipTargets.map((t: TargetInput, i: number) => (
-							<Col key={'t' + i}>
+							<Col key={"t" + i}>
 								<NumberInput
 									pre={t.num}
 									currency={currency}
@@ -68,7 +74,11 @@ export default function Cost() {
 		>
 			<NumberInput
 				pre={
-					isLoanPublicCalc ? 'Borrow Amount' : `Today's cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+					isLoanPublicCalc
+						? "Borrow Amount"
+						: `Today's cost ${
+								goal.type !== GoalType.D && "including taxes & fees"
+						  }`
 				}
 				currency={currency}
 				value={startingPrice}
@@ -78,14 +88,17 @@ export default function Cost() {
 				step={100}
 				post={
 					goal.type === GoalType.E ? (
-						<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" />
+						<HSwitch
+							value={eduCostSemester}
+							setter={setEduCostSemester}
+							rightText="Every 6 Months"
+						/>
 					) : null
 				}
 			/>
-			{startYear > goal.by &&
-			!isLoanPublicCalc && (
+			{startYear > goal.by && !isLoanPublicCalc && (
 				<NumberInput
-					pre='Yearly Cost Changes by'
+					pre="Yearly Cost Changes by"
 					unit="%"
 					min={-10}
 					max={10}
@@ -93,7 +106,13 @@ export default function Cost() {
 					value={priceChgRate}
 					changeHandler={setPriceChgRate}
 					info="Rate at which cost is expected to change on Yearly basis considering inflation and other factors."
-					post={priceChgRate ? `In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}` : ''}
+					post={
+						priceChgRate
+							? `In ${startYear}, ${
+									isLoanPublicCalc ? "Borrow" : "Cost"
+							  } ~ ${toCurrency(price, currency)}`
+							: ""
+					}
 				/>
 			)}
 		</Section>

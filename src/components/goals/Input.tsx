@@ -169,7 +169,7 @@ export default function Input() {
 											<ResultCarousel results={results} />
 										</div>
 									)}
-									<div class="steps-form">
+									<div className="steps-form">
 										{inputTabs[inputTabIndex].content}
 									</div>
 								</Fragment>
