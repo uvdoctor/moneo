@@ -37,8 +37,8 @@ export default function TaxAdjustment() {
 		<Section title={`Claim Tax ${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}>
 			{!isTaxCreditEligible(goal.type) && (
 				<NumberInput
-					info="Marginal Income Tax slab based on Your Income"
-					pre="Marginal Tax Rate"
+					info="Income tax rate applicable based on your income"
+					pre="Marginal tax rate"
 					min={0}
 					max={50}
 					step={0.1}
@@ -49,14 +49,14 @@ export default function TaxAdjustment() {
 			)}
 			{(isTaxCreditEligible(goal.type) || taxRate) && goal.type !== GoalType.E && (
 				<NumberInput
-					info={`Maximum Yearly Income Tax ${isTaxCreditEligible(goal.type)
-						? 'Credit'
-						: 'Deduction'} Allowed`}
-					pre={`Max Yearly ${loanBorrowAmt && manualMode < 1 ? 'Loan Principal' : ''} ${isTaxCreditEligible(
+					info={`Maximum yearly tax ${isTaxCreditEligible(goal.type)
+						? 'credit'
+						: 'deduction'} allowed`}
+					pre={`Max yearly ${loanBorrowAmt && manualMode < 1 ? 'principal' : ''} ${isTaxCreditEligible(
 						goal.type
 					)
-						? 'Credit'
-						: 'Deduction'}`}
+						? 'credit'
+						: 'deduction'}`}
 					currency={currency}
 					value={maxTaxDeduction}
 					changeHandler={setMaxTaxDeduction}
@@ -65,7 +65,7 @@ export default function TaxAdjustment() {
 					step={1000}
 					post={
 						<ItemDisplay
-							label={`Total ${loanBorrowAmt && manualMode < 1 ? 'Loan Principal' : ''} Tax Benefit`}
+							label={`Total ${loanBorrowAmt && manualMode < 1 ? 'principal related' : ''} tax benefit`}
 							result={totalPTaxBenefit}
 							currency={currency}
 							footer={`${startYear} to ${startYear + duration - 1}`}
@@ -76,14 +76,14 @@ export default function TaxAdjustment() {
 			{!isTaxCreditEligible(goal.type) && goal.type !== GoalType.E &&
 			taxRate &&
 			loanBorrowAmt && (
-				<HSwitch rightText="Claim Loan Interest Tax Deduction" value={taxBenefitInt} setter={setTaxBenefitInt} />
+				<HSwitch rightText="Claim tax deduction on interest" value={taxBenefitInt} setter={setTaxBenefitInt} />
 			)}
 			{!isTaxCreditEligible(goal.type) &&
 			taxRate &&
 			loanBorrowAmt &&
 			taxBenefitInt && (
 				<NumberInput
-					pre="Max Yearly Loan Interest Deduction"
+					pre="Max yearly interest deduction"
 					value={maxTaxDeductionInt}
 					changeHandler={setMaxTaxDeductionInt}
 					currency={currency}
@@ -92,7 +92,7 @@ export default function TaxAdjustment() {
 					step={1000}
 					post={
 						<ItemDisplay
-							label="Total Loan Interest Tax Benefit"
+							label="Total interest related tax benefit"
 							result={totalITaxBenefit}
 							currency={currency}
 							footer={`${startYear} to ${startYear + duration - 1}`}
