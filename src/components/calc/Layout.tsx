@@ -35,6 +35,7 @@ export default function Layout(props: LayoutProps) {
 			onBack={wip ? () => setWIP(null) : null}
 			navScrollable
 			fixedNav
+			noFooter={wip}
 		>
 			{!wip ? (
 				<PublicCalcView
