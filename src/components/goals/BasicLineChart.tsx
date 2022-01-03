@@ -4,7 +4,6 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { Col, Row } from 'antd';
-import NumberInput from '../form/numberinput';
 import { COLORS } from '../../CONSTANTS';
 import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { PlanContext } from './PlanContext';
