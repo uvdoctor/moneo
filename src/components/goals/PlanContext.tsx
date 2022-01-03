@@ -17,7 +17,7 @@ interface PlanContextProviderProps {
 }
 
 function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderProps) {
-  const { ratesData, appContextLoaded }: any = useContext(AppContext);
+  const { ratesData, appContextLoaded, discountRate }: any = useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
@@ -32,7 +32,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [ffResult, setFFResult] = useState<any>({});
   const [ffYear, setFFYear] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
-  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : 5);
+  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : discountRate);
   const [planError, setPlanError] = useState<string>('');
   const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
   const nowYear = new Date().getFullYear();
