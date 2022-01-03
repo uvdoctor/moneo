@@ -6,7 +6,6 @@ import { toStringArr, initOptions } from '../utils';
 import { calculateTotalAmt } from './cfutils';
 import { COLORS } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
-import { Row } from 'antd';
 import ItemDisplay from '../calc/ItemDisplay';
 import { CalcContext } from '../calc/CalcContext';
 interface AnnualAmtProps {
