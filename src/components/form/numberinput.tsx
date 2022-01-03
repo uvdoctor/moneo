@@ -91,7 +91,7 @@ export default function NumberInput({
 		<>
 			<LabelWithTooltip label={pre} info={info} />
 			{/*@ts-ignore*/}
-			{currency ? <InputNumber {...inputConfig} /> : <InputNumber {...inputConfig} />}
+			<InputNumber {...inputConfig} />
 			{currency && value > 100000 ? toHumanFriendlyCurrency(value, currency) : null}
 			{post ? 
 				<>
