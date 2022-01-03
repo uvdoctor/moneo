@@ -3,7 +3,6 @@ import { GoalType } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { initOptions, toHumanFriendlyCurrency } from '../utils';
 import { Row } from 'antd';
 import { PlanContext } from '../goals/PlanContext';
@@ -41,7 +40,6 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 					)}
 				</Fragment>
 			}
-			svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
 			pl
 			unit={
 				goal.type !== GoalType.FF &&

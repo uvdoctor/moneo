@@ -1,7 +1,5 @@
-import React, { ReactNode, useContext } from 'react';
-import ModalVideoPlayer from '../ModalVideoPlayer';
+import React, { ReactNode } from 'react';
 import { Row, Col } from 'antd';
-import { CalcContext } from '../calc/CalcContext';
 interface SectionProps {
 	title?: any;
 	footer?: any;
@@ -13,18 +11,14 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-	const { fsb, allInputDone }: any = useContext(CalcContext);
-
 	return (
 		<Row>
 			{props.title && <Col span={24}>
 				<h3 className="steps-heading">
-					{`${props.title} `}
-					{props.videoSrc &&
-					(allInputDone || fsb.info.screenWidth < 1024) && (
-						<ModalVideoPlayer title={props.title} url={props.videoSrc} />
-					)}
-				</h3>
+					{(typeof props.title === 'string') ? 
+						
+						`${props.title} ` : props.title}
+				</h3> 
 			</Col>}
 			{props.toggle && (
 				<Col span={24} style={{ marginBottom: '0.5rem' }}>

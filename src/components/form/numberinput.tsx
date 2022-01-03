@@ -66,10 +66,9 @@ export default function NumberInput({
 		step: stepNum,
 		addonAfter: unit,
 		onChange: (val: number) => changeHandler(val as number),
-		formatter: (val: number) =>
-			currency
-				? toCurrency(val as number, currency as string)
-				: toReadableNumber(val as number, 2),
+		formatter: (val: number) => currency 
+									? toCurrency(val as number, currency)
+									: toReadableNumber(val as number, 2),
 		parser: (val: string) =>
 			currency
 				? parseFloat(parseNumber(val as string, currency))
@@ -83,7 +82,6 @@ export default function NumberInput({
 			let num = currency
 				? parseInt(parseNumber(e.currentTarget.value, currency))
 				: parseFloat(e.currentTarget.value);
-
 			if (!num || num < minNum) changeHandler(minNum);
 		},
 		style: { width: maxNum < 1000 && (!unit || unit?.length < 2) ? "100px" : "150px" },
@@ -93,7 +91,7 @@ export default function NumberInput({
 		<>
 			<LabelWithTooltip label={pre} info={info} />
 			{/*@ts-ignore*/}
-			<InputNumber {...inputConfig} />
+			{currency ? <InputNumber {...inputConfig} /> : <InputNumber {...inputConfig} />}
 			{currency && value > 100000 ? toHumanFriendlyCurrency(value, currency) : null}
 			{post ? 
 				<>

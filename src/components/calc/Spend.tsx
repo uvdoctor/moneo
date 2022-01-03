@@ -1,11 +1,10 @@
-import { Collapse } from 'antd';
+import { Col, Row } from 'antd';
 import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
-import Save from './Save';
 import { TrueCostContext } from './TrueCostContext';
 
 export const SPEND_ONCE = 'Once';
@@ -13,7 +12,6 @@ export const SPEND_MONTHLY = 'Monthly';
 export const SPEND_YEARLY = 'Yearly';
 
 export default function Spend() {
-	const { Panel } = Collapse;
 	const { currency, setCurrency }: any = useContext(CalcContext);
 	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost, savings, setSavings }: any = useContext(TrueCostContext);
 	const freqOptions = {
@@ -23,8 +21,12 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spending and Saving Details">
-			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
+		<Section title={
+			<Row align='middle'>
+				<Col>Spending and Saving in</Col>
+				<Col><SelectInput pre="" value={currency} changeHandler={setCurrency} currency /></Col>
+			</Row>
+		}>
 			<SelectInput
 				pre="Spend frequency"
 				value={freq}
