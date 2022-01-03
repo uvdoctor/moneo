@@ -6,8 +6,8 @@ import {
 	toHumanFriendlyCurrency,
 	toReadableNumber,
 } from "../utils";
-import { Tooltip, InputNumber } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
+import LabelWithTooltip from "./LabelWithTooltip";
 interface NumberInputProps {
 	info?: string;
 	pre: any;
@@ -91,19 +91,16 @@ export default function NumberInput({
 
 	return (
 		<>
-			{pre}
-			{info && 
-				<>
-					<Tooltip title={info}>
-						<InfoCircleOutlined />
-					</Tooltip>
-				</>
-			}
-			{pre || info ? <br/> : null}
+			<LabelWithTooltip label={pre} info={info} />
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{currency && value > 100000 ? toHumanFriendlyCurrency(value, currency) : null}
-			{post}
+			{post ? 
+				<>
+					<br/>
+					{post}
+				</>
+			: null}
 		</>
 	);
 }

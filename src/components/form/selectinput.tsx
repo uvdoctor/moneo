@@ -1,7 +1,7 @@
 import React, { ReactNode, Fragment } from "react";
 import { getCurrencyList } from "../utils";
-import { Tooltip, Select } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Select } from "antd";
+import LabelWithTooltip from "./LabelWithTooltip";
 
 interface SelectInputProps {
 	disabled?: boolean;
@@ -22,16 +22,7 @@ export default function SelectInput(props: SelectInputProps) {
 
 	return (
 		<Fragment>
-			{props.pre && (
-				<Fragment>
-					{props.pre}
-					{props.info && (
-						<Tooltip title={props.info}>
-							<InfoCircleOutlined />
-						</Tooltip>
-					)}
-				</Fragment>
-			)}{" "}
+			<LabelWithTooltip label={props.pre} info={props.info} />
 			<Select
 				showSearch
 				optionFilterProp="children"
@@ -50,9 +41,19 @@ export default function SelectInput(props: SelectInputProps) {
 						{props.currency ? key : selectOptions[key]}
 					</Option>
 				))}
-			</Select>{" "}
-			{props.unit}
-			{props.post}
+			</Select>
+			{props.unit ? 
+				<>
+					&nbsp;
+					{props.unit}
+				</>
+			: null}
+			{props.post ? 
+				<>
+					<br/>
+					{props.post}
+				</>
+			: null}
 		</Fragment>
 	);
 }
