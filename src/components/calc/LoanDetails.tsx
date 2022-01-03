@@ -9,7 +9,7 @@ import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
 import LoanAdvOptions from './LoanAdvOptions';
-import { Button, Col, Modal, Row } from 'antd';
+import { Button, Modal } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
@@ -65,11 +65,9 @@ export default function LoanDetails() {
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}
-				{loanBorrowAmt && (
-					<Row justify="space-between">
-						<Col>
-							<ItemDisplay
-								label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
+				{loanBorrowAmt && 
+					<ItemDisplay
+						label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
 								result={loanBorrowAmt}
 								currency={currency}
 								precise
@@ -92,11 +90,10 @@ export default function LoanDetails() {
 									) : (
 										`${startYear} to ${endYear}`
 									)
-								}
-							/>
-						</Col>
-						<Col>
-							<ItemDisplay
+						}
+					/>}
+				{loanBorrowAmt && 
+					<ItemDisplay
 								label="Monthly Installment"
 								result={emi}
 								currency={currency}
@@ -107,10 +104,7 @@ export default function LoanDetails() {
 										Adjust Schedule
 									</Button>
 								}
-							/>
-						</Col>
-					</Row>
-				)}
+					/>}
 				{emi && <LoanAdvOptions />}
 			</Section>
 			{loanScheduleModal && (
