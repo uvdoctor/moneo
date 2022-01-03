@@ -32,7 +32,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [ffResult, setFFResult] = useState<any>({});
   const [ffYear, setFFYear] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
-  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : discountRate);
+  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : discountRate ? discountRate : 5);
   const [planError, setPlanError] = useState<string>('');
   const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
   const nowYear = new Date().getFullYear();

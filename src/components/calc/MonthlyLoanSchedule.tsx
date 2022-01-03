@@ -313,21 +313,17 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									<Col className="configurations" lg={12}>
 										<Section title="Adjust Loan Schedule">
 											<NumberInput
-												pre={`${isEduLoanSIPayment(num)
-													? 'Custom Payment'
-													: 'Additional Principal Payment'}`}
+												pre="Payment"
 												value={getPrepayment(num)}
 												changeHandler={(val: number) =>
 													changeLoanPrepayments(num, val)}
-												min={0}
 												max={Math.floor(getPrincipalDue(num - 1))}
-												step={1}
 												currency={currency}
 												noRangeFactor
 											/>
 											{record.num !== '1' ? (
 												<NumberInput
-													pre="Adjust Interest Rate"
+													pre="Rate"
 													value={getClosestTargetVal(
 														loanIRAdjustments,
 														parseInt(record.num),
