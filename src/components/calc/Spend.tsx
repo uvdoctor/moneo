@@ -23,27 +23,20 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spending and Saving Details" footer={
-			<Collapse>
-				<Panel key="advanced" header="Advanced">
-					<Save />
-				</Panel>
-			</Collapse>
-		}>
+		<Section title="Enter Spending and Saving Details">
+			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
 			<SelectInput
-				pre="Spending frequency"
+				pre="Spend frequency"
 				value={freq}
 				changeHandler={setFreq}
 				options={freqOptions}
 				info="Frequency at which you wish to spend - One time, Monthly or Yearly."
 			/>
-			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
 			<NumberInput
-				pre="Amount"
+				pre="Spend amount"
 				value={amt}
 				changeHandler={setAmt}
-				min={10}
-				step={10}
+				min={1}
 				currency={currency}
 				info={`Amount that you wish to spend${freq === SPEND_MONTHLY
 					? ' on monthly basis '

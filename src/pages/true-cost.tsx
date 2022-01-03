@@ -5,12 +5,7 @@ import Spend from '../components/calc/Spend';
 import Save from '../components/calc/Save';
 import BasicLineChart from '../components/goals/BasicLineChart';
 import { TrueCostContextProvider } from '../components/calc/TrueCostContext';
-import { faChartLine, faPiggyBank, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
-
-export const SPEND = 'Spend';
-export const SAVE = 'Save';
-export const INVEST = 'Invest';
-export const CHART = 'Yearly Cash Flows If Invested';
+import { faChartLine, faCog, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 
 export default function TrueCost() {
 	const assumptions = [
@@ -61,11 +56,12 @@ export default function TrueCost() {
 	return (
 		<Layout
 			tabOptions={[
-				{ label: SPEND, active: true, svg: faMoneyBillWave, content: <Spend /> }
+				{ label: 'Basic', active: true, svg: faMoneyBillWave, content: <Spend /> },
+				{ label: 'Advanced', active: true, svg: faCog, content: <Save /> }
 			]}
 			resultTabOptions={[
 				{
-					label: CHART,
+					label: 'Yearly cash flows if money is invested instead of spending',
 					active: true,
 					svg: faChartLine,
 					content: <BasicLineChart numberOfYears showRange showFromYear={1} />

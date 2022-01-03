@@ -45,7 +45,7 @@ export default function Input() {
 			{!allInputDone ? (
 				<div className="goals-container">
 					<header>
-						{inputTabs.length > 1 ? (
+						{inputTabs.length > 2 ? (
 							<Steps
 								current={inputTabIndex}
 								onChange={(index: number) => {
@@ -76,18 +76,22 @@ export default function Input() {
 								<Row align="middle">
 									<Col span={24}>
 										<Space>
-											{inputTabIndex > 0 && (
-												<Button onClick={() => handleStepChange(-1)}>Previous</Button>
-											)}
-											{inputTabIndex < inputTabs.length - 1 && (
-												<Button
-													type="primary"
-													disabled={error}
-													onClick={() => handleStepChange()}>
-													Next
-												</Button>
-											)}
-											{inputTabIndex === inputTabs.length - 1 && (
+											{inputTabs.length > 2 && 
+												<Fragment>
+													{inputTabIndex > 0 && (
+														<Button onClick={() => handleStepChange(-1)}>Previous</Button>
+													)}
+													{inputTabIndex < inputTabs.length - 1 && (
+														<Button
+															type="primary"
+															disabled={error}
+															onClick={() => handleStepChange()}>
+															Next
+														</Button>
+													)}
+												</Fragment>
+											}
+											{(inputTabIndex === inputTabs.length - 1  || inputTabs.length < 3) && (
 												<Button
 													type="primary"
 													onClick={() => {
