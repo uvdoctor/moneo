@@ -86,7 +86,7 @@ export default function NumberInput({
 
 			if (!num || num < minNum) changeHandler(minNum);
 		},
-		style: { width: maxNum < 1000 ? "100px" : "150px" },
+		style: { width: maxNum < 1000 && (!unit || unit?.length < 2) ? "100px" : "150px" },
 	};
 
 	return (
