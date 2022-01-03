@@ -2,10 +2,9 @@ import React from 'react';
 import Layout from '../components/calc/Layout';
 import { CALC_NAMES } from '../CONSTANTS';
 import Spend from '../components/calc/Spend';
-import Save from '../components/calc/Save';
 import BasicLineChart from '../components/goals/BasicLineChart';
 import { TrueCostContextProvider } from '../components/calc/TrueCostContext';
-import { faChartLine, faPiggyBank, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
