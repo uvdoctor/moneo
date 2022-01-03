@@ -18,6 +18,7 @@ interface RadialInputProps {
 	post?: ReactNode;
 	colorTo?: string | null;
 	colorFrom?: string | null;
+	trackColor?: string | null;
 }
 
 export default function RadialInput(props: RadialInputProps) {
@@ -42,7 +43,7 @@ export default function RadialInput(props: RadialInputProps) {
 						onChange={(val: string) =>
 							props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
 						label={props.label}
-						trackColor={COLORS.LIGHT_GRAY}
+						trackColor={props.trackColor ? props.trackColor : COLORS.LIGHT_GRAY}
 						data={props.data}
 						dataIndex={(props.value - getVal(props.data[0])) / props.step}
 						appendToValue={props.unit}

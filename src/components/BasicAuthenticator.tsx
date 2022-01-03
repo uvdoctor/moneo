@@ -202,9 +202,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 							<div className="steps-content">{steps[state.step].content}</div>
 							<div className="steps-action">
 								<Row justify="end">
-									<Button type="link" htmlType="button" onClick={onCancel}>
-										Cancel
-									</Button>
+									{state.step === 0 && (
+										<Button type="link" htmlType="button" onClick={onCancel}>
+											Cancel
+										</Button>
+									)}
 									{state.step > 0 && (
 										<Button type="link" onClick={() => prev()}>
 											Back
