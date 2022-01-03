@@ -39,7 +39,7 @@ export default function DatePickerInput(props: DatePickerInputProps) {
 	const endDate = props.enddate ? props.enddate : defaultEnddate;
 
 	return (
-		<Row gutter={[ 10, 0 ]}>
+		<Row gutter={[ 10, 0 ]} align='middle'>
 			{props.title && <Col className={props.className || 'date'}>{props.title}</Col>}
 			{props.isRangePicker ? (
 				<Col>
