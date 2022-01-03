@@ -1,4 +1,4 @@
-import { Col, Empty, Table } from "antd";
+import { Empty, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { HoldingInput } from "../../api/goals";
 import { NWContext, TAB } from "./NWContext";

@@ -4,6 +4,7 @@ import { SizeType } from "antd/lib/config-provider/SizeContext";
 interface TextInputProps {
 	pre: ReactNode;
 	prefix?: ReactNode;
+	style?: object;
 	post?: any;
 	value: string;
 	changeHandler: Function;
