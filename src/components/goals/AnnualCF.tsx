@@ -64,7 +64,7 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 				labelBottom={true}
 				label="of Price"
 				pre={
-					<Row justify="center" align="middle">
+					<>
 						{`From `}
 						<SelectInput
 							pre=""
@@ -72,7 +72,7 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 							value={income ? aiStartYear : amStartYear}
 							changeHandler={income ? setAIStartYear : setAMStartYear}
 						/>
-					</Row>
+					</>
 				}
 				post={
 					<ItemDisplay

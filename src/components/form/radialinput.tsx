@@ -27,9 +27,9 @@ export default function RadialInput(props: RadialInputProps) {
 
 	return (
 		<Row justify="space-between" align="middle">
-			<Col>
+			<Col span={12}>
 				<LabelWithTooltip label={props.pre} info={props.info} />
-				<div className="radial-input">
+				<span className="radial-input">
 					<CircularSlider
 						onChange={(val: string) =>
 							props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
@@ -46,11 +46,10 @@ export default function RadialInput(props: RadialInputProps) {
 						progressColorFrom={props.colorFrom ? props.colorFrom : COLORS.GREEN}
 						progressColorTo={props.colorTo ? props.colorTo : COLORS.GREEN}
 						knobColor="#cbd5e0"
-						className="radial-input"
 					/>
-				</div>
+				</span>
 			</Col>
-			<Col>{props.post}</Col>
+			<Col span={12}>{props.post}</Col>
 		</Row>
 	);
 }

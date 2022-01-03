@@ -25,7 +25,7 @@ export default function Section(props: SectionProps) {
 			)}
 			{React.Children.map(props.children, (child: any, i: number) =>
 					child ? (
-						<Col xs={24} sm={24} md={12} lg={8} key={"section" + i}>
+						<Col xs={24} md={12} lg={8} key={"section" + i}>
 							{child}
 						</Col>
 					) : (
