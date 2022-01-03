@@ -251,7 +251,7 @@ export default function UserSettings(): JSX.Element {
 												{dob && (
 													<DatePickerInput
 														title={'Date of birth'}
-														className="date"
+														className="dob"
 														value={dob}
 														changeHandler={(val: any) =>
 															dispatch({ type: 'single', data: { field: 'dob', val } })}
