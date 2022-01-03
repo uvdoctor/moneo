@@ -23,7 +23,7 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spend Details" footer={
+		<Section title="Enter Spending and Saving Details" footer={
 			<Collapse>
 				<Panel key="advanced" header="Advanced">
 					<Save />

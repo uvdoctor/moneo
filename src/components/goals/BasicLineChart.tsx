@@ -9,6 +9,7 @@ import { COLORS } from '../../CONSTANTS';
 import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { PlanContext } from './PlanContext';
 import { useFullScreenBrowser } from "react-browser-hooks";
+import RadioInput from '../form/RadioInput';
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
@@ -63,17 +64,9 @@ export default function BasicLineChart({
 
 	return (
 		<Fragment>
-			{showRange ? <Row align="middle" className="chart-options-row" justify="center">
+			{showRange ? <Row align="middle" justify="center">
 					<Col xs={24} sm={24} md={24} lg={12}>
-						<NumberInput
-							pre="Compare from 1 to "
-							value={analyzeFor}
-							changeHandler={setAnalyzeFor}
-							min={5}
-							max={50}
-							step={1}
-							unit="Years"
-						/>
+						<RadioInput from={10} to={50} increment={10} value={analyzeFor} changeHandler={setAnalyzeFor} />
 					</Col>
 				</Row>
 			: null}

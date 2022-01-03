@@ -34,35 +34,41 @@ export default function Input() {
 				else document.body.classList.remove('no-scrollbar');
 			}
 		},
-		[ fsb.info.innerWidth, showOptionsForm ]
+		[
+			fsb.info.innerWidth,
+			showOptionsForm
+		]
 	);
 
 	return (
 		<Fragment>
 			{!allInputDone ? (
 				<div className="goals-container">
-					{inputTabs.length > 1 && <header>
-						<Steps
-							current={inputTabIndex}
-							onChange={(index: number) => {
-								if (index < inputTabIndex) setInputTabIndex(index);
-							}}
-							status={error ? 'error' : 'process'}
-						>
-							{inputTabs.map((tab: any) => (
-								<Step
-									key={tab.label}
-									title={
-										<Fragment>
-											<FontAwesomeIcon icon={tab.svg} />
-											<label>{tab.label}</label>
-										</Fragment>
-									}
-									disabled={!tab.active}
-								/>
-							))}
-						</Steps>
-					</header>}
+					<header>
+						{inputTabs.length > 1 ? (
+							<Steps
+								current={inputTabIndex}
+								onChange={(index: number) => {
+									if (index < inputTabIndex) setInputTabIndex(index);
+								}}
+								status={error ? 'error' : 'process'}>
+								{inputTabs.map((tab: any) => (
+									<Step
+										key={tab.label}
+										title={
+											<Fragment>
+												<FontAwesomeIcon icon={tab.svg} />
+												<label>{tab.label}</label>
+											</Fragment>
+										}
+										disabled={!tab.active}
+									/>
+								))}
+							</Steps>
+						) : (
+							<p>&nbsp;</p>
+						)}
+					</header>
 					<section>
 						<Row>
 							<Col>
@@ -77,8 +83,7 @@ export default function Input() {
 												<Button
 													type="primary"
 													disabled={error}
-													onClick={() => handleStepChange()}
-												>
+													onClick={() => handleStepChange()}>
 													Next
 												</Button>
 											)}
@@ -88,8 +93,7 @@ export default function Input() {
 													onClick={() => {
 														setAllInputDone(true);
 														if (isMobileDevice()) setInputTabIndex(-1);
-													}}
-												>
+													}}>
 													Done
 												</Button>
 											)}
@@ -124,8 +128,7 @@ export default function Input() {
 														: document.body.classList.remove('no-scrollbar');
 												}
 											}
-										}}
-									>
+										}}>
 										<Row justify="center">
 											<FontAwesomeIcon icon={tab.svg} />
 										</Row>
@@ -142,8 +145,7 @@ export default function Input() {
 								onClick={() => {
 									setInputTabIndex(-1);
 									setOptionsVisibility(false);
-								}}
-							>
+								}}>
 								<CloseOutlined />
 							</Button>
 							{inputTabIndex >= 0 &&
