@@ -3,7 +3,7 @@ import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
 import { GoalType, TargetInput } from '../../api/goals';
-import { toCurrency } from '../utils';
+import { toHumanFriendlyCurrency } from '../utils';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { useRouter } from 'next/router';
@@ -46,8 +46,7 @@ export default function Cost() {
 					value={t.val}
 					changeHandler={(val: number) => changeTargetVal(val, i)}
 					min={0}
-					max={900000}
-					step={500}
+					step={10}
 					key={'t' + i}
 				/>
 			))}
@@ -59,17 +58,17 @@ export default function Cost() {
 			<NumberInput
 				pre={
 					isLoanPublicCalc ? (
-						'Borrow Amount'
+						'Borrow'
 					) : (
-						`Today's cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+						`Today's cost`
 					)
 				}
+				info="Please input total amount considering taxes and fees"
 				currency={currency}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
-				min={100}
-				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
-				step={100}
+				min={10}
+				step={10}
 				post={
 					goal.type === GoalType.E ? (
 						<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" />
@@ -79,17 +78,17 @@ export default function Cost() {
 			{startYear > goal.by &&
 			!isLoanPublicCalc && (
 				<NumberInput
-					pre="Yearly Cost Changes by"
+					pre="Yearly cost change"
 					unit="%"
 					min={-10}
 					max={10}
 					step={0.1}
 					value={priceChgRate}
 					changeHandler={setPriceChgRate}
-					info="Rate at which cost is expected to change on Yearly basis considering inflation and other factors."
+					info="Rate at which cost is expected to change on yearly basis considering inflation and other factors."
 					post={
 						priceChgRate ? (
-							`In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}`
+							`${toHumanFriendlyCurrency(price, currency)} in ${startYear}`
 						) : (
 							''
 						)
