@@ -52,14 +52,6 @@ export default function NumberInput({
 		setStepNum(stepNum);
 	}, [rangeFactor, min, max]);
 
-	const buildPreComp = () => 
-		<>
-			{pre}
-			{info && <Tooltip title={info}>
-				<InfoCircleOutlined />
-			</Tooltip>}
-		</>
-
 	useEffect(() => {
 		if (!currency || noRangeFactor) return;
 		let rf = getRangeFactor(currency as string);
@@ -72,7 +64,6 @@ export default function NumberInput({
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
-		addonBefore: pre ? buildPreComp() : null,
 		addonAfter: unit,
 		onChange: (val: number) => changeHandler(val as number),
 		formatter: (val: number) =>
@@ -95,11 +86,15 @@ export default function NumberInput({
 
 			if (!num || num < minNum) changeHandler(minNum);
 		},
-		style: { minWidth: maxNum < 1000 ? "100px" : "150px" },
+		style: { width: maxNum < 1000 ? "100px" : "150px" },
 	};
 
 	return (
 		<>
+			{pre}
+			{info && <Tooltip title={info}>
+				<InfoCircleOutlined />
+			</Tooltip>}
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{currency && value > 100000 ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
