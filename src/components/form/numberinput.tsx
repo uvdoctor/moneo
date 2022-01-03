@@ -92,9 +92,14 @@ export default function NumberInput({
 	return (
 		<>
 			{pre}
-			{info && <Tooltip title={info}>
-				<InfoCircleOutlined />
-			</Tooltip>}
+			{info && 
+				<>
+					<Tooltip title={info}>
+						<InfoCircleOutlined />
+					</Tooltip>
+					&nbsp;&nbsp;
+				</>
+			}
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{currency && value > 100000 ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
