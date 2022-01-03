@@ -125,7 +125,7 @@ export default function UserSettings(): JSX.Element {
       name: user?.attributes?.name || '',
       lastName: user?.attributes?.family_name || '',
       prefuser: user?.attributes?.preferred_username || '',
-      dob: user?.attributes?.birthdate || '',
+      dob: user?.attributes?.birthdate,
       whatsapp: whatsapp }
     });
   }, [appContextLoaded, countryCode?.value, user]);
