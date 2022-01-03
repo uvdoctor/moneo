@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
-import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RiskProfile, TaxLiability } from '../api/goals';
+import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from '../api/goals';
 import * as APIt from "../api/goals";
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
@@ -22,7 +22,7 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 		} while (nextToken);
 		return false;
 	} catch (e) {
-		console.log('Error while checking if mobile number is unique: ', e);
+		console.log('Error while checking if email is unique: ', e);
 	}
 };
 
@@ -62,7 +62,7 @@ export const doesImExist = async (im: Number) => {
 		} while (nextToken);
 		return false;
 	} catch (e) {
-		console.log('Error while checking if email address is unique: ', e);
+		console.log('Error while checking if whatsapp number is unique: ', e);
 	}
 };
 
@@ -90,11 +90,11 @@ export const deleteContact = async (uname: string) => {
 	}
 };
 
-export const createUserinfo = async (uname: string, email: string, notify: boolean, rp: RiskProfile, dr: number, tc: string, tax: TaxLiability) => {
+export const createUserinfo = async (input: APIt.CreateUserInfoInput) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createUserInfo,
-			variables: { input: {  uname, email, notify, rp, dr, tc, tax } },
+			variables: { input: input },
 		});
 		console.log(data);
 	} catch(e) {
