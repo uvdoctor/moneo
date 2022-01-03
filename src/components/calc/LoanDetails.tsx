@@ -12,11 +12,10 @@ import { Button, Modal } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 export default function LoanDetails() {
 	const { isPublicCalc }: any = useContext(PlanContext);
-	const { goal, fsb, currency, startYear, endYear }: any = useContext(CalcContext);
+	const { goal, fsb, currency }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,
