@@ -71,10 +71,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			title: 'Step 2',
 			content: (
 				<StepTwo
-					riskProfile={riskProfile}
-					setRiskProfile={setRiskProfile}
-					taxLiability={taxLiability}
-					setTaxLiability={setTaxLiability}
 					DOB={DOB}
 					setDOB={setDOB}
 					lifeExpectancy={lifeExpectancy}
@@ -84,7 +80,17 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		},
 		{
 			title: 'Step 3',
-			content: <StepThree error={error} setNotify={setNotify} setDisable={setDisable} />
+			content: (
+				<StepThree
+					error={error}
+					setNotify={setNotify}
+					setDisable={setDisable}
+					riskProfile={riskProfile}
+					setRiskProfile={setRiskProfile}
+					taxLiability={taxLiability}
+					setTaxLiability={setTaxLiability}
+				/>
+			)
 		}
 	];
 
