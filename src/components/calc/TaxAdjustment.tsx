@@ -67,10 +67,10 @@ export default function TaxAdjustment() {
 			)}
 			{totalPTaxBenefit && 
 				<ItemDisplay
-							label={`Total ${loanBorrowAmt && manualMode < 1 ? 'principal related' : ''} tax benefit`}
-							result={totalPTaxBenefit}
-							currency={currency}
-							footer={`${startYear} to ${startYear + duration - 1}`}
+					label={`Total ${loanBorrowAmt && manualMode < 1 ? 'principal related' : ''} tax benefit`}
+					result={totalPTaxBenefit}
+					currency={currency}
+					footer={`${startYear} to ${startYear + duration - 1}`}
 				/>
 			}
 		</Section>
@@ -78,21 +78,21 @@ export default function TaxAdjustment() {
 			<Section title="Interest related tax deduction" toggle={
 				<HSwitch rightText="" value={taxBenefitInt} setter={setTaxBenefitInt} />
 			}>
-				<NumberInput
+				{taxBenefitInt && <NumberInput
 					pre="Max yearly deduction allowed"
 					value={maxTaxDeductionInt}
 					changeHandler={setMaxTaxDeductionInt}
 					currency={currency}
 					max={30000}
 					step={10}
-				/>
-			{totalITaxBenefit && 
-				<ItemDisplay
-				label="Total interest related tax benefit"
-				result={totalITaxBenefit}
-				currency={currency}
-				footer={`${startYear} to ${startYear + duration - 1}`}
-			/>}
+				/>}
+				{taxBenefitInt && totalITaxBenefit && 
+					<ItemDisplay
+					label="Total interest related tax benefit"
+					result={totalITaxBenefit}
+					currency={currency}
+					footer={`${startYear} to ${startYear + duration - 1}`}
+				/>}
 		</Section> : null}
 		</>
 	);
