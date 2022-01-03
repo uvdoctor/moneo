@@ -4,7 +4,6 @@ import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
 import { GoalType, TargetInput } from '../../api/goals';
 import { toCurrency } from '../utils';
-import { Row, Col } from 'antd';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { useRouter } from 'next/router';
@@ -22,8 +21,6 @@ export default function Cost() {
 		priceChgRate,
 		setPriceChgRate,
 		manualMode,
-		setManualMode,
-		isLoanMandatory,
 		eduCostSemester,
 		setEduCostSemester
 	}: any = useContext(GoalContext);
@@ -33,42 +30,39 @@ export default function Cost() {
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
 		wipTargets[i].val = val;
-		setWIPTargets([ ...wipTargets ]);
+		setWIPTargets([
+			...wipTargets
+		]);
 	};
 
-
-	return (
+	return manualMode ? (
 		<Section
-			title={
-				<Row align='middle'>
-					<Col>{`${isLoanPublicCalc ? 'Borrow' : 'Cost'} in `}</Col>
-					<Col><SelectInput pre="" value={currency} changeHandler={setCurrency} currency /></Col>
-				</Row>
-			}
-			manualInput={
-				wipTargets && (
-					<Row align="middle" justify="space-between">
-						{wipTargets.map((t: TargetInput, i: number) => (
-							<Col key={'t' + i}>
-								<NumberInput
-									pre={t.num}
-									currency={currency}
-									value={t.val}
-									changeHandler={(val: number) => changeTargetVal(val, i)}
-									min={0}
-									max={900000}
-									step={500}
-								/>
-							</Col>
-						))}
-					</Row>
-				)
-			}
-			manualMode={manualMode}
-		>
+			title={`${isLoanPublicCalc ? 'Borrow' : 'Cost'} in `}
+			toggle={<SelectInput pre="" value={currency} changeHandler={setCurrency} currency />}>
+			{wipTargets.map((t: TargetInput, i: number) => (
+				<NumberInput
+					pre={t.num}
+					currency={currency}
+					value={t.val}
+					changeHandler={(val: number) => changeTargetVal(val, i)}
+					min={0}
+					max={900000}
+					step={500}
+					key={'t' + i}
+				/>
+			))}
+		</Section>
+	) : (
+		<Section
+			title={`${isLoanPublicCalc ? 'Borrow' : 'Cost'} in `}
+			toggle={<SelectInput pre="" value={currency} changeHandler={setCurrency} currency />}>
 			<NumberInput
 				pre={
-					isLoanPublicCalc ? 'Borrow Amount' : `Today's cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+					isLoanPublicCalc ? (
+						'Borrow Amount'
+					) : (
+						`Today's cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+					)
 				}
 				currency={currency}
 				value={startingPrice}
@@ -85,7 +79,7 @@ export default function Cost() {
 			{startYear > goal.by &&
 			!isLoanPublicCalc && (
 				<NumberInput
-					pre='Yearly Cost Changes by'
+					pre="Yearly Cost Changes by"
 					unit="%"
 					min={-10}
 					max={10}
@@ -93,7 +87,13 @@ export default function Cost() {
 					value={priceChgRate}
 					changeHandler={setPriceChgRate}
 					info="Rate at which cost is expected to change on Yearly basis considering inflation and other factors."
-					post={priceChgRate ? `In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}` : ''}
+					post={
+						priceChgRate ? (
+							`In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}`
+						) : (
+							''
+						)
+					}
 				/>
 			)}
 		</Section>
