@@ -44,12 +44,12 @@ export default function TextInput(props: TextInputProps) {
 	return (
 		<Input
 			className="input"
+			style={props.style}
 			type={props.password ? "password" : "text"}
 			addonBefore={props.pre}
 			addonAfter={props.post}
 			prefix={props.prefix}
 			size={props.size ? props.size : "large"}
-			//style={{ width: props.width ? props.width : 260 }}
 			placeholder={props.placeholder ? props.placeholder : ""}
 			value={props.value}
 			onChange={(e) => props.changeHandler(e.currentTarget.value)}

@@ -43,7 +43,7 @@ export default function ListHoldings({
 
 	if (childTab === "Deposits") {
 		defaultColumns = ["cat", "amt", "fid"];
-		//expandedColumns = ["date", "label", "qty"];
+		expandedColumns = ["date", "label", "qty"];
 	} else {
 		defaultColumns = ["cat", "amt", "fid"];
 		expandedColumns = ["date", "label", "qty"];
@@ -76,25 +76,21 @@ export default function ListHoldings({
 			key: i,
 			date: <DateColumn data={data} changeData={changeData} record={data[i]} />,
 			label: hasName(childTab) && (
-				<Col>
-					<TextInput
-						pre=""
-						changeHandler={(val: string) => changeName(val, i)}
-						value={data[i].name as string}
-						size={"middle"}
-						width={200}
-					/>
-				</Col>
+				<TextInput
+					pre=""
+					changeHandler={(val: string) => changeName(val, i)}
+					value={data[i].name as string}
+					size={"middle"}
+					style={{ width: 200 }}
+				/>
 			),
 			qty: hasPF(childTab) && (
-				<Col>
-					<NumberInput
-						pre=""
-						value={data[i].qty as number}
-						changeHandler={(val: number) => changeQty(val, i)}
-						currency={data[i].curr as string}
-					/>
-				</Col>
+				<NumberInput
+					pre=""
+					value={data[i].qty as number}
+					changeHandler={(val: number) => changeQty(val, i)}
+					currency={data[i].curr as string}
+				/>
 			),
 		};
 
@@ -114,6 +110,7 @@ export default function ListHoldings({
 
 	useEffect(() => {
 		let dataSource: Array<any> = [];
+
 		data.map((holding: HoldingInput, index: number) => {
 			if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
 				dataSource.push({
@@ -145,6 +142,7 @@ export default function ListHoldings({
 				});
 			}
 		});
+
 		setDataSource([...dataSource]);
 	}, [data, selectedMembers, selectedCurrency]);
 
