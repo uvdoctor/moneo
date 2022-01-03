@@ -34,6 +34,7 @@ export default function TaxAdjustment() {
 	);
 
 	return (
+		<>
 		<Section title={`Claim Tax ${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}>
 			{!isTaxCreditEligible(goal.type) && (
 				<NumberInput
@@ -49,7 +50,7 @@ export default function TaxAdjustment() {
 			)}
 			{(isTaxCreditEligible(goal.type) || taxRate) && goal.type !== GoalType.E && (
 				<NumberInput
-					info={`Maximum yearly tax ${isTaxCreditEligible(goal.type)
+					info={`Maximum yearly ${isTaxCreditEligible(goal.type)
 						? 'credit'
 						: 'deduction'} allowed`}
 					pre={`Max yearly ${loanBorrowAmt && manualMode < 1 ? 'principal' : ''} ${isTaxCreditEligible(
@@ -60,46 +61,39 @@ export default function TaxAdjustment() {
 					currency={currency}
 					value={maxTaxDeduction}
 					changeHandler={setMaxTaxDeduction}
-					min={0}
 					max={30000}
-					step={1000}
-					post={
-						<ItemDisplay
+					step={10}
+				/>
+			)}
+			{totalPTaxBenefit && 
+				<ItemDisplay
 							label={`Total ${loanBorrowAmt && manualMode < 1 ? 'principal related' : ''} tax benefit`}
 							result={totalPTaxBenefit}
 							currency={currency}
 							footer={`${startYear} to ${startYear + duration - 1}`}
-						/>
-					}
 				/>
-			)}
-			{!isTaxCreditEligible(goal.type) && goal.type !== GoalType.E &&
-			taxRate &&
-			loanBorrowAmt && (
-				<HSwitch rightText="Claim tax deduction on interest" value={taxBenefitInt} setter={setTaxBenefitInt} />
-			)}
-			{!isTaxCreditEligible(goal.type) &&
-			taxRate &&
-			loanBorrowAmt &&
-			taxBenefitInt && (
+			}
+		</Section>
+		{taxRate && loanBorrowAmt && goal.type !== GoalType.E && !isTaxCreditEligible(goal.type) ? 
+			<Section title="Interest related tax deduction" toggle={
+				<HSwitch rightText="" value={taxBenefitInt} setter={setTaxBenefitInt} />
+			}>
 				<NumberInput
-					pre="Max yearly interest deduction"
+					pre="Max yearly deduction allowed"
 					value={maxTaxDeductionInt}
 					changeHandler={setMaxTaxDeductionInt}
 					currency={currency}
-					min={0}
 					max={30000}
-					step={1000}
-					post={
-						<ItemDisplay
-							label="Total interest related tax benefit"
-							result={totalITaxBenefit}
-							currency={currency}
-							footer={`${startYear} to ${startYear + duration - 1}`}
-						/>
-					}
+					step={10}
 				/>
-			)}
-		</Section>
+			{totalITaxBenefit && 
+				<ItemDisplay
+				label="Total interest related tax benefit"
+				result={totalITaxBenefit}
+				currency={currency}
+				footer={`${startYear} to ${startYear + duration - 1}`}
+			/>}
+		</Section> : null}
+		</>
 	);
 }

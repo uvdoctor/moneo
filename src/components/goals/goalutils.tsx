@@ -155,7 +155,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
 		ey: startYear,
 		by: nowYear,
 		tdr: 0,
-		tdl: isTaxCreditEligible(goalType) ? 0 : 20000 * getRangeFactor(currency),
+		tdl: isTaxCreditEligible(goalType) ? 0 : 2000 * getRangeFactor(currency),
 		ccy: currency,
 		cp: goalType === APIt.GoalType.B ? 500000 * getRangeFactor(currency) : 20000 * getRangeFactor(currency),
 		chg: 0,
@@ -191,7 +191,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType, currency: string, is
 	let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency);
 	if (isLoanEligible(goalType)) {
 		bg.tbi = 0;
-		bg.tdli = 20000 * getRangeFactor(currency);
+		bg.tdli = 2000 * getRangeFactor(currency);
 		bg.loan = {
 			rate: 4,
 			dur: 120,

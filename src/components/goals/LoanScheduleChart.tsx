@@ -6,6 +6,7 @@ import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
 import { isMobileDevice } from '../utils';
 import { useFullScreenBrowser } from "react-browser-hooks";
+import { COLORS } from '../../CONSTANTS';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -78,6 +79,7 @@ export default function LoanScheduleChart() {
 			data={data}
 			legend={{ position: 'top' }}
 			isStack={true}
+			color={[COLORS.BLUE, COLORS.RED]}
 		>
 			<Slider {...getDefaultSliderProps()} />
 		</ColumnChart>
