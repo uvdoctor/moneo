@@ -7,7 +7,6 @@ import ItemDisplay from './ItemDisplay';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
-import LoanInterest from './LoanInterest';
 import LoanAdvOptions from './LoanAdvOptions';
 import { Button, Modal } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
@@ -26,6 +25,8 @@ export default function LoanDetails() {
 		setLoanRepaymentMonths,
 		isEndYearHidden,
 		loanBorrowAmt,
+		loanIntRate,
+		setLoanIntRate,
 		emi
 	}: any = useContext(GoalContext);
 
@@ -64,7 +65,15 @@ export default function LoanDetails() {
 						post={<div>&nbsp;&nbsp;&nbsp;{`${toReadableNumber(loanMonths / 12, 2)} years`}</div>}
 					/>
 				)}
-				{loanBorrowAmt && <LoanInterest />}
+				{loanBorrowAmt && <NumberInput
+					pre="Yearly Interest"
+					unit="%"
+					value={loanIntRate}
+					changeHandler={setLoanIntRate}
+					min={0}
+					max={25}
+					step={0.01}
+				/>}
 				{loanBorrowAmt && 
 					<ItemDisplay
 						label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
