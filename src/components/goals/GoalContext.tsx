@@ -505,17 +505,17 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [endYear]);
 
   useEffect(() => {
+    if(cfs.length) {
+      let tc = cfs.reduce((val: number, total: number) => val + total);
+      if(goalType === GoalType.B) tc -= sellPrice;
+      setTotalCost(tc);
+    } else setTotalCost(0);
     if (isPublicCalc) return;
     wipGoal.imp = impLevel;
     setWipGoal(wipGoal);
     let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel, goal.ccy);
     setFFImpactYears(result.impactYears);
     if(wipGoal.id) setDiscountRates([...result.rr]);
-    if(cfs.length) {
-      let tc = cfs.reduce((val: number, total: number) => val + total);
-      if(goalType === GoalType.B) tc -= sellPrice;
-      setTotalCost(tc);
-    } else setTotalCost(0);
   }, [cfs, impLevel]);
 
   useEffect(() => {

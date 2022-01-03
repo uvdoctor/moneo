@@ -9,6 +9,7 @@ export default function TotalCostResult() {
 	const { totalCost }: any = useContext(GoalContext);
 	return (
 		<ItemDisplay
+			key={totalCost}
 			label="Total Cost"
 			result={totalCost}
 			currency={currency}
