@@ -100,6 +100,7 @@ export default function NumberInput({
 					&nbsp;&nbsp;
 				</>
 			}
+			<br/>
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{currency && value > 100000 ? <div>~ {toHumanFriendlyCurrency(value, currency)}</div> : null}
