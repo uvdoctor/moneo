@@ -43,7 +43,6 @@ export function BeforeFI() {
 	return (
 		<Section
 			title="Before Financial Independence"
-			videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
 			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="I Pay more than 12% Income Tax" />}
 		>
 			<NumberInput
