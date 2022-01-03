@@ -1,4 +1,3 @@
-import { Col, Row } from 'antd';
 import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
@@ -13,7 +12,9 @@ export const SPEND_YEARLY = 'Yearly';
 
 export default function Spend() {
 	const { currency, setCurrency }: any = useContext(CalcContext);
-	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost, savings, setSavings }: any = useContext(TrueCostContext);
+	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost, savings, setSavings }: any = useContext(
+		TrueCostContext
+	);
 	const freqOptions = {
 		[SPEND_ONCE]: SPEND_ONCE,
 		[SPEND_MONTHLY]: SPEND_MONTHLY,
@@ -21,12 +22,9 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title={
-			<Row align='middle'>
-				<Col>Spending and Saving in</Col>
-				<Col><SelectInput pre="" value={currency} changeHandler={setCurrency} currency /></Col>
-			</Row>
-		}>
+		<Section
+			title="Spending and Saving in"
+			toggle={<SelectInput pre="" value={currency} changeHandler={setCurrency} currency />}>
 			<SelectInput
 				pre="Spend frequency"
 				value={freq}

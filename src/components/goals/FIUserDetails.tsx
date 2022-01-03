@@ -24,7 +24,7 @@ export default function FIUserDetails() {
 	const nowYear = new Date().getFullYear();
 
 	return (
-		<Section title="Your Details" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
+		<Section title="Your Details">
 			<SelectInput
 				info="Your birth year is used to calculate the duration for which Financial Planning is needed."
 				pre="Birth Year"
