@@ -42,27 +42,29 @@ export default function LoanDetails() {
 
 	return (
 		<Fragment>
-			<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
+			<Section title="Loan Details">
 				{!isEndYearHidden && (
 					<NumberInput
-						unit={!loanPer ? '%' : `% (${toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency)})`}
+						unit="%"
 						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
 						step={1}
 						min={loanMinLimitPer}
 						max={loanMaxLimitPer}
+						post={loanPer ? toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency) : ''}
 					/>
 				)}
 				{loanBorrowAmt && (
 					<NumberInput
 						pre="Duration"
-						unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
+						unit="months"
 						value={loanMonths}
 						changeHandler={setLoanMonths}
 						min={6}
 						max={360}
 						step={1}
+						post={`${toReadableNumber(loanMonths / 12, 2)} years`}
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}

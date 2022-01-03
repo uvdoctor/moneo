@@ -16,13 +16,14 @@ export default function Section(props: SectionProps) {
 			{props.title && (
 				<Col span={24}>
 					<h3 className="steps-heading">
-						{typeof props.title === "string" ? `${props.title} ` : props.title}
+						{props.title}
+						{props.toggle ? 
+							<>
+								&nbsp;
+								{props.toggle}
+							</>
+						: null}
 					</h3>
-				</Col>
-			)}
-			{props.toggle && (
-				<Col xs={24} sm={24} md={12} lg={8} style={{ marginBottom: "0.5rem" }}>
-					{props.toggle}
 				</Col>
 			)}
 			{props.manualMode && props.manualMode > 0 ? (

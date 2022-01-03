@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
 import { initOptions, MONTHS } from '../utils';
 import Cost from './cost';
-import { Col } from 'antd';
 import { GoalContext } from './GoalContext';
 import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { PlanContext } from './PlanContext';
-import { getImpLevels } from './goalutils';
+import { getImpLevels, isLoanEligible } from './goalutils';
+import RadioInput from '../form/RadioInput';
+
 
 export default function GoalCost() {
 	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
@@ -21,15 +22,44 @@ export default function GoalCost() {
 		eyOptions,
 		startMonth,
 		changeStartMonth,
+		inputTabs, 
+		setInputTabs
 	}: any = useContext(CalcContext);
 	const ffGoalEndYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) : goal.by + 50;
-	const { manualMode, isEndYearHidden, impLevel, setImpLevel}: any = useContext(GoalContext);
+	const { manualMode, isEndYearHidden, impLevel, setImpLevel, setManualMode, isLoanMandatory}: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
 	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
+	const MANUAL = "Manual";
+
+	const changeManualMode = (value: string) => {
+		if (isLoanEligible(goal.type)) {
+			let loanTabIndex = goal.type === GoalType.B ? 2 : 1;
+			if (value === MANUAL) {
+				if (inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = false;
+					setInputTabs([ ...inputTabs ]);
+				}
+			} else {
+				if (!inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = true;
+					setInputTabs([ ...inputTabs ]);
+				}
+			}
+		}
+		setManualMode(value === MANUAL ? 1 : 0);
+	};
 
 	return (
-		<Col span={24}>
-			<Section title="Payment Schedule">
+		<>
+			<Section title="Payment schedule"
+				toggle={
+					setManualMode &&
+					!isLoanMandatory && (
+						<RadioInput options={["Auto", MANUAL]} value={manualMode ? MANUAL : "Auto"} 
+							changeHandler={(val: string) => changeManualMode(val)} />
+					)
+				}
+			>
 				{!isPublicCalc && (
 					<SelectInput
 						pre="Priority"
@@ -65,7 +95,8 @@ export default function GoalCost() {
 					/>
 				)}
 			</Section>
+			<p>&nbsp;</p>
 			<Cost />
-		</Col>
+		</>
 	);
 }
