@@ -30,7 +30,7 @@ export default function ListHoldings({
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF } = TAB;
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
 
-	const allColumns = {
+	const allColumns: any = {
 		cat: { title: "Category", dataIndex: "cat", key: "cat" },
 		amt: { title: "Amount", dataIndex: "amt", key: "amt" },
 		fid: { title: "Valuation", key: "fid", dataIndex: "fid" },
@@ -38,8 +38,8 @@ export default function ListHoldings({
 		label: { title: "Label", dataIndex: "label", key: "label" },
 		qty: { title: "Contribution Per Year", dataIndex: "qty", key: "qty" },
 	};
-	const defaultColumns = [];
-	const expandedColumns = [];
+	let defaultColumns: Array<string> = [];
+	let expandedColumns: Array<string> = [];
 
 	if (childTab === "Deposits") {
 		defaultColumns = ["cat", "amt", "fid"];
@@ -70,7 +70,7 @@ export default function ListHoldings({
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	const expandedRow = (i: number) => {
-		const columns: any = expandedColumns.map((col) => allColumns[col]);
+		const columns: any = expandedColumns.map((col: string) => allColumns[col]);
 
 		const expandedRowData: any = {
 			key: i,
@@ -110,7 +110,7 @@ export default function ListHoldings({
 		);
 	};
 
-	const columns = defaultColumns.map((col) => allColumns[col]);
+	const columns = defaultColumns.map((col: string) => allColumns[col]);
 
 	useEffect(() => {
 		let dataSource: Array<any> = [];
