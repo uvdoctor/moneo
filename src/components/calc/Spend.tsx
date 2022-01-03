@@ -23,7 +23,7 @@ export default function Spend() {
 
 	return (
 		<Section
-			title="Spending and Saving in"
+			title="Spending and Saving details"
 			toggle={<SelectInput pre="" value={currency} changeHandler={setCurrency} currency />}>
 			<SelectInput
 				pre="Spend frequency"

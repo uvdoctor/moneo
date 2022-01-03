@@ -37,7 +37,7 @@ export default function Cost() {
 
 	return manualMode ? (
 		<Section
-			title={`${isLoanPublicCalc ? "Borrow" : "Cost"} in `}
+			title={isLoanPublicCalc ? "Borrow" : "Cost"}
 			toggle={
 				<SelectInput
 					pre=""
@@ -61,7 +61,7 @@ export default function Cost() {
 		</Section>
 	) : (
 		<Section
-			title={`${isLoanPublicCalc ? "Borrow" : "Cost"} in `}
+			title={isLoanPublicCalc ? "Borrow" : "Cost"}
 			toggle={
 				<SelectInput
 					pre=""

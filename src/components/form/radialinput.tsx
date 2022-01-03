@@ -27,7 +27,7 @@ export default function RadialInput(props: RadialInputProps) {
 
 	return (
 		<Row justify="space-between" align="middle">
-			<Col span={12}>
+			<Col>
 				<LabelWithTooltip label={props.pre} info={props.info} />
 				<span className="radial-input">
 					<CircularSlider
@@ -49,7 +49,7 @@ export default function RadialInput(props: RadialInputProps) {
 					/>
 				</span>
 			</Col>
-			<Col span={12}>{props.post}</Col>
+			<Col>{props.post}</Col>
 		</Row>
 	);
 }

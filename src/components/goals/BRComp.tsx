@@ -29,22 +29,21 @@ export default function BRComp() {
 			}
 		>
 			<NumberInput
-				pre="Yearly Rent including taxes, fees & moving costs"
+				pre="Yearly rent"
 				value={rentAmt as number}
 				changeHandler={setRentAmt}
-				min={0}
-				max={100000}
-				step={1000}
+				step={10}
 				currency={currency}
+				post="including taxes, fees & moving cost"
 			/>
 			{rentAmt && (
 				<NumberInput
-					pre="Rent changes Yearly"
+					pre="Yearly rent change"
 					value={rentChgPer as number}
 					changeHandler={setRentChgPer}
 					min={-5}
 					max={10}
-					step={0.5}
+					step={0.1}
 					unit="%"
 				/>
 			)}
@@ -53,7 +52,7 @@ export default function BRComp() {
 					value={dr}
 					changeHandler={setDR}
 					min={1}
-					max={10}
+					max={15}
 					step={0.1}
 					pre="After taxes & fees, Remaining Money Earns"
 					unit="% Yearly"

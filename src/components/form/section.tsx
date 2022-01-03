@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Row, Col } from "antd";
+import React, { ReactNode } from 'react';
+import { Row, Col } from 'antd';
 interface SectionProps {
 	title?: any;
 	footer?: any;
@@ -9,23 +9,31 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	return (
-		<Row gutter={[15, 15]}>
+		<Row
+			gutter={[
+				15,
+				15
+			]}>
 			{props.title && (
 				<Col span={24}>
 					<h3 className="steps-heading">
-						{props.title}
-						{props.toggle ? 
-							<>
-								&nbsp;
-								{props.toggle}
-							</>
-						: null}
+						<Row align="middle">
+							{props.title}
+							{props.toggle && (
+								<span>
+									&nbsp;
+									{props.toggle}
+								</span>
+							)}
+						</Row>
 					</h3>
 				</Col>
 			)}
-			{React.Children.map(props.children, (child: any, i: number) =>
+			{React.Children.map(
+				props.children,
+				(child: any, i: number) =>
 					child ? (
-						<Col xs={24} md={12} lg={8} key={"section" + i}>
+						<Col xs={24} md={12} lg={8} key={'section' + i}>
 							{child}
 						</Col>
 					) : (
