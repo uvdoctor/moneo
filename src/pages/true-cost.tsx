@@ -61,8 +61,7 @@ export default function TrueCost() {
 	return (
 		<Layout
 			tabOptions={[
-				{ label: SPEND, active: true, svg: faMoneyBillWave, content: <Spend /> },
-				{ label: SAVE, active: true, svg: faPiggyBank, content: <Save /> },
+				{ label: SPEND, active: true, svg: faMoneyBillWave, content: <Spend /> }
 			]}
 			resultTabOptions={[
 				{

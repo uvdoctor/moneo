@@ -1,10 +1,11 @@
+import { Collapse } from 'antd';
 import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { toCurrency, toHumanFriendlyCurrency } from '../utils';
+import { toHumanFriendlyCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
-import ItemDisplay from './ItemDisplay';
+import Save from './Save';
 import { TrueCostContext } from './TrueCostContext';
 
 export const SPEND_ONCE = 'Once';
@@ -12,8 +13,9 @@ export const SPEND_MONTHLY = 'Monthly';
 export const SPEND_YEARLY = 'Yearly';
 
 export default function Spend() {
+	const { Panel } = Collapse;
 	const { currency, setCurrency }: any = useContext(CalcContext);
-	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost }: any = useContext(TrueCostContext);
+	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost, savings, setSavings }: any = useContext(TrueCostContext);
 	const freqOptions = {
 		[SPEND_ONCE]: SPEND_ONCE,
 		[SPEND_MONTHLY]: SPEND_MONTHLY,
@@ -21,7 +23,13 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spend Details">
+		<Section title="Enter Spend Details" footer={
+			<Collapse>
+				<Panel key="advanced" header="Advanced">
+					<Save />
+				</Panel>
+			</Collapse>
+		}>
 			<SelectInput
 				pre="Spending frequency"
 				value={freq}
@@ -50,21 +58,18 @@ export default function Spend() {
 					max={freq === SPEND_MONTHLY ? 360 : 30}
 					unit={freq === SPEND_MONTHLY ? 'months' : 'years'}
 					info={`Number of ${freq === SPEND_MONTHLY ? 'months' : 'years'} you wish to spend for.`}
+					post={`Total spend is ${toHumanFriendlyCurrency(totalCost, currency)}`}
 				/>
 			)}
-			{freq !== SPEND_ONCE && (
-				<ItemDisplay
-					label="Total Spend"
-					result={totalCost}
-					currency={currency}
-					footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'months' : 'years'}`}
-					info={`You spend total of ${toHumanFriendlyCurrency(totalCost, currency)} over ${duration} ${freq === SPEND_MONTHLY
-						? 'months'
-						: 'years'} given spending of ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
-						? 'month'
-						: 'year'}.`}
-				/>
-			)}
+			<NumberInput
+				pre="Yearly savings"
+				value={savings}
+				changeHandler={setSavings}
+				currency={currency}
+				min={100}
+				step={100}
+				info="Amount you save yearly from your work income after deducting taxes & all expenses."
+			/>
 		</Section>
 	);
 }

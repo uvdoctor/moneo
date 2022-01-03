@@ -41,7 +41,7 @@ export default function Input() {
 		<Fragment>
 			{!allInputDone ? (
 				<div className="goals-container">
-					<header>
+					{inputTabs.length > 1 && <header>
 						<Steps
 							current={inputTabIndex}
 							onChange={(index: number) => {
@@ -62,7 +62,7 @@ export default function Input() {
 								/>
 							))}
 						</Steps>
-					</header>
+					</header>}
 					<section>
 						<Row>
 							<Col>

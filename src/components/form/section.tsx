@@ -1,9 +1,9 @@
-import React, { Fragment, ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import ModalVideoPlayer from '../ModalVideoPlayer';
 import { Row, Col } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 interface SectionProps {
-	title: any;
+	title?: any;
 	footer?: any;
 	toggle?: any;
 	manualInput?: any;
@@ -17,7 +17,7 @@ export default function Section(props: SectionProps) {
 
 	return (
 		<Row>
-			<Col span={24}>
+			{props.title && <Col span={24}>
 				<h3 className="steps-heading">
 					{`${props.title} `}
 					{props.videoSrc &&
@@ -25,7 +25,7 @@ export default function Section(props: SectionProps) {
 						<ModalVideoPlayer title={props.title} url={props.videoSrc} />
 					)}
 				</h3>
-			</Col>
+			</Col>}
 			{props.toggle && (
 				<Col span={24} style={{ marginBottom: '0.5rem' }}>
 					{props.toggle}
@@ -50,10 +50,7 @@ export default function Section(props: SectionProps) {
 				)
 			)}
 			{props.footer && (
-				<Fragment>
-					<Col span={24}>{props.footer}</Col>
-					<Col className="fields-divider" span={24} />
-				</Fragment>
+				<Col span={24}>{props.footer}</Col>
 			)}
 		</Row>
 	);

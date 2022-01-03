@@ -1,30 +1,17 @@
 import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
-import { CalcContext } from './CalcContext';
 import { TrueCostContext } from './TrueCostContext';
 
 export default function Save() {
-	const { currency }: any = useContext(CalcContext);
 	const {
 		hoursPerWeek,
 		setHoursPerWeek,
-		savings,
-		setSavings,
 		paidWeeks,
 		setPaidWeeks
 	}: any = useContext(TrueCostContext);
 	return (
-		<Section title="Savings from Work Income">
-			<NumberInput
-				pre="Yearly savings"
-				value={savings}
-				changeHandler={setSavings}
-				currency={currency}
-				min={100}
-				step={100}
-				info="Amount you save yearly from your work income after deducting taxes & all expenses."
-			/>
+		<Section>
 			<NumberInput
 				pre="Yearly work weeks"
 				value={paidWeeks}

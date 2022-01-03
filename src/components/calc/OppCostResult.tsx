@@ -29,12 +29,12 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 					{`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
 					{isPublicCalc && (
 						<Fragment>
-							{` @ `}
+							{` @`}
 							<SelectInput
 								pre=""
 								value={Math.round(dr)}
 								changeHandler={(val: string) => setDR(parseInt(val))}
-								post="%"
+								unit="%"
 								options={drOptions}
 							/>
 						</Fragment>
@@ -47,11 +47,10 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 				goal.type !== GoalType.FF &&
 				isPublicCalc && (
 					<Row align="middle">
-						{`in `}
 						<SelectInput
-							pre=""
+							pre="in"
 							value={numOfYears}
-							unit="Years"
+							unit="years"
 							options={numOfYearsOptions}
 							changeHandler={(val: string) => oppCostHandler(parseInt(val))}
 						/>

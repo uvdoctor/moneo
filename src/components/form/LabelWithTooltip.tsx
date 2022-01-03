@@ -9,6 +9,7 @@ interface LabelWithTooltipProps {
 
 export default function LabelWithTooltip({ label, info }: LabelWithTooltipProps) {
 	return (
+		label ? 
 		<Fragment>
 			{label}
 			{info && (
@@ -17,6 +18,6 @@ export default function LabelWithTooltip({ label, info }: LabelWithTooltipProps)
 				</Tooltip>
 			)}
             {label || info ? <br/> : null}
-		</Fragment>
+		</Fragment> : null
 	);
 }
