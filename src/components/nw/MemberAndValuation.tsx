@@ -15,6 +15,7 @@ import {
 	calculatePM,
 	calculateProvidentFund,
 	calculateVehicle,
+	calculateLoan,
 } from "./valuationutils";
 
 interface MemberAndValuationProps {
@@ -46,8 +47,10 @@ export default function MemberAndValuation({
 		let value = 0;
 		switch (childTab) {
 			case INS:
-			case LOAN:
 				value = calculateInsurance(record, discountRate);
+				break;
+			case LOAN:
+				value = calculateLoan(record);
 				break;
 			case CRYPTO:
 				value = calculateCrypto(record, ratesData, selectedCurrency);

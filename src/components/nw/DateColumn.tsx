@@ -31,12 +31,12 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	};
 
 	const changeStartYear = (val: number) => {
-		(record.chgF === 0 && childTab === LENT) ? record.ey = val : record.sy = val;
+		hasOnlyEnddate(childTab) ? record.ey = val : record.sy = val;
 		changeData([ ...data ]);
 	};
 
 	const changeStartMonth = (val: number) => {
-		(record.chgF === 0 && childTab === LENT) ? record.em = val : record.sm = val;
+		hasOnlyEnddate(childTab) ? record.em = val : record.sm = val;
 		changeData([ ...data ]);
 	};
 
@@ -46,11 +46,11 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	};
 
 	const changeEndMonth = (val: number) => {
-		console.log(record);
 		record.em = val;
 		changeData([ ...data ]);
 	};
 
+	const hasOnlyEnddate = (childTab: string) => [LOAN, INS].includes(childTab) || (record.chgF === 0 && childTab === LENT);
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
 	return (
@@ -75,9 +75,9 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 								undefined
 							)
 						}
-						startMonthValue={record.sm as number}
+						startMonthValue={hasOnlyEnddate(childTab) ? record.em as number : record.sm as number}
 						endMonthValue={record.em as number}
-						startYearValue={record.sy as number}
+						startYearValue={hasOnlyEnddate(childTab) ? record.ey as number : record.sy as number}
 						endYearValue={record.ey as number}
 						size="middle"
 					/>

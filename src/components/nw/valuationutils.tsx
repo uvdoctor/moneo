@@ -76,6 +76,8 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number) 
 		holding.sy as number
 	);
 	const remainingDuration = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
+	console.log(durationFromStartToEnd, remainingDuration, holding);
+	
 	if (remainingDuration <= 0 || isNaN(remainingDuration)) return 0;
 	let bygoneDuration = durationFromStartToEnd - remainingDuration;
 	if (holding.subt && holding.subt !== 'L') {

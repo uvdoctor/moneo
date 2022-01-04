@@ -64,8 +64,8 @@ export default function AddHoldingInput({
 				newRec.subt = category;
 				newRec.sm = presentMonth;
 				newRec.sy = presentYear;
-				newRec.em = em;
-				newRec.ey = ey;
+				newRec.em = sm;
+				newRec.ey = sy;
 				break;
 			case LOAN:
 				newRec.chg = rate;
@@ -73,8 +73,8 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				newRec.sm = presentMonth;
 				newRec.sy = presentYear;
-				newRec.em = em;
-				newRec.ey = ey;
+				newRec.em = sm;
+				newRec.ey = sy;
 				break;
 			case LENT:
 				newRec.type = AssetType.F;
@@ -150,17 +150,19 @@ export default function AddHoldingInput({
 		return newRec;
 	};
 
+	const hasOnlyEnddate = (childTab: string) => [LOAN, INS].includes(childTab) || (subCat === '0' && childTab === LENT);
+
 	const changeStartMonth = (val: number) => {
 		setSm(val);
 		let rec = getNewRec();
-		childTab === LOAN && childTab === INS ? (rec.em = val) : (rec.sm = val);
+		hasOnlyEnddate(childTab) ? (rec.em = val) : (rec.sm = val);
 		setInput(rec);
 	};
 
 	const changeStartYear = (val: number) => {
 		setSy(val);
 		let rec = getNewRec();
-		childTab === LOAN && childTab === INS ? (rec.ey = val) : (rec.sy = val);
+		hasOnlyEnddate(childTab) ? (rec.ey = val) : (rec.sy = val);
 		setInput(rec);
 	};
 
