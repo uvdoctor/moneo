@@ -71,7 +71,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			title: 'Step 2',
 			content: (
 				<StepTwo
-					DOB={DOB}
 					setDOB={setDOB}
 					lifeExpectancy={lifeExpectancy}
 					setLifeExpectancy={setLifeExpectancy}
