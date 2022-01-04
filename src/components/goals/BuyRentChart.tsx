@@ -3,16 +3,16 @@ import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import { isMobileDevice, toCurrency } from '../utils';
 import { GoalContext } from './GoalContext';
-import { Col, Row } from 'antd';
+import { Col } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
-import NumberInput from '../form/numberinput';
 import { useFullScreenBrowser } from "react-browser-hooks";
+import YearsRange from './YearsRange';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function BuyRentChart() {
-	const { currency, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+	const { currency }: any = useContext(CalcContext);
 	const { brChartData }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>([]);
 	const fsb = useFullScreenBrowser();
@@ -45,18 +45,7 @@ export default function BuyRentChart() {
 
 	return (
 		<Fragment>
-			<Row align="middle" className="chart-options-row" justify="center">
-				<Col xs={24} sm={24} md={24} lg={12}>
-					<NumberInput
-						pre="Compare from 3 to "
-						value={analyzeFor}
-						changeHandler={setAnalyzeFor}
-						min={5}
-						max={50}
-						unit="Years"
-					/>
-				</Col>
-			</Row>
+			<YearsRange />
 			<Col span={24} style={{ minHeight: '400px' }}>
 				<ColumnChart
 					meta={getCommonMeta(currency)}

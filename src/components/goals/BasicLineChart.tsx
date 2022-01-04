@@ -8,7 +8,7 @@ import { COLORS } from '../../CONSTANTS';
 import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { PlanContext } from './PlanContext';
 import { useFullScreenBrowser } from "react-browser-hooks";
-import RadioInput from '../form/RadioInput';
+import YearsRange from './YearsRange';
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
@@ -37,7 +37,7 @@ export default function BasicLineChart({
 	tooltips
 }: BasicLineChartProps) {
 	const { goal, rr, ffResult }: any = useContext(PlanContext);
-	const { wipGoal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+	const { wipGoal, startYear, currency, cfs }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const fsb = useFullScreenBrowser();
 	
@@ -63,12 +63,7 @@ export default function BasicLineChart({
 
 	return (
 		<Fragment>
-			{showRange ? <Row align="middle" justify="center">
-					<Col xs={24} sm={24} md={24} lg={12}>
-						<RadioInput from={10} to={50} increment={10} value={analyzeFor} changeHandler={setAnalyzeFor} unit="years" />
-					</Col>
-				</Row>
-			: null}
+			{showRange ? <YearsRange /> : null}
 			{chartTitle && (
 				<Row justify="center">
 					<Col>

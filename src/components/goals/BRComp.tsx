@@ -20,14 +20,7 @@ export default function BRComp() {
 	}: any = useContext(GoalContext);
 
 	return (
-		<Section
-			title="If You Rent Instead of Buying"
-			toggle={
-				taxRate ? (
-					<HSwitch rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={setRentTaxBenefit} />
-				) : null
-			}
-		>
+		<Section title="Compare rent option">
 			<NumberInput
 				pre="Monthly rent"
 				value={rentAmt as number}
@@ -35,6 +28,9 @@ export default function BRComp() {
 				step={10}
 				currency={currency}
 			/>
+			{taxRate && rentAmt && 
+				<HSwitch rightText="Claim tax deduction" value={rentTaxBenefit} setter={setRentTaxBenefit} />
+			}
 			{rentAmt && (
 				<NumberInput
 					pre="Yearly rent change"
@@ -53,7 +49,7 @@ export default function BRComp() {
 					min={1}
 					max={15}
 					step={0.1}
-					pre="Investment earns"
+					pre="Money saved by not buying is invested to earn"
 					unit="% yearly"
 					post="after taxes & fees"
 				/>
