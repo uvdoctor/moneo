@@ -9,12 +9,9 @@ import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
 import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalInput } from '../../api/goals';
 import { isLoanEligible, goalImgStorage } from '../goals/goalutils';
-import FIMoneyOutflow from '../goals/FIMoneyOutflow';
-import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
-import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
@@ -30,17 +27,9 @@ import FIPortfolioChart from '../goals/FIPortfolioChart';
 import { Modal } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
 import Advanced from './Advanced';
+import FIAdvanced from '../goals/FIAdvanced';
 
 const CalcContext = createContext({});
-
-export const getCareTabOption = () => {
-  return {
-      label: "Care",
-      active: true,
-      svg: faHandHoldingMedical,
-      content: <Care />
-  }
-}
 
 interface CalcContextProviderProps {
   children: ReactNode;
@@ -103,11 +92,9 @@ function CalcContextProvider({
   const getFFGoalTabOptions = () => {
     return [
       { label: "About", active: true, svg: faUserCog, content: <FIUserDetails /> },
-      { label: "Before", active: true, svg: faPiggyBank, content: <BeforeFI /> },
-      { label: "After", active: true, svg: faMoneyBillWave, content: <AfterFI /> },
-      { label: "Benefit", active: true, svg: faHandHoldingUsd, content: <FIBenefit /> },
-      getCareTabOption(),
-      { label: "Give", active: true, svg: faDonate, content: <FIMoneyOutflow /> },
+      { label: "Before FI", active: true, svg: faPiggyBank, content: <BeforeFI /> },
+      { label: "After FI", active: true, svg: faMoneyBillWave, content: <AfterFI /> },
+      { label: "Advanced", active: true, svg: faCog, content: <FIAdvanced />}
     ]
   }
   

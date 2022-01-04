@@ -24,7 +24,9 @@ export default function FIUserDetails() {
 	const nowYear = new Date().getFullYear();
 
 	return (
-		<Section title="Your Details">
+		<Section
+			title="Your Details"
+			toggle={<SelectInput pre="" value={currency} changeHandler={setCurrency} currency />}>
 			<SelectInput
 				info="Your birth year is used to calculate the duration for which Financial Planning is needed."
 				pre="Birth Year"
@@ -32,7 +34,7 @@ export default function FIUserDetails() {
 				changeHandler={changeStartYear}
 				options={initOptions(nowYear - 60, 45)}
 			/>
-			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
+
 			<NumberInput
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include Your Home in the Investment Portfolio.`}
 				value={nw}
@@ -55,7 +57,7 @@ export default function FIUserDetails() {
 			<Row justify="space-between">
 				<Col>
 					<RadialInput
-						pre="Assume Lifespan of"
+						pre="Life expectancy"
 						label="Years"
 						value={planDuration}
 						changeHandler={setPlanDuration}

@@ -8,11 +8,7 @@ import { changeSelection, initOptions } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 
 export default function FIBenefit() {
-	const {
-		currency,
-		endYear,
-		startYear
-	}: any = useContext(CalcContext);
+	const { currency, endYear, startYear }: any = useContext(CalcContext);
 	const {
 		retirementIncome,
 		setRetirementIncome,
@@ -28,13 +24,14 @@ export default function FIBenefit() {
 			if (retirementIncomeSY > lastPossibleFFYear - 2 || retirementIncomeSY < lastPossibleFFYear + 5)
 				setRetirementIncomeSY(lastPossibleFFYear);
 		},
-		[ endYear ]
+		[
+			endYear
+		]
 	);
 
 	return (
 		<Fragment>
-		<Section
-			title="Retirement Income Benefit (eg: Pension, Social Security, etc.)">
+			<Section title="Retirement Income Benefit (eg: Pension, Social Security, etc.)">
 				<NumberInput
 					value={retirementIncome}
 					changeHandler={setRetirementIncome}
@@ -54,9 +51,8 @@ export default function FIBenefit() {
 						step={0.1}
 						unit="%"
 					/>
-				)
-			}
-			{retirementIncome && (
+				)}
+				{retirementIncome && (
 					<SelectInput
 						info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
 						value={retirementIncomeSY - startYear}
@@ -67,10 +63,9 @@ export default function FIBenefit() {
 							changeSelection(val, setRetirementIncomeSY, startYear);
 						}}
 					/>
-				)
-			}
+				)}
 			</Section>
-			<Section title="Gains Expected due to Inheritance, Selling Investments, etc. after paying taxes & fees">
+			<Section title="Expected gains due to inheritance, etc.">
 				<DynamicTargetInput />
 			</Section>
 		</Fragment>

@@ -29,8 +29,9 @@ export function AfterFI() {
 	return (
 		<Section title="After Financial Independence">
 			<NumberInput
-				info="If You had already achieved Financial Independence this year, How Much Money Would You Need for Your Living Expenses?"
-				pre="Yearly Expenses in today's money"
+				info="Today's yearly cost for living the desired lifestyle after achieving financial independence."
+				pre="Desired lifestyle costs"
+				post="yearly in today's money"
 				currency={currency}
 				value={expenseAfterFF}
 				changeHandler={setExpenseAfterFF}
@@ -39,9 +40,9 @@ export function AfterFI() {
 				step={100}
 			/>
 			<NumberInput
-				info="Rate at which Your Living Expenses increase every Year."
-				pre="Yearly Expense Increases"
-				unit="%"
+				info="Rate at which your living expenses increase every year."
+				pre="Expense increases"
+				unit="% yearly"
 				min={0}
 				max={10}
 				step={0.1}
@@ -49,11 +50,10 @@ export function AfterFI() {
 				changeHandler={setExpenseChgRate}
 			/>
 			<NumberInput
-				info="Tax Rate, in case You have to pay tax for Investment Gains and Withdrawing from Retirement Accounts beyond the allowed Yearly Limit."
-				pre="Tax"
-				post="Rate"
+				info="Applicable tax rate, in case you have to pay capital gains tax or income tax for withdrawing from retirement accounts beyond the allowed yearly limit."
+				pre="Tax rate"
 				min={0}
-				max={20}
+				max={30}
 				step={0.1}
 				value={taxRate}
 				changeHandler={setTaxRate}

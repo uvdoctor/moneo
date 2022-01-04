@@ -111,8 +111,8 @@ const createFFGoalInput = (currency: string) => {
 			emi: 12000 * rf,
 			ry: nowYear,
 			per: 3,
-			dur: 100,
-			rate: 70,
+			dur: 85,
+			rate: 50,
 			type: APIt.LoanType.A,
 			pmi: 6000 * rf
 		},

@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, LMH, LoanType, TargetInput } from "../../api/goals";
-import { CalcContext, getCareTabOption } from "../calc/CalcContext";
+import { CalcContext } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
 import FIYearResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
@@ -17,19 +17,14 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const {
     goal,
     currency,
-    inputTabIndex,
-    setInputTabIndex,
     setCFs,
     startYear,
     endYear,
-    inputTabs,
-    setInputTabs,
     resultTabs,
     setResultTabs,
     resultTabIndex,
     setResultTabIndex,
     setResults,
-    hasTab,
     allInputDone,
     setError,
     cfs,
@@ -94,8 +89,6 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [losses, setLosses] = useState<Array<TargetInput>>(
     goal.pl
   );
-  const careTabIndex = 4;
-  const careTabLabel = "Care";
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
   const [wipResult, setWipResult] = useState<any>({});
@@ -145,17 +138,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
-      if (!hasTab(careTabLabel)) {
-        inputTabs.splice(careTabIndex, 0, getCareTabOption());
-        setInputTabs([...inputTabs]);
-      }
-    } else {
-      if (hasTab(careTabLabel)) {
-        inputTabs.splice(careTabIndex, 1);
-        setInputTabs([...inputTabs]);
         setCarePremium(0);
-        if (inputTabIndex === inputTabs.length) setInputTabIndex(careTabIndex);
-      }
     }
   }, [currency]);
 
