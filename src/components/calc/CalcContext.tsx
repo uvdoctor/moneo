@@ -1,7 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect, useContext, Fragment } from 'react';
 import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
-import TaxAdjustment from "../calc/TaxAdjustment";
 import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
 import SellAsset from "../goals/SellAsset";
@@ -15,7 +14,7 @@ import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
@@ -30,6 +29,7 @@ import { PlanContext } from '../goals/PlanContext';
 import FIPortfolioChart from '../goals/FIPortfolioChart';
 import { Modal } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
+import Advanced from './Advanced';
 
 const CalcContext = createContext({});
 
@@ -174,15 +174,15 @@ function CalcContextProvider({
     if (isLoanEligible(type)) options.push(
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
     );
-    options.push({
-      label: "Tax",
-      active: true,
-      svg: faFileInvoiceDollar,
-      content: <TaxAdjustment />
-    });
     if (type === GoalType.B) {
       options.push({ label: "Rent?", active: true, svg: faBalanceScale, content: <BRComp /> });
     }
+    options.push({
+      label: "Advanced",
+      active: true,
+      svg: faCog,
+      content: <Advanced />
+    });
     return options;
   }
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);

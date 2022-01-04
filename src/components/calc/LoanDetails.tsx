@@ -3,15 +3,15 @@ import NumberInput from '../form/numberinput';
 import { toCurrency, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import Section from '../form/section';
-import ItemDisplay from './ItemDisplay';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanAdvOptions from './LoanAdvOptions';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Tooltip } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
+import { SettingOutlined } from '@ant-design/icons';
 
 export default function LoanDetails() {
 	const { isPublicCalc }: any = useContext(PlanContext);
@@ -42,7 +42,12 @@ export default function LoanDetails() {
 
 	return (
 		<Fragment>
-			<Section title="Loan Details">
+			<Section title="Loan Details" toggle={
+				emi ? <Tooltip title="Adjust loan schedule">
+							<Button type="link" onClick={showLoanSchedule} icon={<SettingOutlined />} />
+						</Tooltip>
+					: null
+			}>
 				{!isEndYearHidden && (
 					<NumberInput
 						unit="%"
@@ -73,6 +78,7 @@ export default function LoanDetails() {
 					changeHandler={setLoanIntRate}
 					max={25}
 					step={0.01}
+					post={emi ? `Monthly installment ${toCurrency(emi, currency)}` :''}
 				/>}
 				{loanBorrowAmt && goal.type !== GoalType.E &&
 					<SelectInput
@@ -86,19 +92,6 @@ export default function LoanDetails() {
 					}}
 					value={loanRepaymentMonths}
 					changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-					/>}
-				{loanBorrowAmt && 
-					<ItemDisplay
-								label="Monthly Installment"
-								result={emi}
-								currency={currency}
-								precise
-								decimal={2}
-								footer={
-									<Button type="link" onClick={showLoanSchedule}>
-										Adjust Schedule
-									</Button>
-								}
 					/>}
 				{emi && <LoanAdvOptions />}
 			</Section>

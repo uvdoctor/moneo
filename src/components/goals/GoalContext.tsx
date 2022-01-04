@@ -370,7 +370,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (manualMode < 1) return;
     let p = 0;
     wipTargets.forEach((t) => (p += t.val));
-    if (!p) setError('Please enter a valid custom payment plan');
+    if (!p) setError('Cost can not be zero');
     else setError('');
     setPrice(Math.round(p));
     if (isLoanEligible(goal.type)) disableLoanChart();
@@ -568,8 +568,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         getNPV(rates, buyCFs, startYear - (nowYear + 1))
       );
       for (let j = 0; j < i; j++) {
-        let value = getCompoundedIncome(rentChgPer as number, rentAmt as number, j);
+        let value = getCompoundedIncome(rentChgPer as number, rentAmt as number * 12, j);
+        let maintenanceCost = value * (amCostPer as number / 100);
         if (rentTaxBenefit) value *= (1 - taxRate / 100);
+        value += maintenanceCost;
         let buyCF = buyCFs[j];
         if (j === i - 1 && buyCF > 0) {
           if (loanPer && loanMonths && manualMode < 1 && i * 12 < loanMonths) buyCF = allBuyCFs[i - 2] ? allBuyCFs[i - 2][j] : buyCFs[j - 1];

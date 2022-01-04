@@ -47,8 +47,8 @@ export default function Input() {
 								}}
 								status={error ? "error" : "process"}
 							>
-								{inputTabs.map((tab: any) => (
-									<Step
+								{inputTabs.map((tab: any, index: number) => (
+									index < inputTabs.length - 1 && <Step
 										key={tab.label}
 										title={
 											<Fragment>
@@ -76,7 +76,7 @@ export default function Input() {
 													Previous
 												</Button>
 											)}
-											{inputTabIndex < inputTabs.length - 1 && (
+											{inputTabIndex < inputTabs.length - 2 && (
 												<Button
 													type="primary"
 													disabled={error}
@@ -87,8 +87,7 @@ export default function Input() {
 											)}
 										</Fragment>
 									)}
-									{(inputTabIndex === inputTabs.length - 1 ||
-										inputTabs.length < 3) && (
+									{(inputTabIndex === inputTabs.length - 2) && (
 										<Button
 											type="primary"
 											onClick={() => {

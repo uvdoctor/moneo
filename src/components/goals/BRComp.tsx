@@ -16,7 +16,7 @@ export default function BRComp() {
 		setRentChgPer,
 		taxRate,
 		rentTaxBenefit,
-		setRentTaxBenefit
+		setRentTaxBenefit,
 	}: any = useContext(GoalContext);
 
 	return (
@@ -29,12 +29,11 @@ export default function BRComp() {
 			}
 		>
 			<NumberInput
-				pre="Yearly rent"
+				pre="Monthly rent"
 				value={rentAmt as number}
 				changeHandler={setRentAmt}
 				step={10}
 				currency={currency}
-				post="including taxes, fees & moving cost"
 			/>
 			{rentAmt && (
 				<NumberInput
@@ -54,8 +53,9 @@ export default function BRComp() {
 					min={1}
 					max={15}
 					step={0.1}
-					pre="After taxes & fees, Remaining Money Earns"
-					unit="% Yearly"
+					pre="Investment earns"
+					unit="% yearly"
+					post="after taxes & fees"
 				/>
 			)}
 		</Section>
