@@ -11,7 +11,7 @@ import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalIn
 import { isLoanEligible, goalImgStorage } from '../goals/goalutils';
 import { AfterFI } from '../goals/AfterFI';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
