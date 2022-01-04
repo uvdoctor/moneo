@@ -5,10 +5,8 @@ import { getMonthName, getRangeFactor, toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import HSwitch from '../HSwitch';
-import { PlanContext } from './PlanContext';
 
 export function BeforeFI() {
-	const { isPublicCalc, dr, setDR }: any = useContext(PlanContext);
 	const { currency }: any = useContext(CalcContext);
 	const {
 		avgMonthlySavings,
@@ -21,8 +19,6 @@ export function BeforeFI() {
 		setNeedTEBonds,
 		emergencyFund,
 		setEmergencyFund,
-		emergencyFundChgRate,
-		setEmergencyFundChgRate,
 		setEmergencyFundBY
 	}: any = useContext(FIGoalContext);
 
@@ -42,7 +38,7 @@ export function BeforeFI() {
 	return (
 		<Section
 			title="Before Financial Independence"
-			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Applicable income tax rate is more than 12%" />}
+			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Applicable tax rate more than 12%" />}
 		>
 			<NumberInput
 				info={`Average Monthly Investment including retirement Contribution. This will be used to forecast Your Future Savings.`}
@@ -87,18 +83,7 @@ export function BeforeFI() {
 				info={`This is the maximum possible monthly investment amount you can achieve.`}
 		/>
 			}
-			{isPublicCalc && (
-				<NumberInput
-					value={dr as number}
-					changeHandler={setDR}
-					min={0}
-					max={10}
-					step={0.1}
-					pre="Investment Earns Yearly"
-					unit="%"
-					post="after taxes & fees"
-				/>
-			)}
+			
 			<NumberInput
 				pre="Emergency fund"
 				currency={currency}
@@ -108,16 +93,6 @@ export function BeforeFI() {
 				max={25000}
 				step={500}
 				info="Amount needed for emergency fund needs to be set aside in high yield Savings Account & liquid funds, so that money is readily available when needed. Ideally, it should be about 6 months of expenses."
-			/>
-			<NumberInput
-				pre="Emergency fund increases"
-				value={emergencyFundChgRate}
-				changeHandler={setEmergencyFundChgRate}
-				min={0}
-				max={10}
-				step={0.1}
-				unit="% yearly"
-				info="Emergency fund to be increased every year based on inflation."
 			/>
 		</Section>
 	);

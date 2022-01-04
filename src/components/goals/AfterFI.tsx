@@ -5,25 +5,17 @@ import Section from '../form/section';
 import { FIGoalContext } from './FIGoalContext';
 
 export function AfterFI() {
-	const {
-		currency,
-		setEndYear
-	}: any = useContext(CalcContext);
-	const {
-		expenseAfterFF,
-		setExpenseAfterFF,
-		expenseChgRate,
-		setExpenseChgRate,
-		taxRate,
-		setTaxRate
-	}: any = useContext(FIGoalContext);
+	const { currency, setEndYear }: any = useContext(CalcContext);
+	const { expenseAfterFF, setExpenseAfterFF, expenseChgRate, setExpenseChgRate }: any = useContext(FIGoalContext);
 	const nowYear = new Date().getFullYear();
 
 	useEffect(
 		() => {
 			setEndYear(nowYear);
 		},
-		[ expenseAfterFF ]
+		[
+			expenseAfterFF
+		]
 	);
 
 	return (
@@ -48,16 +40,6 @@ export function AfterFI() {
 				step={0.1}
 				value={expenseChgRate}
 				changeHandler={setExpenseChgRate}
-			/>
-			<NumberInput
-				info="Applicable tax rate, in case you have to pay capital gains tax or income tax for withdrawing from retirement accounts beyond the allowed yearly limit."
-				pre="Tax rate"
-				min={0}
-				max={30}
-				step={0.1}
-				value={taxRate}
-				changeHandler={setTaxRate}
-				unit="%"
 			/>
 		</Section>
 	);
