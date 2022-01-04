@@ -108,12 +108,7 @@ export default function DateInput({
 							}
 						}}
 						disabled={disabled}
-						// @ts-ignore
-						disabledDate={(date: Date)=>{
-							if(!date) return;
-							if(initialValue && date.getFullYear() < initialValue) return true;
-						}
-						}
+						disabledDate={(date: Date)=> !date || (initialValue ? date.getFullYear() < initialValue : false)}
 					/>
 				) : (
 					<DatePicker
