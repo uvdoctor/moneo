@@ -16,8 +16,6 @@ export default function FIAdvanced() {
 	const {
 		emergencyFundChgRate,
 		setEmergencyFundChgRate,
-		expenseChgRate,
-		setExpenseChgRate,
 		taxRate,
 		setTaxRate
 	}: any = useContext(FIGoalContext);
