@@ -27,6 +27,8 @@ interface DateInputProps {
 	endDateValue?: number;
 	size?: SizeType;
 	info?: string;
+	disabled?: boolean;
+	initialValue?: number;
 }
 
 export default function DateInput({
@@ -45,7 +47,9 @@ export default function DateInput({
 	startDateValue,
 	endDateValue,
 	size,
-	info
+	info,
+	disabled,
+	initialValue
 }: DateInputProps) {
 	const today = new Date();
 	const month = today.getMonth() + 1;
@@ -103,6 +107,13 @@ export default function DateInput({
 								endDateHandler && endDateHandler(end.getDate());
 							}
 						}}
+						disabled={disabled}
+						// @ts-ignore
+						disabledDate={(date: Date)=>{
+							if(!date) return;
+							if(initialValue && date.getFullYear() < initialValue) return true;
+						}
+						}
 					/>
 				) : (
 					<DatePicker
@@ -115,6 +126,12 @@ export default function DateInput({
 							startDateHandler && startDateHandler(value?.getDate())
 							startMonthHandler && startMonthHandler(value?.getMonth()+1)
 							startYearHandler && startYearHandler(value?.getFullYear())
+						}}
+						disabled={disabled}
+						// @ts-ignore
+						disabledDate={(date: Date) => {
+							if(!date) return;
+							if(initialValue && date.getFullYear() < initialValue) return true;
 						}}
 					/>
 				)}
