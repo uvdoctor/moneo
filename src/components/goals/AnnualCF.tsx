@@ -29,7 +29,7 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 	}: any = useContext(GoalContext);
 	const [ syOptions, setSYOptions ] = useState<object>(initOptions(startYear, sellAfter - 1));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
-	const title = income ? 'Rent, Dividend, etc after paying tax' : 'Fixes, Insurance, etc including tax';
+	const title = income ? 'Rent, Dividend, etc' : 'Fixes, Insurance, etc';
 	
 	useEffect(
 		() => {

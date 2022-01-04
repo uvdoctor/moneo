@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
-import { initOptions } from '../utils';
 import Cost from './cost';
 import { GoalContext } from './GoalContext';
 import Section from '../form/section';
@@ -13,23 +12,21 @@ import DateInput from '../form/DateInput';
 
 
 export default function GoalCost() {
-	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
+	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		goal,
 		startYear,
 		changeStartYear,
 		endYear,
 		changeEndYear,
-		eyOptions,
 		startMonth,
 		changeStartMonth,
 		inputTabs, 
 		setInputTabs
 	}: any = useContext(CalcContext);
-	const ffGoalEndYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) : goal.by + 50;
+	//const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
 	const { manualMode, isEndYearHidden, impLevel, setImpLevel, setManualMode, isLoanMandatory}: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
-	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 	const MANUAL = "Manual";
 
 	const changeManualMode = (value: string) => {
@@ -49,6 +46,8 @@ export default function GoalCost() {
 		}
 		setManualMode(value === MANUAL ? 1 : 0);
 	};
+
+	const showStartMonth = (isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && !manualMode
 
 	return (
 		<>
@@ -71,31 +70,25 @@ export default function GoalCost() {
 					/>
 				)}
 				
-				{(isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && !manualMode ?
-					<DateInput
+				<DateInput
 					title="Starts"
 					info="Month and year when payment starts"
 					startYearValue={startYear}
 					startYearHandler={changeStartYear}
-					startMonthHandler={changeStartMonth}
-					startMonthValue={startMonth}
-					/>
-				: 
-					<DateInput
-					title="Starts"
-					info="Year when payment starts"
-					startYearValue={startYear}
-					startYearHandler={changeStartYear}
-					/>
-				}
+					startMonthHandler={showStartMonth ? changeStartMonth : null}
+					startMonthValue={showStartMonth ? startMonth : null}
+					initialValue={firstStartYear}
+				/>
+
 				{!isEndYearHidden && (
-					<SelectInput
-						pre="Ends"
-						value={endYear}
+					<DateInput
+						key={startYear}
+						title="Ends"
+						startYearValue={endYear}
 						info="Year in which You End Paying"
 						disabled={goal.type === GoalType.B && manualMode < 1}
-						changeHandler={changeEndYear}
-						options={eyOptions}
+						startYearHandler={changeEndYear}
+						initialValue={startYear}
 					/>
 				)}
 			</Section>
