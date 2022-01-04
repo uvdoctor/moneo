@@ -19,6 +19,9 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number)
 	);
 
+	const isRangePicker = (childTab: string, subt?: string, chgF?: number) =>
+		[ LENT ].includes(childTab) && subt !== NATIONAL_SAVINGS_CERTIFICATE && chgF !== 0;
+
 	const changeDuration = (val: number) => {
 		setDuration(val);
 		const { year, month } = calculateAddYears(record.sm as number, record.sy as number, duration);
@@ -28,12 +31,12 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	};
 
 	const changeStartYear = (val: number) => {
-		record.sy = val;
+		(record.chgF === 0 && childTab === LENT) ? record.ey = val : record.sy = val;
 		changeData([ ...data ]);
 	};
 
 	const changeStartMonth = (val: number) => {
-		record.sm = val;
+		(record.chgF === 0 && childTab === LENT) ? record.em = val : record.sm = val;
 		changeData([ ...data ]);
 	};
 
@@ -48,8 +51,6 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		changeData([ ...data ]);
 	};
 
-	const hasRangePicker = (childTab: string) => [ LENT ].includes(childTab);
-
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
 	return (
@@ -61,14 +62,14 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 						startMonthHandler={changeStartMonth}
 						startYearHandler={changeStartYear}
 						endMonthHandler={
-							hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE ? (
+							isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
 								changeEndMonth
 							) : (
 								undefined
 							)
 						}
 						endYearHandler={
-							hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE ? (
+							isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
 								changeEndYear
 							) : (
 								undefined
