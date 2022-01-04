@@ -39,7 +39,7 @@ export default function TaxAdjustment() {
 			{!isTaxCreditEligible(goal.type) && (
 				<NumberInput
 					info="Income tax rate applicable based on your income"
-					pre="Marginal tax rate"
+					pre="Applicable tax rate"
 					min={0}
 					max={50}
 					step={0.1}
@@ -75,7 +75,7 @@ export default function TaxAdjustment() {
 			}
 		</Section>
 		{taxRate && loanBorrowAmt && goal.type !== GoalType.E && !isTaxCreditEligible(goal.type) ? 
-			<Section title="Interest related tax deduction" toggle={
+			<Section title="Interest tax deduction" toggle={
 				<HSwitch rightText="" value={taxBenefitInt} setter={setTaxBenefitInt} />
 			}>
 				{taxBenefitInt && <NumberInput
