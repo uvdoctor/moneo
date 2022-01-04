@@ -1,6 +1,6 @@
 import React from 'react';
 import { toStringArr } from './utils';
-import DatePickerInput from './form/DatePickerInput';
+import DateInput from './form/DateInput';
 import RadialInput from './form/radialinput';
 import { Col, Row } from 'antd';
 
@@ -15,7 +15,7 @@ export default function StepTwo(props: StepTwoProps) {
 	return (
 		<Row gutter={[ 8, 16 ]}>
 			<Col span={24}>
-				<DatePickerInput title="Date of Birth" value={props.DOB} changeHandler={props.setDOB} size="middle" />
+				<DateInput title="Date of Birth" value={props.DOB} changeHandler={props.setDOB} size="middle" />
 			</Col>
 			<Col span={24}>
 				<RadialInput

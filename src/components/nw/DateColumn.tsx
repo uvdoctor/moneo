@@ -2,10 +2,9 @@ import { Col } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { getMonthIndex, getMonthName } from '../utils';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { calculateAddYears, calculateDifferenceInYears } from './valuationutils';
-import DatePickerInput from '../form/DatePickerInput';
+import DateInput from '../form/DateInput';
 
 interface MemberAndValuationProps {
 	data: Array<HoldingInput>;
@@ -28,19 +27,28 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		changeData([ ...data ]);
 	};
 
-	const changeEnddate = (val: any) => {
-		record.ey = Number(val.substring(val.length - 4));
-		record.em = getMonthIndex(val.substring(0, 3));
+	const changeStartYear = (val: number) => {
+		record.sy = val;
 		changeData([ ...data ]);
 	};
 
-	const changeStartdate = (val: string) => {
-		record.sy = Number(val.substring(val.length - 4));
-		record.sm = getMonthIndex(val.substring(0, 3));
+	const changeStartMonth = (val: number) => {
+		record.sm = val;
 		changeData([ ...data ]);
 	};
 
-	const hasRangePicker = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
+	const changeEndYear = (val: number) => {
+		record.ey = val;
+		changeData([ ...data ]);
+	};
+
+	const changeEndMonth = (val: number) => {
+		console.log(record);
+		record.em = val;
+		changeData([ ...data ]);
+	};
+
+	const hasRangePicker = (childTab: string) => [ LENT ].includes(childTab);
 
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
@@ -48,15 +56,29 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		<Fragment>
 			<Col>
 				{hasDate(childTab) && (
-					<DatePickerInput
-						isRangePicker={hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE}
-						picker="month"
-						title=""
-						changeHandler={(val: string) => changeStartdate(val)}
-						value={record.sm && record.sy && `${getMonthName(record.sm as number, true)}-${record.sy}`}
-						enddate={record.em && record.ey && `${getMonthName(record.em as number, true)}-${record.ey}`}
-						setEnddate={(val: string) => changeEnddate(val)}
-						size={'middle'}
+					<DateInput
+						title={''}
+						startMonthHandler={changeStartMonth}
+						startYearHandler={changeStartYear}
+						endMonthHandler={
+							hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE ? (
+								changeEndMonth
+							) : (
+								undefined
+							)
+						}
+						endYearHandler={
+							hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE ? (
+								changeEndYear
+							) : (
+								undefined
+							)
+						}
+						startMonthValue={record.sm as number}
+						endMonthValue={record.em as number}
+						startYearValue={record.sy as number}
+						endYearValue={record.ey as number}
+						size="middle"
 					/>
 				)}
 			</Col>

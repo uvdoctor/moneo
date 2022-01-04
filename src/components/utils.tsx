@@ -743,3 +743,6 @@ export const getDiscountRate = (rp: string, country: string) => {
       return percent+10;
   }
 }
+
+export const presentMonth = new Date().getMonth() + 1;
+export const presentYear = new Date().getFullYear();

@@ -2,11 +2,11 @@ import { UserOutlined } from '@ant-design/icons';
 import { Form, Row, Col } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
-import DatePickerInput from '../form/DatePickerInput';
+import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { getMonthIndex } from '../utils';
+import { presentMonth, presentYear } from '../utils';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
@@ -35,8 +35,10 @@ export default function AddHoldingInput({
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ startdate, setStartdate ] = useState<string>(`Apr-${new Date().getFullYear() - 2}`);
-	const [ enddate, setEnddate ] = useState<any>(`Mar-${new Date().getFullYear() + 1}`);
+	const [ sm, setSm ] = useState<number>(4);
+	const [ em, setEm ] = useState<number>(3);
+	const [ sy, setSy ] = useState<number>(presentYear + 1);
+	const [ ey, setEy ] = useState<number>(presentYear);
 	const [ duration, setDuration ] = useState<number>(5);
 	const [ amt, setAmt ] = useState<number>(0);
 
@@ -46,7 +48,7 @@ export default function AddHoldingInput({
 
 	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
-	const hasRangePicker = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
+	const hasRangePicker = (childTab: string) => [ LENT ].includes(childTab);
 
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
@@ -54,19 +56,24 @@ export default function AddHoldingInput({
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '', curr: selectedCurrency };
-		const today = new Date();
 		switch (childTab) {
 			case INS:
-				newRec.amt = amt;
 				newRec.chg = category !== 'L' ? rate : 0;
 				newRec.chgF = Number(subCat);
 				newRec.subt = category;
+				newRec.sm = presentMonth;
+				newRec.sy = presentYear;
+				newRec.em = em;
+				newRec.ey = ey;
 				break;
 			case LOAN:
 				newRec.chg = rate;
 				newRec.chgF = 12;
 				newRec.name = name;
-				newRec.amt = amt;
+				newRec.sm = presentMonth;
+				newRec.sy = presentYear;
+				newRec.em = em;
+				newRec.ey = ey;
 				break;
 			case LENT:
 				newRec.type = AssetType.F;
@@ -74,10 +81,8 @@ export default function AddHoldingInput({
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
 				newRec.name = name;
-				newRec.amt = amt;
 				break;
 			case NPS:
-				newRec.qty = qty;
 				newRec.subt = category;
 				newRec.name = subCat;
 				break;
@@ -87,29 +92,24 @@ export default function AddHoldingInput({
 				newRec.chgF = 1;
 				newRec.type = AssetType.F;
 				newRec.name = name;
-				newRec.sm = today.getMonth() + 1;
-				newRec.sy = today.getFullYear();
-				newRec.amt = amt;
-				newRec.qty = qty;
+				newRec.sm = presentMonth;
+				newRec.sy = presentYear;
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
-				newRec.sm = getMonthIndex(startdate.substring(0, 3));
-				newRec.sy = Number(startdate.substring(startdate.length - 4));
+				newRec.sm = sm;
+				newRec.sy = sy;
 				newRec.name = name;
-				newRec.amt = amt;
 				break;
 			case PM:
-				newRec.qty = qty;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = subCat;
 				break;
 			case CRYPTO:
-				newRec.qty = qty;
 				newRec.type = AssetType.A;
 				newRec.subt = AssetSubType.C;
 				newRec.name = category;
@@ -118,46 +118,57 @@ export default function AddHoldingInput({
 				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = name;
-				newRec.amt = amt;
 				break;
 			default:
 				newRec.name = name;
-				newRec.amt = amt;
 				break;
 		}
 		if (hasRangePicker(childTab)) {
-			newRec.sm = getMonthIndex(startdate.substring(0, 3));
-			newRec.sy = Number(startdate.substring(startdate.length - 4));
+			newRec.sm = sm;
+			newRec.sy = sy;
 			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
 				newRec.ey = year;
 			} else {
-				newRec.em = getMonthIndex(enddate.substring(0, 3));
-				newRec.ey = Number(enddate.substring(enddate.length - 4));
+				newRec.em = em;
+				newRec.ey = ey;
 			}
 		}
 		if (childTab === PM || childTab === CRYPTO) {
 			newRec.curr = 'USD';
 		}
 		newRec.fId = memberKey;
+		newRec.amt = amt;
+		newRec.qty = qty;
 		return newRec;
 	};
 
-	const changeStartdate = (val: any) => {
-		setStartdate(val);
+	const changeStartMonth = (val: number) => {
+		setSm(val);
 		let rec = getNewRec();
-		rec.sm = getMonthIndex(val.substring(0, 3));
-		rec.sy = Number(val.substring(val.length - 4));
+		childTab === LOAN && childTab === INS ? (rec.em = val) : (rec.sm = val);
 		setInput(rec);
 	};
 
-	const changeEnddate = (val: any) => {
-		setEnddate(val);
-		disableOk(val <= 0);
+	const changeStartYear = (val: number) => {
+		setSy(val);
 		let rec = getNewRec();
-		rec.em = getMonthIndex(val.substring(0, 3));
-		rec.ey = Number(val.substring(val.length - 4));
+		childTab === LOAN && childTab === INS ? (rec.ey = val) : (rec.sy = val);
+		setInput(rec);
+	};
+
+	const changeEndMonth = (val: number) => {
+		setEm(val);
+		let rec = getNewRec();
+		rec.em = val;
+		setInput(rec);
+	};
+
+	const changeEndYear = (val: number) => {
+		setEy(val);
+		let rec = getNewRec();
+		rec.ey = val;
 		setInput(rec);
 	};
 
@@ -280,24 +291,14 @@ export default function AddHoldingInput({
 				) : (
 					<Col xs={24} md={12}>
 						<FormItem label="Amount">
-							<NumberInput
-								pre=""
-								value={amt}
-								changeHandler={changeAmt}
-								currency={selectedCurrency}
-							/>
+							<NumberInput pre="" value={amt} changeHandler={changeAmt} currency={selectedCurrency} />
 						</FormItem>
 					</Col>
 				)}
 				{hasPF(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Contribution per year">
-							<NumberInput
-								pre=""
-								value={qty}
-								changeHandler={changeQty}
-								currency={selectedCurrency}
-							/>
+							<NumberInput pre="" value={qty} changeHandler={changeQty} currency={selectedCurrency} />
 						</FormItem>
 					</Col>
 				)}
@@ -306,16 +307,28 @@ export default function AddHoldingInput({
 						<FormItem label={'Date'}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
-									<DatePickerInput
-										isRangePicker={
-											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE
-										}
+									<DateInput
 										title={''}
-										picker="month"
-										value={startdate}
-										changeHandler={changeStartdate}
-										setEnddate={hasRangePicker(childTab) && changeEnddate}
-										enddate={hasRangePicker(childTab) && enddate}
+										startMonthHandler={changeStartMonth}
+										startYearHandler={changeStartYear}
+										endMonthHandler={
+											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE ? (
+												changeEndMonth
+											) : (
+												undefined
+											)
+										}
+										endYearHandler={
+											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE ? (
+												changeEndYear
+											) : (
+												undefined
+											)
+										}
+										startMonthValue={sm}
+										endMonthValue={em}
+										startYearValue={sy}
+										endYearValue={ey}
 										size="middle"
 									/>
 								</Col>

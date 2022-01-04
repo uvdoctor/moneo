@@ -11,12 +11,12 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
-import DatePickerInput from "../form/DatePickerInput";
+import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
-import { getMonthIndex } from "../utils";
+import { presentMonth, presentYear } from "../utils";
 import { NWContext } from "./NWContext";
 import {
 	getDefaultMember,
@@ -46,24 +46,22 @@ export default function AddPropertyInput({
 	);
 	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(0);
-	const [purchaseDate, setPurchaseDate] = useState<string>(
-		`Apr-${new Date().getFullYear() - 5}`
-	);
 	const [city, setCity] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
 	const [mv, setMv] = useState<number>(0);
-	const [mvy, setMvy] = useState<number>(new Date().getFullYear());
-	const [mvm, setMvm] = useState<number>(new Date().getMonth() + 1);
+	const [mvy, setMvy] = useState<number>(presentYear);
+	const [mvm, setMvm] = useState<number>(presentMonth);
 	const [state, setState] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [res, setRes] = useState<boolean>(false);
 	const [error, setError] = useState<boolean>(false);
+	const [ sm, setSm ] = useState<number>(4);
+	const [ sy, setSy ] = useState<number>(presentYear - 5);
 
 	const duration = () => {
-		const today = new Date();
 		let rec = getNewRec();
 		if (rec.purchase) {
-			return calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), rec.purchase.month, rec.purchase.year);
+			return calculateDifferenceInYears(presentMonth, presentYear, rec.purchase.month, rec.purchase.year);
 		}
 	};
 
@@ -104,14 +102,17 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const changePurchaseDate = (val: any) => {
-		setPurchaseDate(val);
+	const changePurchaseMonth = (val: number) => {
+		setSm(val);
 		let rec = getNewRec();
-		const month = getMonthIndex(val.substring(0, 3));
-		if (rec.purchase) {
-			rec.purchase.month = month;
-			rec.purchase.year = Number(val.substring(val.length - 4));
-		}
+		if (rec.purchase) rec.purchase.month = val;
+		setInput(rec);
+	};
+
+	const changePurchaseYear = (val: number) => {
+		setSy(val);
+		let rec = getNewRec();
+		if (rec.purchase) rec.purchase.year = val;
 		setInput(rec);
 	};
 
@@ -152,8 +153,8 @@ export default function AddPropertyInput({
 			pin: pin,
 			purchase: {
 				amt: amount,
-				month: getMonthIndex(purchaseDate.substring(0, 3)),
-				year: Number(purchaseDate.substring(purchaseDate.length - 4)),
+				month: sm,
+				year: sy,
 				qty: 1,
 			},
 			address: address,
@@ -221,15 +222,15 @@ export default function AddPropertyInput({
 
 	useEffect(() => {
 		changeMv();
-	}, [amount, rate, purchaseDate]);
+	}, [amount, rate, sm, sy]);
 
 	const changeMv = (val?: number) => {
 		val
 			? setMv(val)
 			: // @ts-ignore
 			  setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
-		setMvm(new Date().getMonth() + 1);
-		setMvy(new Date().getFullYear());
+		setMvm(presentMonth);
+		setMvy(presentYear);
 		let rec = getNewRec();
 		rec.mv = mv;
 		rec.mvm = mvm;
@@ -305,12 +306,13 @@ export default function AddPropertyInput({
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Purchase Date">
-						<DatePickerInput
-							title=""
-							picker="month"
-							changeHandler={changePurchaseDate}
-							value={purchaseDate}
-							size={"middle"}
+						<DateInput
+							title={''}
+							startMonthHandler={changePurchaseMonth}
+							startYearHandler={changePurchaseYear}
+							startMonthValue={sm}
+							startYearValue={sy}
+							size="middle"
 						/>
 					</FormItem>
 				</Col>

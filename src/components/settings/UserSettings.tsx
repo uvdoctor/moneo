@@ -18,7 +18,7 @@ import { COLORS } from '../../CONSTANTS';
 import SaveOutlined from '@ant-design/icons/lib/icons/SaveOutlined';
 import OtpDialogue from './OtpDialogue';
 import { doesEmailExist, doesImExist, doesMobExist, updateUserDetails } from '../userinfoutils';
-import DatePickerInput from '../form/DatePickerInput';
+import DateInput from '../form/DateInput';
 import SelectInput from '../form/selectinput';
 import HSwitch from '../HSwitch';
 import NumberInput from '../form/numberinput';
@@ -32,7 +32,9 @@ const initialState = {
 	name: '',
 	lastName: '',
 	prefuser: '',
-	dob: '',
+	dobMonth: '',
+	dobYear: '',
+	dobDate: '',
 	whatsapp: '',
 	riskProfile: '',
 	isDrManual: 0,
@@ -81,7 +83,10 @@ export default function UserSettings(): JSX.Element {
 		notify,
 		isDrManual,
 		tax,
-		lifeExpectancy
+		lifeExpectancy,
+		dobDate,
+		dobMonth,
+		dobYear
 	} = userState;
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
@@ -158,11 +163,16 @@ export default function UserSettings(): JSX.Element {
 			const whatsapp = nickname ? nickname.replace(countryCode?.value, '') : '';
 			dispatch({
 				type: 'userUpdate',
-				data: { email, mobile, name, whatsapp, lastName: family_name, prefuser: preferred_username, dob: birthdate }
+				data: { email, mobile, name, whatsapp, lastName: family_name, prefuser: preferred_username, 
+							dobYear: birthdate.slice(0, birthdate.indexOf('-')) ,dobMonth: birthdate.slice(birthdate.indexOf('-')+2,
+							birthdate.lastIndexOf('-')), dobDate: birthdate.slice(birthdate.lastIndexOf('-')+1) 
+				}
 			});
 		},
 		[ appContextLoaded, countryCode?.value, user ]
 	);
+
+	
 
 	useEffect(
 		() => {
@@ -248,13 +258,16 @@ export default function UserSettings(): JSX.Element {
 										<span>&nbsp;</span>
 										<Row justify="center">
 											<Col>
-												{dob && (
-													<DatePickerInput
+												{dobDate && (
+													<DateInput
 														title={'Date of birth'}
 														className="dob"
-														value={dob}
-														changeHandler={(val: any) =>
-															dispatch({ type: 'single', data: { field: 'dob', val } })}
+														startDateValue={dobDate}
+														startMonthValue={dobMonth}
+														startYearValue={dobYear}
+														startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
+														startMonthHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobMonth', val } })}
+														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
 													/>
 												)}
 											</Col>

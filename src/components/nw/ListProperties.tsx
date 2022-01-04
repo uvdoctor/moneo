@@ -19,9 +19,9 @@ import {
 } from "./nwutils";
 import { PlusOutlined, DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
-import DatePickerInput from "../form/DatePickerInput";
+import DateInput from "../form/DateInput";
 import { COLORS } from "../../CONSTANTS";
-import { getMonthName, getMonthIndex, toHumanFriendlyCurrency } from "../utils";
+import { toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
@@ -87,14 +87,20 @@ export default function ListProperties({
 		changeData([...data]);
 	};
 
-	const changePurchaseDate = (val: string, i: number) => {
+	const changePurchaseMonth = (val: number, i: number) => {
 		// @ts-ignore
-		data[i].purchase.month = getMonthIndex(val.substring(0, 3));
-		// @ts-ignore
-		data[i].purchase.year = Number(val.substring(val.length - 4));
+		data[i].purchase.month = val
 		setIndexForMv(i);
 		changeData([...data]);
-	};
+
+	}
+
+	const changePurchaseYear = (val: number, i: number) => {
+		// @ts-ignore
+		data[i].purchase.year = val
+		setIndexForMv(i);
+		changeData([...data]);
+	}
 
 	const changeMv = (i: number, val: number) => {
 		data[i].mv = val;
@@ -174,14 +180,14 @@ export default function ListProperties({
 								</Row>
 							</Col>
 							<Col xs={24}>
-								<DatePickerInput
-									picker="month"
-									title={"Date"}
-									changeHandler={(val: string) => changePurchaseDate(val, i)}
-									value={
-										// @ts-ignore
-										`${getMonthName(data[i].purchase?.month, true)}-${data[i].purchase?.year}` as string}
-									size={"middle"} />
+								<DateInput
+									title={'Date'}
+									startMonthHandler={(val: number)=>changePurchaseMonth(val, i)}
+									startYearHandler={(val: number)=>changePurchaseYear(val, i)}
+									startMonthValue={data[i].purchase?.month}
+									startYearValue={data[i].purchase?.year as number}
+									size="middle"
+								/>
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>

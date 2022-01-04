@@ -77,25 +77,19 @@ export const calculateNPVAmt = (holding: HoldingInput, discountRate: number) => 
 	);
 	const remainingDuration = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
 	if (remainingDuration <= 0 || isNaN(remainingDuration)) return 0;
-	let bygoneDuration = (remainingDuration > durationFromStartToEnd ? 0 : durationFromStartToEnd) - remainingDuration;
+	let bygoneDuration = durationFromStartToEnd - remainingDuration;
 	if (holding.subt && holding.subt !== 'L') {
 		cashflows = getCashFlows(
 			holding.amt as number,
 			bygoneDuration,
-			remainingDuration > durationFromStartToEnd ? durationFromStartToEnd : remainingDuration,
+			remainingDuration,
 			holding.chg as number,
 			isMonth
 		);
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	}
-	const npv = getNPV(
-		discountRate,
-		cashflows,
-		0,
-		isMonth ? true : false,
-		remainingDuration > durationFromStartToEnd ? false : true
-	);
+	const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
 	return npv;
 };
 
