@@ -77,7 +77,6 @@ export default function UserSettings(): JSX.Element {
 		name,
 		lastName,
 		prefuser,
-		dob,
 		whatsapp,
 		riskProfile,
 		notify,
@@ -138,7 +137,9 @@ export default function UserSettings(): JSX.Element {
 
 	const updatePersonalTab = async () => {
 		try {
-			await Auth.updateUserAttributes(user, { name: name, family_name: lastName, birthdate: dob });
+			const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
+			await Auth.updateUserAttributes(user, 
+				{ name: name, family_name: lastName, birthdate: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}` });
 			success('Updated Successfully');
 		} catch (error) {
 			failure(`Unable to update ${error}`);
@@ -171,8 +172,6 @@ export default function UserSettings(): JSX.Element {
 		},
 		[ appContextLoaded, countryCode?.value, user ]
 	);
-
-	
 
 	useEffect(
 		() => {
