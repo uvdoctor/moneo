@@ -48,7 +48,8 @@ export default function AddHoldingInput({
 
 	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
-	const hasRangePicker = (childTab: string) => [ LENT ].includes(childTab);
+	const isRangePicker = (childTab: string, cat?: string, subCat?: string) =>
+		[ LENT ].includes(childTab) && cat !== NATIONAL_SAVINGS_CERTIFICATE && subCat != '0';
 
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
@@ -123,9 +124,14 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				break;
 		}
-		if (hasRangePicker(childTab)) {
-			newRec.sm = sm;
-			newRec.sy = sy;
+		if (childTab === LENT) {
+			if (subCat === '0') {
+				newRec.em = sm;
+				newRec.ey = sy;
+			} else {
+				newRec.sm = sm;
+				newRec.sy = sy;
+			}
 			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
@@ -312,18 +318,10 @@ export default function AddHoldingInput({
 										startMonthHandler={changeStartMonth}
 										startYearHandler={changeStartYear}
 										endMonthHandler={
-											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE ? (
-												changeEndMonth
-											) : (
-												undefined
-											)
+											isRangePicker(childTab, category, subCat) ? changeEndMonth : undefined
 										}
 										endYearHandler={
-											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE ? (
-												changeEndYear
-											) : (
-												undefined
-											)
+											isRangePicker(childTab, category, subCat) ? changeEndYear : undefined
 										}
 										startMonthValue={sm}
 										endMonthValue={em}

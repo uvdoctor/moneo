@@ -94,9 +94,10 @@ export const calculateNPVAmt = (holding: HoldingInput, discountRate: number) => 
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
-	const duration = calculateDifferenceInYears(holding.em as number, holding.ey as number, presentMonth, presentYear);
-	if (duration < 0) return 0;
+	const remainingDuration = calculateDifferenceInYears(holding.em as number, holding.ey as number, presentMonth, presentYear);
+	if (remainingDuration < 0) return 0;
 	if (!holding.chgF) return holding.amt as number;
+	const duration = calculateDifferenceInYears(presentMonth, presentYear, holding.sm as number, holding.sy as number );
 	return getCompoundedIncome(holding.chg as number, holding.amt as number, duration, holding.chgF);
 };
 
