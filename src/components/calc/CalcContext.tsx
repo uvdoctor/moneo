@@ -14,7 +14,7 @@ import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
