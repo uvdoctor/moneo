@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row, Col } from 'antd';
 import dateFnsGenerateConfig from 'rc-picker/lib/generate/dateFns';
 import generatePicker from 'antd/lib/date-picker/generatePicker';
 import 'antd/lib/date-picker/style/index';
@@ -7,6 +6,7 @@ import { parse } from 'date-fns';
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
 import { RangeValue } from 'rc-picker/lib/interface';
 import { getMonthName } from '../utils';
+import LabelWithTooltip from './LabelWithTooltip';
 
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 const { RangePicker } = DatePicker;
@@ -26,6 +26,7 @@ interface DateInputProps {
 	startDateValue?: number;
 	endDateValue?: number;
 	size?: SizeType;
+	info?: string;
 }
 
 export default function DateInput({
@@ -43,7 +44,8 @@ export default function DateInput({
 	endYearValue,
 	startDateValue,
 	endDateValue,
-	size
+	size,
+	info
 }: DateInputProps) {
 	const today = new Date();
 	const month = today.getMonth() + 1;
@@ -80,9 +82,9 @@ export default function DateInput({
 	const { format, date, endDate } = data[picker];
 
 	return (
-		<Row gutter={[ 10, 0 ]} align="middle">
-			{title && <Col className={className || 'date'}>{title}</Col>}
-			<Col>
+		<>
+			<div className={className ? className : 'date'}><LabelWithTooltip label={title} info={info} /></div>
+			<span>
 				{(endMonthHandler || endYearHandler || endDateHandler) ? (
 					<RangePicker
 						picker={picker}
@@ -116,7 +118,7 @@ export default function DateInput({
 						}}
 					/>
 				)}
-			</Col>
-		</Row>
+			</span>
+		</>
 	);
 }

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
-import { initOptions, MONTHS } from '../utils';
+import { initOptions } from '../utils';
 import Cost from './cost';
 import { GoalContext } from './GoalContext';
 import Section from '../form/section';
@@ -9,6 +9,7 @@ import { GoalType } from '../../api/goals';
 import { PlanContext } from './PlanContext';
 import { getImpLevels, isLoanEligible } from './goalutils';
 import RadioInput from '../form/RadioInput';
+import DateInput from '../form/DateInput';
 
 
 export default function GoalCost() {
@@ -69,24 +70,27 @@ export default function GoalCost() {
 						info='How important is it for you to achieve this goal? Investment strategy will consider this in order to come up with possible options.'
 					/>
 				)}
-				<SelectInput
-					pre="Starting Year"
-					info="Year in which You Start Paying"
-					value={startYear}
-					changeHandler={changeStartYear}
-					options={syOptions}
-				/>
-				{(isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && <SelectInput
-					pre="Starting Month"
-					info="Month of Year when You Start Paying"
-					value={startMonth}
-					changeHandler={changeStartMonth}
-					options={MONTHS}
-					disabled={manualMode > 0}
-				/>}
+				
+				{(isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && !manualMode ?
+					<DateInput
+					title="Starts"
+					info="Month and year when payment starts"
+					startYearValue={startYear}
+					startYearHandler={changeStartYear}
+					startMonthHandler={changeStartMonth}
+					startMonthValue={startMonth}
+					/>
+				: 
+					<DateInput
+					title="Starts"
+					info="Year when payment starts"
+					startYearValue={startYear}
+					startYearHandler={changeStartYear}
+					/>
+				}
 				{!isEndYearHidden && (
 					<SelectInput
-						pre="Ending Year"
+						pre="Ends"
 						value={endYear}
 						info="Year in which You End Paying"
 						disabled={goal.type === GoalType.B && manualMode < 1}
