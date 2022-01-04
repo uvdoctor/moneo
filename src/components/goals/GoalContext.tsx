@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
-import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible, goalImgStorage } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
 import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getEduLoanAnnualDPs, getLoanBorrowAmt } from "./cfutils";
@@ -46,7 +45,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     endYear,
     setEndYear,
     changeEndYear,
-    setEYOptions,
     error,
     setError,
     setResults,
@@ -231,17 +229,15 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     wipGoal.sy = startYear;
     setWipGoal(wipGoal);
     if (startYear <= nowYear) setPriceChgRate(0);
-    if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
-      setEndYear(startYear);
     if (goal.type === GoalType.B) {
       setAIStartYear(startYear);
       setAMStartYear(startYear);
-    } 
+      if(loanPer) return;
+    }
+    if(isEndYearHidden || startYear > endYear || endYear - startYear > 30) {
+      setEndYear(manualMode ? startYear + 2 : startYear);
+    }
   }, [startYear]);
-
-  useEffect(() => {
-    if (manualMode || !loanPer) setEYOptions(initOptions(startYear, 30));
-  }, [startYear, manualMode, loanPer]);
 
   useEffect(() => {
     if (manualMode) return;
@@ -526,9 +522,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   useEffect(() => {
     if (manualMode) {
       changeStartMonth(1);
-      if (endYear === startYear) setEndYear(startYear + 2);
+      if (endYear <= startYear) setEndYear(startYear + 2);
     }
-    else if (manualMode < 1 && !loanPer && goalType === GoalType.B)
+    else if (!loanPer && goalType === GoalType.B)
       setEndYear(startYear);
     if (manualMode < 1 && error) setError("");
   }, [manualMode, loanPer]);

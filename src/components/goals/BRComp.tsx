@@ -42,14 +42,14 @@ export default function BRComp() {
 					unit="%"
 				/>
 			)}
-			{dr && (
+			{rentAmt && dr && (
 				<NumberInput
 					value={dr}
 					changeHandler={setDR}
 					min={1}
 					max={15}
 					step={0.1}
-					pre="Money saved by not buying is invested to earn"
+					pre="Money saved by not buying earns"
 					unit="% yearly"
 					post="after taxes & fees"
 				/>

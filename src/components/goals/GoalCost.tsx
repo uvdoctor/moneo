@@ -82,8 +82,8 @@ export default function GoalCost() {
 
 				{!isEndYearHidden && (
 					<DateInput
-						key={startYear}
 						title="Ends"
+						key={endYear}
 						startYearValue={endYear}
 						info="Year in which You End Paying"
 						disabled={goal.type === GoalType.B && manualMode < 1}
