@@ -17,7 +17,7 @@ export default function AmountWithRate({
 	record,
 }: AmountWithRateProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { PM, CRYPTO, NPS, PF, LENT, INS } = TAB;
+	const { PM, CRYPTO, NPS, PF, LENT, INS, LOAN } = TAB;
 
 	const changeAmt = (amt: number) => {
 		record.amt = amt;
@@ -45,7 +45,7 @@ export default function AmountWithRate({
 	const hasQtyWithRate = (childTab: string) =>
 		[PM, NPS, CRYPTO].includes(childTab);
 
-	const hasRate = (childTab: string) => [PF, LENT].includes(childTab);
+	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 

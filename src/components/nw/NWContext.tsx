@@ -41,7 +41,7 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
-import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateNPVAmt, calculatePM } from './valuationutils'
+import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateInsurance, calculatePM, calculateLoan } from './valuationutils'
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from '../../CONSTANTS';
 
@@ -731,14 +731,21 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	let total = 0;
 	holdings.forEach((holding: HoldingInput) => {
 		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-			total += calculateNPVAmt(holding, discountRate);
+			total += calculateInsurance(holding, discountRate);
 		}
 	});
 	setTotal(total);
 };
 
 	const priceLoans = () => {
-		calculateNPV(loans, setTotalLoans);
+		if(!loans.length) return setTotalLoans(0);
+		let total = 0;
+		loans.forEach((holding: HoldingInput)=>{
+			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				total += calculateLoan(holding);
+			};
+		})
+		setTotalLoans(total);
 	};
 
 	const priceInsurance = () => {

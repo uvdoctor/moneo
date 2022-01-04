@@ -11,7 +11,7 @@ import {
 	calculateCompundingIncome,
 	calculateCrypto,
 	calculateNPS,
-	calculateNPVAmt,
+	calculateInsurance,
 	calculatePM,
 	calculateProvidentFund,
 	calculateVehicle,
@@ -47,7 +47,7 @@ export default function MemberAndValuation({
 		switch (childTab) {
 			case INS:
 			case LOAN:
-				value = calculateNPVAmt(record, discountRate);
+				value = calculateInsurance(record, discountRate);
 				break;
 			case CRYPTO:
 				value = calculateCrypto(record, ratesData, selectedCurrency);

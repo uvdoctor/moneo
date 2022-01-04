@@ -65,7 +65,7 @@ export const calculatePM = (holding: HoldingInput, ratesData: any, selectedCurre
 	return holding.qty * rate;
 };
 
-export const calculateNPVAmt = (holding: HoldingInput, discountRate: number) => {
+export const calculateInsurance = (holding: HoldingInput, discountRate: number) => {
 	let cashflows: any = [];
 	let isMonth = holding.chgF === 1 ? false : true;
 	const calc = isMonth ? calculateDifferenceInMonths : calculateDifferenceInYears;
@@ -89,9 +89,17 @@ export const calculateNPVAmt = (holding: HoldingInput, discountRate: number) => 
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	}
+	
 	const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
 	return npv;
 };
+
+export const calculateLoan = (holding: HoldingInput) => {	
+	const remainingDuration = calculateDifferenceInMonths(holding.em as number, holding.ey as number, presentMonth, presentYear);
+	const cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
+	const npv = getNPV(holding.chg as number, cashflows, 0, true, true);
+	return npv;
+}
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
 	const remainingDuration = calculateDifferenceInYears(holding.em as number, holding.ey as number, presentMonth, presentYear);
