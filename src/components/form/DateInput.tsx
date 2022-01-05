@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import dateFnsGenerateConfig from 'rc-picker/lib/generate/dateFns';
 import generatePicker from 'antd/lib/date-picker/generatePicker';
 import 'antd/lib/date-picker/style/index';
@@ -29,6 +29,7 @@ interface DateInputProps {
 	info?: string;
 	disabled?: boolean;
 	initialValue?: number;
+	endValue?: number;
 }
 
 export default function DateInput({
@@ -49,8 +50,10 @@ export default function DateInput({
 	size,
 	info,
 	disabled,
-	initialValue
+	initialValue,
+	endValue
 }: DateInputProps) {
+	const [ customDate, setCustomDate ] = useState<Array<Date>>([]);
 	const today = new Date();
 	const month = today.getMonth() + 1;
 	const year = today.getFullYear();
@@ -82,11 +85,24 @@ export default function DateInput({
 		}
 	};
 
+	const onOpenChange = (open: boolean) => {
+    if (open && initialValue && endValue) {
+      const getDateByYear = (num: number, start: boolean) => new Date(num, start? 0 : 11, start ? 1 : 31);
+			const dates = [ getDateByYear(initialValue, true), getDateByYear(endValue, false) ]
+			setCustomDate([...dates]);
+    }
+  };
+
+	const disabledDate = (date: Date) => {
+		if (!customDate || customDate.length === 0 || !date) return false;
+		return date.getFullYear() < customDate[0].getFullYear() || date.getFullYear() > customDate[1].getFullYear();
+	}
+
 	const picker = startDateHandler ? 'date' : startMonthHandler ? 'month' : 'year';
 	const { format, date, endDate } = data[picker];
 
 	return (
-		<>
+		<Fragment>
 			<div className={className ? className : 'date'}><LabelWithTooltip label={title} info={info} /></div>
 			<span>
 				{(endMonthHandler || endYearHandler || endDateHandler) ? (
@@ -108,7 +124,8 @@ export default function DateInput({
 							}
 						}}
 						disabled={disabled}
-						disabledDate={(date: Date)=> !date || (initialValue ? date.getFullYear() < initialValue : false)}
+						disabledDate={(date: Date)=>disabledDate(date)}
+						onOpenChange={onOpenChange}
 					/>
 				) : (
 					<DatePicker
@@ -123,10 +140,11 @@ export default function DateInput({
 							startYearHandler && startYearHandler(value?.getFullYear())
 						}}
 						disabled={disabled}
-						disabledDate={(date: Date) => !date || (initialValue ? date.getFullYear() < initialValue : false)}
+						disabledDate={(date: Date)=>disabledDate(date)}
+						onOpenChange={onOpenChange}
 					/>
 				)}
 			</span>
-		</>
+		</Fragment>
 	);
 }
