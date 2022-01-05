@@ -267,6 +267,7 @@ export default function UserSettings(): JSX.Element {
 														startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
 														startMonthHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobMonth', val } })}
 														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
+														size='large'
 													/>
 												)}
 											</Col>
