@@ -130,7 +130,7 @@ export default function DateInput({
 				) : (
 					<DatePicker
 						picker={picker}
-						size={size ? size : 'small'}
+						size={size ? size : 'middle'}
 						defaultValue={parse(date as string, format, new Date())}
 						format={format}
 						onChange={(value: Date | null) => {

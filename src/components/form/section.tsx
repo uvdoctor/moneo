@@ -35,7 +35,7 @@ export default function Section(props: SectionProps) {
 						props.children,
 						(child: any, i: number) =>
 							child ? (
-								<Col xs={24} md={12} lg={8} xl={8} key={'section' + i}>
+								<Col xs={24} md={12} lg={8} xl={6} key={'section' + i}>
 									{child}
 								</Col>
 							) : (

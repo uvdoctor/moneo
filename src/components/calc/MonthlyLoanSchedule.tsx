@@ -106,7 +106,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 				? (existingPrepayment.val = additionalPayment)
 				: removeFromArray(loanPrepayments, 'num', installmentNum);
 		else loanPrepayments.push(createNewTarget(installmentNum, additionalPayment));
-		setLoanPrepayments([...loanPrepayments]);
+		setLoanPrepayments([ ...loanPrepayments ]);
 	};
 
 	const changeLoanIRAdjustments = (installmentNum: number, newIR: number) => {
@@ -203,8 +203,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 				expandedRowRender: (record) => {
 					const num = parseInt(record.num);
 					const isEditable =
-						editable &&
-						(hasAdjustmentsInLastInstallments() || (num > 6 && num <= iSchedule.length - 6));
+						editable && (hasAdjustmentsInLastInstallments() || (num > 6 && num <= iSchedule.length - 6));
 					return (
 						<Fragment>
 							<Row align="middle">
@@ -288,10 +287,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 											lg={isEditable ? 24 : 12}
 											xxl={isEditable ? 24 : 8}
 										>
-											<ItemDisplay
-												label="Remaining Months"
-												result={getRemMonths(num)}
-											/>
+											<ItemDisplay label="Remaining Months" result={getRemMonths(num)} />
 										</Col>
 										<Col
 											xs={24}
@@ -312,53 +308,58 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 								{isEditable && (
 									<Col className="configurations" lg={12}>
 										<Section title="Adjust Loan Schedule">
-											<NumberInput
-												pre="Payment"
-												value={getPrepayment(num)}
-												changeHandler={(val: number) =>
-													changeLoanPrepayments(num, val)}
-												max={Math.floor(getPrincipalDue(num - 1))}
-												currency={currency}
-												noRangeFactor
-											/>
-											{record.num !== '1' ? (
-												<NumberInput
-													pre="Rate"
-													value={getClosestTargetVal(
-														loanIRAdjustments,
-														parseInt(record.num),
-														loanIntRate
-													)}
-													changeHandler={(val: number) =>
-														changeLoanIRAdjustments(num, val)}
-													min={
-														getClosestTargetVal(
-															loanIRAdjustments,
-															num - 1,
-															loanIntRate
-														) -
-															3 <
-														0 ? (
-															0
-														) : (
-															getClosestTargetVal(
+											<Row gutter={[ 0, 10 ]}>
+												<Col span={24}>
+													<NumberInput
+														pre="Payment"
+														value={getPrepayment(num)}
+														changeHandler={(val: number) => changeLoanPrepayments(num, val)}
+														max={Math.floor(getPrincipalDue(num - 1))}
+														currency={currency}
+														noRangeFactor
+													/>
+												</Col>
+												<Col span={24}>
+													{record.num !== '1' ? (
+														<NumberInput
+															pre="Rate"
+															value={getClosestTargetVal(
 																loanIRAdjustments,
-																num - 1,
+																parseInt(record.num),
 																loanIntRate
-															) - 3
-														)
-													}
-													max={
-														getClosestTargetVal(
-															loanIRAdjustments,
-															num - 1,
-															loanIntRate
-														) + 3
-													}
-													step={0.01}
-													unit="%"
-												/>
-											) : null}
+															)}
+															changeHandler={(val: number) =>
+																changeLoanIRAdjustments(num, val)}
+															min={
+																getClosestTargetVal(
+																	loanIRAdjustments,
+																	num - 1,
+																	loanIntRate
+																) -
+																	3 <
+																0 ? (
+																	0
+																) : (
+																	getClosestTargetVal(
+																		loanIRAdjustments,
+																		num - 1,
+																		loanIntRate
+																	) - 3
+																)
+															}
+															max={
+																getClosestTargetVal(
+																	loanIRAdjustments,
+																	num - 1,
+																	loanIntRate
+																) + 3
+															}
+															step={0.01}
+															unit="%"
+														/>
+													) : null}
+												</Col>
+											</Row>
 										</Section>
 									</Col>
 								)}
