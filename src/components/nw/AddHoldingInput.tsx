@@ -125,17 +125,15 @@ export default function AddHoldingInput({
 				break;
 		}
 		if (childTab === LENT) {
-			if (subCat === '0') {
-				newRec.em = sm;
-				newRec.ey = sy;
-			} else {
-				newRec.sm = sm;
-				newRec.sy = sy;
-			}
+			subCat === '0' ? (newRec.sm = presentMonth) : (newRec.sm = sm);
+			subCat === '0' ? (newRec.sy = presentMonth) : (newRec.sy = sy);
 			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
 				newRec.ey = year;
+			} else if (subCat === '0') {
+				newRec.em = sm;
+				newRec.ey = sy;
 			} else {
 				newRec.em = em;
 				newRec.ey = ey;
