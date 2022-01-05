@@ -150,19 +150,20 @@ export default function AddHoldingInput({
 		return newRec;
 	};
 
-	const hasOnlyEnddate = (childTab: string) => [LOAN, INS].includes(childTab) || (subCat === '0' && childTab === LENT);
+	const hasOnlyEnddate = (childTab: string) =>
+		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
 
 	const changeStartMonth = (val: number) => {
 		setSm(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (rec.em = val) : (rec.sm = val);
+		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
 		setInput(rec);
 	};
 
 	const changeStartYear = (val: number) => {
 		setSy(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (rec.ey = val) : (rec.sy = val);
+		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
 		setInput(rec);
 	};
 
@@ -310,7 +311,8 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasDate(childTab) && category !== "H" && (
+				{hasDate(childTab) &&
+				category !== 'H' && (
 					<Col xs={24} md={12}>
 						<FormItem label={'Date'}>
 							<Row gutter={[ 10, 0 ]}>
