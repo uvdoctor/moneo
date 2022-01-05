@@ -64,8 +64,8 @@ export default function AddHoldingInput({
 				newRec.subt = category;
 				newRec.sm = presentMonth;
 				newRec.sy = presentYear;
-				newRec.em = sm;
-				newRec.ey = sy;
+				newRec.em = category !== 'H' ? sm : 0;
+				newRec.ey = category !== 'H' ? sy : 0;
 				break;
 			case LOAN:
 				newRec.chg = rate;
@@ -310,7 +310,7 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasDate(childTab) && (
+				{hasDate(childTab) && category !== "H" && (
 					<Col xs={24} md={12}>
 						<FormItem label={'Date'}>
 							<Row gutter={[ 10, 0 ]}>

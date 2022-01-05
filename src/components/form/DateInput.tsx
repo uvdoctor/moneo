@@ -123,11 +123,7 @@ export default function DateInput({
 							startYearHandler && startYearHandler(value?.getFullYear())
 						}}
 						disabled={disabled}
-						// @ts-ignore
-						disabledDate={(date: Date) => {
-							if(!date) return;
-							if(initialValue && date.getFullYear() < initialValue) return true;
-						}}
+						disabledDate={(date: Date) => !date || (initialValue ? date.getFullYear() < initialValue : false)}
 					/>
 				)}
 			</span>
