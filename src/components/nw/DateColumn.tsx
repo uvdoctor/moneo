@@ -51,12 +51,12 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	};
 
 	const hasOnlyEnddate = (childTab: string) => [LOAN, INS].includes(childTab) || (record.chgF === 0 && childTab === LENT);
-	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
+	const hasDate = (childTab: string, record: HoldingInput) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== "H";
 
 	return (
 		<Fragment>
 			<Col>
-				{hasDate(childTab) && (
+				{hasDate(childTab, record) && (
 					<DateInput
 						title={''}
 						startMonthHandler={changeStartMonth}

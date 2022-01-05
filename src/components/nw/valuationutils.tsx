@@ -65,47 +65,59 @@ export const calculatePM = (holding: HoldingInput, ratesData: any, selectedCurre
 	return holding.qty * rate;
 };
 
-export const calculateInsurance = (holding: HoldingInput, discountRate: number) => {
-	let cashflows: any = [];
-	let isMonth = holding.chgF === 1 ? false : true;
+export const calculateInsurance = (holding: HoldingInput, discountRate: number, le: number, dob: string) => {
+	let { sm, sy, em, ey, amt, chg, subt } = holding;
+	let [ durationFromStartToEnd, remainingDuration ] = [ 0, 0 ];
+	let cashflows: Array<number> = [];
+	let isMonth: boolean = holding.chgF === 1 ? false : true;
 	const calc = isMonth ? calculateDifferenceInMonths : calculateDifferenceInYears;
-	const durationFromStartToEnd = calc(
-		holding.em as number,
-		holding.ey as number,
-		holding.sm as number,
-		holding.sy as number
-	);
-	const remainingDuration = calc(holding.em as number, holding.ey as number, presentMonth, presentYear);
+
+	if (subt === 'H' && dob && le) {
+		const birthYear = Number(dob.slice(0, dob.indexOf('-')));
+		const birthMonth = Number(dob.slice(dob.indexOf('-') + 2, dob.lastIndexOf('-')));
+		const { year, month } = calculateAddYears(birthMonth, birthYear, le); //lifeExpectancy year and month
+		durationFromStartToEnd = calc(month, year, sm as number, sy as number);
+		remainingDuration = calc(month, year, presentMonth, presentYear);
+	} else {
+		durationFromStartToEnd = calc(em as number, ey as number, sm as number, sy as number);
+		remainingDuration = calc(em as number, ey as number, presentMonth, presentYear);
+	}
+
 	if (remainingDuration <= 0 || isNaN(remainingDuration)) return 0;
 	let bygoneDuration = durationFromStartToEnd - remainingDuration;
-	if (holding.subt && holding.subt !== 'L') {
-		cashflows = getCashFlows(
-			holding.amt as number,
-			bygoneDuration,
-			remainingDuration,
-			holding.chg as number,
-			isMonth
-		);
-	} else {
-		cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
-	}
+	console.log(remainingDuration, durationFromStartToEnd, bygoneDuration);
 	
+	if (subt && subt !== 'L') {
+		cashflows = getCashFlows(amt as number, bygoneDuration, remainingDuration, chg as number, isMonth);
+	} else {
+		cashflows = Array(Math.round(remainingDuration)).fill(amt);
+	}
 	const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
 	return npv;
 };
 
-export const calculateLoan = (holding: HoldingInput) => {	
-	const remainingDuration = calculateDifferenceInMonths(holding.em as number, holding.ey as number, presentMonth, presentYear);
+export const calculateLoan = (holding: HoldingInput) => {
+	const remainingDuration = calculateDifferenceInMonths(
+		holding.em as number,
+		holding.ey as number,
+		presentMonth,
+		presentYear
+	);
 	const cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	const npv = getNPV(holding.chg as number, cashflows, 0, true, true);
 	return npv;
-}
+};
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
-	const remainingDuration = calculateDifferenceInYears(holding.em as number, holding.ey as number, presentMonth, presentYear);
+	const remainingDuration = calculateDifferenceInYears(
+		holding.em as number,
+		holding.ey as number,
+		presentMonth,
+		presentYear
+	);
 	if (remainingDuration < 0) return 0;
 	if (!holding.chgF) return holding.amt as number;
-	const duration = calculateDifferenceInYears(presentMonth, presentYear, holding.sm as number, holding.sy as number );
+	const duration = calculateDifferenceInYears(presentMonth, presentYear, holding.sm as number, holding.sy as number);
 	return getCompoundedIncome(holding.chg as number, holding.amt as number, duration, holding.chgF);
 };
 

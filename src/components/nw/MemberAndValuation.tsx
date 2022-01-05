@@ -34,7 +34,7 @@ export default function MemberAndValuation({
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(
 		NWContext
 	);
-	const { ratesData, discountRate }: any = useContext(AppContext);
+	const { ratesData, discountRate, userInfo, user }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 	const [valuation, setValuation] = useState<number>(0);
 
@@ -47,7 +47,7 @@ export default function MemberAndValuation({
 		let value = 0;
 		switch (childTab) {
 			case INS:
-				value = calculateInsurance(record, discountRate);
+				value = calculateInsurance(record, discountRate, userInfo.le, user?.attributes?.birthdate);
 				break;
 			case LOAN:
 				value = calculateLoan(record);
