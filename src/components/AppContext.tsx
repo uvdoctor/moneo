@@ -110,7 +110,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		if (!user) setAppContextLoaded(true);
 	}, []);
 
-	const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+	const initUser = async () => !user && setUser(await Auth.currentAuthenticatedUser());
 	const loadUserInfo = async () => {
 		const userDetails = await getUserDetails(owner); 
 		if (userDetails) {
@@ -121,9 +121,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
 	useEffect(() => {
 		Hub.listen('auth', initUser);
-		if(!user) {
-			initUser()
-		}
+		initUser()
 		return () => Hub.remove('auth', initUser);
 	}, []);
 
@@ -131,7 +129,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		() => {
 			if (user) {
 				initData().then(() => setAppContextLoaded(true));
-				user.signInUserSession.accessToken && setOwner(user.signInUserSession.accessToken.payload.username);
+				if(user.signInUserSession) user.signInUserSession.accessToken && setOwner(user.signInUserSession.accessToken.payload.username);
 			}
 		},
 		[ user ]
