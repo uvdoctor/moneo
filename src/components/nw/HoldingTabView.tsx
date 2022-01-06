@@ -39,18 +39,14 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
-		if(view === LIABILITIES_VIEW) setActiveTab(LIABILITIES_TAB);
-		else if(!nw) setActiveTab('Cash');
-		else setActiveTab(TAB.SUMMARY);
+		setActiveTab(view === LIABILITIES_VIEW ? LIABILITIES_TAB : !nw ? 'Cash' : TAB.SUMMARY);
 	}, [view]);
 
 	useEffect(
 		() => {
 			if (childTab === TAB.NPS && !npsData.length) (async () => setNPSSubCat(await loadNPSSubCategories()))();
 		},
-		[
-			childTab
-		]
+		[ childTab ]
 	);
 
 	useEffect(
@@ -86,6 +82,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
 					{isRoot && !liabilities && <TabPane
+						disabled={!nw ? true : false}
 						key={TAB.SUMMARY}
 						tab={TAB.SUMMARY}>
 							<AAChart />
