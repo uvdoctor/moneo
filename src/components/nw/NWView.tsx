@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from "react";
 import HoldingTabView from "./HoldingTabView";
 import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Button, Col, PageHeader, Radio, Row, Skeleton } from "antd";
+import { Col, PageHeader, Radio, Row, Skeleton } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import SelectInput from "../form/selectinput";
 
@@ -10,6 +10,7 @@ import FamilyInput from "./FamilyInput";
 import TotalNetWorth from "./TotalNetWorth";
 import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
+import Start from "../Start";
 
 require("./NWView.less");
 
@@ -120,12 +121,7 @@ export default function NWView() {
 					<Skeleton active />
 				)}
 			</div>
-		</Fragment>) : ( 	
-			<div style={{ textAlign: 'center' }}>
-			<h3>First Things First.</h3>
-			<Button type="primary" onClick={() => addSelfMember()}>
-				Get Started
-			</Button>
-	</div>)
+		</Fragment>)
+		: <Start onClick={()=>addSelfMember()}/>
 	)
 }

@@ -189,6 +189,12 @@ function NWContextProvider() {
 			label: 'Cash',
 			total: totalCash,
 			children: {
+				[TAB.SAV]: {
+					label: TAB.SAV,
+					data: savings,
+					setData: setSavings,
+					total: totalSavings,
+				},
 				[TAB.LENT]: {
 					label: TAB.LENT,
 					data: lendings,
@@ -213,12 +219,6 @@ function NWContextProvider() {
 							4: 'Accumulates Every Three Months',
 							12: 'Accumulates Every Month' },
 						},
-				},
-				[TAB.SAV]: {
-					label: TAB.SAV,
-					data: savings,
-					setData: setSavings,
-					total: totalSavings,
 				},
 			}
 		},
@@ -486,6 +486,7 @@ function NWContextProvider() {
 				setSelectedMembers([...[allFamilyKeys[0]]]);
 			}
 			setLoadingFamily(false);
+			if(allFamilyMembers) return true;
 		} catch (err) {
 			notification.error({
 				message: 'Family list not loaded',
@@ -542,7 +543,8 @@ function NWContextProvider() {
 	};
 
 	const initializeHoldings = async () => {
-		await initializeFamilyList();
+		const familyMemberExists = await initializeFamilyList();
+		if(!familyMemberExists) return;
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		let insHoldings: CreateUserInsInput | null = null;
 		try {
@@ -577,7 +579,8 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-				initializeHoldings();
+			if(!user) return;
+			initializeHoldings();
 		},[ user ]
 	);
 

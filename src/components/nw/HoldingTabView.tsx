@@ -30,7 +30,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		totalAssets,
 		totalLiabilities,
 		view,
-		nw
 	}: any = useContext(NWContext);
 	const [
 		npsSubCat,
@@ -39,7 +38,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
-		setActiveTab(view === LIABILITIES_VIEW ? LIABILITIES_TAB : !nw ? 'Cash' : TAB.SUMMARY);
+		setActiveTab(view === LIABILITIES_VIEW ? LIABILITIES_TAB : !totalAssets ? 'Cash' : TAB.SUMMARY);
 	}, [view]);
 
 	useEffect(
@@ -82,7 +81,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
 					{isRoot && !liabilities && <TabPane
-						disabled={!nw ? true : false}
+						disabled={!totalAssets ? true : false}
 						key={TAB.SUMMARY}
 						tab={TAB.SUMMARY}>
 							<AAChart />
