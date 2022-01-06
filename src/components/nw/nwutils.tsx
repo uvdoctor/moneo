@@ -134,7 +134,7 @@ export const addMemberIfNeeded = async (
   let id = getFamilyMemberKey(allFamily, taxId);
   if (id) return id;
   let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.M);
-  allFamily[member?.id as string] = { name: member?.name, taxId: member?.tid };
+  allFamily[member?.id as string] = { name: member?.name, taxId: member?.tid, tax: member?.tax };
   allFamilySetter(allFamily);
   return member?.id;
 };
