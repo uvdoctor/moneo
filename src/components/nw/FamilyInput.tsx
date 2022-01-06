@@ -143,29 +143,30 @@ export default function FamilyInput() {
 				<Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
 				onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
 				okText={"Save"} okButtonProps={{icon: <SaveOutlined />, disabled: !name || !taxId || error ? true : false}}>
-				{error ? 
-					<Fragment>
-						<Alert type="error" message={error} />
-						<p>&nbsp;</p> 
-					</Fragment>
-				: null} 
-				{memberKeys.length > 1 && id ? 
-					<SelectInput pre="Family Member" value={id}
-							changeHandler={setId} options={getFamilyMemberOptions()}/> 
-				: null}
-				<TextInput pre={<UserOutlined />} placeholder="Member Name" value={name} changeHandler={setName} minLength={3} 
-					setError={setError} fieldName="Member name" />
-					<p>&nbsp;</p>
-				<TextInput pre="PAN Number" placeholder="XXXXX1234X" value={taxId} changeHandler={setTaxId} minLength={10} 
-						setError={setError} pattern='[A-Z]{5}[0-9]{4}[A-Z]{1}' fieldName="PAN number" />
-				<p>&nbsp;</p>
-					<SelectInput
-						info="How much do you earn in a year?"
-						pre="Yearly Income"
-						value={taxLiability}
-						changeHandler={setTaxLiability}
-						options={getTaxLiabilityOptions()}
-					/>
+				<Row gutter={[32,16]} align='bottom' justify='space-between'>
+					{error && <Col><Alert type="error" message={error} /></Col> } 
+					{memberKeys.length > 1 && id && 
+						<Col>
+							<SelectInput pre="Family Member" value={id} changeHandler={setId} options={getFamilyMemberOptions()}/> 
+						</Col>}
+						<Col>
+							<TextInput pre={<UserOutlined />} placeholder="Member Name" value={name} changeHandler={setName} minLength={3} 
+								setError={setError} fieldName="Member name" size='middle'/>
+						</Col>
+						<Col>
+							<TextInput pre="PAN" placeholder="XXXXX1234X" value={taxId} changeHandler={setTaxId} minLength={10} 
+							setError={setError} pattern='[A-Z]{5}[0-9]{4}[A-Z]{1}' fieldName="PAN number" size='middle'/>
+						</Col>
+						<Col>
+							<SelectInput
+							info="How much do you earn in a year?"
+							pre="Yearly Income"
+							value={taxLiability}
+							changeHandler={setTaxLiability}
+							options={getTaxLiabilityOptions()}
+						/>
+						</Col>
+					</Row>
 				</Modal>}
 	</Fragment>
     );
