@@ -25,17 +25,20 @@ export default function FamilyInput() {
 	const [ taxLiability, setTaxLiability ] = useState<TaxLiability>(TaxLiability.M);
 	const [ memberKeys, setMemberKeys ] = useState<Array<string>>([]);
 
-	useEffect(() => {
-		if(loadingFamily) return;
-		let allFamilyKeys = Object.keys(allFamily);
-		setMemberKeys([...allFamilyKeys]);
-		setSelectedMembers([... [allFamilyKeys.length > 1 ? ALL_FAMILY: allFamilyKeys[0]]]);
-	}, [loadingFamily]);
+	useEffect(
+		() => {
+			if (loadingFamily) return;
+			let allFamilyKeys = Object.keys(allFamily);
+			setMemberKeys([ ...allFamilyKeys ]);
+			setSelectedMembers([ ...[ allFamilyKeys.length > 1 ? ALL_FAMILY : allFamilyKeys[0] ] ]);
+		},
+		[ loadingFamily ]
+	);
 
 	const selectMember = (val: string[]) => {
-    if (!val.length) return setSelectedMembers([ ...[ALL_FAMILY] ]);
-    if(val.length === 1 && val[0] && !selectedMembers.length) return setSelectedMembers([...val]);
-    let filteredOpts = val.filter((key: string) => key && key !== ALL_FAMILY);
+		if (!val.length) return setSelectedMembers([ ...[ ALL_FAMILY ] ]);
+		if (val.length === 1 && val[0] && !selectedMembers.length) return setSelectedMembers([ ...val ]);
+		let filteredOpts = val.filter((key: string) => key && key !== ALL_FAMILY);
 		setSelectedMembers([ ...filteredOpts ]);
 	};
 
@@ -43,59 +46,77 @@ export default function FamilyInput() {
 		setId('');
 		setName('');
 		setTaxId('');
-		setTaxLiability(TaxLiability.M)
+		setTaxLiability(TaxLiability.M);
 	};
 
 	const getFamilyMemberOptions = () => {
 		let opts: any = {};
-		memberKeys.forEach((key: string) => opts[key] = allFamily[key].name)
+		memberKeys.forEach((key: string) => (opts[key] = allFamily[key].name));
 		return opts;
-	}
+	};
 
-	useEffect(() => {
-		if(!mode || mode !== EDIT_MODE) return resetState();
-		setId(Object.keys(allFamily)[0]);
-	}, [mode]);
+	useEffect(
+		() => {
+			if (!mode || mode !== EDIT_MODE) return resetState();
+			setId(Object.keys(allFamily)[0]);
+		},
+		[ mode ]
+	);
 
-	useEffect(() => {
-		if(!id) return resetState();
-		setName(allFamily[id].name);
-		setTaxId(allFamily[id].taxId);
-		setTaxLiability(allFamily[id].tax)
-	}, [id]);
+	useEffect(
+		() => {
+			if (!id) return resetState();
+			setName(allFamily[id].name);
+			setTaxId(allFamily[id].taxId);
+			setTaxLiability(allFamily[id].tax);
+		},
+		[ id ]
+	);
 
 	const addMember = async () => {
 		let member: CreateFamilyInput | null = null;
 		try {
 			member = await addFamilyMember(name, taxId, taxLiability);
-			if(!member) return;
-			allFamily[member.id as string] = {name: member.name, taxId: member.tid, tax: member.tax};
+			if (!member) return;
+			allFamily[member.id as string] = { name: member.name, taxId: member.tid, tax: member.tax };
 			setMode('');
-			setSelectedMembers([...[member.id]]);
+			setSelectedMembers([ ...[ member.id ] ]);
 			memberKeys.push(member.id as string);
-			setMemberKeys([...memberKeys]);
-			notification.success({ message: 'New Family Member Added', description: `Success! ${name} has been added to your family list.`});
+			setMemberKeys([ ...memberKeys ]);
+			notification.success({
+				message: 'New Family Member Added',
+				description: `Success! ${name} has been added to your family list.`
+			});
 			return true;
 		} catch (err) {
-			notification.error({ message: 'Family Member not added', description: "Sorry! Unable to add this family member: " + err });
+			notification.error({
+				message: 'Family Member not added',
+				description: 'Sorry! Unable to add this family member: ' + err
+			});
 			return false;
 		}
-	}
+	};
 
 	const changeMember = async () => {
 		let member: UpdateFamilyInput | null = null;
 		try {
-			member = await updateFamilyMember({id: id, name: name, tid: taxId, tax: taxLiability});
-			if(!member) return;
-			allFamily[id] = {name: member.name, taxId: member.tid, tax: member.tax};
+			member = await updateFamilyMember({ id: id, name: name, tid: taxId, tax: taxLiability });
+			if (!member) return;
+			allFamily[id] = { name: member.name, taxId: member.tid, tax: member.tax };
 			setMode('');
-			notification.success({ message: 'Family Member Updated', description: `Success! Family member details have been updated.`})
+			notification.success({
+				message: 'Family Member Updated',
+				description: `Success! Family member details have been updated.`
+			});
 			return true;
 		} catch (err) {
-			notification.error({ message: 'Family Member not updated', description: "Sorry! Unable to update this family member: " + err });
+			notification.error({
+				message: 'Family Member not updated',
+				description: 'Sorry! Unable to update this family member: ' + err
+			});
 			return false;
 		}
-	}
+	};
 
 	return (
 		<Fragment>
@@ -139,35 +160,69 @@ export default function FamilyInput() {
 						</Tooltip>
 					</Col> : null}
 			</Row> : null}
-			{mode && 
-				<Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
-				onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
-				okText={"Save"} okButtonProps={{icon: <SaveOutlined />, disabled: !name || !taxId || error ? true : false}}>
-				<Row gutter={[32,16]} align='bottom' justify='space-between'>
-					{error && <Col><Alert type="error" message={error} /></Col> } 
-					{memberKeys.length > 1 && id && 
+			{mode && (
+				<Modal
+					title={`${mode} Family Member`}
+					visible={mode.length > 0}
+					onCancel={() => setMode('')}
+					onOk={() => (mode === ADD_MODE ? addMember() : changeMember())}
+					okText={'Save'}
+					okButtonProps={{ icon: <SaveOutlined />, disabled: !name || !taxId || error ? true : false }}
+				>
+					<Row gutter={[ 32, 16 ]} align="bottom" justify="space-between">
+						{error && (
+							<Col>
+								<Alert type="error" message={error} />
+							</Col>
+						)}
+						{memberKeys.length > 1 &&
+						id && (
+							<Col>
+								<SelectInput
+									pre="Family Member"
+									value={id}
+									changeHandler={setId}
+									options={getFamilyMemberOptions()}
+								/>
+							</Col>
+						)}
 						<Col>
-							<SelectInput pre="Family Member" value={id} changeHandler={setId} options={getFamilyMemberOptions()}/> 
-						</Col>}
-						<Col>
-							<TextInput pre={<UserOutlined />} placeholder="Member Name" value={name} changeHandler={setName} minLength={3} 
-								setError={setError} fieldName="Member name" size='middle'/>
+							<TextInput
+								pre={<UserOutlined />}
+								placeholder="Member Name"
+								value={name}
+								changeHandler={setName}
+								minLength={3}
+								setError={setError}
+								fieldName="Member name"
+								size="middle"
+							/>
 						</Col>
 						<Col>
-							<TextInput pre="PAN" placeholder="XXXXX1234X" value={taxId} changeHandler={setTaxId} minLength={10} 
-							setError={setError} pattern='[A-Z]{5}[0-9]{4}[A-Z]{1}' fieldName="PAN number" size='middle'/>
+							<TextInput
+								pre="PAN"
+								placeholder="XXXXX1234X"
+								value={taxId}
+								changeHandler={setTaxId}
+								minLength={10}
+								setError={setError}
+								pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+								fieldName="PAN number"
+								size="middle"
+							/>
 						</Col>
 						<Col>
 							<SelectInput
-							info="How much do you earn in a year?"
-							pre="Yearly Income"
-							value={taxLiability}
-							changeHandler={setTaxLiability}
-							options={getTaxLiabilityOptions()}
-						/>
+								info="How much do you earn in a year?"
+								pre="Yearly Income"
+								value={taxLiability}
+								changeHandler={setTaxLiability}
+								options={getTaxLiabilityOptions()}
+							/>
 						</Col>
 					</Row>
-				</Modal>}
-	</Fragment>
-    );
+				</Modal>
+			)}
+		</Fragment>
+	);
 }
