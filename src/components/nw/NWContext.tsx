@@ -3,11 +3,13 @@ require('./nw.less');
 import NWView from './NWView';
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import {
+	addFamilyMember,
 	addHoldings,
 	addInsHoldings,
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesPropertyMatch,
+	getFamilysList,
 	getNPSData,
 	getNPSFundManagers,
 	getRelatedCurrencies,
@@ -44,6 +46,7 @@ import { includesAny, initOptions } from '../utils';
 import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateInsurance, calculatePM, calculateLoan } from './valuationutils'
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from '../../CONSTANTS';
+import * as APIt from '../../api/goals';
 
 const NWContext = createContext({});
 
@@ -492,6 +495,19 @@ function NWContextProvider() {
 		}
 	};
 
+	const addSelfMember = async () => {
+		const family = await getFamilysList();
+		if (!family || !family.length) {
+			let member = await addFamilyMember("Self", "XXXXX1234X", APIt.TaxLiability.M);
+			if (member) {
+				setAllFamily ({[member.id as string]: { name: member.name, taxId: member.tid }});
+				setSelectedMembers([...[member.id as string]])
+				setLoadingFamily(false);
+				return;
+			}
+		}
+	}
+
 	const initializeInsData = async (instruments: Array<InstrumentInput>) => {
 		let mfIds: Set<string> = new Set();
 		let otherIds: Set<string> = new Set();
@@ -561,7 +577,7 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-				// initializeHoldings();
+				initializeHoldings();
 		},[ user ]
 	);
 
@@ -1068,7 +1084,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				totalPPF,
 				view,
 				setView,
-				initializeHoldings,
+				addSelfMember
 			}}
 		>
 			<NWView />

@@ -24,7 +24,7 @@ export default function NWView() {
 		totalLiabilities,
 		view,
 		setView,
-		initializeHoldings,
+		addSelfMember,
 		allFamily
 	}: any = useContext(NWContext);
 	const {appContextLoaded, user }: any = useContext(AppContext);
@@ -123,7 +123,7 @@ export default function NWView() {
 		</Fragment>) : ( 	
 			<div style={{ textAlign: 'center' }}>
 			<h3>First Things First.</h3>
-			<Button type="primary" onClick={() => initializeHoldings()}>
+			<Button type="primary" onClick={() => addSelfMember()}>
 				Get Started
 			</Button>
 	</div>)

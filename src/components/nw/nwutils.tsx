@@ -27,17 +27,7 @@ export const getFamilysList = async () => {
 
 export const loadAllFamilyMembers = async () => {
   const family = await getFamilysList();
-  if (!family || !family.length) {
-    let member = await addFamilyMember("Self", "XXXXX1234X", APIt.TaxLiability.L);
-    if (member) {
-      return {
-        [member.id as string]: { name: member.name, taxId: member.tid },
-      };
-    }
-    else {
-      return null;
-    }
-  }
+  if(!family) return;
   let familyList: any = {};
   family.forEach((val: APIt.CreateFamilyInput) => {
     if (val.id) {

@@ -144,7 +144,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 						event: 'AuthStateChange',
 						message: AuthState.ConfirmSignUp,
 						data: {
-							...response.user
+							...response.user,
+							username: username,
+							password: password,
+							attributes: { email: email, birthdate: DOB }
 						}
 					});
 				})
