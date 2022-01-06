@@ -11,7 +11,7 @@ import { Button, Modal, Tooltip } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
-import { SettingOutlined } from '@ant-design/icons';
+import { ScheduleOutlined } from '@ant-design/icons';
 
 export default function LoanDetails() {
 	const { isPublicCalc }: any = useContext(PlanContext);
@@ -43,7 +43,7 @@ export default function LoanDetails() {
 		<Fragment>
 			<Section title="Loan Details" toggle={
 				emi ? <Tooltip title="Adjust loan schedule">
-							<Button type="link" onClick={showLoanSchedule} icon={<SettingOutlined />} />
+							<Button type="link" onClick={showLoanSchedule} icon={<ScheduleOutlined />} />
 						</Tooltip>
 					: null
 			}>
