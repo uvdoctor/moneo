@@ -56,6 +56,7 @@ export default function LoanDetails() {
 						max={loanMaxLimitPer}
 						post={toCurrency(loanBorrowAmt, currency)}
 				/>
+				
 				{loanBorrowAmt && (
 					<NumberInput
 						pre="Duration"

@@ -4,7 +4,7 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
-import { isMobileDevice } from '../utils';
+import { isMobileDevice, toCurrency, toReadableNumber } from '../utils';
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { COLORS } from '../../CONSTANTS';
 
@@ -13,7 +13,7 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 
 export default function LoanScheduleChart() {
 	const { currency, startYear, startMonth }: any = useContext(CalcContext);
-	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
+	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths, loanBorrowAmt, totalIntAmt, totalInsAmt }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
 	const fsb = useFullScreenBrowser();
@@ -79,7 +79,17 @@ export default function LoanScheduleChart() {
 			data={data}
 			legend={{ position: 'top' }}
 			isStack={true}
-			color={[COLORS.BLUE, COLORS.RED]}
+			color={[COLORS.BLUE, COLORS.RED, COLORS.ORANGE]}
+			tooltip={{
+				visible: true,
+				formatter: ({ name, value }: any) => {
+					const total = name === "Principal" ? loanBorrowAmt : name === "Interest" ? totalIntAmt : totalInsAmt;
+					return {
+						name: name,
+						value: `${toCurrency(value, currency)} (${toReadableNumber(value * 100 / total)}%)`
+					};
+				},
+			}}
 		>
 			<Slider {...getDefaultSliderProps()} />
 		</ColumnChart>

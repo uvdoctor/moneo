@@ -11,9 +11,12 @@ import DateInput from '../form/DateInput';
 import RadialInput from '../form/radialinput';
 import { toHumanFriendlyCurrency, toStringArr } from '../utils';
 import NumberInput from '../form/numberinput';
+import { useRouter } from 'next/router';
+import { ROUTES } from '../../CONSTANTS';
 
 
 export default function GoalDetails() {
+	const router = useRouter();
 	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
 	const {
 		goal,
@@ -23,6 +26,8 @@ export default function GoalDetails() {
 		changeStartMonth,
 		currency,
 		setCurrency,
+		endYear,
+		changeEndYear
 	}: any = useContext(CalcContext);
 	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
 	const { manualMode, impLevel, setImpLevel, sellAfter, setSellAfter, assetChgRate, setAssetChgRate, sellPrice }: any = useContext(GoalContext);
@@ -62,6 +67,19 @@ export default function GoalDetails() {
 					initialValue={firstStartYear}
 					endValue={lastStartYear}
 				/>
+
+				{goal.type !== GoalType.B && !router.pathname.endsWith(ROUTES.LOAN) && (
+					<DateInput
+						title="Ends"
+						key={endYear}
+						startYearValue={endYear}
+						info="Year in which You End Paying"
+						disabled={goal.type === GoalType.B && manualMode < 1}
+						startYearHandler={changeEndYear}
+						initialValue={startYear}
+						endValue={lastStartYear + 20}
+					/>
+				)}
 
 				{goal.type === GoalType.B && 
 					<RadialInput

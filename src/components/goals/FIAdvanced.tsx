@@ -77,10 +77,10 @@ export default function FIAdvanced() {
 					/>
 				</Section>
 			</TabPane>
-			<TabPane key={1} tab="Inflow">
+			<TabPane key={1} tab="Benefits">
 				<FIBenefit />
 			</TabPane>
-			<TabPane key={2} tab="Outflow">
+			<TabPane key={2} tab="Spends">
 				<FIMoneyOutflow />
 			</TabPane>
 			{currency === 'USD' || currency === 'CAD' || currency === 'GBP' ? (

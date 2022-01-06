@@ -6,8 +6,6 @@ import { GoalType, TargetInput } from "../../api/goals";
 import { toHumanFriendlyCurrency } from "../utils";
 import { GoalContext } from "./GoalContext";
 import { CalcContext } from "../calc/CalcContext";
-import { useRouter } from "next/router";
-import { ROUTES } from "../../CONSTANTS";
 import { isLoanEligible } from "./goalutils";
 import DateInput from "../form/DateInput";
 import { PlanContext } from "./PlanContext";
@@ -31,8 +29,6 @@ export default function GoalPayment() {
 		isLoanMandatory,
 		setManualMode
 	}: any = useContext(GoalContext);
-	const router = useRouter();
-	const isLoanPublicCalc = router.pathname === ROUTES.LOAN;
 	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
 	
 	const changeTargetVal = (val: number, i: number) => {
@@ -68,7 +64,7 @@ export default function GoalPayment() {
 				)
 			}
 		>
-			{(goal.type !== GoalType.B || manualMode) && (
+			{manualMode && (
 					<DateInput
 						title="Ends"
 						key={endYear}
@@ -94,7 +90,7 @@ export default function GoalPayment() {
 			))}
 
 			{!manualMode && <NumberInput
-				pre={isLoanPublicCalc ? "Borrow" : `Today's price`}
+				pre={goal.type === GoalType.D ? "Amount" : "Price"}
 				info="Please input total amount considering taxes and fees"
 				currency={currency}
 				value={startingPrice}
@@ -112,7 +108,7 @@ export default function GoalPayment() {
 				}
 			/>}
 
-			{startYear > goal.by && !isLoanPublicCalc && !manualMode && goal.type !== GoalType.D && (
+			{startYear > goal.by && !manualMode && goal.type !== GoalType.D && (
 				<NumberInput
 					pre="Price changes"
 					unit="% yearly"

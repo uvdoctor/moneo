@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
 import NumberInput from '../form/numberinput';
@@ -9,7 +8,6 @@ import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 
 export default function LoanAdvOptions() {
-	const router = useRouter();
 	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanPer,
@@ -24,7 +22,6 @@ export default function LoanAdvOptions() {
 	}: any = useContext(GoalContext);
 	const [ totalSI, setTotalSI ] = useState<number>(0);
 	const [ pmiMax, setPMIMax ] = useState<number>(Math.round(emi * 0.05));
-	const isPublicLoanCalc = router.pathname.endsWith("loan");
 
 	useEffect(
 		() => {
@@ -42,7 +39,7 @@ export default function LoanAdvOptions() {
 		[ eduLoanSISchedule ]
 	);
 
-	return goal.type !== GoalType.E ? (!isPublicLoanCalc && loanPer > 80) ? (
+	return goal.type !== GoalType.E ? loanPer > 80 ? (
 		<NumberInput
 			currency={currency}
 			pre="Monthly repayment insurance"

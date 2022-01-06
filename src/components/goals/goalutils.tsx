@@ -195,7 +195,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType, currency: string, is
 		bg.loan = {
 			rate: 3 + (3 * getRangeFactor(currency) / 100),
 			dur: 120,
-			per: isPublicLoanCalc ? 100 : 0,
+			per: isPublicLoanCalc ? 80 : 0,
 			ry: 0,
 			type: APIt.LoanType.A,
 			pp: [],
