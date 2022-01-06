@@ -200,6 +200,15 @@ export default function FamilyInput() {
 							/>
 						</Col>
 						<Col>
+							<SelectInput
+								info="How much do you earn in a year?"
+								pre="Yearly Income"
+								value={taxLiability}
+								changeHandler={setTaxLiability}
+								options={getTaxLiabilityOptions()}
+							/>
+						</Col>
+						<Col>
 							<TextInput
 								pre="PAN"
 								placeholder="XXXXX1234X"
@@ -210,15 +219,6 @@ export default function FamilyInput() {
 								pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
 								fieldName="PAN number"
 								size="middle"
-							/>
-						</Col>
-						<Col>
-							<SelectInput
-								info="How much do you earn in a year?"
-								pre="Yearly Income"
-								value={taxLiability}
-								changeHandler={setTaxLiability}
-								options={getTaxLiabilityOptions()}
 							/>
 						</Col>
 					</Row>
