@@ -141,7 +141,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       loanPer,
       loanRepaymentMonths,
       loanMonths,
-      goalType === GoalType.E
+      goalType === GoalType.E,
+      loanGracePeriod
     )
   );
   const [ allBuyCFs, setAllBuyCFs ] = useState<Array<Array<number>>>([]);
@@ -409,7 +410,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       loanPer,
       loanRepaymentMonths,
       loanMonths,
-      goalType === GoalType.E
+      goalType === GoalType.E,
+      loanGracePeriod
     ),
     changeState: boolean = true
   ) => {

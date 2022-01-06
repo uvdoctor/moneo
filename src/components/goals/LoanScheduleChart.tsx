@@ -86,7 +86,7 @@ export default function LoanScheduleChart() {
 					const total = name === "Principal" ? loanBorrowAmt : name === "Interest" ? totalIntAmt : totalInsAmt;
 					return {
 						name: name,
-						value: `${toCurrency(value, currency)} (${toReadableNumber(value * 100 / total)}%)`
+						value: `${toCurrency(value, currency)} (${toReadableNumber(value * 100 / total, 2)}%)`
 					};
 				},
 			}}

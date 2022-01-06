@@ -65,7 +65,8 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
             g.loan?.per as number,
             g.loan?.ry as number,
             g.loan?.dur as number,
-            (g.type === GoalType.E && (g?.loan?.per as number > 0))
+            (g.type === GoalType.E && (g?.loan?.per as number > 0)),
+            g.achg as number
           )
         );
         allCFs[g.id as string] = result.cfs;

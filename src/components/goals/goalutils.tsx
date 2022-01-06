@@ -81,7 +81,8 @@ export const getDuration = (
 	loanPer: number | null | undefined,
 	loanRM: number | null | undefined,
 	loanMonths: number | null | undefined,
-	isEduLoan: boolean = false
+	isEduLoan: boolean = false,
+	loanGracePeriod: number | null | undefined
 ) => {
 	let dur = endYear - startYear + 1;
 	if (sellAfter) dur = sellAfter;
@@ -90,8 +91,10 @@ export const getDuration = (
 		if (isEduLoan) dur += loanYears;
 		else dur = loanYears;
 	}
-	if (startMonth > 1 || loanRM) dur++;
-	if (loanRM && startMonth + loanRM > 12) dur++;
+	if (startMonth > 1 || loanRM || loanGracePeriod) dur++;
+	if ((loanRM && startMonth + loanRM > 12) 
+		|| (loanGracePeriod && startMonth + loanGracePeriod > 12)) 
+			dur++;
 	return dur;
 };
 
