@@ -66,8 +66,6 @@ export default function UploadHoldings() {
 	const [ uploadedInstruments, setUploadedInstruments ] = useState<Array<any>>([]);
 	const [ loading, setLoading ] = useState<boolean>(false);
 
-	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
-
 	const onShowDrawer = () => setDrawerVisibility(true);
 
 	const resetState = () => {
