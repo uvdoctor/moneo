@@ -542,6 +542,7 @@ function NWContextProvider() {
 	const initializeHoldings = async () => {
 		const familyMemberExists = await initializeFamilyList();
 		if(!familyMemberExists) return;
+		if(!owner) return;
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		let insHoldings: CreateUserInsInput | null = null;
 		try {
