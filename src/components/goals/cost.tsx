@@ -8,12 +8,15 @@ import { GoalContext } from "./GoalContext";
 import { CalcContext } from "../calc/CalcContext";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
-import SelectInput from "../form/selectinput";
+import { isLoanEligible } from "./goalutils";
+import DateInput from "../form/DateInput";
+import { PlanContext } from "./PlanContext";
 
 export default function Cost() {
-	const { goal, currency, setCurrency, startYear }: any = useContext(
+	const { goal, currency, startYear, inputTabs, setInputTabs, endYear, changeEndYear }: any = useContext(
 		CalcContext
 	);
+	const { ffGoal }: any = useContext(PlanContext);
 	const {
 		startingPrice,
 		setStartingPrice,
@@ -25,29 +28,60 @@ export default function Cost() {
 		manualMode,
 		eduCostSemester,
 		setEduCostSemester,
+		isLoanMandatory,
+		setManualMode
 	}: any = useContext(GoalContext);
 	const router = useRouter();
 	const isLoanPublicCalc = router.pathname === ROUTES.LOAN;
-
+	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
+	
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
 		wipTargets[i].val = val;
 		setWIPTargets([...wipTargets]);
 	};
 
-	return manualMode ? (
+	const changeManualMode = (value: number) => {
+		if (isLoanEligible(goal.type)) {
+			const loanTabIndex = 1;
+			if (value) {
+				if (inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = false;
+					setInputTabs([ ...inputTabs ]);
+				}
+			} else {
+				if (!inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = true;
+					setInputTabs([ ...inputTabs ]);
+				}
+			}
+		}
+		setManualMode(value);
+	};
+
+	return (
 		<Section
-			title={isLoanPublicCalc ? "Borrow" : "Cost"}
+			title="Payment plan"
 			toggle={
-				<SelectInput
-					pre=""
-					value={currency}
-					changeHandler={setCurrency}
-					currency
-				/>
+				!isLoanMandatory && (
+					<HSwitch rightText='Multi-year'  value={manualMode} setter={changeManualMode} />
+				)
 			}
 		>
-			{wipTargets.map((t: TargetInput, i: number) => (
+			{(goal.type !== GoalType.B || manualMode) && (
+					<DateInput
+						title="Ends"
+						key={endYear}
+						startYearValue={endYear}
+						info="Year in which You End Paying"
+						disabled={goal.type === GoalType.B && manualMode < 1}
+						startYearHandler={changeEndYear}
+						initialValue={startYear}
+						endValue={lastStartYear + 20}
+					/>
+			)}
+
+			{manualMode && wipTargets.length && wipTargets.map((t: TargetInput, i: number) => (
 				<NumberInput
 					pre={t.num}
 					currency={currency}
@@ -58,20 +92,8 @@ export default function Cost() {
 					key={"t" + i}
 				/>
 			))}
-		</Section>
-	) : (
-		<Section
-			title={isLoanPublicCalc ? "Borrow" : "Cost"}
-			toggle={
-				<SelectInput
-					pre=""
-					value={currency}
-					changeHandler={setCurrency}
-					currency
-				/>
-			}
-		>
-			<NumberInput
+
+			{!manualMode && <NumberInput
 				pre={isLoanPublicCalc ? "Borrow" : `Today's cost`}
 				info="Please input total amount considering taxes and fees"
 				currency={currency}
@@ -88,8 +110,9 @@ export default function Cost() {
 						/>
 					) : null
 				}
-			/>
-			{startYear > goal.by && !isLoanPublicCalc && (
+			/>}
+
+			{startYear > goal.by && !isLoanPublicCalc && !manualMode && (
 				<NumberInput
 					pre="Yearly cost change"
 					unit="%"

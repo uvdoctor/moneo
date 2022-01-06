@@ -535,7 +535,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       }
     } else {
       for (let i = 1; i < inputTabs.length; i++) {
-        if(manualMode < 1 || !(goal.type === GoalType.B && i === 2)) inputTabs[i].active = true;
+        if(manualMode < 1 || !(goal.type === GoalType.B && i === 1)) inputTabs[i].active = true;
       }
     }
     setInputTabs([...inputTabs]);

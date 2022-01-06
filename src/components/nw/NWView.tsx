@@ -113,7 +113,8 @@ export default function NWView() {
 		</Fragment>
 	) : (
 		<div style={{ textAlign: 'center' }}>
-			<h3>First Things First.</h3>
+			<h3>Please input your data.</h3>
+			<h3>Get a comprehensive financial health analysis.</h3>
 			<Button type="primary" onClick={() => addSelfMember()}>
 				Get Started
 			</Button>

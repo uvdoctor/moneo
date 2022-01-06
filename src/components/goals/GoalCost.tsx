@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import SelectInput from '../form/selectinput';
 import Cost from './cost';
 import { GoalContext } from './GoalContext';
@@ -6,9 +6,11 @@ import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { PlanContext } from './PlanContext';
-import { getImpLevels, isLoanEligible } from './goalutils';
-import RadioInput from '../form/RadioInput';
+import { getImpLevels } from './goalutils';
 import DateInput from '../form/DateInput';
+import RadialInput from '../form/radialinput';
+import { toHumanFriendlyCurrency, toStringArr } from '../utils';
+import NumberInput from '../form/numberinput';
 
 
 export default function GoalCost() {
@@ -17,47 +19,27 @@ export default function GoalCost() {
 		goal,
 		startYear,
 		changeStartYear,
-		endYear,
-		changeEndYear,
 		startMonth,
 		changeStartMonth,
-		inputTabs, 
-		setInputTabs
+		currency,
+		setCurrency,
 	}: any = useContext(CalcContext);
 	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
-	const { manualMode, impLevel, setImpLevel, setManualMode, isLoanMandatory}: any = useContext(GoalContext);
+	const { manualMode, impLevel, setImpLevel, sellAfter, setSellAfter, assetChgRate, setAssetChgRate, sellPrice }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
-	const MANUAL = "Manual";
-
-	const changeManualMode = (value: string) => {
-		if (isLoanEligible(goal.type)) {
-			let loanTabIndex = goal.type === GoalType.B ? 2 : 1;
-			if (value === MANUAL) {
-				if (inputTabs[loanTabIndex].active) {
-					inputTabs[loanTabIndex].active = false;
-					setInputTabs([ ...inputTabs ]);
-				}
-			} else {
-				if (!inputTabs[loanTabIndex].active) {
-					inputTabs[loanTabIndex].active = true;
-					setInputTabs([ ...inputTabs ]);
-				}
-			}
-		}
-		setManualMode(value === MANUAL ? 1 : 0);
-	};
-
 	const showStartMonth = (isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && !manualMode
+	const [ depreciates, setDepreciates ] = useState<boolean>(assetChgRate < 0);
 
 	return (
 		<>
-			<Section title="Payment schedule"
+			<Section title="Goal details"
 				toggle={
-					setManualMode &&
-					!isLoanMandatory && (
-						<RadioInput options={["Auto", MANUAL]} value={manualMode ? MANUAL : "Auto"} 
-							changeHandler={(val: string) => changeManualMode(val)} />
-					)
+					<SelectInput
+						pre=""
+						value={currency}
+						changeHandler={setCurrency}
+						currency
+					/>
 				}
 			>
 				{!isPublicCalc && (
@@ -71,8 +53,8 @@ export default function GoalCost() {
 				)}
 				
 				<DateInput
-					title="Starts"
-					info="Month and year when payment starts"
+					title={`${goal.type === GoalType.B ? "Buy" : "Spend"} in`}
+					info={`${showStartMonth ? 'Month and year' : 'Year'} when you want to ${goal.type === GoalType.B ? "buy" : "spend"}.`}
 					startYearValue={startYear}
 					startYearHandler={changeStartYear}
 					startMonthHandler={showStartMonth ? changeStartMonth : null}
@@ -81,18 +63,43 @@ export default function GoalCost() {
 					endValue={lastStartYear}
 				/>
 
-				{(goal.type !== GoalType.B || manualMode) && (
-					<DateInput
-						title="Ends"
-						key={endYear}
-						startYearValue={endYear}
-						info="Year in which You End Paying"
-						disabled={goal.type === GoalType.B && manualMode < 1}
-						startYearHandler={changeEndYear}
-						initialValue={startYear}
-						endValue={lastStartYear + 20}
+				{goal.type === GoalType.B && 
+					<RadialInput
+						info="Years after which you plan to sell."
+						label="Years"
+						pre="Sell After"
+						labelBottom={true}
+						data={toStringArr(3, 30)}
+						value={sellAfter}
+						step={1}
+						changeHandler={setSellAfter}
 					/>
-				)}
+				}
+
+				{goal.type === GoalType.B && 
+					<NumberInput
+						info="Rate at which resale value changes yearly."
+						pre="Yearly resale value"
+						addBefore={
+							<SelectInput pre="" value={depreciates ? "d" : "i"} 
+								changeHandler={(val: string) => {
+									const isDepreciating = val === "d";
+									setDepreciates(isDepreciating);
+									setAssetChgRate(-assetChgRate);
+								}}
+								options={{
+									i: "Increases",
+									d: "Decreases"
+								}} />
+						}
+						unit="%"
+						post={`Sell price ${toHumanFriendlyCurrency(sellPrice, currency)}`}
+						max={20}
+						step={0.5}
+						value={Math.abs(assetChgRate)}
+						changeHandler={(val: number) => setAssetChgRate(depreciates ? -val : val)}
+					/>
+				}
 			</Section>
 			<p>&nbsp;</p>
 			<Cost />

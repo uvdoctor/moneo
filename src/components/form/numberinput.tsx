@@ -20,6 +20,7 @@ interface NumberInputProps {
 	changeHandler: any;
 	step?: number;
 	noRangeFactor?: boolean;
+	addBefore?: any;
 }
 
 export default function NumberInput({
@@ -33,7 +34,8 @@ export default function NumberInput({
 	unit,
 	changeHandler,
 	step = 1,
-	noRangeFactor = currency ? false : true
+	noRangeFactor = currency ? false : true,
+	addBefore
 }: NumberInputProps) {
 	const inputRef = useRef(null);
 	const [rangeFactor, setRangeFactor] = useState<number>(
@@ -64,6 +66,7 @@ export default function NumberInput({
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
+		addonBefore: addBefore,
 		addonAfter: unit,
 		onChange: (val: number) => changeHandler(val as number),
 		formatter: (val: number) => currency 
@@ -84,7 +87,7 @@ export default function NumberInput({
 				: parseFloat(e.currentTarget.value);
 			if (!num || num < minNum) changeHandler(minNum);
 		},
-		style: { width: maxNum < 1000 && (!unit || unit?.length < 2) ? "100px" : "150px" },
+		style: { width: addBefore ? "220px" : maxNum < 1000 && (!unit || unit?.length < 2) ? "100px" : "150px" },
 	};
 
 	return (

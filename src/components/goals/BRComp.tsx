@@ -33,13 +33,13 @@ export default function BRComp() {
 			}
 			{rentAmt && (
 				<NumberInput
-					pre="Yearly rent change"
+					pre="Rent changes"
 					value={rentChgPer as number}
 					changeHandler={setRentChgPer}
 					min={-5}
 					max={10}
 					step={0.1}
-					unit="%"
+					unit="% yearly"
 				/>
 			)}
 			{rentAmt && dr && (

@@ -3,7 +3,6 @@ import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
-import SellAsset from "../goals/SellAsset";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
@@ -11,7 +10,7 @@ import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalIn
 import { isLoanEligible, goalImgStorage } from '../goals/goalutils';
 import { AfterFI } from '../goals/AfterFI';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandshake, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
@@ -155,9 +154,6 @@ function CalcContextProvider({
     if (type === GoalType.FF) return getFFGoalTabOptions();
     let options = [
       { label: "Cost", active: true, svg: faMoneyBillWave, content: <GoalCost /> }];
-    if (type === GoalType.B) {
-      options.push({ label: "Sell", active: true, svg: faHandshake, content: <SellAsset /> });
-    }
     if (isLoanEligible(type)) options.push(
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
     );
