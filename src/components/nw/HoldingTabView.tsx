@@ -29,7 +29,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		setIsDirty,
 		totalAssets,
 		totalLiabilities,
-		view
+		view,
+		nw
 	}: any = useContext(NWContext);
 	const [
 		npsSubCat,
@@ -39,6 +40,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
 	useEffect(() => {
 		if(view === LIABILITIES_VIEW) setActiveTab(LIABILITIES_TAB);
+		else if(!nw) setActiveTab('Cash');
 		else setActiveTab(TAB.SUMMARY);
 	}, [view]);
 

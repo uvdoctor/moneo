@@ -561,9 +561,7 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if (user) {
-				initializeHoldings();
-			}
+				// initializeHoldings();
 		},[ user ]
 	);
 
@@ -1069,7 +1067,8 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				totalVPF,
 				totalPPF,
 				view,
-				setView
+				setView,
+				initializeHoldings,
 			}}
 		>
 			<NWView />

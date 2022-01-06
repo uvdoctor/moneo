@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from "react";
 import HoldingTabView from "./HoldingTabView";
 import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Col, PageHeader, Radio, Row, Skeleton } from "antd";
+import { Button, Col, PageHeader, Radio, Row, Skeleton } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import SelectInput from "../form/selectinput";
 
@@ -9,6 +9,7 @@ require("./nw.less");
 import FamilyInput from "./FamilyInput";
 import TotalNetWorth from "./TotalNetWorth";
 import ItemDisplay from "../calc/ItemDisplay";
+import { AppContext } from "../AppContext";
 
 require("./NWView.less");
 
@@ -23,10 +24,13 @@ export default function NWView() {
 		totalLiabilities,
 		view,
 		setView,
+		initializeHoldings,
+		allFamily
 	}: any = useContext(NWContext);
+	const {appContextLoaded, user }: any = useContext(AppContext);
 
-	return (
-		<Fragment>
+	return ( appContextLoaded && user && allFamily ? 
+		(<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
@@ -116,6 +120,12 @@ export default function NWView() {
 					<Skeleton active />
 				)}
 			</div>
-		</Fragment>
-	);
+		</Fragment>) : ( 	
+			<div style={{ textAlign: 'center' }}>
+			<h3>First Things First.</h3>
+			<Button type="primary" onClick={() => initializeHoldings()}>
+				Get Started
+			</Button>
+	</div>)
+	)
 }
