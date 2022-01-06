@@ -61,10 +61,10 @@ export default function Cost() {
 
 	return (
 		<Section
-			title="Payment plan"
+			title="Payment"
 			toggle={
 				!isLoanMandatory && (
-					<HSwitch rightText='Multi-year'  value={manualMode} setter={changeManualMode} />
+					<HSwitch rightText='Multi-year custom plan'  value={manualMode} setter={changeManualMode} />
 				)
 			}
 		>
@@ -94,7 +94,7 @@ export default function Cost() {
 			))}
 
 			{!manualMode && <NumberInput
-				pre={isLoanPublicCalc ? "Borrow" : `Today's cost`}
+				pre={isLoanPublicCalc ? "Borrow" : `Today's price`}
 				info="Please input total amount considering taxes and fees"
 				currency={currency}
 				value={startingPrice}
@@ -112,10 +112,10 @@ export default function Cost() {
 				}
 			/>}
 
-			{startYear > goal.by && !isLoanPublicCalc && !manualMode && (
+			{startYear > goal.by && !isLoanPublicCalc && !manualMode && goal.type !== GoalType.D && (
 				<NumberInput
-					pre="Yearly cost change"
-					unit="%"
+					pre="Price changes"
+					unit="% yearly"
 					min={-10}
 					max={10}
 					step={0.1}

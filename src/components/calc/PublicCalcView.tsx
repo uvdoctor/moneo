@@ -9,9 +9,7 @@ import * as gtag from '../../lib/gtag';
 import { GoalType } from '../../api/goals';
 import MajorAssumptions from './blog/MajorAssumptions';
 import ExpectedResults from './blog/ExpectedResults';
-import VideoPlayer from '../VideoPlayer';
 import KeyFeatures from './blog/KeyFeatures';
-import CommonTerms from './blog/CommonTerms';
 
 interface PublicCalcViewProps {
 	type?: GoalType | undefined;
@@ -64,7 +62,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		}
 	];
 
-	const genericTerms = [
+	/*const genericTerms = [
 		{
 			title: 'Cash Flow',
 			content:
@@ -100,7 +98,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 			content:
 				'Borrower makes scheduled (eg: monthly) payments, consisting of both Interest & Principal. Interest component is paid first, and remaining payment is then applied to reduce the Principal amount.'
 		}
-	];
+	];*/
 
 	const endingResults = [
 		isLoanEligible(props.type as GoalType) && 'Total Interest to be paid for a Loan.',
@@ -155,13 +153,13 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	];
 
 	const sections: any = {
-		Demo: <VideoPlayer url={props.demoUrl} />,
+		//Demo: <VideoPlayer url={props.demoUrl} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
-		'Major Assumptions': (
+		'Major Assumptions': 
 			<MajorAssumptions elements={[ ...startingAssumptions, ...props.assumptions, ...endingAssumptions ]} />
-		),
-		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
+		
+		//Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
 
 	const createGoal = () => {

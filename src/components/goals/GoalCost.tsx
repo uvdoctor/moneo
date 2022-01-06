@@ -53,7 +53,7 @@ export default function GoalCost() {
 				)}
 				
 				<DateInput
-					title={`${goal.type === GoalType.B ? "Buy" : "Spend"} in`}
+					title={goal.type === GoalType.B ? "Buy in" : "Starts"}
 					info={`${showStartMonth ? 'Month and year' : 'Year'} when you want to ${goal.type === GoalType.B ? "buy" : "spend"}.`}
 					startYearValue={startYear}
 					startYearHandler={changeStartYear}
@@ -78,8 +78,8 @@ export default function GoalCost() {
 
 				{goal.type === GoalType.B && 
 					<NumberInput
-						info="Rate at which resale value changes yearly."
-						pre="Yearly resale value"
+						info="Approximate rate at which you expect resale value to change yearly."
+						pre="Assume yearly resale value"
 						addBefore={
 							<SelectInput pre="" value={depreciates ? "d" : "i"} 
 								changeHandler={(val: string) => {
@@ -94,7 +94,7 @@ export default function GoalCost() {
 						}
 						unit="%"
 						post={`Sell price ${toHumanFriendlyCurrency(sellPrice, currency)}`}
-						max={20}
+						max={40}
 						step={0.5}
 						value={Math.abs(assetChgRate)}
 						changeHandler={(val: number) => setAssetChgRate(depreciates ? -val : val)}

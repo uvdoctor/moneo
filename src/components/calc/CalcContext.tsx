@@ -10,7 +10,7 @@ import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalIn
 import { isLoanEligible, goalImgStorage } from '../goals/goalutils';
 import { AfterFI } from '../goals/AfterFI';
 import { BeforeFI } from '../goals/BeforeFI';
-import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faUserCog, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faUserCog, faCog, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
@@ -153,7 +153,7 @@ function CalcContextProvider({
   const getGoalTabOptions = (type: GoalType) => {
     if (type === GoalType.FF) return getFFGoalTabOptions();
     let options = [
-      { label: "Cost", active: true, svg: faMoneyBillWave, content: <GoalCost /> }];
+      { label: "Goal", active: true, svg: faBullseye, content: <GoalCost /> }];
     if (isLoanEligible(type)) options.push(
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
     );
