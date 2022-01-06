@@ -107,6 +107,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	};
 
 	const handleConfirmSignUp = async () => {
+		setLoading(true)
 		await Auth.signIn(uname, password).then((user) => {
 			Hub.dispatch('UI Auth', {
 				event: 'AuthStateChange',
@@ -124,6 +125,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			tc: new Date().toISOString(),
 			le: lifeExpectancy
 		});
+		setLoading(false)
 	};
 
 	const handleRegistrationSubmit = async () => {

@@ -110,7 +110,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		if (!user) setAppContextLoaded(true);
 	}, []);
 
-	const initUser = async () => !user && setUser(await Auth.currentAuthenticatedUser());
+	const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 	const loadUserInfo = async () => {
 		const userDetails = await getUserDetails(owner); 
 		if (userDetails) {
