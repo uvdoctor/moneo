@@ -26,7 +26,7 @@ export default function RadialInput(props: RadialInputProps) {
 
 	return (
 		<>
-			<LabelWithTooltip label={props.pre} info={props.info} />
+			&nbsp;&nbsp;<LabelWithTooltip label={props.pre} info={props.info} />
 			<span className="radial-input">
 					<CircularSlider
 						onChange={(val: string) =>
