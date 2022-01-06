@@ -2,7 +2,9 @@ import { Tabs } from 'antd';
 import React, { useContext, useState } from 'react';
 import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
+import RadialInput from '../form/radialinput';
 import Section from '../form/section';
+import { toStringArr } from '../utils';
 import Care from './Care';
 import FIBenefit from './FIBenefit';
 import { FIGoalContext } from './FIGoalContext';
@@ -17,7 +19,9 @@ export default function FIAdvanced() {
 		emergencyFundChgRate,
 		setEmergencyFundChgRate,
 		taxRate,
-		setTaxRate
+		setTaxRate,
+		planDuration,
+		setPlanDuration
 	}: any = useContext(FIGoalContext);
 	const [
 		tabIndex,
@@ -59,7 +63,17 @@ export default function FIAdvanced() {
 						value={taxRate}
 						changeHandler={setTaxRate}
 						unit="%"
-                        post="after achieving FI"
+						post="after achieving FI"
+					/>
+					<RadialInput
+						pre="Life expectancy"
+						label="Years"
+						value={planDuration}
+						changeHandler={setPlanDuration}
+						step={1}
+						data={toStringArr(70, 100, 1)}
+						labelBottom
+						info="This will be used to define the duration for which Financial Planning is Needed."
 					/>
 				</Section>
 			</TabPane>

@@ -140,44 +140,42 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 				}
 				header={
 					cashData ? (
-						<Fragment>
-							<Row>
-								<Col xs={24} lg={8}>
-									<div className="cash active">
-										<span className="arrow-right" />
-										Cash <Badge count={`${cashData.value} %`} />
-										<strong>
-											{toHumanFriendlyCurrency(
-												Math.round(getCF(index) * cashData.value / 100),
-												getCurrency()
-											)}
-										</strong>
-									</div>
-								</Col>
-								<Col xs={24} sm={12} lg={8}>
-									<div className="cash deposits">
-										Deposits <Badge count={`${cashData.deposits} %`} />
-										<strong>
-											{toHumanFriendlyCurrency(
-												Math.round(getCF(index) * cashData.deposits / 100),
-												getCurrency()
-											)}
-										</strong>
-									</div>
-								</Col>
-								<Col xs={24} sm={12} lg={8}>
-									<div className="cash">
-										Savings <Badge count={`${cashData.savings} %`} />
-										<strong>
-											{toHumanFriendlyCurrency(
-												Math.round(getCF(index) * cashData.savings / 100),
-												getCurrency()
-											)}
-										</strong>
-									</div>
-								</Col>
-							</Row>
-						</Fragment>
+						<Row className='chart'>
+							<Col xs={24} lg={8}>
+								<div className="cash active">
+									<span className="arrow-right" />
+									Cash <Badge count={`${cashData.value} %`} />
+									<strong>
+										{toHumanFriendlyCurrency(
+											Math.round(getCF(index) * cashData.value / 100),
+											getCurrency()
+										)}
+									</strong>
+								</div>
+							</Col>
+							<Col xs={24} sm={12} lg={8}>
+								<div className="cash deposits">
+									Deposits <Badge count={`${cashData.deposits} %`} />
+									<strong>
+										{toHumanFriendlyCurrency(
+											Math.round(getCF(index) * cashData.deposits / 100),
+											getCurrency()
+										)}
+									</strong>
+								</div>
+							</Col>
+							<Col xs={24} sm={12} lg={8}>
+								<div className="cash">
+									Savings <Badge count={`${cashData.savings} %`} />
+									<strong>
+										{toHumanFriendlyCurrency(
+											Math.round(getCF(index) * cashData.savings / 100),
+											getCurrency()
+										)}
+									</strong>
+								</div>
+							</Col>
+						</Row>
 					) : null
 				}
 			>

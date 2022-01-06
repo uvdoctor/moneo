@@ -38,7 +38,7 @@ export function BeforeFI() {
 	return (
 		<Section
 			title="Before Financial Independence"
-			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Applicable tax rate more than 12%" />}
+			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Pay more than 12% income tax" />}
 		>
 			<NumberInput
 				info={`Average Monthly Investment including retirement Contribution. This will be used to forecast Your Future Savings.`}
