@@ -20,11 +20,10 @@ export default function Advanced() {
                 <TabPane key={0} tab="Tax">
                     <TaxAdjustment />
                 </TabPane>
-                <TabPane key={1} tab="Yearly Cost">
-                    <AnnualCF />
-                </TabPane>
-                <TabPane key={2} tab="Yearly Income">
-                    <AnnualCF income />
+                <TabPane key={1} tab="Other">
+                    <></>
+                        <AnnualCF />
+                        <AnnualCF income />
                 </TabPane>
             </Tabs>
     )

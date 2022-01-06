@@ -12,7 +12,7 @@ import { isLoanEligible } from "./goalutils";
 import DateInput from "../form/DateInput";
 import { PlanContext } from "./PlanContext";
 
-export default function Cost() {
+export default function GoalPayment() {
 	const { goal, currency, startYear, inputTabs, setInputTabs, endYear, changeEndYear }: any = useContext(
 		CalcContext
 	);

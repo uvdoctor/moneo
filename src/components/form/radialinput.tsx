@@ -46,6 +46,7 @@ export default function RadialInput(props: RadialInputProps) {
 						knobColor="#cbd5e0"
 					/>
 			</span>
+			<br/>
 			<span>{props.post}</span>
 		</>
 	);

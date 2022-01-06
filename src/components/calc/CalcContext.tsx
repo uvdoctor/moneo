@@ -1,7 +1,7 @@
 import React, { createContext, useState, ReactNode, useEffect, useContext, Fragment } from 'react';
 import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
-import GoalCost from "../goals/GoalCost";
+import GoalDetails from "../goals/GoalDetails";
 import LoanDetails from "./LoanDetails";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
@@ -153,7 +153,7 @@ function CalcContextProvider({
   const getGoalTabOptions = (type: GoalType) => {
     if (type === GoalType.FF) return getFFGoalTabOptions();
     let options = [
-      { label: "Goal", active: true, svg: faBullseye, content: <GoalCost /> }];
+      { label: "Goal", active: true, svg: faBullseye, content: <GoalDetails /> }];
     if (isLoanEligible(type)) options.push(
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
     );

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import SelectInput from '../form/selectinput';
-import Cost from './cost';
+import GoalPayment from './GoalPayment';
 import { GoalContext } from './GoalContext';
 import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
@@ -13,7 +13,7 @@ import { toHumanFriendlyCurrency, toStringArr } from '../utils';
 import NumberInput from '../form/numberinput';
 
 
-export default function GoalCost() {
+export default function GoalDetails() {
 	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
 	const {
 		goal,
@@ -102,7 +102,7 @@ export default function GoalCost() {
 				}
 			</Section>
 			<p>&nbsp;</p>
-			<Cost />
+			<GoalPayment />
 		</>
 	);
 }
