@@ -1,7 +1,6 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { getImpOptions, getGoalTypes, createNewGoalInput, getDefaultIconForGoalType } from './goalutils';
 import SelectInput from '../form/selectinput';
-import Start from '../Start';
 import FISummaryHeader from './FISummaryHeader';
 import { Button, Col, Dropdown, Menu, Row, Skeleton, Tabs } from 'antd';
 import { faChartLine, faChartPie, faChartBar } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FIPortfolioChart from './FIPortfolioChart';
 import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
+import PlanStart from './PlanStart';
 
 interface PlanViewProps {
 	activeTab: string;
@@ -25,7 +25,7 @@ interface PlanViewProps {
 }
 
 export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
-	const { appContextLoaded, defaultCurrency }: any = useContext(AppContext);
+	const { appContextLoaded }: any = useContext(AppContext);
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const [ impFilter, setImpFilter ] = useState<string>('');
@@ -132,6 +132,6 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 						</Tabs>
 		</Fragment>
 	) : (
-		<Start onClick={()=>setGoal(createNewGoalInput(GoalType.FF, defaultCurrency))}/>
+		<PlanStart/>
 	) : <Skeleton active />
 }

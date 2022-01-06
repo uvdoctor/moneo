@@ -1,18 +1,17 @@
-import React, { Fragment, useContext } from "react";
-import HoldingTabView from "./HoldingTabView";
-import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Col, PageHeader, Radio, Row, Skeleton } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
-import SelectInput from "../form/selectinput";
+import React, { Fragment, useContext } from 'react';
+import HoldingTabView from './HoldingTabView';
+import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from './NWContext';
+import { Button, Col, PageHeader, Radio, Row, Skeleton } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import SelectInput from '../form/selectinput';
 
-require("./nw.less");
-import FamilyInput from "./FamilyInput";
-import TotalNetWorth from "./TotalNetWorth";
-import ItemDisplay from "../calc/ItemDisplay";
-import { AppContext } from "../AppContext";
-import Start from "../Start";
+require('./nw.less');
+import FamilyInput from './FamilyInput';
+import TotalNetWorth from './TotalNetWorth';
+import ItemDisplay from '../calc/ItemDisplay';
+import { AppContext } from '../AppContext';
 
-require("./NWView.less");
+require('./NWView.less');
 
 export default function NWView() {
 	const {
@@ -28,10 +27,10 @@ export default function NWView() {
 		addSelfMember,
 		allFamily
 	}: any = useContext(NWContext);
-	const {appContextLoaded, user }: any = useContext(AppContext);
+	const { appContextLoaded, user }: any = useContext(AppContext);
 
-	return ( appContextLoaded && user && allFamily ? 
-		(<Fragment>
+	return appContextLoaded && user && allFamily ? (
+		<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
@@ -45,7 +44,7 @@ export default function NWView() {
 									changeHandler={setSelectedCurrency}
 									options={currencyList}
 									loading={loadingHoldings}
-								/>,
+								/>
 							]}
 						/>
 					</Col>
@@ -63,18 +62,8 @@ export default function NWView() {
 							<Col xs={24} sm={24} md={16} lg={8}>
 								<TotalNetWorth />
 							</Col>
-							<Col
-								className="dd-stat you-own-owe"
-								xs={24}
-								sm={24}
-								md={16}
-								lg={8}
-							>
-								<Radio.Group
-									value={view}
-									onChange={(e) => setView(e.target.value)}
-									size="large"
-								>
+							<Col className="dd-stat you-own-owe" xs={24} sm={24} md={16} lg={8}>
+								<Radio.Group value={view} onChange={(e) => setView(e.target.value)} size="large">
 									<Row align="middle">
 										<Col span={12}>
 											<Radio.Button value={ASSETS_VIEW}>
@@ -121,7 +110,13 @@ export default function NWView() {
 					<Skeleton active />
 				)}
 			</div>
-		</Fragment>)
-		: <Start onClick={()=>addSelfMember()}/>
-	)
+		</Fragment>
+	) : (
+		<div style={{ textAlign: 'center' }}>
+			<h3>First Things First.</h3>
+			<Button type="primary" onClick={() => addSelfMember()}>
+				Get Started
+			</Button>
+		</div>
+	);
 }
