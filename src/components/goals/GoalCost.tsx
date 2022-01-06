@@ -12,7 +12,7 @@ import DateInput from '../form/DateInput';
 
 
 export default function GoalCost() {
-	const { isPublicCalc }: any = useContext(PlanContext);
+	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
 	const {
 		goal,
 		startYear,
@@ -24,8 +24,8 @@ export default function GoalCost() {
 		inputTabs, 
 		setInputTabs
 	}: any = useContext(CalcContext);
-	//const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
-	const { manualMode, isEndYearHidden, impLevel, setImpLevel, setManualMode, isLoanMandatory}: any = useContext(GoalContext);
+	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
+	const { manualMode, impLevel, setImpLevel, setManualMode, isLoanMandatory}: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
 	const MANUAL = "Manual";
 
@@ -78,9 +78,10 @@ export default function GoalCost() {
 					startMonthHandler={showStartMonth ? changeStartMonth : null}
 					startMonthValue={showStartMonth ? startMonth : null}
 					initialValue={firstStartYear}
+					endValue={lastStartYear}
 				/>
 
-				{!isEndYearHidden && (
+				{(goal.type !== GoalType.B || manualMode) && (
 					<DateInput
 						title="Ends"
 						key={endYear}
@@ -89,6 +90,7 @@ export default function GoalCost() {
 						disabled={goal.type === GoalType.B && manualMode < 1}
 						startYearHandler={changeEndYear}
 						initialValue={startYear}
+						endValue={lastStartYear + 20}
 					/>
 				)}
 			</Section>

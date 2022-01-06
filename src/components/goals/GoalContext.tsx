@@ -89,7 +89,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [totalCost, setTotalCost] = useState<number>(0);
   const router = useRouter();
 	const isLoanMandatory = router.pathname === ROUTES.LOAN || router.pathname === ROUTES.EDUCATION;
-  const isEndYearHidden = isLoanMandatory && goalType === GoalType.O;
   const [loanMonths, setLoanMonths] = useState<number | null | undefined>(
     goal?.loan?.dur
   );
@@ -234,7 +233,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       setAMStartYear(startYear);
       if(loanPer) return;
     }
-    if(isEndYearHidden || startYear > endYear || endYear - startYear > 30) {
+    if(startYear > endYear || endYear - startYear > 30) {
       setEndYear(manualMode ? startYear + 2 : startYear);
     }
   }, [startYear]);
@@ -779,7 +778,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           setAnnualReturnPer,
           loanIRAdjustments,
           setLoanIRAdjustments,
-          isEndYearHidden,
           loanPMI,
           setLoanPMI,
           loanPMIEndPer,

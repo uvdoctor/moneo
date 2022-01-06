@@ -23,7 +23,6 @@ export default function LoanDetails() {
 		setLoanPer,
 		setLoanMonths,
 		setLoanRepaymentMonths,
-		isEndYearHidden,
 		loanBorrowAmt,
 		loanIntRate,
 		setLoanIntRate,
@@ -48,8 +47,7 @@ export default function LoanDetails() {
 						</Tooltip>
 					: null
 			}>
-				{!isEndYearHidden && (
-					<NumberInput
+				<NumberInput
 						unit="%"
 						pre="Borrow"
 						value={loanPer}
@@ -57,8 +55,7 @@ export default function LoanDetails() {
 						min={loanMinLimitPer}
 						max={loanMaxLimitPer}
 						post={toCurrency(loanBorrowAmt, currency)}
-					/>
-				)}
+				/>
 				{loanBorrowAmt && (
 					<NumberInput
 						pre="Duration"
