@@ -32,7 +32,7 @@ export default function GoalDetails() {
 	const lastStartYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) - 20 : goal.by + 30;
 	const { manualMode, impLevel, setImpLevel, sellAfter, setSellAfter, assetChgRate, setAssetChgRate, sellPrice }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
-	const showStartMonth = (isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && !manualMode
+	const showStartMonth = (isPublicCalc || goal.type === GoalType.B) && !manualMode && goal.type !== GoalType.E
 	const [ depreciates, setDepreciates ] = useState<boolean>(assetChgRate < 0);
 
 	return (

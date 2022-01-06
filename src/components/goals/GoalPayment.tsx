@@ -55,6 +55,9 @@ export default function GoalPayment() {
 		setManualMode(value);
 	};
 
+	const getCostLabel = () => goal.type === GoalType.D ? "Amount" : goal.type === GoalType.B ? "Cost" : 
+		eduCostSemester ? "Cost every 6 months" : "Yearly cost";
+
 	return (
 		<Section
 			title="Payment"
@@ -90,7 +93,7 @@ export default function GoalPayment() {
 			))}
 
 			{!manualMode && <NumberInput
-				pre={goal.type === GoalType.D ? "Amount" : "Price"}
+				pre={getCostLabel()}
 				info="Please input total amount considering taxes and fees"
 				currency={currency}
 				value={startingPrice}
@@ -110,7 +113,7 @@ export default function GoalPayment() {
 
 			{startYear > goal.by && !manualMode && goal.type !== GoalType.D && (
 				<NumberInput
-					pre="Price changes"
+					pre="Cost changes"
 					unit="% yearly"
 					min={-10}
 					max={10}
