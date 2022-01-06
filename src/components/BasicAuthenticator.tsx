@@ -138,7 +138,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 				attributes: { email: email, birthdate: DOB }
 			})
 				.then((response) => {
-					setLoading(false);
 					setCognitoUser(response.user);
 					Hub.dispatch('UI Auth', {
 						event: 'AuthStateChange',
@@ -150,6 +149,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 							attributes: { email: email, birthdate: DOB }
 						}
 					});
+					setLoading(false);
 				})
 				.catch((error) => {
 					setLoading(false);
