@@ -31,7 +31,7 @@ export const loadAllFamilyMembers = async () => {
   let familyList: any = {};
   family.forEach((val: APIt.CreateFamilyInput) => {
     if (val.id) {
-      familyList[val.id as string] = { name: val.name, taxId: val.tid };
+      familyList[val.id as string] = { name: val.name, taxId: val.tid, tax: val.tax };
     }
   });
   return Object.keys(familyList).length ? familyList : null;
@@ -129,11 +129,11 @@ export const doesPropertyOwnerMatch = (
 export const addMemberIfNeeded = async (
   allFamily: any,
   allFamilySetter: Function,
-  taxId: string
+  taxId: string,
 ) => {
   let id = getFamilyMemberKey(allFamily, taxId);
   if (id) return id;
-  let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.L);
+  let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.M);
   allFamily[member?.id as string] = { name: member?.name, taxId: member?.tid };
   allFamilySetter(allFamily);
   return member?.id;

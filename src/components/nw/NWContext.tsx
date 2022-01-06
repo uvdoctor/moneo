@@ -46,7 +46,6 @@ import { includesAny, initOptions } from '../utils';
 import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateInsurance, calculatePM, calculateLoan } from './valuationutils'
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from '../../CONSTANTS';
-import * as APIt from '../../api/goals';
 
 const NWContext = createContext({});
 
@@ -499,13 +498,11 @@ function NWContextProvider() {
 	const addSelfMember = async () => {
 		const family = await getFamilysList();
 		if (!family || !family.length) {
-			let member = await addFamilyMember("Self", "XXXXX1234X", APIt.TaxLiability.M);
-			if (member) {
-				setAllFamily ({[member.id as string]: { name: member.name, taxId: member.tid }});
-				setSelectedMembers([...[member.id as string]])
-				setLoadingFamily(false);
-				return;
-			}
+			let member = await addFamilyMember("Self", "XXXXX1234X", userInfo?.tax);
+			if(!member) return;
+			setAllFamily ({[member.id as string]: { name: member.name, taxId: member.tid, tax: member.tax }});
+			setSelectedMembers([...[member.id as string]])
+			setLoadingFamily(false);
 		}
 	}
 
