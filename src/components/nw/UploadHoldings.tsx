@@ -28,8 +28,6 @@ import HSwitch from '../HSwitch';
 
 export default function UploadHoldings() {
 	const {
-		showInsUpload,
-		setShowInsUpload,
 		instruments,
 		setInstruments,
 		allFamily,
@@ -63,6 +61,7 @@ export default function UploadHoldings() {
 	const [ memberKey, setMemberKey ] = useState<string | null>(null);
 	const [ error, setError ] = useState<string>('');
 	const [ overwrite, setOverwrite ] = useState<number>(1);
+	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ uploadedInstruments, setUploadedInstruments ] = useState<Array<any>>([]);
 	const [ loading, setLoading ] = useState<boolean>(false);
 
@@ -73,8 +72,8 @@ export default function UploadHoldings() {
 		setMemberKey(null);
 		setError('');
 		setProcessing(false);
-		setShowInsUpload(false);
 		setDrawerVisibility(false);
+		setShowInsUpload(false);
 		setOverwrite(1);
 		setUploadedInstruments([...[]]);
 	};

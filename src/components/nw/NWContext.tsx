@@ -150,7 +150,6 @@ function NWContextProvider() {
 	const [ totalPhysical, setTotalPhysical ] = useState<number>(0);
 	const [ totalFinancial, setTotalFinancial ] = useState<number>(0);
 	const [ totalRetirement, setTotalRetirement ] = useState<number>(0);
-	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ activeTab, setActiveTab ] = useState<string>('Financial');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
@@ -996,8 +995,6 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				tabs,
 				activeTab,
 				setActiveTab,
-				showInsUpload,
-				setShowInsUpload,
 				nw,
 				setNW,
 				totalAssets,
