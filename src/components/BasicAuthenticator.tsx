@@ -51,7 +51,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ uname, setUname ] = useState<string>('');
 	const [ state, dispatch ] = useReducer(stepReducer, { step: 0 });
 	const [ cognitoUser, setCognitoUser ] = useState<any>();
-	const [ DOB, setDOB ] = useState<string>('');
+	const [ DOB, setDOB ] = useState<string>(`${new Date().getFullYear() - 25}-06-01`);
 	const [ lifeExpectancy, setLifeExpectancy ] = useState<number>(70);
 	const { Step } = Steps;
 
@@ -118,6 +118,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			uname,
 			email,
 			notify,
+			dob: DOB,
 			tax: taxLiability,
 			rp: riskProfile,
 			dr: 0,
