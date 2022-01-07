@@ -31,20 +31,20 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	const { TabPane } = Tabs;
 
 	const endingAssumptions = [
-		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) && {
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF && isLoanEligible(props.type as GoalType) && {
 			title: 'No loan prepayment penalty.',
 			content: 'When a loan is prepaid, calculation assumes that there is no prepayment penalty.'
 		},
-		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) && {
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF && isLoanEligible(props.type as GoalType) && {
 			title: 'Penalty not considered in case loan repayment starts late.',
 			content:
 				'When a loan repayment starts later than scheduled, calculation adds due interest to the borrowed amount. However, there may be additional cost due to penalties and credit score impact.'
 		},
-		router.pathname !== ROUTES.TRUE_COST && {
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF &&  {
 			title: 'Yearly tax benefit considered as positive cash flow for next year.',
 			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis considers tax benefit as positive cash flow in next year.`
 		},
-		router.pathname !== ROUTES.TRUE_COST && {
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF && {
 			title: 'Cash Flows happen on the 1st day of the specified year or month.',
 			content: `This is to simplify certain calculations. Actual timelines may vary, but it won't have any significant impact on what-if analysis estimates as time difference between cash flows remains similar.`
 		},
@@ -99,9 +99,9 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	const endingResults = [
 		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) ? 'Total loan interest to be paid.' : '',
 		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) ? 'Principal & Interest schedule for a loan.' : '',
-		router.pathname !== ROUTES.TRUE_COST ? 'Total tax benefit that can be availed.' : '',
-		'Impact of spending money rather than investing.',
-		router.pathname !== ROUTES.TRUE_COST ? 'Yearly cash flows.' : ''
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF ? 'Total tax benefit that can be availed.' : '',
+		props.type !== GoalType.FF ? 'Impact of spending money rather than investing.' : '',
+		router.pathname !== ROUTES.TRUE_COST && props.type !== GoalType.FF ? 'Yearly cash flows.' : ''
 	];
 
 	const startingFeatures = [

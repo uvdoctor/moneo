@@ -6,41 +6,25 @@ import { GoalType } from '../api/goals';
 export default function FI() {
 	const assumptions = [
 		{
-			title: 'All your money in one place',
-			content: `We bring together all of your accounts, bills and more, so you can
-		conveniently manage your finances from one dashboard.`
-		},
-		{
-			title: 'Effortlessly stay on top of bills',
-			content: `Bills are now easier than ever to track. Simply add them to your
-		dashboard to see and monitor them all at once.`
+			title: 'Potential returns for different asset classes',
+			content: `Calculation makes educated assumptions about potential returns for different asset classes. It is possible that real returns can vary significantly due to the volatile nature of financial markets, macro-economic environment and many other factors.`
 		}
 	];
 
 	const features = [
 		{
-			title: 'Amortization',
-			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
-		},
-		{
-			title: 'Simple Savings',
-			content: `Easily create budgets, and see our suggestions based on your spending.`
-		},
-		{
-			title: 'Cost-of-living',
-			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
-		},
-		{
-			title: 'CD calculator',
-			content: `Easily create budgets, and see our suggestions based on your spending.`
-		},
-		{
-			title: 'Home affordability',
-			content: `Check your free credit score as many times as you like, and get tips to help improve it.`
+			title: 'Inheritance',
+			content: `Allows you to configure how much money you want to leave behind for your loved ones.`
 		}
 	];
 
-	const results = [ 'What is Lorem Ipsum?' ];
+	const results = [ 
+		'Amount of money needed to achieve FI',
+		'Earliest year when FI can be achieved',
+		'Asset allocation plan',
+		'Yearly portfolio values',
+		'Monthly investment targets' 
+	];
 
 	const terms = [
 		{
