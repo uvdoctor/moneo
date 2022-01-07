@@ -32,5 +32,8 @@ module.exports = withPlugins(
       ignoreDuringBuilds: true,
     },
     swcMinify: true,
+    images: {
+      domains: ['moneo.in'],
+    },
   }
 );
