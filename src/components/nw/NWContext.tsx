@@ -484,7 +484,6 @@ function NWContextProvider() {
 				setSelectedMembers([...[allFamilyKeys[0]]]);
 			}
 			setLoadingFamily(false);
-			if(allFamilyMembers) return true;
 		} catch (err) {
 			notification.error({
 				message: 'Family list not loaded',
@@ -539,9 +538,7 @@ function NWContextProvider() {
 	};
 
 	const initializeHoldings = async () => {
-		const familyMemberExists = await initializeFamilyList();
-		if(!familyMemberExists) return;
-		if(!owner) return;
+		await initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		let insHoldings: CreateUserInsInput | null = null;
 		try {
