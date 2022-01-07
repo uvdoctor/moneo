@@ -10,6 +10,8 @@ import { GoalType } from '../../api/goals';
 import MajorAssumptions from './blog/MajorAssumptions';
 import ExpectedResults from './blog/ExpectedResults';
 import KeyFeatures from './blog/KeyFeatures';
+import { useRouter } from 'next/router';
+import { ROUTES } from '../../CONSTANTS';
 
 interface PublicCalcViewProps {
 	type?: GoalType | undefined;
@@ -25,6 +27,7 @@ interface PublicCalcViewProps {
 export default function PublicCalcView(props: PublicCalcViewProps) {
 	const { defaultCurrency }: any = useContext(AppContext);
 	const fsb = useFullScreenBrowser();
+	const router = useRouter();
 	const { TabPane } = Tabs;
 
 	const startingAssumptions = [
@@ -33,18 +36,14 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 			content: `Financial estimates are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
 		}
 	];
+
 	const endingAssumptions = [
-		isLoanEligible(props.type as GoalType) && {
-			title: 'Loan has fixed interest rate.',
-			content:
-				"For the purpose of estimates, it is assumed that interest rate remains fixed throughout the loan duration. In reality, loan interest rate may adjust based on market rate. However, this shouldn't make a significant impact to Your decision."
-		},
 		isLoanEligible(props.type as GoalType) && {
 			title: 'No loan prepayment penalty.',
 			content: 'When a loan is prepaid, calculation assumes that there is no prepayment penalty.'
 		},
 		isLoanEligible(props.type as GoalType) && {
-			title: 'Additional cost not considered in case loan repayment starts late.',
+			title: 'Penalty not considered in case loan repayment starts late.',
 			content:
 				'When a loan repayment starts later than scheduled, calculation adds due interest to the borrowed amount. However, there may be additional cost due to penalties and credit score impact.'
 		},
@@ -101,16 +100,16 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	];*/
 
 	const endingResults = [
-		isLoanEligible(props.type as GoalType) && 'Total Interest to be paid for a Loan.',
-		isLoanEligible(props.type as GoalType) && 'Principal & Interest Schedule for a Loan.',
-		'Total Tax Benefit that can be availed.',
-		'Impact of Spending Money rather than Investing.',
-		'Yearly Cash Flows.'
+		isLoanEligible(props.type as GoalType) && 'Total loan interest to be paid.',
+		isLoanEligible(props.type as GoalType) && 'Principal & Interest schedule for a loan.',
+		router.pathname !== ROUTES.TRUE_COST && 'Total tax benefit that can be availed.',
+		'Impact of spending money rather than investing.',
+		router.pathname !== ROUTES.TRUE_COST && 'Yearly cash flows.'
 	];
 
 	const startingFeatures = [
 		{
-			title: 'Financial Analysis Made Simpler',
+			title: 'Financial analysis made simpler',
 			content:
 				'Implements time-tested principles and best practices for money management with extensive configuration.'
 		},
@@ -122,13 +121,8 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 
 	const endingFeatures = [
 		isLoanEligible(props.type as GoalType) &&
-		props.type !== GoalType.E && {
-			title: 'Supports Amortizing and Balloon Loans',
-			content:
-				'Calculation will automatically calculate monthly installment, payment schedule and total interest for both these loan types.'
-		},
 		{
-			title: 'Tax benefit adjustment',
+			title: 'Analyzes tax benefit due to claiming deduction / credit',
 			content:
 				'Easily configure tax information to analyze potential tax benefit. Tax benefit can be computed for both Principal and Interest in case of a loan.'
 		},
@@ -143,7 +137,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 				'Allows custom configuration of payment schedule, loan details, tax benefit, etc so that estimates are as accurate and personalized as possible.'
 		},
 		{
-			title: 'Works Anywhere',
+			title: 'Works anywhere',
 			content: 'Calculation works seamlessly for different currencies.'
 		},
 		{

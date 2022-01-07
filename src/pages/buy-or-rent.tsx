@@ -31,16 +31,16 @@ export default function BuyOrRent() {
 	];
 
 	const results = [
-		`Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years`,
-		"Yearly Gain or Loss for Buy option",
-		"Total Maintenance Cost",
-		"Total Income that can be expected"
+		`Which option is cheaper - buy or rent? Up to how many years? Analysis is available for up to 50 years`,
+		"Yearly gain or loss",
+		"Total maintenance cost",
+		"Potential income that can be expected"
 	];
 
 	const terms = [
 		{
-			title: 'Custom Payment Plan',
-			content: `Default payment option allows for a single payment for buying an asset, or down-payment followed by monthly payments in case of Loan. However, it is possible that You want to input a multi-year payment plan where payment amount and schedule vary. For instance, in case of buying an off-plan property, there may be a payment plan spread over multiple years and linked to percentage completion of the property. In such a case, You can use Custom Payment Plan option to input specific payments for specific years.`
+			title: 'Multi-year custom payment plan',
+			content: `Default payment option allows for a single payment for buying an item, or down-payment followed by monthly payments in case of a loan. However, it is possible that you want to analyze a multi-year custom payment plan where payment amount and schedule vary. For instance, in case of buying an off-plan property, there may be a payment plan spread over multiple years and linked to percentage completion of the property. In such a case, you can use this feature to input payments for specific years.`
 		}
 	];
 

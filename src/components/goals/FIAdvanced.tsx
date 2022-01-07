@@ -21,7 +21,9 @@ export default function FIAdvanced() {
 		taxRate,
 		setTaxRate,
 		planDuration,
-		setPlanDuration
+		setPlanDuration,
+		retirementAge,
+		setRetirementAge
 	}: any = useContext(FIGoalContext);
 	const [
 		tabIndex,
@@ -74,6 +76,16 @@ export default function FIAdvanced() {
 						data={toStringArr(70, 100, 1)}
 						labelBottom
 						info="This will be used to define the duration for which Financial Planning is Needed."
+					/>
+					<RadialInput
+						pre="FI target age"
+						label="years"
+						value={retirementAge}
+						changeHandler={setRetirementAge}
+						step={1}
+						data={toStringArr(40, 67, 1)}
+						labelBottom
+						info="This is the age by which you wish to achieve Financial Independence (FI)."
 					/>
 				</Section>
 			</TabPane>

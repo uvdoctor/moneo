@@ -2,10 +2,8 @@ import React, { useContext } from 'react';
 import { CalcContext } from '../calc/CalcContext';
 import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
-import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { toStringArr } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { getRAOptions } from './goalutils';
 
@@ -16,8 +14,6 @@ export default function FIUserDetails() {
 		setNW,
 		riskProfile,
 		setRiskProfile,
-		retirementAge,
-		setRetirementAge
 	}: any = useContext(FIGoalContext);
 	const nowYear = new Date().getFullYear();
 
@@ -50,16 +46,6 @@ export default function FIUserDetails() {
 				value={riskProfile}
 				changeHandler={setRiskProfile}
 				options={getRAOptions()}
-			/>
-			<RadialInput
-				pre="FI target age"
-				label="years"
-				value={retirementAge}
-				changeHandler={setRetirementAge}
-				step={1}
-				data={toStringArr(40, 67, 1)}
-				labelBottom
-				info="This is the age by which you wish to achieve Financial Independence (FI)."
 			/>
 		</Section>
 	);

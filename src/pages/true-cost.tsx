@@ -23,11 +23,11 @@ export default function TrueCost() {
 
 	const features = [
 		{
-			title: 'Amortization',
-			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
+			title: 'Analyze single and recurring spends',
+			content: `Analysis works for single spends as well as spends that are those that are recurring monthly or yearly.`
 		},
 		{
-			title: 'Simple Savings',
+			title: 'Opportunity cost',
 			content: `Easily create budgets, and see our suggestions based on your spending.`
 		},
 		{
@@ -44,7 +44,9 @@ export default function TrueCost() {
 		}
 	];
 
-	const results = [ 'What is Lorem Ipsum?' ];
+	const results = [ 
+		'Time cost, i.e. time it takes for you to earn the spend amount.'
+	];
 
 	const terms = [
 		{
