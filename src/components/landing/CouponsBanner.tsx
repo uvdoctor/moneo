@@ -3,6 +3,7 @@ import { Row, Col, Button } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import Content from "../Content";
 import GetStartedButton from "./GetStartedButton";
+import Image from 'next/image'
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 require("./CouponsBanner.less");
@@ -75,7 +76,7 @@ export default function CouponsBanner() {
 					>
 						{banners.map((imageName) => (
 							<div key={imageName}>
-								<img src={`images/${imageName}`} />
+								<Image src={`/images/${imageName}`} width={583} height={531} alt='' layout="responsive"/>
 							</div>
 						))}
 					</Carousel>

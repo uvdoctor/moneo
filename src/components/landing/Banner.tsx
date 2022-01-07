@@ -18,7 +18,7 @@ export default function Banner() {
 
 	return (
 		<div className="site-banner">
-			<ResImg name="cover" />
+			<ResImg name="cover" width={1264} height={650}/>
 			<div className="site-banner-content">
 				<BannerContent />
 				<p>

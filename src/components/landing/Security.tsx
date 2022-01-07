@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import Content from '../Content';
+import Image from 'next/image'
 
 export default function Security() {
 	return (
@@ -16,7 +17,7 @@ export default function Security() {
 					</p>
 				</Col>
 				<Col xs={24} sm={24} md={12}>
-					<img src="images/security.jpg" />
+					<Image src="/images/security.jpg" alt='' height={313} width={565} layout='responsive'/>
 				</Col>
 			</Row>
 		</Content>

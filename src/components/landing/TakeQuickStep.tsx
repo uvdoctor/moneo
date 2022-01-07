@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import Content from '../Content';
+import Image from 'next/image'
 
 require('./TakeQuickStep.less');
 import GetStartedButton from './GetStartedButton';
@@ -20,7 +21,7 @@ export default function TakeQuickStep() {
 					<GetStartedButton />
 				</Col>
 				<Col xs={24} sm={24} md={12}>
-					<img src="images/quick-step.jpg" />
+					<Image src="/images/quick-step.jpg"  alt='' height={100} width={300} layout='responsive'/>
 				</Col>
 			</Row>
 		</Content>

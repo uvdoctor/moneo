@@ -33,7 +33,7 @@ module.exports = withPlugins(
     },
     swcMinify: true,
     images: {
-      domains: ['moneo.in'],
+      domains: ['moneo.in', 'moneo.money' , 'gomoneo.com', 'goal-images104733-dev.s3.us-east-1.amazonaws.com'], 
     },
   }
 );

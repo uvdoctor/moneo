@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "antd";
 import Content from "../Content";
+import Image from 'next/image'
 
 require("./SmartSaver.less");
 import GetStartedButton from "./GetStartedButton";
@@ -26,7 +27,7 @@ export default function SmartSaver() {
 					</h3>
 				</Col>
 				<Col xs={24} sm={24} md={12}>
-					<img src="images/genie-coupons.png" />
+					<Image src="images/genie-coupons.png" alt="" width={583} height={531} layout="responsive"/>
 				</Col>
 			</Row>
 		</Content>
