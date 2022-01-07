@@ -3,7 +3,7 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from '../api/goals';
-import * as APIt from "../api/goals";
+import * as APIt from '../api/goals';
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
@@ -16,7 +16,6 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 				variables: variables,
 				authMode: authMode === 'AWS_IAM' ? GRAPHQL_AUTH_MODE.AWS_IAM :GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
 			})) as { data: RegByEmailQuery };
-			console.log(regByEmail?.items);
 			if(regByEmail?.items?.length) return true;
 			nextToken = regByEmail?.nextToken;
 		} while (nextToken);
@@ -36,7 +35,6 @@ export const doesMobExist = async (mob: Number) => {
 				query: queries.regByMob,
 				variables: variables,
 			})) as { data: RegByMobQuery };
-			console.log(regByMob?.items);
 			if(regByMob?.items?.length) return true;
 			nextToken = regByMob?.nextToken;
 		} while (nextToken);
@@ -56,7 +54,6 @@ export const doesImExist = async (im: Number) => {
 				query: queries.regByIm,
 				variables: variables,
 			})) as { data: RegByImQuery };
-			console.log(regByIM?.items);
 			if(regByIM?.items?.length) return true;
 			nextToken = regByIM?.nextToken;
 		} while (nextToken);
@@ -68,11 +65,7 @@ export const doesImExist = async (im: Number) => {
 
 export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
 	try {
-		const data = await API.graphql({
-			query: mutations.updateUserInfo,
-			variables: { input: input }
-		});
-		console.log(data);
+		await API.graphql({ query: mutations.updateUserInfo, variables: { input: input }});
 	} catch (e) {
 		console.log('Error while updating table', e);
 	}
@@ -80,11 +73,7 @@ export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
 
 export const deleteContact = async (uname: string) => {
 	try {
-		const data = await API.graphql({
-			query: mutations.deleteUserInfo,
-			variables: { input: { uname } },
-		});
-		console.log(data);
+		await API.graphql({ query: mutations.deleteUserInfo, variables: { input: { uname } }});
 	} catch (e) {
 		console.log('Error while deleting contacts in table', e);
 	}
@@ -92,21 +81,15 @@ export const deleteContact = async (uname: string) => {
 
 export const createUserinfo = async (input: APIt.CreateUserInfoInput) => {
 	try {
-		const data = await API.graphql({
-			query: mutations.createUserInfo,
-			variables: { input: input },
-		});
-		console.log(data);
-	} catch(e) {
+		await API.graphql({ query: mutations.createUserInfo, variables: { input: input } });
+	} catch (e) {
 		console.log('Error while creating contacts in table', e);
 	}
-}
-
-export const getUserDetails = async (uname: string) => {
-  const { data: { getUserInfo }} =
-    await API.graphql(graphqlOperation(queries.getUserInfo, { uname: uname })) as {
-    data: APIt.GetUserInfoQuery;
-  };
-  return getUserInfo ? getUserInfo : null;
 };
 
+export const getUserDetails = async (uname: string) => {
+	const { data: { getUserInfo } } = (await API.graphql(graphqlOperation(queries.getUserInfo, { uname: uname }))) as {
+		data: APIt.GetUserInfoQuery;
+	};
+	return getUserInfo ? getUserInfo : null;
+};

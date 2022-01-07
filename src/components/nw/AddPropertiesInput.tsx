@@ -84,7 +84,6 @@ export default function AddPropertyInput({
 		let rec = getNewRec();
 		rec.res = val;
 		setInput(rec);
-		console.log(rec);
 	};
 
 	const changeName = (val: string) => {
