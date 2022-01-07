@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col, Button } from "antd";
 import { RightOutlined, CalculatorOutlined } from "@ant-design/icons";
 import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
+import Image from 'next/image';
 
 require("./Calculator.less");
 
@@ -54,9 +55,10 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 				<div className="calculator-title">
 					<h2>Calculators</h2>
 					<div className="bg-white border rounded-lg p-4 text-center">
-						<img
+						<Image width={594} height={37}
 							className="inline-block"
-							src="images/try-advance-calculator.jpg"
+							src="/images/try-advance-calculator.jpg"
+							alt=''
 						/>
 					</div>
 				</div>
