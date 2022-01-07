@@ -85,7 +85,6 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 
 	if (remainingDuration <= 0 || isNaN(remainingDuration)) return 0;
 	let bygoneDuration = durationFromStartToEnd - remainingDuration;
-	console.log(remainingDuration, durationFromStartToEnd, bygoneDuration);
 	
 	if (subt && subt !== 'L') {
 		cashflows = getCashFlows(amt as number, bygoneDuration, remainingDuration, chg as number, isMonth);
