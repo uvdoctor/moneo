@@ -30,34 +30,31 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	const router = useRouter();
 	const { TabPane } = Tabs;
 
-	const startingAssumptions = [
-		{
-			title: 'Estimates Only. No Advice.',
-			content: `Financial estimates are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
-		}
-	];
-
 	const endingAssumptions = [
-		isLoanEligible(props.type as GoalType) && {
+		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) && {
 			title: 'No loan prepayment penalty.',
 			content: 'When a loan is prepaid, calculation assumes that there is no prepayment penalty.'
 		},
-		isLoanEligible(props.type as GoalType) && {
+		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) && {
 			title: 'Penalty not considered in case loan repayment starts late.',
 			content:
 				'When a loan repayment starts later than scheduled, calculation adds due interest to the borrowed amount. However, there may be additional cost due to penalties and credit score impact.'
 		},
-		{
+		router.pathname !== ROUTES.TRUE_COST && {
 			title: 'Yearly tax benefit considered as positive cash flow for next year.',
 			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis considers tax benefit as positive cash flow in next year.`
 		},
-		{
+		router.pathname !== ROUTES.TRUE_COST && {
 			title: 'Cash Flows happen on the 1st day of the specified year or month.',
 			content: `This is to simplify certain calculations. Actual timelines may vary, but it won't have any significant impact on what-if analysis estimates as time difference between cash flows remains similar.`
 		},
 		{
 			title: 'Non-financial aspects are out of scope.',
 			content: `Please consider other factors such as emotions, convenience, etc so that it is the right decision for You.`
+		},
+		{
+			title: 'Estimates Only. No Advice.',
+			content: `Financial estimates are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
 		}
 	];
 
@@ -151,7 +148,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
 		'Major Assumptions': 
-			<MajorAssumptions elements={[ ...startingAssumptions, ...props.assumptions, ...endingAssumptions ]} />
+			<MajorAssumptions elements={[ ...props.assumptions, ...endingAssumptions ]} />
 		
 		//Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
