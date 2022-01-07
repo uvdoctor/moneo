@@ -100,11 +100,11 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	];*/
 
 	const endingResults = [
-		isLoanEligible(props.type as GoalType) && 'Total loan interest to be paid.',
-		isLoanEligible(props.type as GoalType) && 'Principal & Interest schedule for a loan.',
-		router.pathname !== ROUTES.TRUE_COST && 'Total tax benefit that can be availed.',
+		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) ? 'Total loan interest to be paid.' : '',
+		router.pathname !== ROUTES.TRUE_COST && isLoanEligible(props.type as GoalType) ? 'Principal & Interest schedule for a loan.' : '',
+		router.pathname !== ROUTES.TRUE_COST ? 'Total tax benefit that can be availed.' : '',
 		'Impact of spending money rather than investing.',
-		router.pathname !== ROUTES.TRUE_COST && 'Yearly cash flows.'
+		router.pathname !== ROUTES.TRUE_COST ? 'Yearly cash flows.' : ''
 	];
 
 	const startingFeatures = [

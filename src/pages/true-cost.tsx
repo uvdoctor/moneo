@@ -10,14 +10,8 @@ import Save from '../components/calc/Save';
 export default function TrueCost() {
 	const assumptions = [
 		{
-			title: 'All your money in one place',
-			content: `We bring together all of your accounts, bills and more, so you can
-		conveniently manage your finances from one dashboard.`
-		},
-		{
-			title: 'Effortlessly stay on top of bills',
-			content: `Bills are now easier than ever to track. Simply add them to your
-		dashboard to see and monitor them all at once.`
+			title: 'Steady savings from income',
+			content: `While analyzing recurring spends that span across years, this calculation assumes that savings amount from your income remains unchanged across these years.`
 		}
 	];
 
@@ -26,22 +20,6 @@ export default function TrueCost() {
 			title: 'Analyze single and recurring spends',
 			content: `Analysis works for single spends as well as spends that are those that are recurring monthly or yearly.`
 		},
-		{
-			title: 'Opportunity cost',
-			content: `Easily create budgets, and see our suggestions based on your spending.`
-		},
-		{
-			title: 'Cost-of-living',
-			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
-		},
-		{
-			title: 'CD calculator',
-			content: `Easily create budgets, and see our suggestions based on your spending.`
-		},
-		{
-			title: 'Home affordability',
-			content: `Check your free credit score as many times as you like, and get tips to help improve it.`
-		}
 	];
 
 	const results = [ 

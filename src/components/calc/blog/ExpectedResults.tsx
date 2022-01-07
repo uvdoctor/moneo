@@ -8,7 +8,7 @@ export default function ExpectedResults({ elements }: BlogInputProps) {
 			size="small"
 			bordered
 			dataSource={elements}
-			renderItem={(item) => <List.Item>{item}</List.Item>}
+			renderItem={(item) => item ? <List.Item>{item}</List.Item> : null}
 		/>
 	);
 }
