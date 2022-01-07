@@ -136,7 +136,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			Auth.signUp({
 				username: username,
 				password: password,
-				attributes: { email: email, birthdate: DOB }
+				attributes: { email: email }
 			})
 				.then((response) => {
 					setCognitoUser(response.user);
@@ -147,7 +147,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 							...response.user,
 							username: username,
 							password: password,
-							attributes: { email: email, birthdate: DOB }
+							attributes: { email: email }
 						}
 					});
 					setLoading(false);
