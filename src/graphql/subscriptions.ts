@@ -337,6 +337,7 @@ export const onCreateUserInfo = /* GraphQL */ `
     onCreateUserInfo {
       uname
       email
+      dob
       im
       mob
       notify
@@ -355,6 +356,7 @@ export const onUpdateUserInfo = /* GraphQL */ `
     onUpdateUserInfo {
       uname
       email
+      dob
       im
       mob
       notify
@@ -373,6 +375,7 @@ export const onDeleteUserInfo = /* GraphQL */ `
     onDeleteUserInfo {
       uname
       email
+      dob
       im
       mob
       notify

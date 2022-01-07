@@ -247,6 +247,7 @@ export const getUserInfo = /* GraphQL */ `
     getUserInfo(uname: $uname) {
       uname
       email
+      dob
       im
       mob
       notify
@@ -278,6 +279,7 @@ export const listUserInfos = /* GraphQL */ `
       items {
         uname
         email
+        dob
         im
         mob
         notify
@@ -311,6 +313,7 @@ export const regByIm = /* GraphQL */ `
       items {
         uname
         email
+        dob
         im
         mob
         notify
@@ -344,6 +347,7 @@ export const regByMob = /* GraphQL */ `
       items {
         uname
         email
+        dob
         im
         mob
         notify
@@ -377,6 +381,41 @@ export const regByEmail = /* GraphQL */ `
       items {
         uname
         email
+        dob
+        im
+        mob
+        notify
+        tax
+        rp
+        dr
+        tc
+        le
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const regByDob = /* GraphQL */ `
+  query RegByDob(
+    $dob: AWSDate
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByDOB(
+      dob: $dob
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        uname
+        email
+        dob
         im
         mob
         notify

@@ -294,6 +294,7 @@ export const createUserInfo = /* GraphQL */ `
     createUserInfo(input: $input, condition: $condition) {
       uname
       email
+      dob
       im
       mob
       notify
@@ -315,6 +316,7 @@ export const updateUserInfo = /* GraphQL */ `
     updateUserInfo(input: $input, condition: $condition) {
       uname
       email
+      dob
       im
       mob
       notify
@@ -336,6 +338,7 @@ export const deleteUserInfo = /* GraphQL */ `
     deleteUserInfo(input: $input, condition: $condition) {
       uname
       email
+      dob
       im
       mob
       notify

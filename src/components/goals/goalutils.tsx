@@ -111,13 +111,13 @@ const createFFGoalInput = (currency: string) => {
 	return {
 		name: 'Financial Independence',
 		loan: {
-			emi: 12000 * rf,
+			emi: 6000 * rf,
 			ry: nowYear,
 			per: 3,
 			dur: 85,
 			rate: 50,
 			type: APIt.LoanType.A,
-			pmi: 6000 * rf
+			pmi: 3000 * rf
 		},
 		sy: nowYear - 30,
 		ey: nowYear,
@@ -141,10 +141,10 @@ const createFFGoalInput = (currency: string) => {
 		pg: [],
 		pl: [],
 		tbr: 1,
-		tdli: 20000 * rf,
+		tdli: 10000 * rf,
 		btr: 3,
 		ra: 50000 * rf,
-		rachg: 1000 * rf
+		rachg: 500 * rf
 	} as APIt.CreateGoalInput;
 };
 

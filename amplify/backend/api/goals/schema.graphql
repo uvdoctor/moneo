@@ -154,6 +154,7 @@ type UserInfo
 	@key(name: "ByIM", fields: ["im"], queryField: "regByIM")
 	@key(name: "ByMob", fields: ["mob"], queryField: "regByMob")
 	@key(name: "ByEmail", fields: ["email"], queryField: "regByEmail")
+	@key(name: "ByDOB", fields: ["dob"], queryField: "regByDOB")
 	@auth(
 		rules: [
 			{ allow: public, provider: iam, operations: [read] }
@@ -162,6 +163,7 @@ type UserInfo
 	) {
 	uname: String!	
 	email: String!
+	dob: AWSDate!
 	im: Float
 	mob: Float
 	notify: Boolean!
