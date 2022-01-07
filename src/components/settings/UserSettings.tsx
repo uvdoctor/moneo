@@ -138,8 +138,8 @@ export default function UserSettings(): JSX.Element {
 	const updatePersonalTab = async () => {
 		try {
 			const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
-			await Auth.updateUserAttributes(user, 
-				{ name: name, family_name: lastName, birthdate: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}` });
+			await Auth.updateUserAttributes(user, { name: name, family_name: lastName });
+			await updateUserDetails({ uname: owner, dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}` })
 			success('Updated Successfully');
 		} catch (error) {
 			failure(`Unable to update ${error}`);
@@ -159,15 +159,12 @@ export default function UserSettings(): JSX.Element {
 	useEffect(
 		() => {
 			if (!user) return;
-    	const { birthdate, phone_number, nickname, preferred_username, family_name, email, name } = user?.attributes;
+    	const { phone_number, nickname, preferred_username, family_name, email, name } = user?.attributes;
 			const mobile = phone_number ? phone_number.replace(countryCode?.value, '') : '';
 			const whatsapp = nickname ? nickname.replace(countryCode?.value, '') : '';
 			dispatch({
 				type: 'userUpdate',
-				data: { email, mobile, name, whatsapp, lastName: family_name, prefuser: preferred_username, 
-							dobYear: birthdate.slice(0, birthdate.indexOf('-')) ,dobMonth: birthdate.slice(birthdate.indexOf('-')+2,
-							birthdate.lastIndexOf('-')), dobDate: birthdate.slice(birthdate.lastIndexOf('-')+1) 
-				}
+				data: { email, mobile, name, whatsapp, lastName: family_name, prefuser: preferred_username }
 			});
 		},
 		[ appContextLoaded, countryCode?.value, user ]
@@ -176,10 +173,11 @@ export default function UserSettings(): JSX.Element {
 	useEffect(
 		() => {
       if(userInfo) {
-        const { rp, notify, dr, tax, le } = userInfo;
+        const { rp, notify, dr, tax, le, dob } = userInfo;
+				const date = new Date(dob);
         dispatch({
 					type: 'userUpdate',
-					data: { riskProfile: rp, notify, tax, isDrManual: !dr ? 0 : 1, lifeExpectancy: le }
+					data: { riskProfile: rp, notify, tax, isDrManual: !dr ? 0 : 1, lifeExpectancy: le, dobYear: date.getFullYear(), dobMonth: date.getMonth()+1, dobDate: date.getDate() }
 				});
       }
 		},
@@ -264,9 +262,9 @@ export default function UserSettings(): JSX.Element {
 														startDateValue={dobDate}
 														startMonthValue={dobMonth}
 														startYearValue={dobYear}
-														startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
+														startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
 														startMonthHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobMonth', val } })}
-														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
+														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
 														size='large'
 													/>
 												)}
@@ -452,55 +450,48 @@ export default function UserSettings(): JSX.Element {
 								</Row>
 							</TabPane>
 							<TabPane tab="Others" key="4">
-								<Row justify="start" className="tabPane">
+							<Row gutter={[24,24]}>
+								<Col span={24}>
+								<Row gutter={[32, 0]}>
 									<Col>
-										<Row justify="start" align="middle">
-											<Col className="first-col-view">Risk Profile:-</Col>
-											<Col className='nested-col'>
-												<SelectInput
-													info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-													pre="Can Tolerate"
-													unit="Loss"
-													value={riskProfile}
-													changeHandler={(val: string) =>
-														dispatch({
-															type: 'single',
-															data: { field: 'riskProfile', val }
-														})}
-													options={getRiskProfileOptions()}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="start" align="middle">
-											<Col>Tax Liability:-</Col>
-											<Col className="nested-col">
-												<SelectInput
-													info="How much do you earn in a year?"
-													pre="Yearly Income"
-													value={tax}
-													changeHandler={(val: string) =>
-														dispatch({ type: 'single', data: { field: 'tax', val } })}
-													options={getTaxLiabilityOptions()}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row>
-											<Col>Notification:-</Col>
-											<Col className="nested-col">
-												<HSwitch
-													value={notify}
-													setter={(val: boolean) =>
-														dispatch({ type: 'single', data: { field: 'notify', val } })}
-													rightText="Offer and News Letters"
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row align="middle">
-											<Col>Discount Rate:-</Col>
-											<Col className="nested-col">
+										<SelectInput
+											info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+											pre="Can Tolerate"
+											unit="Loss"
+											value={riskProfile}
+											changeHandler={(val: string) =>
+												dispatch({
+													type: 'single',
+													data: { field: 'riskProfile', val }
+												})}
+											options={getRiskProfileOptions()}
+										/>
+									</Col>
+									<Col >
+										<SelectInput
+											info="How much do you earn in a year?"
+											pre="Yearly Income"
+											value={tax}
+											changeHandler={(val: string) =>
+												dispatch({ type: 'single', data: { field: 'tax', val } })}
+											options={getTaxLiabilityOptions()}
+										/>
+									</Col>
+									</Row>
+									</Col>
+									<Col span={24}>
+									<Row gutter={[32, 0]} align='middle'>
+									<Col >
+										<HSwitch
+											value={notify}
+											setter={(val: boolean) =>
+												dispatch({ type: 'single', data: { field: 'notify', val } })}
+											rightText="Offer and News Letters"
+										/>
+									</Col>
+									<Col >
+										<Row align="middle" gutter={[0,10]}>
+											<Col>
 												<HSwitch
 													value={isDrManual}
 													setter={(val: boolean) =>
@@ -512,59 +503,63 @@ export default function UserSettings(): JSX.Element {
 													leftText="Auto"
 												/>
 											</Col>
-											<Col className="nested-col">
+											<Col >
 												{isDrManual ? (
 													<NumberInput
-														pre={''}
+														pre={'Discount Rate'}
 														value={discountRate}
 														changeHandler={(val: number) => setDiscountRate(val)}
 													/>
 												) : (
 													<label>
-														<strong>{discountRate}%</strong>
+														<strong>{discountRate}% Discount Rate</strong>
 													</label>
 												)}
 											</Col>
 										</Row>
-										<p>&nbsp;</p>
-										<Row>
-											<Col>Life Expectancy:-</Col>
-											<Col className="nested-col">
-												<RadialInput
-													pre=""
-													label="Years"
-													value={lifeExpectancy}
-													changeHandler={(val: number) =>
-														dispatch({
-															type: 'single',
-															data: { field: 'lifeExpectancy', val }
-														})}
-													step={1}
-													data={toStringArr(70, 100, 1)}
-													labelBottom
-                          trackColor={COLORS.WHITE}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="center">
-											<Col>
-												<Button
-													type="primary"
-													style={{ color: COLORS.WHITE }}
-													icon={<SaveOutlined />}
-													onClick={() => {
-														validateCaptcha('othersTab_change').then((success: boolean) => {
-															if (!success) return;
-															updateOthersTab();
-														});
-													}}
-												>
-													Save
-												</Button>
-											</Col>
-										</Row>
+								</Col>
+								</Row>
+								</Col>
+								<Col span={24}>
+								<Row gutter={[32, 0]}>
+									<Col >
+									<RadialInput
+										pre="Life Expectancy"
+										label="Years"
+										value={lifeExpectancy}
+										changeHandler={(val: number) =>
+											dispatch({
+												type: 'single',
+												data: { field: 'lifeExpectancy', val }
+											})}
+										step={1}
+										data={toStringArr(70, 100, 1)}
+										labelBottom
+										trackColor={COLORS.WHITE}
+										info='This will be used to define the duration for which Financial Planning is Needed.'
+									/>
+								</Col>
+								</Row>
+								</Col>
+								<Col span={24}>
+									<Row justify="center">
+									<Col>
+										<Button
+											type="primary"
+											style={{ color: COLORS.WHITE }}
+											icon={<SaveOutlined />}
+											onClick={() => {
+												validateCaptcha('othersTab_change').then((success: boolean) => {
+													if (!success) return;
+													updateOthersTab();
+												});
+											}}
+										>
+											Save
+										</Button>
 									</Col>
+								</Row>
+								</Col>
 								</Row>
 							</TabPane>
 						</Tabs>
