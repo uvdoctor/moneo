@@ -455,8 +455,8 @@ export default function UserSettings(): JSX.Element {
 								<Row justify="start" className="tabPane">
 									<Col>
 										<Row justify="start" align="middle">
-											<Col className="nested-col" >Risk Profile:-</Col>
-											<Col>
+											<Col className="first-col-view">Risk Profile:-</Col>
+											<Col className='nested-col'>
 												<SelectInput
 													info="How much Risk are You willing to take in order to achieve higher Investment Return?"
 													pre="Can Tolerate"
