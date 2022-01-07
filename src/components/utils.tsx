@@ -360,7 +360,7 @@ export const toHumanFriendlyCurrency = (val: number, currency: string) => {
     unit = lakhs ? "crores" : "billion";
   }
   const decimals = val % divider === 0 ? 0 : 2;
-  return `${decimals ? ' ~' : ' '} ${getCurrencySymbol(currency)}${(val / divider).toFixed(
+  return `${getCurrencySymbol(currency)}${(val / divider).toFixed(
     decimals
   )} ${unit}`;
 };

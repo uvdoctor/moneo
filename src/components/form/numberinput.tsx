@@ -95,7 +95,7 @@ export default function NumberInput({
 			<LabelWithTooltip label={pre} info={info} />
 			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} key={currency ? `${currency}-${pre}` : pre} />
-			{currency && value > 100000 ? toHumanFriendlyCurrency(value, currency) : null}
+			{currency && value > 100000 ? `${value % 1000 ? ' ~ ' : ' '}${toHumanFriendlyCurrency(value, currency)}` : null}
 			{post ? 
 				<>
 					<br/>
