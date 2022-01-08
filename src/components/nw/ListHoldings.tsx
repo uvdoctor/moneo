@@ -4,7 +4,7 @@ import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import { doesHoldingMatch } from './nwutils';
 import Category from './Category';
-import AmountWithRate from './AmountWithRate';
+import Amount from './Amount';
 import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
@@ -26,6 +26,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
 		amt: { title: fields.amount, dataIndex: 'amt', key: 'amt' },
+		rate: { title: fields.rate, dataIndex: 'rate', key: 'rate' },
 		fid: { title: 'Valuation', key: 'fid', dataIndex: 'fid' },
 		date: { title: fields.date, dataIndex: 'date', key: 'date' },
 		label: { title: fields.name, dataIndex: 'label', key: 'label' },
@@ -35,10 +36,10 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	let expandedColumns: Array<string> = [];
 
 	if (childTab === 'Deposits') {
-		defaultColumns = [ 'cat', 'amt', 'fid' ];
+		defaultColumns = [ 'cat', 'amt', 'rate', 'fid' ];
 		expandedColumns = [ 'date', 'label', 'qty' ];
 	} else {
-		defaultColumns = [ 'cat', 'amt', 'fid' ];
+		defaultColumns = [ 'cat', 'amt', 'rate', 'fid' ];
 		expandedColumns = [ 'date', 'label', 'qty' ];
 	}
 
@@ -98,7 +99,14 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 		);
 	};
 
+	const changeChg = (chg: number, record: HoldingInput) => {
+		record.chg = chg;
+		changeData([ ...data ]);
+	};
+
 	const columns = defaultColumns.map((col: string) => allColumns[col]);
+
+	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
 
 	useEffect(
 		() => {
@@ -117,7 +125,18 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 								record={holding}
 							/>
 						),
-						amt: <AmountWithRate data={data} changeData={changeData} record={holding} />,
+						amt: <Amount data={data} changeData={changeData} record={holding} />,
+						rate: (hasRate(childTab) || (childTab === INS && holding.subt !== 'L')) && (
+							<NumberInput
+								pre=""
+								min={0}
+								max={50}
+								value={holding.chg as number}
+								changeHandler={(val: number) => changeChg(val, holding)}
+								step={0.1}
+								unit="%"
+							/>
+						),
 						fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={index} />
 					});
 				}
@@ -130,7 +149,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 
 	return dataSource.length ? (
 		<Table
-			className="property-nested-table"
 			columns={columns.filter((col) => {
 				if (col.dataIndex === 'cat') return categoryOptions;
 				else return col;
