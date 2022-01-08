@@ -25,7 +25,7 @@ export default function AddHoldingInput({
 	categoryOptions,
 	subCategoryOptions
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency, tabs, activeTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ subCat, setSubCat ] = useState<string>(
@@ -49,11 +49,14 @@ export default function AddHoldingInput({
 	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
 	const isRangePicker = (childTab: string, cat?: string, subCat?: string) =>
-		[ LENT ].includes(childTab) && cat !== NATIONAL_SAVINGS_CERTIFICATE && subCat != '0';
+		[ LENT ].includes(childTab) && cat !== NATIONAL_SAVINGS_CERTIFICATE && subCat !== '0';
 
 	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
 
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
+
+	const hasOnlyEnddate = (childTab: string) =>
+		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '', curr: selectedCurrency };
@@ -148,9 +151,6 @@ export default function AddHoldingInput({
 		return newRec;
 	};
 
-	const hasOnlyEnddate = (childTab: string) =>
-		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
-
 	const changeStartMonth = (val: number) => {
 		setSm(val);
 		let rec = getNewRec();
@@ -235,8 +235,7 @@ export default function AddHoldingInput({
 			}
 		}
 		let rec = getNewRec();
-		if (rec.subt === AssetSubType.C) rec.name = subtype;
-		else rec.subt = subtype;
+		rec.subt === AssetSubType.C ? (rec.name = subtype) : (rec.subt = subtype);
 		return rec;
 	};
 
@@ -247,14 +246,15 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const { Item: FormItem } = Form;
+	const { fields } = tabs[activeTab].children[childTab];
+	const { Item: FormItem } = Form; 
 
 	return (
 		<Form layout="vertical">
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
 				{categoryOptions && (
 					<Col xs={24} md={12}>
-						<FormItem label="Type">
+						<FormItem label={fields.type}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									{categoryOptions && (
@@ -284,27 +284,27 @@ export default function AddHoldingInput({
 				)}
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
-						<FormItem label="Label">
+						<FormItem label={fields.name}>
 							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'} width={250} />
 						</FormItem>
 					</Col>
 				)}
 				{hasQtyWithRate(childTab) ? (
 					<Col xs={24} md={12}>
-						<FormItem label="Qty">
+						<FormItem label={fields.qty}>
 							<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat} />
 						</FormItem>
 					</Col>
 				) : (
 					<Col xs={24} md={12}>
-						<FormItem label="Amount">
+						<FormItem label={fields.amount}>
 							<NumberInput pre="" value={amt} changeHandler={changeAmt} currency={selectedCurrency} />
 						</FormItem>
 					</Col>
 				)}
 				{hasPF(childTab) && (
 					<Col xs={24} md={12}>
-						<FormItem label="Contribution per year">
+						<FormItem label={fields.qty}>
 							<NumberInput pre="" value={qty} changeHandler={changeQty} currency={selectedCurrency} />
 						</FormItem>
 					</Col>
@@ -312,7 +312,7 @@ export default function AddHoldingInput({
 				{hasDate(childTab) &&
 				category !== 'H' && (
 					<Col xs={24} md={12}>
-						<FormItem label={'Date'}>
+						<FormItem label={fields.date}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DateInput
@@ -338,7 +338,7 @@ export default function AddHoldingInput({
 				)}
 				{category === NATIONAL_SAVINGS_CERTIFICATE && (
 					<Col xs={24} md={12}>
-						<FormItem label={'Duration'}>
+						<FormItem label={fields.duration}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<SelectInput
@@ -357,7 +357,7 @@ export default function AddHoldingInput({
 				)}
 				{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
 					<Col xs={24} md={12}>
-						<FormItem label="Rate">
+						<FormItem label={fields.rate}>
 							<NumberInput
 								pre={''}
 								min={0}

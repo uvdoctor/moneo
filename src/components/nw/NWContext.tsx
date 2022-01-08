@@ -192,6 +192,10 @@ function NWContextProvider() {
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
+					fields: {
+						name: "Label",
+						amount: "Amount",
+					}
 				},
 				[TAB.LENT]: {
 					label: TAB.LENT,
@@ -217,6 +221,15 @@ function NWContextProvider() {
 							4: 'Accumulates Every Three Months',
 							12: 'Accumulates Every Month' },
 						},
+					fields: {
+						type: "Type",
+						subtype: "Interest",
+						name: "Label",
+						amount: "Amount",
+						date: "Date",
+						rate: "Rate",
+						duration: "Duration"
+					}
 				},
 			}
 		},
@@ -238,6 +251,17 @@ function NWContextProvider() {
 						[PropertyType.T]: "Townhouse",
 						[PropertyType.OTHER]: 'Others'
 					},
+					fields: {
+						type: "Type",
+						name: "Label",
+						amount: "Purchase Amount",
+						date: "Purchase Date",
+						rate: "Appreciation Rate",
+						mv: "Market Value",
+						pin: "Pincode",
+						add: "Address",
+						owner: "Owners"
+					}
 				},
 				[TAB.VEHICLE]: {
 					label: TAB.VEHICLE,
@@ -249,6 +273,12 @@ function NWContextProvider() {
 						3: 'Three-Wheeler',
 						4: 'Four-Wheeler'
 					},
+					fields: {
+						type: "Type",
+						name: "Label",
+						amount: "Amount",
+						date: "Purchase Date",
+					}
 				},
 				[TAB.PM]: {
 					label: TAB.PM,
@@ -287,6 +317,11 @@ function NWContextProvider() {
 						[PLATINUM]: 'Platinum',
 						[PALLADIUM]: 'Palladium',
 					},
+					fields: {
+						type: "Type",
+						subtype: "Purity",
+						qty: "Quantity"
+					}
 				},
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
@@ -300,6 +335,11 @@ function NWContextProvider() {
 						Time: 'Time Sharing Membership',
 						Other: 'Other'
 					},
+					fields: {
+						type: "Type",
+						name: "Label",
+						amount: "Amount"
+					}
 				},
 			},
 		},
@@ -385,6 +425,10 @@ function NWContextProvider() {
 						[LITECOIN]: 'Litecoin',
 						[MONERO]: 'Monero',
 						[STELLAR]: 'Stellar'
+					},
+					fields: {
+						type: "Type",
+						qty: "Quantity"
 					}
 				},
 				[TAB.ANGEL]: {
@@ -394,6 +438,10 @@ function NWContextProvider() {
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
+					fields: {
+						name: "Label",
+						amount: "Amount"
+					}
 				},
 				[TAB.OIT]: {
 					label: TAB.OIT,
@@ -423,6 +471,13 @@ function NWContextProvider() {
 						EF: 'Employee Fund',
 						VF: 'Voluntary Fund',
 					},
+					fields: {
+						type: "Type",
+						name: "Label",
+						amount: "Amount",
+						qty: "Contribution Per Year",
+						rate: "Rate"
+					}
 				},
 				[TAB.NPS]: {
 					label: TAB.NPS,
@@ -433,6 +488,11 @@ function NWContextProvider() {
 					total: totalNPS,
 					categoryOptions: getNPSFundManagers(),
 					subCategoryOptions: loadNPSSubCategories,
+					fields: {
+						type: "Fund Manager",
+						subType: "Scheme Type",
+						qty: "Quantity",
+					}
 				},
 			}
 		},
@@ -444,6 +504,12 @@ function NWContextProvider() {
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
+					fields: {
+						name: "Label",
+						amount: "Monthly Installment",
+						rate: "Rate of Interest",
+						date: "End date"
+					}
 				},
 				[TAB.INS]: {
 					label: TAB.INS,
@@ -464,12 +530,24 @@ function NWContextProvider() {
 						V: { 1: 'Yearly', 12: 'Monthly' },
 						O: { 1: 'Yearly', 12: 'Monthly' }
 					},
+					fields: {
+						type: "Type",
+						subType: "Premium Mode",
+						name: "Label",
+						amount: "Premium Amount",
+						rate: "Premium increases",
+						date: "End date"
+					}
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
+					fields: {
+						name: "Label",
+						amount: "Amount"
+					}
 				}
 			}
 		}

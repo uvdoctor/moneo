@@ -14,7 +14,7 @@ interface MemberAndValuationProps {
 
 export default function MemberAndValuation({ data, record, changeData }: MemberAndValuationProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { LENT, VEHICLE, LOAN, INS } = TAB;
+	const { LENT, LOAN, INS } = TAB;
 	const [ duration, setDuration ] = useState<number>(
 		calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number)
 	);
@@ -31,12 +31,12 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	};
 
 	const changeStartYear = (val: number) => {
-		hasOnlyEnddate(childTab) ? record.ey = val : record.sy = val;
+		hasOnlyEnddate(childTab) ? (record.ey = val) : (record.sy = val);
 		changeData([ ...data ]);
 	};
 
 	const changeStartMonth = (val: number) => {
-		hasOnlyEnddate(childTab) ? record.em = val : record.sm = val;
+		hasOnlyEnddate(childTab) ? (record.em = val) : (record.sm = val);
 		changeData([ ...data ]);
 	};
 
@@ -50,38 +50,36 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		changeData([ ...data ]);
 	};
 
-	const hasOnlyEnddate = (childTab: string) => [LOAN, INS].includes(childTab) || (record.chgF === 0 && childTab === LENT);
-	const hasDate = (childTab: string, record: HoldingInput) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== "H";
+	const hasOnlyEnddate = (childTab: string) =>
+		[ LOAN, INS ].includes(childTab) || (record.chgF === 0 && childTab === LENT);
 
 	return (
 		<Fragment>
 			<Col>
-				{hasDate(childTab, record) && (
-					<DateInput
-						title={''}
-						startMonthHandler={changeStartMonth}
-						startYearHandler={changeStartYear}
-						endMonthHandler={
-							isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
-								changeEndMonth
-							) : (
-								undefined
-							)
-						}
-						endYearHandler={
-							isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
-								changeEndYear
-							) : (
-								undefined
-							)
-						}
-						startMonthValue={hasOnlyEnddate(childTab) ? record.em as number : record.sm as number}
-						endMonthValue={record.em as number}
-						startYearValue={hasOnlyEnddate(childTab) ? record.ey as number : record.sy as number}
-						endYearValue={record.ey as number}
-						size="middle"
-					/>
-				)}
+				<DateInput
+					title={''}
+					startMonthHandler={changeStartMonth}
+					startYearHandler={changeStartYear}
+					endMonthHandler={
+						isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
+							changeEndMonth
+						) : (
+							undefined
+						)
+					}
+					endYearHandler={
+						isRangePicker(childTab, record.subt as string, record.chgF as number) ? (
+							changeEndYear
+						) : (
+							undefined
+						)
+					}
+					startMonthValue={hasOnlyEnddate(childTab) ? record.em as number : record.sm as number}
+					endMonthValue={record.em as number}
+					startYearValue={hasOnlyEnddate(childTab) ? record.ey as number : record.sy as number}
+					endYearValue={record.ey as number}
+					size="middle"
+				/>
 			</Col>
 			{record.subt === NATIONAL_SAVINGS_CERTIFICATE && (
 				<Col>
