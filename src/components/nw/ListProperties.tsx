@@ -10,7 +10,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import SelectInput from "../form/selectinput";
-import { NWContext } from "./NWContext";
+import { NWContext, TAB } from "./NWContext";
 import TextInput from "../form/textinput";
 import {
 	doesPropertyMatch,
@@ -37,7 +37,7 @@ export default function ListProperties({
 	changeData,
 	categoryOptions,
 }: ListPropertiesProps) {
-	const { selectedCurrency, allFamily, selectedMembers }: any = useContext(
+	const { selectedCurrency, allFamily, selectedMembers, tabs }: any = useContext(
 		NWContext
 	);
 	const [indexForMv, setIndexForMv] = useState<number | null>(null);
@@ -47,7 +47,7 @@ export default function ListProperties({
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 	const today = new Date();
-
+	const { fields } = tabs["Physical"].children[TAB.PROP];
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
 		changeData([...data]);
@@ -167,7 +167,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
-									<Col>Amount</Col>
+									<Col>{fields.amount}</Col>
 									<Col>
 										<NumberInput
 											pre=""
@@ -181,7 +181,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<DateInput
-									title={'Date'}
+									title={fields.date}
 									startMonthHandler={(val: number)=>changePurchaseMonth(val, i)}
 									startYearHandler={(val: number)=>changePurchaseYear(val, i)}
 									startMonthValue={data[i].purchase?.month}
@@ -191,7 +191,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
-									<Col>Name</Col>
+									<Col>{fields.name}</Col>
 									<Col>
 										<TextInput
 											pre=""
@@ -209,7 +209,7 @@ export default function ListProperties({
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[0, 10]}>
 							<Col xs={24}>
-								<strong>Address</strong>
+								<strong>{fields.address}</strong>
 								<hr />
 							</Col>
 							<Col xs={24}>
@@ -242,7 +242,7 @@ export default function ListProperties({
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[0, 10]}>
 							<Col xs={24}>
-								<strong>Own By</strong>
+								<strong>{fields.owner}</strong>
 								<hr />
 							</Col>
 							{owners &&
@@ -294,8 +294,8 @@ export default function ListProperties({
 	};
 
 	const columns = [
-		{ title: "Type", dataIndex: "type", key: "type" },
-		{ title: "Rate", dataIndex: "rate", key: "rate" },
+		{ title: fields.type, dataIndex: "type", key: "type" },
+		{ title: fields.rate, dataIndex: "rate", key: "rate" },
 		{ title: "Valuation", key: "val", dataIndex: "val" },
 	];
 

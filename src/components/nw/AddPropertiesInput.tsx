@@ -17,7 +17,7 @@ import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import { presentMonth, presentYear } from "../utils";
-import { NWContext } from "./NWContext";
+import { NWContext, TAB } from "./NWContext";
 import {
 	getDefaultMember,
 	getFamilyOptions,
@@ -35,7 +35,7 @@ export default function AddPropertyInput({
 	disableOk,
 	categoryOptions,
 }: AddPropertiesInputProps) {
-	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(
+	const { allFamily, selectedMembers, selectedCurrency, tabs }: any = useContext(
 		NWContext
 	);
 	const [subtype, setSubtype] = useState<string>("P");
@@ -57,6 +57,8 @@ export default function AddPropertyInput({
 	const [error, setError] = useState<boolean>(false);
 	const [ sm, setSm ] = useState<number>(4);
 	const [ sy, setSy ] = useState<number>(presentYear - 5);
+
+	const { fields } = tabs["Physical"].children[TAB.PROP];
 
 	const duration = () => {
 		let rec = getNewRec();
@@ -293,7 +295,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Purchase Amount">
+					<FormItem label={fields.amount}>
 						<NumberInput
 							pre=""
 							min={1}
@@ -304,7 +306,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Purchase Date">
+					<FormItem label={fields.date}>
 						<DateInput
 							title={''}
 							startMonthHandler={changePurchaseMonth}
@@ -316,7 +318,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Appreciation Rate">
+					<FormItem label={fields.rate}>
 						<NumberInput
 							pre={""}
 							min={1}
@@ -329,7 +331,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Market Value">
+					<FormItem label={fields.mv}>
 						<NumberInput
 							pre=""
 							min={1}
@@ -340,7 +342,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Pincode">
+					<FormItem label={fields.pin}>
 						<TextInput
 							pre=""
 							value={pin}
@@ -350,7 +352,7 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label="Address">
+					<FormItem label={fields.address}>
 						<TextInput
 							pre=""
 							value={address}
@@ -373,7 +375,7 @@ export default function AddPropertyInput({
 					<>
 						<Col xs={24}>
 							Owners{" "}
-							<Tooltip title="Add Owners">
+							<Tooltip title={fields.owner}>
 								<Button
 									shape={"circle"}
 									onClick={onAddBtnClick}
@@ -401,22 +403,21 @@ export default function AddPropertyInput({
 										/>
 									</Col>
 									<Col>
-										{/* <NumberInput 
+										<NumberInput 
 											pre='' 
 											min={1} 
 											max={100} 
 											value={own.per} 
 											changeHandler={(val:number)=>changePer(i,val)} 
 											step={0.1} 
-											isBasic 
-											unit='%'/> */}
-										<InputNumber
+											unit='%'/>
+										{/* <InputNumber
 											placeholder="Percentage"
 											min={1}
 											max={100}
 											value={own.per}
 											onChange={(val: number) => changePer(i, val)}
-										/>
+										/> */}
 									</Col>
 									<Button type="link" onClick={() => removeOwner(i)} danger>
 										<DeleteOutlined />

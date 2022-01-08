@@ -259,7 +259,7 @@ function NWContextProvider() {
 						rate: "Appreciation Rate",
 						mv: "Market Value",
 						pin: "Pincode",
-						add: "Address",
+						address: "Address",
 						owner: "Owners"
 					}
 				},
