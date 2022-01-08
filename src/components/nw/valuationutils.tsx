@@ -15,9 +15,9 @@ export const getCashFlows = (
 ) => {
 	let cashflows: any = [];
 	let count = 0;
-	let monthLeftForCurrentYear = 12 - today.getMonth();
+	let monthLeftForCurrentYear = 12 - (today.getMonth()+1);
 	let bygoneTimeToCalculateForCI = isMonth ? (monthLeftForCurrentYear + bygoneDuration) / 12 : bygoneDuration;
-	if (bygoneDuration > 0) {
+	if (bygoneDuration >= 0) {
 		amt = getCompoundedIncome(rate, amt, bygoneTimeToCalculateForCI, isMonth ? 12 : 1);
 		if (isMonth && monthLeftForCurrentYear > 0) {
 			cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
@@ -39,7 +39,7 @@ export const getCashFlows = (
 	} else {
 		for (let index = 0; index <= remainingDuration; index++) {
 			amt = getCompoundedIncome(rate as number, amt, 1, 1);
-			cashflows = Array(Math.round(1)).fill(amt);
+			cashflows = cashflows.concat(Array(Math.round(1)).fill(amt));
 		}
 	}
 	return cashflows;
@@ -77,6 +77,7 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 		const { year, month } = calculateAddYears(birthdate.getMonth()+1, birthdate.getFullYear(), le); //lifeExpectancy year and month
 		durationFromStartToEnd = calc(month, year, sm as number, sy as number);
 		remainingDuration = calc(month, year, presentMonth, presentYear);
+		console.log(remainingDuration, durationFromStartToEnd);
 	} else {
 		durationFromStartToEnd = calc(em as number, ey as number, sm as number, sy as number);
 		remainingDuration = calc(em as number, ey as number, presentMonth, presentYear);
@@ -91,11 +92,14 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(amt);
 	}
+	console.log(cashflows);
+	
 	const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
 	return npv;
 };
 
 export const calculateLoan = (holding: HoldingInput) => {
+	if(!holding) return 0;
 	const remainingDuration = calculateDifferenceInMonths(
 		holding.em as number,
 		holding.ey as number,
