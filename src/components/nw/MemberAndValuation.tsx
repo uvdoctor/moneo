@@ -34,7 +34,7 @@ export default function MemberAndValuation({
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(
 		NWContext
 	);
-	const { ratesData, discountRate, userInfo, user }: any = useContext(AppContext);
+	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 	const [valuation, setValuation] = useState<number>(0);
 
