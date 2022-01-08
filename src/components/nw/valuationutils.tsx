@@ -77,7 +77,6 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 		const { year, month } = calculateAddYears(birthdate.getMonth()+1, birthdate.getFullYear(), le); //lifeExpectancy year and month
 		durationFromStartToEnd = calc(month, year, sm as number, sy as number);
 		remainingDuration = calc(month, year, presentMonth, presentYear);
-		console.log(remainingDuration, durationFromStartToEnd);
 	} else {
 		durationFromStartToEnd = calc(em as number, ey as number, sm as number, sy as number);
 		remainingDuration = calc(em as number, ey as number, presentMonth, presentYear);
@@ -92,7 +91,6 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 	} else {
 		cashflows = Array(Math.round(remainingDuration)).fill(amt);
 	}
-	console.log(cashflows);
 	
 	const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
 	return npv;
