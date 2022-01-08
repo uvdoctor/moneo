@@ -250,17 +250,6 @@ function NWContextProvider() {
 						[PropertyType.COMM]: "Commercial",
 						[PropertyType.T]: "Townhouse",
 						[PropertyType.OTHER]: 'Others'
-					},
-					fields: {
-						type: "Type",
-						name: "Label",
-						amount: "Purchase Amount",
-						date: "Purchase Date",
-						rate: "Appreciation Rate",
-						mv: "Market Value",
-						pin: "Pincode",
-						add: "Address",
-						owner: "Owners"
 					}
 				},
 				[TAB.VEHICLE]: {
