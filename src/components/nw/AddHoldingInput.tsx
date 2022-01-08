@@ -27,7 +27,7 @@ export default function AddHoldingInput({
 	subCategoryOptions,
 	fields
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency, tabs, activeTab }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ subCat, setSubCat ] = useState<string>(
