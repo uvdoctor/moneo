@@ -97,13 +97,14 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 };
 
 export const calculateLoan = (holding: HoldingInput) => {
-	if(!holding) return 0;
 	const remainingDuration = calculateDifferenceInMonths(
 		holding.em as number,
 		holding.ey as number,
 		presentMonth,
 		presentYear
 	);
+	if (remainingDuration < 0 || isNaN(remainingDuration)) return 0;
+	if (remainingDuration === 0 ) return holding.amt as number;
 	const cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	const npv = getNPV(holding.chg as number, cashflows, 0, true, true);
 	return npv;
