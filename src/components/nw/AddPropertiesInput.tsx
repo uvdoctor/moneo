@@ -3,7 +3,6 @@ import {
 	Form,
 	Button,
 	Col,
-	InputNumber,
 	Row,
 	Alert,
 	Tooltip,
@@ -390,10 +389,9 @@ export default function AddPropertyInput({
 								/>
 							)}
 						</Col>
-
 						{own.map((own: OwnershipInput, i: number) => (
 							<Col key={"own" + i} xs={24} md={12}>
-								<Row gutter={[10, 10]}>
+								<Row gutter={[10, 10]} align='bottom'>
 									<Col key={"own" + i}>
 										<SelectInput
 											pre={<UserOutlined />}
@@ -411,13 +409,6 @@ export default function AddPropertyInput({
 											changeHandler={(val:number)=>changePer(i,val)} 
 											step={0.1} 
 											unit='%'/>
-										{/* <InputNumber
-											placeholder="Percentage"
-											min={1}
-											max={100}
-											value={own.per}
-											onChange={(val: number) => changePer(i, val)}
-										/> */}
 									</Col>
 									<Button type="link" onClick={() => removeOwner(i)} danger>
 										<DeleteOutlined />
