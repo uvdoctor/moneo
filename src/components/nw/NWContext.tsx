@@ -742,7 +742,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	let total = 0;
 	holdings.forEach((holding: HoldingInput) => {
 		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-			total += calculateInsurance(holding, discountRate, userInfo.le, user?.attributes?.birthdate);
+			total += calculateInsurance(holding, discountRate, userInfo?.le, userInfo?.dob);
 		}
 	});
 	setTotal(total);

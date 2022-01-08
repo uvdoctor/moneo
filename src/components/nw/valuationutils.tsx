@@ -73,9 +73,8 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 	const calc = isMonth ? calculateDifferenceInMonths : calculateDifferenceInYears;
 
 	if (subt === 'H' && dob && le) {
-		const birthYear = Number(dob.slice(0, dob.indexOf('-')));
-		const birthMonth = Number(dob.slice(dob.indexOf('-') + 2, dob.lastIndexOf('-')));
-		const { year, month } = calculateAddYears(birthMonth, birthYear, le); //lifeExpectancy year and month
+		const birthdate: Date = new Date(dob);
+		const { year, month } = calculateAddYears(birthdate.getMonth()+1, birthdate.getFullYear(), le); //lifeExpectancy year and month
 		durationFromStartToEnd = calc(month, year, sm as number, sy as number);
 		remainingDuration = calc(month, year, presentMonth, presentYear);
 	} else {

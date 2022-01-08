@@ -47,7 +47,7 @@ export default function MemberAndValuation({
 		let value = 0;
 		switch (childTab) {
 			case INS:
-				value = calculateInsurance(record, discountRate, userInfo.le, user?.attributes?.birthdate);
+				value = calculateInsurance(record, discountRate, userInfo?.le, userInfo?.dob);
 				break;
 			case LOAN:
 				value = calculateLoan(record);
