@@ -16,13 +16,13 @@ interface ListHoldingsProps {
 	changeData: Function;
 	categoryOptions: any;
 	subCategoryOptions?: any;
+	fields: any;
 }
 
-export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab, activeTab, tabs }: any = useContext(NWContext);
+export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions, fields }: ListHoldingsProps) {
+	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
-	const { fields } = tabs[activeTab].children[childTab];
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
 		amt: { title: fields.amount, dataIndex: 'amt', key: 'amt' },

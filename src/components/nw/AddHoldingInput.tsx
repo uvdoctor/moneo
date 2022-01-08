@@ -17,13 +17,15 @@ interface AddHoldingInputProps {
 	disableOk: Function;
 	categoryOptions: any;
 	subCategoryOptions?: any;
+	fields: any;
 }
 
 export default function AddHoldingInput({
 	setInput,
 	disableOk,
 	categoryOptions,
-	subCategoryOptions
+	subCategoryOptions,
+	fields
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency, tabs, activeTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
@@ -246,7 +248,6 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const { fields } = tabs[activeTab].children[childTab];
 	const { Item: FormItem } = Form; 
 
 	return (

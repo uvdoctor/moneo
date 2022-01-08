@@ -16,7 +16,7 @@ import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import { presentMonth, presentYear } from "../utils";
-import { NWContext, TAB } from "./NWContext";
+import { NWContext } from "./NWContext";
 import {
 	getDefaultMember,
 	getFamilyOptions,
@@ -27,14 +27,16 @@ interface AddPropertiesInputProps {
 	setInput: Function;
 	disableOk: Function;
 	categoryOptions: any;
+	fields: any;
 }
 
 export default function AddPropertyInput({
 	setInput,
 	disableOk,
 	categoryOptions,
+	fields
 }: AddPropertiesInputProps) {
-	const { allFamily, selectedMembers, selectedCurrency, tabs }: any = useContext(
+	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(
 		NWContext
 	);
 	const [subtype, setSubtype] = useState<string>("P");
@@ -56,8 +58,6 @@ export default function AddPropertyInput({
 	const [error, setError] = useState<boolean>(false);
 	const [ sm, setSm ] = useState<number>(4);
 	const [ sy, setSy ] = useState<number>(presentYear - 5);
-
-	const { fields } = tabs["Physical"].children[TAB.PROP];
 
 	const duration = () => {
 		let rec = getNewRec();

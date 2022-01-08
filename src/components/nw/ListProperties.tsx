@@ -10,7 +10,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import SelectInput from "../form/selectinput";
-import { NWContext, TAB } from "./NWContext";
+import { NWContext } from "./NWContext";
 import TextInput from "../form/textinput";
 import {
 	doesPropertyMatch,
@@ -30,14 +30,16 @@ interface ListPropertiesProps {
 	data: Array<PropertyInput>;
 	changeData: Function;
 	categoryOptions: any;
+	fields: any;
 }
 
 export default function ListProperties({
 	data,
 	changeData,
 	categoryOptions,
+	fields
 }: ListPropertiesProps) {
-	const { selectedCurrency, allFamily, selectedMembers, tabs }: any = useContext(
+	const { selectedCurrency, allFamily, selectedMembers }: any = useContext(
 		NWContext
 	);
 	const [indexForMv, setIndexForMv] = useState<number | null>(null);
@@ -47,7 +49,6 @@ export default function ListProperties({
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 	const today = new Date();
-	const { fields } = tabs["Physical"].children[TAB.PROP];
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
 		changeData([...data]);

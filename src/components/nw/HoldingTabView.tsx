@@ -75,8 +75,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 				onChange={(activeKey) => {
 					if (isRoot) {
 						setActiveTab(activeKey);
-						const children = tabs[activeKey]?.children;
-						setChildTab(children ? Object.keys(children)[0] : '');
 					} else {
 						setChildTab(activeKey);
 					}
@@ -91,7 +89,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 					{Object.keys(tabsData).map((tabName) => {
 						if (!liabilities && tabName === LIABILITIES_TAB) return;
 						const { label, children, hasUploader, info, link, total } = tabsData[tabName];
-						
 						const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
 						const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
 						return (
@@ -144,6 +141,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 															tabsData[tabName].subCategoryOptions
 														)
 													}
+													fields={tabsData[tabName].fields}
 												/>
 											</Col>
 										</Row>
@@ -155,6 +153,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
 												categoryOptions={tabsData[tabName].categoryOptions}
+												fields={tabsData[tabName].fields}
 											/>
 										) : (
 											<ListHoldings
@@ -164,6 +163,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												subCategoryOptions={
 													childTab === TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions
 												}
+												fields={tabsData[tabName].fields}
 											/>
 										) : (
 											<Empty description="No data found." />
