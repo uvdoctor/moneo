@@ -276,7 +276,7 @@ function NWContextProvider() {
 					fields: {
 						type: "Type",
 						name: "Label",
-						amount: "Amount",
+						amount: "Purchase Amount",
 						date: "Purchase Date",
 					}
 				},
