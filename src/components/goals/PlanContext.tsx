@@ -78,7 +78,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   };
 
   // potential performance
-  const pp = () => {
+  const getPotentialPerformance = () => {
     const irDiffByCurrency: any = {
       INR: 3,
     };
@@ -125,7 +125,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       ffYear,
       mustCFs,
       tryCFs,
-      pp()
+      getPotentialPerformance()
     );
     console.log("FF result: ", result);
     setFFResult(result);
@@ -341,7 +341,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       result ? result.ffYear : ffYear,
       highImpCFs,
       medImpCFs,
-      pp()
+      getPotentialPerformance()
     );
     if (!isFFPossible(resultWithoutGoal, nomineeAmt)) return {
       impactYears: null,
@@ -363,7 +363,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       result ? result.ffYear : ffYear,
       highImpCFs,
       medImpCFs,
-      pp()
+      getPotentialPerformance()
     );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
@@ -396,7 +396,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         editGoal,
         removeGoal,
         calculateFFImpactYear,
-        pp,
+        pp: getPotentialPerformance,
         goal,
         setGoal,
         isPublicCalc,

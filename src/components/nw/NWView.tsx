@@ -29,7 +29,7 @@ export default function NWView() {
 	}: any = useContext(NWContext);
 	const { appContextLoaded, user }: any = useContext(AppContext);
 
-	return appContextLoaded && user && allFamily ? (
+	return appContextLoaded && user && allFamily && Object.keys(allFamily).length ? (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
