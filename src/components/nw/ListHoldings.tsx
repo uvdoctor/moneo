@@ -19,9 +19,15 @@ interface ListHoldingsProps {
 	fields: any;
 }
 
-export default function ListHoldings({ data, changeData, categoryOptions, subCategoryOptions, fields }: ListHoldingsProps) {
+export default function ListHoldings({
+	data,
+	changeData,
+	categoryOptions,
+	subCategoryOptions,
+	fields
+}: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, ANGEL, OTHER, SAV, CREDIT } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
@@ -35,12 +41,22 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	let defaultColumns: Array<string> = [];
 	let expandedColumns: Array<string> = [];
 
-	if (childTab === 'Deposits') {
-		defaultColumns = [ 'cat', 'amt', 'rate', 'fid' ];
-		expandedColumns = [ 'date', 'label', 'qty' ];
-	} else {
-		defaultColumns = [ 'cat', 'amt', 'rate', 'fid' ];
-		expandedColumns = [ 'date', 'label', 'qty' ];
+	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT, OTHER ].includes(childTab);
+
+	if (hasminimumCol(childTab)) {
+		defaultColumns = [ 'cat', 'label', 'fid' ];
+	} else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
+		defaultColumns = [ 'cat', 'fid' ];
+		expandedColumns = [ 'amt' ];
+	} else if (childTab === VEHICLE) {
+		defaultColumns = [ 'cat', 'fid' ];
+		expandedColumns = [ 'label', 'amt', 'date' ];
+	} else if (childTab === LENT || childTab === LOAN || childTab === PF) {
+		defaultColumns = [ 'cat', 'amt', 'fid' ];
+		expandedColumns = [ 'label', 'date', 'rate', 'qty' ];
+	} else if (childTab === INS) {
+		defaultColumns = [ 'cat', 'amt', 'fid' ];
+		expandedColumns = [ 'date', 'rate', 'qty' ];
 	}
 
 	const changeName = (val: any, i: number) => {
@@ -62,41 +78,64 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
-	const expandedRow = (i: number) => {
-		const columns: any = expandedColumns.map((col: string) => allColumns[col]);
-
-		const expandedRowData: any = {
+	const getAllData = (holding: HoldingInput, i: number) => {
+		const dataToRender = {
 			key: i,
-			date: <DateColumn data={data} changeData={changeData} record={data[i]} />,
+			cat: (
+				<Category
+					data={data}
+					changeData={changeData}
+					categoryOptions={categoryOptions}
+					subCategoryOptions={subCategoryOptions}
+					record={holding}
+				/>
+			),
+			amt: <Amount data={data} changeData={changeData} record={holding} />,
+			rate: (hasRate(childTab) || (childTab === INS && holding.subt !== 'L')) && (
+				<NumberInput
+					pre=""
+					min={0}
+					max={50}
+					value={holding.chg as number}
+					changeHandler={(val: number) => changeChg(val, holding)}
+					step={0.1}
+					unit="%"
+				/>
+			),
+			fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={i} />,
 			label: hasName(childTab) && (
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
-					value={data[i].name as string}
+					value={holding.name as string}
 					size={'middle'}
 					style={{ width: 200 }}
 				/>
-			),
-			qty: hasPF(childTab) && (
-				<NumberInput
-					pre=""
-					value={data[i].qty as number}
-					changeHandler={(val: number) => changeQty(val, i)}
-					currency={data[i].curr as string}
-				/>
 			)
 		};
+		if (hasDate(childTab, data[i])) {
+			// @ts-ignore
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} />;
+		}
+		if (hasPF(childTab)) {
+			// @ts-ignore
+			dataToRender.qty = (
+				<NumberInput
+					pre=""
+					value={holding.qty as number}
+					changeHandler={(val: number) => changeQty(val, i)}
+					currency={holding.curr as string}
+				/>
+			);
+		}
+		return dataToRender;
+	};
 
-		return (
-			<Table
-				columns={columns.filter((col: any) => {
-					if (col.dataIndex === 'date') return hasDate(childTab, data[i]);
-					if (col.dataIndex === 'label') return hasName(childTab);
-					if (col.dataIndex === 'qty') return hasPF(childTab);
-				})}
-				dataSource={[ expandedRowData ]}
-			/>
-		);
+	const expandedRow = (i: number) => {
+		const columns: any = expandedColumns.map((col: string) => allColumns[col]);
+		const expandedRowData: any = getAllData(data[i], i);
+
+		return <Table columns={columns} dataSource={[ expandedRowData ]} />;
 	};
 
 	const changeChg = (chg: number, record: HoldingInput) => {
@@ -111,37 +150,11 @@ export default function ListHoldings({ data, changeData, categoryOptions, subCat
 	useEffect(
 		() => {
 			let dataSource: Array<any> = [];
-
 			data.map((holding: HoldingInput, index: number) => {
 				if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-					dataSource.push({
-						key: index,
-						cat: (
-							<Category
-								data={data}
-								changeData={changeData}
-								categoryOptions={categoryOptions}
-								subCategoryOptions={subCategoryOptions}
-								record={holding}
-							/>
-						),
-						amt: <Amount data={data} changeData={changeData} record={holding} />,
-						rate: (hasRate(childTab) || (childTab === INS && holding.subt !== 'L')) && (
-							<NumberInput
-								pre=""
-								min={0}
-								max={50}
-								value={holding.chg as number}
-								changeHandler={(val: number) => changeChg(val, holding)}
-								step={0.1}
-								unit="%"
-							/>
-						),
-						fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={index} />
-					});
+					dataSource.push(getAllData(holding, index));
 				}
 			});
-
 			setDataSource([ ...dataSource ]);
 		},
 		[ data, selectedMembers, selectedCurrency ]
