@@ -49,7 +49,7 @@ export default function Amount({ data, changeData, record }: AmountProps) {
 					/>
 				</Col>
 			) : (
-				<Col flex="150px">
+				<Col>
 					<NumberInput
 						pre=""
 						value={record.amt as number}

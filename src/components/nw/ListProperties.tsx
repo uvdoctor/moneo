@@ -51,7 +51,7 @@ export default function ListProperties({
 	const today = new Date();
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
-		changeData([...data]);
+		changeData([...data]); 
 	};
 
 	const changePin = async (val: string, i: number) => {
@@ -93,7 +93,6 @@ export default function ListProperties({
 		data[i].purchase.month = val
 		setIndexForMv(i);
 		changeData([...data]);
-
 	}
 
 	const changePurchaseYear = (val: number, i: number) => {

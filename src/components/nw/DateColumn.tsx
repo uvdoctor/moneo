@@ -1,5 +1,5 @@
-import { Col } from 'antd';
-import React, { Fragment, useContext, useState } from 'react';
+import { Col, Row } from 'antd';
+import React, { useContext, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
@@ -54,8 +54,8 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		[ LOAN, INS ].includes(childTab) || (record.chgF === 0 && childTab === LENT);
 
 	return (
-		<Fragment>
-			<Col>
+		<Row align='middle'>
+			<Col span={18}>
 				<DateInput
 					title={''}
 					startMonthHandler={changeStartMonth}
@@ -82,7 +82,7 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 				/>
 			</Col>
 			{record.subt === NATIONAL_SAVINGS_CERTIFICATE && (
-				<Col>
+				<Col span={6}>
 					<SelectInput
 						pre={''}
 						value={duration}
@@ -91,6 +91,6 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 					/>
 				</Col>
 			)}
-		</Fragment>
+		</Row>
 	);
 }

@@ -6,7 +6,7 @@ import SelectInput from '../form/selectinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { NWContext, TAB } from './NWContext';
 import { getFamilyOptions } from './nwutils';
-import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
+import { DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import {
 	calculateCompundingIncome,
 	calculateCrypto,
@@ -17,6 +17,7 @@ import {
 	calculateVehicle,
 	calculateLoan
 } from './valuationutils';
+import NumberInput from '../form/numberinput';
 
 interface MemberAndValuationProps {
 	data: Array<HoldingInput>;
@@ -28,8 +29,9 @@ interface MemberAndValuationProps {
 export default function MemberAndValuation({ data, record, changeData, index }: MemberAndValuationProps) {
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(NWContext);
 	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
-	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, SAV, OTHER, ANGEL, CREDIT } = TAB;
 	const [ valuation, setValuation ] = useState<number>(0);
+	const [ isEditMode, setIsEditMode ] = useState<boolean>(false);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
@@ -82,12 +84,39 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		changeData([ ...data ]);
 	};
 
+	const changeAmt = (amt: number) => {
+		record.amt = amt;
+		changeData([ ...data ]);
+	};
+
+	const hasAmountAsValuation = (childTab: string) => [ ANGEL, SAV, CREDIT, OTHER ].includes(childTab);
+
 	return (
-		<Row align="middle" gutter={[ 10, 10 ]}>
-			<Col xs={24} sm={24} md={6} lg={6}>
-				<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
+		<Row gutter={[ 10, 10 ]}>
+			<Col span={24}>
+				<Row>
+					<Col>
+						{hasAmountAsValuation(childTab) && isEditMode ? (
+							<NumberInput
+								pre=""
+								value={record.amt as number}
+								changeHandler={changeAmt}
+								currency={record.curr as string}
+							/>
+						) : (
+							<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
+						)}
+					</Col>
+					{hasAmountAsValuation(childTab) && <Col>
+						<Button
+							type="link"
+							icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+							onClick={() => (isEditMode ? setIsEditMode(false) : setIsEditMode(true))}
+						/>
+					</Col>}
+				</Row>
 			</Col>
-			<Col xs={24} sm={24} md={6} lg={6}>
+			<Col span={24}>
 				<Row align="middle">
 					<Col>
 						<UserOutlined />
