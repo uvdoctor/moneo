@@ -102,7 +102,7 @@ export const doesHoldingMatch = (
   //@ts-ignore
   const subType = instrument.subt;
   if(!subType || ![APIt.AssetSubType.C, APIt.AssetSubType.Gold, SILVER, PALLADIUM, PLATINUM].includes(subType)) {
-    if(instrument.curr === selectedCurrency) return doesMemberMatch(instrument, selectedMembers);
+    if(instrument.curr !== selectedCurrency) return false;
   }
   return doesMemberMatch(instrument, selectedMembers);
 }
