@@ -1,4 +1,4 @@
-import { Empty, Table } from 'antd';
+import { Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
@@ -46,8 +46,8 @@ export default function ListHoldings({
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'label', 'fid' ];
 	} else if (childTab === OTHER) {
-		defaultColumns = [ 'label', 'fid' ];
-		expandedColumns = [ 'cat' ];
+		defaultColumns = [ 'cat', 'fid' ];
+		expandedColumns = [ 'label' ];
 	} else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'amt' ];
@@ -80,6 +80,7 @@ export default function ListHoldings({
 		[ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== 'H';
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
+	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
@@ -93,20 +94,8 @@ export default function ListHoldings({
 					record={holding}
 				/>
 			),
-			amt: <Amount data={data} changeData={changeData} record={holding} />,
-			rate: (hasRate(childTab) || (childTab === INS && holding.subt !== 'L')) && (
-				<NumberInput
-					pre=""
-					min={0}
-					max={50}
-					value={holding.chg as number}
-					changeHandler={(val: number) => changeChg(val, holding)}
-					step={0.1}
-					unit="%"
-				/>
-			),
 			fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={i} />,
-			label: hasName(childTab) && (
+			label: (
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
@@ -116,29 +105,122 @@ export default function ListHoldings({
 				/>
 			)
 		};
-		if (hasDate(childTab, data[i])) {
-			// @ts-ignore
-			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} />;
-		}
-		if (hasPF(childTab)) {
-			// @ts-ignore
-			dataToRender.qty = (
-				<NumberInput
-					pre=""
-					value={holding.qty as number}
-					changeHandler={(val: number) => changeQty(val, i)}
-					currency={holding.curr as string}
-				/>
-			);
-		}
 		return dataToRender;
 	};
 
 	const expandedRow = (i: number) => {
-		const columns: any = expandedColumns.map((col: string) => allColumns[col]);
-		const expandedRowData: any = getAllData(data[i], i);
-
-		return <Table columns={columns} dataSource={[ expandedRowData ]} />;
+		return (
+			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 0 } ]}>
+				{hasName(childTab) &&
+				expandedColumns.includes('label') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{fields.name}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<TextInput
+											pre=""
+											changeHandler={(val: string) => changeName(val, i)}
+											value={data[i].name as string}
+											size={'middle'}
+											style={{ width: 200 }}
+										/>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{expandedColumns.includes('amt') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<Amount data={data} changeData={changeData} record={data[i]} />
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{hasDate(childTab, data[i]) &&
+				expandedColumns.includes('date') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{fields.date}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<DateColumn data={data} changeData={changeData} record={data[i]} />
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{hasPF(childTab) &&
+				expandedColumns.includes('qty') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{fields.qty}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<NumberInput
+											pre=""
+											value={data[i].qty as number}
+											changeHandler={(val: number) => changeQty(val, i)}
+											currency={data[i].curr as string}
+										/>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{hasRate(childTab) &&
+				expandedColumns.includes('rate') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{fields.rate}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<NumberInput
+											pre=""
+											min={0}
+											max={50}
+											value={data[i].chg as number}
+											changeHandler={(val: number) => changeChg(val, data[i])}
+											step={0.1}
+											unit="%"
+										/>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+			</Row>
+		);
 	};
 
 	const changeChg = (chg: number, record: HoldingInput) => {
