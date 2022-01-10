@@ -41,10 +41,13 @@ export default function ListHoldings({
 	let defaultColumns: Array<string> = [];
 	let expandedColumns: Array<string> = [];
 
-	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT, OTHER ].includes(childTab);
+	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT ].includes(childTab);
 
 	if (hasminimumCol(childTab)) {
-		defaultColumns = [ 'cat', 'label', 'fid' ];
+		defaultColumns = [ 'label', 'fid' ];
+	} else if (childTab === OTHER) {
+		defaultColumns = [ 'label', 'fid' ];
+		expandedColumns = [ 'cat' ];
 	} else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'amt' ];
@@ -52,11 +55,11 @@ export default function ListHoldings({
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date' ];
 	} else if (childTab === LENT || childTab === LOAN || childTab === PF) {
-		defaultColumns = [ 'cat', 'amt', 'fid' ];
-		expandedColumns = [ 'label', 'date', 'rate', 'qty' ];
+		defaultColumns = [ 'cat', 'fid' ];
+		expandedColumns = [ 'label', 'amt', 'date', 'rate', 'qty' ];
 	} else if (childTab === INS) {
-		defaultColumns = [ 'cat', 'amt', 'fid' ];
-		expandedColumns = [ 'date', 'rate', 'qty' ];
+		defaultColumns = [ 'cat', 'fid' ];
+		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
 	}
 
 	const changeName = (val: any, i: number) => {
