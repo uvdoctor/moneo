@@ -38,7 +38,7 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 	return (
 		<Row gutter={[10,10]}>
 			{categoryOptions && (
-				<Col xs={24} sm={24} md={8} lg={6}>
+				<Col span={24}>
 					<SelectInput
 						pre=""
 						value={childTab === CRYPTO ? record.name as string : record.subt as string}
@@ -49,7 +49,7 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 			)}
 			{subCategoryOptions ? (
 				subCategoryOptions[record.subt as string] && (
-					<Col xs={24} sm={24} md={8} lg={6}>
+					<Col span={24}>
 						<SelectInput
 							pre=""
 							value={
