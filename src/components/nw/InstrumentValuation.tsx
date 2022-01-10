@@ -140,8 +140,9 @@ export default function InstrumentValuation() {
 		const { E, F } = AssetType;
 		const { REIT, InvIT, ETF } = InsType;
 		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
-			const id = instrument.id;
-			const data = insData[id];
+			let [ id, cachedData ] = [ instrument.id, simpleStorage.get(LOCAL_INS_DATA_KEY) ]
+			if (!cachedData) cachedData = insData;
+			const data = cachedData[id];
 			if (!data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				if (childTab === MF && isFund(id)) return id;
 				if (childTab === STOCK && !isFund(id)) return id;
@@ -162,7 +163,9 @@ export default function InstrumentValuation() {
 	const filterInstrumentsByTags = () => {
 		if (!selectedTags.length) return;
 		let filterDataByTag = filteredInstruments.filter((instrument: InstrumentInput) => {
-			const data = insData[instrument.id];
+			let [ id, cachedData ] = [ instrument.id, simpleStorage.get(LOCAL_INS_DATA_KEY) ]
+			if (!cachedData) cachedData = insData;
+			const data = cachedData[id];
 			if (childTab === MF && selectedSubtTags.length && selectedTags.indexOf(data.type as string) > -1) {
 				const { CB, GBO, I, HB, GB, L } = AssetSubType;
 				const { subt, mftype, type, mcap } = data;
