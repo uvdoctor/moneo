@@ -1,12 +1,12 @@
-import { Button, Col, Row } from "antd";
-import React, { useContext, useEffect, useState } from "react";
-import { HoldingInput } from "../../api/goals";
-import { AppContext } from "../AppContext";
-import SelectInput from "../form/selectinput";
-import { toHumanFriendlyCurrency } from "../utils";
-import { NWContext, TAB } from "./NWContext";
-import { getFamilyOptions } from "./nwutils";
-import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Col, Row } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { HoldingInput } from '../../api/goals';
+import { AppContext } from '../AppContext';
+import SelectInput from '../form/selectinput';
+import { toHumanFriendlyCurrency } from '../utils';
+import { NWContext, TAB } from './NWContext';
+import { getFamilyOptions } from './nwutils';
+import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import {
 	calculateCompundingIncome,
 	calculateCrypto,
@@ -15,8 +15,8 @@ import {
 	calculatePM,
 	calculateProvidentFund,
 	calculateVehicle,
-	calculateLoan,
-} from "./valuationutils";
+	calculateLoan
+} from './valuationutils';
 
 interface MemberAndValuationProps {
 	data: Array<HoldingInput>;
@@ -25,22 +25,15 @@ interface MemberAndValuationProps {
 	index: number;
 }
 
-export default function MemberAndValuation({
-	data,
-	record,
-	changeData,
-	index,
-}: MemberAndValuationProps) {
-	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(
-		NWContext
-	);
+export default function MemberAndValuation({ data, record, changeData, index }: MemberAndValuationProps) {
+	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(NWContext);
 	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
-	const [valuation, setValuation] = useState<number>(0);
+	const [ valuation, setValuation ] = useState<number>(0);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	const calculateValuation = (childTab: string) => {
@@ -77,35 +70,40 @@ export default function MemberAndValuation({
 		return value;
 	};
 
-	useEffect(() => {
-		setValuation(calculateValuation(childTab));
-	}, [childTab, data, record, discountRate]);
+	useEffect(
+		() => {
+			setValuation(calculateValuation(childTab));
+		},
+		[ childTab, data, record, discountRate ]
+	);
 
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
-		changeData([...data]);
+		changeData([ ...data ]);
 	};
 
 	return (
-		<Row align="middle" gutter={[10, 10]}>
-			<Col>
-				<UserOutlined />
-			</Col>
-			<Col>
-				<SelectInput
-					pre=""
-					value={record.fId ? record.fId : ""}
-					options={getFamilyOptions(allFamily)}
-					changeHandler={(key: string) => changeOwner(key, index)}
-				/>
-			</Col>
-			<Col>
+		<Row align="middle" gutter={[ 10, 10 ]}>
+			<Col xs={24} sm={24} md={6} lg={6}>
 				<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
 			</Col>
-			<Col>
-				<Button type="link" onClick={() => removeHolding(index)} danger>
-					<DeleteOutlined />
-				</Button>
+			<Col xs={24} sm={24} md={6} lg={6}>
+				<Row align="middle">
+					<Col>
+						<UserOutlined />
+					</Col>
+					<Col>
+						<SelectInput
+							pre=""
+							value={record.fId ? record.fId : ''}
+							options={getFamilyOptions(allFamily)}
+							changeHandler={(key: string) => changeOwner(key, index)}
+						/>
+					</Col>
+					<Col>
+						<Button type="link" onClick={() => removeHolding(index)} danger icon={<DeleteOutlined />} />
+					</Col>
+				</Row>
 			</Col>
 		</Row>
 	);
