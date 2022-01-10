@@ -735,23 +735,24 @@ function NWContextProvider() {
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		if(!cachedData) cachedData = insData;
 		instruments.forEach((instrument: InstrumentInput) => {
-			const data = insData[instrument.id];
+			const id = instrument.id;
+			const data = cachedData[id];
 			if(data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				let value = instrument.qty * cachedData[instrument.id].price;
+				let value = instrument.qty * data.price;
 				total += value;
 				if(data.itype === InsType.ETF) totalETFs += value;
 				else if(isFund(instrument.id)) totalMFs += value;
 				if(data.subt === AssetSubType.GoldB) totalFGold += value;
-				else if(data.itype && cachedData[instrument.id].itype === InsType.REIT)
+				else if(data.itype && data.itype === InsType.REIT)
 					totalFRE += value;
-				else if(data.itype && cachedData[instrument.id].itype === InsType.InvIT)
+				else if(data.itype && data.itype === InsType.InvIT)
 					totalInv += value;
 				else if(data.type === AssetType.E) {
 					totalFEquity += value;
-					if(!isFund(instrument.id) && !data.itype) totalStocks += value;
+					if(!isFund(id) && !data.itype) totalStocks += value;
 				} else if(data.type === AssetType.F) {
 					totalFFixed += value;
-					if(!isFund(instrument.id) && !data.itype) totalBonds += value;
+					if(!isFund(id) && !data.itype) totalBonds += value;
 				} else if(data.type === AssetType.H) {
 					if(includesAny(data.name as string, ["conservative"])) {
 						totalFFixed += 0.7 * value;
