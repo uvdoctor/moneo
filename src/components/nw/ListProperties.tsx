@@ -205,6 +205,22 @@ export default function ListProperties({
 									</Col>
 								</Row>
 							</Col>
+							<Col>
+								<Row gutter={[10, 0]}>
+									<Col>{fields.rate}</Col>
+									<Col>
+										<NumberInput
+											changeHandler={(val: number) => changeRate(i, val)}
+											min={1}
+											max={50}
+											value={data[i].rate as number}
+											step={0.1}
+											unit="%"
+											pre=""
+										/>
+								</Col>
+								</Row>
+							</Col>
 						</Row>
 					</Col>
 					<Col xs={24} sm={12} md={8}>
@@ -296,7 +312,6 @@ export default function ListProperties({
 
 	const columns = [
 		{ title: fields.type, dataIndex: "type", key: "type" },
-		{ title: fields.rate, dataIndex: "rate", key: "rate" },
 		{ title: "Valuation", key: "val", dataIndex: "val" },
 	];
 
@@ -323,17 +338,6 @@ export default function ListProperties({
 							data[i].type = val;
 							changeData([...data]);
 						}}
-					/>
-				),
-				rate: (
-					<NumberInput
-						changeHandler={(val: number) => changeRate(i, val)}
-						min={1}
-						max={50}
-						value={data[i].rate as number}
-						step={0.1}
-						unit="%"
-						pre=""
 					/>
 				),
 				val: (
