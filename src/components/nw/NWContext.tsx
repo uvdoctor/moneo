@@ -651,9 +651,9 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if(!user) return;
+			if(!user || !owner) return;
 			initializeHoldings();
-		},[ user ]
+		},[ user, owner ]
 	);
 
 	useEffect(
