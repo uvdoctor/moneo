@@ -54,9 +54,12 @@ export default function ListHoldings({
 	} else if (childTab === VEHICLE) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date' ];
-	} else if (childTab === LENT || childTab === LOAN || childTab === PF) {
+	} else if (childTab === LENT || childTab === PF) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date', 'rate', 'qty' ];
+	} else if (childTab === LOAN) {
+		defaultColumns = [ 'label', 'fid' ];
+		expandedColumns = [ 'amt', 'date', 'rate' ];
 	} else if (childTab === INS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
