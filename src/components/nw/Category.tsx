@@ -13,13 +13,13 @@ interface CategoryProps {
 }
 
 export default function Category({ data, changeData, categoryOptions, subCategoryOptions, record }: CategoryProps) {
-	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, LENT, INS } = TAB;
+	const { childTab, npsSubtype }: any = useContext(NWContext);
+	const { CRYPTO, LENT, INS, NPS } = TAB;
 
-	const changeCategory = (subtype: string) => {
-		childTab === CRYPTO ? (record.name = subtype) : (record.subt = subtype);
+	const changeCategory = (val: string) => {
+		childTab === CRYPTO ? (record.name = val) : childTab === NPS ? (record.type = val) : (record.subt = val);
 		if (subCategoryOptions) {
-			let opts = subCategoryOptions[subtype];
+			let opts = subCategoryOptions[val];
 			if (!opts) return changeData([ ...data ]);
 			if (childTab === LENT) {
 				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
@@ -27,35 +27,64 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 				if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 			}
 		}
+		if (npsSubtype) {
+			let opts = npsSubtype[record.type as string][val];
+			if (!opts) return changeData([ ...data ]);
+			if (!opts[record.subt as string]) record.subt = Object.keys(opts)[0];
+		}
 		changeData([ ...data ]);
 	};
 
 	const changeSubCategory = (val: string) => {
-		childTab === LENT || childTab === INS ? (record.chgF = Number(val)) : (record.name = val);
+		if (npsSubtype) {
+			let opts = npsSubtype[record.type as string][val];
+			if (!opts) return changeData([ ...data ]);
+			if (!opts[record.subt as string]) record.subt = Object.keys(opts)[0];
+		}
+		if (childTab === LENT || childTab === INS) record.chgF = Number(val);
+		else {
+			record.name = val;
+		}
 		changeData([ ...data ]);
 	};
 
 	return (
-		<Row gutter={[10,10]}>
+		<Row gutter={[ 10, 10 ]}>
 			{categoryOptions && (
 				<Col span={24}>
 					<SelectInput
 						pre=""
-						value={childTab === CRYPTO ? record.name as string : record.subt as string}
+						value={
+							childTab === CRYPTO ? (
+								record.name as string
+							) : childTab === NPS ? (
+								record.type as string
+							) : (
+								record.subt as string
+							)
+						}
 						options={categoryOptions}
 						changeHandler={(val: string) => changeCategory(val)}
 					/>
 				</Col>
 			)}
 			{subCategoryOptions ? (
-				subCategoryOptions[record.subt as string] && (
+				(childTab === NPS
+					? subCategoryOptions[record.type as string]
+					: subCategoryOptions[record.subt as string]) && (
 					<Col span={24}>
 						<SelectInput
 							pre=""
 							value={
 								childTab === LENT || childTab === INS ? record.chgF as number : record.name as string
 							}
-							options={subCategoryOptions[record.subt as string]}
+							options={
+								childTab === NPS ? (
+									subCategoryOptions[record.type as string]
+								) : (
+									subCategoryOptions[record.subt as string]
+								)
+							}
 							changeHandler={(val: string) => changeSubCategory(val)}
 							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
 						/>

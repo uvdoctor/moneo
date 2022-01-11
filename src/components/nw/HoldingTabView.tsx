@@ -30,11 +30,10 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		totalAssets,
 		totalLiabilities,
 		view,
+		npsCategory,
+		
 	}: any = useContext(NWContext);
-	const [
-		npsSubCat,
-		setNPSSubCat
-	] = useState<any>({});
+
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
@@ -43,7 +42,9 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
 	useEffect(
 		() => {
-			if (childTab === TAB.NPS && !npsData.length) (async () => setNPSSubCat(await loadNPSSubCategories()))();
+			if (childTab === TAB.NPS && !npsData.length) {
+				(async () => await loadNPSSubCategories())();
+			}
 		},
 		[ childTab ]
 	);
@@ -136,7 +137,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 													categoryOptions={tabsData[tabName].categoryOptions}
 													subCategoryOptions={
 														childTab === TAB.NPS ? (
-															npsSubCat
+															npsCategory
 														) : (
 															tabsData[tabName].subCategoryOptions
 														)
@@ -161,7 +162,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												changeData={tabsData[tabName].setData}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												subCategoryOptions={
-													childTab === TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions
+													childTab === TAB.NPS ? npsCategory : tabsData[tabName].subCategoryOptions
 												}
 												fields={tabsData[tabName].fields}
 											/>

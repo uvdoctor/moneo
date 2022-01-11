@@ -12,6 +12,8 @@ import {
 	getFamilysList,
 	getNPSData,
 	getNPSFundManagers,
+	getNPSSchemeTypes,
+	getNPSTypes,
 	getRelatedCurrencies,
 	isFund,
 	loadAllFamilyMembers,
@@ -168,17 +170,35 @@ function NWContextProvider() {
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
 	const [	view, setView ] = useState<string>(ASSETS_VIEW);
+	const [ npsCategory, setNpsCategory ] = useState<Object>({});
+	const [ npsSubtype, setNpsSubtype ] = useState<Object>({});
 
 	const loadNPSSubCategories = async () => {
-		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
-		if (npsData) {
-			setNPSData([...npsData]);
-			let subCategories: any = getNPSFundManagers();
-			Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
-			for(let item of npsData) {
-				subCategories[item.pfm][item.id] = item.name;
+		let npsDetails: Array<CreateNPSPriceInput> | undefined = await getNPSData();
+		if (npsDetails) {
+			setNPSData([...npsDetails]);
+			let subCategories: any = getNPSSchemeTypes();
+			let categories: any = getNPSSchemeTypes();
+			Object.keys(subCategories).forEach((key: string) => subCategories[key] = getNPSFundManagers());
+			Object.keys(categories).forEach((key: string) => categories[key] = getNPSFundManagers());
+			Object.keys(subCategories).forEach((key: string) => {
+				Object.keys(subCategories[key]).forEach((pfm: string) => subCategories[key][pfm] = {});
+			})
+			for(let item of npsDetails) {
+				let subtype: any = getNPSTypes(item.subt);
+				if(item.name.includes("TAX SAVER")) subtype = "Tax Saver";
+				subCategories[item.st][item.pfm][item.id] = subtype;
 			}
-			return subCategories;
+			Object.keys(subCategories).forEach((key: string) => {
+				Object.keys(subCategories[key]).forEach((pfm: string) => {
+					if(!Object.keys(subCategories[key][pfm]).length) {
+						delete subCategories[key][pfm] 
+						delete categories[key][pfm]
+					}
+				})
+			})
+			setNpsCategory(categories);
+			setNpsSubtype(subCategories);
 		}
 	};
 
@@ -486,8 +506,8 @@ function NWContextProvider() {
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					categoryOptions: getNPSFundManagers(),
-					subCategoryOptions: loadNPSSubCategories,
+					categoryOptions: getNPSSchemeTypes(),
+					subCategoryOptions: npsCategory,
 					fields: {
 						type: "Fund Manager",
 						subType: "Scheme Type",
@@ -1158,7 +1178,9 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				totalPPF,
 				view,
 				setView,
-				addSelfMember
+				addSelfMember,
+				npsCategory,
+				npsSubtype
 			}}
 		>
 			<NWView />

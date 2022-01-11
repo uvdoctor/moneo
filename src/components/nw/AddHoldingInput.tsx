@@ -27,13 +27,13 @@ export default function AddHoldingInput({
 	subCategoryOptions,
 	fields
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency, npsSubtype }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ subCat, setSubCat ] = useState<string>(
 		subCategoryOptions && subCategoryOptions[category] ? Object.keys(subCategoryOptions[category])[0] : ''
 	);
-	const [ name, setName ] = useState<string>('');
+	const [ name, setName ] = useState<string>(childTab === NPS && npsSubtype ? Object.keys(npsSubtype[category][subCat])[0] : '');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
@@ -89,8 +89,9 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				break;
 			case NPS:
-				newRec.subt = category;
+				newRec.subt = name;
 				newRec.name = subCat;
+				newRec.type = category;
 				break;
 			case PF:
 				newRec.subt = category;
@@ -199,8 +200,18 @@ export default function AddHoldingInput({
 
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
+		if (childTab === NPS && npsSubtype) {
+			let opts = npsSubtype[category][subCat];
+			if (opts && Object.keys(opts).length && !opts[name]) {
+				setName(Object.keys(opts)[0]);
+			}
+		}
 		let rec = getNewRec();
-		childTab === LENT || childTab === INS ? (rec.chgF = Number(subCat)) : (rec.name = val);
+		if (childTab === LENT || childTab === INS) {
+			rec.chgF = Number(subCat);
+		} else {
+			rec.name = val;
+		}
 		setInput(rec);
 	};
 
@@ -228,16 +239,26 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeCategory = (subtype: string) => {
-		setCategory(subtype);
+	const changeCategory = (val: string) => {
+		setCategory(val);
 		if (subCategoryOptions) {
-			let opts = subCategoryOptions[subtype];
+			let opts = subCategoryOptions[val];
 			if (opts && Object.keys(opts).length && !opts[subCat]) {
 				setSubCat(Object.keys(opts)[0]);
 			}
 		}
+		if (childTab === NPS) {
+			let opts = npsSubtype[category][subCat];
+			if (opts && Object.keys(opts).length && !opts[name]) {
+				setName(Object.keys(opts)[0]);
+			}
+		}
 		let rec = getNewRec();
-		rec.subt === AssetSubType.C ? (rec.name = subtype) : (rec.subt = subtype);
+		if (childTab === NPS) {
+			rec.type = val;
+		} else {
+			rec.subt === AssetSubType.C ? (rec.name = val) : (rec.subt = val);
+		}
 		return rec;
 	};
 
@@ -248,7 +269,14 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const { Item: FormItem } = Form; 
+	const changeTier = (val: string) => {
+		setName(val);
+		let rec = getNewRec();
+		rec.subt = val;
+		return rec;
+	};
+
+	const { Item: FormItem } = Form;
 
 	return (
 		<Form layout="vertical">
@@ -268,8 +296,7 @@ export default function AddHoldingInput({
 									)}
 								</Col>
 								<Col>
-									{subCategoryOptions &&
-									subCategoryOptions[category as string] && (
+									{subCategoryOptions && subCategoryOptions[category as string] && (
 										<SelectInput
 											pre=""
 											value={subCat as string}
@@ -280,6 +307,18 @@ export default function AddHoldingInput({
 									)}
 								</Col>
 							</Row>
+						</FormItem>
+					</Col>
+				)}
+				{childTab === NPS && npsSubtype && (
+					<Col xs={24} md={12}>
+						<FormItem label={'Tier'}>
+							<SelectInput
+								pre={''}
+								value={name}
+								changeHandler={(val: string) => changeTier(val)}
+								options={npsSubtype[category][subCat]}
+							/>
 						</FormItem>
 					</Col>
 				)}

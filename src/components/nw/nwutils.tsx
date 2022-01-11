@@ -438,16 +438,41 @@ export const getIndustry = (at: APIt.Industry) => {
   return indData[at];
 };
 
-export const getNPSFundManagers = () => {
-  return {
-    L: "LIC PENSION FUND LIMITED",
-    H: "HDFC PENSION MANAGEMENT COMPANY LIMITED",
-    S: "SBI PENSION FUNDS PRIVATE LIMITED",
-    A: "ADITYA BIRLA SUN LIFE PENSION MANAGEMENT LIMITED",
-    I: "ICICI PRUDENTIAL PENSION FUNDS MANAGEMENT COMPANY LIMITED",
-    U: "UTI RETIREMENT SOLUTIONS LIMITED",
-    K: "KOTAK MAHINDRA PENSION FUND LIMITED",
+export const getNPSFundManagers = (at?: APIt.NPSPFM) => {
+  const pfm =  {
+    L: "LIC",
+    H: "HDFC",
+    S: "SBI",
+    A: "ADITYA BIRLA",
+    I: "ICICI",
+    U: "UTI",
+    K: "KOTAK MAHINDRA",
   };
+  return at ? pfm[at] : pfm
+};
+
+export const getNPSSchemeTypes = (at?: APIt.NPSSchemeType) => {
+  const schemeType =  {
+    T1: "Tier I",
+    T2: "Tier II",
+    Lite: "Lite",
+    APY: "Atal Pension",
+    CG: "Central Govt",
+    SG: "State Govt",
+    CCG: "Corporate CG",
+  };
+  return at ? schemeType[at] : schemeType;
+};
+
+export const getNPSTypes = (at?: APIt.AssetSubType) => {
+  const subType: {[key:string]: string} =  {
+    [APIt.AssetSubType.S]: "Equity",
+    [APIt.AssetSubType.CB]: "Corporate Debt",
+    [APIt.AssetSubType.GB]: "Government Bonds",
+    [APIt.AssetSubType.GBO]: "Government Bonds",
+    [APIt.AssetSubType.HB]: "Alternative"
+  };
+  return at ? subType[at] : subType;
 };
 
 export const financialAssetTypes = [
