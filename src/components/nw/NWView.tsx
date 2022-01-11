@@ -29,7 +29,7 @@ export default function NWView() {
 	}: any = useContext(NWContext);
 	const { appContextLoaded, user, owner }: any = useContext(AppContext);
 
-	return appContextLoaded && user && owner && allFamily && Object.keys(allFamily).length ? (
+	return (appContextLoaded && user && owner && allFamily) ? Object.keys(allFamily).length ? (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
@@ -119,5 +119,5 @@ export default function NWView() {
 				Get Started
 			</Button>
 		</div>
-	);
+	) : <Skeleton active />;
 }
