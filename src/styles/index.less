@@ -76,7 +76,8 @@ body.no-scrollbar {
 	}
 
 	& .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
-	& .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+	&
+		.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
 		background: @primary-color;
 		color: #fff;
 	}
@@ -323,7 +324,11 @@ svg {
 
 .scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
+	background-image: linear-gradient(
+		to top,
+		@layout-body-background,
+		@primary-color
+	);
 }
 // Make captcha badge invisible
 .grecaptcha-badge {
@@ -429,6 +434,16 @@ svg {
 	}
 }
 @media all and (max-width: 576px) {
+	.ant-tabs.ant-tabs-top {
+		& .ant-tabs-content-holder {
+			padding: 0;
+
+			& th,
+			& td {
+				padding: 8px 2px !important;
+			}
+		}
+	}
 	.rec-carousel-wrapper {
 		padding: 0 5px;
 	}
