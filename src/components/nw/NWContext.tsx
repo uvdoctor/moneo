@@ -43,8 +43,18 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
-import { calculateCrypto, calculateNPS, calculateProvidentFund, calculateProperty, calculateVehicle, calculateCompundingIncome, calculateInsurance, calculatePM, calculateLoan } from './valuationutils'
-import simpleStorage from "simplestorage.js";
+import {
+	calculateCrypto,
+	calculateNPS,
+	calculateProvidentFund,
+	calculateProperty,
+	calculateVehicle,
+	calculateCompundingIncome,
+	calculateInsurance,
+	calculatePM,
+	calculateLoan
+} from './valuationutils';
+import simpleStorage from 'simplestorage.js';
 import { ROUTES } from '../../CONSTANTS';
 
 const NWContext = createContext({});
@@ -95,7 +105,9 @@ export const LIABILITIES_VIEW = 'liabilities';
 export const NATIONAL_SAVINGS_CERTIFICATE = 'NSC';
 
 function NWContextProvider() {
-	const { defaultCurrency, insData, setInsData, ratesData, owner, user, discountRate, userInfo }: any = useContext(AppContext);
+	const { defaultCurrency, insData, setInsData, ratesData, owner, user, discountRate, userInfo }: any = useContext(
+		AppContext
+	);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<InstrumentInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -158,8 +170,8 @@ function NWContextProvider() {
 	const [ uname, setUname ] = useState<string | null | undefined>(owner);
 	const [ insUname, setInsUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
-	const [ npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);
-	const [ isDirty, setIsDirty]  = useState<boolean>(false);
+	const [ npsData, setNPSData ] = useState<Array<CreateNPSPriceInput>>([]);
+	const [ isDirty, setIsDirty ] = useState<boolean>(false);
 	const [ totalOtherProperty, setTotalOtherProperty ] = useState<number>(0);
 	const [ totalResidential, setTotalResidential ] = useState<number>(0);
 	const [ totalCommercial, setTotalCommercial ] = useState<number>(0);
@@ -167,24 +179,23 @@ function NWContextProvider() {
 	const [ totalPPF, setTotalPPF ] = useState<number>(0);
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
-	const [	view, setView ] = useState<string>(ASSETS_VIEW);
+	const [ view, setView ] = useState<string>(ASSETS_VIEW);
 	const [ npsSubcategory, setNpsSubcategory ] = useState<Object>({});
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
 		if (npsData) {
-			setNPSData([...npsData]);
+			setNPSData([ ...npsData ]);
 			let subCategories: any = getNPSFundManagers();
-			Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
-			for(let item of npsData) {
-				const name =  (item.name).includes('SCHEME -') ? (item.name).split("SCHEME -")  : (item.name).split("SCHEME ");
+			Object.keys(subCategories).forEach((key: string) => (subCategories[key] = {}));
+			for (let item of npsData) {
+				const name = item.name.includes('SCHEME -') ? item.name.split('SCHEME -') : item.name.split('SCHEME ');
 				subCategories[item.pfm][item.id] = name[1];
 			}
 			setNpsSubcategory(subCategories);
 			return subCategories;
 		}
 	};
-	
 
 	const tabs = {
 		Cash: {
@@ -197,8 +208,8 @@ function NWContextProvider() {
 					setData: setSavings,
 					total: totalSavings,
 					fields: {
-						name: "Label",
-						amount: "Amount",
+						name: 'Label',
+						amount: 'Amount'
 					}
 				},
 				[TAB.LENT]: {
@@ -209,31 +220,33 @@ function NWContextProvider() {
 					categoryOptions: {
 						BD: 'Deposit',
 						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate',
-						P2P: 'Lent to an individual',
+						P2P: 'Lent to an individual'
 					},
-					subCategoryOptions:{
+					subCategoryOptions: {
 						BD: {
 							0: 'Pay Out',
 							1: 'Accumulates Every Year',
 							2: 'Accumulates Every Six Months',
 							4: 'Accumulates Every Three Months',
-							12: 'Accumulates Every Month' },
+							12: 'Accumulates Every Month'
+						},
 						ML: {
 							0: 'Pay Out',
 							1: 'Accumulates Every Year',
 							2: 'Accumulates Every Six Months',
 							4: 'Accumulates Every Three Months',
-							12: 'Accumulates Every Month' },
-						},
+							12: 'Accumulates Every Month'
+						}
+					},
 					fields: {
-						type: "Type & Interest",
-						name: "Label",
-						amount: "Amount",
-						date: "Date",
-						rate: "Rate",
-						duration: "Duration"
+						type: 'Type & Interest',
+						name: 'Label',
+						amount: 'Amount',
+						date: 'Date',
+						rate: 'Rate',
+						duration: 'Duration'
 					}
-				},
+				}
 			}
 		},
 		Physical: {
@@ -246,24 +259,24 @@ function NWContextProvider() {
 					setData: setProperties,
 					total: totalProperties,
 					categoryOptions: {
-						[PropertyType.P]: "Plot",
-						[PropertyType.A]: "Apartment",
-						[PropertyType.H]: "House",
-						[PropertyType.C]: "Condominium",
-						[PropertyType.COMM]: "Commercial",
-						[PropertyType.T]: "Townhouse",
+						[PropertyType.P]: 'Plot',
+						[PropertyType.A]: 'Apartment',
+						[PropertyType.H]: 'House',
+						[PropertyType.C]: 'Condominium',
+						[PropertyType.COMM]: 'Commercial',
+						[PropertyType.T]: 'Townhouse',
 						[PropertyType.OTHER]: 'Others'
 					},
 					fields: {
-						type: "Type",
-						name: "Label",
-						amount: "Purchase Amount",
-						date: "Purchase Date",
-						rate: "Appreciation Rate",
-						mv: "Market Value",
-						pin: "Pincode",
-						address: "Address",
-						owner: "Owners"
+						type: 'Type',
+						name: 'Label',
+						amount: 'Purchase Amount',
+						date: 'Purchase Date',
+						rate: 'Appreciation Rate',
+						mv: 'Market Value',
+						pin: 'Pincode',
+						address: 'Address',
+						owner: 'Owners'
 					}
 				},
 				[TAB.VEHICLE]: {
@@ -277,10 +290,10 @@ function NWContextProvider() {
 						4: 'Four-Wheeler'
 					},
 					fields: {
-						type: "Type",
-						name: "Label",
-						amount: "Purchase Amount",
-						date: "Purchase Date",
+						type: 'Type',
+						name: 'Label',
+						amount: 'Purchase Amount',
+						date: 'Purchase Date'
 					}
 				},
 				[TAB.PM]: {
@@ -318,11 +331,11 @@ function NWContextProvider() {
 						[AssetSubType.Gold]: 'Gold',
 						[SILVER]: 'Silver',
 						[PLATINUM]: 'Platinum',
-						[PALLADIUM]: 'Palladium',
+						[PALLADIUM]: 'Palladium'
 					},
 					fields: {
-						type: "Type & Purity",
-						qty: "Quantity"
+						type: 'Type & Purity',
+						qty: 'Quantity'
 					}
 				},
 				[TAB.OTHER]: {
@@ -338,12 +351,12 @@ function NWContextProvider() {
 						Other: 'Other'
 					},
 					fields: {
-						type: "Type",
-						name: "Label",
-						amount: "Amount"
+						type: 'Type',
+						name: 'Label',
+						amount: 'Amount'
 					}
-				},
-			},
+				}
+			}
 		},
 		Financial: {
 			label: 'Financial',
@@ -351,7 +364,7 @@ function NWContextProvider() {
 			children: {
 				[TAB.STOCK]: {
 					label: TAB.STOCK,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -361,7 +374,7 @@ function NWContextProvider() {
 				},
 				[TAB.MF]: {
 					label: TAB.MF,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -371,7 +384,7 @@ function NWContextProvider() {
 				},
 				[TAB.BOND]: {
 					label: TAB.BOND,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -381,7 +394,7 @@ function NWContextProvider() {
 				},
 				[TAB.GOLDB]: {
 					label: TAB.GOLDB,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -391,7 +404,7 @@ function NWContextProvider() {
 				},
 				[TAB.ETF]: {
 					label: TAB.ETF,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -401,7 +414,7 @@ function NWContextProvider() {
 				},
 				[TAB.REIT]: {
 					label: TAB.REIT,
-					info: "Investment Trust",
+					info: 'Investment Trust',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -429,25 +442,25 @@ function NWContextProvider() {
 						[STELLAR]: 'Stellar'
 					},
 					fields: {
-						type: "Type",
-						qty: "Quantity"
+						type: 'Type',
+						qty: 'Quantity'
 					}
 				},
 				[TAB.ANGEL]: {
 					label: TAB.ANGEL,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
 					fields: {
-						name: "Label",
-						amount: "Amount"
+						name: 'Label',
+						amount: 'Amount'
 					}
 				},
 				[TAB.OIT]: {
 					label: TAB.OIT,
-					info: "Investment Trust",
+					info: 'Investment Trust',
 					link: ROUTES.PRIVACY,
 					hasUploader: true,
 					data: instruments,
@@ -463,26 +476,26 @@ function NWContextProvider() {
 			children: {
 				[TAB.PF]: {
 					label: TAB.PF,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					data: pf,
 					setData: setPF,
 					total: totalPF,
-					categoryOptions : {
+					categoryOptions: {
 						PF: 'Pension Fund',
 						EF: 'Employee Fund',
-						VF: 'Voluntary Fund',
+						VF: 'Voluntary Fund'
 					},
 					fields: {
-						type: "Type",
-						amount: "Amount",
-						qty: "Contribution Per Year",
-						rate: "Rate"
+						type: 'Type',
+						amount: 'Amount',
+						qty: 'Contribution Per Year',
+						rate: 'Rate'
 					}
 				},
 				[TAB.NPS]: {
 					label: TAB.NPS,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.PRIVACY,
 					data: nps,
 					setData: setNPS,
@@ -490,25 +503,25 @@ function NWContextProvider() {
 					categoryOptions: getNPSFundManagers(),
 					subCategoryOptions: npsSubcategory,
 					fields: {
-						type: "Fund Manager & Scheme",
-						qty: "Quantity",
+						type: 'Fund Manager & Scheme',
+						qty: 'Quantity'
 					}
-				},
+				}
 			}
 		},
 		[LIABILITIES_TAB]: {
 			label: LIABILITIES_TAB,
 			children: {
-				[TAB.LOAN] : {
+				[TAB.LOAN]: {
 					label: TAB.LOAN,
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
 					fields: {
-						name: "Label",
-						amount: "Monthly Installment",
-						rate: "Rate of Interest",
-						date: "End date"
+						name: 'Label',
+						amount: 'Monthly Installment',
+						rate: 'Rate of Interest',
+						date: 'End date'
 					}
 				},
 				[TAB.INS]: {
@@ -531,21 +544,21 @@ function NWContextProvider() {
 						O: { 1: 'Yearly', 12: 'Monthly' }
 					},
 					fields: {
-						type: "Type & Premium Mode",
-						name: "Label",
-						amount: "Premium Amount",
-						rate: "Premium increases",
-						date: "End date"
+						type: 'Type & Premium Mode',
+						name: 'Label',
+						amount: 'Premium Amount',
+						rate: 'Premium increases',
+						date: 'End date'
 					}
 				},
-				[TAB.CREDIT]:{
+				[TAB.CREDIT]: {
 					label: TAB.CREDIT,
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
 					fields: {
-						name: "Label",
-						amount: "Amount"
+						name: 'Label',
+						amount: 'Amount'
 					}
 				}
 			}
@@ -555,10 +568,10 @@ function NWContextProvider() {
 	const initializeFamilyList = async () => {
 		try {
 			let allFamilyMembers = await loadAllFamilyMembers();
-			setAllFamily(allFamilyMembers);			
+			setAllFamily(allFamilyMembers);
 			let allFamilyKeys = Object.keys(allFamilyMembers);
-			if(allFamilyKeys.length === 1) {
-				setSelectedMembers([...[allFamilyKeys[0]]]);
+			if (allFamilyKeys.length === 1) {
+				setSelectedMembers([ ...[ allFamilyKeys[0] ] ]);
 			}
 			setLoadingFamily(false);
 		} catch (err) {
@@ -650,9 +663,10 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if(!user || !owner) return;
+			if (!user || !owner) return;
 			initializeHoldings();
-		},[ user, owner ]
+		},
+		[ user, owner ]
 	);
 
 	useEffect(
@@ -662,47 +676,66 @@ function NWContextProvider() {
 		[ totalAssets, totalLiabilities ]
 	);
 
-	useEffect(() => {
-		setTotalCash(totalSavings + totalLendings);
-	}, [totalSavings, totalLendings]);
+	useEffect(
+		() => {
+			setTotalCash(totalSavings + totalLendings);
+		},
+		[ totalSavings, totalLendings ]
+	);
 
-	useEffect(() => {
-		setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
-	}, [totalProperties, totalVehicles, totalPM, totalOthers]);
+	useEffect(
+		() => {
+			setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
+		},
+		[ totalProperties, totalVehicles, totalPM, totalOthers ]
+	);
 
-	useEffect(() => {
-		setTotalFinancial(totalInstruments + totalAngel + totalCrypto);
-	}, [totalInstruments, totalAngel, totalCrypto]);
+	useEffect(
+		() => {
+			setTotalFinancial(totalInstruments + totalAngel + totalCrypto);
+		},
+		[ totalInstruments, totalAngel, totalCrypto ]
+	);
 
-	useEffect(() => {
-		setTotalRetirement(totalPPF + totalVPF + totalEPF + totalNPS);
-	}, [totalPPF, totalVPF, totalEPF, totalNPS]);
+	useEffect(
+		() => {
+			setTotalRetirement(totalPPF + totalVPF + totalEPF + totalNPS);
+		},
+		[ totalPPF, totalVPF, totalEPF, totalNPS ]
+	);
 
 	useEffect(
 		() => {
 			setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
 		},
-		[totalLoans, totalInsurance, totalCredit]
+		[ totalLoans, totalInsurance, totalCredit ]
 	);
 
 	useEffect(
 		() => {
-			setTotalAssets(
-					totalCash +
-					totalPhysical +
-					totalFinancial +
-					totalRetirement
-			);
+			setTotalAssets(totalCash + totalPhysical + totalFinancial + totalRetirement);
 		},
-		[totalCash, totalPhysical, totalFinancial, totalRetirement]
+		[ totalCash, totalPhysical, totalFinancial, totalRetirement ]
 	);
 
-	useEffect(() => {
-		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalFGold + totalFRE + totalFInv);
-	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalPM, totalFGold, totalFRE, totalFInv]);
+	useEffect(
+		() => {
+			setTotalAlternative(
+				totalOthers +
+					totalVehicles +
+					totalProperties +
+					totalPM +
+					totalCrypto +
+					totalFGold +
+					totalFRE +
+					totalFInv
+			);
+		},
+		[ totalOthers, totalVehicles, totalProperties, totalCrypto, totalPM, totalFGold, totalFRE, totalFInv ]
+	);
 
 	const pricePM = () => {
-		if(!preciousMetals.length) {
+		if (!preciousMetals.length) {
 			setTotalPM(0);
 			setTotalPGold(0);
 			return;
@@ -710,12 +743,12 @@ function NWContextProvider() {
 		let total = 0;
 		let totalPGold = 0;
 		preciousMetals.forEach((holding: HoldingInput) => {
-			if(doesMemberMatch(holding, selectedMembers)) {
+			if (doesMemberMatch(holding, selectedMembers)) {
 				const value = calculatePM(holding, ratesData, selectedCurrency);
-				total += value
-				if(holding.subt === AssetSubType.Gold) totalPGold += value;
+				total += value;
+				if (holding.subt === AssetSubType.Gold) totalPGold += value;
 			}
-		})
+		});
 		setTotalPM(total);
 		setTotalPGold(totalPGold);
 	};
@@ -732,35 +765,33 @@ function NWContextProvider() {
 		let totalMFs = 0;
 		let totalETFs = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-		if(!cachedData) cachedData = insData;
+		if (!cachedData) cachedData = insData;
 		instruments.forEach((instrument: InstrumentInput) => {
 			const id = instrument.id;
 			const data = cachedData[id];
-			if(data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				let value = instrument.qty * data.price;
 				total += value;
-				if(data.itype === InsType.ETF) totalETFs += value;
-				else if(isFund(instrument.id)) totalMFs += value;
-				if(data.subt === AssetSubType.GoldB) totalFGold += value;
-				else if(data.itype && data.itype === InsType.REIT)
-					totalFRE += value;
-				else if(data.itype && data.itype === InsType.InvIT)
-					totalInv += value;
-				else if(data.type === AssetType.E) {
+				if (data.itype === InsType.ETF) totalETFs += value;
+				else if (isFund(instrument.id)) totalMFs += value;
+				if (data.subt === AssetSubType.GoldB) totalFGold += value;
+				else if (data.itype && data.itype === InsType.REIT) totalFRE += value;
+				else if (data.itype && data.itype === InsType.InvIT) totalInv += value;
+				else if (data.type === AssetType.E) {
 					totalFEquity += value;
-					if(!isFund(id) && !data.itype) totalStocks += value;
-				} else if(data.type === AssetType.F) {
+					if (!isFund(id) && !data.itype) totalStocks += value;
+				} else if (data.type === AssetType.F) {
 					totalFFixed += value;
-					if(!isFund(id) && !data.itype) totalBonds += value;
-				} else if(data.type === AssetType.H) {
-					if(includesAny(data.name as string, ["conservative"])) {
+					if (!isFund(id) && !data.itype) totalBonds += value;
+				} else if (data.type === AssetType.H) {
+					if (includesAny(data.name as string, [ 'conservative' ])) {
 						totalFFixed += 0.7 * value;
 						totalFEquity += 0.3 * value;
-					} else if(includesAny(data.name as string, ["multi-asset"])) {
+					} else if (includesAny(data.name as string, [ 'multi-asset' ])) {
 						totalFGold += 0.1 * value;
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.3 * value;
-					} else if(includesAny(data.name as string, ["balanced"])) {
+					} else if (includesAny(data.name as string, [ 'balanced' ])) {
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.4 * value;
 					} else {
@@ -769,7 +800,7 @@ function NWContextProvider() {
 					}
 				}
 			}
-		})
+		});
 		setTotalInstruments(total);
 		setTotalFGold(totalFGold);
 		setTotalFEquity(totalFEquity);
@@ -801,39 +832,45 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit;
 		updatedHoldings.ins = insurance;
-		
+
 		try {
-			uname ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput) : await addHoldings(updatedHoldings);
-			if (instruments.length)  {
-				insUname ? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
-						 : await addInsHoldings(updatedInsHoldings);
+			uname
+				? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
+				: await addHoldings(updatedHoldings);
+			if (instruments.length) {
+				insUname
+					? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
+					: await addInsHoldings(updatedInsHoldings);
 			}
-			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
-		} catch(e) {
-			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
+			notification.success({ message: 'Data saved', description: 'All holdings data has been saved.' });
+		} catch (e) {
+			notification.error({
+				message: 'Unable to save holdings',
+				description: 'Sorry! An unexpected error occurred while trying to save the data.'
+			});
 		}
 		setIsDirty(false);
 	};
 
-const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
-	if (!holdings.length) return setTotal(0);
-	let total = 0;
-	holdings.forEach((holding: HoldingInput) => {
-		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-			total += calculateInsurance(holding, discountRate, userInfo?.le, userInfo?.dob);
-		}
-	});
-	setTotal(total);
-};
+	const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
+		if (!holdings.length) return setTotal(0);
+		let total = 0;
+		holdings.forEach((holding: HoldingInput) => {
+			if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				total += calculateInsurance(holding, discountRate, userInfo?.le, userInfo?.dob);
+			}
+		});
+		setTotal(total);
+	};
 
 	const priceLoans = () => {
-		if(!loans.length) return setTotalLoans(0);
+		if (!loans.length) return setTotalLoans(0);
 		let total = 0;
-		loans.forEach((holding: HoldingInput)=>{
-			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+		loans.forEach((holding: HoldingInput) => {
+			if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
 				total += calculateLoan(holding);
-			};
-		})
+			}
+		});
 		setTotalLoans(total);
 	};
 
@@ -842,24 +879,24 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	};
 
 	const priceLendings = () => {
-		if(!lendings.length) return setTotalLendings(0);
+		if (!lendings.length) return setTotalLendings(0);
 		let total = 0;
-		lendings.forEach((holding: HoldingInput)=>{
-			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+		lendings.forEach((holding: HoldingInput) => {
+			if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
 				total += calculateCompundingIncome(holding);
-			};
-		})
+			}
+		});
 		setTotalLendings(total);
 	};
 
 	const calculateBalance = (records: Array<HoldingInput>, setTotal: Function) => {
-		if(!records.length) return setTotal(0);
+		if (!records.length) return setTotal(0);
 		let total = 0;
 		records.forEach((record: HoldingInput) => {
-			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
+			if (record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				total += record.amt as number;
 			}
-		})
+		});
 		setTotal(total);
 	};
 
@@ -877,25 +914,30 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 
 	const priceAngel = () => {
 		calculateBalance(angel, setTotalAngel);
-	}
+	};
 
 	const priceProperties = () => {
-		if(!properties.length) return;
+		if (!properties.length) return;
 		let total = 0;
 		let totalOtherProperty = 0;
 		let totalCommercial = 0;
 		let totalResidential = 0;
 		let totalPlot = 0;
 		properties.forEach((property: PropertyInput) => {
-			if(!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
+			if (!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
 			const value = calculateProperty(property);
 			total += value;
-			if(property.type === PropertyType.P) totalPlot += value;
-			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
-			if(property.type === PropertyType.A || property.type === PropertyType.H ||
-				property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
-			if(property.type === PropertyType.COMM) totalCommercial += value;
-		})
+			if (property.type === PropertyType.P) totalPlot += value;
+			if (property.type === PropertyType.OTHER) totalOtherProperty += value;
+			if (
+				property.type === PropertyType.A ||
+				property.type === PropertyType.H ||
+				property.type === PropertyType.C ||
+				property.type === PropertyType.T
+			)
+				totalResidential += value;
+			if (property.type === PropertyType.COMM) totalCommercial += value;
+		});
 		setTotalProperties(total);
 		setTotalOtherProperty(totalOtherProperty);
 		setTotalCommercial(totalCommercial);
@@ -904,41 +946,41 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	};
 
 	const priceVehicles = () => {
-		if(!vehicles.length) return;
+		if (!vehicles.length) return;
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
-			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-				total += calculateVehicle(vehicle)
+			if (vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+				total += calculateVehicle(vehicle);
 			}
-		})
+		});
 		setTotalVehicles(total);
 	};
 
 	const priceCrypto = () => {
-		if(!crypto.length) return;
+		if (!crypto.length) return;
 		let total = 0;
 		crypto.forEach((holding: HoldingInput) => {
-			if(doesMemberMatch(holding, selectedMembers)) {
+			if (doesMemberMatch(holding, selectedMembers)) {
 				total += calculateCrypto(holding, ratesData, selectedCurrency);
 			}
-		})
+		});
 		setTotalCrypto(total);
 	};
 
 	const pricePF = () => {
-		if(!pf.length) return;
+		if (!pf.length) return;
 		let total = 0;
 		let totalPPF = 0;
 		let totalVPF = 0;
 		let totalEPF = 0;
 		pf.forEach((record: HoldingInput) => {
-			if(doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
+			if (doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				total = calculateProvidentFund(record);
-				if(record.subt === 'PF') totalPPF += total;
-				if(record.subt === 'VF') totalVPF += total;
-				if(record.subt === 'EF') totalEPF += total;
+				if (record.subt === 'PF') totalPPF += total;
+				if (record.subt === 'VF') totalVPF += total;
+				if (record.subt === 'EF') totalEPF += total;
 			}
-		})
+		});
 		setTotalPF(total);
 		setTotalPPF(totalPPF);
 		setTotalVPF(totalVPF);
@@ -946,7 +988,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 	};
 
 	const priceNPS = () => {
-		if(!nps.length) return;
+		if (!nps.length) return;
 		let total = 0;
 		let totalNPSFixed = 0;
 		let totalNPSEquity = 0;
@@ -957,112 +999,171 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				totalNPSFixed += fixed;
 				totalNPSEquity += equity;
 			}
-		})
+		});
 		setTotalNPS(total);
 		setTotalNPSEquity(totalNPSEquity);
 		setTotalNPSFixed(totalNPSFixed);
 	};
 
-	useEffect(() => {
-		setTotalEquity(totalAngel + totalFEquity + totalNPSEquity);
-	}, [totalAngel, totalFEquity, totalNPSEquity]);
+	useEffect(
+		() => {
+			setTotalEquity(totalAngel + totalFEquity + totalNPSEquity);
+		},
+		[ totalAngel, totalFEquity, totalNPSEquity ]
+	);
 
-	useEffect(() => {
-		setTotalFixed(totalFFixed + totalNPSFixed + totalPF);
-	}, [totalPF, totalFFixed, totalNPSFixed])
+	useEffect(
+		() => {
+			setTotalFixed(totalFFixed + totalNPSFixed + totalPF);
+		},
+		[ totalPF, totalFFixed, totalNPSFixed ]
+	);
 
-	useEffect(() => {
-		priceInstruments();
-		pricePM();
-		pricePF();
-		priceNPS();
-		priceProperties();
-		priceVehicles();
-		priceOthers();
-		priceCrypto();
-		priceLendings();
-		priceInsurance();
-		priceLoans();
-		priceCredit();
-		priceSavings();
-	}, [selectedMembers, selectedCurrency]);
+	useEffect(
+		() => {
+			priceInstruments();
+			pricePM();
+			pricePF();
+			priceNPS();
+			priceProperties();
+			priceVehicles();
+			priceOthers();
+			priceCrypto();
+			priceLendings();
+			priceInsurance();
+			priceLoans();
+			priceCredit();
+			priceSavings();
+		},
+		[ selectedMembers, selectedCurrency ]
+	);
 
-	useEffect(() => {
-		priceInstruments();
-	}, [instruments]);
+	useEffect(
+		() => {
+			priceInstruments();
+		},
+		[ instruments ]
+	);
 
-	useEffect(() => {
-		pricePM();
-	}, [preciousMetals]);
+	useEffect(
+		() => {
+			pricePM();
+		},
+		[ preciousMetals ]
+	);
 
-	useEffect(() => {
-		priceCrypto();
-	}, [crypto]);
+	useEffect(
+		() => {
+			priceCrypto();
+		},
+		[ crypto ]
+	);
 
-	useEffect(() => {
-		priceAngel();
-	}, [angel]);
+	useEffect(
+		() => {
+			priceAngel();
+		},
+		[ angel ]
+	);
 
-	useEffect(() => {
-		priceOthers();
-	}, [others]);
+	useEffect(
+		() => {
+			priceOthers();
+		},
+		[ others ]
+	);
 
-	useEffect(() => {
-		pricePF();
-	}, [pf]);
+	useEffect(
+		() => {
+			pricePF();
+		},
+		[ pf ]
+	);
 
-	useEffect(() => {
-		priceNPS();
-	}, [nps]);
+	useEffect(
+		() => {
+			priceNPS();
+		},
+		[ nps ]
+	);
 
-	useEffect(() => {
-		priceLoans();
-	}, [loans, discountRate]);
+	useEffect(
+		() => {
+			priceLoans();
+		},
+		[ loans, discountRate ]
+	);
 
-	useEffect(()=>{
-		priceCredit();
-	},[credit]);
+	useEffect(
+		() => {
+			priceCredit();
+		},
+		[ credit ]
+	);
 
-	useEffect(() => {
-		priceInsurance();
-	}, [insurance, discountRate]);
+	useEffect(
+		() => {
+			priceInsurance();
+		},
+		[ insurance, discountRate ]
+	);
 
-	useEffect(() => {
-		priceProperties();
-	}, [properties]);
+	useEffect(
+		() => {
+			priceProperties();
+		},
+		[ properties ]
+	);
 
-	useEffect(() => {
-		priceVehicles();
-	}, [vehicles]);
+	useEffect(
+		() => {
+			priceVehicles();
+		},
+		[ vehicles ]
+	);
 
-	useEffect(() => {
-		priceInstruments();
-	}, [instruments]);
+	useEffect(
+		() => {
+			priceInstruments();
+		},
+		[ instruments ]
+	);
 
-	useEffect(() => {
-		priceLendings();
-	}, [lendings]);
+	useEffect(
+		() => {
+			priceLendings();
+		},
+		[ lendings ]
+	);
 
-	useEffect(() => {
-		priceSavings();
-	}, [savings]);
+	useEffect(
+		() => {
+			priceSavings();
+		},
+		[ savings ]
+	);
 
-	useEffect(()=>{
-		setIsDirty(true);
-	},[instruments,
-		savings,
-		lendings,
-		properties,
-		preciousMetals,
-		crypto,
-		pf,
-		loans,
-		insurance,
-		credit,
-		angel,
-		others,
-		nps,
-		vehicles])
+	useEffect(
+		() => {
+			setIsDirty(true);
+		},
+		[
+			instruments,
+			savings,
+			lendings,
+			properties,
+			preciousMetals,
+			crypto,
+			pf,
+			loans,
+			insurance,
+			credit,
+			angel,
+			others,
+			nps,
+			vehicles
+		]
+	);
 
 	return (
 		<NWContext.Provider
@@ -1158,7 +1259,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				view,
 				setView,
 				addSelfMember,
-				npsSubcategory,
+				npsSubcategory
 			}}
 		>
 			<NWView />
