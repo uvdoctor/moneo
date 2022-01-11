@@ -312,7 +312,7 @@ export default function AddHoldingInput({
 				)}
 				{childTab === NPS && npsSubtype && (
 					<Col xs={24} md={12}>
-						<FormItem label={'Tier'}>
+						<FormItem label={'Asset Type'}>
 							<SelectInput
 								pre={''}
 								value={name}

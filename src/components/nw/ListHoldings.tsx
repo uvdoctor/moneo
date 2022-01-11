@@ -126,7 +126,7 @@ export default function ListHoldings({
 					<Col xs={24} sm={12} md={6}>
 						<Row gutter={[ 0, 10 ]}>
 							<Col xs={24}>
-								<strong>{'Type'}</strong>
+								<strong>{'Asset Type'}</strong>
 								<hr />
 							</Col>
 							<Col xs={24}>
