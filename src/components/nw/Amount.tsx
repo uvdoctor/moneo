@@ -43,7 +43,7 @@ export default function Amount({ data, changeData, record }: AmountProps) {
 				<Col>
 					<QuantityWithRate
 						quantity={record.qty}
-						name={record.name as string}
+						name={childTab === NPS ? record.subt as string : record.name as string}
 						subtype={childTab === CRYPTO ? record.name as string : record.subt as string}
 						onChange={(val: number) => changeQty(val)}
 					/>

@@ -7,8 +7,8 @@ import { getCommodityRate, getCryptoRate } from './nwutils';
 
 interface QuantityWithRateProps {
 	quantity: number;
-    subtype: string;
-    name: string;
+	subtype: string;
+  name: string;
 	onChange: Function;
 }
 export default function QuantityWithRate({ quantity, subtype, name, onChange }: QuantityWithRateProps) {
