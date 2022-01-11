@@ -94,7 +94,7 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 	return (
 		<Row gutter={[ 10, 10 ]}>
 			<Col span={24}>
-				<Row>
+				<Row align='middle'>
 					<Col>
 						{hasAmountAsValuation(childTab) && isEditMode ? (
 							<NumberInput
@@ -114,6 +114,9 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 							onClick={() => (isEditMode ? setIsEditMode(false) : setIsEditMode(true))}
 						/>
 					</Col>}
+					<Col>
+						<Button type="link" onClick={() => removeHolding(index)} danger icon={<DeleteOutlined />} />
+					</Col>
 				</Row>
 			</Col>
 			<Col span={24}>
@@ -128,9 +131,6 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 							options={getFamilyOptions(allFamily)}
 							changeHandler={(key: string) => changeOwner(key, index)}
 						/>
-					</Col>
-					<Col>
-						<Button type="link" onClick={() => removeHolding(index)} danger icon={<DeleteOutlined />} />
 					</Col>
 				</Row>
 			</Col>
