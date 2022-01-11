@@ -9,7 +9,6 @@ import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
-import SelectInput from '../form/selectinput';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -19,7 +18,6 @@ interface ListHoldingsProps {
 	subCategoryOptions?: any;
 	fields: any;
 }
-
 export default function ListHoldings({
 	data,
 	changeData,
@@ -27,7 +25,7 @@ export default function ListHoldings({
 	subCategoryOptions,
 	fields
 }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab, npsSubtype }: any = useContext(NWContext);
+	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, ANGEL, OTHER, SAV, CREDIT } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const allColumns: any = {
@@ -41,9 +39,7 @@ export default function ListHoldings({
 	};
 	let defaultColumns: Array<string> = [];
 	let expandedColumns: Array<string> = [];
-
 	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT ].includes(childTab);
-
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'label', 'fid' ];
 	} else if (childTab === OTHER) {
@@ -65,12 +61,10 @@ export default function ListHoldings({
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
 	}
-
 	const changeName = (val: any, i: number) => {
 		data[i].name = val;
 		changeData([ ...data ]);
 	};
-
 	const changeQty = (qty: number, i: number) => {
 		data[i].qty = qty;
 		if (hasPF(childTab)) {
@@ -79,13 +73,11 @@ export default function ListHoldings({
 		}
 		changeData([ ...data ]);
 	};
-
 	const hasDate = (childTab: string, record: HoldingInput) =>
 		[ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== 'H';
-	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
+	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS, PF ].includes(childTab);
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
-
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
 			key: i,
@@ -112,38 +104,9 @@ export default function ListHoldings({
 		return dataToRender;
 	};
 
-	const changeTier = (val: string, i: number) => {
-		data[i].subt = val;
-		changeData([ ...data ]);
-	};
-
 	const expandedRow = (i: number) => {
 		return (
 			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 0 } ]}>
-				{childTab === NPS && npsSubtype[data[i].type as string] ? npsSubtype[data[i].type as string][
-					data[i].name as string
-				] ? (
-					<Col xs={24} sm={12} md={6}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{fields.subt}</strong>
-								<hr />
-							</Col>
-							<Col xs={24}>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<SelectInput
-											pre={''}
-											value={data[i].subt as string}
-											changeHandler={(val: string) => changeTier(val, i)}
-											options={npsSubtype[data[i].type as string][data[i].name as string]}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				) : null : null}
 				{hasName(childTab) &&
 				expandedColumns.includes('label') && (
 					<Col xs={24} sm={12} md={6}>
@@ -255,16 +218,12 @@ export default function ListHoldings({
 			</Row>
 		);
 	};
-
 	const changeChg = (chg: number, record: HoldingInput) => {
 		record.chg = chg;
 		changeData([ ...data ]);
 	};
-
 	const columns = defaultColumns.map((col: string) => allColumns[col]);
-
 	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
-
 	useEffect(
 		() => {
 			let dataSource: Array<any> = [];
@@ -275,7 +234,7 @@ export default function ListHoldings({
 			});
 			setDataSource([ ...dataSource ]);
 		},
-		[ data, selectedMembers, selectedCurrency, childTab ]
+		[ data, selectedMembers, selectedCurrency ]
 	);
 
 	return dataSource.length ? (

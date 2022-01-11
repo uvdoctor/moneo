@@ -30,7 +30,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		totalAssets,
 		totalLiabilities,
 		view,
-		npsCategory,
+		npsSubcategory
 		
 	}: any = useContext(NWContext);
 
@@ -137,7 +137,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 													categoryOptions={tabsData[tabName].categoryOptions}
 													subCategoryOptions={
 														childTab === TAB.NPS ? (
-															npsCategory
+															npsSubcategory
 														) : (
 															tabsData[tabName].subCategoryOptions
 														)
@@ -162,7 +162,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												changeData={tabsData[tabName].setData}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												subCategoryOptions={
-													childTab === TAB.NPS ? npsCategory : tabsData[tabName].subCategoryOptions
+													childTab === TAB.NPS ? npsSubcategory : tabsData[tabName].subCategoryOptions
 												}
 												fields={tabsData[tabName].fields}
 											/>

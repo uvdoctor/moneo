@@ -12,8 +12,6 @@ import {
 	getFamilysList,
 	getNPSData,
 	getNPSFundManagers,
-	getNPSSchemeTypes,
-	getNPSTypes,
 	getRelatedCurrencies,
 	isFund,
 	loadAllFamilyMembers,
@@ -170,37 +168,23 @@ function NWContextProvider() {
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
 	const [	view, setView ] = useState<string>(ASSETS_VIEW);
-	const [ npsCategory, setNpsCategory ] = useState<Object>({});
-	const [ npsSubtype, setNpsSubtype ] = useState<Object>({});
+	const [ npsSubcategory, setNpsSubcategory ] = useState<Object>({});
 
 	const loadNPSSubCategories = async () => {
-		let npsDetails: Array<CreateNPSPriceInput> | undefined = await getNPSData();
-		if (npsDetails) {
-			setNPSData([...npsDetails]);
-			let subCategories: any = getNPSSchemeTypes();
-			let categories: any = getNPSSchemeTypes();
-			Object.keys(subCategories).forEach((key: string) => subCategories[key] = getNPSFundManagers());
-			Object.keys(categories).forEach((key: string) => categories[key] = getNPSFundManagers());
-			Object.keys(subCategories).forEach((key: string) => {
-				Object.keys(subCategories[key]).forEach((pfm: string) => subCategories[key][pfm] = {});
-			})
-			for(let item of npsDetails) {
-				let subtype: any = getNPSTypes(item.subt);
-				if(item.name.includes("TAX SAVER")) subtype = "Tax Saver";
-				subCategories[item.st][item.pfm][item.id] = subtype;
+		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
+		if (npsData) {
+			setNPSData([...npsData]);
+			let subCategories: any = getNPSFundManagers();
+			Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
+			for(let item of npsData) {
+				const name =  (item.name).includes('SCHEME -') ? (item.name).split("SCHEME -")  : (item.name).split("SCHEME ");
+				subCategories[item.pfm][item.id] = name[1];
 			}
-			Object.keys(subCategories).forEach((key: string) => {
-				Object.keys(subCategories[key]).forEach((pfm: string) => {
-					if(!Object.keys(subCategories[key][pfm]).length) {
-						delete subCategories[key][pfm] 
-						delete categories[key][pfm]
-					}
-				})
-			})
-			setNpsCategory(categories);
-			setNpsSubtype(subCategories);
+			setNpsSubcategory(subCategories);
+			return subCategories;
 		}
 	};
+	
 
 	const tabs = {
 		Cash: {
@@ -242,8 +226,7 @@ function NWContextProvider() {
 							12: 'Accumulates Every Month' },
 						},
 					fields: {
-						type: "Type",
-						subtype: "Interest",
+						type: "Type & Interest",
 						name: "Label",
 						amount: "Amount",
 						date: "Date",
@@ -338,8 +321,7 @@ function NWContextProvider() {
 						[PALLADIUM]: 'Palladium',
 					},
 					fields: {
-						type: "Type",
-						subtype: "Purity",
+						type: "Type & Purity",
 						qty: "Quantity"
 					}
 				},
@@ -493,7 +475,6 @@ function NWContextProvider() {
 					},
 					fields: {
 						type: "Type",
-						name: "Label",
 						amount: "Amount",
 						qty: "Contribution Per Year",
 						rate: "Rate"
@@ -506,11 +487,10 @@ function NWContextProvider() {
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					categoryOptions: getNPSSchemeTypes(),
-					subCategoryOptions: npsCategory,
+					categoryOptions: getNPSFundManagers(),
+					subCategoryOptions: npsSubcategory,
 					fields: {
-						type: "Scheme & Fund Manager",
-						subt: "Asset Type",
+						type: "Fund Manager & Scheme",
 						qty: "Quantity",
 					}
 				},
@@ -551,8 +531,7 @@ function NWContextProvider() {
 						O: { 1: 'Yearly', 12: 'Monthly' }
 					},
 					fields: {
-						type: "Type",
-						subType: "Premium Mode",
+						type: "Type & Premium Mode",
 						name: "Label",
 						amount: "Premium Amount",
 						rate: "Premium increases",
@@ -1179,8 +1158,7 @@ const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
 				view,
 				setView,
 				addSelfMember,
-				npsCategory,
-				npsSubtype
+				npsSubcategory,
 			}}
 		>
 			<NWView />
