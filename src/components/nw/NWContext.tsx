@@ -509,8 +509,8 @@ function NWContextProvider() {
 					categoryOptions: getNPSSchemeTypes(),
 					subCategoryOptions: npsCategory,
 					fields: {
-						type: "Fund Manager",
-						subType: "Scheme Type",
+						type: "Scheme & Fund Manager",
+						subType: "Asset Type",
 						qty: "Quantity",
 					}
 				},
