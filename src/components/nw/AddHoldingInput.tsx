@@ -201,7 +201,7 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		if (childTab === NPS && npsSubtype) {
-			let opts = npsSubtype[category][subCat];
+			let opts = npsSubtype[category][val];
 			if (opts && Object.keys(opts).length && !opts[name]) {
 				setName(Object.keys(opts)[0]);
 			}
@@ -245,12 +245,12 @@ export default function AddHoldingInput({
 			let opts = subCategoryOptions[val];
 			if (opts && Object.keys(opts).length && !opts[subCat]) {
 				setSubCat(Object.keys(opts)[0]);
-			}
-		}
-		if (childTab === NPS) {
-			let opts = npsSubtype[category][subCat];
-			if (opts && Object.keys(opts).length && !opts[name]) {
-				setName(Object.keys(opts)[0]);
+				if (childTab === NPS && npsSubtype) {
+					let option = npsSubtype[val][Object.keys(opts)[0]];
+					if (option && Object.keys(option).length && !option[name]) {
+						setName(Object.keys(option)[0]);
+					}
+				}
 			}
 		}
 		let rec = getNewRec();
@@ -332,7 +332,7 @@ export default function AddHoldingInput({
 				{hasQtyWithRate(childTab) ? (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.qty}>
-							<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat} />
+							<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={childTab === NPS ? name : subCat} />
 						</FormItem>
 					</Col>
 				) : (
