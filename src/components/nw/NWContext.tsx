@@ -488,7 +488,6 @@ function NWContextProvider() {
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					// @ts-ignore
 					cascaderOptions: getCascaderOptions(getNPSFundManagers(), npsSubcategory, false),
 					fields: {
 						type: 'Fund Manager & Scheme',

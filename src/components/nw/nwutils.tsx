@@ -438,8 +438,8 @@ export const getIndustry = (at: APIt.Industry) => {
   return indData[at];
 };
 
-export const getNPSFundManagers = (at?: APIt.NPSPFM) => {
-  const pfm =  {
+export const getNPSFundManagers = () => {
+  return {
     L: "LIC",
     H: "HDFC",
     S: "SBI",
@@ -448,7 +448,6 @@ export const getNPSFundManagers = (at?: APIt.NPSPFM) => {
     U: "UTI",
     K: "KOTAK MAHINDRA",
   };
-  return at ? pfm[at] : pfm
 };
 
 export const getCascaderOptions = (parent: {[key: string]: string}, child: {[key: string]: any}, childEqualForAllParent: boolean

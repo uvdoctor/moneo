@@ -137,7 +137,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 													categoryOptions={tabsData[tabName].categoryOptions}
 													cascaderOptions={
 														childTab === TAB.NPS ? (
-															// @ts-ignore
 															getCascaderOptions(getNPSFundManagers(),npsSubcategory, false)
 														) : (
 															tabsData[tabName].cascaderOptions
@@ -163,7 +162,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												changeData={tabsData[tabName].setData}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												cascaderOptions={
-													// @ts-ignore
 													childTab === TAB.NPS ? getCascaderOptions(getNPSFundManagers(),npsSubcategory, false) : tabsData[tabName].cascaderOptions
 												}
 												fields={tabsData[tabName].fields}
