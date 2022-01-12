@@ -124,6 +124,21 @@ export default function MemberAndValuation({
 			<Col>
 				<Row align="middle">
 					<Col>
+						<UserOutlined />
+					</Col>
+					<Col>
+						<SelectInput
+							pre=""
+							value={record.fId ? record.fId : ""}
+							options={getFamilyOptions(allFamily)}
+							changeHandler={(key: string) => changeOwner(key, index)}
+						/>
+					</Col>
+				</Row>
+			</Col>
+			<Col>
+				<Row align="middle">
+					<Col>
 						{hasAmountAsValuation(childTab) && isEditMode ? (
 							<NumberInput
 								pre=""
@@ -154,21 +169,6 @@ export default function MemberAndValuation({
 							onClick={() => removeHolding(index)}
 							danger
 							icon={<DeleteOutlined />}
-						/>
-					</Col>
-				</Row>
-			</Col>
-			<Col>
-				<Row align="middle">
-					<Col>
-						<UserOutlined />
-					</Col>
-					<Col>
-						<SelectInput
-							pre=""
-							value={record.fId ? record.fId : ""}
-							options={getFamilyOptions(allFamily)}
-							changeHandler={(key: string) => changeOwner(key, index)}
 						/>
 					</Col>
 				</Row>
