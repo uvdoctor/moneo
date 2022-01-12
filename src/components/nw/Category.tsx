@@ -51,7 +51,7 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 					]}
 					onChange={changeSubCategory}
 					options={cascaderOptions}
-					style={{ width: isMobileDevice(fsb) ? 120 : 'auto' }}
+					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 				/>
 			)}
 			{(record.subt === "BD" || record.subt === "P2P") &&
