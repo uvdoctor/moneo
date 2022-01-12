@@ -34,14 +34,11 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		npsSubcategory
 	}: any = useContext(NWContext);
 
- 	const [ options, setOptions ] = useState<any>();
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
 		setActiveTab(view === LIABILITIES_VIEW ? LIABILITIES_TAB : !totalAssets ? 'Cash' : TAB.SUMMARY);
 	}, [view]);
-
-	const hasCascaderOptions = (childTab: string) => [ TAB.NPS, TAB.INS, TAB.LENT, TAB.PM ].includes(childTab);
 
 	useEffect(
 		() => {
