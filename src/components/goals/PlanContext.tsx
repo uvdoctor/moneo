@@ -33,6 +33,29 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [ffYear, setFFYear] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
   const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : discountRate ? discountRate : 5);
+  const [savingsPerf, setSavingsPerf] = useState<number>();
+  const [depositsPerf, setDepositsPerf] = useState<number>();
+  const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>();
+  const [iMedTermBondsPerf, setIMedTermBondsPerf] = useState<number>();
+  const [taxExemptBondsPerf, setTaxExemptBondsPerf] = useState<number>();
+  const [highYieldBondsPerf, setHighYieldBondsPerf] = useState<number>();
+  const [iHighYieldBondsPerf, setIHighYieldBondsPerf] = useState<number>();
+  const [reitPerf ,setREITPerf] = useState<number>();
+  const [iREITPerf, setIREITPerf] = useState<number>();
+  const [realEstatePerf, setRealEstatePerf] = useState<number>();
+  const [goldPerf, setGoldPerf] = useState<number>();
+  const [goldBondsPerf, setGoldBondsPerf] = useState<number>();
+  const [largeCapStocksPerf, setLargeCapStocksPerf] = useState<number>();
+  const [largeCapETFPerf, setLargeCapETFPerf] = useState<number>();
+  const [midCapStocksPerf, setMidCapStocksPerf] = useState<number>();
+  const [smallCapStocksPerf, setSmallCapStocksPerf] = useState<number>();
+  const [divGrowthStocksPerf, setDivGrowthStocksPerf] = useState<number>();
+  const [iLargeCapStocksPerf, setILargeCapStocksPerf] = useState<number>();
+  const [iLargeCapETFPerf, setILargeCapETFPerf] = useState<number>();
+  const [iMidCapStocksPerf, setIMidCapStocksPerf] = useState<number>();
+  const [iSmallCapStocksPerf, setISmallCapStocksPerf] = useState<number>();
+  const [liquidFundsPerf, setLiquidFundsPerf] = useState<number>();
+  const [uniqueCollectionPerf, setUniqueCollectionPerf] = useState<number>();
   const [planError, setPlanError] = useState<string>('');
   const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
   const nowYear = new Date().getFullYear();
@@ -407,6 +430,17 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         ffYear,
         oppCostCache,
         setOppCostCache,
+        savingsPerf, setSavingsPerf, depositsPerf, setDepositsPerf,
+        medTermBondsPerf, setMedTermBondsPerf, iMedTermBondsPerf, setIMedTermBondsPerf,
+        taxExemptBondsPerf, setTaxExemptBondsPerf, highYieldBondsPerf, setHighYieldBondsPerf, 
+        iHighYieldBondsPerf, setIHighYieldBondsPerf, reitPerf ,setREITPerf, 
+        iREITPerf, setIREITPerf, realEstatePerf, setRealEstatePerf, goldPerf, setGoldPerf, 
+        goldBondsPerf, setGoldBondsPerf, largeCapStocksPerf, setLargeCapStocksPerf, 
+        largeCapETFPerf, setLargeCapETFPerf, midCapStocksPerf, setMidCapStocksPerf, 
+        smallCapStocksPerf, setSmallCapStocksPerf, divGrowthStocksPerf, setDivGrowthStocksPerf, 
+        iLargeCapStocksPerf, setILargeCapStocksPerf, iLargeCapETFPerf, setILargeCapETFPerf, 
+        iMidCapStocksPerf, setIMidCapStocksPerf, iSmallCapStocksPerf, setISmallCapStocksPerf, 
+        liquidFundsPerf, setLiquidFundsPerf, uniqueCollectionPerf, setUniqueCollectionPerf      
       }}
     >
       {children}

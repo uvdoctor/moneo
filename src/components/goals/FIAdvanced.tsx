@@ -6,6 +6,7 @@ import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import { toStringArr } from '../utils';
 import Care from './Care';
+import FIAssetPerformance from './FIAssetPerformance';
 import FIBenefit from './FIBenefit';
 import { FIGoalContext } from './FIGoalContext';
 import FIMoneyOutflow from './FIMoneyOutflow';
@@ -95,8 +96,11 @@ export default function FIAdvanced() {
 			<TabPane key={2} tab="Spends">
 				<FIMoneyOutflow />
 			</TabPane>
+			<TabPane key={3} tab="Performance">
+				<FIAssetPerformance />
+			</TabPane>
 			{currency === 'USD' || currency === 'CAD' || currency === 'GBP' ? (
-				<TabPane key={3} tab="Care">
+				<TabPane key={4} tab="Care">
 					<Care />
 				</TabPane>
 			) : null}
