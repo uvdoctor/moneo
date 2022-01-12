@@ -269,7 +269,7 @@ export default function AddHoldingInput({
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.name}>
-							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'} width={250} />
+							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'}/>
 						</FormItem>
 					</Col>
 				)}

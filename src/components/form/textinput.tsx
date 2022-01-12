@@ -17,7 +17,6 @@ interface TextInputProps {
 	size?: SizeType;
 	password?: boolean;
 	disabled?: boolean;
-	width?: number | string;
 }
 
 export default function TextInput(props: TextInputProps) {

@@ -9,6 +9,8 @@ import MemberAndValuation from './MemberAndValuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
+import { isMobileDevice } from '../utils';
+import { useFullScreenBrowser } from 'react-browser-hooks';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -28,6 +30,7 @@ export default function ListHoldings({
 	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, ANGEL, OTHER, SAV, CREDIT } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
+	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
 		amt: { title: fields.amount, dataIndex: 'amt', key: 'amt' },
@@ -97,7 +100,7 @@ export default function ListHoldings({
 					changeHandler={(val: string) => changeName(val, i)}
 					value={holding.name as string}
 					size={'middle'}
-					style={{ width: 200 }}
+					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 				/>
 			)
 		};
@@ -123,7 +126,7 @@ export default function ListHoldings({
 											changeHandler={(val: string) => changeName(val, i)}
 											value={data[i].name as string}
 											size={'middle'}
-											style={{ width: 200 }}
+											style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 										/>
 									</Col>
 								</Row>
