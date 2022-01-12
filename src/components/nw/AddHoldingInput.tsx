@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Form, Row, Col, Cascader } from 'antd';
+import { Form, Row, Col, Cascader, Select } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import DateInput from '../form/DateInput';
@@ -48,6 +48,9 @@ export default function AddHoldingInput({
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 	const hasOnlyEnddate = (childTab: string) =>
 		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
+	
+	const { Option, OptGroup } = Select;
+
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '', curr: selectedCurrency };
 		switch (childTab) {
@@ -242,6 +245,18 @@ export default function AddHoldingInput({
 										/>
 									</Col>
 								)}
+								{(category === "BD" || category === "P2P") &&
+									<Select defaultValue="0" style={{ width: 120 }} >
+									<OptGroup label="Interest">
+										<Option value="0">Pay Out</Option>
+									</OptGroup>
+									<OptGroup label="Accumulates Interest">
+										<Option value="1">Yearly</Option>
+										<Option value="2">Semi-Annually</Option>
+										<Option value="4">Quarterly</Option>
+										<Option value="12">Monthly</Option>
+									</OptGroup>
+								</Select>}
 								{cascaderOptions && (
 									<Col>
 										<Cascader defaultValue={[ category, subCat]} options={cascaderOptions} onChange={changeSubCat} />

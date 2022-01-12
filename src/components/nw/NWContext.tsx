@@ -218,33 +218,13 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					cascaderOptions: getCascaderOptions(
-						{
-							BD: 'Deposit',
-							P2P: 'Lent to an individual',
-							[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate'
-						},
-						{
-							BD: {
-								0: 'Pay Out',
-								1: 'Accumulates Every Year',
-								2: 'Accumulates Every Six Months',
-								4: 'Accumulates Every Three Months',
-								12: 'Accumulates Every Month'
-							},
-							ML: {
-								0: 'Pay Out',
-								1: 'Accumulates Every Year',
-								2: 'Accumulates Every Six Months',
-								4: 'Accumulates Every Three Months',
-								12: 'Accumulates Every Month'
-							},
-							[NATIONAL_SAVINGS_CERTIFICATE]: {}
-						},
-						false
-					),
+					categoryOptions: {
+						BD: 'Deposit',
+						P2P: 'Lent to an individual',
+						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate'
+					},
 					fields: {
-						type: 'Type & Interest',
+						type: 'Type',
 						name: 'Label',
 						amount: 'Amount',
 						date: 'Date',
