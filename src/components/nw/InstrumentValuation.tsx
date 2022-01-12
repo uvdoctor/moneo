@@ -50,7 +50,7 @@ export default function InstrumentValuation() {
 					Total ~ {toHumanFriendlyCurrency(totalFilterAmt, selectedCurrency)}
 				</strong>
 			),
-			key: 'id',
+			key: childTab,
 			filterIcon: <FilterTwoTone twoToneColor={filteredInfo?.id ? COLORS.GREEN : COLORS.DEFAULT} style={{ fontSize: 20 }} />,
 			filteredValue: filteredInfo.id || null,
 			filters: nameFilterValues,

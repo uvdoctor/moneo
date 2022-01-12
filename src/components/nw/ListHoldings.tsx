@@ -286,6 +286,7 @@ export default function ListHoldings({
 			}
 			dataSource={dataSource}
 			size="small"
+			bordered
 		/>
 	) : (
 		<Empty description={<p>No data found.</p>} />
