@@ -247,10 +247,10 @@ export default function ListProperties({
 									} }
 									size={"middle"} />
 							</Col>
-							<Col>
+							<Col xs={8}>
 								<label>{data[i].city}</label>
 							</Col>
-							<Col>
+							<Col xs={8}>
 								<label>{data[i].state}</label>
 							</Col>
 						</Row>
