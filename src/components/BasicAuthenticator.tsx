@@ -7,7 +7,7 @@ import {
 import { Auth, Hub } from 'aws-amplify';
 import React, { Fragment, useContext, useEffect, useReducer, useState } from 'react';
 import { AuthState, Translations, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { Row, Steps } from 'antd';
+import { Col, Row, Steps } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { createUserinfo, doesEmailExist } from './userinfoutils';
 import Nav from './Nav';
@@ -69,13 +69,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		},
 		{
 			title: 'Step 2',
-			content: (
-				<StepTwo
-					setDOB={setDOB}
-					lifeExpectancy={lifeExpectancy}
-					setLifeExpectancy={setLifeExpectancy}
-				/>
-			)
+			content: <StepTwo setDOB={setDOB} lifeExpectancy={lifeExpectancy} setLifeExpectancy={setLifeExpectancy} />
 		},
 		{
 			title: 'Step 3',
@@ -185,63 +179,73 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	}, []);
 
 	return (
-		<Fragment>
-			{!user && <Nav hideMenu title="Almost there..." />}
-			<AmplifyAuthContainer>
-				<AmplifyAuthenticator>
-					{authState === AuthState.ConfirmSignUp && (
-						<AmplifyConfirmSignUp
-							slot="confirm-sign-up"
-							user={cognitoUser}
-							handleAuthStateChange={handleConfirmSignUp}
-							formFields={[
-								{
-									type: 'code'
-								}
-							]}
-						/>
-					)}
-					{authState !== AuthState.SignIn && (
-						<AmplifySection slot="sign-up">
-							<Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
-							<Steps current={state.step} size="small">
-								{steps.map((item) => <Step key={item.title} title={item.title} />)}
-							</Steps>
-							<div className="steps-content">{steps[state.step].content}</div>
-							<div className="steps-action">
-								<Row justify="end">
-									{state.step === 0 && (
-										<Button type="link" htmlType="button" onClick={onCancel}>
-											Cancel
-										</Button>
-									)}
-									{state.step > 0 && (
-										<Button type="link" onClick={() => prev()}>
-											Back
-										</Button>
-									)}
-									{state.step < 2 && (
-										<Button
-											type="primary"
-											disabled={state.step === 0 && disable}
-											onClick={state.step === 0 ? verifyEmail : next}
-											loading={loading}
-										>
-											Next
-										</Button>
-									)}
-									{state.step === 2 && (
-										<Button type="primary" disabled={disable} onClick={handleRegistrationSubmit}>
-											Done
-										</Button>
-									)}
-								</Row>
-							</div>
-						</AmplifySection>
-					)}
-					{children}
-				</AmplifyAuthenticator>
-			</AmplifyAuthContainer>
-		</Fragment>
+		<Row>
+			<Col span={24}>{!user && <Nav hideMenu title="Almost there..." />}</Col>
+			<Col span={24}>
+				<Row justify="center">
+					<Col>
+						<AmplifyAuthContainer>
+							<AmplifyAuthenticator>
+								{authState === AuthState.ConfirmSignUp && (
+									<AmplifyConfirmSignUp
+										slot="confirm-sign-up"
+										user={cognitoUser}
+										handleAuthStateChange={handleConfirmSignUp}
+										formFields={[
+											{
+												type: 'code'
+											}
+										]}
+									/>
+								)}
+								{authState !== AuthState.SignIn && (
+									<AmplifySection slot="sign-up">
+										<Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+										<Steps current={state.step} size="small">
+											{steps.map((item) => <Step key={item.title} title={item.title} />)}
+										</Steps>
+										<div className="steps-content">{steps[state.step].content}</div>
+										<div className="steps-action">
+											<Row justify="end">
+												{state.step === 0 && (
+													<Button type="link" htmlType="button" onClick={onCancel}>
+														Cancel
+													</Button>
+												)}
+												{state.step > 0 && (
+													<Button type="link" onClick={() => prev()}>
+														Back
+													</Button>
+												)}
+												{state.step < 2 && (
+													<Button
+														type="primary"
+														disabled={state.step === 0 && disable}
+														onClick={state.step === 0 ? verifyEmail : next}
+														loading={loading}
+													>
+														Next
+													</Button>
+												)}
+												{state.step === 2 && (
+													<Button
+														type="primary"
+														disabled={disable}
+														onClick={handleRegistrationSubmit}
+													>
+														Done
+													</Button>
+												)}
+											</Row>
+										</div>
+									</AmplifySection>
+								)}
+								{children}
+							</AmplifyAuthenticator>
+						</AmplifyAuthContainer>
+					</Col>
+				</Row>
+			</Col>
+		</Row>
 	);
 }
