@@ -29,7 +29,7 @@ export default function Footer() {
 				</Col>
 	</Row>*/}
 			<Row justify="center">
-				<Col xs={20} sm={12} md={10} lg={6} className="social-icons">
+				<Col xs={24} sm={12} md={10} lg={6} className="social-icons">
 					<a target="_blank" href={url} rel="noopener noreferrer">
 						<FacebookIcon round />
 					</a>
@@ -50,7 +50,11 @@ export default function Footer() {
 			<Row justify="center">
 				<Col>
 					<a target="_blank" href={ROUTES.TC} rel="noreferrer">Terms & Conditions</a>&nbsp; | &nbsp;
+				</Col>
+				<Col>
 					<a target="_blank" href={ROUTES.PRIVACY} rel="noreferrer">Privacy Policy</a> &nbsp; | &nbsp;
+				</Col>
+				<Col>
 					<a target="_blank" href={ROUTES.SECURITY} rel="noreferrer">Security Policy</a> &nbsp;
 				</Col>
 			</Row>
