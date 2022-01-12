@@ -223,7 +223,6 @@ export default function UserSettings(): JSX.Element {
 													value={name}
 													changeHandler={(val: any) =>
 														dispatch({ type: 'single', data: { field: 'name', val } })}
-													width={300}
 													minLength={2}
 													maxLength={20}
 													setError={(val: any) =>
@@ -242,7 +241,6 @@ export default function UserSettings(): JSX.Element {
 													value={lastName}
 													changeHandler={(val: any) =>
 														dispatch({ type: 'single', data: { field: 'lastName', val } })}
-													width={300}
 													minLength={2}
 													maxLength={20}
 													setError={(val: any) =>
