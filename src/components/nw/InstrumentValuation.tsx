@@ -180,9 +180,10 @@ export default function InstrumentValuation() {
 					(selectedSubtTags.includes(LF) && subt === L)
 				);
 			}
-			if (childTab === STOCK && data && data.meta) {
+			if (childTab === STOCK && data) {
 				const { L, M, H, S } = MCap;
-				const { meta: { mcap } } = data;
+				let mcap = null;
+				if(data.meta) mcap = data.meta.mcap;
 				return (
 					(selectedTags.includes(L) && mcap === L) ||
 					(selectedTags.includes(M) && mcap === M) ||
