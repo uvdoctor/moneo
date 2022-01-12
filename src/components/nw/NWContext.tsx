@@ -9,6 +9,7 @@ import {
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesPropertyMatch,
+	getCascaderOptions,
 	getFamilysList,
 	getNPSData,
 	getNPSFundManagers,
@@ -217,27 +218,31 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					categoryOptions: {
-						BD: 'Deposit',
-						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate',
-						P2P: 'Lent to an individual'
-					},
-					subCategoryOptions: {
-						BD: {
-							0: 'Pay Out',
-							1: 'Accumulates Every Year',
-							2: 'Accumulates Every Six Months',
-							4: 'Accumulates Every Three Months',
-							12: 'Accumulates Every Month'
+					cascaderOptions: getCascaderOptions(
+						{
+							BD: 'Deposit',
+							P2P: 'Lent to an individual',
+							[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate'
 						},
-						ML: {
-							0: 'Pay Out',
-							1: 'Accumulates Every Year',
-							2: 'Accumulates Every Six Months',
-							4: 'Accumulates Every Three Months',
-							12: 'Accumulates Every Month'
-						}
-					},
+						{
+							BD: {
+								0: 'Pay Out',
+								1: 'Accumulates Every Year',
+								2: 'Accumulates Every Six Months',
+								4: 'Accumulates Every Three Months',
+								12: 'Accumulates Every Month'
+							},
+							ML: {
+								0: 'Pay Out',
+								1: 'Accumulates Every Year',
+								2: 'Accumulates Every Six Months',
+								4: 'Accumulates Every Three Months',
+								12: 'Accumulates Every Month'
+							},
+							[NATIONAL_SAVINGS_CERTIFICATE]: {}
+						},
+						false
+					),
 					fields: {
 						type: 'Type & Interest',
 						name: 'Label',
@@ -301,38 +306,41 @@ function NWContextProvider() {
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
-					subCategoryOptions: {
-						[AssetSubType.Gold]: initOptions(8, 16),
-						[SILVER]: {
-							'100': 'Pure',
-							'95.8': 'Brittania (95.8%)',
-							'92.5': 'Sterling (92.5%)',
-							'90': 'Coin (90%)',
-							'80': 'Jewellery (80%)'
+					cascaderOptions: getCascaderOptions(
+						{
+							[AssetSubType.Gold]: 'Gold',
+							[SILVER]: 'Silver',
+							[PLATINUM]: 'Platinum',
+							[PALLADIUM]: 'Palladium'
 						},
-						[PLATINUM]: {
-							'100': 'Pure',
-							'95': '95%',
-							'90': '90%',
-							'85': '85%',
-							'80': '80%',
-							'50': '50%'
+						{
+							[AssetSubType.Gold]: initOptions(8, 16),
+							[SILVER]: {
+								'100': 'Pure',
+								'95.8': 'Brittania (95.8%)',
+								'92.5': 'Sterling (92.5%)',
+								'90': 'Coin (90%)',
+								'80': 'Jewellery (80%)'
+							},
+							[PLATINUM]: {
+								'100': 'Pure',
+								'95': '95%',
+								'90': '90%',
+								'85': '85%',
+								'80': '80%',
+								'50': '50%'
+							},
+							[PALLADIUM]: {
+								'100': 'Pure',
+								'95': '95%',
+								'90': '90%',
+								'85': '85%',
+								'80': '80%',
+								'50': '50%'
+							}
 						},
-						[PALLADIUM]: {
-							'100': 'Pure',
-							'95': '95%',
-							'90': '90%',
-							'85': '85%',
-							'80': '80%',
-							'50': '50%'
-						}
-					},
-					categoryOptions: {
-						[AssetSubType.Gold]: 'Gold',
-						[SILVER]: 'Silver',
-						[PLATINUM]: 'Platinum',
-						[PALLADIUM]: 'Palladium'
-					},
+						false
+					),
 					fields: {
 						type: 'Type & Purity',
 						qty: 'Quantity'
@@ -500,8 +508,8 @@ function NWContextProvider() {
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					categoryOptions: getNPSFundManagers(),
-					subCategoryOptions: npsSubcategory,
+					// @ts-ignore
+					cascaderOptions: getCascaderOptions(getNPSFundManagers(), npsSubcategory, false),
 					fields: {
 						type: 'Fund Manager & Scheme',
 						qty: 'Quantity'
@@ -529,20 +537,17 @@ function NWContextProvider() {
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
-					categoryOptions: {
-						L: 'Life',
-						H: 'Health',
-						P: 'Property',
-						V: 'Vehicle',
-						O: 'Others'
-					},
-					subCategoryOptions: {
-						L: { 1: 'Yearly', 12: 'Monthly' },
-						H: { 1: 'Yearly', 12: 'Monthly' },
-						P: { 1: 'Yearly', 12: 'Monthly' },
-						V: { 1: 'Yearly', 12: 'Monthly' },
-						O: { 1: 'Yearly', 12: 'Monthly' }
-					},
+					cascaderOptions: getCascaderOptions(
+						{
+							L: 'Life',
+							H: 'Health',
+							P: 'Property',
+							V: 'Vehicle',
+							O: 'Others'
+						},
+						{ 1: 'Yearly', 12: 'Monthly' },
+						true
+					),
 					fields: {
 						type: 'Type & Premium Mode',
 						name: 'Label',
@@ -587,12 +592,12 @@ function NWContextProvider() {
 		const family = await getFamilysList();
 		if (!family || !family.length) {
 			let member = await addFamilyMember("Self", "XXXXX1234X", userInfo?.tax);
-			if(!member) return;
-			setAllFamily ({[member.id as string]: { name: member.name, taxId: member.tid, tax: member.tax }});
-			setSelectedMembers([...[member.id as string]])
+			if (!member) return;
+			setAllFamily({ [member.id as string]: { name: member.name, taxId: member.tid, tax: member.tax } });
+			setSelectedMembers([ ...[ member.id as string ] ]);
 			setLoadingFamily(false);
 		}
-	}
+	};
 
 	const initializeInsData = async (instruments: Array<InstrumentInput>) => {
 		let mfIds: Set<string> = new Set();

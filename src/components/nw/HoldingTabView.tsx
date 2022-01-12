@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Badge, Col, Empty, Row, Skeleton, Tabs, Tooltip } from 'antd';
 import { TAB, NWContext, LIABILITIES_TAB, LIABILITIES_VIEW } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
@@ -10,6 +10,7 @@ import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
 import TabInfo from './TabInfo';
 import AAChart from './AAChart';
+import { getCascaderOptions, getNPSFundManagers } from './nwutils';
 
 interface HoldingTabViewProps {
 	liabilities?: boolean;
@@ -31,14 +32,16 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 		totalLiabilities,
 		view,
 		npsSubcategory
-		
 	}: any = useContext(NWContext);
 
+ 	const [ options, setOptions ] = useState<any>();
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
 		setActiveTab(view === LIABILITIES_VIEW ? LIABILITIES_TAB : !totalAssets ? 'Cash' : TAB.SUMMARY);
 	}, [view]);
+
+	const hasCascaderOptions = (childTab: string) => [ TAB.NPS, TAB.INS, TAB.LENT, TAB.PM ].includes(childTab);
 
 	useEffect(
 		() => {
@@ -135,11 +138,12 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 													changeData={tabsData[tabName].setData}
 													title={`${tabsData[tabName].label} - Add Record`}
 													categoryOptions={tabsData[tabName].categoryOptions}
-													subCategoryOptions={
+													cascaderOptions={
 														childTab === TAB.NPS ? (
-															npsSubcategory
+															// @ts-ignore
+															getCascaderOptions(getNPSFundManagers(),npsSubcategory, false)
 														) : (
-															tabsData[tabName].subCategoryOptions
+															tabsData[tabName].cascaderOptions
 														)
 													}
 													fields={tabsData[tabName].fields}
@@ -161,8 +165,9 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
 												categoryOptions={tabsData[tabName].categoryOptions}
-												subCategoryOptions={
-													childTab === TAB.NPS ? npsSubcategory : tabsData[tabName].subCategoryOptions
+												cascaderOptions={
+													// @ts-ignore
+													childTab === TAB.NPS ? getCascaderOptions(getNPSFundManagers(),npsSubcategory, false) : tabsData[tabName].cascaderOptions
 												}
 												fields={tabsData[tabName].fields}
 											/>

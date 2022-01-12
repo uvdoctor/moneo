@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Form, Row, Col } from 'antd';
+import { Form, Row, Col, Cascader } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import DateInput from '../form/DateInput';
@@ -15,22 +15,20 @@ interface AddHoldingInputProps {
 	setInput: Function;
 	disableOk: Function;
 	categoryOptions: any;
-	subCategoryOptions?: any;
+	cascaderOptions?: any;
 	fields: any;
 }
 export default function AddHoldingInput({
 	setInput,
 	disableOk,
 	categoryOptions,
-	subCategoryOptions,
+	cascaderOptions,
 	fields
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
-	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ subCat, setSubCat ] = useState<string>(
-		subCategoryOptions && subCategoryOptions[category] ? Object.keys(subCategoryOptions[category])[0] : ''
-	);
+	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : cascaderOptions ? cascaderOptions[0].value : '');
+	const [ subCat, setSubCat ] = useState<string>(cascaderOptions ? cascaderOptions[0].children[0].value: '');
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
@@ -180,10 +178,12 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeSubCat = (val: string) => {
-		setSubCat(val);
+	const changeSubCat = (value: any) => {
+		setCategory(value[0]);
+		setSubCat(value[1]);
 		let rec = getNewRec();
-		childTab === LENT || childTab === INS ? (rec.chgF = Number(subCat)) : (rec.name = val);
+		childTab === LENT || childTab === INS ? (rec.chgF = Number(value[1])) : (rec.name = value[1]);
+		rec.subt = value[0];
 		setInput(rec);
 	};
 
@@ -211,12 +211,6 @@ export default function AddHoldingInput({
 
 	const changeCategory = (subtype: string) => {
 		setCategory(subtype);
-		if (subCategoryOptions) {
-			let opts = subCategoryOptions[subtype];
-			if (opts && Object.keys(opts).length && !opts[subCat]) {
-				setSubCat(Object.keys(opts)[0]);
-			}
-		}
 		let rec = getNewRec();
 		rec.subt === AssetSubType.C ? (rec.name = subtype) : (rec.subt = subtype);
 		return rec;
@@ -229,37 +223,30 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const { Item: FormItem } = Form; 
+	const { Item: FormItem } = Form;
 
 	return (
 		<Form layout="vertical">
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
-				{categoryOptions && (
+				{(categoryOptions || cascaderOptions) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.type}>
 							<Row gutter={[ 10, 0 ]}>
-								<Col>
-									{categoryOptions && (
+								{categoryOptions && (
+									<Col>
 										<SelectInput
 											pre=""
 											value={category}
 											options={categoryOptions}
 											changeHandler={(val: string) => changeCategory(val)}
 										/>
-									)}
-								</Col>
-								<Col>
-									{subCategoryOptions &&
-									subCategoryOptions[category as string] && (
-										<SelectInput
-											pre=""
-											value={subCat as string}
-											options={subCategoryOptions[category as string]}
-											changeHandler={(val: string) => changeSubCat(val)}
-											post={category === AssetSubType.Gold ? 'karat' : ''}
-										/>
-									)}
-								</Col>
+									</Col>
+								)}
+								{cascaderOptions && (
+									<Col>
+										<Cascader defaultValue={[ category, subCat]} options={cascaderOptions} onChange={changeSubCat} />
+									</Col>
+								)}
 							</Row>
 						</FormItem>
 					</Col>

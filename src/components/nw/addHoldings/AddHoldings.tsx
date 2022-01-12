@@ -14,7 +14,7 @@ interface AddHoldingsProps {
 	isPrimary: boolean;
 	title: string;
 	categoryOptions?: any;
-	subCategoryOptions?: any;
+	cascaderOptions?: any;
 	fields: any;
 }
 
@@ -24,7 +24,7 @@ export default function AddHoldings({
 	isPrimary,
 	title,
 	categoryOptions,
-	subCategoryOptions,
+	cascaderOptions,
 	fields,
 }: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
@@ -105,7 +105,7 @@ export default function AddHoldings({
 						setInput={setNewRec}
 						disableOk={setOkDisabled}
 						categoryOptions={categoryOptions}
-						subCategoryOptions={subCategoryOptions}
+						cascaderOptions={cascaderOptions}
 						fields={fields}
 					/>
 				)}

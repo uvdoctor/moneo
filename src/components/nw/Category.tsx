@@ -1,6 +1,6 @@
-import { Col, Row } from 'antd';
+import { Cascader, Col, Row } from 'antd';
 import React, { useContext } from 'react';
-import { AssetSubType, HoldingInput } from '../../api/goals';
+import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { isMobileDevice } from '../utils';
 import { NWContext, TAB } from './NWContext';
@@ -9,31 +9,23 @@ interface CategoryProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	categoryOptions: any;
-	subCategoryOptions: any;
+	cascaderOptions: any;
 	record: HoldingInput;
 }
 
-export default function Category({ data, changeData, categoryOptions, subCategoryOptions, record }: CategoryProps) {
+export default function Category({ data, changeData, categoryOptions, cascaderOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, LENT, INS } = TAB;
 	const fsb = useFullScreenBrowser();
 
 	const changeCategory = (subtype: string) => {
 		childTab === CRYPTO ? (record.name = subtype) : (record.subt = subtype);
-		if (subCategoryOptions) {
-			let opts = subCategoryOptions[subtype];
-			if (!opts) return changeData([ ...data ]);
-			if (childTab === LENT) {
-				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
-			} else {
-				if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
-			}
-		}
 		changeData([ ...data ]);
 	};
 
-	const changeSubCategory = (val: string) => {
-		childTab === LENT || childTab === INS ? (record.chgF = Number(val)) : (record.name = val);
+	const changeSubCategory = (value: any) => {
+		record.subt = value[0];
+		childTab === LENT || childTab === INS ? (record.chgF = Number(value[1])) : (record.name = value[1]);
 		changeData([ ...data ]);
 	};
 
@@ -50,22 +42,17 @@ export default function Category({ data, changeData, categoryOptions, subCategor
 					/>
 				</Col>
 			)}
-			{subCategoryOptions ? (
-				subCategoryOptions[record.subt as string] && (
-					<Col>
-						<SelectInput
-							pre=""
-							value={
-								childTab === LENT || childTab === INS ? record.chgF as number : record.name as string
-							}
-							options={subCategoryOptions[record.subt as string]}
-							changeHandler={(val: string) => changeSubCategory(val)}
-							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
-							width={isMobileDevice(fsb) ? 120 : 'auto'}
-						/>
-					</Col>
-				)
-			) : null}
+			{cascaderOptions && (
+				<Cascader
+					defaultValue={[
+						record.subt as string,
+						childTab === LENT || childTab === INS ? record.chgF as number : record.name as string
+					]}
+					onChange={changeSubCategory}
+					options={cascaderOptions}
+					// width={isMobileDevice(fsb) ? 120 : 'auto'}
+				/>
+			)}
 		</Row>
 	);
 }
