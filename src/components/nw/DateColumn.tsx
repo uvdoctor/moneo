@@ -54,8 +54,8 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		[ LOAN, INS ].includes(childTab) || (record.chgF === 0 && childTab === LENT);
 
 	return (
-		<Row align="middle" gutter={[ 10, 0 ]}>
-			<Col>
+		<Row align="middle" gutter={[ 10, 10 ]}>
+			<Col xs={24} sm={12}>
 				<DateInput
 					title={''}
 					startMonthHandler={changeStartMonth}
@@ -82,7 +82,7 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 				/>
 			</Col>
 			{record.subt === NATIONAL_SAVINGS_CERTIFICATE && (
-				<Col>
+				<Col xs={24} sm={12}>
 					<SelectInput
 						pre={''}
 						value={duration}

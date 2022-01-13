@@ -118,15 +118,12 @@ export default function ListHoldings({
 
 	const expandedRow = (i: number) => {
 		return (
-			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 0 } ]}>
+			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 10 } ]}>
 				{hasName(childTab) &&
 				expandedColumns.includes('label') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{fields.name}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>{fields.name}</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -144,12 +141,9 @@ export default function ListHoldings({
 					</Col>
 				)}
 				{(data[i].subt === 'BD' || data[i].subt === 'P2P') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{'Interest'}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>Interest</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -176,12 +170,9 @@ export default function ListHoldings({
 					</Col>
 				)}
 				{expandedColumns.includes('amt') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -194,12 +185,9 @@ export default function ListHoldings({
 				)}
 				{hasDate(childTab, data[i]) &&
 				expandedColumns.includes('date') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{fields.date}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>{fields.date}</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -212,12 +200,9 @@ export default function ListHoldings({
 				)}
 				{hasPF(childTab) &&
 				expandedColumns.includes('qty') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{fields.qty}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>{fields.qty}</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -235,12 +220,9 @@ export default function ListHoldings({
 				)}
 				{hasRate(childTab) &&
 				expandedColumns.includes('rate') && (
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
-								<strong>{fields.rate}</strong>
-								<hr />
-							</Col>
+							<Col xs={24}>{fields.rate}</Col>
 							<Col xs={24}>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
@@ -260,22 +242,26 @@ export default function ListHoldings({
 					</Col>
 				)}
 				{!hasminimumCol(childTab) && (
-						<Col>
-							<Row align="middle">
-								<Col>
-									<UserOutlined />
-								</Col>
-								<Col>
-									<SelectInput
-										pre=""
-										value={data[i].fId ? data[i].fId : ''}
-										options={getFamilyOptions(allFamily)}
-										changeHandler={(key: string) => changeOwner(key, i)}
-									/>
-								</Col>
-							</Row>
-						</Col>
-					)}
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<UserOutlined />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<SelectInput
+											pre=""
+											value={data[i].fId ? data[i].fId : ''}
+											options={getFamilyOptions(allFamily)}
+											changeHandler={(key: string) => changeOwner(key, i)}
+										/>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
 			</Row>
 		);
 	};
