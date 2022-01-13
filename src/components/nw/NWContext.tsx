@@ -1149,6 +1149,10 @@ function NWContextProvider() {
 		]
 	);
 
+	useEffect(() => {
+		if(isDirty) saveHoldings();
+	}, [childTab])
+
 	return (
 		<NWContext.Provider
 			value={{

@@ -35,7 +35,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
 	const [ subCat, setSubCat ] = useState<string>(
-		categoryOptions[0] && !hasOnlyCategory(childTab)
+		categoryOptions && !hasOnlyCategory(childTab)
 			? categoryOptions[0].children[0].value
 			: childTab === LENT ? '0' : ''
 	);
