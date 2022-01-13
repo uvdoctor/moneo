@@ -1,8 +1,25 @@
 .list-holdings {
+	td {
+		vertical-align: top;
+	}
+
 	.align-left {
 		justify-content: left;
 	}
+
 	.number-input {
 		width: 130px;
+	}
+}
+
+@media all and (max-width: 576px) {
+	.list-holdings {
+		input {
+			width: 160px !important;
+		}
+
+		.ant-select {
+			width: 125px;
+		}
 	}
 }
