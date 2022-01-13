@@ -25,6 +25,7 @@ import { toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
+require('./ListProperties.less');
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
