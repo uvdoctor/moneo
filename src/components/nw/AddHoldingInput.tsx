@@ -1,7 +1,8 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Form, Row, Col, Cascader, Select } from 'antd';
+import { Form, Row, Col, Select } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
+import CascaderInput from '../form/CascaderInput';
 import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
@@ -15,22 +16,19 @@ interface AddHoldingInputProps {
 	setInput: Function;
 	disableOk: Function;
 	categoryOptions: any;
-	cascaderOptions?: any;
 	fields: any;
 }
-export default function AddHoldingInput({
-	setInput,
-	disableOk,
-	categoryOptions,
-	cascaderOptions,
-	fields
-}: AddHoldingInputProps) {
+export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields }: AddHoldingInputProps) {
+	const hasSingleOption = (childTab: string) => [ LENT, OTHER, VEHICLE, CRYPTO, PF ].includes(childTab);
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
-	const [ category, setCategory ] = useState<string>(
-		categoryOptions ? Object.keys(categoryOptions)[0] : cascaderOptions ? cascaderOptions[0].value : ''
+	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
+	const [ subCat, setSubCat ] = useState<string>(
+		categoryOptions[0] && !hasSingleOption(childTab)
+			? categoryOptions[0].children[0].value
+			: childTab === LENT ? '0' : ''
 	);
-	const [ subCat, setSubCat ] = useState<string>(cascaderOptions ? cascaderOptions[0].children[0].value : childTab === LENT ? "0" : '');
+
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
@@ -183,15 +181,6 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeSubCat = (value: any) => {
-		setCategory(value[0]);
-		setSubCat(value[1]);
-		let rec = getNewRec();
-		childTab === INS ? (rec.chgF = Number(value[1])) : (rec.name = value[1]);
-		rec.subt = value[0];
-		setInput(rec);
-	};
-
 	const changeRate = (val: number) => {
 		setRate(val);
 		disableOk(val <= 0);
@@ -214,11 +203,19 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeCategory = (subtype: string) => {
-		setCategory(subtype);
+	const changeCategory = (value: any) => {
+		setCategory(value);
 		let rec = getNewRec();
-		rec.subt === AssetSubType.C ? (rec.name = subtype) : (rec.subt = subtype);
+		rec.subt === AssetSubType.C ? (rec.name = value) : (rec.subt = value);
 		return rec;
+	};
+
+	const changeSubCat = (value: any) => {
+		setSubCat(value);
+		let rec = getNewRec();
+		childTab === INS ? (rec.chgF = Number(value)) : (rec.name = value);
+		rec.subt = value;
+		setInput(rec);
 	};
 
 	const changeMember = (key: string) => {
@@ -227,27 +224,28 @@ export default function AddHoldingInput({
 		rec.fId = key;
 		setInput(rec);
 	};
-
 	const { Item: FormItem } = Form;
 
 	return (
 		<Form layout="vertical">
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
-				{(categoryOptions || cascaderOptions) && (
+				{categoryOptions && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.type}>
 							<Row gutter={[ 10, 0 ]}>
 								{categoryOptions && (
 									<Col>
-										<SelectInput
-											pre=""
-											value={category}
+										<CascaderInput
+											pre={''}
+											parentValue={category}
+											parentChangeHandler={changeCategory}
+											childChangeHandler={hasSingleOption(childTab) ? '' : changeSubCat}
+											childValue={hasSingleOption(childTab) ? '' : subCat}
 											options={categoryOptions}
-											changeHandler={(val: string) => changeCategory(val)}
 										/>
 									</Col>
 								)}
-								{(category === 'BD' || category === "P2P") && (
+								{(category === 'BD' || category === 'P2P') && (
 									<Select
 										defaultValue={subCat}
 										style={{ width: 150 }}
@@ -266,15 +264,6 @@ export default function AddHoldingInput({
 											<Option value="12">Month</Option>
 										</OptGroup>
 									</Select>
-								)}
-								{cascaderOptions && (
-									<Col>
-										<Cascader
-											defaultValue={[ category, subCat ]}
-											options={cascaderOptions}
-											onChange={changeSubCat}
-										/>
-									</Col>
 								)}
 							</Row>
 						</FormItem>

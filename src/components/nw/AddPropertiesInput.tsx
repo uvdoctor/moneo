@@ -10,6 +10,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
+import CascaderInput from "../form/CascaderInput";
 import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
@@ -173,10 +174,10 @@ export default function AddPropertyInput({
 		return newRec;
 	};
 
-	const changeSubtype = (subtype: any) => {
-		setSubtype(subtype);
+	const changeSubtype = (value: any) => {
+		setSubtype(value);
 		let rec = getNewRec();
-		rec.type = subtype;
+		rec.type = value;
 		setInput(rec);
 	};
 
@@ -276,12 +277,7 @@ export default function AddPropertyInput({
 						>
 							<Col xs={24} sm={12}>
 								{categoryOptions && (
-									<SelectInput
-										pre=""
-										value={subtype}
-										options={categoryOptions}
-										changeHandler={(val: any) => changeSubtype(val)}
-									/>
+									<CascaderInput pre={''} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions}/>
 								)}
 							</Col>
 							<Col xs={24} md={12}>

@@ -20,14 +20,12 @@ interface ListHoldingsProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	categoryOptions: any;
-	cascaderOptions?: any;
 	fields: any;
 }
 export default function ListHoldings({
 	data,
 	changeData,
 	categoryOptions,
-	cascaderOptions,
 	fields
 }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
@@ -99,7 +97,6 @@ export default function ListHoldings({
 					data={data}
 					changeData={changeData}
 					categoryOptions={categoryOptions}
-					cascaderOptions={cascaderOptions}
 					record={holding}
 				/>
 			),

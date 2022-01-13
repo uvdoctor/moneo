@@ -134,14 +134,9 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 													data={tabsData[tabName].data}
 													changeData={tabsData[tabName].setData}
 													title={`${tabsData[tabName].label} - Add Record`}
-													categoryOptions={tabsData[tabName].categoryOptions}
-													cascaderOptions={
-														childTab === TAB.NPS ? (
-															getCascaderOptions(getNPSFundManagers(),npsSubcategory, false)
-														) : (
-															tabsData[tabName].cascaderOptions
-														)
-													}
+													categoryOptions={	childTab === TAB.NPS ? (
+														getCascaderOptions(getNPSFundManagers(),npsSubcategory, false)
+													) : tabsData[tabName].categoryOptions}
 													fields={tabsData[tabName].fields}
 												/>
 											</Col>
@@ -160,10 +155,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 											<ListHoldings
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
-												categoryOptions={tabsData[tabName].categoryOptions}
-												cascaderOptions={
-													childTab === TAB.NPS ? getCascaderOptions(getNPSFundManagers(),npsSubcategory, false) : tabsData[tabName].cascaderOptions
-												}
+												categoryOptions={childTab === TAB.NPS ? getCascaderOptions(getNPSFundManagers(),npsSubcategory, false) : tabsData[tabName].categoryOptions}
 												fields={tabsData[tabName].fields}
 											/>
 										) : (

@@ -25,6 +25,7 @@ import { toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
+import CascaderInput from "../form/CascaderInput";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -335,15 +336,10 @@ export default function ListProperties({
 			dataSource.push({
 				key: i,
 				type: categoryOptions && (
-					<SelectInput
-						pre=""
-						value={data[i].type as string}
-						options={categoryOptions}
-						changeHandler={(val: any) => {
-							data[i].type = val;
-							changeData([...data]);
-						}}
-					/>
+					<CascaderInput pre={''} parentValue={data[i].type} parentChangeHandler={(val:any)=>{
+						data[i].type = val;
+						changeData([...data])
+					}} options={categoryOptions}/>
 				),
 				val: (
 					<Row justify="space-between" align="middle">

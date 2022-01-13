@@ -218,11 +218,11 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						BD: 'Deposit',
 						P2P: 'Lent to an individual',
 						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						name: 'Label',
@@ -243,7 +243,7 @@ function NWContextProvider() {
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						[PropertyType.P]: 'Plot',
 						[PropertyType.A]: 'Apartment',
 						[PropertyType.H]: 'House',
@@ -251,7 +251,7 @@ function NWContextProvider() {
 						[PropertyType.COMM]: 'Commercial',
 						[PropertyType.T]: 'Townhouse',
 						[PropertyType.OTHER]: 'Others'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						name: 'Label',
@@ -269,11 +269,11 @@ function NWContextProvider() {
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						2: 'Two-Wheeler',
 						3: 'Three-Wheeler',
 						4: 'Four-Wheeler'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						name: 'Label',
@@ -286,7 +286,7 @@ function NWContextProvider() {
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
-					cascaderOptions: getCascaderOptions(
+					categoryOptions: getCascaderOptions(
 						{
 							[AssetSubType.Gold]: 'Gold',
 							[SILVER]: 'Silver',
@@ -331,13 +331,13 @@ function NWContextProvider() {
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						Art: 'Art',
 						Watch: 'Watch',
 						Club: 'Club Membership',
 						Time: 'Time Sharing Membership',
 						Other: 'Other'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						name: 'Label',
@@ -417,7 +417,7 @@ function NWContextProvider() {
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						[BTC]: 'Bitcoin',
 						[BTC_CASH]: 'Bitcoin Cash',
 						[DASH]: 'Dash',
@@ -428,7 +428,7 @@ function NWContextProvider() {
 						[LITECOIN]: 'Litecoin',
 						[MONERO]: 'Monero',
 						[STELLAR]: 'Stellar'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						qty: 'Quantity'
@@ -469,11 +469,11 @@ function NWContextProvider() {
 					data: pf,
 					setData: setPF,
 					total: totalPF,
-					categoryOptions: {
+					categoryOptions: getCascaderOptions({
 						PF: 'Pension Fund',
 						EF: 'Employee Fund',
 						VF: 'Voluntary Fund'
-					},
+					}),
 					fields: {
 						type: 'Type',
 						amount: 'Amount',
@@ -488,7 +488,7 @@ function NWContextProvider() {
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					cascaderOptions: getCascaderOptions(getNPSFundManagers(), npsSubcategory, false),
+					categoryOptions: getCascaderOptions(getNPSFundManagers(), npsSubcategory, false),
 					fields: {
 						type: 'Fund Manager & Scheme',
 						qty: 'Quantity'
@@ -516,7 +516,7 @@ function NWContextProvider() {
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
-					cascaderOptions: getCascaderOptions(
+					categoryOptions: getCascaderOptions(
 						{
 							L: 'Life',
 							H: 'Health',

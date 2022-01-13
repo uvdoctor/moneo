@@ -450,20 +450,27 @@ export const getNPSFundManagers = () => {
   };
 };
 
-export const getCascaderOptions = (parent: {[key: string]: string}, child: {[key: string]: any}, childEqualForAllParent: boolean
-  ) => {
-  let options: Array<any> = [];
-  Object.keys(parent).map((parentValue: string)=>{
-    let childOptions: Array<{[key: string]: string}> = [];
-    let children = childEqualForAllParent ? child : child[parentValue];
-    if(!children) return options.push({value: parentValue, label: parent[parentValue]}) 
-    Object.keys(children).map((childValue: string)=>{
-      childOptions.push({value: childValue, label: children[childValue]})
-      if(childEqualForAllParent) return
-    })
-    options.push({value: parentValue, label: parent[parentValue], children: childOptions})
-  })
-  return options;
+export const getCascaderOptions = (
+	parent: { [key: string]: string },
+	child?: { [key: string]: any },
+	haveSameChildren?: boolean
+) => {
+	let options: Array<any> = [];
+	Object.keys(parent).map((parentValue: string) => {
+		let childOptions: Array<{ [key: string]: string }> = [];
+    if(!child){
+      options.push({ value: parentValue, label: parent[parentValue] });
+    } else {
+      let children = !haveSameChildren ? child[parentValue] : child;
+      if(!children) return;
+			Object.keys(children).map((childValue: string) => {
+				childOptions.push({ value: childValue, label: children[childValue] });
+				if (haveSameChildren) return;
+			});
+			options.push({ value: parentValue, label: parent[parentValue], children: childOptions });
+    }
+	});
+	return options;
 };
 
 export const financialAssetTypes = [
