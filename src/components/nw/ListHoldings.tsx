@@ -1,7 +1,7 @@
 import { Col, Empty, Row, Select, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
-import { NWContext, TAB } from './NWContext';
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { doesHoldingMatch, getFamilyOptions } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
@@ -13,6 +13,7 @@ import { isMobileDevice } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { UserOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
+import Duration from './Duration';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -122,9 +123,9 @@ export default function ListHoldings({
 				{hasName(childTab) &&
 				expandedColumns.includes('label') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>{fields.name}</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{fields.name}</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<TextInput
@@ -142,9 +143,9 @@ export default function ListHoldings({
 				)}
 				{(data[i].subt === 'BD' || data[i].subt === 'P2P') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>Interest</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>Interest</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<Select
@@ -171,9 +172,9 @@ export default function ListHoldings({
 				)}
 				{expandedColumns.includes('amt') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<Amount data={data} changeData={changeData} record={data[i]} />
@@ -186,9 +187,9 @@ export default function ListHoldings({
 				{hasDate(childTab, data[i]) &&
 				expandedColumns.includes('date') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>{fields.date}</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{fields.date}</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<DateColumn data={data} changeData={changeData} record={data[i]} />
@@ -198,12 +199,27 @@ export default function ListHoldings({
 						</Row>
 					</Col>
 				)}
+				{childTab === LENT &&
+				data[i].subt === NATIONAL_SAVINGS_CERTIFICATE && (
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{'Duration'}</Col>
+							<Col>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<Duration data={data} changeData={changeData} record={data[i]} />
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
 				{hasPF(childTab) &&
 				expandedColumns.includes('qty') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>{fields.qty}</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{fields.qty}</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<NumberInput
@@ -221,9 +237,9 @@ export default function ListHoldings({
 				{hasRate(childTab) &&
 				expandedColumns.includes('rate') && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>{fields.rate}</Col>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{fields.rate}</Col>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<NumberInput
@@ -243,11 +259,11 @@ export default function ListHoldings({
 				)}
 				{!hasminimumCol(childTab) && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 0, 10 ]}>
-							<Col xs={24}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>
 								<UserOutlined />
 							</Col>
-							<Col xs={24}>
+							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<SelectInput
