@@ -247,7 +247,7 @@ export default function AddHoldingInput({
 										/>
 									</Col>
 								)}
-								{(category === 'BD') && (
+								{(category === 'BD' || category === "P2P") && (
 									<Select
 										defaultValue={subCat}
 										style={{ width: 150 }}

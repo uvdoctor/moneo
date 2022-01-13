@@ -54,7 +54,7 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 				/>
 			)}
-			{(record.subt === 'BD') && (
+			{(record.subt === 'BD' || record.subt === "P2P") && (
 				<Select
 					defaultValue={record.chgF as number}
 					style={{ width: isMobileDevice(fsb) ? 120 : 150 }}
