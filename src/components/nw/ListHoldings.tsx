@@ -2,7 +2,7 @@ import { Col, Empty, Row, Select, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
-import { doesHoldingMatch } from './nwutils';
+import { doesHoldingMatch, getFamilyOptions } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
 import MemberAndValuation from './MemberAndValuation';
@@ -11,6 +11,8 @@ import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
 import { isMobileDevice } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
+import { UserOutlined } from '@ant-design/icons';
+import SelectInput from '../form/selectinput';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -27,7 +29,7 @@ export default function ListHoldings({
 	cascaderOptions,
 	fields
 }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab }: any = useContext(NWContext);
+	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, ANGEL, OTHER, SAV, CREDIT } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const fsb = useFullScreenBrowser();
@@ -76,6 +78,12 @@ export default function ListHoldings({
 		}
 		changeData([ ...data ]);
 	};
+
+	const changeOwner = (ownerKey: string, i: number) => {
+		data[i].fId = ownerKey;
+		changeData([ ...data ]);
+	};
+
 	const hasDate = (childTab: string, record: HoldingInput) =>
 		[ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== 'H';
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS, PF ].includes(childTab);
@@ -251,6 +259,23 @@ export default function ListHoldings({
 						</Row>
 					</Col>
 				)}
+				{!hasminimumCol(childTab) && (
+						<Col>
+							<Row align="middle">
+								<Col>
+									<UserOutlined />
+								</Col>
+								<Col>
+									<SelectInput
+										pre=""
+										value={data[i].fId ? data[i].fId : ''}
+										options={getFamilyOptions(allFamily)}
+										changeHandler={(key: string) => changeOwner(key, i)}
+									/>
+								</Col>
+							</Row>
+						</Col>
+					)}
 			</Row>
 		);
 	};
