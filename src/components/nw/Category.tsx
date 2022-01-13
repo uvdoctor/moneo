@@ -54,18 +54,24 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 				/>
 			)}
-			{(record.subt === "BD" || record.subt === "P2P") &&
-				<Select defaultValue="0" style={{ width: 120 }} >
-				<OptGroup label="Interest">
-					<Option value="0">Pay Out</Option>
-				</OptGroup>
-				<OptGroup label="Accumulates Interest">
-					<Option value="1">Yearly</Option>
-					<Option value="2">Semi-Annually</Option>
-					<Option value="4">Quarterly</Option>
-					<Option value="12">Monthly</Option>
-				</OptGroup>
-			</Select>}
+			{(record.subt === 'BD') && (
+				<Select
+					defaultValue={record.chgF as number}
+					style={{ width: isMobileDevice(fsb) ? 120 : 150 }}
+					onChange={(value) => {
+						record.chgF = Number(value);
+						changeData([ ...data ]);
+					}}
+				>
+					<Option value={0}>Pay Out</Option>
+					<OptGroup label="Accumulates Interest Every">
+						<Option value={1}>Year</Option>
+						<Option value={2}>Six Months</Option>
+						<Option value={4}>Three Months</Option>
+						<Option value={12}>Month</Option>
+					</OptGroup>
+				</Select>
+			)}
 		</Row>
 	);
 }

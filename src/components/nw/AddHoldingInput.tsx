@@ -27,8 +27,10 @@ export default function AddHoldingInput({
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
-	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : cascaderOptions ? cascaderOptions[0].value : '');
-	const [ subCat, setSubCat ] = useState<string>(cascaderOptions ? cascaderOptions[0].children[0].value: '');
+	const [ category, setCategory ] = useState<string>(
+		categoryOptions ? Object.keys(categoryOptions)[0] : cascaderOptions ? cascaderOptions[0].value : ''
+	);
+	const [ subCat, setSubCat ] = useState<string>(cascaderOptions ? cascaderOptions[0].children[0].value : childTab === LENT ? "0" : '');
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
@@ -48,7 +50,7 @@ export default function AddHoldingInput({
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 	const hasOnlyEnddate = (childTab: string) =>
 		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
-	
+
 	const { Option, OptGroup } = Select;
 
 	const getNewRec = () => {
@@ -185,7 +187,7 @@ export default function AddHoldingInput({
 		setCategory(value[0]);
 		setSubCat(value[1]);
 		let rec = getNewRec();
-		childTab === LENT || childTab === INS ? (rec.chgF = Number(value[1])) : (rec.name = value[1]);
+		childTab === INS ? (rec.chgF = Number(value[1])) : (rec.name = value[1]);
 		rec.subt = value[0];
 		setInput(rec);
 	};
@@ -245,21 +247,33 @@ export default function AddHoldingInput({
 										/>
 									</Col>
 								)}
-								{(category === "BD" || category === "P2P") &&
-									<Select defaultValue="0" style={{ width: 120 }} >
-									<OptGroup label="Interest">
+								{(category === 'BD') && (
+									<Select
+										defaultValue={subCat}
+										style={{ width: 150 }}
+										onChange={(value) => {
+											setSubCat(value);
+											let rec = getNewRec();
+											rec.chgF = Number(value);
+											setInput(rec);
+										}}
+									>
 										<Option value="0">Pay Out</Option>
-									</OptGroup>
-									<OptGroup label="Accumulates Interest">
-										<Option value="1">Yearly</Option>
-										<Option value="2">Semi-Annually</Option>
-										<Option value="4">Quarterly</Option>
-										<Option value="12">Monthly</Option>
-									</OptGroup>
-								</Select>}
+										<OptGroup label="Accumulates Interest Every">
+											<Option value="1">Year</Option>
+											<Option value="2">Six Months</Option>
+											<Option value="4">Three Months</Option>
+											<Option value="12">Month</Option>
+										</OptGroup>
+									</Select>
+								)}
 								{cascaderOptions && (
 									<Col>
-										<Cascader defaultValue={[ category, subCat]} options={cascaderOptions} onChange={changeSubCat} />
+										<Cascader
+											defaultValue={[ category, subCat ]}
+											options={cascaderOptions}
+											onChange={changeSubCat}
+										/>
 									</Col>
 								)}
 							</Row>
@@ -269,7 +283,7 @@ export default function AddHoldingInput({
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.name}>
-							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'}/>
+							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'} />
 						</FormItem>
 					</Col>
 				)}
