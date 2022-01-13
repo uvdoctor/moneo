@@ -213,7 +213,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		setSubCat(value);
 		let rec = getNewRec();
 		childTab === INS ? (rec.chgF = Number(value)) : (rec.name = value);
-		rec.subt = value;
 		setInput(rec);
 	};
 
