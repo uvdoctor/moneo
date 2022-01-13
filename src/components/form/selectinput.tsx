@@ -14,7 +14,6 @@ interface SelectInputProps {
 	changeHandler: any;
 	currency?: boolean;
 	loading?: boolean;
-	width?: number | string;
 }
 
 export default function SelectInput(props: SelectInputProps) {
@@ -26,7 +25,6 @@ export default function SelectInput(props: SelectInputProps) {
 			<LabelWithTooltip label={props.pre} info={props.info} />
 			<Select
 				showSearch
-				style={{ width: props.width ? props.width : 'auto' }}
 				optionFilterProp="children"
 				value={props.currency ? props.value : selectOptions[props.value]}
 				onChange={(value: string) => props.changeHandler(value)}

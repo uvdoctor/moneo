@@ -39,38 +39,41 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 						value={childTab === CRYPTO ? record.name as string : record.subt as string}
 						options={categoryOptions}
 						changeHandler={(val: string) => changeCategory(val)}
-						width={isMobileDevice(fsb) ? 120 : 'auto'}
 					/>
 				</Col>
 			)}
 			{cascaderOptions && (
-				<Cascader
-					defaultValue={[
-						record.subt as string,
-						childTab === INS ? record.chgF as number : record.name as string
-					]}
-					onChange={changeSubCategory}
-					options={cascaderOptions}
-					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
-				/>
+				<Col>
+					<Cascader
+						defaultValue={[
+							record.subt as string,
+							childTab === INS ? record.chgF as number : record.name as string
+						]}
+						onChange={changeSubCategory}
+						options={cascaderOptions}
+						style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
+					/>
+				</Col>
 			)}
-			{(record.subt === 'BD' || record.subt === "P2P") && (
-				<Select
-					defaultValue={record.chgF as number}
-					style={{ width: isMobileDevice(fsb) ? 120 : 150 }}
-					onChange={(value) => {
-						record.chgF = Number(value);
-						changeData([ ...data ]);
-					}}
-				>
-					<Option value={0}>Pay Out</Option>
-					<OptGroup label="Accumulates Interest Every">
-						<Option value={1}>Year</Option>
-						<Option value={2}>Six Months</Option>
-						<Option value={4}>Three Months</Option>
-						<Option value={12}>Month</Option>
-					</OptGroup>
-				</Select>
+			{(record.subt === 'BD' || record.subt === 'P2P') && (
+				<Col>
+					<Select
+						defaultValue={record.chgF as number}
+						style={{ width: 150 }}
+						onChange={(value) => {
+							record.chgF = Number(value);
+							changeData([ ...data ]);
+						}}
+					>
+						<Option value={0}>Pay Out</Option>
+						<OptGroup label="Accumulates Interest Every">
+							<Option value={1}>Year</Option>
+							<Option value={2}>Six Months</Option>
+							<Option value={4}>Three Months</Option>
+							<Option value={12}>Month</Option>
+						</OptGroup>
+					</Select>
+				</Col>
 			)}
 		</Row>
 	);
