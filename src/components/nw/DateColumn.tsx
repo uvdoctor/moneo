@@ -55,7 +55,7 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 
 	return (
 		<Row align="middle" gutter={[ 10, 10 ]}>
-			<Col xs={24} sm={12}>
+			<Col xs={24} sm={record.subt === NATIONAL_SAVINGS_CERTIFICATE ? 12 : 24}>
 				<DateInput
 					title={''}
 					startMonthHandler={changeStartMonth}
