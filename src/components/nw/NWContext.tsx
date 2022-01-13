@@ -816,11 +816,27 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit;
 		updatedHoldings.ins = insurance;
-
+	
 		try {
-			uname
-				? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
-				: await addHoldings(updatedHoldings);
+			if (
+				savings.length ||
+				lendings.length ||
+				angel.length ||
+				pf.length ||
+				loans.length ||
+				preciousMetals.length ||
+				vehicles.length ||
+				properties.length ||
+				others.length ||
+				nps.length ||
+				crypto.length ||
+				credit.length ||
+				insurance.length
+			) {
+				uname
+					? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
+					: await addHoldings(updatedHoldings);
+			}
 			if (instruments.length) {
 				insUname
 					? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
@@ -1152,6 +1168,10 @@ function NWContextProvider() {
 	useEffect(() => {
 		if(isDirty) saveHoldings();
 	}, [childTab])
+
+	useEffect(() => {
+		setIsDirty(false);
+	}, []);
 
 	return (
 		<NWContext.Provider
