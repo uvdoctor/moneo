@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Table } from 'antd';
+import { Col, Empty, Row, Select, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
@@ -81,6 +81,7 @@ export default function ListHoldings({
 	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS, PF ].includes(childTab);
 	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
+	const { Option, OptGroup } = Select;
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
 			key: i,
@@ -128,6 +129,38 @@ export default function ListHoldings({
 											size={'middle'}
 											style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 										/>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{(data[i].subt === 'BD' || data[i].subt === 'P2P') && (
+					<Col xs={24} sm={12} md={6}>
+						<Row gutter={[ 0, 10 ]}>
+							<Col xs={24}>
+								<strong>{'Interest'}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<Select
+											defaultValue={data[i].chgF as number}
+											style={{ width: 150 }}
+											onChange={(value) => {
+												data[i].chgF = Number(value);
+												changeData([ ...data ]);
+											}}
+										>
+											<Option value={0}>Pay Out</Option>
+											<OptGroup label="Accumulates Interest Every">
+												<Option value={1}>Year</Option>
+												<Option value={2}>Six Months</Option>
+												<Option value={4}>Three Months</Option>
+												<Option value={12}>Month</Option>
+											</OptGroup>
+										</Select>
 									</Col>
 								</Row>
 							</Col>

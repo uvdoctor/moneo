@@ -1,4 +1,4 @@
-import { Cascader, Col, Row, Select } from 'antd';
+import { Cascader, Col, Row } from 'antd';
 import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
@@ -17,7 +17,7 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, INS } = TAB;
 	const fsb = useFullScreenBrowser();
-	const { Option, OptGroup } = Select;
+	
 
 	const changeCategory = (subtype: string) => {
 		childTab === CRYPTO ? (record.name = subtype) : (record.subt = subtype);
@@ -53,26 +53,6 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 						options={cascaderOptions}
 						style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 					/>
-				</Col>
-			)}
-			{(record.subt === 'BD' || record.subt === 'P2P') && (
-				<Col>
-					<Select
-						defaultValue={record.chgF as number}
-						style={{ width: 150 }}
-						onChange={(value) => {
-							record.chgF = Number(value);
-							changeData([ ...data ]);
-						}}
-					>
-						<Option value={0}>Pay Out</Option>
-						<OptGroup label="Accumulates Interest Every">
-							<Option value={1}>Year</Option>
-							<Option value={2}>Six Months</Option>
-							<Option value={4}>Three Months</Option>
-							<Option value={12}>Month</Option>
-						</OptGroup>
-					</Select>
 				</Col>
 			)}
 		</Row>
