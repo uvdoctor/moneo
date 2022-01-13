@@ -5,7 +5,7 @@ import { AppContext } from '../AppContext';
 import SelectInput from '../form/selectinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { NWContext, TAB } from './NWContext';
-import { getFamilyOptions } from './nwutils';
+import { getFamilyOptions, hasminimumCol } from './nwutils';
 import { DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import {
 	calculateCompundingIncome,
@@ -93,7 +93,6 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		record.amt = amt;
 		changeData([ ...data ]);
 	};
-	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT ].includes(childTab);
 	const hasAmountAsValuation = (childTab: string) => [ ANGEL, SAV, CREDIT, OTHER ].includes(childTab);
 
 	return (

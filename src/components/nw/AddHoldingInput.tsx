@@ -9,7 +9,18 @@ import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { presentMonth, presentYear } from '../utils';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
-import { getDefaultMember, getFamilyOptions } from './nwutils';
+import {
+	getDefaultMember,
+	getFamilyOptions,
+	hasDate,
+	hasName,
+	hasOnlyEnddate,
+	hasPF,
+	hasQtyWithRate,
+	hasRate,
+	hasOnlyCategory,
+	isRangePicker
+} from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 import { calculateAddYears } from './valuationutils';
 interface AddHoldingInputProps {
@@ -19,19 +30,17 @@ interface AddHoldingInputProps {
 	fields: any;
 }
 export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields }: AddHoldingInputProps) {
-	const hasSingleOption = (childTab: string) => [ LENT, OTHER, VEHICLE, CRYPTO, PF ].includes(childTab);
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
+	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
 	const [ subCat, setSubCat ] = useState<string>(
-		categoryOptions[0] && !hasSingleOption(childTab)
+		categoryOptions[0] && !hasOnlyCategory(childTab)
 			? categoryOptions[0].children[0].value
 			: childTab === LENT ? '0' : ''
 	);
-
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
-	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
 	const [ sm, setSm ] = useState<number>(4);
 	const [ em, setEm ] = useState<number>(3);
@@ -39,16 +48,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ ey, setEy ] = useState<number>(presentYear);
 	const [ duration, setDuration ] = useState<number>(5);
 	const [ amt, setAmt ] = useState<number>(0);
-	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
-	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS, PF ].includes(childTab);
-	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
-	const isRangePicker = (childTab: string, cat?: string, subCat?: string) =>
-		[ LENT ].includes(childTab) && cat !== NATIONAL_SAVINGS_CERTIFICATE && subCat !== '0';
-	const hasDate = (childTab: string) => [ VEHICLE, LENT, LOAN, INS ].includes(childTab);
-	const hasPF = (childTab: string) => [ PF ].includes(childTab);
-	const hasOnlyEnddate = (childTab: string) =>
-		[ LOAN, INS ].includes(childTab) || (subCat === '0' && childTab === LENT);
-
 	const { Option, OptGroup } = Select;
 
 	const getNewRec = () => {
@@ -145,13 +144,13 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const changeStartMonth = (val: number) => {
 		setSm(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
+		hasOnlyEnddate(childTab, subCat) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
 		setInput(rec);
 	};
 	const changeStartYear = (val: number) => {
 		setSy(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
+		hasOnlyEnddate(childTab, subCat) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
 		setInput(rec);
 	};
 	const changeEndMonth = (val: number) => {
@@ -239,8 +238,8 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 											pre={''}
 											parentValue={category}
 											parentChangeHandler={changeCategory}
-											childChangeHandler={hasSingleOption(childTab) ? '' : changeSubCat}
-											childValue={hasSingleOption(childTab) ? '' : subCat}
+											childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCat}
+											childValue={hasOnlyCategory(childTab) ? '' : subCat}
 											options={categoryOptions}
 										/>
 									</Col>

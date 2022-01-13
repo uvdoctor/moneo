@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import CascaderInput from '../form/CascaderInput';
+import { hasOnlyCategory } from './nwutils';
 interface CategoryProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
@@ -12,7 +13,7 @@ interface CategoryProps {
 
 export default function Category({ data, changeData, categoryOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, INS, LENT, OTHER, VEHICLE, PF } = TAB;
+	const { CRYPTO, INS } = TAB;
 
 	const changeCategory = (value: any) => {
 		childTab === CRYPTO ? (record.name = value) : (record.subt = value);
@@ -24,8 +25,6 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 		changeData([ ...data ]);
 	};
 
-	const hasSingleOption = (childTab: string) => [ LENT, OTHER, VEHICLE, CRYPTO, PF ].includes(childTab);
-
 	return (
 		<Row gutter={[ 10, 10 ]}>
 			{categoryOptions && (
@@ -33,7 +32,7 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 					<CascaderInput
 						parentValue={childTab === CRYPTO ? record.name as string : record.subt as string}
 						childValue={
-							hasSingleOption(childTab) ? (
+							hasOnlyCategory(childTab) ? (
 								''
 							) : childTab === INS ? (
 								record.chgF as number
@@ -41,7 +40,7 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 								record.name as string
 							)
 						}
-						childChangeHandler={hasSingleOption(childTab) ? '' : changeSubCategory}
+						childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCategory}
 						parentChangeHandler={changeCategory}
 						options={categoryOptions}
 						pre={''}

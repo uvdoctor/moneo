@@ -17,14 +17,7 @@ interface AddHoldingsProps {
 	fields: any;
 }
 
-export default function AddHoldings({
-	data,
-	changeData,
-	isPrimary,
-	title,
-	categoryOptions,
-	fields,
-}: AddHoldingsProps) {
+export default function AddHoldings({ data, changeData, isPrimary, title, categoryOptions, fields }: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>({});
@@ -35,7 +28,8 @@ export default function AddHoldings({
 		setModalVisibility(false);
 	};
 
-	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB, TAB.REIT, TAB.OIT ].includes(childTab);
+	const hasInstruments = (childTab: string) =>
+		[ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB, TAB.REIT, TAB.OIT ].includes(childTab);
 
 	const addHolding = () => {
 		if (hasInstruments(childTab)) {
@@ -50,10 +44,10 @@ export default function AddHoldings({
 
 	const updateInstruments = (instrumentsToAdd: []) => {
 		instrumentsToAdd.map((item: any) => {
-			if(item.name) delete item.name;
-			if(item.type) delete item.type;
-			if(item.subt) delete item.subt;
-		})
+			if (item.name) delete item.name;
+			if (item.type) delete item.type;
+			if (item.subt) delete item.subt;
+		});
 		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
 	};
 

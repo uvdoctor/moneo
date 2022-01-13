@@ -2,7 +2,7 @@ import { Col, Empty, Row, Select, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
-import { doesHoldingMatch, getFamilyOptions } from './nwutils';
+import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
 import MemberAndValuation from './MemberAndValuation';
@@ -22,15 +22,11 @@ interface ListHoldingsProps {
 	categoryOptions: any;
 	fields: any;
 }
-export default function ListHoldings({
-	data,
-	changeData,
-	categoryOptions,
-	fields
-}: ListHoldingsProps) {
+export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, ANGEL, OTHER, SAV, CREDIT } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
+	const { Option, OptGroup } = Select;
 	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
@@ -43,7 +39,6 @@ export default function ListHoldings({
 	};
 	let defaultColumns: Array<string> = [];
 	let expandedColumns: Array<string> = [];
-	const hasminimumCol = (childTab: string) => [ ANGEL, SAV, CREDIT ].includes(childTab);
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'label', 'fid' ];
 	} else if (childTab === OTHER) {
@@ -85,21 +80,11 @@ export default function ListHoldings({
 
 	const hasDate = (childTab: string, record: HoldingInput) =>
 		[ VEHICLE, LENT, LOAN, INS ].includes(childTab) && record.subt !== 'H';
-	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS, PF ].includes(childTab);
-	const hasPF = (childTab: string) => [ PF ].includes(childTab);
-	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
-	const { Option, OptGroup } = Select;
+
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
 			key: i,
-			cat: (
-				<Category
-					data={data}
-					changeData={changeData}
-					categoryOptions={categoryOptions}
-					record={holding}
-				/>
-			),
+			cat: <Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />,
 			fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={i} />,
 			label: (
 				<TextInput

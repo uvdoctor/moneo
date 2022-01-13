@@ -3,7 +3,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
-import { GOLD, PALLADIUM, PLATINUM, SILVER } from "./NWContext";
+import { GOLD, NATIONAL_SAVINGS_CERTIFICATE, PALLADIUM, PLATINUM, SILVER, TAB } from "./NWContext";
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
@@ -545,3 +545,16 @@ export const getInstrumentDataWithKey = async (
 export const isFund = (id: string) => id.substring(2, 3) === 'F';
 
 export const isBond = (id: string) => id.substring(2, 3) === '0';
+
+export const hasOnlyCategory = (childTab: string) => [ TAB.LENT, TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF ].includes(childTab);
+export const hasRate = (childTab: string) => [ TAB.PF, TAB.LENT, TAB.LOAN ].includes(childTab);
+export const hasName = (childTab: string) => ![ TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF ].includes(childTab);
+export const hasQtyWithRate = (childTab: string) => [ TAB.PM, TAB.NPS, TAB.CRYPTO ].includes(childTab);
+export const isRangePicker = (childTab: string, subt?: string, frequency?: string | number) =>
+  [ TAB.LENT ].includes(childTab) && subt !== NATIONAL_SAVINGS_CERTIFICATE && frequency != "0";
+export const hasDate = (childTab: string) => [ TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS ].includes(childTab);
+export const hasPF = (childTab: string) => [ TAB.PF ].includes(childTab);
+export const hasOnlyEnddate = (childTab: string, frequency: string | number) =>
+  [ TAB.LOAN, TAB.INS ].includes(childTab) || (frequency == "0" && childTab === TAB.LENT);
+export const hasminimumCol = (childTab: string) => [ TAB.ANGEL, TAB.SAV, TAB.CREDIT ].includes(childTab);
+
