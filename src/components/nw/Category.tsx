@@ -15,7 +15,7 @@ interface CategoryProps {
 
 export default function Category({ data, changeData, categoryOptions, cascaderOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, LENT, INS } = TAB;
+	const { CRYPTO, INS } = TAB;
 	const fsb = useFullScreenBrowser();
 	const { Option, OptGroup } = Select;
 
@@ -26,7 +26,7 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 
 	const changeSubCategory = (value: any) => {
 		record.subt = value[0];
-		childTab === LENT || childTab === INS ? (record.chgF = Number(value[1])) : (record.name = value[1]);
+		childTab === INS ? (record.chgF = Number(value[1])) : (record.name = value[1]);
 		changeData([ ...data ]);
 	};
 
@@ -47,7 +47,7 @@ export default function Category({ data, changeData, categoryOptions, cascaderOp
 				<Cascader
 					defaultValue={[
 						record.subt as string,
-						childTab === LENT || childTab === INS ? record.chgF as number : record.name as string
+						childTab === INS ? record.chgF as number : record.name as string
 					]}
 					onChange={changeSubCategory}
 					options={cascaderOptions}
