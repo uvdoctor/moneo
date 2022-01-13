@@ -169,15 +169,14 @@ export default function InstrumentValuation() {
 			if (childTab === MF && selectedSubtTags.length && selectedTags.indexOf(data.type as string) > -1) {
 				const { CB, GBO, I, HB, GB, L } = AssetSubType;
 				const { subt, mftype, type, mcap } = data;
-				const { GovB, IF, FMP, LF } = getFixedCategories();
 				return (
 					selectedSubtTags.indexOf(mcap as string) > -1 ||
-					(selectedSubtTags.includes(CB) && subt === CB) ||
-					(selectedSubtTags.includes(I) && (type === AssetType.F && subt === I)) ||
-					(selectedSubtTags.includes(GovB) && (subt === GB || subt === GBO)) ||
-					(selectedSubtTags.includes(IF) && (subt === HB && mftype === MFSchemeType.I)) ||
-					(selectedSubtTags.includes(FMP) && (subt === HB && mftype === MFSchemeType.C)) ||
-					(selectedSubtTags.includes(LF) && subt === L)
+					(selectedSubtTags.includes('CB') && subt === CB) ||
+					(selectedSubtTags.includes('I') && (type === AssetType.F && subt === I)) ||
+					(selectedSubtTags.includes('GovB') && (subt === GB || subt === GBO)) ||
+					(selectedSubtTags.includes('IF') && (subt === HB && mftype === MFSchemeType.I)) ||
+					(selectedSubtTags.includes('FMP') && (subt === HB && mftype === MFSchemeType.C)) ||
+					(selectedSubtTags.includes('LF') && subt === L)
 				);
 			}
 			if (childTab === STOCK && data) {
