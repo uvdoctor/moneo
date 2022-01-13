@@ -181,8 +181,11 @@ export default function ListProperties({
 								</Row>
 							</Col>
 							<Col xs={24}>
+								<Row gutter={[10, 0]}>
+								<Col>{fields.date}</Col>
+								<Col>
 								<DateInput
-									title={fields.date}
+									title=''
 									startMonthHandler={(val: number)=>changePurchaseMonth(val, i)}
 									startYearHandler={(val: number)=>changePurchaseYear(val, i)}
 									startMonthValue={data[i].purchase?.month}
@@ -190,20 +193,7 @@ export default function ListProperties({
 									size="middle"
 								/>
 							</Col>
-							<Col xs={24}>
-								<Row gutter={[10, 0]}>
-									<Col>{fields.name}</Col>
-									<Col>
-										<TextInput
-											pre=""
-											value={data[i].name as string}
-											changeHandler={(val: string) => {
-												data[i].name = val;
-												changeData([...data]);
-											} }
-											size={"middle"} />
-									</Col>
-								</Row>
+							</Row>
 							</Col>
 							<Col>
 								<Row gutter={[10, 0]}>
@@ -219,6 +209,21 @@ export default function ListProperties({
 											pre=""
 										/>
 								</Col>
+								</Row>
+							</Col>
+							<Col xs={24}>
+								<Row gutter={[10, 0]}>
+									<Col>{fields.name}</Col>
+									<Col>
+										<TextInput
+											pre=""
+											value={data[i].name as string}
+											changeHandler={(val: string) => {
+												data[i].name = val;
+												changeData([...data]);
+											} }
+											size={"middle"} />
+									</Col>
 								</Row>
 							</Col>
 						</Row>
