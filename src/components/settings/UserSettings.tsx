@@ -216,7 +216,7 @@ export default function UserSettings(): JSX.Element {
 				>
 					<TabPane className='settings-tabpane-view'  tab="Personal" key="1">
 						<Row gutter={[10, 10]}> 
-							<Col xs={24} sm={24} md={8}>
+							<Col xs={24} sm={24} md={6}>
 								<Row justify='center'>
 									<Col className="personal-tabpane-image-view">
 										<ImageInput user={user} />
@@ -283,27 +283,29 @@ export default function UserSettings(): JSX.Element {
 											</Col>
 										</Row>
 									</Col>)}
+									<Col span={24}>
+										<Row justify='center'>
+											<Col md={12}>
+											<Button
+												type="primary"
+												loading={loading}
+												style={{ color: COLORS.WHITE }}
+												icon={<SaveOutlined />}
+												disabled={error.length > 0 ? true : false}
+												onClick={() => {
+													validateCaptcha(
+														'personalTab_change'
+													).then((success: boolean) => {
+														if (!success) return;
+														updatePersonalTab();
+													});
+												}}
+											>Save</Button>
+										</Col>
+									</Row>
+								</Col>
 						</Row>
 						</Col>
-						</Row>
-						<Row justify='center'>
-							<Col>
-							<Button
-								type="primary"
-								loading={loading}
-								style={{ color: COLORS.WHITE }}
-								icon={<SaveOutlined />}
-								disabled={error.length > 0 ? true : false}
-								onClick={() => {
-									validateCaptcha(
-										'personalTab_change'
-									).then((success: boolean) => {
-										if (!success) return;
-										updatePersonalTab();
-									});
-								}}
-							>Save</Button>
-							</Col>
 						</Row>
 					</TabPane>
 					<TabPane className='settings-tabpane-view' tab="Account" key="2">
