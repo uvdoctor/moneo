@@ -42,12 +42,13 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		let value = 0;
 		switch (childTab) {
 			case INS:
+				if (discountRate) {
 				value = calculateInsurance(
 					record,
 					discountRate,
 					userInfo?.le,
 					userInfo?.dob
-				);
+				)};
 				break;
 			case LOAN:
 				value = calculateLoan(record);

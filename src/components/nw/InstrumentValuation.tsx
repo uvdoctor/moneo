@@ -171,7 +171,7 @@ export default function InstrumentValuation() {
 				const { subt, mftype, type, mcap } = data;
 				return (
 					selectedSubtTags.indexOf(mcap as string) > -1 ||
-					(selectedSubtTags.includes('CB') && subt === CB) ||
+					(selectedSubtTags.includes('CB') && subt === CB || mftype === MFSchemeType.O) ||
 					(selectedSubtTags.includes('I') && (type === AssetType.F && subt === I)) ||
 					(selectedSubtTags.includes('GovB') && (subt === GB || subt === GBO)) ||
 					(selectedSubtTags.includes('IF') && (subt === HB && mftype === MFSchemeType.I)) ||

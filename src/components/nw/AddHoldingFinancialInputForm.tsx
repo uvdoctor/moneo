@@ -81,8 +81,6 @@ const dataReducer = (
           familyMember: "",
           type: "",
           price: 0,
-          suggestions: [],
-          buttonState: true,
         },
       };
     default:
@@ -181,7 +179,7 @@ export default function HoldingInput(props: any) {
   };
 
   const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["assetType", "familyMember", "qty", "name", "id"];
+    const toValidateArr = ["familyMember", "qty", "name", "id"];
     const toValidateHoldingState = Object.assign(
       {},
       holdingState,
