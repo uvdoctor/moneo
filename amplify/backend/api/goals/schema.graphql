@@ -94,9 +94,7 @@ type Loan {
 }
 
 type PP {
-  s: Float!
-  d: Float!
-  l: Float!
+  cash: Float!
   mtb: Float
   imtb: Float
   hyb: Float
@@ -104,6 +102,8 @@ type PP {
   teb: Float
   reit: Float
   ireit: Float
+  reitETF: Float
+  ireitETF: Float
   re: Float!
   gold: Float!
   goldb: Float
@@ -117,6 +117,8 @@ type PP {
   iscs: Float
   dgs: Float
   uc: Float
+  crypto: Float
+  p2p: Float
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
@@ -155,6 +157,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   rachg: Float
   img: String
   pp: PP
+  rp: RiskProfile
 }
 
 enum RiskProfile {

@@ -1,15 +1,14 @@
 import React, { useContext } from "react";
 import { CalcContext } from "../calc/CalcContext";
 import DateInput from "../form/DateInput";
-import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
+import { getRiskProfileOptions, getTaxLiabilityOptions } from "../utils";
 import { FIGoalContext } from "./FIGoalContext";
-import { getRAOptions } from "./goalutils";
 
 export default function FIUserDetails() {
-  const { currency, startYear, changeStartYear }: any = useContext(CalcContext);
-  const { nw, setNW, riskProfile, setRiskProfile }: any =
+  const { startYear, changeStartYear }: any = useContext(CalcContext);
+  const { riskProfile, setRiskProfile, taxLiability, setTaxLiability }: any =
     useContext(FIGoalContext);
   const nowYear = new Date().getFullYear();
 
@@ -23,15 +22,12 @@ export default function FIUserDetails() {
         initialValue={nowYear - 60}
         endValue={nowYear - 15}
       />
-      <NumberInput
-        info={`Total portfolio value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include your Home value.`}
-        value={nw}
-        pre="Total portfolio value"
-        min={500}
-        max={900000}
-        changeHandler={setNW}
-        step={100}
-        currency={currency}
+      <SelectInput
+        info="How much do you earn in a year?"
+        pre="Yearly Income"
+        value={taxLiability}
+        changeHandler={setTaxLiability}
+        options={getTaxLiabilityOptions()}
       />
       <SelectInput
         info="How much risk are you willing to take in order to achieve higher investment return?"
@@ -39,7 +35,7 @@ export default function FIUserDetails() {
         unit="loss"
         value={riskProfile}
         changeHandler={setRiskProfile}
-        options={getRAOptions()}
+        options={getRiskProfileOptions()}
       />
     </Section>
   );

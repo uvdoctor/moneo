@@ -31,25 +31,7 @@ export const CALC_NAMES = {
 export const ASSET_CATEGORIES = {
   STOCKS: "Stocks",
   BONDS: "Bonds",
-  CASH: "Cash",
   ALTERNATIVE: "Alternative",
-};
-
-export const ASSET_TYPES = {
-  SAVINGS: "Savings",
-  DEPOSITS: "Deposits",
-  MED_TERM_BONDS: "Domestic Bonds",
-  INTERNATIONAL_BONDS: "International Bonds",
-  TAX_EXEMPT_BONDS: "Tax-exempt Bonds",
-  REIT: "REIT",
-  GOLD: "Gold",
-  LARGE_CAP_STOCKS: "Domestic Large-cap Stocks",
-  MID_CAP_STOCKS: "Mid-cap Stocks",
-  SMALL_CAP_STOCKS: "Small-cap Stocks",
-  INTERNATIONAL_STOCKS: "International Large-cap Stocks",
-  DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
-  REAL_ESTATE: "Real Estate",
-  INDIA_FIXED_INCOME: "PPF, EPF, VPF, NSC, Bonds",
 };
 
 export const COLORS = {

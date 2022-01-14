@@ -12,7 +12,7 @@ import {
   LMH,
   UpdateGoalInput,
 } from "../../api/goals";
-import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
+import { ROUTES } from "../../CONSTANTS";
 import { appendValue, getFXRate, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import {
@@ -42,7 +42,6 @@ function PlanContextProvider({
     useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
-  const irDiff = defaultCurrency === "INR" ? 3 : 0;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(
@@ -59,75 +58,6 @@ function PlanContextProvider({
   const [rr, setRR] = useState<Array<number>>([]);
   const [dr, setDR] = useState<number | null>(
     !isPublicCalc ? null : discountRate ? discountRate : 5
-  );
-  const [savingsPerf, setSavingsPerf] = useState<number>(
-    ffGoal?.pp?.s ? ffGoal.pp.s : 0.25 + irDiff
-  );
-  const [depositsPerf, setDepositsPerf] = useState<number>(
-    ffGoal?.pp?.d ? ffGoal.pp.d : 1 + irDiff
-  );
-  const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>(
-    ffGoal?.pp?.mtb ? ffGoal.pp.mtb : 0.5 + irDiff
-  );
-  const [iMedTermBondsPerf, setIMedTermBondsPerf] = useState<number>(
-    ffGoal?.pp?.imtb ? ffGoal.pp.imtb : 0.5 + irDiff
-  );
-  const [taxExemptBondsPerf, setTaxExemptBondsPerf] = useState<number>(
-    ffGoal?.pp?.teb ? ffGoal.pp.teb : 0.5 + irDiff
-  );
-  const [highYieldBondsPerf, setHighYieldBondsPerf] = useState<number>(
-    ffGoal?.pp?.hyb ? ffGoal.pp.hyb : 0.5 + irDiff
-  );
-  const [iHighYieldBondsPerf, setIHighYieldBondsPerf] = useState<number>(
-    ffGoal?.pp?.ihyb ? ffGoal.pp.ihyb : 0.5 + irDiff
-  );
-  const [reitPerf, setREITPerf] = useState<number>(
-    ffGoal?.pp?.reit ? ffGoal.pp.reit : 0.5 + irDiff
-  );
-  const [iREITPerf, setIREITPerf] = useState<number>(
-    ffGoal?.pp?.ireit ? ffGoal.pp.ireit : 0.5 + irDiff
-  );
-  const [realEstatePerf, setRealEstatePerf] = useState<number>(
-    ffGoal?.pp?.re ? ffGoal.pp.re : 0.5 + irDiff
-  );
-  const [goldPerf, setGoldPerf] = useState<number>(
-    ffGoal?.pp?.gold ? ffGoal.pp.gold : 0.5 + irDiff
-  );
-  const [goldBondsPerf, setGoldBondsPerf] = useState<number>(
-    ffGoal?.pp?.goldb ? ffGoal.pp.goldb : 0.5 + irDiff
-  );
-  const [largeCapStocksPerf, setLargeCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.lcs ? ffGoal.pp.lcs : 0.5 + irDiff
-  );
-  const [largeCapETFPerf, setLargeCapETFPerf] = useState<number>(
-    ffGoal?.pp?.lcetf ? ffGoal.pp.lcetf : 0.5 + irDiff
-  );
-  const [midCapStocksPerf, setMidCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.mcs ? ffGoal.pp.mcs : 0.5 + irDiff
-  );
-  const [smallCapStocksPerf, setSmallCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.scs ? ffGoal.pp.scs : 0.5 + irDiff
-  );
-  const [divGrowthStocksPerf, setDivGrowthStocksPerf] = useState<number>(
-    ffGoal?.pp?.dgs ? ffGoal.pp.dgs : 0.5 + irDiff
-  );
-  const [iLargeCapStocksPerf, setILargeCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.ilcs ? ffGoal.pp.ilcs : 0.5 + irDiff
-  );
-  const [iLargeCapETFPerf, setILargeCapETFPerf] = useState<number>(
-    ffGoal?.pp?.ilcetf ? ffGoal.pp.ilcetf : 0.5 + irDiff
-  );
-  const [iMidCapStocksPerf, setIMidCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.imcs ? ffGoal.pp.imcs : 0.5 + irDiff
-  );
-  const [iSmallCapStocksPerf, setISmallCapStocksPerf] = useState<number>(
-    ffGoal?.pp?.iscs ? ffGoal.pp.iscs : 0.5 + irDiff
-  );
-  const [liquidFundsPerf, setLiquidFundsPerf] = useState<number>(
-    ffGoal?.pp?.l ? ffGoal.pp.l : 0.5 + irDiff
-  );
-  const [uniqueCollectionPerf, setUniqueCollectionPerf] = useState<number>(
-    ffGoal?.pp?.uc ? ffGoal.pp.uc : 0.5 + irDiff
   );
   const [planError, setPlanError] = useState<string>("");
   const nowYear = new Date().getFullYear();
@@ -176,26 +106,6 @@ function PlanContextProvider({
     ]);
   };
 
-  // potential performance
-  const getPotentialPerformance = () => {
-    return {
-      [ASSET_TYPES.SAVINGS]: savingsPerf,
-      [ASSET_TYPES.DEPOSITS]: depositsPerf,
-      [ASSET_TYPES.MED_TERM_BONDS]: medTermBondsPerf,
-      [ASSET_TYPES.TAX_EXEMPT_BONDS]: taxExemptBondsPerf,
-      [ASSET_TYPES.INTERNATIONAL_BONDS]: iMedTermBondsPerf,
-      [ASSET_TYPES.REIT]: reitPerf,
-      [ASSET_TYPES.REAL_ESTATE]: realEstatePerf,
-      [ASSET_TYPES.GOLD]: goldPerf,
-      [ASSET_TYPES.LARGE_CAP_STOCKS]: largeCapStocksPerf,
-      [ASSET_TYPES.MID_CAP_STOCKS]: midCapStocksPerf,
-      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: divGrowthStocksPerf,
-      [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
-      [ASSET_TYPES.SMALL_CAP_STOCKS]: smallCapStocksPerf,
-      [ASSET_TYPES.INDIA_FIXED_INCOME]: 8,
-    };
-  };
-
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs: any = {};
@@ -211,14 +121,7 @@ function PlanContextProvider({
     tryCFs: Array<number>
   ) => {
     if (!ffGoal) return;
-    let result = findEarliestFFYear(
-      ffGoal,
-      mergedCFs,
-      ffYear,
-      mustCFs,
-      tryCFs,
-      getPotentialPerformance()
-    );
+    let result = findEarliestFFYear(ffGoal, mergedCFs, ffYear, mustCFs, tryCFs);
     console.log("FF result: ", result);
     setFFResult(result);
     setOppCostCache({});
@@ -488,8 +391,7 @@ function PlanContextProvider({
       mCFs,
       result ? result.ffYear : ffYear,
       highImpCFs,
-      medImpCFs,
-      getPotentialPerformance()
+      medImpCFs
     );
     if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
@@ -513,8 +415,7 @@ function PlanContextProvider({
           mCFs,
           result ? result.ffYear : ffYear,
           highImpCFs,
-          medImpCFs,
-          getPotentialPerformance()
+          medImpCFs
         );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
@@ -556,52 +457,6 @@ function PlanContextProvider({
         ffYear,
         oppCostCache,
         setOppCostCache,
-        savingsPerf,
-        setSavingsPerf,
-        depositsPerf,
-        setDepositsPerf,
-        medTermBondsPerf,
-        setMedTermBondsPerf,
-        iMedTermBondsPerf,
-        setIMedTermBondsPerf,
-        taxExemptBondsPerf,
-        setTaxExemptBondsPerf,
-        highYieldBondsPerf,
-        setHighYieldBondsPerf,
-        iHighYieldBondsPerf,
-        setIHighYieldBondsPerf,
-        reitPerf,
-        setREITPerf,
-        iREITPerf,
-        setIREITPerf,
-        realEstatePerf,
-        setRealEstatePerf,
-        goldPerf,
-        setGoldPerf,
-        goldBondsPerf,
-        setGoldBondsPerf,
-        largeCapStocksPerf,
-        setLargeCapStocksPerf,
-        largeCapETFPerf,
-        setLargeCapETFPerf,
-        midCapStocksPerf,
-        setMidCapStocksPerf,
-        smallCapStocksPerf,
-        setSmallCapStocksPerf,
-        divGrowthStocksPerf,
-        setDivGrowthStocksPerf,
-        iLargeCapStocksPerf,
-        setILargeCapStocksPerf,
-        iLargeCapETFPerf,
-        setILargeCapETFPerf,
-        iMidCapStocksPerf,
-        setIMidCapStocksPerf,
-        iSmallCapStocksPerf,
-        setISmallCapStocksPerf,
-        liquidFundsPerf,
-        setLiquidFundsPerf,
-        uniqueCollectionPerf,
-        setUniqueCollectionPerf,
       }}>
       {children}
     </PlanContext.Provider>

@@ -137,9 +137,7 @@ export const createGoal = /* GraphQL */ `
       rachg
       img
       pp {
-        s
-        d
-        l
+        cash
         mtb
         imtb
         hyb
@@ -147,6 +145,8 @@ export const createGoal = /* GraphQL */ `
         teb
         reit
         ireit
+        reitETF
+        ireitETF
         re
         gold
         goldb
@@ -160,7 +160,10 @@ export const createGoal = /* GraphQL */ `
         iscs
         dgs
         uc
+        crypto
+        p2p
       }
+      rp
       createdAt
       updatedAt
       owner
@@ -234,9 +237,7 @@ export const updateGoal = /* GraphQL */ `
       rachg
       img
       pp {
-        s
-        d
-        l
+        cash
         mtb
         imtb
         hyb
@@ -244,6 +245,8 @@ export const updateGoal = /* GraphQL */ `
         teb
         reit
         ireit
+        reitETF
+        ireitETF
         re
         gold
         goldb
@@ -257,7 +260,10 @@ export const updateGoal = /* GraphQL */ `
         iscs
         dgs
         uc
+        crypto
+        p2p
       }
+      rp
       createdAt
       updatedAt
       owner
@@ -331,9 +337,7 @@ export const deleteGoal = /* GraphQL */ `
       rachg
       img
       pp {
-        s
-        d
-        l
+        cash
         mtb
         imtb
         hyb
@@ -341,6 +345,8 @@ export const deleteGoal = /* GraphQL */ `
         teb
         reit
         ireit
+        reitETF
+        ireitETF
         re
         gold
         goldb
@@ -354,7 +360,10 @@ export const deleteGoal = /* GraphQL */ `
         iscs
         dgs
         uc
+        crypto
+        p2p
       }
+      rp
       createdAt
       updatedAt
       owner

@@ -136,9 +136,7 @@ export const getGoal = /* GraphQL */ `
       rachg
       img
       pp {
-        s
-        d
-        l
+        cash
         mtb
         imtb
         hyb
@@ -146,6 +144,8 @@ export const getGoal = /* GraphQL */ `
         teb
         reit
         ireit
+        reitETF
+        ireitETF
         re
         gold
         goldb
@@ -159,7 +159,10 @@ export const getGoal = /* GraphQL */ `
         iscs
         dgs
         uc
+        crypto
+        p2p
       }
+      rp
       createdAt
       updatedAt
       owner
@@ -227,9 +230,7 @@ export const listGoals = /* GraphQL */ `
         rachg
         img
         pp {
-          s
-          d
-          l
+          cash
           mtb
           imtb
           hyb
@@ -237,6 +238,8 @@ export const listGoals = /* GraphQL */ `
           teb
           reit
           ireit
+          reitETF
+          ireitETF
           re
           gold
           goldb
@@ -250,7 +253,10 @@ export const listGoals = /* GraphQL */ `
           iscs
           dgs
           uc
+          crypto
+          p2p
         }
+        rp
         createdAt
         updatedAt
         owner

@@ -190,6 +190,7 @@ export type CreateGoalInput = {
   rachg?: number | null,
   img?: string | null,
   pp?: PPInput | null,
+  rp?: RiskProfile | null,
 };
 
 export enum GoalType {
@@ -238,9 +239,7 @@ export enum LMH {
 
 
 export type PPInput = {
-  s: number,
-  d: number,
-  l: number,
+  cash: number,
   mtb?: number | null,
   imtb?: number | null,
   hyb?: number | null,
@@ -248,6 +247,8 @@ export type PPInput = {
   teb?: number | null,
   reit?: number | null,
   ireit?: number | null,
+  reitETF?: number | null,
+  ireitETF?: number | null,
   re: number,
   gold: number,
   goldb?: number | null,
@@ -261,7 +262,18 @@ export type PPInput = {
   iscs?: number | null,
   dgs?: number | null,
   uc?: number | null,
+  crypto?: number | null,
+  p2p?: number | null,
 };
+
+export enum RiskProfile {
+  VC = "VC",
+  C = "C",
+  M = "M",
+  A = "A",
+  VA = "VA",
+}
+
 
 export type ModelGoalConditionInput = {
   sy?: ModelIntInput | null,
@@ -293,6 +305,7 @@ export type ModelGoalConditionInput = {
   ra?: ModelIntInput | null,
   rachg?: ModelFloatInput | null,
   img?: ModelStringInput | null,
+  rp?: ModelRiskProfileInput | null,
   and?: Array< ModelGoalConditionInput | null > | null,
   or?: Array< ModelGoalConditionInput | null > | null,
   not?: ModelGoalConditionInput | null,
@@ -325,6 +338,11 @@ export type ModelBooleanInput = {
   eq?: boolean | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelRiskProfileInput = {
+  eq?: RiskProfile | null,
+  ne?: RiskProfile | null,
 };
 
 export type Goal = {
@@ -364,6 +382,7 @@ export type Goal = {
   rachg?: number | null,
   img?: string | null,
   pp?: PP,
+  rp?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
   owner?: string | null,
@@ -391,9 +410,7 @@ export type Loan = {
 
 export type PP = {
   __typename: "PP",
-  s?: number,
-  d?: number,
-  l?: number,
+  cash?: number,
   mtb?: number | null,
   imtb?: number | null,
   hyb?: number | null,
@@ -401,6 +418,8 @@ export type PP = {
   teb?: number | null,
   reit?: number | null,
   ireit?: number | null,
+  reitETF?: number | null,
+  ireitETF?: number | null,
   re?: number,
   gold?: number,
   goldb?: number | null,
@@ -414,6 +433,8 @@ export type PP = {
   iscs?: number | null,
   dgs?: number | null,
   uc?: number | null,
+  crypto?: number | null,
+  p2p?: number | null,
 };
 
 export type UpdateGoalInput = {
@@ -452,6 +473,7 @@ export type UpdateGoalInput = {
   rachg?: number | null,
   img?: string | null,
   pp?: PPInput | null,
+  rp?: RiskProfile | null,
 };
 
 export type DeleteGoalInput = {
@@ -481,15 +503,6 @@ export enum TaxLiability {
 }
 
 
-export enum RiskProfile {
-  VC = "VC",
-  C = "C",
-  M = "M",
-  A = "A",
-  VA = "VA",
-}
-
-
 export type ModelUserInfoConditionInput = {
   email?: ModelStringInput | null,
   dob?: ModelStringInput | null,
@@ -509,11 +522,6 @@ export type ModelUserInfoConditionInput = {
 export type ModelTaxLiabilityInput = {
   eq?: TaxLiability | null,
   ne?: TaxLiability | null,
-};
-
-export type ModelRiskProfileInput = {
-  eq?: RiskProfile | null,
-  ne?: RiskProfile | null,
 };
 
 export type UserInfo = {
@@ -1566,6 +1574,7 @@ export type ModelGoalFilterInput = {
   ra?: ModelIntInput | null,
   rachg?: ModelFloatInput | null,
   img?: ModelStringInput | null,
+  rp?: ModelRiskProfileInput | null,
   and?: Array< ModelGoalFilterInput | null > | null,
   or?: Array< ModelGoalFilterInput | null > | null,
   not?: ModelGoalFilterInput | null,
@@ -1985,9 +1994,7 @@ export type CreateGoalMutation = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -1995,6 +2002,8 @@ export type CreateGoalMutation = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -2008,7 +2017,10 @@ export type CreateGoalMutation = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2091,9 +2103,7 @@ export type UpdateGoalMutation = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -2101,6 +2111,8 @@ export type UpdateGoalMutation = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -2114,7 +2126,10 @@ export type UpdateGoalMutation = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2197,9 +2212,7 @@ export type DeleteGoalMutation = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -2207,6 +2220,8 @@ export type DeleteGoalMutation = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -2220,7 +2235,10 @@ export type DeleteGoalMutation = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4026,9 +4044,7 @@ export type GetGoalQuery = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -4036,6 +4052,8 @@ export type GetGoalQuery = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -4049,7 +4067,10 @@ export type GetGoalQuery = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4125,9 +4146,7 @@ export type ListGoalsQuery = {
       img?: string | null,
       pp?:  {
         __typename: "PP",
-        s: number,
-        d: number,
-        l: number,
+        cash: number,
         mtb?: number | null,
         imtb?: number | null,
         hyb?: number | null,
@@ -4135,6 +4154,8 @@ export type ListGoalsQuery = {
         teb?: number | null,
         reit?: number | null,
         ireit?: number | null,
+        reitETF?: number | null,
+        ireitETF?: number | null,
         re: number,
         gold: number,
         goldb?: number | null,
@@ -4148,7 +4169,10 @@ export type ListGoalsQuery = {
         iscs?: number | null,
         dgs?: number | null,
         uc?: number | null,
+        crypto?: number | null,
+        p2p?: number | null,
       } | null,
+      rp?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -5564,9 +5588,7 @@ export type OnCreateGoalSubscription = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -5574,6 +5596,8 @@ export type OnCreateGoalSubscription = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -5587,7 +5611,10 @@ export type OnCreateGoalSubscription = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -5669,9 +5696,7 @@ export type OnUpdateGoalSubscription = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -5679,6 +5704,8 @@ export type OnUpdateGoalSubscription = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -5692,7 +5719,10 @@ export type OnUpdateGoalSubscription = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -5774,9 +5804,7 @@ export type OnDeleteGoalSubscription = {
     img?: string | null,
     pp?:  {
       __typename: "PP",
-      s: number,
-      d: number,
-      l: number,
+      cash: number,
       mtb?: number | null,
       imtb?: number | null,
       hyb?: number | null,
@@ -5784,6 +5812,8 @@ export type OnDeleteGoalSubscription = {
       teb?: number | null,
       reit?: number | null,
       ireit?: number | null,
+      reitETF?: number | null,
+      ireitETF?: number | null,
       re: number,
       gold: number,
       goldb?: number | null,
@@ -5797,7 +5827,10 @@ export type OnDeleteGoalSubscription = {
       iscs?: number | null,
       dgs?: number | null,
       uc?: number | null,
+      crypto?: number | null,
+      p2p?: number | null,
     } | null,
+    rp?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
