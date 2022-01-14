@@ -27,9 +27,9 @@ export default function NWView() {
 		addSelfMember,
 		allFamily
 	}: any = useContext(NWContext);
-	const { appContextLoaded, user, owner }: any = useContext(AppContext);
+	const { user, owner }: any = useContext(AppContext);
 
-	return (appContextLoaded && user && owner) ? (allFamily && Object.keys(allFamily).length) ? (
+	return (user && owner) ? (allFamily && Object.keys(allFamily).length) ? (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
