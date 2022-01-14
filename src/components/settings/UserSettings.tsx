@@ -494,7 +494,6 @@ export default function UserSettings(): JSX.Element {
 							</Col>
 							</Row>
 							</Col>
-
 							<Col xs={24} sm={24} md={8}>
 						<Row gutter={[10, 0]}>
 							<Col>
@@ -507,7 +506,6 @@ export default function UserSettings(): JSX.Element {
 							</Col>
 							</Row>
 							</Col>
-
 							<Col xs={24} sm={24} md={8}>
 						<Row gutter={[10, 0]}>
 							<Col>
@@ -527,6 +525,7 @@ export default function UserSettings(): JSX.Element {
 									<Col >
 										{isDrManual ? (
 											<NumberInput
+												unit='%'
 												pre={'Discount Rate'}
 												value={discountRate}
 												changeHandler={(val: number) => setDiscountRate(val)}
@@ -541,8 +540,6 @@ export default function UserSettings(): JSX.Element {
 							</Col>
 							</Row>
 							</Col>
-							
-							
 							<Col xs={24} sm={24} md={8}>
 						<Row gutter={[10, 0]}>
 							<Col>
