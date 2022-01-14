@@ -215,99 +215,95 @@ export default function UserSettings(): JSX.Element {
 					animated
 				>
 					<TabPane className='settings-tabpane-view'  tab="Personal" key="1">
-						<Row gutter={[24, 24]}> 
-							<Col span={24}>
-								<Row gutter={[18, 18]} align='middle'>
+						<Row gutter={[10, 10]}> 
+							<Col xs={24} sm={24} md={12}>
+								<Row justify='center'>
 									<Col className="personal-tabpane-image-view">
 										<ImageInput user={user} />
 									</Col>
-									<Col>
-										<Row gutter={[18,18]}>
-											<Col xs={24} sm={24} md={8}>
-												<Row gutter={[ 0, 5 ]}>
-													<Col span={24}>First Name</Col>
-													<Col>
-														<TextInput
-															pre=""
-															placeholder="Name"
-															value={name}
-															changeHandler={(val: any) =>
-																dispatch({ type: 'single', data: { field: 'name', val } })}
-															minLength={2}
-															maxLength={20}
-															setError={(val: any) =>
-																dispatch({ type: 'single', data: { field: 'error', val } })}
-															fieldName="firstname"
-															pattern="^[a-zA-Z'-.,]+$"
-														/>
-													</Col>
-												</Row>
-											</Col>
-											<Col xs={24} sm={24} md={8}>
-												<Row gutter={[ 0, 5 ]}>
-													<Col span={24}>Last Name</Col>
-													<Col>
-														<TextInput
-															pre=""
-															placeholder="Last Name"
-															value={lastName}
-															changeHandler={(val: any) =>
-																dispatch({ type: 'single', data: { field: 'lastName', val } })}
-															minLength={2}
-															maxLength={20}
-															setError={(val: any) =>
-																dispatch({ type: 'single', data: { field: 'error', val } })}
-															fieldName="lastname"
-															pattern="^[a-zA-Z'-.,]+$"
-														/>
-													</Col>
-												</Row>
-											</Col>
-											{dobDate && (<Col xs={24} sm={24} md={8}>
-												<Row gutter={[ 0, 5 ]}>
-												<Col span={24}>Date of Birth</Col>
-												<Col>
-													<DateInput
-														title=''
-														className="dob"
-														startDateValue={dobDate}
-														startMonthValue={dobMonth}
-														startYearValue={dobYear}
-														startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
-														startMonthHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobMonth', val } })}
-														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
-														size='large'
+								</Row>
+							</Col>
+							<Col xs={24} sm={24} md={12}>
+								<Row gutter={[10,10]}>
+									<Col span={24}>
+										<Row gutter={[ 0, 5 ]}>
+											<Col span={24}>First Name</Col>
+												<Col xs={24} sm={24} md={12}>
+													<TextInput
+														pre=""
+														placeholder="Name"
+														value={name}
+														changeHandler={(val: any) =>
+															dispatch({ type: 'single', data: { field: 'name', val } })}
+														minLength={2}
+														maxLength={20}
+														setError={(val: any) =>
+															dispatch({ type: 'single', data: { field: 'error', val } })}
+														fieldName="firstname"
+														pattern="^[a-zA-Z'-.,]+$"
 													/>
 												</Col>
 											</Row>
-										</Col>)}
-									</Row>
-								</Col>
-							</Row>
+										</Col>
+										<Col span={24}>
+											<Row gutter={[ 0, 5 ]}>
+												<Col span={24}>Last Name</Col>
+												<Col xs={24} sm={24} md={12}>
+													<TextInput
+														pre=""
+														placeholder="Last Name"
+														value={lastName}
+														changeHandler={(val: any) =>
+															dispatch({ type: 'single', data: { field: 'lastName', val } })}
+														minLength={2}
+														maxLength={20}
+														setError={(val: any) =>
+															dispatch({ type: 'single', data: { field: 'error', val } })}
+														fieldName="lastname"
+														pattern="^[a-zA-Z'-.,]+$"
+													/>
+												</Col>
+											</Row>
+										</Col>
+									{dobDate && (<Col span={24}>
+										<Row gutter={[ 0, 5 ]}>
+											<Col span={24}>Date of Birth</Col>
+											<Col xs={24} sm={24} md={12}>
+												<DateInput
+													title=''
+													className="dob"
+													startDateValue={dobDate}
+													startMonthValue={dobMonth}
+													startYearValue={dobYear}
+													startYearHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobYear', val } })}
+													startMonthHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobMonth', val } })}
+													startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
+													size='large'
+												/>
+											</Col>
+										</Row>
+									</Col>)}
+						</Row>
 						</Col>
-						<Col span={24}>
-							<Row justify='center'>
-								<Col>
-								<Button
-									type="primary"
-									loading={loading}
-									style={{ color: COLORS.WHITE }}
-									icon={<SaveOutlined />}
-									disabled={error.length > 0 ? true : false}
-									onClick={() => {
-										validateCaptcha(
-											'personalTab_change'
-										).then((success: boolean) => {
-											if (!success) return;
-											updatePersonalTab();
-										});
-									}}
-								>
-									Save
-									</Button>
-								</Col>
-							</Row>
-						</Col>
+						</Row>
+						<Row justify='center'>
+							<Col>
+							<Button
+								type="primary"
+								loading={loading}
+								style={{ color: COLORS.WHITE }}
+								icon={<SaveOutlined />}
+								disabled={error.length > 0 ? true : false}
+								onClick={() => {
+									validateCaptcha(
+										'personalTab_change'
+									).then((success: boolean) => {
+										if (!success) return;
+										updatePersonalTab();
+									});
+								}}
+							>Save</Button>
+							</Col>
 						</Row>
 					</TabPane>
 					<TabPane className='settings-tabpane-view' tab="Account" key="2">

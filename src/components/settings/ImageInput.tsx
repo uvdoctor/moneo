@@ -102,7 +102,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
           }
         >
-          {avatar(170)}
+          {avatar(250)}
         </span>
         <Tooltip className="edit-icon" title={"Edit Photo"}>
           <Button
@@ -162,7 +162,7 @@ export default function ImageInput({ user }: ImageInputProps) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={user?.attributes.picture} alt="profile picture" />
             ) : (
-              <span onClick={openBrowse}>{avatar(300)}</span>
+              <span onClick={openBrowse}>{avatar(1000)}</span>
             )}
           </div>
         </div>
