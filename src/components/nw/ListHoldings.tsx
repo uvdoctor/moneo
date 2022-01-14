@@ -84,7 +84,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
 			key: i,
-			cat: <Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />,
+			cat: categoryOptions && <Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />,
 			fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={i} />,
 			label: (
 				<TextInput
