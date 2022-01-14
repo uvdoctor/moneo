@@ -9,7 +9,6 @@ require('./nw.less');
 import FamilyInput from './FamilyInput';
 import TotalNetWorth from './TotalNetWorth';
 import ItemDisplay from '../calc/ItemDisplay';
-import { AppContext } from '../AppContext';
 
 require('./NWView.less');
 
@@ -27,9 +26,8 @@ export default function NWView() {
 		addSelfMember,
 		allFamily
 	}: any = useContext(NWContext);
-	const { user, owner }: any = useContext(AppContext);
 
-	return (user && owner) ? (allFamily && Object.keys(allFamily).length) ? (
+	return !loadingFamily ? allFamily && Object.keys(allFamily).length ?  (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
