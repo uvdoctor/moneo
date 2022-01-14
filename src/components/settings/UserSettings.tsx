@@ -105,7 +105,7 @@ export default function UserSettings(): JSX.Element {
 				return false;
 			}
 			await Auth.updateUserAttributes(user, updateAttr);
-			success(`${attr} updated successfully. Enter Otp to verify`);
+			success(`${attr} updated successfully. ${attr === 'Whatsapp Number' ? "" : "Enter Otp to verify"}`);
 			if (attr === 'Whatsapp Number') {
 				await updateUserDetails({ uname: owner, im: data as number });
 			}
@@ -309,7 +309,7 @@ export default function UserSettings(): JSX.Element {
 						</Row>
 					</TabPane>
 					<TabPane className='settings-tabpane-view' tab="Account" key="2">
-						<Row gutter={[18,18]}>
+						<Row gutter={[0,24]}>
 							<Col xs={24} sm={24} md={12}>
 								<Row gutter={[ 10, 10 ]}>
 									<Col span={24}>Login Name</Col>
