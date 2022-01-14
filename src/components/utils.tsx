@@ -2,7 +2,6 @@ import { Menu } from "antd";
 import Link from "next/link";
 import { RiskProfile, TaxLiability } from "../api/goals";
 import { ASSET_CATEGORIES, COLORS } from "../CONSTANTS";
-import { getQty } from "./nw/parseutils";
 
 export function getCurrencyList() {
   return {
@@ -231,23 +230,6 @@ export const getRangeFactor = (currency: string) => {
   //@ts-ignore
   return factor[currency];
 };
-
-export function compareValues(key: string, order: string = "asc") {
-  return function innerSort(a: any, b: any) {
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-      // property doesn't exist on either object
-      return 0;
-    }
-
-    const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
-    const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
-
-    let comparison = 0;
-    if (varA > varB) comparison = 1;
-    else if (varA < varB) comparison = -1;
-    return order === "desc" ? comparison * -1 : comparison;
-  };
-}
 
 export const getAllAssetDetails = () => {
   return {
@@ -536,9 +518,14 @@ export const menuItem = (
   name: string,
   path: string,
   selectedKey: string,
-  multiCol: boolean = false
+  icon?: any | null,
+  key?: string,
+  multiCol?: boolean
 ) => (
-  <Menu.Item key={path} className={multiCol ? "multi-col-submenu" : ""}>
+  <Menu.Item
+    key={key ? key : path}
+    className={multiCol ? "multi-col-submenu" : ""}>
+    {icon ? <>{icon} </> : null}
     {selectedKey !== path ? (
       <Link href={path}>
         <a>{name}</a>
@@ -556,53 +543,6 @@ export const includesAny = (value: string, items: Array<string>) => {
     if (v.includes(item.toLowerCase())) return true;
   }
   return false;
-};
-
-export const replaceIfFound = (
-  value: string,
-  items: Array<string>,
-  replacement: string = "",
-  endsWith: boolean = false
-) => {
-  for (let item of items) {
-    if (endsWith ? value.endsWith(item) : value.includes(item))
-      value = value.replace(item, replacement);
-  }
-  return value.trim();
-};
-
-export const getValueBefore = (value: string, items: Array<string>) => {
-  for (let item of items) {
-    value = value.split(item)[0].trim();
-  }
-  return value;
-};
-
-export const getNumberAtEnd = (value: string) => {
-  let words = value.split(" ");
-  let endWord = words[words.length - 1].trim();
-  return getQty(endWord);
-};
-
-export const countWords = (value: string) => {
-  let words = value.split(" ");
-  let numOfWords = 0;
-  for (let word of words) {
-    if (word.trim().length) numOfWords++;
-  }
-  return numOfWords;
-};
-
-export const removeDuplicates = (value: string) => {
-  let values = value.split(" ");
-  for (let i = 2; i < values.length; i++) {
-    let v = values[i].trim();
-    for (let j = 1; j < i; j++) {
-      let token = values[j].trim();
-      if (v === token) value = value.replace(token, "");
-    }
-  }
-  return value.trim();
 };
 
 export const getFXRate = (ratesData: any, currency: string) => {

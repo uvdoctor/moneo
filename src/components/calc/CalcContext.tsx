@@ -193,7 +193,7 @@ function CalcContextProvider({
         content: <DynamicAAChart />,
       },
       {
-        label: "Monthly Investment Targets",
+        label: "Investment Targets",
         active: true,
         svg: faChartArea,
         content: <FIMonthlyInvTargetChart />,

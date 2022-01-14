@@ -130,6 +130,8 @@ function PlanContextProvider({
   };
 
   useEffect(() => {
+    if (!appContextLoaded) return;
+    console.log("App context loaded: ", appContextLoaded);
     if (isPublicCalc) {
       setAllGoals([...[]]);
     } else loadAllGoals().then(() => {});

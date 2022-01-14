@@ -102,7 +102,9 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [gains, setGains] = useState<Array<TargetInput>>(goal.pg);
   const [losses, setLosses] = useState<Array<TargetInput>>(goal.pl);
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
-  const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
+  const [planDuration, setPlanDuration] = useState<number>(
+    userInfo ? userInfo.le : goal.loan?.dur
+  );
   const [cashPerf, setCashPerf] = useState<number>(goal?.pp?.cash);
   const [ltDepPerf, setLTDepPerf] = useState<number>(goal?.pp?.ltdep);
   const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>(
@@ -258,6 +260,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     if (!allInputDone) return;
     let g: CreateGoalInput = getLatestGoalState();
     setWipGoal(g);
+    console.log("Goal state: ", g);
     let result: any = findEarliestFFYear(g, mergedCFs, ffYear, mustCFs, tryCFs);
     if (!isFFPossible(result, leaveBehind)) {
       setError(
