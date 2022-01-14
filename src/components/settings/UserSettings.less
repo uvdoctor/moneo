@@ -1,0 +1,37 @@
+.image-holder {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+
+  & input[type="file"] {
+    display: none;
+  }
+
+  & .edit-icon {
+    vertical-align: bottom;
+    margin-bottom: -2px;
+    border-radius: 50%;
+    right: 50px;
+    background: white;
+  }
+}
+
+.settings-tab-view {
+  margin-top: 30px;
+}
+
+@media all and (max-width: 576px) {
+  .personal-tabpane-image-view {
+    float: none;
+    margin: 0 auto;
+  }
+
+  .settings-tab-view {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  .settings-tabpane-view {
+    margin-top: 10px;
+  }
+}

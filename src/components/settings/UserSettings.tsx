@@ -23,7 +23,7 @@ import SelectInput from '../form/selectinput';
 import HSwitch from '../HSwitch';
 import NumberInput from '../form/numberinput';
 import RadialInput from '../form/radialinput';
-require('./Settings.less');
+require('./UserSettings.less');
 
 const initialState = {
 	email: '',
@@ -61,7 +61,6 @@ const userReducer = (userState: any, { type, data }: { type: string; data: any }
 export default function UserSettings(): JSX.Element {
 	const {
 		user,
-		appContextLoaded,
 		defaultCountry,
 		validateCaptcha,
 		owner,
@@ -167,7 +166,7 @@ export default function UserSettings(): JSX.Element {
 				data: { email, mobile, name, whatsapp, lastName: family_name, prefuser: preferred_username }
 			});
 		},
-		[ appContextLoaded, countryCode?.value, user ]
+		[ countryCode?.value, user ]
 	);
 
 	useEffect(
@@ -193,69 +192,75 @@ export default function UserSettings(): JSX.Element {
 
 	return (
 		<Fragment>
-			{error ? <Alert type="error" message={error} /> : null}
 			<Row className="primary-header">
 				<Col>
 					<PageHeader title="Settings" />
 				</Col>
 			</Row>
-			<p>&nbsp;</p>
-			{appContextLoaded ? (
-				<Row>
-					<Col>
-						<Tabs
-							tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
-							type={isMobileDevice(fsb) ? 'card' : 'line'}
-							animated
-						>
-							<TabPane tab="Personal" key="1">
-								<Row className="tabPane">
+			{error ? <Alert type="error" message={error} /> : null}
+			{user ? (
+				<Tabs
+					className='settings-tab-view'
+					tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
+					type={isMobileDevice(fsb) ? 'card' : 'line'}
+					animated
+				>
+					<TabPane className='settings-tabpane-view'  tab="Personal" key="1">
+						<Row gutter={[24, 24]}> 
+							<Col span={24}>
+								<Row gutter={[18, 18]} align='middle'>
 									<Col className="personal-tabpane-image-view">
 										<ImageInput user={user} />
 									</Col>
-									<p>&nbsp;</p>
 									<Col>
-										<Row justify="center">
-											<Col className="first-col-view">
-												<TextInput
-													pre="First Name"
-													placeholder="Name"
-													value={name}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'name', val } })}
-													minLength={2}
-													maxLength={20}
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													fieldName="firstname"
-													pattern="^[a-zA-Z'-.,]+$"
-												/>
+										<Row gutter={[18,18]}>
+											<Col xs={24} sm={24} md={8}>
+												<Row gutter={[ 0, 5 ]}>
+													<Col span={24}>First Name</Col>
+													<Col>
+														<TextInput
+															pre=""
+															placeholder="Name"
+															value={name}
+															changeHandler={(val: any) =>
+																dispatch({ type: 'single', data: { field: 'name', val } })}
+															minLength={2}
+															maxLength={20}
+															setError={(val: any) =>
+																dispatch({ type: 'single', data: { field: 'error', val } })}
+															fieldName="firstname"
+															pattern="^[a-zA-Z'-.,]+$"
+														/>
+													</Col>
+												</Row>
 											</Col>
-										</Row>
-										<span>&nbsp;</span>
-										<Row justify="center">
-											<Col>
-												<TextInput
-													pre="Last Name"
-													placeholder="Last Name"
-													value={lastName}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'lastName', val } })}
-													minLength={2}
-													maxLength={20}
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													fieldName="lastname"
-													pattern="^[a-zA-Z'-.,]+$"
-												/>
+											<Col xs={24} sm={24} md={8}>
+												<Row gutter={[ 0, 5 ]}>
+													<Col span={24}>Last Name</Col>
+													<Col>
+														<TextInput
+															pre=""
+															placeholder="Last Name"
+															value={lastName}
+															changeHandler={(val: any) =>
+																dispatch({ type: 'single', data: { field: 'lastName', val } })}
+															minLength={2}
+															maxLength={20}
+															setError={(val: any) =>
+																dispatch({ type: 'single', data: { field: 'error', val } })}
+															fieldName="lastname"
+															pattern="^[a-zA-Z'-.,]+$"
+														/>
+													</Col>
+												</Row>
 											</Col>
-										</Row>
-										<span>&nbsp;</span>
-										<Row justify="center">
-											<Col>
+											<Col xs={24} sm={24} md={8}>
+												<Row gutter={[ 0, 5 ]}>
+												<Col span={24}>Date of Birth</Col>
+												<Col>
 												{dobDate && (
 													<DateInput
-														title={'Date of birth'}
+														title=''
 														className="dob"
 														startDateValue={dobDate}
 														startMonthValue={dobMonth}
@@ -266,303 +271,320 @@ export default function UserSettings(): JSX.Element {
 														size='large'
 													/>
 												)}
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="center">
-											<Col>
+												</Col>
+											</Row>
+										</Col>
+									</Row>
+								</Col>
+							</Row>
+						</Col>
+						<Col span={24}>
+							<Row justify='center'>
+								<Col>
+								<Button
+									type="primary"
+									style={{ color: COLORS.WHITE }}
+									icon={<SaveOutlined />}
+									disabled={error.length > 0 ? true : false}
+									onClick={() => {
+										validateCaptcha(
+											'personalTab_change'
+										).then((success: boolean) => {
+											if (!success) return;
+											updatePersonalTab();
+										});
+									}}
+								>
+									Save
+									</Button>
+								</Col>
+							</Row>
+						</Col>
+						</Row>
+					</TabPane>
+					<TabPane className='settings-tabpane-view' tab="Account" key="2">
+						<Row gutter={[18,18]}>
+							<Col xs={24} sm={24} md={12}>
+								<Row gutter={[ 10, 10 ]}>
+									<Col span={24}>Login Name</Col>
+									<Col xs={24} sm={24} md={12}>
+									<TextInput
+											pre=''
+											value={prefuser}
+											changeHandler={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'prefuser', val } })}
+											fieldName="prefusername"
+											setError={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'error', val } })}
+											post={
 												<Button
-													type="primary"
-													style={{ color: COLORS.WHITE }}
+													type="link"
+													style={{ color: COLORS.GREEN }}
 													icon={<SaveOutlined />}
 													disabled={error.length > 0 ? true : false}
 													onClick={() => {
 														validateCaptcha(
-															'personalTab_change'
+															'prefusername_change'
 														).then((success: boolean) => {
 															if (!success) return;
-															updatePersonalTab();
+															updatePrefUsername();
 														});
 													}}
-												>
-													Save
-												</Button>
-											</Col>
-										</Row>
-									</Col>
+												/>
+											}
+										/>
+								</Col>
 								</Row>
-							</TabPane>
-							<TabPane tab="Account" key="2">
-								<Row justify="start" className="tabPane">
+							</Col>
+							<Col xs={24} sm={24} md={12}>
+								<Row gutter={[ 0, 10 ]}>
+									<Col span={24}>Email Id</Col>
+									<Col xs={24} sm={24} md={12}>
+									<TextInput
+											pre=""
+											placeholder={'abc@xyz.com'}
+											value={email}
+											changeHandler={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'email', val } })}
+											pattern={
+												'^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$'
+											}
+											setError={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'error', val } })}
+											fieldName="email"
+											post={
+												<OtpDialogue
+													disableButton={disableButton(email, user?.attributes?.email)}
+													action={'email'}
+													onClickAction={() =>
+														updateAccountTab(email, doesEmailExist, 'Email', {
+															email: email
+														})}
+													email={email}
+													mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
+													im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
+													resendOtp={sendOtp}
+												/>
+											}
+										/>
+								</Col>
+								</Row>
+							</Col>
+							<Col xs={24} sm={24} md={12}>
+								<Row gutter={[ 0, 10 ]}>
+									<Col span={24}>Mobile</Col>
+									<Col xs={24} sm={24} md={12}>
+									<TextInput
+											pre=""
+											prefix={countryCode?.value}
+											value={mobile}
+											changeHandler={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'mobile', val } })}
+											fieldName="mobile"
+											pattern="^[0-9]"
+											setError={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'error', val } })}
+											minLength={10}
+											maxLength={10}
+											post={
+												<OtpDialogue
+													disableButton={disableButton(
+														user?.attributes?.phone_number,
+														countryCode?.value + mobile
+													)}
+													action={'phone_number'}
+													mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
+													onClickAction={() =>
+														updateAccountTab(
+															mobile,
+															doesMobExist,
+															'Mobile Number',
+															{ phone_number: countryCode?.value + mobile }
+														)}
+													resendOtp={sendOtp}
+												/>
+											}
+										/>
+								</Col>
+								</Row>
+							</Col>
+							<Col xs={24} sm={24} md={12}>
+								<Row gutter={[ 0, 10 ]}>
+									<Col span={24}>Whatsapp</Col>
+									<Col xs={24} sm={24} md={12}>
+									<TextInput
+											pre=""
+											prefix={countryCode?.value}
+											value={whatsapp}
+											changeHandler={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'whatsapp', val } })}
+											fieldName="whatsapp"
+											pattern="^[0-9]"
+											setError={(val: any) =>
+												dispatch({ type: 'single', data: { field: 'error', val } })}
+											minLength={10}
+											maxLength={10}
+											post={
+												<OtpDialogue
+													disableButton={disableButton(
+														user?.attributes?.nickname,
+														countryCode?.value + whatsapp
+													)}
+													action={'whatsapp_number'}
+													im={parseFloat(countryCodeWithoutPlusSign + mobile)}
+													onClickAction={() =>
+														updateAccountTab(
+															whatsapp,
+															doesImExist,
+															'Whatsapp Number',
+															{ nickname: countryCode?.value + whatsapp }
+														)}
+												/>
+											}
+										/>
+								</Col>
+								<Col span={24}><Checkbox
+											checked={whatsapp === mobile}
+											onChange={(e) => (e.target.checked ? updateImIfSameAsMob() : null)}
+										>
+											<strong>Whatsapp number same as mobile number</strong>
+										</Checkbox></Col>
+								</Row>
+							</Col>
+							</Row>
+					</TabPane>
+					<TabPane className='settings-tabpane-view' tab="Password" key="3">
+						<Row justify="start">
+							<Col>
+								<PasswordInput user={user} />
+							</Col>
+						</Row>
+					</TabPane>
+					<TabPane className='settings-tabpane-view' tab="Others" key="4">
+					<Row gutter={[24,24]}>
+						<Col xs={24} sm={24} md={8}>
+						<Row gutter={[10, 0]}>
+							<Col>
+								<SelectInput
+									info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+									pre="Can Tolerate"
+									unit="Loss"
+									value={riskProfile}
+									changeHandler={(val: string) =>
+										dispatch({
+											type: 'single',
+											data: { field: 'riskProfile', val }
+										})}
+									options={getRiskProfileOptions()}
+								/>
+							</Col>
+							</Row>
+							</Col>
+							<Col xs={24} sm={24} md={8}>
+						<Row gutter={[10, 0]}>
+							<Col>
+								<SelectInput
+									info="How much do you earn in a year?"
+									pre="Yearly Income"
+									value={tax}
+									changeHandler={(val: string) =>
+										dispatch({ type: 'single', data: { field: 'tax', val } })}
+									options={getTaxLiabilityOptions()}
+								/>
+							</Col>
+							</Row>
+							</Col>
+
+							<Col xs={24} sm={24} md={8}>
+						<Row gutter={[10, 0]}>
+							<Col>
+							<HSwitch
+									value={notify}
+									setter={(val: boolean) =>
+										dispatch({ type: 'single', data: { field: 'notify', val } })}
+									rightText="Offer and News Letters"
+									/>
+							</Col>
+							</Row>
+							</Col>
+
+							<Col xs={24} sm={24} md={8}>
+						<Row gutter={[10, 0]}>
+							<Col>
+							<Row align="middle" gutter={[20,10]}>
 									<Col>
-										<Row justify="start">
-											<Col className="first-col-view">
-												<TextInput
-													pre="Login Name"
-													value={prefuser}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'prefuser', val } })}
-													fieldName="prefusername"
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													post={
-														<Button
-															type="link"
-															style={{ color: COLORS.GREEN }}
-															icon={<SaveOutlined />}
-															disabled={error.length > 0 ? true : false}
-															onClick={() => {
-																validateCaptcha(
-																	'prefusername_change'
-																).then((success: boolean) => {
-																	if (!success) return;
-																	updatePrefUsername();
-																});
-															}}
-														/>
-													}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="start">
-											<Col>
-												<TextInput
-													pre="Mobile"
-													prefix={countryCode?.value}
-													value={mobile}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'mobile', val } })}
-													fieldName="mobile"
-													pattern="^[0-9]"
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													minLength={10}
-													maxLength={10}
-													post={
-														<OtpDialogue
-															disableButton={disableButton(
-																user?.attributes?.phone_number,
-																countryCode?.value + mobile
-															)}
-															action={'phone_number'}
-															mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
-															onClickAction={() =>
-																updateAccountTab(
-																	mobile,
-																	doesMobExist,
-																	'Mobile Number',
-																	{ phone_number: countryCode?.value + mobile }
-																)}
-															resendOtp={sendOtp}
-														/>
-													}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="start">
-											<Col>
-												<Checkbox
-													checked={whatsapp === mobile}
-													onChange={(e) => (e.target.checked ? updateImIfSameAsMob() : null)}
-												>
-													<strong>Whatsapp number same as mobile number</strong>
-												</Checkbox>
-											</Col>
-										</Row>
-										<Row justify="start">
-											<Col>
-												<TextInput
-													pre="Whatsapp"
-													prefix={countryCode?.value}
-													value={whatsapp}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'whatsapp', val } })}
-													fieldName="whatsapp"
-													pattern="^[0-9]"
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													minLength={10}
-													maxLength={10}
-													post={
-														<OtpDialogue
-															disableButton={disableButton(
-																user?.attributes?.nickname,
-																countryCode?.value + whatsapp
-															)}
-															action={'whatsapp_number'}
-															im={parseFloat(countryCodeWithoutPlusSign + mobile)}
-															onClickAction={() =>
-																updateAccountTab(
-																	whatsapp,
-																	doesImExist,
-																	'Whatsapp Number',
-																	{ nickname: countryCode?.value + whatsapp }
-																)}
-														/>
-													}
-												/>
-											</Col>
-										</Row>
-										<p>&nbsp;</p>
-										<Row justify="start">
-											<Col>
-												<TextInput
-													pre="Email Id"
-													placeholder={'abc@xyz.com'}
-													value={email}
-													changeHandler={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'email', val } })}
-													pattern={
-														'^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$'
-													}
-													setError={(val: any) =>
-														dispatch({ type: 'single', data: { field: 'error', val } })}
-													fieldName="email"
-													post={
-														<OtpDialogue
-															disableButton={disableButton(email, user?.attributes?.email)}
-															action={'email'}
-															onClickAction={() =>
-																updateAccountTab(email, doesEmailExist, 'Email', {
-																	email: email
-																})}
-															email={email}
-															mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
-															im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
-															resendOtp={sendOtp}
-														/>
-													}
-												/>
-											</Col>
-										</Row>
-									</Col>
-								</Row>
-							</TabPane>
-							<TabPane tab="Password" key="3">
-								<Row justify="start" className="tabPane">
-									<Col className="first-col-view">
-										<PasswordInput user={user} />
-									</Col>
-								</Row>
-							</TabPane>
-							<TabPane tab="Others" key="4">
-							<Row gutter={[24,24]}>
-								<Col span={24}>
-								<Row gutter={[32, 0]}>
-									<Col>
-										<SelectInput
-											info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-											pre="Can Tolerate"
-											unit="Loss"
-											value={riskProfile}
-											changeHandler={(val: string) =>
+										<HSwitch
+											value={isDrManual}
+											setter={(val: boolean) =>
 												dispatch({
 													type: 'single',
-													data: { field: 'riskProfile', val }
+													data: { field: 'isDrManual', val }
 												})}
-											options={getRiskProfileOptions()}
+											rightText="Manual"
+											leftText="Auto"
 										/>
 									</Col>
 									<Col >
-										<SelectInput
-											info="How much do you earn in a year?"
-											pre="Yearly Income"
-											value={tax}
-											changeHandler={(val: string) =>
-												dispatch({ type: 'single', data: { field: 'tax', val } })}
-											options={getTaxLiabilityOptions()}
-										/>
-									</Col>
-									</Row>
-									</Col>
-									<Col span={24}>
-									<Row gutter={[32, 0]} align='middle'>
-									<Col >
-										<HSwitch
-											value={notify}
-											setter={(val: boolean) =>
-												dispatch({ type: 'single', data: { field: 'notify', val } })}
-											rightText="Offer and News Letters"
-										/>
-									</Col>
-									<Col >
-										<Row align="middle" gutter={[0,10]}>
-											<Col>
-												<HSwitch
-													value={isDrManual}
-													setter={(val: boolean) =>
-														dispatch({
-															type: 'single',
-															data: { field: 'isDrManual', val }
-														})}
-													rightText="Manual"
-													leftText="Auto"
-												/>
-											</Col>
-											<Col >
-												{isDrManual ? (
-													<NumberInput
-														pre={'Discount Rate'}
-														value={discountRate}
-														changeHandler={(val: number) => setDiscountRate(val)}
-													/>
-												) : (
-													<label>
-														<strong>{discountRate}% Discount Rate</strong>
-													</label>
-												)}
-											</Col>
-										</Row>
-								</Col>
-								</Row>
-								</Col>
-								<Col span={24}>
-								<Row gutter={[32, 0]}>
-									<Col >
-									<RadialInput
-										pre="Life Expectancy"
-										label="Years"
-										value={lifeExpectancy}
-										changeHandler={(val: number) =>
-											dispatch({
-												type: 'single',
-												data: { field: 'lifeExpectancy', val }
-											})}
-										step={1}
-										data={toStringArr(70, 100, 1)}
-										labelBottom
-										trackColor={COLORS.WHITE}
-										info='This will be used to define the duration for which Financial Planning is Needed.'
-									/>
-								</Col>
-								</Row>
-								</Col>
-								<Col span={24}>
-									<Row justify="center">
-									<Col>
-										<Button
-											type="primary"
-											style={{ color: COLORS.WHITE }}
-											icon={<SaveOutlined />}
-											onClick={() => {
-												validateCaptcha('othersTab_change').then((success: boolean) => {
-													if (!success) return;
-													updateOthersTab();
-												});
-											}}
-										>
-											Save
-										</Button>
+										{isDrManual ? (
+											<NumberInput
+												pre={'Discount Rate'}
+												value={discountRate}
+												changeHandler={(val: number) => setDiscountRate(val)}
+											/>
+										) : (
+											<label>
+												<strong>{discountRate}% Discount Rate</strong>
+											</label>
+										)}
 									</Col>
 								</Row>
-								</Col>
-								</Row>
-							</TabPane>
-						</Tabs>
-					</Col>
-				</Row>
+							</Col>
+							</Row>
+							</Col>
+							
+							
+							<Col xs={24} sm={24} md={8}>
+						<Row gutter={[10, 0]}>
+							<Col>
+							<RadialInput
+								pre="Life Expectancy"
+								label="Years"
+								value={lifeExpectancy}
+								changeHandler={(val: number) =>
+									dispatch({
+										type: 'single',
+										data: { field: 'lifeExpectancy', val }
+									})}
+								step={1}
+								data={toStringArr(70, 100, 1)}
+								labelBottom
+								trackColor={COLORS.WHITE}
+								info='This will be used to define the duration for which Financial Planning is Needed.'
+							/>
+							</Col>
+							</Row>
+							</Col>
+							</Row>
+						<Row justify='center'>
+							<Col>
+							<Button
+									type="primary"
+									style={{ color: COLORS.WHITE }}
+									icon={<SaveOutlined />}
+									onClick={() => {
+										validateCaptcha('othersTab_change').then((success: boolean) => {
+											if (!success) return;
+											updateOthersTab();
+										});
+									}}
+								>
+									Save
+								</Button>
+							</Col>
+							</Row>
+							
+					</TabPane>
+				</Tabs>
 			) : (
 				<Skeleton active />
 			)}
