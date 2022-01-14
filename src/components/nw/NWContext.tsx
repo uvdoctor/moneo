@@ -856,7 +856,7 @@ function NWContextProvider() {
 		if (!holdings.length) return setTotal(0);
 		let total = 0;
 		holdings.forEach((holding: HoldingInput) => {
-			if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+			if (holding && discountRate && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
 				total += calculateInsurance(holding, discountRate, userInfo?.le, userInfo?.dob);
 			}
 		});
@@ -1166,7 +1166,7 @@ function NWContextProvider() {
 	);
 
 	useEffect(() => {
-		if(isDirty) saveHoldings();
+		if(isDirty && owner) saveHoldings();
 	}, [childTab])
 
 	useEffect(() => {
