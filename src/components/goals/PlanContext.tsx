@@ -1,28 +1,53 @@
 import { notification } from "antd";
-import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, GoalType, LMH, UpdateGoalInput } from "../../api/goals";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from "react";
+import {
+  CreateGoalInput,
+  GoalType,
+  LMH,
+  UpdateGoalInput,
+} from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
 import { appendValue, getFXRate, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
-import { changeGoal, createNewGoal, deleteGoal, getDuration, getGoalsList } from "./goalutils";
-import { useRouter } from 'next/router';
+import {
+  changeGoal,
+  createNewGoal,
+  deleteGoal,
+  getDuration,
+  getGoalsList,
+} from "./goalutils";
+import { useRouter } from "next/router";
 import { AppContext } from "../AppContext";
 
 const PlanContext = createContext({});
 
 interface PlanContextProviderProps {
-  goal: CreateGoalInput | null
-  setGoal: Function
-  children: ReactNode
+  goal: CreateGoalInput | null;
+  setGoal: Function;
+  children: ReactNode;
 }
 
-function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderProps) {
-  const { ratesData, appContextLoaded, discountRate }: any = useContext(AppContext);
+function PlanContextProvider({
+  children,
+  goal,
+  setGoal,
+}: PlanContextProviderProps) {
+  const { ratesData, appContextLoaded, discountRate, defaultCurrency }: any =
+    useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
+  const irDiff = defaultCurrency === "INR" ? 3 : 0;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
-  const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(isPublicCalc && goal && goal.type === GoalType.FF ? goal : null);
+  const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(
+    isPublicCalc && goal && goal.type === GoalType.FF ? goal : null
+  );
   const [allCFs, setAllCFs] = useState<any>({});
   const [oppCostCache, setOppCostCache] = useState<any>({});
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
@@ -32,35 +57,83 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [ffResult, setFFResult] = useState<any>({});
   const [ffYear, setFFYear] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
-  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : discountRate ? discountRate : 5);
-  const [savingsPerf, setSavingsPerf] = useState<number>();
-  const [depositsPerf, setDepositsPerf] = useState<number>();
-  const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>();
-  const [iMedTermBondsPerf, setIMedTermBondsPerf] = useState<number>();
-  const [taxExemptBondsPerf, setTaxExemptBondsPerf] = useState<number>();
-  const [highYieldBondsPerf, setHighYieldBondsPerf] = useState<number>();
-  const [iHighYieldBondsPerf, setIHighYieldBondsPerf] = useState<number>();
-  const [reitPerf ,setREITPerf] = useState<number>();
-  const [iREITPerf, setIREITPerf] = useState<number>();
-  const [realEstatePerf, setRealEstatePerf] = useState<number>();
-  const [goldPerf, setGoldPerf] = useState<number>();
-  const [goldBondsPerf, setGoldBondsPerf] = useState<number>();
-  const [largeCapStocksPerf, setLargeCapStocksPerf] = useState<number>();
-  const [largeCapETFPerf, setLargeCapETFPerf] = useState<number>();
-  const [midCapStocksPerf, setMidCapStocksPerf] = useState<number>();
-  const [smallCapStocksPerf, setSmallCapStocksPerf] = useState<number>();
-  const [divGrowthStocksPerf, setDivGrowthStocksPerf] = useState<number>();
-  const [iLargeCapStocksPerf, setILargeCapStocksPerf] = useState<number>();
-  const [iLargeCapETFPerf, setILargeCapETFPerf] = useState<number>();
-  const [iMidCapStocksPerf, setIMidCapStocksPerf] = useState<number>();
-  const [iSmallCapStocksPerf, setISmallCapStocksPerf] = useState<number>();
-  const [liquidFundsPerf, setLiquidFundsPerf] = useState<number>();
-  const [uniqueCollectionPerf, setUniqueCollectionPerf] = useState<number>();
-  const [planError, setPlanError] = useState<string>('');
-  const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
+  const [dr, setDR] = useState<number | null>(
+    !isPublicCalc ? null : discountRate ? discountRate : 5
+  );
+  const [savingsPerf, setSavingsPerf] = useState<number>(
+    ffGoal?.pp?.s ? ffGoal.pp.s : 0.25 + irDiff
+  );
+  const [depositsPerf, setDepositsPerf] = useState<number>(
+    ffGoal?.pp?.d ? ffGoal.pp.d : 1 + irDiff
+  );
+  const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>(
+    ffGoal?.pp?.mtb ? ffGoal.pp.mtb : 0.5 + irDiff
+  );
+  const [iMedTermBondsPerf, setIMedTermBondsPerf] = useState<number>(
+    ffGoal?.pp?.imtb ? ffGoal.pp.imtb : 0.5 + irDiff
+  );
+  const [taxExemptBondsPerf, setTaxExemptBondsPerf] = useState<number>(
+    ffGoal?.pp?.teb ? ffGoal.pp.teb : 0.5 + irDiff
+  );
+  const [highYieldBondsPerf, setHighYieldBondsPerf] = useState<number>(
+    ffGoal?.pp?.hyb ? ffGoal.pp.hyb : 0.5 + irDiff
+  );
+  const [iHighYieldBondsPerf, setIHighYieldBondsPerf] = useState<number>(
+    ffGoal?.pp?.ihyb ? ffGoal.pp.ihyb : 0.5 + irDiff
+  );
+  const [reitPerf, setREITPerf] = useState<number>(
+    ffGoal?.pp?.reit ? ffGoal.pp.reit : 0.5 + irDiff
+  );
+  const [iREITPerf, setIREITPerf] = useState<number>(
+    ffGoal?.pp?.ireit ? ffGoal.pp.ireit : 0.5 + irDiff
+  );
+  const [realEstatePerf, setRealEstatePerf] = useState<number>(
+    ffGoal?.pp?.re ? ffGoal.pp.re : 0.5 + irDiff
+  );
+  const [goldPerf, setGoldPerf] = useState<number>(
+    ffGoal?.pp?.gold ? ffGoal.pp.gold : 0.5 + irDiff
+  );
+  const [goldBondsPerf, setGoldBondsPerf] = useState<number>(
+    ffGoal?.pp?.goldb ? ffGoal.pp.goldb : 0.5 + irDiff
+  );
+  const [largeCapStocksPerf, setLargeCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.lcs ? ffGoal.pp.lcs : 0.5 + irDiff
+  );
+  const [largeCapETFPerf, setLargeCapETFPerf] = useState<number>(
+    ffGoal?.pp?.lcetf ? ffGoal.pp.lcetf : 0.5 + irDiff
+  );
+  const [midCapStocksPerf, setMidCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.mcs ? ffGoal.pp.mcs : 0.5 + irDiff
+  );
+  const [smallCapStocksPerf, setSmallCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.scs ? ffGoal.pp.scs : 0.5 + irDiff
+  );
+  const [divGrowthStocksPerf, setDivGrowthStocksPerf] = useState<number>(
+    ffGoal?.pp?.dgs ? ffGoal.pp.dgs : 0.5 + irDiff
+  );
+  const [iLargeCapStocksPerf, setILargeCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.ilcs ? ffGoal.pp.ilcs : 0.5 + irDiff
+  );
+  const [iLargeCapETFPerf, setILargeCapETFPerf] = useState<number>(
+    ffGoal?.pp?.ilcetf ? ffGoal.pp.ilcetf : 0.5 + irDiff
+  );
+  const [iMidCapStocksPerf, setIMidCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.imcs ? ffGoal.pp.imcs : 0.5 + irDiff
+  );
+  const [iSmallCapStocksPerf, setISmallCapStocksPerf] = useState<number>(
+    ffGoal?.pp?.iscs ? ffGoal.pp.iscs : 0.5 + irDiff
+  );
+  const [liquidFundsPerf, setLiquidFundsPerf] = useState<number>(
+    ffGoal?.pp?.l ? ffGoal.pp.l : 0.5 + irDiff
+  );
+  const [uniqueCollectionPerf, setUniqueCollectionPerf] = useState<number>(
+    ffGoal?.pp?.uc ? ffGoal.pp.uc : 0.5 + irDiff
+  );
+  const [planError, setPlanError] = useState<string>("");
   const nowYear = new Date().getFullYear();
-  
-  const getCurrencyFactor = (currency: string) => getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency);
+
+  const getCurrencyFactor = (currency: string) =>
+    getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency);
 
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
@@ -73,7 +146,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     goals?.forEach((g) => {
       if (g.type === GoalType.FF) {
         setFFGoal(g);
-        setDefaultCurrency(g.ccy);
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -88,7 +160,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
             g.loan?.per as number,
             g.loan?.ry as number,
             g.loan?.dur as number,
-            (g.type === GoalType.E && (g?.loan?.per as number > 0)),
+            g.type === GoalType.E && (g?.loan?.per as number) > 0,
             g.achg as number
           )
         );
@@ -97,33 +169,30 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     });
     removeFromArray(goals, "id", ffGoalId);
     setAllCFs(allCFs);
-    setAllGoals([...goals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy)]);
+    setAllGoals([
+      ...goals?.sort(
+        (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+      ),
+    ]);
   };
 
   // potential performance
   const getPotentialPerformance = () => {
-    const irDiffByCurrency: any = {
-      INR: 3,
-    };
-    let irDiff =
-      ffGoal && irDiffByCurrency.hasOwnProperty(ffGoal.ccy)
-        ? irDiffByCurrency[ffGoal.ccy]
-        : 0;
     return {
-      [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
-      [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
-      [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
-      [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
-      [ASSET_TYPES.INTERNATIONAL_BONDS]: 7,
-      [ASSET_TYPES.REIT]: 5 + irDiff,
-      [ASSET_TYPES.REAL_ESTATE]: 5 + irDiff,
-      [ASSET_TYPES.GOLD]: 3 + irDiff,
-      [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
-      [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
-      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.SAVINGS]: savingsPerf,
+      [ASSET_TYPES.DEPOSITS]: depositsPerf,
+      [ASSET_TYPES.MED_TERM_BONDS]: medTermBondsPerf,
+      [ASSET_TYPES.TAX_EXEMPT_BONDS]: taxExemptBondsPerf,
+      [ASSET_TYPES.INTERNATIONAL_BONDS]: iMedTermBondsPerf,
+      [ASSET_TYPES.REIT]: reitPerf,
+      [ASSET_TYPES.REAL_ESTATE]: realEstatePerf,
+      [ASSET_TYPES.GOLD]: goldPerf,
+      [ASSET_TYPES.LARGE_CAP_STOCKS]: largeCapStocksPerf,
+      [ASSET_TYPES.MID_CAP_STOCKS]: midCapStocksPerf,
+      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: divGrowthStocksPerf,
       [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
-      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9 + irDiff,
-      [ASSET_TYPES.INDIA_FIXED_INCOME]: 8
+      [ASSET_TYPES.SMALL_CAP_STOCKS]: smallCapStocksPerf,
+      [ASSET_TYPES.INDIA_FIXED_INCOME]: 8,
     };
   };
 
@@ -160,7 +229,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   useEffect(() => {
     if (isPublicCalc) {
       setAllGoals([...[]]);
-    } else loadAllGoals().then(() => { });
+    } else loadAllGoals().then(() => {});
   }, [appContextLoaded]);
 
   useEffect(() => {
@@ -169,7 +238,10 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     let mustCFs = populateWithZeros(yearRange.from, yearRange.to);
     let tryCFs = populateWithZeros(yearRange.from, yearRange.to);
     let optCFs = populateWithZeros(yearRange.from, yearRange.to);
-    let mCFs = buildEmptyMergedCFs(yearRange.from, ffGoal.sy + (ffGoal.loan?.dur as number));
+    let mCFs = buildEmptyMergedCFs(
+      yearRange.from,
+      ffGoal.sy + (ffGoal.loan?.dur as number)
+    );
     if (isPublicCalc) {
       setMustCFs([...mustCFs]);
       setOptCFs([...optCFs]);
@@ -195,62 +267,91 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     setGoalsLoaded(true);
   }, [allGoals]);
 
-  const addGoal = async (
-    newGoal: CreateGoalInput, cfs: Array<number> = []
-  ) => {
+  const addGoal = async (newGoal: CreateGoalInput, cfs: Array<number> = []) => {
     let g = null;
     try {
       g = await createNewGoal(newGoal as CreateGoalInput);
     } catch (err) {
-      notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
+      notification.error({
+        message: "Goal Not Created",
+        description: "Sorry! Unable to create this Goal: " + err,
+      });
       return false;
     }
     if (!g) return false;
     setGoal(null);
     if (g.type === GoalType.FF) {
       setFFGoal(g);
-      setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy) as Array<CreateGoalInput>)]);
+      setAllGoals([
+        ...(allGoals?.sort(
+          (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+        ) as Array<CreateGoalInput>),
+      ]);
       return true;
     }
-    notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
+    notification.success({
+      message: "New Goal Created",
+      description: `Success! New Goal ${g.name} has been Created.`,
+    });
     allGoals?.push(g as CreateGoalInput);
     allCFs[g.id as string] = cfs;
     setAllCFs(allCFs);
-    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
+    setAllGoals([
+      ...(allGoals?.sort(
+        (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+      ) as Array<CreateGoalInput>),
+    ]);
   };
 
-  const updateGoal = async (
-    g: UpdateGoalInput, cfs: Array<number> = []
-  ) => {
+  const updateGoal = async (g: UpdateGoalInput, cfs: Array<number> = []) => {
     let savedGoal: UpdateGoalInput | null = null;
     try {
       savedGoal = await changeGoal(g as UpdateGoalInput);
     } catch (err) {
-      notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
+      notification.error({
+        message: "Goal not Updated",
+        description: "Sorry! Unable to update this Goal: " + err,
+      });
       return false;
     }
     if (!savedGoal) return false;
     setGoal(null);
     if (savedGoal.type === GoalType.FF) {
-      notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
+      notification.success({
+        message: "Target Updated",
+        description:
+          "Success! Your Financial Independence Target has been Updated.",
+      });
       setFFGoal(savedGoal as CreateGoalInput);
-      setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
+      setAllGoals([
+        ...(allGoals?.sort(
+          (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+        ) as Array<CreateGoalInput>),
+      ]);
       return true;
-    } 
-    notification.success({ message: "Goal Updated", description: `Success! Goal ${savedGoal.name} has been Updated.` });
-    if(allGoals && allGoals.length) {
+    }
+    notification.success({
+      message: "Goal Updated",
+      description: `Success! Goal ${savedGoal.name} has been Updated.`,
+    });
+    if (allGoals && allGoals.length) {
       let existingGoalIndex = -1;
-      for(let i = 0; i < allGoals.length; i++) {
-        if(allGoals[i].id === savedGoal.id) {
+      for (let i = 0; i < allGoals.length; i++) {
+        if (allGoals[i].id === savedGoal.id) {
           existingGoalIndex = i;
           break;
         }
       }
-      if(existingGoalIndex >= 0) allGoals[existingGoalIndex] = savedGoal as CreateGoalInput;
+      if (existingGoalIndex >= 0)
+        allGoals[existingGoalIndex] = savedGoal as CreateGoalInput;
     }
     allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
-    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
+    setAllGoals([
+      ...(allGoals?.sort(
+        (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+      ) as Array<CreateGoalInput>),
+    ]);
     return true;
   };
 
@@ -258,15 +359,25 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     try {
       await deleteGoal(id);
     } catch (err) {
-      notification.error({ message: "Delete Error", description: "Sorry! Unable to delete this Goal: " + err });
+      notification.error({
+        message: "Delete Error",
+        description: "Sorry! Unable to delete this Goal: " + err,
+      });
       return false;
     }
-    notification.success({ message: "Goal Deleted", description: `Success! Goal has been Deleted.`});
+    notification.success({
+      message: "Goal Deleted",
+      description: `Success! Goal has been Deleted.`,
+    });
     removeFromArray(allGoals as Array<CreateGoalInput>, "id", id);
     delete allCFs[id];
     setAllCFs(allCFs);
     setGoal(null);
-    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
+    setAllGoals([
+      ...(allGoals?.sort(
+        (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+      ) as Array<CreateGoalInput>),
+    ]);
   };
 
   const editGoal = (id: string) => {
@@ -275,7 +386,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return;
     }
     if (!allGoals || !allGoals.length) return;
-    setGoal((allGoals.filter((g) => g.id === id))[0]);
+    setGoal(allGoals.filter((g) => g.id === id)[0]);
   };
 
   const getYearRange = () => {
@@ -314,7 +425,12 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     });
   };
 
-  const mergeCFs = (obj: Object, cfs: Array<number>, sy: number, goalCurrency: string) => {
+  const mergeCFs = (
+    obj: Object,
+    cfs: Array<number>,
+    sy: number,
+    goalCurrency: string
+  ) => {
     let currencyFactor = getCurrencyFactor(goalCurrency);
     cfs.forEach((cf, i) => {
       let year = sy + i;
@@ -334,15 +450,24 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     tryCashflows?: any
   ) => {
     if (!ffGoal) return null;
-    let mCFs: any = Object.assign({}, mergedCashflows ? mergedCashflows : mergedCFs);
-    let highImpCFs: any = Object.assign([], mustCashflows ? mustCashflows : mustCFs);
-    let medImpCFs: any = Object.assign([], tryCashflows ? tryCashflows : tryCFs);
+    let mCFs: any = Object.assign(
+      {},
+      mergedCashflows ? mergedCashflows : mergedCFs
+    );
+    let highImpCFs: any = Object.assign(
+      [],
+      mustCashflows ? mustCashflows : mustCFs
+    );
+    let medImpCFs: any = Object.assign(
+      [],
+      tryCashflows ? tryCashflows : tryCFs
+    );
     let nowYear = new Date().getFullYear();
     let currencyFactor = getCurrencyFactor(goalCurrency);
     if (goalId) {
-      let existingGoal = (allGoals?.filter((g) => g.id === goalId) as Array<
-        CreateGoalInput
-      >)[0];
+      let existingGoal = (
+        allGoals?.filter((g) => g.id === goalId) as Array<CreateGoalInput>
+      )[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
       let existingCFs = allCFs[goalId];
@@ -366,10 +491,11 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       medImpCFs,
       getPotentialPerformance()
     );
-    if (!isFFPossible(resultWithoutGoal, nomineeAmt)) return {
-      impactYears: null,
-      rr: resultWithoutGoal.rr
-    };
+    if (!isFFPossible(resultWithoutGoal, nomineeAmt))
+      return {
+        impactYears: null,
+        rr: resultWithoutGoal.rr,
+      };
     cfs.forEach((cf, i) => {
       let cashFlow = cf * currencyFactor;
       appendValue(mCFs, startYear + i, cashFlow);
@@ -380,25 +506,26 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         appendValue(medImpCFs, index, cashFlow);
       }
     });
-    let resultWithGoal = result ? result : findEarliestFFYear(
-      ffGoal,
-      mCFs,
-      result ? result.ffYear : ffYear,
-      highImpCFs,
-      medImpCFs,
-      getPotentialPerformance()
-    );
+    let resultWithGoal = result
+      ? result
+      : findEarliestFFYear(
+          ffGoal,
+          mCFs,
+          result ? result.ffYear : ffYear,
+          highImpCFs,
+          medImpCFs,
+          getPotentialPerformance()
+        );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         impactYears: null,
-        rr: resultWithoutGoal.rr
+        rr: resultWithoutGoal.rr,
       };
     return {
       impactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
-      rr: resultWithoutGoal.rr
-    }
+      rr: resultWithoutGoal.rr,
+    };
   };
-
 
   return (
     <PlanContext.Provider
@@ -419,7 +546,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         editGoal,
         removeGoal,
         calculateFFImpactYear,
-        pp: getPotentialPerformance,
         goal,
         setGoal,
         isPublicCalc,
@@ -430,22 +556,56 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         ffYear,
         oppCostCache,
         setOppCostCache,
-        savingsPerf, setSavingsPerf, depositsPerf, setDepositsPerf,
-        medTermBondsPerf, setMedTermBondsPerf, iMedTermBondsPerf, setIMedTermBondsPerf,
-        taxExemptBondsPerf, setTaxExemptBondsPerf, highYieldBondsPerf, setHighYieldBondsPerf, 
-        iHighYieldBondsPerf, setIHighYieldBondsPerf, reitPerf ,setREITPerf, 
-        iREITPerf, setIREITPerf, realEstatePerf, setRealEstatePerf, goldPerf, setGoldPerf, 
-        goldBondsPerf, setGoldBondsPerf, largeCapStocksPerf, setLargeCapStocksPerf, 
-        largeCapETFPerf, setLargeCapETFPerf, midCapStocksPerf, setMidCapStocksPerf, 
-        smallCapStocksPerf, setSmallCapStocksPerf, divGrowthStocksPerf, setDivGrowthStocksPerf, 
-        iLargeCapStocksPerf, setILargeCapStocksPerf, iLargeCapETFPerf, setILargeCapETFPerf, 
-        iMidCapStocksPerf, setIMidCapStocksPerf, iSmallCapStocksPerf, setISmallCapStocksPerf, 
-        liquidFundsPerf, setLiquidFundsPerf, uniqueCollectionPerf, setUniqueCollectionPerf      
-      }}
-    >
+        savingsPerf,
+        setSavingsPerf,
+        depositsPerf,
+        setDepositsPerf,
+        medTermBondsPerf,
+        setMedTermBondsPerf,
+        iMedTermBondsPerf,
+        setIMedTermBondsPerf,
+        taxExemptBondsPerf,
+        setTaxExemptBondsPerf,
+        highYieldBondsPerf,
+        setHighYieldBondsPerf,
+        iHighYieldBondsPerf,
+        setIHighYieldBondsPerf,
+        reitPerf,
+        setREITPerf,
+        iREITPerf,
+        setIREITPerf,
+        realEstatePerf,
+        setRealEstatePerf,
+        goldPerf,
+        setGoldPerf,
+        goldBondsPerf,
+        setGoldBondsPerf,
+        largeCapStocksPerf,
+        setLargeCapStocksPerf,
+        largeCapETFPerf,
+        setLargeCapETFPerf,
+        midCapStocksPerf,
+        setMidCapStocksPerf,
+        smallCapStocksPerf,
+        setSmallCapStocksPerf,
+        divGrowthStocksPerf,
+        setDivGrowthStocksPerf,
+        iLargeCapStocksPerf,
+        setILargeCapStocksPerf,
+        iLargeCapETFPerf,
+        setILargeCapETFPerf,
+        iMidCapStocksPerf,
+        setIMidCapStocksPerf,
+        iSmallCapStocksPerf,
+        setISmallCapStocksPerf,
+        liquidFundsPerf,
+        setLiquidFundsPerf,
+        uniqueCollectionPerf,
+        setUniqueCollectionPerf,
+      }}>
       {children}
     </PlanContext.Provider>
-  )
+  );
 }
 
 export { PlanContext, PlanContextProvider };

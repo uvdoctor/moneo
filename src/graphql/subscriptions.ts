@@ -149,6 +149,31 @@ export const onCreateGoal = /* GraphQL */ `
       ra
       rachg
       img
+      pp {
+        s
+        d
+        l
+        mtb
+        imtb
+        hyb
+        ihyb
+        teb
+        reit
+        ireit
+        re
+        gold
+        goldb
+        lcs
+        lcetf
+        ilcs
+        ilcetf
+        mcs
+        scs
+        imcs
+        iscs
+        dgs
+        uc
+      }
       createdAt
       updatedAt
       owner
@@ -218,6 +243,31 @@ export const onUpdateGoal = /* GraphQL */ `
       ra
       rachg
       img
+      pp {
+        s
+        d
+        l
+        mtb
+        imtb
+        hyb
+        ihyb
+        teb
+        reit
+        ireit
+        re
+        gold
+        goldb
+        lcs
+        lcetf
+        ilcs
+        ilcetf
+        mcs
+        scs
+        imcs
+        iscs
+        dgs
+        uc
+      }
       createdAt
       updatedAt
       owner
@@ -287,6 +337,31 @@ export const onDeleteGoal = /* GraphQL */ `
       ra
       rachg
       img
+      pp {
+        s
+        d
+        l
+        mtb
+        imtb
+        hyb
+        ihyb
+        teb
+        reit
+        ireit
+        re
+        gold
+        goldb
+        lcs
+        lcetf
+        ilcs
+        ilcetf
+        mcs
+        scs
+        imcs
+        iscs
+        dgs
+        uc
+      }
       createdAt
       updatedAt
       owner
@@ -346,7 +421,6 @@ export const onCreateUserInfo = /* GraphQL */ `
       dr
       tc
       le
-      pp
       createdAt
       updatedAt
     }
@@ -366,7 +440,6 @@ export const onUpdateUserInfo = /* GraphQL */ `
       dr
       tc
       le
-      pp
       createdAt
       updatedAt
     }
@@ -386,7 +459,6 @@ export const onDeleteUserInfo = /* GraphQL */ `
       dr
       tc
       le
-      pp
       createdAt
       updatedAt
     }

@@ -135,6 +135,31 @@ export const getGoal = /* GraphQL */ `
       ra
       rachg
       img
+      pp {
+        s
+        d
+        l
+        mtb
+        imtb
+        hyb
+        ihyb
+        teb
+        reit
+        ireit
+        re
+        gold
+        goldb
+        lcs
+        lcetf
+        ilcs
+        ilcetf
+        mcs
+        scs
+        imcs
+        iscs
+        dgs
+        uc
+      }
       createdAt
       updatedAt
       owner
@@ -201,6 +226,31 @@ export const listGoals = /* GraphQL */ `
         ra
         rachg
         img
+        pp {
+          s
+          d
+          l
+          mtb
+          imtb
+          hyb
+          ihyb
+          teb
+          reit
+          ireit
+          re
+          gold
+          goldb
+          lcs
+          lcetf
+          ilcs
+          ilcetf
+          mcs
+          scs
+          imcs
+          iscs
+          dgs
+          uc
+        }
         createdAt
         updatedAt
         owner
@@ -256,7 +306,6 @@ export const getUserInfo = /* GraphQL */ `
       dr
       tc
       le
-      pp
       createdAt
       updatedAt
     }
@@ -289,7 +338,6 @@ export const listUserInfos = /* GraphQL */ `
         dr
         tc
         le
-        pp
         createdAt
         updatedAt
       }
@@ -324,7 +372,6 @@ export const regByIm = /* GraphQL */ `
         dr
         tc
         le
-        pp
         createdAt
         updatedAt
       }
@@ -359,7 +406,6 @@ export const regByMob = /* GraphQL */ `
         dr
         tc
         le
-        pp
         createdAt
         updatedAt
       }
@@ -394,7 +440,6 @@ export const regByEmail = /* GraphQL */ `
         dr
         tc
         le
-        pp
         createdAt
         updatedAt
       }
@@ -429,7 +474,6 @@ export const regByDob = /* GraphQL */ `
         dr
         tc
         le
-        pp
         createdAt
         updatedAt
       }

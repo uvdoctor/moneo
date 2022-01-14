@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from "react";
 import { CreateGoalInput, LMH, LoanType, TargetInput } from "../../api/goals";
 import { CalcContext } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
@@ -13,7 +19,8 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { mustCFs, tryCFs, mergedCFs, pp, dr, ffYear, isPublicCalc }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, dr, ffYear, isPublicCalc }: any =
+    useContext(PlanContext);
   const {
     goal,
     currency,
@@ -28,11 +35,34 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     allInputDone,
     setError,
     cfs,
-    setWipGoal
+    setWipGoal,
+    savingsPerf,
+    depositsPerf,
+    medTermBondsPerf,
+    iMedTermBondsPerf,
+    taxExemptBondsPerf,
+    highYieldBondsPerf,
+    iHighYieldBondsPerf,
+    reitPerf,
+    iREITPerf,
+    realEstatePerf,
+    goldPerf,
+    goldBondsPerf,
+    largeCapStocksPerf,
+    largeCapETFPerf,
+    midCapStocksPerf,
+    smallCapStocksPerf,
+    divGrowthStocksPerf,
+    iLargeCapStocksPerf,
+    iLargeCapETFPerf,
+    iMidCapStocksPerf,
+    iSmallCapStocksPerf,
+    liquidFundsPerf,
+    uniqueCollectionPerf,
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
-    goal?.tdli as number
+    goal?.stdli as number
   );
   const [expenseChgRate, setExpenseChgRate] = useState<number>(
     goal?.btr as number
@@ -83,18 +113,14 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [successionTaxRate, setSuccessionTaxRate] = useState<number>(
     goal?.dr as number
   );
-  const [gains, setGains] = useState<Array<TargetInput>>(
-    goal.pg
-  );
-  const [losses, setLosses] = useState<Array<TargetInput>>(
-    goal.pl
-  );
+  const [gains, setGains] = useState<Array<TargetInput>>(goal.pg);
+  const [losses, setLosses] = useState<Array<TargetInput>>(goal.pl);
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
   const [wipResult, setWipResult] = useState<any>({});
-  
+
   const getLatestGoalState = () => {
-    let g: CreateGoalInput =  {
+    let g: CreateGoalInput = {
       name: goal.name,
       by: goal.by,
       sy: startYear,
@@ -129,24 +155,48 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         dur: planDuration,
         rate: retirementAge,
         type: LoanType.A,
-        pmi: monthlyMaxSavings
-      }
-    }
+        pmi: monthlyMaxSavings,
+      },
+      pp: {
+        s: savingsPerf,
+        d: depositsPerf,
+        l: liquidFundsPerf,
+        mtb: medTermBondsPerf,
+        imtb: iMedTermBondsPerf,
+        hyb: highYieldBondsPerf,
+        ihyb: iHighYieldBondsPerf,
+        teb: taxExemptBondsPerf,
+        reit: reitPerf,
+        ireit: iREITPerf,
+        re: realEstatePerf,
+        gold: goldPerf,
+        goldb: goldBondsPerf,
+        lcs: largeCapStocksPerf,
+        lcetf: largeCapETFPerf,
+        ilcs: iLargeCapStocksPerf,
+        ilcetf: iLargeCapETFPerf,
+        mcs: midCapStocksPerf,
+        scs: smallCapStocksPerf,
+        imcs: iMidCapStocksPerf,
+        iscs: iSmallCapStocksPerf,
+        dgs: divGrowthStocksPerf,
+        uc: uniqueCollectionPerf,
+      },
+    };
     if (goal.id) g.id = goal.id;
     return g;
   };
-  
+
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
-        setCarePremium(0);
+      setCarePremium(0);
     }
   }, [currency]);
 
   useEffect(() => {
-    setResults([...[
-        <FIYearResult key="fiyear" />,
-        <FISavingsResult key="fiamt" />
-      ]]);
+    setResults([
+      ...[<FIYearResult key="fiyear" />, <FISavingsResult key="fiamt" />],
+    ]);
   }, [cfs]);
 
   useEffect(() => {
@@ -175,7 +225,9 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
       isPublicCalc ? dr : pp()
     );
     if (!isFFPossible(result, leaveBehind)) {
-      setError(`Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${retirementAge}.`);
+      setError(
+        `Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${retirementAge}.`
+      );
     } else {
       setError("");
     }
@@ -185,6 +237,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   }, [
     startYear,
     endYear,
+    currency,
     taxRate,
     needTEBonds,
     careTaxDedLimit,
@@ -213,71 +266,94 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     retirementAge,
     planDuration,
     dr,
-    allInputDone
+    allInputDone,
+    savingsPerf,
+    depositsPerf,
+    medTermBondsPerf,
+    iMedTermBondsPerf,
+    taxExemptBondsPerf,
+    highYieldBondsPerf,
+    iHighYieldBondsPerf,
+    reitPerf,
+    iREITPerf,
+    realEstatePerf,
+    goldPerf,
+    goldBondsPerf,
+    largeCapStocksPerf,
+    largeCapETFPerf,
+    midCapStocksPerf,
+    smallCapStocksPerf,
+    divGrowthStocksPerf,
+    iLargeCapStocksPerf,
+    iLargeCapETFPerf,
+    iMidCapStocksPerf,
+    iSmallCapStocksPerf,
+    liquidFundsPerf,
+    uniqueCollectionPerf,
   ]);
 
-    return (
-      <FIGoalContext.Provider
-        value={{
-          needTEBonds,
-          setNeedTEBonds,
-          taxRate,
-          setTaxRate,
-          careTaxDedLimit,
-          setCareTaxDedLimit,
-          carePremiumSY,
-          setCarePremiumSY,
-          carePremiumChgPer,
-          setCarePremiumChgPer,
-          carePremiumDur,
-          setCarePremiumDur,
-          carePremium,
-          setCarePremium,
-          cpBY,
-          setCPBY,
-          retirementIncomeSY,
-          setRetirementIncomeSY,
-          retirementIncomePer,
-          setRetirementIncomePer,
-          retirementIncome,
-          setRetirementIncome,
-          leaveBehind,
-          setLeaveBehind,
-          successionTaxRate,
-          setSuccessionTaxRate,
-          gains,
-          setGains,
-          losses,
-          setLosses,
-          nw,
-          setNW,
-          avgMonthlySavings,
-          setAvgMonthlySavings,
-          monthlyMaxSavings,
-          setMonthlyMaxSavings,
-          expenseAfterFF,
-          setExpenseAfterFF,
-          expenseChgRate,
-          setExpenseChgRate,
-          monthlySavingsRate,
-          setMonthlySavingsRate,
-          riskProfile,
-          setRiskProfile,
-          emergencyFund,
-          setEmergencyFund,
-          emergencyFundChgRate,
-          setEmergencyFundChgRate,
-          emergencyFundBY,
-          setEmergencyFundBY,
-          retirementAge,
-          setRetirementAge,
-          planDuration,
-          setPlanDuration,
-          wipResult
-        }}>
-        {children ? children : <CalcTemplate />}
-      </FIGoalContext.Provider>
-    );
+  return (
+    <FIGoalContext.Provider
+      value={{
+        needTEBonds,
+        setNeedTEBonds,
+        taxRate,
+        setTaxRate,
+        careTaxDedLimit,
+        setCareTaxDedLimit,
+        carePremiumSY,
+        setCarePremiumSY,
+        carePremiumChgPer,
+        setCarePremiumChgPer,
+        carePremiumDur,
+        setCarePremiumDur,
+        carePremium,
+        setCarePremium,
+        cpBY,
+        setCPBY,
+        retirementIncomeSY,
+        setRetirementIncomeSY,
+        retirementIncomePer,
+        setRetirementIncomePer,
+        retirementIncome,
+        setRetirementIncome,
+        leaveBehind,
+        setLeaveBehind,
+        successionTaxRate,
+        setSuccessionTaxRate,
+        gains,
+        setGains,
+        losses,
+        setLosses,
+        nw,
+        setNW,
+        avgMonthlySavings,
+        setAvgMonthlySavings,
+        monthlyMaxSavings,
+        setMonthlyMaxSavings,
+        expenseAfterFF,
+        setExpenseAfterFF,
+        expenseChgRate,
+        setExpenseChgRate,
+        monthlySavingsRate,
+        setMonthlySavingsRate,
+        riskProfile,
+        setRiskProfile,
+        emergencyFund,
+        setEmergencyFund,
+        emergencyFundChgRate,
+        setEmergencyFundChgRate,
+        emergencyFundBY,
+        setEmergencyFundBY,
+        retirementAge,
+        setRetirementAge,
+        planDuration,
+        setPlanDuration,
+        wipResult,
+      }}>
+      {children ? children : <CalcTemplate />}
+    </FIGoalContext.Provider>
+  );
 }
 
 export { FIGoalContext, FIGoalContextProvider };
