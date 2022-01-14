@@ -252,8 +252,13 @@ export function compareValues(key: string, order: string = "asc") {
 export const getAllAssetDetails = () => {
   return {
     cash: {
-      label: "Cash",
+      label: "Emergency Cash",
       color: COLORS.GREEN,
+      cat: "Cash",
+    },
+    ltdep: {
+      label: "Retirement Funds",
+      color: "#82d949",
       cat: "Cash",
     },
     mtb: {
@@ -313,12 +318,12 @@ export const getAllAssetDetails = () => {
     },
     lcetf: {
       label: "Large-cap ETFs",
-      color: "#befe95",
+      color: "#fdd0cb",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     ilcetf: {
       label: "International Large-cap ETFs",
-      color: "#befe95",
+      color: "#f9aaa6",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     lcs: {
@@ -326,24 +331,14 @@ export const getAllAssetDetails = () => {
       color: "#fdd0cb",
       cat: ASSET_CATEGORIES.STOCKS,
     },
-    mcs: {
-      label: "Mid-cap Stocks",
+    mscs: {
+      label: "Multi-cap Stocks",
       color: "#e78284",
       cat: ASSET_CATEGORIES.STOCKS,
     },
-    scs: {
-      label: "Small-cap Stocks",
+    imscs: {
+      label: "International Multi-cap Stocks",
       color: "#cf544e",
-      cat: ASSET_CATEGORIES.STOCKS,
-    },
-    imcs: {
-      label: "International Mid-cap Stocks",
-      color: "#befe95",
-      cat: ASSET_CATEGORIES.STOCKS,
-    },
-    iscs: {
-      label: "International Small-cap Stocks",
-      color: "#befe95",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     ilcs: {
@@ -362,7 +357,7 @@ export const getAllAssetDetails = () => {
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     uc: {
-      label: "Unique Collections",
+      label: "Angel Investments & Collections",
       color: COLORS.ORANGE,
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },

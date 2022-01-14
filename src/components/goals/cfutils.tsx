@@ -745,7 +745,7 @@ const allocateStocks = (
   const ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
   let maxStocksPer = 120 - (year - ffGoal.sy);
   let maxAllowedPer =
-    ffGoal.rp === RiskProfile.VA ? 80 : ffGoal.rp === RiskProfile.A ? 70 : 50;
+    ffGoal.rp === RiskProfile.VA ? 90 : ffGoal.rp === RiskProfile.A ? 80 : 60;
   const goldAsset = ffGoal.ccy === "INR" ? aa.goldb : aa.gold;
   if (maxStocksPer > maxAllowedPer) maxStocksPer = maxAllowedPer;
   if (maxStocksPer > remPer) maxStocksPer = remPer;
@@ -769,19 +769,24 @@ const allocateStocks = (
       remPer
     );
   } else {
-    if (ffGoal.rp === RiskProfile.A || ffGoal.rp === RiskProfile.VA) {
+    if (ffGoal.rp === RiskProfile.VA) {
+      if (year < ffYear)
+        remPer = allocate(aa.imscs, i, Math.round(maxStocksPer * 0.2), remPer);
       remPer = allocate(
-        aa.mcs,
+        aa.mscs,
         i,
-        Math.round(maxStocksPer * (year < ffYear ? 0.2 : 0.3)),
+        Math.round(maxStocksPer * (year < ffYear ? 0.3 : 0.4)),
         remPer
       );
-      if (year < ffYear)
-        remPer = allocate(aa.scs, i, Math.round(maxStocksPer * 0.1), remPer);
     }
-    remPer = allocate(aa.ilcs, i, Math.round(maxStocksPer * 0.3), remPer);
     remPer = allocate(
-      aa.lcs,
+      ffGoal.rp === RiskProfile.M ? aa.ilcetf : aa.ilcs,
+      i,
+      Math.round(maxStocksPer * 0.3),
+      remPer
+    );
+    remPer = allocate(
+      ffGoal.rp === RiskProfile.M ? aa.lcetf : aa.lcs,
       i,
       Math.round(
         maxStocksPer *
@@ -832,9 +837,48 @@ const calculateAllocation = (
     remPer
   );
   if (!remPer) return;
-  if (ffGoal.rp === RiskProfile.VC) {
-    remPer = allocate(goldAsset, i, Math.round(remPer * 0.1), remPer);
-    remPer = allocate(aa.re, i, Math.round(remPer * 0.3), remPer);
+  remPer = allocate(
+    aa.ltdep,
+    i,
+    Math.round(
+      remPer *
+        (ffGoal.rp === RiskProfile.VC
+          ? 0.1
+          : ffGoal.rp === RiskProfile.C
+          ? 0.05
+          : 0.02)
+    ),
+    remPer
+  );
+  remPer = allocate(
+    aa.re,
+    i,
+    Math.round(
+      remPer *
+        (ffGoal.rp === RiskProfile.VC
+          ? 0.4
+          : RiskProfile.C
+          ? 0.3
+          : ffGoal.rp === RiskProfile.M
+          ? 0.1
+          : 0.05)
+    ),
+    remPer,
+    ffGoal.rp === RiskProfile.VC
+      ? 40
+      : ffGoal.rp === RiskProfile.C
+      ? 20
+      : ffGoal.rp === RiskProfile.M
+      ? 10
+      : 5
+  );
+  if (!remPer) return;
+  if (ffGoal.rp === RiskProfile.VC || ffGoal.rp === RiskProfile.C) {
+    if (ffGoal.rp === RiskProfile.C)
+      remPer = allocate(aa.lcetf, i, Math.round(remPer * 0.1), remPer);
+    remPer = allocate(goldAsset, i, Math.round(remPer * 0.2), remPer);
+    if (ffGoal.rp === RiskProfile.C)
+      remPer = allocate(aa.reit, i, Math.round(remPer * 0.1), remPer);
     remPer = allocate(
       allocateTEBonds ? fixedIncomeTEAsset : fixedIncomeAsset,
       i,
@@ -843,6 +887,34 @@ const calculateAllocation = (
     );
     remPer = allocate(fixedIncomeAsset, i, remPer, remPer);
   } else {
+    if (ffGoal.rp === RiskProfile.VA)
+      remPer = allocate(aa.crypto, i, Math.round(remPer * 0.02), remPer);
+    remPer = allocate(
+      aa.p2p,
+      i,
+      Math.round(
+        remPer *
+          (ffGoal.rp === RiskProfile.M
+            ? 0.01
+            : ffGoal.rp === RiskProfile.A
+            ? 0.03
+            : 0.05)
+      ),
+      remPer
+    );
+    remPer = allocate(
+      aa.uc,
+      i,
+      Math.round(
+        remPer *
+          (ffGoal.rp === RiskProfile.M
+            ? 0
+            : ffGoal.rp === RiskProfile.A
+            ? 0.05
+            : 0.1)
+      ),
+      remPer
+    );
     remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
     if (!remPer) return;
     let teBondsPer = fixedIncomeTEAsset[i];

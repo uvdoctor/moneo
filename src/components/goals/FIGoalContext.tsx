@@ -28,8 +28,7 @@ interface FIGoalContextProviderProps {
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const { userInfo }: any = useContext(AppContext);
-  const { mustCFs, tryCFs, mergedCFs, dr, ffYear }: any =
-    useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, ffYear }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -105,6 +104,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
   const [cashPerf, setCashPerf] = useState<number>(goal?.pp?.cash);
+  const [ltDepPerf, setLTDepPerf] = useState<number>(goal?.pp?.ltdep);
   const [medTermBondsPerf, setMedTermBondsPerf] = useState<number>(
     goal?.pp?.mtb
   );
@@ -133,12 +133,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [largeCapETFPerf, setLargeCapETFPerf] = useState<number>(
     goal?.pp?.lcetf
   );
-  const [midCapStocksPerf, setMidCapStocksPerf] = useState<number>(
-    goal?.pp?.mcs
-  );
-  const [smallCapStocksPerf, setSmallCapStocksPerf] = useState<number>(
-    goal?.pp?.scs
-  );
+  const [midAndSmallCapStocksPerf, setMidAndSmallCapStocksPerf] =
+    useState<number>(goal?.pp?.mscs);
   const [divGrowthStocksPerf, setDivGrowthStocksPerf] = useState<number>(
     goal?.pp?.dgs
   );
@@ -148,12 +144,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [iLargeCapETFPerf, setILargeCapETFPerf] = useState<number>(
     goal?.pp?.ilcetf
   );
-  const [iMidCapStocksPerf, setIMidCapStocksPerf] = useState<number>(
-    goal?.pp?.imcs
-  );
-  const [iSmallCapStocksPerf, setISmallCapStocksPerf] = useState<number>(
-    goal?.pp?.iscs
-  );
+  const [iMidAndSmallCapStocksPerf, setIMidAndSmallCapStocksPerf] =
+    useState<number>(goal?.pp?.imscs);
   const [uniqueCollectionPerf, setUniqueCollectionPerf] = useState<number>(
     goal?.pp?.uc
   );
@@ -204,6 +196,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
       rp: riskProfile,
       pp: {
         cash: cashPerf,
+        ltdep: ltDepPerf,
         mtb: medTermBondsPerf,
         imtb: iMedTermBondsPerf,
         hyb: highYieldBondsPerf,
@@ -220,10 +213,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         lcetf: largeCapETFPerf,
         ilcs: iLargeCapStocksPerf,
         ilcetf: iLargeCapETFPerf,
-        mcs: midCapStocksPerf,
-        scs: smallCapStocksPerf,
-        imcs: iMidCapStocksPerf,
-        iscs: iSmallCapStocksPerf,
+        mscs: midAndSmallCapStocksPerf,
+        imscs: iMidAndSmallCapStocksPerf,
         dgs: divGrowthStocksPerf,
         uc: uniqueCollectionPerf,
         crypto: cryptoPerf,
@@ -308,10 +299,10 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     riskProfile,
     retirementAge,
     planDuration,
-    dr,
     allInputDone,
     taxLiability,
     cashPerf,
+    ltDepPerf,
     medTermBondsPerf,
     iMedTermBondsPerf,
     taxExemptBondsPerf,
@@ -326,13 +317,9 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     goldBondsPerf,
     largeCapStocksPerf,
     largeCapETFPerf,
-    midCapStocksPerf,
-    smallCapStocksPerf,
     divGrowthStocksPerf,
     iLargeCapStocksPerf,
     iLargeCapETFPerf,
-    iMidCapStocksPerf,
-    iSmallCapStocksPerf,
     uniqueCollectionPerf,
     cryptoPerf,
     p2pPerf,
@@ -396,6 +383,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         wipResult,
         cashPerf,
         setCashPerf,
+        ltDepPerf,
+        setLTDepPerf,
         medTermBondsPerf,
         setMedTermBondsPerf,
         iMedTermBondsPerf,
@@ -424,20 +413,16 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         setLargeCapStocksPerf,
         largeCapETFPerf,
         setLargeCapETFPerf,
-        midCapStocksPerf,
-        setMidCapStocksPerf,
-        smallCapStocksPerf,
-        setSmallCapStocksPerf,
+        midAndSmallCapStocksPerf,
+        setMidAndSmallCapStocksPerf,
         divGrowthStocksPerf,
         setDivGrowthStocksPerf,
         iLargeCapStocksPerf,
         setILargeCapStocksPerf,
         iLargeCapETFPerf,
         setILargeCapETFPerf,
-        iMidCapStocksPerf,
-        setIMidCapStocksPerf,
-        iSmallCapStocksPerf,
-        setISmallCapStocksPerf,
+        iMidAndSmallCapStocksPerf,
+        setIMidAndSmallCapStocksPerf,
         uniqueCollectionPerf,
         setUniqueCollectionPerf,
         cryptoPerf,

@@ -95,6 +95,7 @@ type Loan {
 
 type PP {
   cash: Float!
+  ltdep: Float!
   mtb: Float
   imtb: Float
   hyb: Float
@@ -104,17 +105,15 @@ type PP {
   ireit: Float
   reitETF: Float
   ireitETF: Float
-  re: Float!
-  gold: Float!
+  re: Float
+  gold: Float
   goldb: Float
   lcs: Float
   lcetf: Float
   ilcs: Float
   ilcetf: Float
-  mcs: Float
-  scs: Float
-  imcs: Float
-  iscs: Float
+  mscs: Float
+  imscs: Float
   dgs: Float
   uc: Float
   crypto: Float

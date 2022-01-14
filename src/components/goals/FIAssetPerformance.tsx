@@ -8,6 +8,8 @@ export default function FIAssetPerformance() {
   const {
     cashPerf,
     setCashPerf,
+    ltDepPerf,
+    setLTDepPerf,
     medTermBondsPerf,
     setMedTermBondsPerf,
     iMedTermBondsPerf,
@@ -36,20 +38,16 @@ export default function FIAssetPerformance() {
     setLargeCapStocksPerf,
     largeCapETFPerf,
     setLargeCapETFPerf,
-    midCapStocksPerf,
-    setMidCapStocksPerf,
-    smallCapStocksPerf,
-    setSmallCapStocksPerf,
+    midAndSmallCapStocksPerf,
+    setMidAndSmallCapStocksPerf,
     divGrowthStocksPerf,
     setDivGrowthStocksPerf,
     iLargeCapStocksPerf,
     setILargeCapStocksPerf,
     iLargeCapETFPerf,
     setILargeCapETFPerf,
-    iMidCapStocksPerf,
-    setIMidCapStocksPerf,
-    iSmallCapStocksPerf,
-    setISmallCapStocksPerf,
+    iMidAndSmallCapStocksPerf,
+    setIMidAndSmallCapStocksPerf,
     uniqueCollectionPerf,
     setUniqueCollectionPerf,
     cryptoPerf,
@@ -63,10 +61,18 @@ export default function FIAssetPerformance() {
       <TabPane key="cash" tab="Cash">
         <Section title="Average long-time performance of cash">
           <NumberInput
-            pre="Portfolio of deposits, liquid funds & retirement funds"
+            pre="Emergency cash"
             unit="% yearly"
             value={cashPerf}
             changeHandler={setCashPerf}
+            info="This consists of short-term deposits and liquid funds, which can be easily liquidated for emergency reason."
+          />
+          <NumberInput
+            pre="Long-term deposits"
+            unit="% yearly"
+            value={ltDepPerf}
+            changeHandler={setLTDepPerf}
+            info="This includes long-term deposits, including retirement funds."
           />
         </Section>
       </TabPane>
@@ -121,16 +127,10 @@ export default function FIAssetPerformance() {
             changeHandler={setLargeCapStocksPerf}
           />
           <NumberInput
-            pre="Mid-cap stocks"
+            pre="Portfolio of Mid-cap and Small-cap stocks"
             unit="% yearly"
-            value={midCapStocksPerf}
-            changeHandler={setMidCapStocksPerf}
-          />
-          <NumberInput
-            pre="Small-cap stocks"
-            unit="% yearly"
-            value={smallCapStocksPerf}
-            changeHandler={setSmallCapStocksPerf}
+            value={midAndSmallCapStocksPerf}
+            changeHandler={setMidAndSmallCapStocksPerf}
           />
           <NumberInput
             pre="Dividend-growth stocks"
@@ -153,16 +153,10 @@ export default function FIAssetPerformance() {
             changeHandler={setILargeCapStocksPerf}
           />
           <NumberInput
-            pre="Mid-cap stocks"
+            pre="Portfolio of Mid-cap and Small-cap stocks"
             unit="% yearly"
-            value={iMidCapStocksPerf}
-            changeHandler={setIMidCapStocksPerf}
-          />
-          <NumberInput
-            pre="Small-cap stocks"
-            unit="% yearly"
-            value={iSmallCapStocksPerf}
-            changeHandler={setISmallCapStocksPerf}
+            value={iMidAndSmallCapStocksPerf}
+            changeHandler={setIMidAndSmallCapStocksPerf}
           />
         </Section>
       </TabPane>
@@ -229,7 +223,7 @@ export default function FIAssetPerformance() {
           <NumberInput
             pre="Unique collections"
             unit="% yearly"
-            post="eg: Paintings, Watches, Statues, etc"
+            post="eg: Angel investments, Art, Watches, etc"
             value={uniqueCollectionPerf}
             changeHandler={setUniqueCollectionPerf}
           />

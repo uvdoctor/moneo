@@ -137,6 +137,7 @@ export const getGoal = /* GraphQL */ `
       img
       pp {
         cash
+        ltdep
         mtb
         imtb
         hyb
@@ -153,10 +154,8 @@ export const getGoal = /* GraphQL */ `
         lcetf
         ilcs
         ilcetf
-        mcs
-        scs
-        imcs
-        iscs
+        mscs
+        imscs
         dgs
         uc
         crypto
@@ -231,6 +230,7 @@ export const listGoals = /* GraphQL */ `
         img
         pp {
           cash
+          ltdep
           mtb
           imtb
           hyb
@@ -247,10 +247,8 @@ export const listGoals = /* GraphQL */ `
           lcetf
           ilcs
           ilcetf
-          mcs
-          scs
-          imcs
-          iscs
+          mscs
+          imscs
           dgs
           uc
           crypto

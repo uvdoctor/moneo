@@ -34,9 +34,9 @@ export function FIInvest() {
   return (
     <Section title="Investment Details">
       <NumberInput
-        info={`Total portfolio value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include your Home value.`}
+        info={`Current portfolio value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include the value of the property where you live.`}
         value={nw}
-        pre="Total portfolio value"
+        pre="Current portfolio value"
         min={500}
         max={900000}
         changeHandler={setNW}
@@ -98,7 +98,7 @@ export function FIInvest() {
         min={0}
         max={25000}
         step={500}
-        info="Amount needed for emergency fund needs to be set aside in high yield Savings Account & liquid funds, so that money is readily available when needed. Ideally, it should be about 6 months of expenses."
+        info="Amount needed for emergency fund should be invested in short-term deposits and liquid funds so that money is readily available when needed. Ideally, it should be about 6 months of expenses."
       />
     </Section>
   );

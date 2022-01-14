@@ -131,24 +131,48 @@ export default function AssetAllocationChart({
         }
         header={
           <Row className="chart">
-            <Col span={24} className="cash active">
-              <LabelWithTooltip
-                label="Emergency Cash"
-                info="Total cash including savings, short-term deposits and liquid funds"
-                inline
-              />{" "}
-              <Badge count={`${aa.cash[index]} %`} />
-              <strong>
-                {toHumanFriendlyCurrency(
-                  Math.round((getCF(index) * aa.cash[index]) / 100),
-                  getCurrency()
-                )}
-              </strong>
+            <Col xs={24} lg={6}>
+              <div className="cash active">
+                <span className="arrow-right" />
+                Cash <Badge count={`${aa.cash[index] + aa.ltdep[index]} %`} />
+              </div>
+            </Col>
+            <Col xs={24} sm={12} lg={9}>
+              <div className="cash deposits">
+                <LabelWithTooltip
+                  label="Emergency"
+                  info="Emergency cash including savings, short-term deposits and liquid funds"
+                  inline
+                />{" "}
+                <Badge count={`${aa.cash[index]} %`} />
+                <strong>
+                  {toHumanFriendlyCurrency(
+                    Math.round((getCF(index) * aa.cash[index]) / 100),
+                    getCurrency()
+                  )}
+                </strong>
+              </div>
+            </Col>
+            <Col xs={24} sm={12} lg={9}>
+              <div className="cash">
+                <LabelWithTooltip
+                  label="Retirement"
+                  info="Long-term cash investments in deposits and retirement related funds"
+                  inline
+                />{" "}
+                <Badge count={`${aa.ltdep[index]} %`} />
+                <strong>
+                  {toHumanFriendlyCurrency(
+                    Math.round((getCF(index) * aa.ltdep[index]) / 100),
+                    getCurrency()
+                  )}
+                </strong>
+              </div>
             </Col>
           </Row>
         }>
         <Chart>
-          {aa.cash[index] === 100 ? (
+          {aa.cash[index] + aa.ltdep[index] === 100 ? (
             <Row justify="center">
               <Col>
                 <strong>

@@ -151,6 +151,7 @@ export const onCreateGoal = /* GraphQL */ `
       img
       pp {
         cash
+        ltdep
         mtb
         imtb
         hyb
@@ -167,10 +168,8 @@ export const onCreateGoal = /* GraphQL */ `
         lcetf
         ilcs
         ilcetf
-        mcs
-        scs
-        imcs
-        iscs
+        mscs
+        imscs
         dgs
         uc
         crypto
@@ -248,6 +247,7 @@ export const onUpdateGoal = /* GraphQL */ `
       img
       pp {
         cash
+        ltdep
         mtb
         imtb
         hyb
@@ -264,10 +264,8 @@ export const onUpdateGoal = /* GraphQL */ `
         lcetf
         ilcs
         ilcetf
-        mcs
-        scs
-        imcs
-        iscs
+        mscs
+        imscs
         dgs
         uc
         crypto
@@ -345,6 +343,7 @@ export const onDeleteGoal = /* GraphQL */ `
       img
       pp {
         cash
+        ltdep
         mtb
         imtb
         hyb
@@ -361,10 +360,8 @@ export const onDeleteGoal = /* GraphQL */ `
         lcetf
         ilcs
         ilcetf
-        mcs
-        scs
-        imcs
-        iscs
+        mscs
+        imscs
         dgs
         uc
         crypto
