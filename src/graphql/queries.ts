@@ -912,6 +912,23 @@ export const getUserHoldings = /* GraphQL */ `
         ey
         amt
       }
+      p2p {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
       loans {
         id
         qty
@@ -1149,6 +1166,23 @@ export const listUserHoldingss = /* GraphQL */ `
       items {
         uname
         lendings {
+          id
+          qty
+          name
+          fId
+          curr
+          chg
+          chgF
+          payF
+          type
+          subt
+          sm
+          sy
+          em
+          ey
+          amt
+        }
+        p2p {
           id
           qty
           name

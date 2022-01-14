@@ -3,7 +3,14 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
-import { GOLD, NATIONAL_SAVINGS_CERTIFICATE, PALLADIUM, PLATINUM, SILVER, TAB } from "./NWContext";
+import {
+  GOLD,
+  NATIONAL_SAVINGS_CERTIFICATE,
+  PALLADIUM,
+  PLATINUM,
+  SILVER,
+  TAB,
+} from "./NWContext";
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
@@ -23,37 +30,51 @@ export const getFamilysList = async () => {
     ? (listFamilys.items as Array<APIt.CreateFamilyInput>)
     : null;
   return family;
-}
+};
 
 export const loadAllFamilyMembers = async () => {
   const family = await getFamilysList();
-  if(!family) return;
+  if (!family) return;
   let familyList: any = {};
   family.forEach((val: APIt.CreateFamilyInput) => {
     if (val.id) {
-      familyList[val.id as string] = { name: val.name, taxId: val.tid, tax: val.tax };
+      familyList[val.id as string] = {
+        name: val.name,
+        taxId: val.tid,
+        tax: val.tax,
+      };
     }
   });
   return Object.keys(familyList).length ? familyList : null;
 };
 
 export const loadAllHoldings = async (uname: string) => {
-  const { data: { getUserHoldings }} =
-    await API.graphql(graphqlOperation(queries.getUserHoldings, { uname: uname })) as {
+  const {
+    data: { getUserHoldings },
+  } = (await API.graphql(
+    graphqlOperation(queries.getUserHoldings, { uname: uname })
+  )) as {
     data: APIt.GetUserHoldingsQuery;
   };
   return getUserHoldings ? getUserHoldings : null;
 };
 
 export const loadInsHoldings = async (uname: string) => {
-  const { data: { getUserIns }} =
-    await API.graphql(graphqlOperation(queries.getUserIns, { uname: uname })) as {
+  const {
+    data: { getUserIns },
+  } = (await API.graphql(
+    graphqlOperation(queries.getUserIns, { uname: uname })
+  )) as {
     data: APIt.GetUserInsQuery;
   };
   return getUserIns ? getUserIns : null;
 };
 
-export const addFamilyMember = async (name: string, taxId: string, tax: APIt.TaxLiability) => {
+export const addFamilyMember = async (
+  name: string,
+  taxId: string,
+  tax: APIt.TaxLiability
+) => {
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.createFamily, {
@@ -83,7 +104,8 @@ export const getDefaultMember = (
   selectedMembers: Array<string>
 ) => {
   if (!selectedMembers[0] || selectedMembers.indexOf(ALL_FAMILY) > -1) {
-    return Object.keys(allFamily)[0];}
+    return Object.keys(allFamily)[0];
+  }
   return selectedMembers[0];
 };
 
@@ -101,40 +123,53 @@ export const doesHoldingMatch = (
 ) => {
   //@ts-ignore
   const subType = instrument.subt;
-  if(!subType || ![APIt.AssetSubType.C, APIt.AssetSubType.Gold, SILVER, PALLADIUM, PLATINUM].includes(subType)) {
-    if(instrument.curr !== selectedCurrency) return false;
+  if (
+    !subType ||
+    ![
+      APIt.AssetSubType.C,
+      APIt.AssetSubType.Gold,
+      SILVER,
+      PALLADIUM,
+      PLATINUM,
+    ].includes(subType)
+  ) {
+    if (instrument.curr !== selectedCurrency) return false;
   }
   return doesMemberMatch(instrument, selectedMembers);
-}
+};
 
 export const doesPropertyMatch = (
-    property: APIt.PropertyInput,
-    selectedMembers: Array<string>,
-    selectedCurrency: string
-  ) =>
-    doesPropertyOwnerMatch(property, selectedMembers) &&
-    property.curr === selectedCurrency;
+  property: APIt.PropertyInput,
+  selectedMembers: Array<string>,
+  selectedCurrency: string
+) =>
+  doesPropertyOwnerMatch(property, selectedMembers) &&
+  property.curr === selectedCurrency;
 
 export const doesPropertyOwnerMatch = (
   property: APIt.PropertyInput,
   selectedMembers: Array<string>
 ) => {
-  if(selectedMembers.indexOf(ALL_FAMILY) > -1) return true;
-  for(let owner of property.own) {
-    if(selectedMembers.indexOf(owner.fId) > -1) return true;
+  if (selectedMembers.indexOf(ALL_FAMILY) > -1) return true;
+  for (let owner of property.own) {
+    if (selectedMembers.indexOf(owner.fId) > -1) return true;
   }
   return false;
-}
+};
 
 export const addMemberIfNeeded = async (
   allFamily: any,
   allFamilySetter: Function,
-  taxId: string,
+  taxId: string
 ) => {
   let id = getFamilyMemberKey(allFamily, taxId);
   if (id) return id;
   let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.M);
-  allFamily[member?.id as string] = { name: member?.name, taxId: member?.tid, tax: member?.tax };
+  allFamily[member?.id as string] = {
+    name: member?.name,
+    taxId: member?.tid,
+    tax: member?.tax,
+  };
   allFamilySetter(allFamily);
   return member?.id;
 };
@@ -195,7 +230,9 @@ export const addHoldings = async (holdings: APIt.CreateUserHoldingsInput) => {
   }
 };
 
-export const updateHoldings = async (holdings: APIt.UpdateUserHoldingsInput) => {
+export const updateHoldings = async (
+  holdings: APIt.UpdateUserHoldingsInput
+) => {
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.updateUserHoldings, { input: holdings })
@@ -305,22 +342,22 @@ export const getAssetTypes = () => {
 
 export const getMarketCap = () => {
   return {
-    [APIt.MCap.L]: 'Large Cap',
-    [APIt.MCap.M]: 'Mid Cap',
-    [APIt.MCap.S]: 'Small Cap',
-    [APIt.MCap.H]: 'Hybrid Cap'
-  }
-}
+    [APIt.MCap.L]: "Large Cap",
+    [APIt.MCap.M]: "Mid Cap",
+    [APIt.MCap.S]: "Small Cap",
+    [APIt.MCap.H]: "Hybrid Cap",
+  };
+};
 
 export const getFixedCategories = () => {
   return {
-    CB: 'Corporate Bonds',
-		GovB: 'Government Bonds',
-		LF: 'Liquid Funds',
-		I: 'Index Funds',
-		IF: 'Interval Funds',
-		FMP: 'Fixed Maturity Plans'
-  }
+    CB: "Corporate Bonds",
+    GovB: "Government Bonds",
+    LF: "Liquid Funds",
+    I: "Index Funds",
+    IF: "Interval Funds",
+    FMP: "Fixed Maturity Plans",
+  };
 };
 
 export const getAssetSubTypes = () => {
@@ -338,7 +375,7 @@ export const getAssetSubTypes = () => {
     [APIt.AssetSubType.V]: "Vehicle",
     [APIt.AssetSubType.O]: "Other",
     [APIt.AssetSubType.M]: "Membership",
-    [APIt.AssetSubType.Cash]: "Cash"
+    [APIt.AssetSubType.Cash]: "Cash",
   };
 };
 
@@ -375,7 +412,7 @@ export const getColourForAssetType = (at: string) => {
     case APIt.MCap.S:
       return "#cf544e";
     // case APIt.AssetSubType.CB:
-      // return COLORS.WHITE;
+    // return COLORS.WHITE;
     default:
       return "#f9aaa6";
   }
@@ -451,26 +488,30 @@ export const getNPSFundManagers = () => {
 };
 
 export const getCascaderOptions = (
-	parent: { [key: string]: string },
-	child?: { [key: string]: any },
-	haveSameChildren?: boolean
+  parent: { [key: string]: string },
+  child?: { [key: string]: any },
+  haveSameChildren?: boolean
 ) => {
-	let options: Array<any> = [];
-	Object.keys(parent).map((parentValue: string) => {
-		let childOptions: Array<{ [key: string]: string }> = [];
-    if(!child){
+  let options: Array<any> = [];
+  Object.keys(parent).map((parentValue: string) => {
+    let childOptions: Array<{ [key: string]: string }> = [];
+    if (!child) {
       options.push({ value: parentValue, label: parent[parentValue] });
     } else {
       let children = !haveSameChildren ? child[parentValue] : child;
-      if(!children) return;
-			Object.keys(children).map((childValue: string) => {
-				childOptions.push({ value: childValue, label: children[childValue] });
-				if (haveSameChildren) return;
-			});
-			options.push({ value: parentValue, label: parent[parentValue], children: childOptions });
+      if (!children) return;
+      Object.keys(children).map((childValue: string) => {
+        childOptions.push({ value: childValue, label: children[childValue] });
+        if (haveSameChildren) return;
+      });
+      options.push({
+        value: parentValue,
+        label: parent[parentValue],
+        children: childOptions,
+      });
     }
-	});
-	return options;
+  });
+  return options;
 };
 
 export const financialAssetTypes = [
@@ -542,19 +583,33 @@ export const getInstrumentDataWithKey = async (
   }
 };
 
-export const isFund = (id: string) => id.substring(2, 3) === 'F';
+export const isFund = (id: string) => id.substring(2, 3) === "F";
 
-export const isBond = (id: string) => id.substring(2, 3) === '0';
+export const isBond = (id: string) => id.substring(2, 3) === "0";
 
-export const hasOnlyCategory = (childTab: string) => [ TAB.LENT, TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF ].includes(childTab);
-export const hasRate = (childTab: string) => [ TAB.PF, TAB.LENT, TAB.LOAN ].includes(childTab);
-export const hasName = (childTab: string) => ![ TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF ].includes(childTab);
-export const hasQtyWithRate = (childTab: string) => [ TAB.PM, TAB.NPS, TAB.CRYPTO ].includes(childTab);
-export const isRangePicker = (childTab: string, subt?: string, frequency?: string | number) =>
-  [ TAB.LENT ].includes(childTab) && subt !== NATIONAL_SAVINGS_CERTIFICATE && frequency != "0";
-export const hasDate = (childTab: string) => [ TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS ].includes(childTab);
-export const hasPF = (childTab: string) => [ TAB.PF ].includes(childTab);
+export const hasOnlyCategory = (childTab: string) =>
+  [TAB.LENT, TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P].includes(
+    childTab
+  );
+export const hasRate = (childTab: string) =>
+  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P].includes(childTab);
+export const hasName = (childTab: string) =>
+  ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF].includes(childTab);
+export const hasQtyWithRate = (childTab: string) =>
+  [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
+export const isRangePicker = (
+  childTab: string,
+  subt?: string,
+  frequency?: string | number
+) =>
+  [TAB.LENT, TAB.P2P].includes(childTab) &&
+  subt !== NATIONAL_SAVINGS_CERTIFICATE &&
+  frequency != "0";
+export const hasDate = (childTab: string) =>
+  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P].includes(childTab);
+export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
 export const hasOnlyEnddate = (childTab: string, frequency: string | number) =>
-  [ TAB.LOAN, TAB.INS ].includes(childTab) || (frequency == "0" && childTab === TAB.LENT);
-export const hasminimumCol = (childTab: string) => [ TAB.ANGEL, TAB.SAV, TAB.CREDIT ].includes(childTab);
-
+  [TAB.LOAN, TAB.INS].includes(childTab) ||
+  (frequency == "0" && (childTab === TAB.LENT || childTab === TAB.P2P));
+export const hasminimumCol = (childTab: string) =>
+  [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);

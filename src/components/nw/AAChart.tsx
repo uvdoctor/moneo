@@ -34,8 +34,6 @@ export default function AAChart() {
     totalAssets,
     instruments,
     totalAngel,
-    totalFFixed,
-    totalNPSFixed,
     totalOthers,
     totalVehicles,
     totalPF,
@@ -48,6 +46,8 @@ export default function AAChart() {
     totalPPF,
     totalNPSEquity,
     totalCrypto,
+    totalFixed,
+    totalP2P,
   }: any = useContext(NWContext);
   const { insData }: any = useContext(AppContext);
   const [totalCash, setTotalCash] = useState<number>(
@@ -67,7 +67,7 @@ export default function AAChart() {
     Equity: { color: COLORS.ORANGE, total: totalEquity },
     Fixed: {
       color: COLORS.BLUE,
-      total: totalFFixed + totalNPSFixed - liquidFunds,
+      total: totalFixed - totalPF - liquidFunds,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#7cd9fd", total: totalFRE },
@@ -198,6 +198,7 @@ export default function AAChart() {
         "Interval Funds": intervalFunds,
         Bonds: bonds,
         "Index Funds": indexFunds,
+        "P2P Lending": totalP2P,
       });
     if (asset === "Real-estate")
       return getTooltipDesc({

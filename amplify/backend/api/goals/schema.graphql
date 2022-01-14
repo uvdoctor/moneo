@@ -244,6 +244,7 @@ enum AssetSubType {
   O
   V
   Cash
+  P2P
 }
 
 enum Industry {
@@ -603,6 +604,7 @@ type UserHoldings
   ) {
   uname: String!
   lendings: [Holding!]
+  p2p: [Holding!]
   loans: [Holding!]
   credit: [Holding!]
   savings: [Holding!]

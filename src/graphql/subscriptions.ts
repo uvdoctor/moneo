@@ -920,6 +920,23 @@ export const onCreateUserHoldings = /* GraphQL */ `
         ey
         amt
       }
+      p2p {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
       loans {
         id
         qty
@@ -1160,6 +1177,23 @@ export const onUpdateUserHoldings = /* GraphQL */ `
         ey
         amt
       }
+      p2p {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
       loans {
         id
         qty
@@ -1384,6 +1418,23 @@ export const onDeleteUserHoldings = /* GraphQL */ `
     onDeleteUserHoldings(owner: $owner) {
       uname
       lendings {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
+      p2p {
         id
         qty
         name
