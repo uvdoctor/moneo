@@ -1,5 +1,5 @@
 import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Checkbox } from 'antd';
-import React, { Fragment, useContext, useEffect, useReducer } from 'react';
+import React, { Fragment, useContext, useEffect, useReducer, useState } from 'react';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { Auth } from 'aws-amplify';
 import {
@@ -86,12 +86,11 @@ export default function UserSettings(): JSX.Element {
 		dobMonth,
 		dobYear
 	} = userState;
+	const [loading, setLoading] = useState<boolean>(false);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
-
 	const countryCode = countrylist.find((item) => item.countryCode === defaultCountry);
 	const countryCodeWithoutPlusSign = countryCode ? countryCode.value.slice(1) : '91';
-
 	const success = (message: any) => notification.success({ message });
 	const failure = (message: any) => notification.error({ message });
 	const disableButton = (prevValue: any, currValue: any) =>
@@ -135,6 +134,7 @@ export default function UserSettings(): JSX.Element {
 	};
 
 	const updatePersonalTab = async () => {
+		setLoading(true)
 		try {
 			const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
 			await Auth.updateUserAttributes(user, { name: name, family_name: lastName });
@@ -143,17 +143,26 @@ export default function UserSettings(): JSX.Element {
 		} catch (error) {
 			failure(`Unable to update ${error}`);
 		}
+		setLoading(false);
 	};
 
-	const updateOthersTab = async () =>
-		await updateUserDetails({
-			uname: owner,
-			dr: isDrManual ? discountRate : 0,
-			rp: riskProfile,
-			notify,
-			tax,
-			le: lifeExpectancy
-		});
+	const updateOthersTab = async () => {
+		setLoading(true);
+		try {
+			await updateUserDetails({
+				uname: owner,
+				dr: isDrManual ? discountRate : 0,
+				rp: riskProfile,
+				notify,
+				tax,
+				le: lifeExpectancy
+			});
+			success('Updated Successfully');
+		} catch{
+			failure('Unable to update');
+		}
+		setLoading(false);
+	}
 
 	useEffect(
 		() => {
@@ -254,11 +263,10 @@ export default function UserSettings(): JSX.Element {
 													</Col>
 												</Row>
 											</Col>
-											<Col xs={24} sm={24} md={8}>
+											{dobDate && (<Col xs={24} sm={24} md={8}>
 												<Row gutter={[ 0, 5 ]}>
 												<Col span={24}>Date of Birth</Col>
 												<Col>
-												{dobDate && (
 													<DateInput
 														title=''
 														className="dob"
@@ -270,10 +278,9 @@ export default function UserSettings(): JSX.Element {
 														startDateHandler={(val: number)=>dispatch({ type: 'single', data: { field: 'dobDate', val } })}
 														size='large'
 													/>
-												)}
 												</Col>
 											</Row>
-										</Col>
+										</Col>)}
 									</Row>
 								</Col>
 							</Row>
@@ -283,6 +290,7 @@ export default function UserSettings(): JSX.Element {
 								<Col>
 								<Button
 									type="primary"
+									loading={loading}
 									style={{ color: COLORS.WHITE }}
 									icon={<SaveOutlined />}
 									disabled={error.length > 0 ? true : false}
@@ -565,18 +573,19 @@ export default function UserSettings(): JSX.Element {
 						<Row justify='center'>
 							<Col>
 							<Button
-									type="primary"
-									style={{ color: COLORS.WHITE }}
-									icon={<SaveOutlined />}
-									onClick={() => {
-										validateCaptcha('othersTab_change').then((success: boolean) => {
-											if (!success) return;
-											updateOthersTab();
-										});
-									}}
-								>
-									Save
-								</Button>
+								type="primary"
+								loading={loading}
+								style={{ color: COLORS.WHITE }}
+								icon={<SaveOutlined />}
+								onClick={() => {
+									validateCaptcha('othersTab_change').then((success: boolean) => {
+										if (!success) return;
+										updateOthersTab();
+									});
+								}}
+							>
+								Save
+							</Button>
 							</Col>
 							</Row>
 							
