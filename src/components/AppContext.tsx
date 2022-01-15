@@ -166,7 +166,6 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     if (!userInfo) return;
-    console.log("user info: ", userInfo);
     setAppContextLoaded(true);
   }, [userInfo]);
 

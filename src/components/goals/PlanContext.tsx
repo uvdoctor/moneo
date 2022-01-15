@@ -10,6 +10,7 @@ import {
   CreateGoalInput,
   GoalType,
   LMH,
+  TaxLiability,
   UpdateGoalInput,
 } from "../../api/goals";
 import { ROUTES } from "../../CONSTANTS";
@@ -38,8 +39,13 @@ function PlanContextProvider({
   goal,
   setGoal,
 }: PlanContextProviderProps) {
-  const { ratesData, appContextLoaded, discountRate, defaultCurrency }: any =
-    useContext(AppContext);
+  const {
+    ratesData,
+    appContextLoaded,
+    discountRate,
+    defaultCurrency,
+    userInfo,
+  }: any = useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
@@ -65,6 +71,16 @@ function PlanContextProvider({
   const getCurrencyFactor = (currency: string) =>
     getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency);
 
+  const loadStateFromUserInfo = (g: CreateGoalInput) => {
+    if (!userInfo) return;
+    g.sy = new Date(userInfo.dob).getFullYear();
+    if (g.loan) g.loan.dur = userInfo.le;
+    g.manual =
+      userInfo.tax === TaxLiability.NIL || userInfo.tax === TaxLiability.L
+        ? 0
+        : 1;
+  };
+
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
     if (!goals || goals.length === 0) {
@@ -76,6 +92,7 @@ function PlanContextProvider({
     goals?.forEach((g) => {
       if (g.type === GoalType.FF) {
         setFFGoal(g);
+        loadStateFromUserInfo(g);
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
