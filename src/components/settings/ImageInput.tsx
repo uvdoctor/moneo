@@ -2,8 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import { Avatar, Button, Modal, notification, Spin, Tooltip } from "antd";
 import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, EditOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 interface ImageInputProps {
   user: any;
