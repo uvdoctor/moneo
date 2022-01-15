@@ -181,16 +181,16 @@ function CalcContextProvider({
   const getFFGoalResultTabOptions = () => {
     let options = [
       {
-        label: "Milestones",
-        active: true,
-        svg: faChartLine,
-        content: <FIPortfolioChart />,
-      },
-      {
         label: "Target Allocation",
         active: true,
         svg: faChartPie,
         content: <DynamicAAChart />,
+      },
+      {
+        label: "Milestones",
+        active: true,
+        svg: faChartLine,
+        content: <FIPortfolioChart />,
       },
       {
         label: "Investment Targets",
