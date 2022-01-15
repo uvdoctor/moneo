@@ -1,4 +1,5 @@
 .image-holder {
+  position: relative;
   cursor: pointer;
 
   & input[type="file"] {
@@ -7,11 +8,12 @@
   }
 
   & .edit-icon {
+    position: absolute;
     vertical-align: bottom;
-    margin-bottom: -2px;
     border-radius: 50%;
     right: 80px;
     background: white;
+    bottom: 4px;
   }
 }
 
