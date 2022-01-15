@@ -38,7 +38,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ subCat, setSubCat ] = useState<string>(
 		categoryOptions && !hasOnlyCategory(childTab)
 			? categoryOptions[0].children[0].value
-			: childTab === LENT || childTab === P2P ? '0' : ''
+			: (category === "NBD" || childTab === P2P) ? '0' : ''
 	);
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
@@ -132,7 +132,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
   }
 		if (childTab === LENT || childTab === P2P) {
 			subCat === '0' ? (newRec.sm = presentMonth) : (newRec.sm = sm);
-			subCat === '0' ? (newRec.sy = presentMonth) : (newRec.sy = sy);
+			subCat === '0' ? (newRec.sy = presentYear) : (newRec.sy = sy);
 			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
@@ -284,7 +284,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				) : (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.amount}>
-							<NumberInput pre="" value={amt} changeHandler={changeAmt} currency={selectedCurrency} />
+							<NumberInput pre="" value={amt} changeHandler={changeAmt} currency={selectedCurrency} min={1}/>
 						</FormItem>
 					</Col>
 				)}
