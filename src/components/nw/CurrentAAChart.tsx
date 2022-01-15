@@ -259,6 +259,7 @@ export default function CurrentAAChart() {
           longTerm={totalNSC + totalPF}
           longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
           currency={selectedCurrency}
+          decimal
         />
         <TreemapChart
           data={{

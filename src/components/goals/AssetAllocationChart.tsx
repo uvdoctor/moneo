@@ -132,8 +132,8 @@ export default function AssetAllocationChart({
         header={
           <div className="chart">
             <CashAA
-              emergency={getCF(index) * aa.cash[index]}
-              longTerm={getCF(index) * aa.ltdep[index]}
+              emergency={(getCF(index) * aa.cash[index]) / 100}
+              longTerm={(getCF(index) * aa.ltdep[index]) / 100}
               emergencyPer={aa.cash[index]}
               longTermPer={aa.ltdep[index]}
               currency={getCurrency()}

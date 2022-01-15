@@ -9,6 +9,7 @@ interface CashAAProps {
   longTerm: number;
   longTermPer: number;
   currency: string;
+  decimal?: boolean;
 }
 
 export default function CashAA({
@@ -17,13 +18,20 @@ export default function CashAA({
   longTerm,
   longTermPer,
   currency,
+  decimal,
 }: CashAAProps) {
   return (
     <Row>
       <Col xs={24} lg={6}>
         <div className="cash active">
           <span className="arrow-right" />
-          Total Cash <Badge count={`${emergencyPer + longTermPer} %`} />
+          Total Cash{" "}
+          <Badge
+            count={`${toReadableNumber(
+              emergencyPer + longTermPer,
+              decimal ? 2 : 0
+            )} %`}
+          />
         </div>
       </Col>
       <Col xs={24} sm={12} lg={9}>
@@ -33,9 +41,11 @@ export default function CashAA({
             info="Emergency cash including savings, short-term deposits and liquid funds"
             inline
           />{" "}
-          <Badge count={`${toReadableNumber(emergencyPer)} %`} />
+          <Badge
+            count={`${toReadableNumber(emergencyPer, decimal ? 2 : 0)} %`}
+          />
           <strong>
-            {toHumanFriendlyCurrency(Math.round(emergency / 100), currency)}
+            {toHumanFriendlyCurrency(Math.round(emergency), currency)}
           </strong>
         </div>
       </Col>
@@ -46,9 +56,11 @@ export default function CashAA({
             info="Long-term cash investments in deposits and retirement related funds"
             inline
           />{" "}
-          <Badge count={`${toReadableNumber(longTermPer)} %`} />
+          <Badge
+            count={`${toReadableNumber(longTermPer, decimal ? 2 : 0)} %`}
+          />
           <strong>
-            {toHumanFriendlyCurrency(Math.round(longTerm / 100), currency)}
+            {toHumanFriendlyCurrency(Math.round(longTerm), currency)}
           </strong>
         </div>
       </Col>
