@@ -4,7 +4,6 @@ import { ShareAltOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons
 import { CalcContext } from './CalcContext';
 import SocialShare from '../SocialShare';
 import Feedback from '../feedback/Feedback';
-import GoalImage from './GoalImage';
 import { getGoalTypes } from '../goals/goalutils';
 import { PlanContext } from '../goals/PlanContext';
 import TextInput from '../form/textinput';
@@ -47,7 +46,7 @@ export default function CalcHeader() {
 								) : (
 									<TextInput
 										pre={(getGoalTypes() as any)[goal.type]}
-										prefix={<GoalImage />}
+										// prefix={<GoalImage />}
 										placeholder="Goal Name"
 										value={name}
 										changeHandler={setName}

@@ -29,7 +29,6 @@ import {
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import PasswordInput from "./PasswordInput";
-import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
@@ -294,16 +293,16 @@ export default function UserSettings(): JSX.Element {
           animated
         >
           <TabPane className="settings-tabpane-view" tab="Personal" key="1">
-            <Row gutter={[20, 10]}>
-              <Col className="personal-tabpane-image-view">
+            {/* <Row gutter={[20, 10]}> */}
+              {/* <Col className="personal-tabpane-image-view">
                 <ImageInput user={user} />
-              </Col>
-              <Col xs={24} sm={24} md={12}>
+              </Col> */}
+              {/* <Col xs={24} sm={24} md={12}> */}
                 <Row gutter={[10, 10]}>
                   <Col span={24}>
                     <Row gutter={[0, 5]}>
                       <Col span={24}>First Name</Col>
-                      <Col xs={24} sm={24} md={12}>
+                      <Col xs={24} sm={24} md={8}>
                         <TextInput
                           pre=""
                           placeholder="Name"
@@ -331,7 +330,7 @@ export default function UserSettings(): JSX.Element {
                   <Col span={24}>
                     <Row gutter={[0, 5]}>
                       <Col span={24}>Last Name</Col>
-                      <Col xs={24} sm={24} md={12}>
+                      <Col xs={24} sm={24} md={8}>
                         <TextInput
                           pre=""
                           placeholder="Last Name"
@@ -360,7 +359,7 @@ export default function UserSettings(): JSX.Element {
                     <Col span={24}>
                       <Row gutter={[0, 5]}>
                         <Col span={24}>Date of Birth</Col>
-                        <Col xs={24} sm={24} md={12}>
+                        <Col xs={24} sm={24} md={8}>
                           <DateInput
                             title=""
                             className="dob"
@@ -415,8 +414,8 @@ export default function UserSettings(): JSX.Element {
                     </Row>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
+              {/* </Col> */}
+            {/* </Row> */}
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Profile" key="2">
             <Row gutter={[24, 24]} justify="center">
