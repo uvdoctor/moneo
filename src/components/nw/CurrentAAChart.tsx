@@ -20,8 +20,8 @@ const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
 
 export default function CurrentAAChart() {
   const {
+    totalCash,
     totalSavings,
-    totalDeposits,
     totalAlternative,
     totalLendings,
     totalFGold,
@@ -51,9 +51,6 @@ export default function CurrentAAChart() {
     totalNSC,
   }: any = useContext(NWContext);
   const { insData }: any = useContext(AppContext);
-  const [totalCash, setTotalCash] = useState<number>(
-    totalSavings + totalDeposits + totalLendings
-  );
   const [data, setData] = useState<Array<any>>([]);
   const [largeCap, setLargeCap] = useState<number>(0);
   const [midCap, setMidCap] = useState<number>(0);
@@ -113,10 +110,6 @@ export default function CurrentAAChart() {
     });
     setData([...data]);
   };
-
-  useEffect(() => {
-    setTotalCash(totalSavings + totalDeposits + totalLendings);
-  }, [totalSavings, totalDeposits, totalLendings]);
 
   useEffect(() => {
     initChartData();

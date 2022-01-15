@@ -99,7 +99,7 @@ export const TAB = {
   OIT: "Other Investments",
   P2P: "P2P Lending",
   SUMMARY: "Summary",
-  NSC: NATIONAL_SAVINGS_CERTIFICATE
+  NSC: NATIONAL_SAVINGS_CERTIFICATE,
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -172,7 +172,6 @@ function NWContextProvider() {
   const [totalCash, setTotalCash] = useState<number>(0);
   const [totalPhysical, setTotalPhysical] = useState<number>(0);
   const [totalFinancial, setTotalFinancial] = useState<number>(0);
-  const [totalRetirement, setTotalRetirement] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<string>("Financial");
   const [activeTabSum, setActiveTabSum] = useState<number>(0);
   const [results, setResults] = useState<Array<any>>([]);
@@ -711,30 +710,26 @@ function NWContextProvider() {
   }, [totalAssets, totalLiabilities]);
 
   useEffect(() => {
-    setTotalCash(totalSavings + totalLendings);
-  }, [totalSavings, totalLendings]);
+    setTotalCash(totalSavings + totalLendings + totalNSC + totalPF);
+  }, [totalSavings, totalLendings, totalNSC, totalPF]);
 
   useEffect(() => {
     setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
   }, [totalProperties, totalVehicles, totalPM, totalOthers]);
 
   useEffect(() => {
-    setTotalFinancial(totalInstruments + totalAngel + totalCrypto + totalP2P);
-  }, [totalInstruments, totalAngel, totalCrypto, totalP2P]);
-
-  useEffect(() => {
-    setTotalRetirement(totalPPF + totalVPF + totalEPF + totalNPS);
-  }, [totalPPF, totalVPF, totalEPF, totalNPS]);
+    setTotalFinancial(
+      totalInstruments + totalAngel + totalCrypto + totalP2P + totalNPS
+    );
+  }, [totalInstruments, totalAngel, totalCrypto, totalP2P, totalNPS]);
 
   useEffect(() => {
     setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
   }, [totalLoans, totalInsurance, totalCredit]);
 
   useEffect(() => {
-    setTotalAssets(
-      totalCash + totalPhysical + totalFinancial + totalRetirement
-    );
-  }, [totalCash, totalPhysical, totalFinancial, totalRetirement]);
+    setTotalAssets(totalCash + totalPhysical + totalFinancial);
+  }, [totalCash, totalPhysical, totalFinancial]);
 
   useEffect(() => {
     setTotalAlternative(
@@ -936,18 +931,18 @@ function NWContextProvider() {
   };
 
   const priceNSC = () => {
-    if(!nsc.length) return setTotalNSC(0);
+    if (!nsc.length) return setTotalNSC(0);
     let total = 0;
-    nsc.forEach((holding: HoldingInput)=>{
+    nsc.forEach((holding: HoldingInput) => {
       if (
         holding &&
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
         total += calculateCompundingIncome(holding).valuation;
       }
-    })
+    });
     setTotalNSC(total);
-  }
+  };
 
   const priceP2P = () => {
     if (!p2p.length) return setTotalP2P(0);
@@ -1094,8 +1089,8 @@ function NWContextProvider() {
   }, [totalAngel, totalFEquity, totalNPSEquity]);
 
   useEffect(() => {
-    setTotalFixed(totalFFixed + totalNPSFixed + totalPF + totalP2P);
-  }, [totalPF, totalFFixed, totalNPSFixed, totalP2P]);
+    setTotalFixed(totalFFixed + totalNPSFixed + totalP2P);
+  }, [totalFFixed, totalNPSFixed, totalP2P]);
 
   useEffect(() => {
     priceInstruments();
@@ -1173,7 +1168,7 @@ function NWContextProvider() {
 
   useEffect(() => {
     priceNSC();
-  }, [nsc])
+  }, [nsc]);
 
   useEffect(() => {
     priceP2P();
