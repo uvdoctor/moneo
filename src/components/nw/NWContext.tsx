@@ -469,7 +469,7 @@ function NWContextProvider() {
             amount: "Amount",
             date: "Date",
             rate: "Rate",
-            duration: "Duration",
+            type: "Interest"
           },
         },
         [TAB.OIT]: {
