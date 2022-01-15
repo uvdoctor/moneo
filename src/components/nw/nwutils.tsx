@@ -15,6 +15,7 @@ import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
+import { calculateCompundingIncome, calculateCrypto, calculateInsurance, calculateLoan, calculateNPS, calculatePM, calculateProvidentFund, calculateVehicle } from "./valuationutils";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -613,3 +614,45 @@ export const hasOnlyEnddate = (childTab: string, frequency: string | number) =>
   (frequency == "0" && (childTab === TAB.LENT || childTab === TAB.P2P));
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
+
+export const calculateValuation = (childTab: string, record: APIt.HoldingInput, userInfo: any, discountRate: number, ratesData: any, selectedCurrency: string, npsData: any) => {
+  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, P2P } = TAB;
+  let value = 0;
+  switch (childTab) {
+    case INS:
+      if (discountRate) {
+      value = calculateInsurance(
+        record,
+        discountRate,
+        userInfo?.le,
+        userInfo?.dob
+      )};
+      break;
+    case LOAN:
+      value = calculateLoan(record);
+      break;
+    case CRYPTO:
+      value = calculateCrypto(record, ratesData, selectedCurrency);
+      break;
+    case PM:
+      value = calculatePM(record, ratesData, selectedCurrency);
+      break;
+    case LENT:
+    case P2P:
+      value = calculateCompundingIncome(record).valuation;
+      break;
+    case NPS:
+      const result = calculateNPS(record, npsData);
+      value = result.value;
+      break;
+    case VEHICLE:
+      value = calculateVehicle(record);
+      break;
+    case PF:
+      value = calculateProvidentFund(record);
+    default:
+      value = record.amt as number;
+      break;
+  }
+  return value;
+};

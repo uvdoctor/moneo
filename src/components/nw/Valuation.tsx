@@ -5,18 +5,8 @@ import { AppContext } from '../AppContext';
 import SelectInput from '../form/selectinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { NWContext, TAB } from './NWContext';
-import { getFamilyOptions, hasminimumCol } from './nwutils';
+import { calculateValuation, getFamilyOptions, hasminimumCol } from './nwutils';
 import { DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import {
-	calculateCompundingIncome,
-	calculateCrypto,
-	calculateNPS,
-	calculateInsurance,
-	calculatePM,
-	calculateProvidentFund,
-	calculateVehicle,
-	calculateLoan
-} from './valuationutils';
 import NumberInput from '../form/numberinput';
 
 interface MemberAndValuationProps {
@@ -29,7 +19,7 @@ interface MemberAndValuationProps {
 export default function MemberAndValuation({ data, record, changeData, index }: MemberAndValuationProps) {
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(NWContext);
 	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
-	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, SAV, OTHER, ANGEL, CREDIT } = TAB;
+	const { SAV, OTHER, ANGEL, CREDIT } = TAB;
 	const [ valuation, setValuation ] = useState<number>(0);
 	const [ isEditMode, setIsEditMode ] = useState<boolean>(false);
 
@@ -38,49 +28,18 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 		changeData([ ...data ]);
 	};
 
-	const calculateValuation = (childTab: string) => {
-		let value = 0;
-		switch (childTab) {
-			case INS:
-				if (discountRate) {
-				value = calculateInsurance(
-					record,
-					discountRate,
-					userInfo?.le,
-					userInfo?.dob
-				)};
-				break;
-			case LOAN:
-				value = calculateLoan(record);
-				break;
-			case CRYPTO:
-				value = calculateCrypto(record, ratesData, selectedCurrency);
-				break;
-			case PM:
-				value = calculatePM(record, ratesData, selectedCurrency);
-				break;
-			case LENT:
-				value = calculateCompundingIncome(record);
-				break;
-			case NPS:
-				const result = calculateNPS(record, npsData);
-				value = result.value;
-				break;
-			case VEHICLE:
-				value = calculateVehicle(record);
-				break;
-			case PF:
-				value = calculateProvidentFund(record);
-			default:
-				value = record.amt as number;
-				break;
-		}
-		return value;
-	};
-
 	useEffect(
 		() => {
-			setValuation(calculateValuation(childTab));
+			const valuation = calculateValuation(
+				childTab,
+				record,
+				userInfo,
+				discountRate,
+				ratesData,
+				selectedCurrency,
+				npsData
+			);
+			setValuation(valuation);
 		},
 		[ childTab, data, record, discountRate ]
 	);

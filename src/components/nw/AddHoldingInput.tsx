@@ -1,13 +1,14 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Form, Row, Col } from 'antd';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
+import { AppContext } from '../AppContext';
 import CascaderInput from '../form/CascaderInput';
 import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { presentMonth, presentYear } from '../utils';
+import { presentMonth, presentYear, toHumanFriendlyCurrency } from '../utils';
 import Interest from './Interest';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import {
@@ -20,10 +21,11 @@ import {
 	hasQtyWithRate,
 	hasRate,
 	hasOnlyCategory,
-	isRangePicker
+	isRangePicker,
+	calculateValuation
 } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
-import { calculateAddYears } from './valuationutils';
+import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
 interface AddHoldingInputProps {
 	setInput: Function;
 	disableOk: Function;
@@ -31,7 +33,8 @@ interface AddHoldingInputProps {
 	fields: any;
 }
 export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency, npsData }: any = useContext(NWContext);
+	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P } = TAB;
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
@@ -49,6 +52,8 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ ey, setEy ] = useState<number>(presentYear);
 	const [ duration, setDuration ] = useState<number>(5);
 	const [ amt, setAmt ] = useState<number>(0);
+	const [ valuation, setValuation ] = useState<number>(0);
+	const [ maturityAmt, setMaturityAmt ] = useState<number>(0);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = {
@@ -242,6 +247,14 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		setInput(rec);
 	};
 
+	useEffect(()=>{
+		const valuation = calculateValuation(childTab, getNewRec(), userInfo, discountRate, ratesData, selectedCurrency, npsData);
+		setValuation(valuation);
+		const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
+		console.log(maturityAmt);
+		setMaturityAmt(maturityAmt);
+	},[amt, category, sm, sy, em, ey, subCat, childTab, userInfo, discountRate, ratesData, selectedCurrency, npsData])
+
 	const { Item: FormItem } = Form;
 
 	return (
@@ -364,6 +377,16 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 							options={getFamilyOptions(allFamily)}
 							changeHandler={(key: string) => changeMember(key)}
 						/>
+					</FormItem>
+				</Col>
+				{(childTab === P2P || childTab === LENT) && <Col xs={24} md={12}>
+					<FormItem label="Maturity Amount">
+					<label>{toHumanFriendlyCurrency(maturityAmt, selectedCurrency)}</label>
+					</FormItem>
+				</Col>}
+				<Col xs={24} md={12}>
+					<FormItem label="Valuation">
+					<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
 					</FormItem>
 				</Col>
 			</Row>

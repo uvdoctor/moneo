@@ -5,16 +5,17 @@ import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
-import MemberAndValuation from './MemberAndValuation';
+import MemberAndValuation from './Valuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
-import { isMobileDevice } from '../utils';
+import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { UserOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import Duration from './Duration';
 import Interest from './Interest';
+import { calculateCompundingIncome } from './valuationutils';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -27,6 +28,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
+	const [ maturityAmt, setMaturityAmt ] = useState<number>(0);
 	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
@@ -235,6 +237,20 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
+				{(childTab === P2P || childTab === LENT) && (
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>Maturity Amount</Col>
+							<Col>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<label>{toHumanFriendlyCurrency(calculateCompundingIncome(data[i]).maturityAmt, selectedCurrency)}</label>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
 				{!hasminimumCol(childTab) && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
@@ -265,6 +281,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	};
 	const columns = defaultColumns.map((col: string) => allColumns[col]);
 	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
+
 	useEffect(
 		() => {
 			let dataSource: Array<any> = [];

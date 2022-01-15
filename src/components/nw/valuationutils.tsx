@@ -15,7 +15,7 @@ export const getCashFlows = (
 ) => {
 	let cashflows: any = [];
 	let count = 0;
-	let monthLeftForCurrentYear = 12 - (today.getMonth()+1);
+	let monthLeftForCurrentYear = 12 - (today.getMonth() + 1);
 	let bygoneTimeToCalculateForCI = isMonth ? (monthLeftForCurrentYear + bygoneDuration) / 12 : bygoneDuration;
 	if (bygoneDuration >= 0) {
 		amt = getCompoundedIncome(rate, amt, bygoneTimeToCalculateForCI, isMonth ? 12 : 1);
@@ -74,7 +74,7 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 
 	if (subt === 'H' && dob && le) {
 		const birthdate: Date = new Date(dob);
-		const { year, month } = calculateAddYears(birthdate.getMonth()+1, birthdate.getFullYear(), le); //lifeExpectancy year and month
+		const { year, month } = calculateAddYears(birthdate.getMonth() + 1, birthdate.getFullYear(), le); //lifeExpectancy year and month
 		durationFromStartToEnd = calc(month, year, sm as number, sy as number);
 		remainingDuration = calc(month, year, presentMonth, presentYear);
 	} else {
@@ -83,9 +83,9 @@ export const calculateInsurance = (holding: HoldingInput, discountRate: number, 
 	}
 
 	if (remainingDuration < 0 || isNaN(remainingDuration)) return 0;
-	if (remainingDuration === 0 ) return amt as number;
+	if (remainingDuration === 0) return amt as number;
 	let bygoneDuration = durationFromStartToEnd - remainingDuration;
-	
+
 	if (subt && subt !== 'L') {
 		cashflows = getCashFlows(amt as number, bygoneDuration, remainingDuration, chg as number, isMonth);
 	} else {
@@ -104,7 +104,7 @@ export const calculateLoan = (holding: HoldingInput) => {
 		presentYear
 	);
 	if (remainingDuration < 0 || isNaN(remainingDuration)) return 0;
-	if (remainingDuration === 0 ) return holding.amt as number;
+	if (remainingDuration === 0) return holding.amt as number;
 	const cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
 	console.log(cashflows);
 	const npv = getNPV(holding.chg as number, cashflows, 0, true, true);
@@ -112,16 +112,31 @@ export const calculateLoan = (holding: HoldingInput) => {
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
+	let valuation = 0;
+	let maturityAmt = 0;
 	const remainingDuration = calculateDifferenceInYears(
 		holding.em as number,
 		holding.ey as number,
 		presentMonth,
 		presentYear
 	);
-	if (remainingDuration < 0) return 0;
-	if (!holding.chgF) return holding.amt as number;
+	if (remainingDuration < 0) return { valuation, maturityAmt };
+	if (!holding.chgF) return { valuation: holding.amt as number, maturityAmt: holding.amt as number };
 	const duration = calculateDifferenceInYears(presentMonth, presentYear, holding.sm as number, holding.sy as number);
-	return getCompoundedIncome(holding.chg as number, holding.amt as number, duration, holding.chgF);
+	const durationFromStartToEnd = calculateDifferenceInYears(
+		holding.em as number,
+		holding.ey as number,
+		holding.sm as number,
+		holding.sy as number
+	);
+	valuation = getCompoundedIncome(holding.chg as number, holding.amt as number, duration, holding.chgF);
+	maturityAmt = getCompoundedIncome(
+		holding.chg as number,
+		holding.amt as number,
+		durationFromStartToEnd,
+		holding.chgF
+	);
+	return { valuation, maturityAmt }
 };
 
 export const calculateProperty = (property: PropertyInput) => {

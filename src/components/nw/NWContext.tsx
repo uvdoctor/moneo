@@ -936,7 +936,7 @@ function NWContextProvider() {
         holding &&
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
-        total += calculateCompundingIncome(holding);
+        total += calculateCompundingIncome(holding).valuation;
       }
     });
     setTotalLendings(total);
@@ -950,7 +950,7 @@ function NWContextProvider() {
         holding &&
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
-        total += calculateCompundingIncome(holding);
+        total += calculateCompundingIncome(holding).valuation;
       }
     });
     setTotalP2P(total);
