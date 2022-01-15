@@ -1,4 +1,4 @@
-import { Badge, Col, Empty, Row, Skeleton, Tooltip } from "antd";
+import { Badge, Col, Empty, Row, Skeleton } from "antd";
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -21,7 +21,6 @@ export default function AAChart() {
   const {
     totalSavings,
     totalDeposits,
-    totalEquity,
     totalAlternative,
     totalLendings,
     totalFGold,
@@ -64,14 +63,27 @@ export default function AAChart() {
   const [indexFunds, setIndexFunds] = useState<number>(0);
   const [liquidFunds, setLiquidFunds] = useState<number>(0);
   const categories: any = {
-    Equity: { color: COLORS.ORANGE, total: totalEquity },
-    Fixed: {
+    "Large-cap Stocks & Funds": {
+      color: "#fdd0cb",
+      total: largeCap + totalNPSEquity,
+    },
+    "Multi-cap Stocks & Funds": {
+      color: "#e78284",
+      total: midCap + smallCap + hybridCap,
+    },
+    Bonds: { color: "#aa8dfa", total: bonds },
+    "Other Fixed": {
       color: COLORS.BLUE,
-      total: totalFixed - totalPF - liquidFunds,
+      total: totalFixed - totalPF - liquidFunds - bonds - totalP2P,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
-    REITs: { color: "#7cd9fd", total: totalFRE },
+    REITs: { color: "#ffc107", total: totalFRE },
     Gold: { color: "#f6e05e", total: totalFGold + totalPGold },
+    "P2P Lending": { color: COLORS.ORANGE, total: totalP2P },
+    "Start-up Investments & Collections": {
+      color: "#ffab00",
+      total: totalAngel + totalOthers,
+    },
     Others: {
       color: "#aa8dfa",
       total:
@@ -183,22 +195,11 @@ export default function AAChart() {
         "Physical Gold": totalPGold,
         "Gold Bonds": totalFGold,
       });
-    if (asset === "Equity") {
-      return getTooltipDesc({
-        "Large-company stocks": largeCap + totalNPSEquity,
-        "Mid-company stocks": midCap,
-        "Small-company stocks": smallCap,
-        "Funds consisting of large, medium and small company stocks": hybridCap,
-        "Start-up Investments": totalAngel,
-      });
-    }
-    if (asset === "Fixed")
+    if (asset === "Other Fixed")
       return getTooltipDesc({
         "Fixed Maturity Plan": fmp,
         "Interval Funds": intervalFunds,
-        Bonds: bonds,
         "Index Funds": indexFunds,
-        "P2P Lending": totalP2P,
       });
     if (asset === "Real-estate")
       return getTooltipDesc({
@@ -207,13 +208,16 @@ export default function AAChart() {
         Plot: totalPlot,
         Other: totalOtherProperty,
       });
+    if (asset === "Start-up Investments & Collections")
+      return getTooltipDesc({
+        "Start-up Investments": totalAngel,
+        Collections: totalOthers,
+      });
     if (asset === "Others")
       return getTooltipDesc({
         "Other Investment Trusts": totalFInv,
         Vehicles: totalVehicles,
-        Others: totalOthers,
       });
-
     if (asset === "PF") {
       return (
         <>
@@ -251,19 +255,13 @@ export default function AAChart() {
           <Col xs={24} lg={8}>
             <div className="cash active">
               <span className="arrow-right" />
-              Emergency Cash{" "}
+              Total Cash{" "}
               <Badge
                 count={`${toReadableNumber(
                   ((totalSavings + totalLendings) / totalAssets) * 100,
                   2
                 )} %`}
               />
-              <strong>
-                {toHumanFriendlyCurrency(
-                  totalSavings + totalLendings,
-                  selectedCurrency
-                )}
-              </strong>
             </div>
           </Col>
           <Col xs={24} sm={12} lg={8}>
@@ -281,7 +279,7 @@ export default function AAChart() {
             </div>
           </Col>
           <Col xs={24} sm={12} lg={8}>
-            <div className="cash">
+            <div className="cash deposits">
               Deposits{" "}
               <Badge
                 count={`${toReadableNumber(
@@ -293,56 +291,6 @@ export default function AAChart() {
                 {toHumanFriendlyCurrency(totalLendings, selectedCurrency)}
               </strong>
             </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: 8 }}>
-          <Col xs={24} lg={8}>
-            <div className="cash active">
-              <span className="arrow-right" />
-              Other Cash{" "}
-              <Badge
-                count={`${toReadableNumber(
-                  ((totalLendings + totalPF) / totalAssets) * 100,
-                  2
-                )} %`}
-              />
-              <strong>
-                {toHumanFriendlyCurrency(
-                  totalLendings + totalPF,
-                  selectedCurrency
-                )}
-              </strong>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} lg={8}>
-            <div className="cash deposits">
-              Money Lent{" "}
-              <Badge
-                count={`${toReadableNumber(
-                  (totalLendings / totalAssets) * 100,
-                  2
-                )} %`}
-              />
-              <strong>
-                {toHumanFriendlyCurrency(totalLendings, selectedCurrency)}
-              </strong>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} lg={8}>
-            <Tooltip title={breakdownAssetInfo("PF")}>
-              <div className="cash deposits">
-                Provident Fund{" "}
-                <Badge
-                  count={`${toReadableNumber(
-                    (totalPF / totalAssets) * 100,
-                    2
-                  )} %`}
-                />
-                <strong>
-                  {toHumanFriendlyCurrency(totalPF, selectedCurrency)}
-                </strong>
-              </div>
-            </Tooltip>
           </Col>
         </Row>
         <TreemapChart

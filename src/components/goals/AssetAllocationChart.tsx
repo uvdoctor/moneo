@@ -157,7 +157,7 @@ export default function AssetAllocationChart({
             <Col xs={24} sm={12} lg={9}>
               <div className="cash">
                 <LabelWithTooltip
-                  label="Retirement"
+                  label="Long-term"
                   info="Long-term cash investments in deposits and retirement related funds"
                   inline
                 />{" "}

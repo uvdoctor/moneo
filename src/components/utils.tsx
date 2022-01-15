@@ -309,22 +309,22 @@ export const getAllAssetDetails = () => {
       cat: ASSET_CATEGORIES.STOCKS,
     },
     lcs: {
-      label: "Large-cap Stocks",
+      label: "Large-cap Stocks & Funds",
       color: "#fdd0cb",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     mscs: {
-      label: "Multi-cap Stocks",
+      label: "Multi-cap Stocks & Funds",
       color: "#e78284",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     imscs: {
-      label: "International Multi-cap Stocks",
+      label: "International Multi-cap Stocks & Funds",
       color: "#cf544e",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     ilcs: {
-      label: "International Large-cap Stocks",
+      label: "International Large-cap Stocks & Funds",
       color: "#f9aaa6",
       cat: ASSET_CATEGORIES.STOCKS,
     },
@@ -339,7 +339,7 @@ export const getAllAssetDetails = () => {
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     uc: {
-      label: "Angel Investments & Collections",
+      label: "Start-up Investments & Collections",
       color: "#ffab00",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },

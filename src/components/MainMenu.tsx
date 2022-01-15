@@ -52,7 +52,9 @@ export default function MainMenu({
           <Fragment>
             {menuItem("Get", ROUTES.GET, selectedKey)}
             {menuItem("Set", ROUTES.SET, selectedKey)}
-            {menuItem("Grow", ROUTES.GROW, selectedKey)}
+            <Menu.Item key="Grow" disabled>
+              Grow
+            </Menu.Item>
             {menuItem("Contact Us", ROUTES.CONTACT_US, selectedKey)}
             <SubMenu
               key="usermenu"
