@@ -17,7 +17,7 @@ const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
   ssr: false,
 });
 
-export default function AAChart() {
+export default function CurrentAAChart() {
   const {
     totalSavings,
     totalDeposits,

@@ -17,7 +17,7 @@ import { useFullScreenBrowser } from "react-browser-hooks";
 import SelectInput from "../form/selectinput";
 import { FIGoalContext } from "./FIGoalContext";
 import { PlanContext } from "./PlanContext";
-import LabelWithTooltip from "../form/LabelWithTooltip";
+import CashAA from "./CashAA";
 
 const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
   ssr: false,
@@ -130,47 +130,15 @@ export default function AssetAllocationChart({
           </Fragment>
         }
         header={
-          <Row className="chart">
-            <Col xs={24} lg={6}>
-              <div className="cash active">
-                <span className="arrow-right" />
-                Total Cash{" "}
-                <Badge count={`${aa.cash[index] + aa.ltdep[index]} %`} />
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={9}>
-              <div className="cash deposits">
-                <LabelWithTooltip
-                  label="Emergency"
-                  info="Emergency cash including savings, short-term deposits and liquid funds"
-                  inline
-                />{" "}
-                <Badge count={`${aa.cash[index]} %`} />
-                <strong>
-                  {toHumanFriendlyCurrency(
-                    Math.round((getCF(index) * aa.cash[index]) / 100),
-                    getCurrency()
-                  )}
-                </strong>
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={9}>
-              <div className="cash">
-                <LabelWithTooltip
-                  label="Long-term"
-                  info="Long-term cash investments in deposits and retirement related funds"
-                  inline
-                />{" "}
-                <Badge count={`${aa.ltdep[index]} %`} />
-                <strong>
-                  {toHumanFriendlyCurrency(
-                    Math.round((getCF(index) * aa.ltdep[index]) / 100),
-                    getCurrency()
-                  )}
-                </strong>
-              </div>
-            </Col>
-          </Row>
+          <div className="chart">
+            <CashAA
+              emergency={getCF(index) * aa.cash[index]}
+              longTerm={getCF(index) * aa.ltdep[index]}
+              emergencyPer={aa.cash[index]}
+              longTermPer={aa.ltdep[index]}
+              currency={getCurrency()}
+            />
+          </div>
         }>
         <Chart>
           {aa.cash[index] + aa.ltdep[index] === 100 ? (
