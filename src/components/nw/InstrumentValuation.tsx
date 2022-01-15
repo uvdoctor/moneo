@@ -170,7 +170,8 @@ export default function InstrumentValuation() {
 				const { CB, GBO, I, HB, GB, L } = AssetSubType;
 				const { subt, mftype, type, mcap } = data;
 				return (
-					selectedSubtTags.indexOf(mcap as string) > -1 ||
+					selectedSubtTags.includes(MCap.L) && mcap === MCap.L || 
+					(selectedSubtTags.includes("Multi") && (mcap !== MCap.L || !mcap)) || 
 					(selectedSubtTags.includes('CB') && subt === CB || mftype === MFSchemeType.O) ||
 					(selectedSubtTags.includes('I') && (type === AssetType.F && subt === I)) ||
 					(selectedSubtTags.includes('GovB') && (subt === GB || subt === GBO)) ||
@@ -180,15 +181,8 @@ export default function InstrumentValuation() {
 				);
 			}
 			if (childTab === STOCK && data) {
-				const { L, M, H, S } = MCap;
-				let mcap = null;
-				if(data.meta) mcap = data.meta.mcap;
-				return (
-					(selectedTags.includes(L) && mcap === L) ||
-					(selectedTags.includes(M) && mcap === M) ||
-					(selectedTags.includes(H) && mcap === H) ||
-					(selectedTags.includes(S) && !mcap)
-				);
+				return (selectedTags.includes(MCap.L) && data.meta && data.meta.mcap === MCap.L ||
+					selectedTags.includes("Multi") && ((data.meta && data.meta.mcap !== MCap.L) || !data.meta || !data.meta.mcap));
 			} else if (childTab === BOND && data) {
 				const { subt } = data;
 				const { GB, CB, GBO } = AssetSubType;
