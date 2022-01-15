@@ -404,7 +404,7 @@ export default function UserSettings(): JSX.Element {
             </Row>
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Profile" key="2">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[24, 24]} justify="center">
               <Col xs={24} sm={24} md={8}>
                 <Row gutter={[10, 0]}>
                   <Col>
@@ -675,12 +675,10 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
               </Col>
+              <Col xs={24} sm={24} md={12}>
+                <DeleteAccount />
+              </Col>
             </Row>
-            <p>&nbsp;</p>
-            <Row justify="center">
-              <DeleteAccount />
-            </Row>
-            <p>&nbsp;</p>
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Password" key="4">
             <Row justify="start">
