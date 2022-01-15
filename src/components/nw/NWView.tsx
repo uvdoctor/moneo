@@ -36,7 +36,7 @@ export default function NWView() {
           <Row>
             <Col span={24}>
               <PageHeader
-                title="Real-time Analysis"
+                title="Financial Health Analysis"
                 extra={[
                   <SelectInput
                     key="currency"
