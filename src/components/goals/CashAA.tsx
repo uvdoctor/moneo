@@ -1,7 +1,7 @@
 import { Badge, Col, Row } from "antd";
 import React from "react";
 import LabelWithTooltip from "../form/LabelWithTooltip";
-import { toHumanFriendlyCurrency } from "../utils";
+import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 
 interface CashAAProps {
   emergency: number;
@@ -33,7 +33,7 @@ export default function CashAA({
             info="Emergency cash including savings, short-term deposits and liquid funds"
             inline
           />{" "}
-          <Badge count={`${emergencyPer} %`} />
+          <Badge count={`${toReadableNumber(emergencyPer)} %`} />
           <strong>
             {toHumanFriendlyCurrency(Math.round(emergency / 100), currency)}
           </strong>
@@ -46,7 +46,7 @@ export default function CashAA({
             info="Long-term cash investments in deposits and retirement related funds"
             inline
           />{" "}
-          <Badge count={`${longTermPer} %`} />
+          <Badge count={`${toReadableNumber(longTermPer)} %`} />
           <strong>
             {toHumanFriendlyCurrency(Math.round(longTerm / 100), currency)}
           </strong>

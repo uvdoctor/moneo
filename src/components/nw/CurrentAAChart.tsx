@@ -1,4 +1,4 @@
-import { Badge, Col, Empty, Row, Skeleton } from "antd";
+import { Empty, Skeleton } from "antd";
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
 } from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
+import CashAA from "../goals/CashAA";
 import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { NWContext } from "./NWContext";
 
@@ -47,6 +48,7 @@ export default function CurrentAAChart() {
     totalCrypto,
     totalFixed,
     totalP2P,
+    totalNSC,
   }: any = useContext(NWContext);
   const { insData }: any = useContext(AppContext);
   const [totalCash, setTotalCash] = useState<number>(
@@ -251,48 +253,13 @@ export default function CurrentAAChart() {
           Total Asset Allocation of{" "}
           {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}
         </h3>
-        <Row>
-          <Col xs={24} lg={8}>
-            <div className="cash active">
-              <span className="arrow-right" />
-              Total Cash{" "}
-              <Badge
-                count={`${toReadableNumber(
-                  ((totalSavings + totalLendings) / totalAssets) * 100,
-                  2
-                )} %`}
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={12} lg={8}>
-            <div className="cash">
-              Savings{" "}
-              <Badge
-                count={`${toReadableNumber(
-                  (totalSavings / totalAssets) * 100,
-                  2
-                )} %`}
-              />
-              <strong>
-                {toHumanFriendlyCurrency(totalSavings, selectedCurrency)}
-              </strong>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} lg={8}>
-            <div className="cash deposits">
-              Deposits{" "}
-              <Badge
-                count={`${toReadableNumber(
-                  (totalLendings / totalAssets) * 100,
-                  2
-                )} %`}
-              />
-              <strong>
-                {toHumanFriendlyCurrency(totalLendings, selectedCurrency)}
-              </strong>
-            </div>
-          </Col>
-        </Row>
+        <CashAA
+          emergencyPer={((totalSavings + totalLendings) / totalAssets) * 100}
+          emergency={totalSavings + totalLendings}
+          longTerm={totalNSC + totalPF}
+          longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
+          currency={selectedCurrency}
+        />
         <TreemapChart
           data={{
             name: "root",
