@@ -5,7 +5,6 @@ import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   GOLD,
-  NATIONAL_SAVINGS_CERTIFICATE,
   PALLADIUM,
   PLATINUM,
   SILVER,
