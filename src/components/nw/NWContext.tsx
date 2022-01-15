@@ -238,7 +238,8 @@ function NWContextProvider() {
             [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
           }),
           fields: {
-            type: "Type & Interest",
+            type: "Type",
+            subtype: "Interest",
             name: "Label",
             amount: "Amount",
             date: "Date",

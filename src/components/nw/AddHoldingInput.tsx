@@ -247,27 +247,27 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	return (
 		<Form layout="vertical">
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
-				<Col xs={24} md={12}>
+      {categoryOptions && (<Col xs={24} md={12}>
 					<FormItem label={fields.type}>
-						<Row gutter={[ 10, 0 ]}>
-							{categoryOptions && (
-								<Col>
-									<CascaderInput
-										pre={''}
-										parentValue={category}
-										parentChangeHandler={changeCategory}
-										childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCat}
-										childValue={hasOnlyCategory(childTab) ? '' : subCat}
-										options={categoryOptions}
-									/>
-								</Col>
-							)}
-							{(category === 'NBD' || childTab === P2P) && (
-								<Interest value={subCat} onChange={changeInterest} />
-							)}
-						</Row>
+            <Col>
+              <CascaderInput
+                pre={''}
+                parentValue={category}
+                parentChangeHandler={changeCategory}
+                childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCat}
+                childValue={hasOnlyCategory(childTab) ? '' : subCat}
+                options={categoryOptions}
+              />
+            </Col>
 					</FormItem>
-				</Col>
+				</Col>)}
+        {(category === 'NBD' || childTab === P2P) && (
+					<Col xs={24} md={12}>
+						<FormItem label={childTab === P2P ? fields.type : fields.subtype}>
+              <Interest value={subCat} onChange={changeInterest} />
+						</FormItem>
+					</Col>
+				)}
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.name}>
