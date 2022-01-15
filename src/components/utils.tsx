@@ -270,22 +270,22 @@ export const getAllAssetDetails = () => {
     },
     reit: {
       label: "REITs",
-      color: "#7cd9fd",
+      color: "#ffc107",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     reitETF: {
       label: "REIT ETFs",
-      color: "#befe95",
+      color: "#ffca28",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     ireit: {
       label: "International REITs",
-      color: "#befe95",
+      color: "#ff6f00",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     ireitETF: {
       label: "International REIT ETFs",
-      color: "#befe95",
+      color: "#ff8f00",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     gold: {
@@ -340,7 +340,7 @@ export const getAllAssetDetails = () => {
     },
     uc: {
       label: "Angel Investments & Collections",
-      color: COLORS.ORANGE,
+      color: "#ffab00",
       cat: ASSET_CATEGORIES.ALTERNATIVE,
     },
     crypto: {

@@ -260,7 +260,6 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     if (!allInputDone) return;
     let g: CreateGoalInput = getLatestGoalState();
     setWipGoal(g);
-    console.log("Goal state: ", g);
     let result: any = findEarliestFFYear(g, mergedCFs, ffYear, mustCFs, tryCFs);
     if (!isFFPossible(result, leaveBehind)) {
       setError(

@@ -134,7 +134,8 @@ export default function AssetAllocationChart({
             <Col xs={24} lg={6}>
               <div className="cash active">
                 <span className="arrow-right" />
-                Cash <Badge count={`${aa.cash[index] + aa.ltdep[index]} %`} />
+                Total Cash{" "}
+                <Badge count={`${aa.cash[index] + aa.ltdep[index]} %`} />
               </div>
             </Col>
             <Col xs={24} sm={12} lg={9}>

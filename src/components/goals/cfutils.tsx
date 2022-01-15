@@ -718,18 +718,32 @@ const allocateREIT = (
   ffGoal: APIt.CreateGoalInput,
   remPer: number
 ) => {
-  if (!remPer) return remPer;
+  if (!remPer || ffGoal.rp === RiskProfile.VC) return remPer;
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-  let reitPer =
-    ffGoal.rp === RiskProfile.VC ? 0 : ffGoal.rp === RiskProfile.C ? 5 : 10;
+  let reitPer = ffGoal.rp === RiskProfile.C ? 5 : 10;
   if (year >= ffYear) {
     if (year > ffGoalEndYear - 5) reitPer = 25;
     else if (year >= ffGoalEndYear - 20) reitPer = 20;
     else reitPer += 5;
   }
-  return allocate(aa.reit, i, reitPer, remPer);
+  remPer = allocate(
+    ffGoal.ccy === "INR" ? aa.reit : aa.reitETF,
+    i,
+    reitPer *
+      (ffGoal.rp === RiskProfile.C || ffGoal.rp === RiskProfile.M ? 1 : 0.5),
+    remPer
+  );
+  if (ffGoal.rp === RiskProfile.A || ffGoal.rp === RiskProfile.VA) {
+    remPer = allocate(
+      ffGoal.rp === RiskProfile.A ? aa.ireitETF : aa.ireit,
+      i,
+      reitPer * 0.5,
+      remPer
+    );
+  }
+  return remPer;
 };
 
 const allocateStocks = (

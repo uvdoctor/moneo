@@ -75,6 +75,7 @@ function PlanContextProvider({
     if (!userInfo) return;
     g.sy = new Date(userInfo.dob).getFullYear();
     if (g.loan) g.loan.dur = userInfo.le;
+    g.rp = userInfo.rp;
     g.manual =
       userInfo.tax === TaxLiability.NIL || userInfo.tax === TaxLiability.L
         ? 0
@@ -85,14 +86,14 @@ function PlanContextProvider({
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
     if (!goals || goals.length === 0) {
       setGoalsLoaded(true);
-      return;
+      return [];
     }
     let allCFs: any = {};
     let ffGoalId = "";
     goals?.forEach((g) => {
       if (g.type === GoalType.FF) {
-        setFFGoal(g);
         loadStateFromUserInfo(g);
+        setFFGoal(g);
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -116,11 +117,7 @@ function PlanContextProvider({
     });
     removeFromArray(goals, "id", ffGoalId);
     setAllCFs(allCFs);
-    setAllGoals([
-      ...goals?.sort(
-        (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
-      ),
-    ]);
+    return goals;
   };
 
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
@@ -148,13 +145,20 @@ function PlanContextProvider({
 
   useEffect(() => {
     if (!appContextLoaded) return;
-    console.log("App context loaded: ", appContextLoaded);
     if (isPublicCalc) {
       setAllGoals([...[]]);
-    } else loadAllGoals().then(() => {});
+    } else
+      loadAllGoals().then((allGoals) => {
+        setAllGoals([
+          ...(allGoals?.sort(
+            (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+          ) as Array<CreateGoalInput>),
+        ]);
+        setGoalsLoaded(true);
+      });
   }, [appContextLoaded]);
 
-  useEffect(() => {
+  const calculateFI = (allGoals: Array<CreateGoalInput> | null) => {
     if (!ffGoal) return;
     let yearRange = getYearRange();
     let mustCFs = populateWithZeros(yearRange.from, yearRange.to);
@@ -186,7 +190,10 @@ function PlanContextProvider({
     setTryCFs([...tryCFs]);
     setMergedCFs(mCFs);
     calculateFFYear(mCFs, mustCFs, tryCFs);
-    setGoalsLoaded(true);
+  };
+
+  useEffect(() => {
+    calculateFI(allGoals);
   }, [allGoals]);
 
   const addGoal = async (newGoal: CreateGoalInput, cfs: Array<number> = []) => {
@@ -203,6 +210,7 @@ function PlanContextProvider({
     if (!g) return false;
     setGoal(null);
     if (g.type === GoalType.FF) {
+      loadStateFromUserInfo(g);
       setFFGoal(g);
       setAllGoals([
         ...(allGoals?.sort(
@@ -244,6 +252,7 @@ function PlanContextProvider({
         description:
           "Success! Your Financial Independence Target has been Updated.",
       });
+      loadStateFromUserInfo(savedGoal as CreateGoalInput);
       setFFGoal(savedGoal as CreateGoalInput);
       setAllGoals([
         ...(allGoals?.sort(
