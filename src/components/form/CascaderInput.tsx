@@ -37,6 +37,7 @@ export default function CascaderInput({
 		<Fragment>
 			<LabelWithTooltip label={pre} info={info} />
 			<Cascader
+				allowClear={false}
 				style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
 				defaultValue={defaultValue}
 				options={options}

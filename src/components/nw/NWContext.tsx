@@ -233,11 +233,12 @@ function NWContextProvider() {
           setData: setLendings,
           total: totalLendings,
           categoryOptions: getCascaderOptions({
-            BD: "Deposit",
+            BD: "Bank Deposit",
+            NBD: "Non-Bank Deposit",
             [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
           }),
           fields: {
-            type: "Type",
+            type: "Type & Interest",
             name: "Label",
             amount: "Amount",
             date: "Date",
