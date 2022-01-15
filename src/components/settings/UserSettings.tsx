@@ -200,11 +200,24 @@ export default function UserSettings(): JSX.Element {
     try {
       await updateUserDetails({
         uname: owner,
-        dr: isDrManual ? discountRate : 0,
         rp: riskProfile,
-        notify,
         tax,
         le: lifeExpectancy,
+      });
+      success("Updated Successfully");
+    } catch {
+      failure("Unable to update");
+    }
+    setLoading(false);
+  };
+
+  const updatePreferenceTab = async () => {
+    setLoading(true);
+    try {
+      await updateUserDetails({
+        uname: owner,
+        dr: isDrManual ? discountRate : 0,
+        notify,
       });
       success("Updated Successfully");
     } catch {
@@ -692,42 +705,34 @@ export default function UserSettings(): JSX.Element {
             </Row>
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Preferences" key="5">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={8}>
-                <Row gutter={[10, 0]}>
+            <Row gutter={[24,24]}>
+              <Col>
+                <Row gutter={[24, 24]}>
                   <Col>
-                    <Row align="middle" gutter={[20, 10]}>
-                      <Col>
-                        <NumberInput
-                          unit="%"
-                          pre="Discount Rate"
-                          value={discountRate}
-                          changeHandler={setDiscountRate}
-                          disabled={!isDrManual}
-                          addBefore={
-                            <SelectInput
-                              pre=""
-                              value={isDrManual ? "manual" : "auto"}
-                              options={{ manual: "Manual", auto: "Auto" }}
-                              changeHandler={(value: string) =>
-                                dispatch({
-                                  type: "single",
-                                  data: {
-                                    field: "isDrManual",
-                                    val: value === "manual",
-                                  },
-                                })
-                              }
-                            />
+                    <NumberInput
+                      unit="%"
+                      pre="Discount Rate"
+                      value={discountRate}
+                      changeHandler={setDiscountRate}
+                      disabled={!isDrManual}
+                      addBefore={
+                        <SelectInput
+                          pre=""
+                          value={isDrManual ? "manual" : "auto"}
+                          options={{ manual: "Manual", auto: "Auto" }}
+                          changeHandler={(value: string) =>
+                            dispatch({
+                              type: "single",
+                              data: {
+                                field: "isDrManual",
+                                val: value === "manual",
+                              },
+                            })
                           }
                         />
-                      </Col>
-                    </Row>
+                      }
+                    />
                   </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={8}>
-                <Row gutter={[10, 0]}>
                   <Col>
                     Subscribe to offers and newsletters
                     <br />
@@ -743,6 +748,24 @@ export default function UserSettings(): JSX.Element {
                     />
                   </Col>
                 </Row>
+              </Col>
+              <Col span={24}>
+                <Button
+                  type="primary"
+                  loading={loading}
+                  style={{ color: COLORS.WHITE }}
+                  icon={<SaveOutlined />}
+                  onClick={() => {
+                    validateCaptcha("preferences_settings").then(
+                      (success: boolean) => {
+                        if (!success) return;
+                        updatePreferenceTab();
+                      }
+                    );
+                  }}
+                >
+                  Save
+                </Button>
               </Col>
             </Row>
           </TabPane>
