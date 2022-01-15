@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { calculateAddYears, calculateDifferenceInYears } from './valuationutils';
+import { calculateAddYears } from './valuationutils';
 
 interface DurationProps {
 	data: Array<HoldingInput>;
@@ -10,18 +10,17 @@ interface DurationProps {
 }
 
 export default function Duration({ data, record, changeData }: DurationProps) {
-	const [ duration, setDuration ] = useState<number>(
-		calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number)
-	);
+	const [ duration, setDuration ] = useState<number>(record.qty);
 
 	const changeDuration = (val: number) => {
 		setDuration(val);
-		const { year, month } = calculateAddYears(record.sm as number, record.sy as number, duration);
+		const { year, month } = calculateAddYears(record.sm as number, record.sy as number, val);
 		record.em = month;
 		record.ey = year;
+		record.qty = val;
 		changeData([ ...data ]);
 	};
-
+	
 	return (
 		<SelectInput
 			pre={''}

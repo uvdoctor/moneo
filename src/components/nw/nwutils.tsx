@@ -593,19 +593,16 @@ export const hasOnlyCategory = (childTab: string) =>
     childTab
   );
 export const hasRate = (childTab: string) =>
-  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P].includes(childTab);
+  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.NSC].includes(childTab);
 export const hasName = (childTab: string) =>
   ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF].includes(childTab);
 export const hasQtyWithRate = (childTab: string) =>
   [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
 export const isRangePicker = (
   childTab: string,
-  subt?: string,
-) =>
-  [TAB.LENT, TAB.P2P].includes(childTab) &&
-  subt !== NATIONAL_SAVINGS_CERTIFICATE;
+) => [TAB.LENT, TAB.P2P].includes(childTab);
 export const hasDate = (childTab: string) =>
-  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P].includes(childTab);
+  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.NSC].includes(childTab);
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
 export const hasOnlyEnddate = (childTab: string) =>
   [TAB.LOAN, TAB.INS].includes(childTab);
@@ -613,7 +610,7 @@ export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 
 export const calculateValuation = (childTab: string, record: APIt.HoldingInput, userInfo: any, discountRate: number, ratesData: any, selectedCurrency: string, npsData: any) => {
-  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, P2P } = TAB;
+  const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, NSC } = TAB;
   let value = 0;
   switch (childTab) {
     case INS:
@@ -636,6 +633,7 @@ export const calculateValuation = (childTab: string, record: APIt.HoldingInput, 
       break;
     case LENT:
     case P2P:
+    case NSC:
       value = calculateCompundingIncome(record).valuation;
       break;
     case NPS:

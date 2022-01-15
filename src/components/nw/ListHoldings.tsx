@@ -2,7 +2,7 @@ import { Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
-import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate } from './nwutils';
+import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate, hasRate } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
 import MemberAndValuation from './Valuation';
@@ -26,7 +26,7 @@ interface ListHoldingsProps {
 }
 export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, NSC } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
@@ -60,7 +60,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	} else if (childTab === INS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
-	} else if (childTab === P2P) {
+	} else if (childTab === P2P || childTab === NSC) {
 		defaultColumns = [ 'label', 'fid' ];
 		expandedColumns = [ 'amt', 'date', 'rate', 'qty' ];
 	}
@@ -129,7 +129,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
-				{(data[i].subt === 'NBD' || childTab === P2P) && (
+				{((childTab === LENT && data[i].subt === 'NBD') || childTab === P2P) && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
 							<Col>Interest</Col>
@@ -178,8 +178,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
-				{childTab === LENT &&
-				data[i].subt === NATIONAL_SAVINGS_CERTIFICATE && (
+				{childTab === NSC && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
 							<Col>{'Duration'}</Col>
@@ -236,7 +235,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
-				{(childTab === P2P || childTab === LENT) && (
+				{(childTab === P2P || childTab === LENT || childTab === NSC) && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
 							<Col>Maturity Amount</Col>
@@ -279,7 +278,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		changeData([ ...data ]);
 	};
 	const columns = defaultColumns.map((col: string) => allColumns[col]);
-	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
 
 	useEffect(
 		() => {

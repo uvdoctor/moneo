@@ -39,10 +39,10 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 			startMonthHandler={changeStartMonth}
 			startYearHandler={changeStartYear}
 			endMonthHandler={
-				isRangePicker(childTab, record.subt as string) ? changeEndMonth : undefined
+				isRangePicker(childTab) ? changeEndMonth : undefined
 			}
 			endYearHandler={
-				isRangePicker(childTab, record.subt as string) ? changeEndYear : undefined
+				isRangePicker(childTab) ? changeEndYear : undefined
 			}
 			startMonthValue={
 				hasOnlyEnddate(childTab) ? record.em as number : record.sm as number

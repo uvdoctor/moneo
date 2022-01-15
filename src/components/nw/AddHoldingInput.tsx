@@ -37,7 +37,7 @@ interface AddHoldingInputProps {
 export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency, npsData }: any = useContext(NWContext);
 	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
-	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P } = TAB;
+	const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, NSC } = TAB;
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
 	const [ subCat, setSubCat ] = useState<string>(
@@ -87,8 +87,25 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.type = AssetType.F;
 				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = category === 'BD' ? 4 : category === NATIONAL_SAVINGS_CERTIFICATE ? 1 : Number(subCat);
+				newRec.chgF = category === 'BD' ? 4 : Number(subCat);
 				newRec.name = name;
+				newRec.sm = sm;
+				newRec.sy = sy;
+				newRec.em = em;
+				newRec.ey = ey;
+				break;
+			case NSC:
+				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
+				newRec.type = AssetType.F;
+				newRec.subt = NATIONAL_SAVINGS_CERTIFICATE;
+				newRec.chg = rate;
+				newRec.chgF = 1;
+				newRec.name = name;
+				newRec.sm = sm;
+				newRec.sy = sy;
+				newRec.em = month;
+				newRec.ey = year;
+				newRec.qty = duration;
 				break;
 			case P2P:
 				newRec.type = AssetType.F;
@@ -96,6 +113,10 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
 				newRec.name = name;
+				newRec.sm = sm;
+				newRec.sy = sy;
+				newRec.em = em;
+				newRec.ey = ey;
 				break;
 			case NPS:
 				newRec.subt = category;
@@ -137,18 +158,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.name = name;
 				break;
 		}
-		if (childTab === LENT || childTab === P2P) {
-			newRec.sm = sm;
-			newRec.sy = sy;
-			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
-				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
-				newRec.em = month;
-				newRec.ey = year;
-			} else {
-				newRec.em = em;
-				newRec.ey = ey;
-			}
-		}
 		if (childTab === PM || childTab === CRYPTO) {
 			newRec.curr = 'USD';
 		}
@@ -184,9 +193,10 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const changeDuration = (val: number) => {
 		setDuration(val);
 		let rec = getNewRec();
-		const { year, month } = calculateAddYears(rec.sm as number, rec.sy as number, duration);
+		const { year, month } = calculateAddYears(rec.sm as number, rec.sy as number, val);
 		rec.em = month;
 		rec.ey = year;
+		rec.qty = val;
 		setInput(rec);
 	};
 	const changeName = (val: string) => {
@@ -259,7 +269,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 			);
 			setValuation(valuation);
 			const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
-			console.log(maturityAmt);
 			setMaturityAmt(maturityAmt);
 		},
 		[
@@ -376,7 +385,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				{hasDate(childTab) &&
 				category !== 'H' && (
 					<Col xs={24} md={12}>
-						<FormItem label={category === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" : fields.date}>
+						<FormItem label={fields.date}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DateInput
@@ -384,10 +393,10 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 										startMonthHandler={changeStartMonth}
 										startYearHandler={changeStartYear}
 										endMonthHandler={
-											isRangePicker(childTab, category) ? changeEndMonth : undefined
+											isRangePicker(childTab) ? changeEndMonth : undefined
 										}
 										endYearHandler={
-											isRangePicker(childTab, category) ? changeEndYear : undefined
+											isRangePicker(childTab) ? changeEndYear : undefined
 										}
 										startMonthValue={sm}
 										endMonthValue={em}
@@ -400,7 +409,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 						</FormItem>
 					</Col>
 				)}
-				{category === NATIONAL_SAVINGS_CERTIFICATE && (
+				{childTab === NSC && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.duration}>
 							<Row gutter={[ 10, 0 ]}>

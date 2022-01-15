@@ -2,7 +2,7 @@ import { Select } from 'antd';
 import React from 'react';
 
 interface InterestProps {
-	value: string | number;
+	value: string;
   onChange: Function;
 }
 
