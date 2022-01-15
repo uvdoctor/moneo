@@ -895,7 +895,24 @@ export const getUserHoldings = /* GraphQL */ `
   query GetUserHoldings($uname: String!) {
     getUserHoldings(uname: $uname) {
       uname
-      lendings {
+      dep {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
+      ltdep {
         id
         qty
         name
@@ -1165,7 +1182,24 @@ export const listUserHoldingss = /* GraphQL */ `
     ) {
       items {
         uname
-        lendings {
+        dep {
+          id
+          qty
+          name
+          fId
+          curr
+          chg
+          chgF
+          payF
+          type
+          subt
+          sm
+          sy
+          em
+          ey
+          amt
+        }
+        ltdep {
           id
           qty
           name

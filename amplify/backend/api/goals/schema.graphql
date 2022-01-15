@@ -603,7 +603,8 @@ type UserHoldings
     ]
   ) {
   uname: String!
-  lendings: [Holding!]
+  dep: [Holding!]
+  ltdep: [Holding!]
   p2p: [Holding!]
   loans: [Holding!]
   credit: [Holding!]

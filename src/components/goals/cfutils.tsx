@@ -757,9 +757,10 @@ const allocateStocks = (
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
   const ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-  let maxStocksPer = 120 - (year - ffGoal.sy);
+  let maxStocksPer =
+    ffGoal.rp === RiskProfile.VA ? 140 : 120 - (year - ffGoal.sy);
   let maxAllowedPer =
-    ffGoal.rp === RiskProfile.VA ? 90 : ffGoal.rp === RiskProfile.A ? 80 : 60;
+    ffGoal.rp === RiskProfile.VA ? 100 : ffGoal.rp === RiskProfile.A ? 80 : 60;
   const goldAsset = ffGoal.ccy === "INR" ? aa.goldb : aa.gold;
   if (maxStocksPer > maxAllowedPer) maxStocksPer = maxAllowedPer;
   if (maxStocksPer > remPer) maxStocksPer = remPer;

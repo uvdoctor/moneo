@@ -471,7 +471,7 @@ function NWContextProvider() {
             amount: "Amount",
             date: "Start Date & Maturity Date",
             rate: "Rate",
-            type: "Interest"
+            type: "Interest",
           },
         },
         [TAB.OIT]: {
@@ -685,7 +685,7 @@ function NWContextProvider() {
     setInsurance([...(allHoldings?.ins ? allHoldings.ins : [])]);
     setCredit([...(allHoldings?.credit ? allHoldings.credit : [])]);
     setSavings([...(allHoldings?.savings ? allHoldings.savings : [])]);
-    setLendings([...(allHoldings?.lendings ? allHoldings.lendings : [])]);
+    setLendings([...(allHoldings?.dep ? allHoldings.dep : [])]);
     setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
     setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
     setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
@@ -838,7 +838,7 @@ function NWContextProvider() {
     };
     let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
     updatedHoldings.savings = savings;
-    updatedHoldings.lendings = lendings;
+    updatedHoldings.dep = lendings;
     updatedHoldings.angel = angel;
     updatedHoldings.pf = pf;
     updatedHoldings.loans = loans;

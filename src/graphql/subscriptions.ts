@@ -903,7 +903,24 @@ export const onCreateUserHoldings = /* GraphQL */ `
   subscription OnCreateUserHoldings($owner: String) {
     onCreateUserHoldings(owner: $owner) {
       uname
-      lendings {
+      dep {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
+      ltdep {
         id
         qty
         name
@@ -1160,7 +1177,24 @@ export const onUpdateUserHoldings = /* GraphQL */ `
   subscription OnUpdateUserHoldings($owner: String) {
     onUpdateUserHoldings(owner: $owner) {
       uname
-      lendings {
+      dep {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
+      ltdep {
         id
         qty
         name
@@ -1417,7 +1451,24 @@ export const onDeleteUserHoldings = /* GraphQL */ `
   subscription OnDeleteUserHoldings($owner: String) {
     onDeleteUserHoldings(owner: $owner) {
       uname
-      lendings {
+      dep {
+        id
+        qty
+        name
+        fId
+        curr
+        chg
+        chgF
+        payF
+        type
+        subt
+        sm
+        sy
+        em
+        ey
+        amt
+      }
+      ltdep {
         id
         qty
         name
