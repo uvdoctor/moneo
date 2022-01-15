@@ -14,12 +14,12 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 	const { childTab }: any = useContext(NWContext);
 
 	const changeStartYear = (val: number) => {
-		hasOnlyEnddate(childTab, record.chgF as number) ? (record.ey = val) : (record.sy = val);
+		hasOnlyEnddate(childTab) ? (record.ey = val) : (record.sy = val);
 		changeData([ ...data ]);
 	};
 
 	const changeStartMonth = (val: number) => {
-		hasOnlyEnddate(childTab, record.chgF as number) ? (record.em = val) : (record.sm = val);
+		hasOnlyEnddate(childTab) ? (record.em = val) : (record.sm = val);
 		changeData([ ...data ]);
 	};
 
@@ -39,18 +39,17 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 			startMonthHandler={changeStartMonth}
 			startYearHandler={changeStartYear}
 			endMonthHandler={
-				isRangePicker(childTab, record.subt as string, record.chgF as number) ? changeEndMonth : undefined
+				isRangePicker(childTab, record.subt as string) ? changeEndMonth : undefined
 			}
 			endYearHandler={
-				isRangePicker(childTab, record.subt as string, record.chgF as number) ? changeEndYear : undefined
+				isRangePicker(childTab, record.subt as string) ? changeEndYear : undefined
 			}
 			startMonthValue={
-				hasOnlyEnddate(childTab, record.chgF as number) ? record.em as number : record.sm as number
+				hasOnlyEnddate(childTab) ? record.em as number : record.sm as number
 			}
 			endMonthValue={record.em as number}
-			startYearValue={hasOnlyEnddate(childTab, record.chgF as number) ? record.ey as number : record.sy as number}
+			startYearValue={hasOnlyEnddate(childTab) ? record.ey as number : record.sy as number}
 			endYearValue={record.ey as number}
-			size="middle"
 		/>
 	);
 }

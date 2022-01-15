@@ -601,17 +601,14 @@ export const hasQtyWithRate = (childTab: string) =>
 export const isRangePicker = (
   childTab: string,
   subt?: string,
-  frequency?: string | number
 ) =>
   [TAB.LENT, TAB.P2P].includes(childTab) &&
-  subt !== NATIONAL_SAVINGS_CERTIFICATE &&
-  frequency != "0";
+  subt !== NATIONAL_SAVINGS_CERTIFICATE;
 export const hasDate = (childTab: string) =>
   [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P].includes(childTab);
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
-export const hasOnlyEnddate = (childTab: string, frequency: string | number) =>
-  [TAB.LOAN, TAB.INS].includes(childTab) ||
-  (frequency == "0" && (childTab === TAB.LENT || childTab === TAB.P2P));
+export const hasOnlyEnddate = (childTab: string) =>
+  [TAB.LOAN, TAB.INS].includes(childTab);
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 

@@ -3,12 +3,14 @@ import { Form, Row, Col } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
+import ItemDisplay from '../calc/ItemDisplay';
 import CascaderInput from '../form/CascaderInput';
 import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { presentMonth, presentYear, toHumanFriendlyCurrency } from '../utils';
+import ResultCarousel from '../ResultCarousel';
+import { presentMonth, presentYear } from '../utils';
 import Interest from './Interest';
 import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import {
@@ -41,7 +43,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ subCat, setSubCat ] = useState<string>(
 		categoryOptions && !hasOnlyCategory(childTab)
 			? categoryOptions[0].children[0].value
-			: (category === "NBD" || childTab === P2P) ? '0' : ''
+			: category === 'NBD' || childTab === P2P ? '0' : ''
 	);
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
@@ -85,7 +87,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.type = AssetType.F;
 				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = category === "BD" ? 4 : category === NATIONAL_SAVINGS_CERTIFICATE ? 1 : Number(subCat);
+				newRec.chgF = category === 'BD' ? 4 : category === NATIONAL_SAVINGS_CERTIFICATE ? 1 : Number(subCat);
 				newRec.name = name;
 				break;
 			case P2P:
@@ -134,17 +136,14 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 			default:
 				newRec.name = name;
 				break;
-  }
+		}
 		if (childTab === LENT || childTab === P2P) {
-			subCat === '0' ? (newRec.sm = presentMonth) : (newRec.sm = sm);
-			subCat === '0' ? (newRec.sy = presentYear) : (newRec.sy = sy);
+			newRec.sm = sm;
+			newRec.sy = sy;
 			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
 				newRec.ey = year;
-			} else if (subCat === '0') {
-				newRec.em = sm;
-				newRec.ey = sy;
 			} else {
 				newRec.em = em;
 				newRec.ey = ey;
@@ -161,13 +160,13 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const changeStartMonth = (val: number) => {
 		setSm(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab, subCat) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
+		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
 		setInput(rec);
 	};
 	const changeStartYear = (val: number) => {
 		setSy(val);
 		let rec = getNewRec();
-		hasOnlyEnddate(childTab, subCat) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
+		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
 		setInput(rec);
 	};
 	const changeEndMonth = (val: number) => {
@@ -247,37 +246,97 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		setInput(rec);
 	};
 
-	useEffect(()=>{
-		const valuation = calculateValuation(childTab, getNewRec(), userInfo, discountRate, ratesData, selectedCurrency, npsData);
-		setValuation(valuation);
-		const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
-		console.log(maturityAmt);
-		setMaturityAmt(maturityAmt);
-	},[amt, category, sm, sy, em, ey, subCat, childTab, userInfo, discountRate, ratesData, selectedCurrency, npsData])
+	useEffect(
+		() => {
+			const valuation = calculateValuation(
+				childTab,
+				getNewRec(),
+				userInfo,
+				discountRate,
+				ratesData,
+				selectedCurrency,
+				npsData
+			);
+			setValuation(valuation);
+			const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
+			console.log(maturityAmt);
+			setMaturityAmt(maturityAmt);
+		},
+		[
+			amt,
+			category,
+			sm,
+			sy,
+			em,
+			ey,
+			rate,
+			subCat,
+			childTab,
+			userInfo,
+			discountRate,
+			ratesData,
+			selectedCurrency,
+			npsData
+		]
+	);
 
 	const { Item: FormItem } = Form;
 
 	return (
 		<Form layout="vertical">
+			<ResultCarousel
+				results={
+					childTab === P2P || childTab === LENT ? (
+						[
+							<ItemDisplay
+								key="valuation"
+								label="Current Valuation"
+								result={valuation}
+								currency={selectedCurrency}
+								pl
+							/>,
+							<ItemDisplay
+								label="Maturity Amount"
+								key="maturity"
+								result={maturityAmt}
+								currency={selectedCurrency}
+								pl
+							/>
+						]
+					) : (
+						[
+							<ItemDisplay
+								key="valuation"
+								label="Current Valuation"
+								result={valuation}
+								currency={selectedCurrency}
+								pl
+							/>
+						]
+					)
+				}
+			/>
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
-      {categoryOptions && (<Col xs={24} md={12}>
-					<FormItem label={fields.type}>
-            <Col>
-              <CascaderInput
-                pre={''}
-                parentValue={category}
-                parentChangeHandler={changeCategory}
-                childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCat}
-                childValue={hasOnlyCategory(childTab) ? '' : subCat}
-                options={categoryOptions}
-              />
-            </Col>
-					</FormItem>
-				</Col>)}
-        {(category === 'NBD' || childTab === P2P) && (
+				{categoryOptions && (
+					<Col xs={24} md={12}>
+						<FormItem label={fields.type}>
+							<Col>
+								<CascaderInput
+									pre={''}
+									parentValue={category}
+									parentChangeHandler={changeCategory}
+									childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCat}
+									childValue={hasOnlyCategory(childTab) ? '' : subCat}
+									options={categoryOptions}
+								/>
+							</Col>
+						</FormItem>
+					</Col>
+				)}
+				{(category === 'NBD' || childTab === P2P) && (
 					<Col xs={24} md={12}>
 						<FormItem label={childTab === P2P ? fields.type : fields.subtype}>
-              <Interest value={subCat} onChange={changeInterest} />
+							<Interest value={subCat} onChange={changeInterest} />
 						</FormItem>
 					</Col>
 				)}
@@ -297,7 +356,13 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				) : (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.amount}>
-							<NumberInput pre="" value={amt} changeHandler={changeAmt} currency={selectedCurrency} min={1}/>
+							<NumberInput
+								pre=""
+								value={amt}
+								changeHandler={changeAmt}
+								currency={selectedCurrency}
+								min={1}
+							/>
 						</FormItem>
 					</Col>
 				)}
@@ -311,7 +376,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				{hasDate(childTab) &&
 				category !== 'H' && (
 					<Col xs={24} md={12}>
-						<FormItem label={fields.date}>
+						<FormItem label={category === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" : fields.date}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DateInput
@@ -319,10 +384,10 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 										startMonthHandler={changeStartMonth}
 										startYearHandler={changeStartYear}
 										endMonthHandler={
-											isRangePicker(childTab, category, subCat) ? changeEndMonth : undefined
+											isRangePicker(childTab, category) ? changeEndMonth : undefined
 										}
 										endYearHandler={
-											isRangePicker(childTab, category, subCat) ? changeEndYear : undefined
+											isRangePicker(childTab, category) ? changeEndYear : undefined
 										}
 										startMonthValue={sm}
 										endMonthValue={em}
@@ -377,16 +442,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 							options={getFamilyOptions(allFamily)}
 							changeHandler={(key: string) => changeMember(key)}
 						/>
-					</FormItem>
-				</Col>
-				{(childTab === P2P || childTab === LENT) && <Col xs={24} md={12}>
-					<FormItem label="Maturity Amount">
-					<label>{toHumanFriendlyCurrency(maturityAmt, selectedCurrency)}</label>
-					</FormItem>
-				</Col>}
-				<Col xs={24} md={12}>
-					<FormItem label="Valuation">
-					<label>{toHumanFriendlyCurrency(valuation, selectedCurrency)}</label>
 					</FormItem>
 				</Col>
 			</Row>

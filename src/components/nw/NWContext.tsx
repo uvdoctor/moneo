@@ -242,7 +242,7 @@ function NWContextProvider() {
             subtype: "Interest",
             name: "Label",
             amount: "Amount",
-            date: "Date",
+            date: "Start Date & Maturity Date",
             rate: "Rate",
             duration: "Duration",
           },
@@ -469,7 +469,7 @@ function NWContextProvider() {
           fields: {
             name: "Label",
             amount: "Amount",
-            date: "Date",
+            date: "Start Date & Maturity Date",
             rate: "Rate",
             type: "Interest"
           },
@@ -1190,14 +1190,6 @@ function NWContextProvider() {
     vehicles,
     p2p,
   ]);
-
-  useEffect(() => {
-    if (isDirty && owner) saveHoldings();
-  }, [childTab]);
-
-  useEffect(() => {
-    setIsDirty(false);
-  }, []);
 
   return (
     <NWContext.Provider
