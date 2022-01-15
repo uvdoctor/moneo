@@ -105,6 +105,9 @@ export default function DateInput({
   };
 
   const disabledDate = (date: Date) => {
+    if(endMonthHandler && date.getFullYear() === year && (date.getMonth()+1 > month+1)) {
+      return date.getMonth()+1 > month+1
+    } 
     if (!customDate || customDate.length === 0 || !date) return false;
     return (
       date.getFullYear() < customDate[0].getFullYear() ||
@@ -137,7 +140,7 @@ export default function DateInput({
             onChange={(values: RangeValue<Date> | null) => {
               const start = values?.[0];
               const end = values?.[1];
-              if (start && end) {
+              if (start && end) { 
                 startYearHandler(start.getFullYear());
                 endYearHandler && endYearHandler(end.getFullYear());
                 startMonthHandler && startMonthHandler(start.getMonth() + 1);

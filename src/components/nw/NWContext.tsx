@@ -60,6 +60,7 @@ import { ROUTES } from "../../CONSTANTS";
 
 const NWContext = createContext({});
 
+export const NATIONAL_SAVINGS_CERTIFICATE = "NSC";
 export const GOLD = "GC";
 export const SILVER = "SI";
 export const PLATINUM = "PL";
@@ -98,13 +99,12 @@ export const TAB = {
   OIT: "Other Investments",
   P2P: "P2P Lending",
   SUMMARY: "Summary",
+  NSC: NATIONAL_SAVINGS_CERTIFICATE
 };
 
 export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
-
-export const NATIONAL_SAVINGS_CERTIFICATE = "NSC";
 
 function NWContextProvider() {
   const {
@@ -123,6 +123,7 @@ function NWContextProvider() {
   const [properties, setProperties] = useState<Array<PropertyInput>>([]);
   const [vehicles, setVehicles] = useState<Array<HoldingInput>>([]);
   const [lendings, setLendings] = useState<Array<HoldingInput>>([]);
+  const [nsc, setNsc] = useState<Array<HoldingInput>>([]);
   const [savings, setSavings] = useState<Array<HoldingInput>>([]);
   const [pf, setPF] = useState<Array<HoldingInput>>([]);
   const [nps, setNPS] = useState<Array<HoldingInput>>([]);
@@ -190,6 +191,7 @@ function NWContextProvider() {
   const [totalVPF, setTotalVPF] = useState<number>(0);
   const [totalEPF, setTotalEPF] = useState<number>(0);
   const [totalP2P, setTotalP2P] = useState<number>(0);
+  const [totalNSC, setTotalNSC] = useState<number>(0);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
 
@@ -235,7 +237,7 @@ function NWContextProvider() {
           categoryOptions: getCascaderOptions({
             BD: "Bank Deposit",
             NBD: "Non-Bank Deposit",
-            [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
+            // [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
           }),
           fields: {
             type: "Type",
@@ -244,7 +246,39 @@ function NWContextProvider() {
             amount: "Amount",
             date: "Start Date & Maturity Date",
             rate: "Rate",
+          },
+        },
+        [TAB.NSC]: {
+          label: TAB.NSC,
+          data: nsc,
+          setData: setNsc,
+          total: totalNSC,
+          fields: {
+            type: "Type",
+            name: "Label",
+            amount: "Amount",
+            date: "Start Date",
+            rate: "Rate",
             duration: "Duration",
+          },
+        },
+        [TAB.PF]: {
+          label: TAB.PF,
+          info: "Example",
+          link: ROUTES.PRIVACY,
+          data: pf,
+          setData: setPF,
+          total: totalPF,
+          categoryOptions: getCascaderOptions({
+            PF: "Pension Fund",
+            EF: "Employee Fund",
+            VF: "Voluntary Fund",
+          }),
+          fields: {
+            type: "Type",
+            amount: "Amount",
+            qty: "Contribution Per Year",
+            rate: "Rate",
           },
         },
       },
@@ -425,6 +459,16 @@ function NWContextProvider() {
           total: totalFRE,
           contentComp: <InstrumentValuation />,
         },
+        [TAB.OIT]: {
+          label: TAB.OIT,
+          info: "Investment Trust",
+          link: ROUTES.PRIVACY,
+          hasUploader: true,
+          data: instruments,
+          setData: setInstruments,
+          total: totalFInv,
+          contentComp: <InstrumentValuation />,
+        },
         [TAB.CRYPTO]: {
           label: TAB.CRYPTO,
           info: "Example",
@@ -472,41 +516,6 @@ function NWContextProvider() {
             date: "Start Date & Maturity Date",
             rate: "Rate",
             type: "Interest",
-          },
-        },
-        [TAB.OIT]: {
-          label: TAB.OIT,
-          info: "Investment Trust",
-          link: ROUTES.PRIVACY,
-          hasUploader: true,
-          data: instruments,
-          setData: setInstruments,
-          total: totalFInv,
-          contentComp: <InstrumentValuation />,
-        },
-      },
-    },
-    Retirement: {
-      label: "Retirement",
-      total: totalRetirement,
-      children: {
-        [TAB.PF]: {
-          label: TAB.PF,
-          info: "Example",
-          link: ROUTES.PRIVACY,
-          data: pf,
-          setData: setPF,
-          total: totalPF,
-          categoryOptions: getCascaderOptions({
-            PF: "Pension Fund",
-            EF: "Employee Fund",
-            VF: "Voluntary Fund",
-          }),
-          fields: {
-            type: "Type",
-            amount: "Amount",
-            qty: "Contribution Per Year",
-            rate: "Rate",
           },
         },
         [TAB.NPS]: {
