@@ -281,12 +281,8 @@ export default function UserSettings(): JSX.Element {
           animated>
           <TabPane className="settings-tabpane-view" tab="Personal" key="1">
             <Row gutter={[10, 10]}>
-              <Col xs={24} sm={24} md={6}>
-                <Row justify="center">
-                  <Col className="personal-tabpane-image-view">
-                    <ImageInput user={user} />
-                  </Col>
-                </Row>
+              <Col className="personal-tabpane-image-view">
+                <ImageInput user={user} />
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Row gutter={[10, 10]}>

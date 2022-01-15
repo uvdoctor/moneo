@@ -102,7 +102,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
           }
         >
-          {avatar(250)}
+          {avatar(230)}
         </span>
         <Tooltip className="edit-icon" title={"Edit Photo"}>
           <Button
