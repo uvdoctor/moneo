@@ -105,9 +105,13 @@ export default function DateInput({
   };
 
   const disabledDate = (date: Date) => {
-    if(endMonthHandler && date.getFullYear() === year && (date.getMonth()+1 > month+1)) {
-      return date.getMonth()+1 > month+1
-    } 
+    if (
+      endMonthHandler &&
+      date.getFullYear() === year &&
+      date.getMonth() + 1 > month + 1
+    ) {
+      return date.getMonth() + 1 > month + 1;
+    }
     if (!customDate || customDate.length === 0 || !date) return false;
     return (
       date.getFullYear() < customDate[0].getFullYear() ||
@@ -130,6 +134,7 @@ export default function DateInput({
       <span>
         {endMonthHandler || endYearHandler || endDateHandler ? (
           <RangePicker
+            allowClear={false}
             picker={picker}
             size={size ? size : "small"}
             defaultValue={[
@@ -140,7 +145,7 @@ export default function DateInput({
             onChange={(values: RangeValue<Date> | null) => {
               const start = values?.[0];
               const end = values?.[1];
-              if (start && end) { 
+              if (start && end) {
                 startYearHandler(start.getFullYear());
                 endYearHandler && endYearHandler(end.getFullYear());
                 startMonthHandler && startMonthHandler(start.getMonth() + 1);
@@ -156,6 +161,7 @@ export default function DateInput({
         ) : (
           <DatePicker
             picker={picker}
+            allowClear={false}
             size={size ? size : "middle"}
             defaultValue={parse(date as string, format, new Date())}
             format={format}
