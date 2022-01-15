@@ -28,7 +28,7 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 		<CascaderInput
 			parentValue={childTab === CRYPTO ? record.name as string : record.subt as string}
 			childValue={
-				hasOnlyCategory(childTab) ? '' : childTab === INS ? record.chgF as number : record.name as string
+				hasOnlyCategory(childTab) ? '' : childTab === INS ? String(record.chgF) : record.name as string
 			}
 			childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCategory}
 			parentChangeHandler={changeCategory}

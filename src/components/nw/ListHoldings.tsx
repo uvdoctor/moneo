@@ -28,7 +28,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
-	const [ maturityAmt, setMaturityAmt ] = useState<number>(0);
 	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
 		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
@@ -168,7 +167,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				expandedColumns.includes('date') && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.date}</Col>
+							<Col>{data[i].subt === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" : fields.date}</Col>
 							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
