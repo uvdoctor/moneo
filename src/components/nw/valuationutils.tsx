@@ -112,7 +112,6 @@ export const calculateLoan = (holding: HoldingInput) => {
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
-	console.log(holding);
 	const remainingDuration = calculateDifferenceInYears(
 		holding.em as number,
 		holding.ey as number,
