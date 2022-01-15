@@ -343,9 +343,7 @@ export const getAssetTypes = () => {
 export const getMarketCap = () => {
   return {
     [APIt.MCap.L]: "Large Cap",
-    [APIt.MCap.M]: "Mid Cap",
-    [APIt.MCap.S]: "Small Cap",
-    [APIt.MCap.H]: "Hybrid Cap",
+    "Multi": "Multi Cap"
   };
 };
 
