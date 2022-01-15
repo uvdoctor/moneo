@@ -96,26 +96,30 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   return (
     <>
-      <span className="image-holder">
-        <span
+      <div className="image-holder">
+        <div
           onClick={
-            user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
+            user?.attributes.picture
+              ? () => setIsModalVisible(true)
+              : openBrowse
           }
         >
           {avatar(230)}
-        </span>
+        </div>
         <Tooltip className="edit-icon" title={"Edit Photo"}>
           <Button
             type="link"
             style={{ color: "black" }}
             icon={<EditOutlined />}
             onClick={
-              user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
+              user?.attributes.picture
+                ? () => setIsModalVisible(true)
+                : openBrowse
             }
           />
         </Tooltip>
         <input type="file" ref={inputEl} onChange={getImage} />
-      </span>
+      </div>
       <Modal
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}

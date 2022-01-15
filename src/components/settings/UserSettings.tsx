@@ -278,9 +278,10 @@ export default function UserSettings(): JSX.Element {
           className="settings-tab-view"
           tabPosition={isMobileDevice(fsb) ? "top" : "left"}
           type={isMobileDevice(fsb) ? "card" : "line"}
-          animated>
+          animated
+        >
           <TabPane className="settings-tabpane-view" tab="Personal" key="1">
-            <Row gutter={[10, 10]}>
+            <Row gutter={[20, 10]}>
               <Col className="personal-tabpane-image-view">
                 <ImageInput user={user} />
               </Col>
@@ -393,7 +394,8 @@ export default function UserSettings(): JSX.Element {
                                 updatePersonalTab();
                               }
                             );
-                          }}>
+                          }}
+                        >
                           Save
                         </Button>
                       </Col>
@@ -479,7 +481,8 @@ export default function UserSettings(): JSX.Element {
                         updateOthersTab();
                       }
                     );
-                  }}>
+                  }}
+                >
                   Save
                 </Button>
               </Col>
@@ -669,7 +672,8 @@ export default function UserSettings(): JSX.Element {
                       checked={whatsapp === mobile}
                       onChange={(e) =>
                         e.target.checked ? updateImIfSameAsMob() : null
-                      }>
+                      }
+                    >
                       <strong>Whatsapp number same as mobile number</strong>
                     </Checkbox>
                   </Col>
