@@ -30,7 +30,6 @@ export default function CurrentAAChart() {
     totalFInv,
     totalProperties,
     selectedCurrency,
-    loadingHoldings,
     totalAssets,
     instruments,
     totalAngel,
@@ -49,18 +48,18 @@ export default function CurrentAAChart() {
     totalFixed,
     totalP2P,
     totalNSC,
+    totalBonds,
+    pricingDone,
   }: any = useContext(NWContext);
   const { insData }: any = useContext(AppContext);
   const [data, setData] = useState<Array<any>>([]);
   const [largeCap, setLargeCap] = useState<number>(0);
-  const [midCap, setMidCap] = useState<number>(0);
-  const [smallCap, setSmallCap] = useState<number>(0);
-  const [hybridCap, setHybridCap] = useState<number>(0);
+  const [multiCap, setMultiCap] = useState<number>(0);
   const [fmp, setFmp] = useState<number>(0);
-  const [bonds, setBonds] = useState<number>(0);
   const [intervalFunds, setIntervalFunds] = useState<number>(0);
   const [indexFunds, setIndexFunds] = useState<number>(0);
   const [liquidFunds, setLiquidFunds] = useState<number>(0);
+  const [allocationDone, setAllocationDone] = useState<boolean>(false);
   const categories: any = {
     "Large-cap Stocks & Funds": {
       color: "#fdd0cb",
@@ -68,12 +67,12 @@ export default function CurrentAAChart() {
     },
     "Multi-cap Stocks & Funds": {
       color: "#e78284",
-      total: midCap + smallCap + hybridCap,
+      total: multiCap,
     },
-    Bonds: { color: "#aa8dfa", total: bonds },
+    Bonds: { color: "#aa8dfa", total: totalBonds },
     "Other Fixed": {
       color: COLORS.BLUE,
-      total: totalFixed - totalPF - liquidFunds - bonds - totalP2P,
+      total: totalFixed - liquidFunds - totalBonds - totalP2P,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#ffc107", total: totalFRE },
@@ -112,16 +111,11 @@ export default function CurrentAAChart() {
   };
 
   useEffect(() => {
-    initChartData();
-  }, [totalAssets]);
-
-  useEffect(() => {
+    if (!pricingDone) return;
+    setAllocationDone(false);
     let largeCap = 0;
-    let midCap = 0;
-    let smallCap = 0;
-    let hybridCap = 0;
+    let multiCap = 0;
     let fmp = 0;
-    let bonds = 0;
     let intervalFunds = 0;
     let indexFunds = 0;
     let liquidFunds = 0;
@@ -130,26 +124,10 @@ export default function CurrentAAChart() {
       if (data) {
         const price = instrument.qty * (data ? data.price : 0);
         if (data.type === AssetType.E) {
-          if (data.meta) {
-            if (data.meta.mcap === MCap.L) largeCap += price;
-            if (data.meta.mcap === MCap.M) midCap += price;
-            if (data.meta.mcap === MCap.S) smallCap += price;
-            if (data.meta.mcap === MCap.H) hybridCap += price;
-            else smallCap += price;
-          }
-          if (data.mcap === MCap.L) largeCap += price;
-          if (data.mcap === MCap.M) midCap += price;
-          if (data.mcap === MCap.S) smallCap += price;
-          if (data.mcap === MCap.H) hybridCap += price;
-        }
-        if (data.type === AssetType.F) {
-          if (
-            data.subt === AssetSubType.CB ||
-            data.subt === AssetSubType.GB ||
-            data.subt === AssetSubType.GBO ||
-            data.subt === AssetSubType.HB
-          )
-            bonds += price;
+          if (data?.meta?.mcap === MCap.L || data?.mcap === MCap.L)
+            largeCap += price;
+          else multiCap += price;
+        } else if (data.type === AssetType.F) {
           if (data.subt === AssetSubType.I) indexFunds += price;
           if (data.subt === AssetSubType.L) liquidFunds += price;
           if (data.mftype && data.subt === AssetSubType.HB) {
@@ -160,15 +138,18 @@ export default function CurrentAAChart() {
       }
     });
     setLargeCap(largeCap);
-    setMidCap(midCap);
-    setSmallCap(smallCap);
-    setHybridCap(hybridCap);
+    setMultiCap(multiCap);
     setIndexFunds(indexFunds);
     setLiquidFunds(liquidFunds);
-    setBonds(bonds);
     setIntervalFunds(intervalFunds);
     setFmp(fmp);
-  }, [instruments]);
+    setAllocationDone(true);
+  }, [pricingDone, instruments]);
+
+  useEffect(() => {
+    if (!allocationDone) return;
+    initChartData();
+  }, [allocationDone]);
 
   const getTooltipDesc = (records: any) => {
     let data: any = "";
@@ -239,7 +220,7 @@ export default function CurrentAAChart() {
     return "";
   };
 
-  return !loadingHoldings ? (
+  return pricingDone ? (
     totalAssets ? (
       <div className="container chart">
         <h3>

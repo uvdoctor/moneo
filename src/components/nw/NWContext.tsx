@@ -98,7 +98,7 @@ export const TAB = {
   REIT: "REITs",
   OIT: "Other Investments",
   P2P: "P2P Lending",
-  SUMMARY: "Summary",
+  SUMMARY: "Allocation",
   NSC: NATIONAL_SAVINGS_CERTIFICATE,
 };
 
@@ -193,6 +193,7 @@ function NWContextProvider() {
   const [totalNSC, setTotalNSC] = useState<number>(0);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
+  const [pricingDone, setPricingDone] = useState<boolean>(false);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
@@ -1108,6 +1109,7 @@ function NWContextProvider() {
     priceCredit();
     priceSavings();
     priceP2P();
+    setPricingDone(true);
   }, [selectedMembers, selectedCurrency]);
 
   useEffect(() => {
@@ -1299,6 +1301,7 @@ function NWContextProvider() {
         setView,
         addSelfMember,
         npsSubcategory,
+        pricingDone,
       }}>
       <NWView />
     </NWContext.Provider>

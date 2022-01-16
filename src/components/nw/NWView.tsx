@@ -122,11 +122,14 @@ export default function NWView() {
       </Fragment>
     ) : (
       <div style={{ textAlign: "center" }}>
-        <h3>Please input your data.</h3>
+        <h3>Please provide your financial data.</h3>
         <h3>Get a comprehensive financial health analysis.</h3>
+        <h3>More data you provide, better the analysis!</h3>
+        <p>&nbsp;</p>
         <Button type="primary" onClick={() => addSelfMember()}>
           Get Started
         </Button>
+        <p>&nbsp;</p>
       </div>
     )
   ) : (

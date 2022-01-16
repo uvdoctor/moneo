@@ -86,10 +86,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
           !isRoot && activeTab === "Financial" ? <UploadHoldings /> : null
         }>
         {isRoot && !liabilities && (
-          <TabPane
-            disabled={!totalAssets ? true : false}
-            key={TAB.SUMMARY}
-            tab={TAB.SUMMARY}>
+          <TabPane disabled={!totalAssets} key={TAB.SUMMARY} tab={TAB.SUMMARY}>
             <CurrentAAChart />
           </TabPane>
         )}
@@ -117,11 +114,14 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                       </Tooltip>
                     )}
                   {allocationPer ? (
-                    <Badge
-                      count={toReadableNumber(allocationPer, 2) + "%"}
-                      offset={[0, -5]}
-                      showZero
-                    />
+                    <>
+                      {!info && " "}
+                      <Badge
+                        count={toReadableNumber(allocationPer, 2) + "%"}
+                        offset={[0, -5]}
+                        showZero
+                      />
+                    </>
                   ) : null}
                 </Fragment>
               }>
