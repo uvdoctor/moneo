@@ -108,9 +108,9 @@ export default function DateInput({
     if (
       endMonthHandler &&
       date.getFullYear() === year &&
-      date.getMonth() + 1 > month + 1
+      date.getMonth() + 1 > month
     ) {
-      return date.getMonth() + 1 > month + 1;
+      return date.getMonth() + 1 > month;
     }
     if (!customDate || customDate.length === 0 || !date) return false;
     return (
