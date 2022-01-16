@@ -103,7 +103,7 @@ export const TAB = {
   OIT: "Other Investments",
   P2P: "P2P Lending",
   SUMMARY: "Allocation",
-  LTDEP: "Long Term Scheme",
+  LTDEP: "Long-term Schemes",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -745,9 +745,21 @@ function NWContextProvider() {
 
   useEffect(() => {
     setTotalFinancial(
-      totalInstruments + totalAngel + totalCrypto + totalP2P + totalNPS
+      totalInstruments +
+        totalAngel +
+        totalCrypto +
+        totalP2P +
+        totalNPS -
+        totalLiquidFunds
     );
-  }, [totalInstruments, totalAngel, totalCrypto, totalP2P, totalNPS]);
+  }, [
+    totalInstruments,
+    totalAngel,
+    totalCrypto,
+    totalP2P,
+    totalNPS,
+    totalLiquidFunds,
+  ]);
 
   useEffect(() => {
     setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
