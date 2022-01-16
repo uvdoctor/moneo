@@ -725,8 +725,10 @@ function NWContextProvider() {
   }, [totalAssets, totalLiabilities]);
 
   useEffect(() => {
-    setTotalCash(totalSavings + totalLendings + totalNSC + totalPF);
-  }, [totalSavings, totalLendings, totalNSC, totalPF]);
+    setTotalCash(
+      totalSavings + totalLendings + totalNSC + totalPF + totalLiquidFunds
+    );
+  }, [totalSavings, totalLendings, totalNSC, totalPF, totalLiquidFunds]);
 
   useEffect(() => {
     setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
@@ -827,6 +829,7 @@ function NWContextProvider() {
         else if (data.type === AssetType.E) {
           totalFEquity += value;
           if (isLargeCap(data)) {
+            console.log("Large-cap value: ", value);
             if (data.itype === InsType.ETF) largeCapETFs += value;
             else largeCap += value;
           } else multiCap += value;
@@ -1125,6 +1128,9 @@ function NWContextProvider() {
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
         const { value, fixed, equity } = calculateNPS(holding, npsData);
+        console.log("NPS value: ", value);
+        console.log("NPS fixed: ", fixed);
+        console.log("NPS equity: ", equity);
         total += value;
         totalNPSFixed += fixed;
         totalNPSEquity += equity;
@@ -1357,6 +1363,9 @@ function NWContextProvider() {
         totalIntervalFunds,
         totalLiquidFunds,
         totalFMP,
+        totalBonds,
+        totalNPSEquity,
+        totalNPSFixed,
       }}>
       <NWView />
     </NWContext.Provider>
