@@ -37,7 +37,7 @@ export const getFamilysList = async () => {
   } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
     data: APIt.ListFamilysQuery;
   };
-  let family: Array<APIt.CreateFamilyInput> | null = listFamilys
+  let family: Array<APIt.CreateFamilyInput> | null = listFamilys?.items?.length
     ? (listFamilys.items as Array<APIt.CreateFamilyInput>)
     : null;
   return family;

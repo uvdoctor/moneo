@@ -282,7 +282,9 @@ export default function CurrentAAChart() {
             },
           ]}
         />
-      ) : null}
+      ) : (
+        <Empty />
+      )}
     </div>
   ) : (
     <Empty />

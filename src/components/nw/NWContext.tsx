@@ -612,6 +612,7 @@ function NWContextProvider() {
   const initializeFamilyList = async () => {
     try {
       let allFamilyMembers = await loadAllFamilyMembers();
+      if (!allFamilyMembers) return;
       setAllFamily(allFamilyMembers);
       let allFamilyKeys = Object.keys(allFamilyMembers);
       setSelectedMembers([
