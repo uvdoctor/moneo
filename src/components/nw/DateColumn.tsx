@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { HoldingInput } from '../../api/goals';
-import { NWContext } from './NWContext';
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext } from './NWContext';
 import DateInput from '../form/DateInput';
 import { hasOnlyEnddate, isRangePicker } from './nwutils';
+import { calculateAddYears } from './valuationutils';
 
 interface MemberAndValuationProps {
 	data: Array<HoldingInput>;
@@ -32,6 +33,14 @@ export default function MemberAndValuation({ data, record, changeData }: MemberA
 		record.em = val;
 		changeData([ ...data ]);
 	};
+
+	useEffect(() => {
+		if(record.subt === NATIONAL_SAVINGS_CERTIFICATE) {
+			const { month, year } = calculateAddYears(record.sm as number, record.sy as number, 5);
+			record.em = month;
+			record.ey = year;
+		}
+	}, [record])
 
 	return (
 		<DateInput
