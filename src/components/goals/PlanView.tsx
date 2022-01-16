@@ -92,6 +92,20 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
             key="1"
             tab={
               <Fragment>
+                <FontAwesomeIcon icon={faChartLine} />
+                &nbsp;&nbsp;Milestones
+              </Fragment>
+            }>
+            <CalcContextProvider calculateFor={ffGoal}>
+              <FIGoalContextProvider>
+                <FIPortfolioChart />
+              </FIGoalContextProvider>
+            </CalcContextProvider>
+          </TabPane>
+          <TabPane
+            key="2"
+            tab={
+              <Fragment>
                 <FontAwesomeIcon icon={faChartPie} />
                 &nbsp;&nbsp;Allocation
               </Fragment>
@@ -104,7 +118,7 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
           </TabPane>
           {allGoals?.length && (
             <TabPane
-              key={"2"}
+              key={"3"}
               tab={
                 <Fragment>
                   <AimOutlined />
@@ -136,20 +150,6 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
               </Row>
             </TabPane>
           )}
-          <TabPane
-            key="3"
-            tab={
-              <Fragment>
-                <FontAwesomeIcon icon={faChartLine} />
-                &nbsp;&nbsp;Milestones
-              </Fragment>
-            }>
-            <CalcContextProvider calculateFor={ffGoal}>
-              <FIGoalContextProvider>
-                <FIPortfolioChart />
-              </FIGoalContextProvider>
-            </CalcContextProvider>
-          </TabPane>
           {allGoals?.length && (
             <TabPane
               key={"4"}
