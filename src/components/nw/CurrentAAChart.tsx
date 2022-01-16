@@ -39,7 +39,7 @@ export default function CurrentAAChart() {
     totalCrypto,
     totalFixed,
     totalP2P,
-    totalNSC,
+    totalLtdep,
     totalBonds,
     totalPM,
     totalLargeCap,
@@ -123,11 +123,11 @@ export default function CurrentAAChart() {
     );
 
   const buildLongTermInfo = () =>
-    totalPF || totalNSC ? (
+    totalPF || totalLtdep ? (
       <>
         Long-term cash includes
         <br />
-        {buildValuationString("NSC", totalNSC)}
+        {buildValuationString("Long-term Schemes", totalLtdep)}
         {buildValuationString("PPF", totalPPF)}
         {buildValuationString("Employee PF", totalEPF)}
         {buildValuationString("Voluntary PF", totalVPF)}
@@ -227,8 +227,8 @@ export default function CurrentAAChart() {
       <CashAA
         emergencyPer={((totalSavings + totalLendings) / totalAssets) * 100}
         emergency={totalSavings + totalLendings}
-        longTerm={totalNSC + totalPF}
-        longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
+        longTerm={totalLtdep + totalPF}
+        longTermPer={((totalLtdep + totalPF) / totalAssets) * 100}
         currency={selectedCurrency}
         // @ts-ignore
         emergencyInfo={emergencyInfo}
