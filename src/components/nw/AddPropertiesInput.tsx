@@ -10,19 +10,21 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
+import ItemDisplay from "../calc/ItemDisplay";
 import CascaderInput from "../form/CascaderInput";
 import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
+import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
 import { NWContext } from "./NWContext";
 import {
 	getDefaultMember,
 	getFamilyOptions,
 } from "./nwutils";
-import { calculateDifferenceInYears } from "./valuationutils";
+import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 
 interface AddPropertiesInputProps {
 	setInput: Function;
@@ -59,6 +61,7 @@ export default function AddPropertyInput({
 	const [error, setError] = useState<boolean>(false);
 	const [ sm, setSm ] = useState<number>(4);
 	const [ sy, setSy ] = useState<number>(presentYear - 5);
+	const [valuation, setValuation] = useState<number>(0);
 
 	const duration = () => {
 		let rec = getNewRec();
@@ -225,6 +228,14 @@ export default function AddPropertyInput({
 		changeMv();
 	}, [amount, rate, sm, sy]);
 
+	useEffect(
+		() => {
+			const valuation = calculateProperty(getNewRec());
+			setValuation(valuation);
+		},
+		[ amount, mv, mvm, mvy, sm, sy, rate ]
+	);
+
 	const changeMv = (val?: number) => {
 		val
 			? setMv(val)
@@ -251,6 +262,15 @@ export default function AddPropertyInput({
 
 	return (
 		<Form layout="vertical">
+			<ResultCarousel
+				results={[
+					<ItemDisplay
+						key="valuation"
+						label="Current Valuation"
+						result={valuation}
+						currency={selectedCurrency}
+						pl
+					/>]}/>
 			<Row
 				gutter={[
 					{ xs: 0, sm: 0, md: 35 },

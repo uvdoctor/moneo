@@ -33,8 +33,9 @@ interface AddHoldingInputProps {
 	disableOk: Function;
 	categoryOptions: any;
 	fields: any;
+	defaultRate: number;
 }
-export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields }: AddHoldingInputProps) {
+export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields, defaultRate }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency, npsData }: any = useContext(NWContext);
 	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, NSC } = TAB;
@@ -47,7 +48,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	);
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
-	const [ rate, setRate ] = useState<number>(0);
+	const [ rate, setRate ] = useState<number>(defaultRate);
 	const [ sm, setSm ] = useState<number>(4);
 	const [ em, setEm ] = useState<number>(3);
 	const [ sy, setSy ] = useState<number>(childTab === VEHICLE ? presentYear - 5 : presentYear + 1);
@@ -246,8 +247,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 
 	useEffect(
 		() => {
-			console.log(getNewRec());
-			
 			const valuation = calculateValuation(
 				childTab,
 				getNewRec(),
