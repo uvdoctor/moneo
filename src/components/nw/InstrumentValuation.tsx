@@ -153,7 +153,7 @@ export default function InstrumentValuation() {
 				if (childTab === TAB.ETF) return data.itype === ETF;
 				if (childTab === MF) return isFund(id) && !data.itype;
 				if (childTab === GOLDB) return data.subt === AssetSubType.GoldB;
-				if (childTab === BOND) return data.type === F && !isFund(id) && !data.itype;
+				if (childTab === BOND) return data.type === F && !isFund(id) && !data.itype && data.subt !== AssetSubType.GoldB;
 				if (childTab === STOCK) return data.type === E && !isFund(id) && !isBond(id);
 			}
 		});
@@ -170,9 +170,9 @@ export default function InstrumentValuation() {
 				const { CB, GBO, I, HB, GB, L } = AssetSubType;
 				const { subt, mftype, type, mcap } = data;
 				return (
-					selectedSubtTags.includes(MCap.L) && mcap === MCap.L || 
+					(selectedSubtTags.includes(MCap.L) && (mcap === MCap.L)) || 
 					(selectedSubtTags.includes("Multi") && (mcap !== MCap.L || !mcap)) || 
-					(selectedSubtTags.includes('CB') && subt === CB || mftype === MFSchemeType.O) ||
+					(selectedSubtTags.includes('CB') && (subt === CB || mftype === MFSchemeType.O)) ||
 					(selectedSubtTags.includes('I') && (type === AssetType.F && subt === I)) ||
 					(selectedSubtTags.includes('GovB') && (subt === GB || subt === GBO)) ||
 					(selectedSubtTags.includes('IF') && (subt === HB && mftype === MFSchemeType.I)) ||
