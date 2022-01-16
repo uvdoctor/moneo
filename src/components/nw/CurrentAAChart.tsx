@@ -44,12 +44,14 @@ export default function CurrentAAChart() {
     totalVPF,
     totalPPF,
     totalNPSEquity,
+    totalNPSFixed,
     totalCrypto,
     totalFixed,
     totalP2P,
     totalNSC,
     totalBonds,
     pricingDone,
+    totalPM,
   }: any = useContext(NWContext);
   const { insData }: any = useContext(AppContext);
   const [data, setData] = useState<Array<any>>([]);
@@ -60,6 +62,8 @@ export default function CurrentAAChart() {
   const [indexFunds, setIndexFunds] = useState<number>(0);
   const [liquidFunds, setLiquidFunds] = useState<number>(0);
   const [allocationDone, setAllocationDone] = useState<boolean>(false);
+  const [emergencyInfo, setEmergencyInfo] = useState<any>("");
+  const [longTermInfo, setLongTermInfo] = useState<any>("");
   const categories: any = {
     "Large-cap Stocks & Funds": {
       color: "#fdd0cb",
@@ -69,10 +73,10 @@ export default function CurrentAAChart() {
       color: "#e78284",
       total: multiCap,
     },
-    Bonds: { color: "#aa8dfa", total: totalBonds },
+    Bonds: { color: "#aa8dfa", total: totalBonds + totalNPSFixed },
     "Other Fixed": {
       color: COLORS.BLUE,
-      total: totalFixed - liquidFunds - totalBonds - totalP2P,
+      total: totalFixed - liquidFunds - totalBonds - totalNPSFixed - totalP2P,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#ffc107", total: totalFRE },
@@ -95,11 +99,53 @@ export default function CurrentAAChart() {
     Crypto: { color: COLORS.RED, total: totalCrypto },
   };
 
+  const buildValuationString = (pre: string, total: number) =>
+    total ? (
+      <>
+        {`${pre}: ${toHumanFriendlyCurrency(
+          total,
+          selectedCurrency
+        )} (${toReadableNumber((total * 100) / totalAssets, 2)}%)`}
+        <br />
+      </>
+    ) : (
+      ""
+    );
+
+  const buildEmergencyInfo = () =>
+    totalSavings || totalLendings || liquidFunds ? (
+      <>
+        Emergency cash includes
+        <br />
+        {buildValuationString("Savings", totalSavings)}
+        {buildValuationString("Deposits", totalLendings)}
+        {buildValuationString("Liquid funds", liquidFunds)}
+      </>
+    ) : (
+      "Emergency cash includes savings, deposits and liquid funds"
+    );
+
+  const buildLongTermInfo = () =>
+    totalPF || totalNSC ? (
+      <>
+        Long-term cash includes
+        <br />
+        {buildValuationString("NSC", totalNSC)}
+        {buildValuationString("PPF", totalPPF)}
+        {buildValuationString("Employee PF", totalEPF)}
+        {buildValuationString("Voluntary PF", totalVPF)}
+      </>
+    ) : (
+      "Long-term cash includes long-term deposits and retirement funds"
+    );
+
   const initChartData = () => {
     if (!totalAssets) {
       setData([...[]]);
       return;
     }
+    setEmergencyInfo(buildEmergencyInfo());
+    setLongTermInfo(buildLongTermInfo());
     let data: Array<any> = [];
     Object.keys(categories).forEach((cat) => {
       data.push({
@@ -191,32 +237,10 @@ export default function CurrentAAChart() {
       });
     if (asset === "Others")
       return getTooltipDesc({
+        "Precious Metals": totalPM - totalPGold,
         "Other Investment Trusts": totalFInv,
         Vehicles: totalVehicles,
       });
-    if (asset === "PF") {
-      return (
-        <>
-          Includes
-          <br />
-          <br />
-          <strong>{toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
-          ({toReadableNumber((totalPPF / totalAssets) * 100, 2)}%) of Pension PF
-          <br />
-          <br />
-          <strong>{toHumanFriendlyCurrency(totalVPF, selectedCurrency)}</strong>
-          ({toReadableNumber((totalVPF / totalAssets) * 100, 2)}%) of Voluntary
-          PF
-          <br />
-          <br />
-          <strong>{toHumanFriendlyCurrency(totalEPF, selectedCurrency)}</strong>
-          ({toReadableNumber((totalEPF / totalAssets) * 100, 2)}%) of Employee
-          PF
-          <br />
-          <br />
-        </>
-      );
-    }
     return "";
   };
 
@@ -233,6 +257,8 @@ export default function CurrentAAChart() {
           longTerm={totalNSC + totalPF}
           longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
           currency={selectedCurrency}
+          emergencyInfo={emergencyInfo}
+          longTermInfo={longTermInfo}
           decimal
         />
         <TreemapChart

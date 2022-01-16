@@ -9,6 +9,8 @@ interface CashAAProps {
   longTerm: number;
   longTermPer: number;
   currency: string;
+  emergencyInfo: any;
+  longTermInfo: any;
   decimal?: boolean;
 }
 
@@ -18,6 +20,8 @@ export default function CashAA({
   longTerm,
   longTermPer,
   currency,
+  emergencyInfo,
+  longTermInfo,
   decimal,
 }: CashAAProps) {
   return (
@@ -36,11 +40,7 @@ export default function CashAA({
       </Col>
       <Col xs={24} sm={12} lg={9}>
         <div className="cash deposits">
-          <LabelWithTooltip
-            label="Emergency"
-            info="Emergency cash including savings, short-term deposits and liquid funds"
-            inline
-          />{" "}
+          <LabelWithTooltip label="Emergency" info={emergencyInfo} inline />{" "}
           <Badge
             count={`${toReadableNumber(emergencyPer, decimal ? 2 : 0)} %`}
           />
@@ -51,11 +51,7 @@ export default function CashAA({
       </Col>
       <Col xs={24} sm={12} lg={9}>
         <div className="cash">
-          <LabelWithTooltip
-            label="Long-term"
-            info="Long-term cash investments in deposits and retirement related funds"
-            inline
-          />{" "}
+          <LabelWithTooltip label="Long-term" info={longTermInfo} inline />{" "}
           <Badge
             count={`${toReadableNumber(longTermPer, decimal ? 2 : 0)} %`}
           />

@@ -28,13 +28,11 @@ interface RenderItemProp {
   value?: any;
 }
 
-interface AssetAllocationChartProps {
+interface TargetAAChartProps {
   yearChangeable?: boolean;
 }
 
-export default function AssetAllocationChart({
-  yearChangeable,
-}: AssetAllocationChartProps) {
+export default function TargetAAChart({ yearChangeable }: TargetAAChartProps) {
   const nowYear = new Date().getFullYear();
   const { Chart, List: DataSwitcherList } = DataSwitcher;
   const { goal, rr, ffGoal, ffResult }: any = useContext(PlanContext);
@@ -137,6 +135,8 @@ export default function AssetAllocationChart({
               emergencyPer={aa.cash[index]}
               longTermPer={aa.ltdep[index]}
               currency={getCurrency()}
+              emergencyInfo="Emergency cash including savings, deposits and liquid funds"
+              longTermInfo="Long-term cash investments in long-term deposits and retirement related funds"
             />
           </div>
         }>
