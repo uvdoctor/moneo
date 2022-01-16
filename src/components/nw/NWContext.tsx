@@ -59,6 +59,7 @@ import {
 } from "./valuationutils";
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from "../../CONSTANTS";
+import { ALL_FAMILY } from "./FamilyInput";
 
 const NWContext = createContext({});
 
@@ -200,6 +201,7 @@ function NWContextProvider() {
   const [totalEPF, setTotalEPF] = useState<number>(0);
   const [totalP2P, setTotalP2P] = useState<number>(0);
   const [totalNSC, setTotalNSC] = useState<number>(0);
+  const [familyMemberKeys, setFamilyMemberKeys] = useState<Array<string>>([]);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
 
@@ -608,9 +610,10 @@ function NWContextProvider() {
       let allFamilyMembers = await loadAllFamilyMembers();
       setAllFamily(allFamilyMembers);
       let allFamilyKeys = Object.keys(allFamilyMembers);
-      if (allFamilyKeys.length === 1) {
-        setSelectedMembers([...[allFamilyKeys[0]]]);
-      }
+      setSelectedMembers([
+        ...[allFamilyKeys.length > 1 ? ALL_FAMILY : allFamilyKeys[0]],
+      ]);
+      setFamilyMemberKeys([...allFamilyKeys]);
       setLoadingFamily(false);
     } catch (err) {
       notification.error({
@@ -633,6 +636,7 @@ function NWContextProvider() {
           tax: member.tax,
         },
       });
+      setFamilyMemberKeys([...[member.id as string]]);
       setSelectedMembers([...[member.id as string]]);
       setLoadingFamily(false);
     }
@@ -829,7 +833,6 @@ function NWContextProvider() {
         else if (data.type === AssetType.E) {
           totalFEquity += value;
           if (isLargeCap(data)) {
-            console.log("Large-cap value: ", value);
             if (data.itype === InsType.ETF) largeCapETFs += value;
             else largeCap += value;
           } else multiCap += value;
@@ -1128,9 +1131,6 @@ function NWContextProvider() {
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
         const { value, fixed, equity } = calculateNPS(holding, npsData);
-        console.log("NPS value: ", value);
-        console.log("NPS fixed: ", fixed);
-        console.log("NPS equity: ", equity);
         total += value;
         totalNPSFixed += fixed;
         totalNPSEquity += equity;
@@ -1366,6 +1366,8 @@ function NWContextProvider() {
         totalBonds,
         totalNPSEquity,
         totalNPSFixed,
+        familyMemberKeys,
+        setFamilyMemberKeys,
       }}>
       <NWView />
     </NWContext.Provider>

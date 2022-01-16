@@ -3,18 +3,21 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
-import {
-  GOLD,
-  PALLADIUM,
-  PLATINUM,
-  SILVER,
-  TAB,
-} from "./NWContext";
+import { GOLD, PALLADIUM, PLATINUM, SILVER, TAB } from "./NWContext";
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
-import { calculateCompundingIncome, calculateCrypto, calculateInsurance, calculateLoan, calculateNPS, calculatePM, calculateProvidentFund, calculateVehicle } from "./valuationutils";
+import {
+  calculateCompundingIncome,
+  calculateCrypto,
+  calculateInsurance,
+  calculateLoan,
+  calculateNPS,
+  calculatePM,
+  calculateProvidentFund,
+  calculateVehicle,
+} from "./valuationutils";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -159,7 +162,8 @@ export const doesPropertyOwnerMatch = (
 
 export const addMemberIfNeeded = async (
   allFamily: any,
-  allFamilySetter: Function,
+  memberKeys: Array<string>,
+  memberKeysSetter: Function,
   taxId: string
 ) => {
   let id = getFamilyMemberKey(allFamily, taxId);
@@ -170,7 +174,8 @@ export const addMemberIfNeeded = async (
     taxId: member?.tid,
     tax: member?.tax,
   };
-  allFamilySetter(allFamily);
+  memberKeys.push(member?.id as string);
+  memberKeysSetter([...memberKeys]);
   return member?.id;
 };
 
@@ -343,7 +348,7 @@ export const getAssetTypes = () => {
 export const getMarketCap = () => {
   return {
     [APIt.MCap.L]: "Large Cap",
-    "Multi": "Multi Cap"
+    Multi: "Multi Cap",
   };
 };
 
@@ -595,29 +600,39 @@ export const hasName = (childTab: string) =>
   ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF].includes(childTab);
 export const hasQtyWithRate = (childTab: string) =>
   [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
-export const isRangePicker = (
-  childTab: string,
-) => [TAB.LENT, TAB.P2P].includes(childTab);
+export const isRangePicker = (childTab: string) =>
+  [TAB.LENT, TAB.P2P].includes(childTab);
 export const hasDate = (childTab: string) =>
-  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.NSC].includes(childTab);
+  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.NSC].includes(
+    childTab
+  );
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
 export const hasOnlyEnddate = (childTab: string) =>
   [TAB.LOAN, TAB.INS].includes(childTab);
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 
-export const calculateValuation = (childTab: string, record: APIt.HoldingInput, userInfo: any, discountRate: number, ratesData: any, selectedCurrency: string, npsData: any) => {
+export const calculateValuation = (
+  childTab: string,
+  record: APIt.HoldingInput,
+  userInfo: any,
+  discountRate: number,
+  ratesData: any,
+  selectedCurrency: string,
+  npsData: any
+) => {
   const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, NSC } = TAB;
   let value = 0;
   switch (childTab) {
     case INS:
       if (discountRate) {
-      value = calculateInsurance(
-        record,
-        discountRate,
-        userInfo?.le,
-        userInfo?.dob
-      )};
+        value = calculateInsurance(
+          record,
+          discountRate,
+          userInfo?.le,
+          userInfo?.dob
+        );
+      }
       break;
     case LOAN:
       value = calculateLoan(record);

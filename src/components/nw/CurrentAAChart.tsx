@@ -205,6 +205,16 @@ export default function CurrentAAChart() {
         "Other Investment Trusts": totalFInv,
         Vehicles: totalVehicles,
       });
+    if (asset === "Large-cap Stocks & Funds")
+      return getTooltipDesc({
+        "NPS Equity Funds": totalNPSEquity,
+        "Other Large-cap Stocks & Funds": totalLargeCap,
+      });
+    if (asset === "Bonds & Funds")
+      return getTooltipDesc({
+        "NPS Bond Funds": totalNPSFixed,
+        "Other Bonds & Funds": totalBonds,
+      });
     return "";
   };
 
