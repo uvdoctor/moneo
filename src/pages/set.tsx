@@ -6,22 +6,21 @@ import { CreateGoalInput } from "../api/goals";
 import { PlanContextProvider } from "../components/goals/PlanContext";
 import BasicPage from "../components/BasicPage";
 
-Amplify.configure({...awsexports, ssr: true});
+Amplify.configure({ ...awsexports, ssr: true });
 
 export default function Set() {
   const [goal, setGoal] = useState<CreateGoalInput | null>(null);
 
   return (
     <BasicPage
-      title={"Set Plan"}
+      title={"Moneo - Set"}
       className="calculator-container steps-landing"
       navScrollable
       fixedNav
-      secure
-    >
+      secure>
       <PlanContextProvider goal={goal} setGoal={setGoal}>
         <SetPlan />
       </PlanContextProvider>
     </BasicPage>
   );
-};
+}
