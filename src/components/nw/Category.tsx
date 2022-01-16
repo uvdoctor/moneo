@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import CascaderInput from '../form/CascaderInput';
-import { hasOnlyCategory } from './nwutils';
+import { getRateByCategory, hasOnlyCategory } from './nwutils';
 interface CategoryProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
@@ -12,7 +12,7 @@ interface CategoryProps {
 
 export default function Category({ data, changeData, categoryOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, INS } = TAB;
+	const { CRYPTO, INS, LTDEP, PF } = TAB;
 
 	const changeCategory = (value: any) => {
 		childTab === CRYPTO ? (record.name = value) : (record.subt = value);
@@ -23,6 +23,12 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 		childTab === INS ? (record.chgF = Number(value)) : (record.name = value);
 		changeData([ ...data ]);
 	};
+
+	useEffect(() => {
+		if(childTab === LTDEP || childTab === PF) {
+			record.chg = getRateByCategory(record.subt as string);
+		}
+	}, [record])
 
 	return (
 		<CascaderInput
