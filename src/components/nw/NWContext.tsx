@@ -64,6 +64,7 @@ import { ALL_FAMILY } from "./FamilyInput";
 const NWContext = createContext({});
 
 export const NATIONAL_SAVINGS_CERTIFICATE = "NSC";
+export const SUKANYA_SAMRIDDHI_YOJANA = "SSY";
 export const GOLD = "GC";
 export const SILVER = "SI";
 export const PLATINUM = "PL";
@@ -102,7 +103,7 @@ export const TAB = {
   OIT: "Other Investments",
   P2P: "P2P Lending",
   SUMMARY: "Allocation",
-  NSC: NATIONAL_SAVINGS_CERTIFICATE,
+  LTDEP: "Long Term Scheme",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -126,7 +127,7 @@ function NWContextProvider() {
   const [properties, setProperties] = useState<Array<PropertyInput>>([]);
   const [vehicles, setVehicles] = useState<Array<HoldingInput>>([]);
   const [lendings, setLendings] = useState<Array<HoldingInput>>([]);
-  const [nsc, setNsc] = useState<Array<HoldingInput>>([]);
+  const [ltdep, setLtdep] = useState<Array<HoldingInput>>([]);
   const [savings, setSavings] = useState<Array<HoldingInput>>([]);
   const [pf, setPF] = useState<Array<HoldingInput>>([]);
   const [nps, setNPS] = useState<Array<HoldingInput>>([]);
@@ -200,8 +201,8 @@ function NWContextProvider() {
   const [totalVPF, setTotalVPF] = useState<number>(0);
   const [totalEPF, setTotalEPF] = useState<number>(0);
   const [totalP2P, setTotalP2P] = useState<number>(0);
-  const [totalNSC, setTotalNSC] = useState<number>(0);
   const [familyMemberKeys, setFamilyMemberKeys] = useState<Array<string>>([]);
+  const [totalLtdep, setTotalLtdep] = useState<number>(0);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
 
@@ -258,11 +259,15 @@ function NWContextProvider() {
             rate: "Rate",
           },
         },
-        [TAB.NSC]: {
-          label: TAB.NSC,
-          data: nsc,
-          setData: setNsc,
-          total: totalNSC,
+        [TAB.LTDEP]: {
+          label: TAB.LTDEP,
+          data: ltdep,
+          setData: setLtdep,
+          total: totalLtdep,
+          categoryOptions: getCascaderOptions({
+            [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
+            [SUKANYA_SAMRIDDHI_YOJANA]: "Sukanya Samriddhi Yojana",
+          }),
           rate: 6.8,
           fields: {
             type: "Type",
@@ -712,7 +717,7 @@ function NWContextProvider() {
     setCredit([...(allHoldings?.credit ? allHoldings.credit : [])]);
     setSavings([...(allHoldings?.savings ? allHoldings.savings : [])]);
     setLendings([...(allHoldings?.dep ? allHoldings.dep : [])]);
-    setNsc([...(allHoldings?.ltdep ? allHoldings?.ltdep : [])]);
+    setLtdep([...(allHoldings?.ltdep ? allHoldings?.ltdep : [])]);
     setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
     setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
     setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
@@ -730,9 +735,9 @@ function NWContextProvider() {
 
   useEffect(() => {
     setTotalCash(
-      totalSavings + totalLendings + totalNSC + totalPF + totalLiquidFunds
+      totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds
     );
-  }, [totalSavings, totalLendings, totalNSC, totalPF, totalLiquidFunds]);
+  }, [totalSavings, totalLendings, totalLtdep, totalPF, totalLiquidFunds]);
 
   useEffect(() => {
     setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
@@ -897,7 +902,7 @@ function NWContextProvider() {
     let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
     updatedHoldings.savings = savings;
     updatedHoldings.dep = lendings;
-    updatedHoldings.ltdep = nsc;
+    updatedHoldings.ltdep = ltdep;
     updatedHoldings.angel = angel;
     updatedHoldings.pf = pf;
     updatedHoldings.loans = loans;
@@ -984,10 +989,10 @@ function NWContextProvider() {
     setTotalLendings(total);
   };
 
-  const priceNSC = () => {
-    if (!nsc.length) return setTotalNSC(0);
+  const priceLtdep = () => {
+    if (!ltdep.length) return setTotalLtdep(0);
     let total = 0;
-    nsc.forEach((holding: HoldingInput) => {
+    ltdep.forEach((holding: HoldingInput) => {
       if (
         holding &&
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
@@ -995,7 +1000,7 @@ function NWContextProvider() {
         total += calculateCompundingIncome(holding).valuation;
       }
     });
-    setTotalNSC(total);
+    setTotalLtdep(total);
   };
 
   const priceP2P = () => {
@@ -1159,7 +1164,7 @@ function NWContextProvider() {
     priceOthers();
     priceCrypto();
     priceLendings();
-    priceNSC();
+    priceLtdep();
     priceInsurance();
     priceLoans();
     priceCredit();
@@ -1224,8 +1229,8 @@ function NWContextProvider() {
   }, [lendings]);
 
   useEffect(() => {
-    priceNSC();
-  }, [nsc]);
+    priceLtdep();
+  }, [ltdep]);
 
   useEffect(() => {
     priceP2P();
@@ -1241,7 +1246,7 @@ function NWContextProvider() {
     instruments,
     savings,
     lendings,
-    nsc,
+    ltdep,
     properties,
     preciousMetals,
     crypto,
@@ -1292,7 +1297,7 @@ function NWContextProvider() {
         totalNPS,
         totalAngel,
         totalLendings,
-        totalNSC,
+        totalLtdep,
         totalInsurance,
         totalLoans,
         totalOthers,
@@ -1301,7 +1306,7 @@ function NWContextProvider() {
         preciousMetals,
         setPreciousMetals,
         loans,
-        nsc,
+        ltdep,
         setLoans,
         insurance,
         setInsurance,

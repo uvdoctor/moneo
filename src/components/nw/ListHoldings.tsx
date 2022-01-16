@@ -2,7 +2,7 @@ import { Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
-import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate, hasRate } from './nwutils';
+import { doesHoldingMatch, getFamilyOptions, hasDate, hasminimumCol, hasName, hasPF, hasQtyWithRate, hasRate } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
 import MemberAndValuation from './Valuation';
@@ -25,7 +25,7 @@ interface ListHoldingsProps {
 }
 export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
-	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, NSC } = TAB;
+	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const fsb = useFullScreenBrowser();
 	const allColumns: any = {
@@ -50,7 +50,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	} else if (childTab === VEHICLE) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date' ];
-	} else if (childTab === LENT || childTab === PF) {
+	} else if (childTab === LENT || childTab === PF || childTab === LTDEP) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date', 'rate', 'qty' ];
 	} else if (childTab === LOAN) {
@@ -59,7 +59,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	} else if (childTab === INS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
-	} else if (childTab === P2P || childTab === NSC) {
+	} else if (childTab === P2P) {
 		defaultColumns = [ 'label', 'fid' ];
 		expandedColumns = [ 'amt', 'date', 'rate', 'qty' ];
 	}
@@ -80,9 +80,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		data[i].fId = ownerKey;
 		changeData([ ...data ]);
 	};
-
-	const hasDate = (childTab: string, record: HoldingInput) =>
-		[ VEHICLE, LENT, LOAN, INS, P2P ].includes(childTab) && record.subt !== 'H';
 
 	const getAllData = (holding: HoldingInput, i: number) => {
 		const dataToRender = {
@@ -162,7 +159,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
-				{hasDate(childTab, data[i]) &&
+				{hasDate(childTab, data[i].subt as string) &&
 				expandedColumns.includes('date') && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
@@ -220,7 +217,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 						</Row>
 					</Col>
 				)}
-				{(childTab === P2P || childTab === LENT || childTab === NSC) && (
+				{(childTab === P2P || childTab === LENT || childTab === LTDEP) && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
 							<Col>Maturity Amount</Col>
