@@ -121,6 +121,7 @@ export default function NWView() {
       </Fragment>
     ) : (
       <div style={{ textAlign: "center" }}>
+        <p>&nbsp;</p>
         <h3>Please provide your financial data.</h3>
         <h3>Get a comprehensive financial health analysis.</h3>
         <h3>More data you provide, better the analysis!</h3>
