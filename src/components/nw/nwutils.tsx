@@ -5,9 +5,11 @@ import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   GOLD,
+  NATIONAL_SAVINGS_CERTIFICATE,
   PALLADIUM,
   PLATINUM,
   SILVER,
+  SUKANYA_SAMRIDDHI_YOJANA,
   TAB,
 } from "./NWContext";
 import { getFXRate } from "../utils";
@@ -586,20 +588,20 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const hasOnlyCategory = (childTab: string) =>
-  [TAB.LENT, TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P].includes(
+  [TAB.LENT, TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P, TAB.LTDEP].includes(
     childTab
   );
 export const hasRate = (childTab: string) =>
-  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.NSC].includes(childTab);
+  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
 export const hasName = (childTab: string) =>
   ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF].includes(childTab);
 export const hasQtyWithRate = (childTab: string) =>
   [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
 export const isRangePicker = (
-  childTab: string,
-) => [TAB.LENT, TAB.P2P].includes(childTab);
-export const hasDate = (childTab: string) =>
-  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.NSC].includes(childTab);
+  childTab: string, category: string
+) => [TAB.LENT, TAB.P2P, TAB.LTDEP].includes(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE;
+export const hasDate = (childTab: string, category: string|undefined) =>
+  [ TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.LTDEP ].includes(childTab) && category !== 'H';
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
 export const hasOnlyEnddate = (childTab: string) =>
   [TAB.LOAN, TAB.INS].includes(childTab);
@@ -607,7 +609,7 @@ export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 
 export const calculateValuation = (childTab: string, record: APIt.HoldingInput, userInfo: any, discountRate: number, ratesData: any, selectedCurrency: string, npsData: any) => {
-  const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, NSC } = TAB;
+  const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, LTDEP } = TAB;
   let value = 0;
   switch (childTab) {
     case INS:
@@ -630,7 +632,7 @@ export const calculateValuation = (childTab: string, record: APIt.HoldingInput, 
       break;
     case LENT:
     case P2P:
-    case NSC:
+    case LTDEP:
       value = calculateCompundingIncome(record).valuation;
       break;
     case NPS:
@@ -648,3 +650,14 @@ export const calculateValuation = (childTab: string, record: APIt.HoldingInput, 
   }
   return value;
 };
+
+export const getRateByCategory = (at: string) => {
+  const funds: {[key: string]: number} = {
+    PF: 7.1, 
+    EF: 8.5,
+    VF: 8.5,
+    [NATIONAL_SAVINGS_CERTIFICATE]: 6.8, 
+    [SUKANYA_SAMRIDDHI_YOJANA]: 7.6,
+  }
+  return funds[at];
+}

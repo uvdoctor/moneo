@@ -24,7 +24,8 @@ import {
 	hasRate,
 	hasOnlyCategory,
 	isRangePicker,
-	calculateValuation
+	calculateValuation,
+	getRateByCategory
 } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
@@ -38,7 +39,7 @@ interface AddHoldingInputProps {
 export default function AddHoldingInput({ setInput, disableOk, categoryOptions, fields, defaultRate }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency, npsData }: any = useContext(NWContext);
 	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
-	const { PM, CRYPTO, LENT: LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, NSC } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, LTDEP } = TAB;
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ category, setCategory ] = useState<string>(categoryOptions ? categoryOptions[0].value : '');
 	const [ subCat, setSubCat ] = useState<string>(
@@ -94,17 +95,17 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.em = em;
 				newRec.ey = ey;
 				break;
-			case NSC:
+			case LTDEP:
 				const { year, month } = calculateAddYears(sm, sy, 5);
 				newRec.type = AssetType.F;
-				newRec.subt = NATIONAL_SAVINGS_CERTIFICATE;
+				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = 1;
 				newRec.name = name;
 				newRec.sm = sm;
 				newRec.sy = sy;
-				newRec.em = month;
-				newRec.ey = year;
+				newRec.em = category === NATIONAL_SAVINGS_CERTIFICATE ? month : em;
+				newRec.ey = category === NATIONAL_SAVINGS_CERTIFICATE ? year : ey;
 				break;
 			case P2P:
 				newRec.type = AssetType.F;
@@ -245,6 +246,12 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		setInput(rec);
 	};
 
+	useEffect(() => {
+		if(childTab===PF || childTab === LTDEP){
+			setRate(getRateByCategory(category))
+		}  
+	}, [category])
+
 	useEffect(
 		() => {
 			const valuation = calculateValuation(
@@ -285,7 +292,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		<Form layout="vertical">
 			<ResultCarousel
 				results={
-					(childTab === P2P || childTab === LENT || childTab === NSC) ? (
+					(childTab === P2P || childTab === LENT || childTab === LTDEP) ? (
 						[
 							<ItemDisplay
 								key="valuation"
@@ -372,8 +379,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 						</FormItem>
 					</Col>
 				)}
-				{hasDate(childTab) &&
-				category !== 'H' && (
+				{hasDate(childTab, category) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.date}>
 							<Row gutter={[ 10, 0 ]}>
@@ -383,10 +389,10 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 										startMonthHandler={changeStartMonth}
 										startYearHandler={changeStartYear}
 										endMonthHandler={
-											isRangePicker(childTab) ? changeEndMonth : undefined
+											isRangePicker(childTab, category) ? changeEndMonth : undefined
 										}
 										endYearHandler={
-											isRangePicker(childTab) ? changeEndYear : undefined
+											isRangePicker(childTab, category) ? changeEndYear : undefined
 										}
 										startMonthValue={sm}
 										endMonthValue={em}
