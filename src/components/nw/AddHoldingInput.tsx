@@ -52,7 +52,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 	const [ em, setEm ] = useState<number>(3);
 	const [ sy, setSy ] = useState<number>(childTab === VEHICLE ? presentYear - 5 : presentYear + 1);
 	const [ ey, setEy ] = useState<number>(presentYear);
-	const [ duration, setDuration ] = useState<number>(5);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ valuation, setValuation ] = useState<number>(0);
 	const [ maturityAmt, setMaturityAmt ] = useState<number>(0);
@@ -95,7 +94,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.ey = ey;
 				break;
 			case NSC:
-				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
+				const { year, month } = calculateAddYears(sm, sy, 5);
 				newRec.type = AssetType.F;
 				newRec.subt = NATIONAL_SAVINGS_CERTIFICATE;
 				newRec.chg = rate;
@@ -105,7 +104,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 				newRec.sy = sy;
 				newRec.em = month;
 				newRec.ey = year;
-				newRec.qty = duration;
 				break;
 			case P2P:
 				newRec.type = AssetType.F;
@@ -190,22 +188,12 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		rec.ey = val;
 		setInput(rec);
 	};
-	const changeDuration = (val: number) => {
-		setDuration(val);
-		let rec = getNewRec();
-		const { year, month } = calculateAddYears(rec.sm as number, rec.sy as number, val);
-		rec.em = month;
-		rec.ey = year;
-		rec.qty = val;
-		setInput(rec);
-	};
 	const changeName = (val: string) => {
 		setName(val);
 		let rec = getNewRec();
 		rec.name = val;
 		setInput(rec);
 	};
-
 	const changeRate = (val: number) => {
 		setRate(val);
 		disableOk(val <= 0);
@@ -258,6 +246,8 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 
 	useEffect(
 		() => {
+			console.log(getNewRec());
+			
 			const valuation = calculateValuation(
 				childTab,
 				getNewRec(),
@@ -285,7 +275,8 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 			discountRate,
 			ratesData,
 			selectedCurrency,
-			npsData
+			npsData,
+			qty
 		]
 	);
 
@@ -295,7 +286,7 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 		<Form layout="vertical">
 			<ResultCarousel
 				results={
-					childTab === P2P || childTab === LENT ? (
+					(childTab === P2P || childTab === LENT || childTab === NSC) ? (
 						[
 							<ItemDisplay
 								key="valuation"
@@ -403,25 +394,6 @@ export default function AddHoldingInput({ setInput, disableOk, categoryOptions, 
 										startYearValue={sy}
 										endYearValue={ey}
 										size="middle"
-									/>
-								</Col>
-							</Row>
-						</FormItem>
-					</Col>
-				)}
-				{childTab === NSC && (
-					<Col xs={24} md={12}>
-						<FormItem label={fields.duration}>
-							<Row gutter={[ 10, 0 ]}>
-								<Col>
-									<SelectInput
-										pre={''}
-										value={duration}
-										options={{
-											5: 'Five Years',
-											10: 'Ten Years'
-										}}
-										changeHandler={(val: number) => changeDuration(val)}
 									/>
 								</Col>
 							</Row>

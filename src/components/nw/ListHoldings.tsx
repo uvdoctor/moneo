@@ -1,7 +1,7 @@
 import { Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
-import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
+import { NWContext, TAB } from './NWContext';
 import { doesHoldingMatch, getFamilyOptions, hasminimumCol, hasName, hasPF, hasQtyWithRate, hasRate } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
@@ -13,7 +13,6 @@ import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { UserOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
-import Duration from './Duration';
 import Interest from './Interest';
 import { calculateCompundingIncome } from './valuationutils';
 require('./ListHoldings.less');
@@ -167,25 +166,11 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				expandedColumns.includes('date') && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
-							<Col>{data[i].subt === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" : fields.date}</Col>
+							<Col>{fields.date}</Col>
 							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
 										<DateColumn data={data} changeData={changeData} record={data[i]} />
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{childTab === NSC && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{'Duration'}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<Duration data={data} changeData={changeData} record={data[i]} />
 									</Col>
 								</Row>
 							</Col>

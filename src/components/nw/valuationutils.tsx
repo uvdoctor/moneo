@@ -54,7 +54,7 @@ export const calculateDifferenceInMonths = (em: number, ey: number, sm: number, 
 };
 
 export const calculateAddYears = (mon: number, yr: number, yearsToAdd: number) => {
-	const result = addYears(new Date(yr, mon, 1), yearsToAdd);
+	const result = addYears(new Date(yr, (mon-1), 1), yearsToAdd);
 	const year = result.getFullYear();
 	const month = result.getMonth();
 	return { year, month };
@@ -170,15 +170,13 @@ export const calculateProvidentFund = (holding: HoldingInput) => {
 			holding.sm as number,
 			holding.sy as number
 		);
-		if (duration <= 0) return (value + holding.qty) as number;
+		if (duration <= 0) return value;
 		for (let i = 0; i < duration; i++) {
 			value += holding.qty as number;
 			value += value + value * ((holding.chg as number) / 100);
 		}
-		return value;
-	} else {
-		return (value + holding.qty) as number;
 	}
+	return value;
 };
 
 export const calculateNPS = (holding: HoldingInput, npsData: Array<CreateNPSPriceInput>) => {
