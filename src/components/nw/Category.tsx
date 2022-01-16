@@ -28,7 +28,7 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 		if(childTab === LTDEP || childTab === PF) {
 			record.chg = getRateByCategory(record.subt as string);
 		}
-	}, [record])
+	}, [record.subt])
 
 	return (
 		<CascaderInput
