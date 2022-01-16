@@ -41,6 +41,8 @@ import {
   CreateUserInsInput,
   UpdateUserInsInput,
   PropertyType,
+  MCap,
+  MFSchemeType,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
 import { includesAny, initOptions } from "../utils";
@@ -166,6 +168,13 @@ function NWContextProvider() {
   const [totalETFs, setTotalETFs] = useState<number>(0);
   const [totalStocks, setTotalStocks] = useState<number>(0);
   const [totalBonds, setTotalBonds] = useState<number>(0);
+  const [totalLargeCap, setTotalLargeCap] = useState<number>(0);
+  const [totalMultiCap, setTotalMultiCap] = useState<number>(0);
+  const [totalLargeCapETF, setTotalLargeCapETF] = useState<number>(0);
+  const [totalFMP, setTotalFMP] = useState<number>(0);
+  const [totalIndexFunds, setTotalIndexFunds] = useState<number>(0);
+  const [totalIntervalFunds, setTotalIntervalFunds] = useState<number>(0);
+  const [totalLiquidFunds, setTotalLiquidFunds] = useState<number>(0);
   const [totalAlternative, setTotalAlternative] = useState<number>(0);
   const [totalPGold, setTotalPGold] = useState<number>(0);
   const [totalFGold, setTotalFGold] = useState<number>(0);
@@ -193,7 +202,6 @@ function NWContextProvider() {
   const [totalNSC, setTotalNSC] = useState<number>(0);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
-  const [pricingDone, setPricingDone] = useState<boolean>(false);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
@@ -773,6 +781,9 @@ function NWContextProvider() {
     setTotalPGold(totalPGold);
   };
 
+  const isLargeCap = (data: any) =>
+    data?.meta?.mcap === MCap.L || data?.mcap === MCap.L;
+
   const priceInstruments = () => {
     let total = 0;
     let totalFGold = 0;
@@ -784,6 +795,13 @@ function NWContextProvider() {
     let totalStocks = 0;
     let totalMFs = 0;
     let totalETFs = 0;
+    let largeCap = 0;
+    let largeCapETFs = 0;
+    let multiCap = 0;
+    let fmp = 0;
+    let intervalFunds = 0;
+    let indexFunds = 0;
+    let liquidFunds = 0;
     let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     if (!cachedData) cachedData = insData;
     instruments.forEach((instrument: InstrumentInput) => {
@@ -802,24 +820,40 @@ function NWContextProvider() {
         else if (data.itype && data.itype === InsType.InvIT) totalInv += value;
         else if (data.type === AssetType.E) {
           totalFEquity += value;
+          if (isLargeCap(data)) {
+            if (data.itype === InsType.ETF) largeCapETFs += value;
+            else largeCap += value;
+          } else multiCap += value;
           if (!isFund(id) && !data.itype) totalStocks += value;
         } else if (data.type === AssetType.F) {
           totalFFixed += value;
-          if (!isFund(id) && !data.itype) totalBonds += value;
+          if (data.subt === AssetSubType.I) indexFunds += value;
+          else if (data.subt === AssetSubType.L) liquidFunds += value;
+          else if (data.mftype && data.subt === AssetSubType.HB) {
+            if (data.mftype === MFSchemeType.I) intervalFunds += value;
+            if (data.mftype === MFSchemeType.C) fmp += value;
+          } else totalBonds += value;
         } else if (data.type === AssetType.H) {
           if (includesAny(data.name as string, ["conservative"])) {
             totalFFixed += 0.7 * value;
             totalFEquity += 0.3 * value;
+            multiCap += 0.3 * value;
           } else if (includesAny(data.name as string, ["multi-asset"])) {
             totalFGold += 0.1 * value;
             totalFEquity += 0.6 * value;
             totalFFixed += 0.3 * value;
+            multiCap += 0.6 * value;
+            totalBonds += 0.3 * value;
           } else if (includesAny(data.name as string, ["balanced"])) {
             totalFEquity += 0.6 * value;
             totalFFixed += 0.4 * value;
+            multiCap += 0.6 * value;
+            totalBonds += 0.4 * value;
           } else {
             totalFFixed += 0.7 * value;
             totalFEquity += 0.3 * value;
+            multiCap += 0.3 * value;
+            totalBonds += 0.7 * value;
           }
         }
       }
@@ -834,6 +868,13 @@ function NWContextProvider() {
     setTotalBonds(totalBonds);
     setTotalETFs(totalETFs);
     setTotalMFs(totalMFs);
+    setTotalLargeCap(largeCap);
+    setTotalLargeCapETF(largeCapETFs);
+    setTotalMultiCap(multiCap);
+    setTotalIndexFunds(indexFunds);
+    setTotalFMP(fmp);
+    setTotalIntervalFunds(intervalFunds);
+    setTotalLiquidFunds(liquidFunds);
   };
 
   const saveHoldings = async () => {
@@ -1109,7 +1150,6 @@ function NWContextProvider() {
     priceCredit();
     priceSavings();
     priceP2P();
-    setPricingDone(true);
   }, [selectedMembers, selectedCurrency]);
 
   useEffect(() => {
@@ -1301,7 +1341,13 @@ function NWContextProvider() {
         setView,
         addSelfMember,
         npsSubcategory,
-        pricingDone,
+        totalLargeCap,
+        totalLargeCapETF,
+        totalMultiCap,
+        totalIndexFunds,
+        totalIntervalFunds,
+        totalLiquidFunds,
+        totalFMP,
       }}>
       <NWView />
     </NWContext.Provider>

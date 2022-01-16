@@ -1,15 +1,7 @@
-import { Empty, Skeleton } from "antd";
+import { Empty } from "antd";
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  AssetSubType,
-  AssetType,
-  InstrumentInput,
-  MCap,
-  MFSchemeType,
-} from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
-import { AppContext } from "../AppContext";
 import CashAA from "../goals/CashAA";
 import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { NWContext } from "./NWContext";
@@ -31,7 +23,6 @@ export default function CurrentAAChart() {
     totalProperties,
     selectedCurrency,
     totalAssets,
-    instruments,
     totalAngel,
     totalOthers,
     totalVehicles,
@@ -50,33 +41,39 @@ export default function CurrentAAChart() {
     totalP2P,
     totalNSC,
     totalBonds,
-    pricingDone,
     totalPM,
+    totalLargeCap,
+    totalMultiCap,
+    totalLargeCapETF,
+    totalIndexFunds,
+    totalLiquidFunds,
+    totalIntervalFunds,
+    totalFMP,
   }: any = useContext(NWContext);
-  const { insData }: any = useContext(AppContext);
   const [data, setData] = useState<Array<any>>([]);
-  const [largeCap, setLargeCap] = useState<number>(0);
-  const [multiCap, setMultiCap] = useState<number>(0);
-  const [fmp, setFmp] = useState<number>(0);
-  const [intervalFunds, setIntervalFunds] = useState<number>(0);
-  const [indexFunds, setIndexFunds] = useState<number>(0);
-  const [liquidFunds, setLiquidFunds] = useState<number>(0);
-  const [allocationDone, setAllocationDone] = useState<boolean>(false);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
   const [longTermInfo, setLongTermInfo] = useState<any>("");
   const categories: any = {
+    "Large-cap ETFs": {
+      color: "#fdd0ab",
+      total: totalLargeCapETF,
+    },
     "Large-cap Stocks & Funds": {
       color: "#fdd0cb",
-      total: largeCap + totalNPSEquity,
+      total: totalLargeCap + totalNPSEquity,
     },
     "Multi-cap Stocks & Funds": {
       color: "#e78284",
-      total: multiCap,
+      total: totalMultiCap,
     },
-    Bonds: { color: "#aa8dfa", total: totalBonds + totalNPSFixed },
+    "Bonds and Funds": {
+      color: "#aa8dfa",
+      total: totalBonds + totalNPSFixed,
+    },
     "Other Fixed": {
       color: COLORS.BLUE,
-      total: totalFixed - liquidFunds - totalBonds - totalNPSFixed - totalP2P,
+      total:
+        totalFixed - totalLiquidFunds - totalBonds - totalNPSFixed - totalP2P,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#ffc107", total: totalFRE },
@@ -113,13 +110,13 @@ export default function CurrentAAChart() {
     );
 
   const buildEmergencyInfo = () =>
-    totalSavings || totalLendings || liquidFunds ? (
+    totalSavings || totalLendings || totalLiquidFunds ? (
       <>
         Emergency cash includes
         <br />
         {buildValuationString("Savings", totalSavings)}
         {buildValuationString("Deposits", totalLendings)}
-        {buildValuationString("Liquid funds", liquidFunds)}
+        {buildValuationString("Liquid funds", totalLiquidFunds)}
       </>
     ) : (
       "Emergency cash includes savings, deposits and liquid funds"
@@ -157,45 +154,12 @@ export default function CurrentAAChart() {
   };
 
   useEffect(() => {
-    if (!pricingDone) return;
-    setAllocationDone(false);
-    let largeCap = 0;
-    let multiCap = 0;
-    let fmp = 0;
-    let intervalFunds = 0;
-    let indexFunds = 0;
-    let liquidFunds = 0;
-    instruments.map((instrument: InstrumentInput) => {
-      const data = insData[instrument.id];
-      if (data) {
-        const price = instrument.qty * (data ? data.price : 0);
-        if (data.type === AssetType.E) {
-          if (data?.meta?.mcap === MCap.L || data?.mcap === MCap.L)
-            largeCap += price;
-          else multiCap += price;
-        } else if (data.type === AssetType.F) {
-          if (data.subt === AssetSubType.I) indexFunds += price;
-          if (data.subt === AssetSubType.L) liquidFunds += price;
-          if (data.mftype && data.subt === AssetSubType.HB) {
-            if (data.mftype === MFSchemeType.I) intervalFunds += price;
-            if (data.mftype === MFSchemeType.C) fmp += price;
-          }
-        }
-      }
-    });
-    setLargeCap(largeCap);
-    setMultiCap(multiCap);
-    setIndexFunds(indexFunds);
-    setLiquidFunds(liquidFunds);
-    setIntervalFunds(intervalFunds);
-    setFmp(fmp);
-    setAllocationDone(true);
-  }, [pricingDone, instruments]);
-
-  useEffect(() => {
-    if (!allocationDone) return;
+    if (!totalAssets) {
+      setData([...[]]);
+      return;
+    }
     initChartData();
-  }, [allocationDone]);
+  }, [totalAssets]);
 
   const getTooltipDesc = (records: any) => {
     let data: any = "";
@@ -219,9 +183,9 @@ export default function CurrentAAChart() {
       });
     if (asset === "Other Fixed")
       return getTooltipDesc({
-        "Fixed Maturity Plan": fmp,
-        "Interval Funds": intervalFunds,
-        "Index Funds": indexFunds,
+        "Fixed Maturity Plan": totalFMP,
+        "Interval Funds": totalIntervalFunds,
+        "Index Funds": totalIndexFunds,
       });
     if (asset === "Real-estate")
       return getTooltipDesc({
@@ -244,24 +208,24 @@ export default function CurrentAAChart() {
     return "";
   };
 
-  return pricingDone ? (
-    totalAssets ? (
-      <div className="container chart">
-        <h3>
-          Total Asset Allocation of{" "}
-          {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}
-        </h3>
-        <CashAA
-          emergencyPer={((totalSavings + totalLendings) / totalAssets) * 100}
-          emergency={totalSavings + totalLendings}
-          longTerm={totalNSC + totalPF}
-          longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
-          currency={selectedCurrency}
-          // @ts-ignore 
-          emergencyInfo={emergencyInfo}
-          longTermInfo={longTermInfo}
-          decimal
-        />
+  return totalAssets ? (
+    <div className="container chart">
+      <h3>
+        Total Asset Allocation of{" "}
+        {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}
+      </h3>
+      <CashAA
+        emergencyPer={((totalSavings + totalLendings) / totalAssets) * 100}
+        emergency={totalSavings + totalLendings}
+        longTerm={totalNSC + totalPF}
+        longTermPer={((totalNSC + totalPF) / totalAssets) * 100}
+        currency={selectedCurrency}
+        // @ts-ignore
+        emergencyInfo={emergencyInfo}
+        longTermInfo={longTermInfo}
+        decimal
+      />
+      {data.length ? (
         <TreemapChart
           data={{
             name: "root",
@@ -308,11 +272,9 @@ export default function CurrentAAChart() {
             },
           ]}
         />
-      </div>
-    ) : (
-      <Empty />
-    )
+      ) : null}
+    </div>
   ) : (
-    <Skeleton active />
+    <Empty />
   );
 }

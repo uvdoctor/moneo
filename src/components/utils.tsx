@@ -300,7 +300,7 @@ export const getAllAssetDetails = () => {
     },
     lcetf: {
       label: "Large-cap ETFs",
-      color: "#fdd0cb",
+      color: "#fdd0ab",
       cat: ASSET_CATEGORIES.STOCKS,
     },
     ilcetf: {
