@@ -1079,7 +1079,7 @@ function NWContextProvider() {
     let totalNPSFixed = 0;
     let totalNPSEquity = 0;
     nps.forEach((holding: HoldingInput) => {
-      if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+      if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
         const { value, fixed, equity } = calculateNPS(holding, npsData);
         total += value;
         totalNPSFixed += fixed;
