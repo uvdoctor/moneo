@@ -290,131 +290,129 @@ export default function UserSettings(): JSX.Element {
           className="settings-tab-view"
           tabPosition={isMobileDevice(fsb) ? "top" : "left"}
           type={isMobileDevice(fsb) ? "card" : "line"}
-          animated
-        >
+          animated>
           <TabPane className="settings-tabpane-view" tab="Personal" key="1">
             {/* <Row gutter={[20, 10]}> */}
-              {/* <Col className="personal-tabpane-image-view">
+            {/* <Col className="personal-tabpane-image-view">
                 <ImageInput user={user} />
               </Col> */}
-              {/* <Col xs={24} sm={24} md={12}> */}
-                <Row gutter={[10, 10]}>
-                  <Col span={24}>
-                    <Row gutter={[0, 5]}>
-                      <Col span={24}>First Name</Col>
-                      <Col xs={24} sm={24} md={8}>
-                        <TextInput
-                          pre=""
-                          placeholder="Name"
-                          value={name}
-                          changeHandler={(val: any) =>
-                            dispatch({
-                              type: "single",
-                              data: { field: "name", val },
-                            })
-                          }
-                          minLength={2}
-                          maxLength={20}
-                          setError={(val: any) =>
-                            dispatch({
-                              type: "single",
-                              data: { field: "error", val },
-                            })
-                          }
-                          fieldName="firstname"
-                          pattern="^[a-zA-Z'-.,]+$"
-                        />
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col span={24}>
-                    <Row gutter={[0, 5]}>
-                      <Col span={24}>Last Name</Col>
-                      <Col xs={24} sm={24} md={8}>
-                        <TextInput
-                          pre=""
-                          placeholder="Last Name"
-                          value={lastName}
-                          changeHandler={(val: any) =>
-                            dispatch({
-                              type: "single",
-                              data: { field: "lastName", val },
-                            })
-                          }
-                          minLength={2}
-                          maxLength={20}
-                          setError={(val: any) =>
-                            dispatch({
-                              type: "single",
-                              data: { field: "error", val },
-                            })
-                          }
-                          fieldName="lastname"
-                          pattern="^[a-zA-Z'-.,]+$"
-                        />
-                      </Col>
-                    </Row>
-                  </Col>
-                  {dobDate && (
-                    <Col span={24}>
-                      <Row gutter={[0, 5]}>
-                        <Col span={24}>Date of Birth</Col>
-                        <Col xs={24} sm={24} md={8}>
-                          <DateInput
-                            title=""
-                            className="dob"
-                            startDateValue={dobDate}
-                            startMonthValue={dobMonth}
-                            startYearValue={dobYear}
-                            startYearHandler={(val: number) =>
-                              dispatch({
-                                type: "single",
-                                data: { field: "dobYear", val },
-                              })
-                            }
-                            startMonthHandler={(val: number) =>
-                              dispatch({
-                                type: "single",
-                                data: { field: "dobMonth", val },
-                              })
-                            }
-                            startDateHandler={(val: number) =>
-                              dispatch({
-                                type: "single",
-                                data: { field: "dobDate", val },
-                              })
-                            }
-                            size="large"
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                  )}
-                  <Col span={24}>
-                    <Row justify="center">
-                      <Col md={12}>
-                        <Button
-                          type="primary"
-                          loading={loading}
-                          style={{ color: COLORS.WHITE }}
-                          icon={<SaveOutlined />}
-                          disabled={error.length > 0 ? true : false}
-                          onClick={() => {
-                            validateCaptcha("personal_settings").then(
-                              (success: boolean) => {
-                                if (!success) return;
-                                updatePersonalTab();
-                              }
-                            );
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </Col>
-                    </Row>
+            {/* <Col xs={24} sm={24} md={12}> */}
+            <Row gutter={[10, 10]}>
+              <Col span={24}>
+                <Row gutter={[0, 5]}>
+                  <Col span={24}>First Name</Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <TextInput
+                      pre=""
+                      placeholder="Name"
+                      value={name}
+                      changeHandler={(val: any) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "name", val },
+                        })
+                      }
+                      minLength={2}
+                      maxLength={20}
+                      setError={(val: any) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "error", val },
+                        })
+                      }
+                      fieldName="firstname"
+                      pattern="^[a-zA-Z'-.,]+$"
+                    />
                   </Col>
                 </Row>
-              {/* </Col> */}
+              </Col>
+              <Col span={24}>
+                <Row gutter={[0, 5]}>
+                  <Col span={24}>Last Name</Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <TextInput
+                      pre=""
+                      placeholder="Last Name"
+                      value={lastName}
+                      changeHandler={(val: any) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "lastName", val },
+                        })
+                      }
+                      minLength={2}
+                      maxLength={20}
+                      setError={(val: any) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "error", val },
+                        })
+                      }
+                      fieldName="lastname"
+                      pattern="^[a-zA-Z'-.,]+$"
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              {dobDate && (
+                <Col span={24}>
+                  <Row gutter={[0, 5]}>
+                    <Col span={24}>Date of Birth</Col>
+                    <Col xs={24} sm={24} md={8}>
+                      <DateInput
+                        title=""
+                        className="dob"
+                        startDateValue={dobDate}
+                        startMonthValue={dobMonth}
+                        startYearValue={dobYear}
+                        startYearHandler={(val: number) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "dobYear", val },
+                          })
+                        }
+                        startMonthHandler={(val: number) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "dobMonth", val },
+                          })
+                        }
+                        startDateHandler={(val: number) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "dobDate", val },
+                          })
+                        }
+                        size="large"
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              )}
+              <Col span={24}>
+                <Row justify="center">
+                  <Col md={12}>
+                    <Button
+                      type="primary"
+                      loading={loading}
+                      style={{ color: COLORS.WHITE }}
+                      icon={<SaveOutlined />}
+                      disabled={error.length > 0 ? true : false}
+                      onClick={() => {
+                        validateCaptcha("personal_settings").then(
+                          (success: boolean) => {
+                            if (!success) return;
+                            updatePersonalTab();
+                          }
+                        );
+                      }}>
+                      Save
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            {/* </Col> */}
             {/* </Row> */}
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Profile" key="2">
@@ -493,8 +491,7 @@ export default function UserSettings(): JSX.Element {
                         updateOthersTab();
                       }
                     );
-                  }}
-                >
+                  }}>
                   Save
                 </Button>
               </Col>
@@ -684,8 +681,7 @@ export default function UserSettings(): JSX.Element {
                       checked={whatsapp === mobile}
                       onChange={(e) =>
                         e.target.checked ? updateImIfSameAsMob() : null
-                      }
-                    >
+                      }>
                       <strong>Whatsapp number same as mobile number</strong>
                     </Checkbox>
                   </Col>
@@ -704,7 +700,7 @@ export default function UserSettings(): JSX.Element {
             </Row>
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Preferences" key="5">
-            <Row gutter={[24,24]}>
+            <Row gutter={[24, 24]}>
               <Col>
                 <Row gutter={[24, 24]}>
                   <Col>
@@ -761,8 +757,7 @@ export default function UserSettings(): JSX.Element {
                         updatePreferenceTab();
                       }
                     );
-                  }}
-                >
+                  }}>
                   Save
                 </Button>
               </Col>
