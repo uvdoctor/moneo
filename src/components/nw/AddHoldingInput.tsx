@@ -69,12 +69,11 @@ export default function AddHoldingInput({
   const [name, setName] = useState<string>("");
   const [qty, setQty] = useState<number>(0);
   const [rate, setRate] = useState<number>(defaultRate);
-  const [sm, setSm] = useState<number>(4);
-  const [em, setEm] = useState<number>(3);
+  const [sm, setSm] = useState<number>(presentMonth);
+  const [em, setEm] = useState<number>(presentMonth);
   const [sy, setSy] = useState<number>(
-    childTab === VEHICLE ? presentYear - 5 : presentYear + 1
-  );
-  const [ey, setEy] = useState<number>(presentYear);
+    childTab === VEHICLE ? presentYear - 5 : presentYear);
+  const [ey, setEy] = useState<number>(presentYear+2);
   const [amt, setAmt] = useState<number>(0);
   const [valuation, setValuation] = useState<number>(0);
   const [maturityAmt, setMaturityAmt] = useState<number>(0);

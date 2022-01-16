@@ -187,8 +187,8 @@ function NWContextProvider() {
   const [activeTabSum, setActiveTabSum] = useState<number>(0);
   const [results, setResults] = useState<Array<any>>([]);
   const [loadingHoldings, setLoadingHoldings] = useState<boolean>(true);
-  const [uname, setUname] = useState<string | null | undefined>(owner);
-  const [insUname, setInsUname] = useState<string | null | undefined>(owner);
+  const [holdings, setHoldings] = useState<boolean>(false);
+  const [insHoldings, setInsholdings] = useState<boolean>(false);
   const [childTab, setChildTab] = useState<string>("");
   const [npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -699,8 +699,8 @@ function NWContextProvider() {
     let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
     setSelectedCurrency(Object.keys(currencyList)[0]);
     setCurrencyList(currencyList);
-    setUname(allHoldings?.uname);
-    setInsUname(insHoldings?.uname);
+    if(allHoldings)setHoldings(true);
+    if(insHoldings)setInsholdings(true);
     if (insHoldings?.uname && insHoldings?.ins?.length)
       await initializeInsData(insHoldings?.ins);
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
@@ -925,13 +925,19 @@ function NWContextProvider() {
     updatedHoldings.credit = credit;
     updatedHoldings.ins = insurance;
     try {
-      uname
-        ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
-        : await addHoldings(updatedHoldings);
+      if(holdings){
+        await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
+      } else {
+        await addHoldings(updatedHoldings);
+        setHoldings(true);
+      }
       if (instruments.length) {
-        insUname
-          ? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
-          : await addInsHoldings(updatedInsHoldings);
+        if(insHoldings){
+          await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
+        } else {
+          await addInsHoldings(updatedInsHoldings);
+          setInsholdings(true);
+        }
       }
       notification.success({
         message: "Data saved",

@@ -170,8 +170,8 @@ export default function UserSettings(): JSX.Element {
     try {
       await Auth.updateUserAttributes(user, { preferred_username: prefuser });
       success("Preferred username updated successfully");
-    } catch (error) {
-      failure(`Unable to update ${error}`);
+    } catch (error: any) {
+      failure(`Unable to update ${error.message}`);
     }
   };
 
