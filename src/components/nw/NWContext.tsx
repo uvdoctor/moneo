@@ -186,7 +186,6 @@ function NWContextProvider() {
   const [activeTab, setActiveTab] = useState<string>("Financial");
   const [activeTabSum, setActiveTabSum] = useState<number>(0);
   const [results, setResults] = useState<Array<any>>([]);
-  const [loadingFamily, setLoadingFamily] = useState<boolean>(true);
   const [loadingHoldings, setLoadingHoldings] = useState<boolean>(true);
   const [uname, setUname] = useState<string | null | undefined>(owner);
   const [insUname, setInsUname] = useState<string | null | undefined>(owner);
@@ -619,7 +618,6 @@ function NWContextProvider() {
         ...[allFamilyKeys.length > 1 ? ALL_FAMILY : allFamilyKeys[0]],
       ]);
       setFamilyMemberKeys([...allFamilyKeys]);
-      setLoadingFamily(false);
     } catch (err) {
       notification.error({
         message: "Family list not loaded",
@@ -643,7 +641,6 @@ function NWContextProvider() {
       });
       setFamilyMemberKeys([...[member.id as string]]);
       setSelectedMembers([...[member.id as string]]);
-      setLoadingFamily(false);
     }
   };
 
@@ -1295,7 +1292,6 @@ function NWContextProvider() {
         setSelectedCurrency,
         activeTabSum,
         setActiveTabSum,
-        loadingFamily,
         loadingHoldings,
         currencyList,
         setCurrencyList,

@@ -18,19 +18,18 @@ export default function NWView() {
     selectedCurrency,
     setSelectedCurrency,
     loadingHoldings,
-    loadingFamily,
     currencyList,
     totalAssets,
     totalLiabilities,
     view,
     setView,
     addSelfMember,
-    allFamily,
+    familyMemberKeys,
   }: any = useContext(NWContext);
   const { appContextLoaded }: any = useContext(AppContext);
 
-  return appContextLoaded && !loadingFamily ? (
-    allFamily && Object.keys(allFamily).length ? (
+  return appContextLoaded ? (
+    familyMemberKeys.length ? (
       <Fragment>
         <div className="primary-header">
           <Row>
@@ -57,7 +56,7 @@ export default function NWView() {
           </Row>
         </div>
         <div className="nw-container">
-          {!loadingHoldings && !loadingFamily ? (
+          {!loadingHoldings ? (
             <Fragment>
               <Row justify="center" gutter={16}>
                 <Col xs={24} sm={24} md={16} lg={8}>

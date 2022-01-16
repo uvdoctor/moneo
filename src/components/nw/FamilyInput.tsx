@@ -39,7 +39,6 @@ export default function FamilyInput() {
     setFamilyMemberKeys,
     selectedMembers,
     setSelectedMembers,
-    loadingFamily,
   }: any = useContext(NWContext);
   const { Option } = Select;
   const [mode, setMode] = useState<string>("");
@@ -152,7 +151,6 @@ export default function FamilyInput() {
                 value={selectedMembers}
                 onChange={(val: string[]) => selectMember(val)}
                 showArrow={familyMemberKeys.length > 1}
-                loading={loadingFamily}
                 filterOption={(input, option) =>
                   // @ts-ignore
                   option?.children.toLowerCase().indexOf(input.toLowerCase()) >=
