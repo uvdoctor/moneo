@@ -322,7 +322,7 @@ export default function AddHoldingInput({
             ? [
                 <ItemDisplay
                   key="valuation"
-                  label="Current Valuation"
+                  label="Current Value"
                   result={valuation}
                   currency={selectedCurrency}
                   pl
@@ -338,7 +338,7 @@ export default function AddHoldingInput({
             : [
                 <ItemDisplay
                   key="valuation"
-                  label="Current Valuation"
+                  label="Current Value"
                   result={valuation}
                   currency={selectedCurrency}
                   pl
