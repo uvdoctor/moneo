@@ -10,7 +10,7 @@ import ListProperties from "./ListProperties";
 import InfoCircleOutlined from "@ant-design/icons/lib/icons/InfoCircleOutlined";
 import TabInfo from "./TabInfo";
 import CurrentAAChart from "./CurrentAAChart";
-import { getCascaderOptions, getNPSFundManagers } from "./nwutils";
+import { getCascaderOptions, getNPSFundManagers, hasRate } from "./nwutils";
 
 interface HoldingTabViewProps {
   liabilities?: boolean;
@@ -155,6 +155,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                             : tabsData[tabName].categoryOptions
                         }
                         fields={tabsData[tabName].fields}
+                        defaultRate={hasRate(childTab) ? tabsData[tabName].rate : 0}
                       />
                     </Col>
                   </Row>

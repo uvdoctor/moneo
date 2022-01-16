@@ -234,6 +234,7 @@ function NWContextProvider() {
           data: lendings,
           setData: setLendings,
           total: totalLendings,
+          rate: 5,
           categoryOptions: getCascaderOptions({
             BD: "Bank Deposit",
             NBD: "Non-Bank Deposit",
@@ -252,6 +253,7 @@ function NWContextProvider() {
           data: nsc,
           setData: setNsc,
           total: totalNSC,
+          rate: 5,
           fields: {
             type: "Type",
             name: "Label",
@@ -268,6 +270,7 @@ function NWContextProvider() {
           data: pf,
           setData: setPF,
           total: totalPF,
+          rate: 7.2,
           categoryOptions: getCascaderOptions({
             PF: "Pension Fund",
             EF: "Employee Fund",
@@ -509,6 +512,7 @@ function NWContextProvider() {
           data: p2p,
           setData: setP2P,
           total: totalP2P,
+          rate: 5,
           fields: {
             name: "Label",
             amount: "Amount",
@@ -544,6 +548,7 @@ function NWContextProvider() {
           data: loans,
           setData: setLoans,
           total: totalLoans,
+          rate: 6,
           fields: {
             name: "Label",
             amount: "Monthly Installment",
@@ -556,6 +561,7 @@ function NWContextProvider() {
           data: insurance,
           total: totalInsurance,
           setData: setInsurance,
+          rate: 6,
           categoryOptions: getCascaderOptions(
             {
               L: "Life",
