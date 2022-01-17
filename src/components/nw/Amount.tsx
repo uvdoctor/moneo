@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import { NWContext, TAB } from './NWContext';
+import { hasPF } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 
 interface AmountProps {
@@ -13,9 +14,7 @@ interface AmountProps {
 
 export default function Amount({ data, changeData, record }: AmountProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { PM, CRYPTO, NPS, PF } = TAB;
-
-	const hasPF = (childTab: string) => [ PF ].includes(childTab);
+	const { PM, CRYPTO, NPS } = TAB;
 
 	const changeAmt = (amt: number) => {
 		record.amt = amt;
