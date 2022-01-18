@@ -141,9 +141,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
   const loadUserInfo = async () => {
-    console.log("Getting user details for owner: ", owner);
     const userDetails = await getUserDetails(owner);
-    console.log("Got user details...", userDetails);
     if (userDetails) {
       setUserInfo(userDetails);
       setDiscountRate(
@@ -151,7 +149,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
           ? getDiscountRate(userDetails?.rp, defaultCountry)
           : userDetails?.dr
       );
-    } else setAppContextLoaded(true);
+      setAppContextLoaded(true);
+    }
   };
 
   useEffect(() => {
@@ -163,13 +162,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     if (!owner) return;
-    loadUserInfo();
+    userInfo ? setAppContextLoaded(true) : loadUserInfo();
   }, [owner]);
-
-  useEffect(() => {
-    if (!userInfo) return;
-    setAppContextLoaded(true);
-  }, [userInfo]);
 
   return (
     <AppContext.Provider
@@ -187,6 +181,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
         validateCaptcha,
         owner,
         userInfo,
+        setUserInfo,
         discountRate,
         setDiscountRate,
       }}>

@@ -49,7 +49,7 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { user, validateCaptcha }: any = useContext(AppContext);
+  const { user, validateCaptcha, setUserInfo }: any = useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -130,17 +130,19 @@ export default function BasicAuthenticator({
         data: user,
       });
     });
-    await createUserinfo({
-      uname,
-      email,
-      notify,
-      dob: DOB,
-      tax: taxLiability,
-      rp: riskProfile,
-      dr: 0,
-      tc: new Date().toISOString(),
-      le: lifeExpectancy,
-    });
+    setUserInfo(
+      await createUserinfo({
+        uname,
+        email,
+        notify,
+        dob: DOB,
+        tax: taxLiability,
+        rp: riskProfile,
+        dr: 0,
+        tc: new Date().toISOString(),
+        le: lifeExpectancy,
+      })
+    );
   };
 
   const handleRegistrationSubmit = async () => {
