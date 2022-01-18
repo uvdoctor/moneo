@@ -29,7 +29,7 @@ export default function CashAA({
       <Col xs={24} lg={6}>
         <div className="cash active">
           <span className="arrow-right" />
-          Total Cash{" "}
+          <LabelWithTooltip label="Total Cash" info="" />
           <Badge
             count={`${toReadableNumber(
               emergencyPer + longTermPer,

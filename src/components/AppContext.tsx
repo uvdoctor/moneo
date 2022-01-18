@@ -149,7 +149,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
           ? getDiscountRate(userDetails?.rp, defaultCountry)
           : userDetails?.dr
       );
-    }
+    } else setAppContextLoaded(true);
   };
 
   useEffect(() => {
