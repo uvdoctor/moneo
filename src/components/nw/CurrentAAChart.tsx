@@ -42,7 +42,8 @@ export default function CurrentAAChart() {
     totalLtdep,
     totalBonds,
     totalPM,
-    totalLargeCap,
+    totalLargeCapStocks,
+    totalLargeCapFunds,
     totalMultiCap,
     totalLargeCapETF,
     totalIndexFunds,
@@ -60,7 +61,7 @@ export default function CurrentAAChart() {
     },
     "Large-cap Stocks & Funds": {
       color: "#fdd0cb",
-      total: totalLargeCap + totalNPSEquity,
+      total: totalLargeCapStocks + totalLargeCapFunds + totalNPSEquity,
     },
     "Multi-cap Stocks & Funds": {
       color: "#e78284",
@@ -207,12 +208,13 @@ export default function CurrentAAChart() {
       });
     if (asset === "Large-cap Stocks & Funds")
       return getTooltipDesc({
-        "NPS Equity Funds": totalNPSEquity,
-        "Other Large-cap Stocks & Funds": totalLargeCap,
+        "Large-cap Stocks": totalLargeCapStocks,
+        "Large-cap Mutual Funds": totalLargeCapFunds,
+        "NPS Equity Schemes": totalNPSEquity,
       });
     if (asset === "Bonds & Funds")
       return getTooltipDesc({
-        "NPS Bond Funds": totalNPSFixed,
+        "NPS Bond Schemes": totalNPSFixed,
         "Other Bonds & Funds": totalBonds,
       });
     return "";

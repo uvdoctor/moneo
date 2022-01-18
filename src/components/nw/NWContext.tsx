@@ -170,7 +170,8 @@ function NWContextProvider() {
   const [totalETFs, setTotalETFs] = useState<number>(0);
   const [totalStocks, setTotalStocks] = useState<number>(0);
   const [totalBonds, setTotalBonds] = useState<number>(0);
-  const [totalLargeCap, setTotalLargeCap] = useState<number>(0);
+  const [totalLargeCapStocks, setTotalLargeCapStocks] = useState<number>(0);
+  const [totalLargeCapFunds, setTotalLargeCapFunds] = useState<number>(0);
   const [totalMultiCap, setTotalMultiCap] = useState<number>(0);
   const [totalLargeCapETF, setTotalLargeCapETF] = useState<number>(0);
   const [totalFMP, setTotalFMP] = useState<number>(0);
@@ -699,8 +700,8 @@ function NWContextProvider() {
     let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
     setSelectedCurrency(Object.keys(currencyList)[0]);
     setCurrencyList(currencyList);
-    if(allHoldings)setHoldings(true);
-    if(insHoldings)setInsholdings(true);
+    if (allHoldings) setHoldings(true);
+    if (insHoldings) setInsholdings(true);
     if (insHoldings?.uname && insHoldings?.ins?.length)
       await initializeInsData(insHoldings?.ins);
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
@@ -822,7 +823,8 @@ function NWContextProvider() {
     let totalStocks = 0;
     let totalMFs = 0;
     let totalETFs = 0;
-    let largeCap = 0;
+    let largeCapStocks = 0;
+    let largeCapFunds = 0;
     let largeCapETFs = 0;
     let multiCap = 0;
     let fmp = 0;
@@ -849,7 +851,10 @@ function NWContextProvider() {
           totalFEquity += value;
           if (isLargeCap(data)) {
             if (data.itype === InsType.ETF) largeCapETFs += value;
-            else largeCap += value;
+            else
+              isFund(instrument.id)
+                ? (largeCapFunds += value)
+                : (largeCapStocks += value);
           } else multiCap += value;
           if (!isFund(id) && !data.itype) totalStocks += value;
         } else if (data.type === AssetType.F) {
@@ -895,7 +900,8 @@ function NWContextProvider() {
     setTotalBonds(totalBonds);
     setTotalETFs(totalETFs);
     setTotalMFs(totalMFs);
-    setTotalLargeCap(largeCap);
+    setTotalLargeCapStocks(largeCapStocks);
+    setTotalLargeCapFunds(largeCapFunds);
     setTotalLargeCapETF(largeCapETFs);
     setTotalMultiCap(multiCap);
     setTotalIndexFunds(indexFunds);
@@ -925,15 +931,15 @@ function NWContextProvider() {
     updatedHoldings.credit = credit;
     updatedHoldings.ins = insurance;
     try {
-      if(holdings){
-        await updateHoldings(updatedHoldings as UpdateUserHoldingsInput)
+      if (holdings) {
+        await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
       } else {
         await addHoldings(updatedHoldings);
         setHoldings(true);
       }
       if (instruments.length) {
-        if(insHoldings){
-          await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
+        if (insHoldings) {
+          await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
         } else {
           await addInsHoldings(updatedInsHoldings);
           setInsholdings(true);
@@ -1376,7 +1382,8 @@ function NWContextProvider() {
         setView,
         addSelfMember,
         npsSubcategory,
-        totalLargeCap,
+        totalLargeCapStocks,
+        totalLargeCapFunds,
         totalLargeCapETF,
         totalMultiCap,
         totalIndexFunds,
