@@ -163,6 +163,9 @@ export const createGoal = /* GraphQL */ `
         p2p
       }
       rp
+      bt
+      rc
+      rcchg
       createdAt
       updatedAt
       owner
@@ -262,6 +265,9 @@ export const updateGoal = /* GraphQL */ `
         p2p
       }
       rp
+      bt
+      rc
+      rcchg
       createdAt
       updatedAt
       owner
@@ -361,6 +367,9 @@ export const deleteGoal = /* GraphQL */ `
         p2p
       }
       rp
+      bt
+      rc
+      rcchg
       createdAt
       updatedAt
       owner

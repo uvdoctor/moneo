@@ -191,6 +191,9 @@ export type CreateGoalInput = {
   img?: string | null,
   pp?: PPInput | null,
   rp?: RiskProfile | null,
+  bt?: BuyType | null,
+  rc?: number | null,
+  rcchg?: number | null,
 };
 
 export enum GoalType {
@@ -274,6 +277,15 @@ export enum RiskProfile {
 }
 
 
+export enum BuyType {
+  P = "P",
+  V = "V",
+  F = "F",
+  E = "E",
+  O = "O",
+}
+
+
 export type ModelGoalConditionInput = {
   sy?: ModelIntInput | null,
   sm?: ModelIntInput | null,
@@ -305,6 +317,9 @@ export type ModelGoalConditionInput = {
   rachg?: ModelFloatInput | null,
   img?: ModelStringInput | null,
   rp?: ModelRiskProfileInput | null,
+  bt?: ModelBuyTypeInput | null,
+  rc?: ModelIntInput | null,
+  rcchg?: ModelFloatInput | null,
   and?: Array< ModelGoalConditionInput | null > | null,
   or?: Array< ModelGoalConditionInput | null > | null,
   not?: ModelGoalConditionInput | null,
@@ -342,6 +357,11 @@ export type ModelBooleanInput = {
 export type ModelRiskProfileInput = {
   eq?: RiskProfile | null,
   ne?: RiskProfile | null,
+};
+
+export type ModelBuyTypeInput = {
+  eq?: BuyType | null,
+  ne?: BuyType | null,
 };
 
 export type Goal = {
@@ -382,6 +402,9 @@ export type Goal = {
   img?: string | null,
   pp?: PP,
   rp?: RiskProfile | null,
+  bt?: BuyType | null,
+  rc?: number | null,
+  rcchg?: number | null,
   createdAt?: string,
   updatedAt?: string,
   owner?: string | null,
@@ -472,6 +495,9 @@ export type UpdateGoalInput = {
   img?: string | null,
   pp?: PPInput | null,
   rp?: RiskProfile | null,
+  bt?: BuyType | null,
+  rc?: number | null,
+  rcchg?: number | null,
 };
 
 export type DeleteGoalInput = {
@@ -1580,6 +1606,9 @@ export type ModelGoalFilterInput = {
   rachg?: ModelFloatInput | null,
   img?: ModelStringInput | null,
   rp?: ModelRiskProfileInput | null,
+  bt?: ModelBuyTypeInput | null,
+  rc?: ModelIntInput | null,
+  rcchg?: ModelFloatInput | null,
   and?: Array< ModelGoalFilterInput | null > | null,
   or?: Array< ModelGoalFilterInput | null > | null,
   not?: ModelGoalFilterInput | null,
@@ -2025,6 +2054,9 @@ export type CreateGoalMutation = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2133,6 +2165,9 @@ export type UpdateGoalMutation = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2241,6 +2276,9 @@ export type DeleteGoalMutation = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4180,6 +4218,9 @@ export type GetGoalQuery = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4281,6 +4322,9 @@ export type ListGoalsQuery = {
         p2p?: number | null,
       } | null,
       rp?: RiskProfile | null,
+      bt?: BuyType | null,
+      rc?: number | null,
+      rcchg?: number | null,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -5794,6 +5838,9 @@ export type OnCreateGoalSubscription = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -5901,6 +5948,9 @@ export type OnUpdateGoalSubscription = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6008,6 +6058,9 @@ export type OnDeleteGoalSubscription = {
       p2p?: number | null,
     } | null,
     rp?: RiskProfile | null,
+    bt?: BuyType | null,
+    rc?: number | null,
+    rcchg?: number | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

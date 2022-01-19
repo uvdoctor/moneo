@@ -120,6 +120,14 @@ type PP {
   p2p: Float
 }
 
+enum BuyType {
+  P
+  V
+  F
+  E
+  O
+}
+
 type Goal @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   sy: Int!
@@ -157,6 +165,9 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   img: String
   pp: PP
   rp: RiskProfile
+  bt: BuyType
+  rc: Int
+  rcchg: Float
 }
 
 enum RiskProfile {

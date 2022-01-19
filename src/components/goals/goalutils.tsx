@@ -15,6 +15,7 @@ import {
   faFileContract,
 } from "@fortawesome/free-solid-svg-icons";
 import { Storage } from "aws-amplify";
+import { BuyType } from "../../api/goals";
 
 export const getGoalsList = async () => {
   try {
@@ -257,7 +258,7 @@ export const createNewGoalInput = (
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 10;
-    bg.achg = 3;
+    bg.achg = 5;
     bg.amper = 2;
     bg.amsy = bg.sy;
     bg.aiper = 0;
@@ -265,6 +266,9 @@ export const createNewGoalInput = (
     bg.tbr = 0;
     bg.ra = 0;
     bg.rachg = 5;
+    bg.bt = BuyType.P;
+    bg.rc = 0;
+    bg.rcchg = 3;
   } else if (goalType === APIt.GoalType.E) {
     bg.tbr = 0;
     bg.achg = 0;

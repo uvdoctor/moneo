@@ -7,7 +7,7 @@ import {
 } from "../calc/finance";
 import { appendValue, buildArray, getAllAssetTypes } from "../utils";
 import { isTaxCreditEligible } from "./goalutils";
-import { GoalType, RiskProfile, TargetInput } from "../../api/goals";
+import { BuyType, GoalType, RiskProfile, TargetInput } from "../../api/goals";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr || (tr === 100 && maxTaxDL === 0)) return 0;
@@ -25,7 +25,10 @@ export const calculateBuyAnnualNetCF = (
   index: number,
   p: number,
   aiPer: number,
-  aiSY: number
+  aiSY: number,
+  buyType: BuyType | null | undefined,
+  runningCost: number,
+  runningCostChg: number
 ) => {
   let annualNetCF = 0;
   let yearlyPrice = !index ? p : getCompoundedIncome(chgRate, p, index);
@@ -37,6 +40,9 @@ export const calculateBuyAnnualNetCF = (
     annualNetCF -= yearlyPrice * (amCostPer / 100) * yearFactor;
   if (aiPer && startYear + index >= aiSY)
     annualNetCF += yearlyPrice * (aiPer / 100) * yearFactor;
+  if (buyType === BuyType.V && runningCost)
+    annualNetCF -=
+      yearFactor * getCompoundedIncome(runningCostChg, runningCost, index);
   return Math.round(annualNetCF);
 };
 //Tested
@@ -254,7 +260,10 @@ export const calculateSellCFs = (
       0,
       p,
       goal.aiper as number,
-      goal.aisy as number
+      goal.aisy as number,
+      goal.bt,
+      goal.rc as number,
+      goal.rcchg as number
     );
     cfs.push(Math.round(netAnnualAmt));
   }
@@ -284,7 +293,10 @@ const createAutoCFs = (
         i,
         p,
         goal.aiper as number,
-        goal.aisy as number
+        goal.aisy as number,
+        goal.bt,
+        goal.rc as number,
+        goal.rcchg as number
       );
       if (cfs[i]) cfs[i] += Math.round(netCF);
       else cfs.push(Math.round(netCF));
@@ -528,7 +540,10 @@ export const createLoanCFs = (
         year - goal.sy,
         price,
         goal.aiper as number,
-        goal.aisy as number
+        goal.aisy as number,
+        goal.bt,
+        goal.rc as number,
+        goal.rcchg as number
       );
     }
     if (isTaxCreditEligible(goal.type)) {
@@ -584,7 +599,10 @@ const createManualCFs = (
           i,
           p,
           goal.aiper as number,
-          goal.aisy as number
+          goal.aisy as number,
+          goal.bt,
+          goal.rc as number,
+          goal.rcchg as number
         )
       );
     cfs.push(v ? -v : 0);

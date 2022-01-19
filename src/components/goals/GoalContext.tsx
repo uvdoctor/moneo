@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import {
+  BuyType,
   CreateGoalInput,
   GoalType,
   LMH,
@@ -186,6 +187,15 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
     goal?.rachg
   );
+  const [buyType, setBuyType] = useState<BuyType>(
+    goal?.bt ? goal.bt : BuyType.P
+  );
+  const [runningCost, setRunningCost] = useState<number>(
+    goal?.rc ? goal.rc : 0
+  );
+  const [runningCostChg, setRunningCostChg] = useState<number>(
+    goal?.rcchg ? goal.rcchg : 0
+  );
   const [brAns, setBRAns] = useState<any>("");
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
@@ -265,6 +275,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       g.tbr = rentTaxBenefit;
       g.ra = rentAmt;
       g.rachg = rentChgPer;
+      g.bt = buyType;
+      g.rc = runningCost;
+      g.rcchg = runningCostChg;
     } else if (goalType === GoalType.E) {
       g.achg = loanGracePeriod;
       g.tbr = eduCostSemester;
@@ -401,6 +414,12 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     startYear,
     endYear,
   ]);
+
+  useEffect(() => {
+    setAssetChgRate(
+      buyType === BuyType.P ? 5 : buyType === BuyType.E ? -25 : -15
+    );
+  }, [buyType]);
 
   useEffect(() => {
     let intRate = loanIntRate as number;
@@ -653,6 +672,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     aiStartYear,
     iSchedule,
     rr,
+    runningCost,
+    runningCostChg,
   ]);
 
   useEffect(() => {
@@ -977,6 +998,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         setGoalImgKey,
         goalImgUrl,
         setGoalImgUrl,
+        buyType,
+        runningCost,
+        runningCostChg,
       }}>
       {children ? children : <CalcTemplate />}
     </GoalContext.Provider>
