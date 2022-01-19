@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Col, notification, Row, Space } from 'antd';
 import { AppContext } from '../AppContext';
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
