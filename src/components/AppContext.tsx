@@ -141,9 +141,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
   const loadUserInfo = async () => {
-    console.log("Getting user info....");
     const userDetails = await getUserDetails(owner);
-    console.log("User details...", userDetails);
     if (userDetails) {
       setUserInfo(userDetails);
       setDiscountRate(

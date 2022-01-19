@@ -416,12 +416,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   ]);
 
   useEffect(() => {
-    setAssetChgRate(
-      buyType === BuyType.P ? 5 : buyType === BuyType.E ? -25 : -15
-    );
-  }, [buyType]);
-
-  useEffect(() => {
     let intRate = loanIntRate as number;
     if (
       goal.type === GoalType.E &&

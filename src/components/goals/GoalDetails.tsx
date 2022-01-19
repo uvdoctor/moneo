@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import SelectInput from "../form/selectinput";
 import GoalPayment from "./GoalPayment";
 import { GoalContext } from "./GoalContext";
 import Section from "../form/section";
 import { CalcContext } from "../calc/CalcContext";
-import { GoalType } from "../../api/goals";
+import { BuyType, GoalType } from "../../api/goals";
 import { PlanContext } from "./PlanContext";
 import { getImpLevels } from "./goalutils";
 import DateInput from "../form/DateInput";
@@ -13,6 +13,7 @@ import { toHumanFriendlyCurrency, toStringArr } from "../utils";
 import NumberInput from "../form/numberinput";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
+import RadioInput from "../form/RadioInput";
 
 export default function GoalDetails() {
   const router = useRouter();
@@ -40,16 +41,52 @@ export default function GoalDetails() {
     assetChgRate,
     setAssetChgRate,
     sellPrice,
+    buyType,
+    runningCost,
+    setRunningCost,
+    runningCostChg,
+    setRunningCostChg,
+    setBuyType,
   }: any = useContext(GoalContext);
   const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
   const showStartMonth =
     (isPublicCalc || goal.type === GoalType.B) &&
     !manualMode &&
     goal.type !== GoalType.E;
-  const [depreciates, setDepreciates] = useState<boolean>(assetChgRate < 0);
+
+  const buyTypes: any = {
+    Property: BuyType.P,
+    Vehicle: BuyType.V,
+    Electronics: BuyType.E,
+    Furniture: BuyType.F,
+    Other: BuyType.O,
+  };
+
+  const getBuyTypeString = (val: BuyType) => {
+    for (let key of Object.keys(buyTypes)) {
+      if (buyTypes[key] === val) return key;
+    }
+    return BuyType.P;
+  };
+
+  useEffect(() => {
+    setAssetChgRate(
+      buyType === BuyType.P ? 5 : buyType === BuyType.E ? -25 : -15
+    );
+    setSellAfter(buyType === BuyType.P ? 20 : 5);
+  }, [buyType]);
 
   return (
     <>
+      {goal.type === GoalType.B && (
+        <p>
+          <RadioInput
+            options={Object.keys(buyTypes)}
+            value={getBuyTypeString(buyType)}
+            changeHandler={(val: string) => setBuyType(buyTypes[val])}
+          />
+        </p>
+      )}
       <Section
         title="Goal details"
         toggle={
@@ -83,6 +120,28 @@ export default function GoalDetails() {
           endValue={lastStartYear}
         />
 
+        {goal.type === GoalType.B && buyType === BuyType.V && (
+          <NumberInput
+            pre="Monthly usage cost"
+            info="Monthly cost to use the vehicle (eg: fuel, driver, etc)"
+            value={runningCost}
+            changeHandler={setRunningCost}
+            currency={currency}
+          />
+        )}
+
+        {goal.type === GoalType.B && buyType === BuyType.V && runningCost && (
+          <NumberInput
+            pre="Usage cost changes"
+            info="Rate at which the usage cost changes in a year"
+            value={runningCostChg}
+            changeHandler={setRunningCostChg}
+            step={0.1}
+            max={10}
+            unit="% yearly"
+          />
+        )}
+
         {goal.type !== GoalType.B && !router.pathname.endsWith(ROUTES.LOAN) && (
           <DateInput
             title="Ends"
@@ -112,30 +171,14 @@ export default function GoalDetails() {
         {goal.type === GoalType.B && (
           <NumberInput
             info="Approximate rate at which you expect resale value to change yearly."
-            pre="Assume yearly resale value"
-            addBefore={
-              <SelectInput
-                pre=""
-                value={depreciates ? "d" : "i"}
-                changeHandler={(val: string) => {
-                  const isDepreciating = val === "d";
-                  setDepreciates(isDepreciating);
-                  setAssetChgRate(-assetChgRate);
-                }}
-                options={{
-                  i: "Increases",
-                  d: "Decreases",
-                }}
-              />
-            }
-            unit="%"
+            pre="Assume resale value changes"
+            unit="% yearly"
             post={`Sell price ${toHumanFriendlyCurrency(sellPrice, currency)}`}
-            max={40}
+            min={-40}
+            max={15}
             step={0.5}
-            value={Math.abs(assetChgRate)}
-            changeHandler={(val: number) =>
-              setAssetChgRate(depreciates ? -val : val)
-            }
+            value={assetChgRate}
+            changeHandler={setAssetChgRate}
           />
         )}
       </Section>
