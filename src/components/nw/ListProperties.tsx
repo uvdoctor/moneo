@@ -279,10 +279,10 @@ export default function ListProperties({
 													own.per = val;
 													changeData([...data]);
 												}} 
-												pre={''} 
+												pre={<UserOutlined />} 
 												addBefore={
 													<SelectInput
-														pre={<UserOutlined />}
+														pre={''}
 														value={own.fId as string}
 														options={getFamilyOptions(allFamily)}
 														changeHandler={(val: string) => {

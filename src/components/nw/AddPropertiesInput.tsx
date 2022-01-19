@@ -406,7 +406,7 @@ export default function AddPropertyInput({
 								<Row gutter={[10, 10]} align='bottom'>
 									<Col>
 										<NumberInput 
-											pre='' 
+											pre={<UserOutlined />}
 											min={1} 
 											max={100} 
 											value={owner.per} 
@@ -415,7 +415,7 @@ export default function AddPropertyInput({
 											unit='%'
 											addBefore={
 												<SelectInput
-													pre={<UserOutlined />}
+													pre={''}
 													value={owner.fId as string}
 													options={getFamilyOptions(allFamily)}
 													changeHandler={(key: string) => changeMember(i, key)}
