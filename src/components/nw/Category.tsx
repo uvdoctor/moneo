@@ -12,15 +12,15 @@ interface CategoryProps {
 
 export default function Category({ data, changeData, categoryOptions, record }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, INS, LTDEP, PF } = TAB;
+	const { CRYPTO, INS, LTDEP, PF, P2P, LENT } = TAB;
 
 	const changeCategory = (value: any) => {
-		childTab === CRYPTO ? (record.name = value) : (record.subt = value);
+		childTab === CRYPTO ? (record.name = value) : childTab === P2P ? (record.chgF = Number(value)) :  (record.subt = value);
 		changeData([ ...data ]);
 	};
 
 	const changeSubCategory = (value: any) => {
-		childTab === INS ? (record.chgF = Number(value)) : (record.name = value);
+		childTab === INS || childTab === LENT ? (record.chgF = Number(value)) : (record.name = value);
 		changeData([ ...data ]);
 	};
 
@@ -32,9 +32,9 @@ export default function Category({ data, changeData, categoryOptions, record }: 
 
 	return (
 		<CascaderInput
-			parentValue={childTab === CRYPTO ? record.name as string : record.subt as string}
+			parentValue={childTab === CRYPTO ? record.name as string : childTab === P2P ? String(record.chgF) : record.subt as string}
 			childValue={
-				hasOnlyCategory(childTab) ? '' : childTab === INS ? String(record.chgF) : record.name as string
+				hasOnlyCategory(childTab) ? '' : (childTab === INS || childTab === LENT) ? String(record.chgF) : record.name as string
 			}
 			childChangeHandler={hasOnlyCategory(childTab) ? '' : changeSubCategory}
 			parentChangeHandler={changeCategory}

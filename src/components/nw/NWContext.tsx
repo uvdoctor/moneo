@@ -236,7 +236,7 @@ function NWContextProvider() {
           setData: setSavings,
           total: totalSavings,
           fields: {
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
           },
         },
@@ -249,11 +249,20 @@ function NWContextProvider() {
           categoryOptions: getCascaderOptions({
             BD: "Bank Deposit",
             NBD: "Non-Bank Deposit",
-          }),
+          }, { 
+            BD: {
+              "4": "Accumulates every 3 months" 
+            }, 
+            NBD: {
+              "0": "Paid out",
+              "4": "Accumulates every 3 months",
+              "2": "Accumulates every 6 months",
+              "1": "Accumulates every year"
+            }
+          }, false ),
           fields: {
-            type: "Type",
-            subtype: "Interest",
-            name: "Label",
+            type: "Type & Interest",
+            name: "Comment",
             amount: "Amount",
             date: "Start Date & Maturity Date",
             rate: "Rate",
@@ -271,7 +280,7 @@ function NWContextProvider() {
           rate: 6.8,
           fields: {
             type: "Type",
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
             date: "Start Date",
             rate: "Rate",
@@ -320,7 +329,7 @@ function NWContextProvider() {
           }),
           fields: {
             type: "Type",
-            name: "Label",
+            name: "Comment",
             amount: "Purchase Amount",
             date: "Purchase Date",
             rate: "Appreciation Rate",
@@ -342,7 +351,7 @@ function NWContextProvider() {
           }),
           fields: {
             type: "Type",
-            name: "Label",
+            name: "Comment",
             amount: "Purchase Amount",
             date: "Purchase Date",
           },
@@ -406,7 +415,7 @@ function NWContextProvider() {
           }),
           fields: {
             type: "Type",
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
           },
         },
@@ -518,7 +527,7 @@ function NWContextProvider() {
           setData: setAngel,
           total: totalAngel,
           fields: {
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
           },
         },
@@ -528,8 +537,13 @@ function NWContextProvider() {
           setData: setP2P,
           total: totalP2P,
           rate: 5,
+          categoryOptions: getCascaderOptions({ 
+            "0": "Paid out",
+            "4": "Accumulates every 3 months",
+            "2": "Accumulates every 6 months",
+            "1": "Accumulates every 1 months"}),
           fields: {
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
             date: "Start Date & Maturity Date",
             rate: "Rate",
@@ -565,7 +579,7 @@ function NWContextProvider() {
           total: totalLoans,
           rate: 6,
           fields: {
-            name: "Label",
+            name: "Comment",
             amount: "Monthly Installment",
             rate: "Rate of Interest",
             date: "End date",
@@ -590,7 +604,7 @@ function NWContextProvider() {
           ),
           fields: {
             type: "Type & Premium Mode",
-            name: "Label",
+            name: "Comment",
             amount: "Premium Amount",
             rate: "Premium increases",
             date: "End date",
@@ -602,7 +616,7 @@ function NWContextProvider() {
           total: totalCredit,
           setData: setCredit,
           fields: {
-            name: "Label",
+            name: "Comment",
             amount: "Amount",
           },
         },

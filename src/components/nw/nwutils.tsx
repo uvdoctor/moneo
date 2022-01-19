@@ -600,7 +600,6 @@ export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const hasOnlyCategory = (childTab: string) =>
   [
-    TAB.LENT,
     TAB.OTHER,
     TAB.VEHICLE,
     TAB.CRYPTO,

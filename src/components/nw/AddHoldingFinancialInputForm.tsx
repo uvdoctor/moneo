@@ -1,8 +1,8 @@
 import React, { useReducer, useContext, useState, useEffect } from "react";
-import { Row, Col, Button, Select, Input, AutoComplete, Spin } from "antd";
+import { Row, Col, Button, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getInstrumentDataWithKey } from "./nwutils";
-import { NWContext } from "./NWContext";
+import { NWContext, TAB } from "./NWContext";
 
 interface InstrumentsData {
   listInExchgPrices: [];
@@ -21,7 +21,6 @@ interface Holding {
 
 interface DataState {
   assetType: string;
-  familyMember: string;
   price: number;
   type: string;
   instrumentData: InstrumentsData;
@@ -78,7 +77,6 @@ const dataReducer = (
         ...dataState,
         ...{
           assetType: "",
-          familyMember: "",
           type: "",
           price: 0,
         },
@@ -92,7 +90,8 @@ const dataReducer = (
 };
 
 export default function HoldingInput(props: any) {
-  const { allFamily, childTab }: any = useContext(NWContext);
+  const { childTab }: any = useContext(NWContext);
+  const { STOCK, GOLDB, BOND, REIT, OIT, ETF } = TAB;
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [rawDetails, setRawDetails] = useState<{}>({});
   const [holdingState, dispatch] = useReducer(holdingReducer, {
@@ -107,7 +106,6 @@ export default function HoldingInput(props: any) {
   const [dataState, dispatchDataState] = useReducer(dataReducer, {
     assetType: "",
     price: 0,
-    familyMember: "",
     type: "",
     instrumentData: {
       listInExchgPrices: [],
@@ -117,9 +115,8 @@ export default function HoldingInput(props: any) {
     suggestions: [],
     buttonState: true,
   });
-  const { instrumentData, suggestions, buttonState, assetType, familyMember } =
+  const { instrumentData, suggestions, buttonState, assetType } =
     dataState;
-  const { Option } = Select;
 
   const onSearch = (searchText: any) => {
     const data = instrumentData[optionTableMap[assetType]]
@@ -139,14 +136,18 @@ export default function HoldingInput(props: any) {
 
   const getFilters = (option: string) => {
     switch (option) {
-      case "Gold Bonds":
+      case GOLDB:
         return { prop: "subt", value: "GoldB" };
-      case "ETFs":
+      case ETF:
         return { prop: "itype", value: "ETF" };
-      case "REITs":
+      case REIT:
         return { prop: 'itype', value: 'REIT'};
-      case "Other Investments":
+      case OIT:
         return { prop: 'itype', value: 'InvIT'};
+      case STOCK:
+        return { prop: 'subt', value: 'S'};
+      case BOND:
+        return { prop: 'type', value:  'F'}
       default:
         return null;
     }
@@ -172,14 +173,13 @@ export default function HoldingInput(props: any) {
       data: {
         instrumentData: Object.assign({}, fetchedInstrumentData),
         suggestions: data,
-        familyMember: "",
       },
     });
     setShowSpinner(false);
   };
 
   const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["familyMember", "qty", "name", "id"];
+    const toValidateArr = ["qty", "name", "id"];
     const toValidateHoldingState = Object.assign(
       {},
       holdingState,
@@ -203,55 +203,13 @@ export default function HoldingInput(props: any) {
   }; 
 
   useEffect(() => {
-    const option = childTab;
-    changeAssetType(option);
+    changeAssetType(childTab);
   }, [childTab])
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col flex={6}>
-        <label htmlFor="familyMember">Family member</label> <br />
-        <Select
-          id="familyMember"
-          value={familyMember}
-          style={{ width: 170 }}
-          onSelect={async (option: any, details) => {
-            const { value, fid } = details;
-            dispatch({ type: "formUpdate", data: { fId: fid } });
-            dispatchDataState({
-              type: "formUpdate",
-              data: { familyMember: value },
-            });
-            updateButtonStatus({ familyMember: option });
-          }}
-        >
-          {Object.keys(allFamily).map((item, key) => (
-            <Option key={key} value={allFamily[item].name} fid={item}>
-              {allFamily[item].name}
-            </Option>
-          ))}
-        </Select>
-      </Col>
-
-      <Col flex={3}>
-        <label htmlFor="qty">Quantity</label> <br />
-        <Input
-          id="qty"
-          value={qty}
-          placeholder="Quantity"
-          min={0}
-          style={{ width: 80 }}
-          onChange={(e) => {
-            const data = { qty: e.target.value };
-            dispatch({ type: "formUpdate", data });
-            updateButtonStatus(data);
-          }}
-          type="number"
-        />
-      </Col>
-
+    !showSpinner ? (<Row gutter={[16, 16]}>
       <Col flex={8}>
-        <label htmlFor="name">Name</label> <br />
+        <label htmlFor="name">Name</label><br />
         <AutoComplete
           id="name"
           options={suggestions}
@@ -277,11 +235,23 @@ export default function HoldingInput(props: any) {
           value={holdingState.name}
           onSearch={onSearch}
         />
-        {showSpinner && (
-          <span style={{ position: "relative", top: "-30px", left: "9px" }}>
-            <Spin>Loading...</Spin>
-          </span>
-        )}
+      </Col>
+
+      <Col flex={3}>
+        <label htmlFor="qty">Quantity</label> <br />
+        <Input
+          id="qty"
+          value={qty}
+          placeholder="Quantity"
+          min={0}
+          style={{ width: 80 }}
+          onChange={(e) => {
+            const data = { qty: e.target.value };
+            dispatch({ type: "formUpdate", data });
+            updateButtonStatus(data);
+          }}
+          type="number"
+        />
       </Col>
 
       <Col flex={2}>
@@ -290,6 +260,9 @@ export default function HoldingInput(props: any) {
           <PlusOutlined />
         </Button>
       </Col>
-    </Row>
+    </Row>) : 
+    ( 
+      <Spin>Loading...</Spin>
+    )
   );
 }

@@ -1,10 +1,13 @@
 import React, { Fragment, useState, useContext } from 'react';
-import { Modal, Button } from 'antd';
-import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { Modal, Button, Dropdown, Menu } from 'antd';
+import { PlusOutlined, SaveOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
 import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
 import { NWContext, TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
+import { getFamilyOptions } from '../nwutils';
+import MenuItem from 'antd/lib/menu/MenuItem';
+import { InstrumentInput } from '../../../api/goals';
 
 require('./AddHoldings.less');
 
@@ -18,19 +21,28 @@ interface AddHoldingsProps {
 	defaultRate: number;
 }
 
-export default function AddHoldings({ data, changeData, isPrimary, title, categoryOptions, fields, defaultRate }: AddHoldingsProps) {
+export default function AddHoldings({
+	data,
+	changeData,
+	isPrimary,
+	title,
+	categoryOptions,
+	fields,
+	defaultRate
+}: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>({});
-	const { setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(NWContext);
+	const { setInstruments, instruments, childTab, saveHoldings, isDirty, allFamily }: any = useContext(NWContext);
 	const [ instrumentsList, setInstrumentsList ] = useState<Array<any>>([]);
+	const { STOCK, GOLDB, BOND, REIT, OIT, ETF, MF } = TAB;
 
 	const close = () => {
 		setModalVisibility(false);
 	};
 
-	const hasInstruments = (childTab: string) =>
-		[ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB, TAB.REIT, TAB.OIT ].includes(childTab);
+	const familyList = Object.keys(getFamilyOptions(allFamily));
+	const hasInstruments = (childTab: string) => [ MF, STOCK, GOLDB, BOND, REIT, OIT, ETF ].includes(childTab);
 
 	const addHolding = () => {
 		if (hasInstruments(childTab)) {
@@ -42,6 +54,41 @@ export default function AddHoldings({ data, changeData, isPrimary, title, catego
 		}
 		close();
 	};
+
+	const addFamilyMember = (fid: string) => {
+		if (hasInstruments(childTab)) {
+			const updatedinstruments = instrumentsList.map((item: InstrumentInput) => (item.fId = fid));
+			setInstrumentsList([ ...updatedinstruments, ...instruments ]);
+		} else {
+			const rec = newRec;
+			rec.fId = fid;
+			setNewRec(rec);
+		}
+	};
+
+	const handleAddButtonClick = () => {
+		if (familyList.length === 1) {
+			const fid = familyList[0];
+			addFamilyMember(fid);
+			addHolding();
+		}
+	};
+
+	const handleMenuClick = (e: any) => {
+		const fid = e.key;
+		addFamilyMember(fid);
+		addHolding();
+	};
+
+	const menu = (
+		<Menu onClick={handleMenuClick}>
+			{Object.keys(getFamilyOptions(allFamily)).map((key: string) => (
+				<MenuItem key={key} icon={<UserOutlined />}>
+					{getFamilyOptions(allFamily)[key]}
+				</MenuItem>
+			))}
+		</Menu>
+	);
 
 	const updateInstruments = (instrumentsToAdd: []) => {
 		instrumentsToAdd.map((item: any) => {
@@ -77,12 +124,27 @@ export default function AddHoldings({ data, changeData, isPrimary, title, catego
 				className="add-holdings"
 				title={title}
 				visible={isModalVisible}
-				onCancel={close}
-				onOk={() => addHolding()}
 				okButtonProps={{ disabled: okDisabled }}
 				destroyOnClose
 				centered
 				width="800px"
+				footer={[
+					<Button key="link" type="link" onClick={close}>
+						Cancel
+					</Button>,
+					familyList.length > 1 ? (
+						<Dropdown overlay={menu} key={'add'}>
+							<Button key="link" type="primary" onClick={handleAddButtonClick}>
+								{isPrimary ? 'Add' : 'Add Manually'}
+								<DownOutlined />
+							</Button>
+						</Dropdown>
+					) : (
+						<Button key="link" type="primary" onClick={handleAddButtonClick}>
+							{isPrimary ? 'Add' : 'Add Manually'}
+						</Button>
+					)
+				]}
 			>
 				{hasInstruments(childTab) ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />

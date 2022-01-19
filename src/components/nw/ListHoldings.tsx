@@ -2,7 +2,16 @@ import { Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
-import { doesHoldingMatch, getFamilyOptions, hasDate, hasminimumCol, hasName, hasPF, hasQtyWithRate, hasRate } from './nwutils';
+import {
+	doesHoldingMatch,
+	getFamilyOptions,
+	hasDate,
+	hasminimumCol,
+	hasName,
+	hasPF,
+	hasQtyWithRate,
+	hasRate
+} from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
 import MemberAndValuation from './Valuation';
@@ -13,7 +22,6 @@ import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { UserOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
-import Interest from './Interest';
 import { calculateCompundingIncome } from './valuationutils';
 require('./ListHoldings.less');
 
@@ -50,7 +58,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	} else if (childTab === VEHICLE) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date' ];
-	} else if (childTab === LENT || childTab === PF || childTab === LTDEP) {
+	} else if (childTab === LENT || childTab === PF || childTab === LTDEP || childTab === P2P) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'label', 'amt', 'date', 'rate', 'qty' ];
 	} else if (childTab === LOAN) {
@@ -59,9 +67,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	} else if (childTab === INS) {
 		defaultColumns = [ 'cat', 'fid' ];
 		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
-	} else if (childTab === P2P) {
-		defaultColumns = [ 'label', 'fid' ];
-		expandedColumns = [ 'amt', 'date', 'rate', 'qty' ];
 	}
 	const changeName = (val: any, i: number) => {
 		data[i].name = val;
@@ -104,47 +109,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	const expandedRow = (i: number) => {
 		return (
 			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 10 } ]}>
-				{hasName(childTab) &&
-				expandedColumns.includes('label') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.name}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<TextInput
-											pre=""
-											changeHandler={(val: string) => changeName(val, i)}
-											value={data[i].name as string}
-											size={'middle'}
-											style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{((childTab === LENT && data[i].subt === 'NBD') || childTab === P2P) && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>Interest</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<Interest
-											value={String(data[i].chgF)}
-											onChange={(value: string) => {
-												data[i].chgF = Number(value);
-												changeData([ ...data ]);
-											}}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
 				{expandedColumns.includes('amt') && (
 					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[ 10, 0 ]}>
@@ -224,7 +188,33 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
-										<label>{toHumanFriendlyCurrency(calculateCompundingIncome(data[i]).maturityAmt, selectedCurrency)}</label>
+										<label>
+											{toHumanFriendlyCurrency(
+												calculateCompundingIncome(data[i]).maturityAmt,
+												selectedCurrency
+											)}
+										</label>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
+					</Col>
+				)}
+				{hasName(childTab) &&
+				expandedColumns.includes('label') && (
+					<Col xs={24} sm={12} md={8}>
+						<Row gutter={[ 10, 0 ]}>
+							<Col>{fields.name}</Col>
+							<Col>
+								<Row gutter={[ 10, 0 ]}>
+									<Col>
+										<TextInput
+											pre=""
+											changeHandler={(val: string) => changeName(val, i)}
+											value={data[i].name as string}
+											size={'middle'}
+											style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
+										/>
 									</Col>
 								</Row>
 							</Col>

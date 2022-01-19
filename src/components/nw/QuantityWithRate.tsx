@@ -34,10 +34,7 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 				step={0.1}
 				size='small'
 			/>
-			{` ${childTab === TAB.PM ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
-				quantity * getRate(subtype, name),
-				selectedCurrency
-			)}`}
+			{` ${childTab === TAB.PM ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} `}
 		</Fragment>
 	);
 }

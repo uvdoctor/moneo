@@ -3,7 +3,6 @@ import { Row, Col, Button, Divider, Badge } from "antd";
 import {
   DeleteOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import { COLORS } from "../../CONSTANTS";
@@ -15,13 +14,11 @@ import {
   toReadableNumber,
 } from "../utils";
 import { getColourForAssetType } from "./nwutils";
-import { NWContext } from "./NWContext";
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
 
 export default function AddHoldingFinancialInput(props: any) {
   const { insData, setInsData }: any = useContext(AppContext);
   const [holdings, setHoldings] = useState<{}[]>([]);
-  const { allFamily }: any = useContext(NWContext);
   const { updateInstruments, disableOk } = props;
 
   useEffect(() => {
@@ -47,7 +44,7 @@ export default function AddHoldingFinancialInput(props: any) {
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
     const {
-      holding: { curr, qty, id, fId },
+      holding: { curr, qty, id },
       key,
     } = props;
     const { price, type } = insData[id];
@@ -61,10 +58,6 @@ export default function AddHoldingFinancialInput(props: any) {
                   Sorry, unable to find price for this one!
                 </h4>
               }
-            </Col>
-            <Col>
-              <UserOutlined />
-              &nbsp;{allFamily[fId].name}
             </Col>
           </Row>
 
