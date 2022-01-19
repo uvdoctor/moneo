@@ -46,7 +46,7 @@ export default function AddHoldingInput({
 	);
 	const [ subCat, setSubCat ] = useState<string>(
 		categoryOptions && !hasOnlyCategory(childTab)
-			? categoryOptions[0].children[0].value
+			? (categoryOptions.length && categoryOptions[0].children[0].value)
 			: category === 'NBD' || childTab === P2P ? '0' : ''
 	);
 	const [ name, setName ] = useState<string>('');
