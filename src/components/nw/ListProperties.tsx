@@ -2,7 +2,6 @@ import {
 	Button,
 	Col,
 	Empty,
-	InputNumber,
 	Row,
 	Table,
 	Tooltip,
