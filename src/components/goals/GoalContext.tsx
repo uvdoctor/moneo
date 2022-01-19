@@ -733,9 +733,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           (rentAmt as number) * 12,
           j
         );
-        let maintenanceCost = value * ((amCostPer as number) / 100);
         if (rentTaxBenefit) value *= 1 - taxRate / 100;
-        value += maintenanceCost;
         let buyCF = buyCFs[j];
         if (j === i - 1 && buyCF > 0) {
           if (loanPer && loanMonths && manualMode < 1 && i * 12 < loanMonths)
