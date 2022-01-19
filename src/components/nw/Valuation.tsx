@@ -9,14 +9,14 @@ import { calculateValuation, getFamilyOptions, hasminimumCol } from './nwutils';
 import { DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import NumberInput from '../form/numberinput';
 
-interface MemberAndValuationProps {
+interface ValuationProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
 	record: HoldingInput;
 	index: number;
 }
 
-export default function MemberAndValuation({ data, record, changeData, index }: MemberAndValuationProps) {
+export default function Valuation({ data, record, changeData, index }: ValuationProps) {
 	const { childTab, npsData, selectedCurrency, allFamily }: any = useContext(NWContext);
 	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
 	const { SAV, OTHER, ANGEL, CREDIT } = TAB;
@@ -56,7 +56,7 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 	const hasAmountAsValuation = (childTab: string) => [ ANGEL, SAV, CREDIT, OTHER ].includes(childTab);
 
 	return (
-		<Row gutter={[ 10, 10 ]}>
+		<Row gutter={[ 10, 10 ]} align='middle'>
 			<Col>
 				<Row align="middle">
 					<Col>
@@ -87,17 +87,21 @@ export default function MemberAndValuation({ data, record, changeData, index }: 
 			</Col>
 			{hasminimumCol(childTab) && (
 				<Col>
-					<Row align="middle">
+					<Row>
 						<Col>
 							<UserOutlined />
 						</Col>
 						<Col>
-							<SelectInput
-								pre=""
-								value={record.fId ? record.fId : ''}
-								options={getFamilyOptions(allFamily)}
-								changeHandler={(key: string) => changeOwner(key, index)}
-							/>
+							{Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
+								<SelectInput
+									pre=""
+									value={record.fId ? record.fId : ''}
+									options={getFamilyOptions(allFamily)}
+									changeHandler={(key: string) => changeOwner(key, index)}
+								/>
+							) : (
+								<label>{getFamilyOptions(allFamily)[record.fId]}</label>
+							)}
 						</Col>
 					</Row>
 				</Col>

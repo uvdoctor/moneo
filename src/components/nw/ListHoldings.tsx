@@ -14,7 +14,7 @@ import {
 } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
-import MemberAndValuation from './Valuation';
+import Valuation from './Valuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
@@ -92,7 +92,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			cat: categoryOptions && (
 				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
 			),
-			fid: <MemberAndValuation data={data} changeData={changeData} record={holding} index={i} />,
+			fid: <Valuation data={data} changeData={changeData} record={holding} index={i} />,
 			label: (
 				<TextInput
 					pre=""
@@ -223,19 +223,23 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				)}
 				{!hasminimumCol(childTab) && (
 					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
+						<Row gutter={[ 10, 0 ]} align="middle">
 							<Col>
 								<UserOutlined />
 							</Col>
 							<Col>
 								<Row gutter={[ 10, 0 ]}>
 									<Col>
-										<SelectInput
-											pre=""
-											value={data[i].fId ? data[i].fId : ''}
-											options={getFamilyOptions(allFamily)}
-											changeHandler={(key: string) => changeOwner(key, i)}
-										/>
+										{Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
+											<SelectInput
+												pre=""
+												value={data[i].fId ? data[i].fId : ''}
+												options={getFamilyOptions(allFamily)}
+												changeHandler={(key: string) => changeOwner(key, i)}
+											/>
+										) : (
+											<label>{getFamilyOptions(allFamily)[data[i].fId]}</label>
+										)}
 									</Col>
 								</Row>
 							</Col>
