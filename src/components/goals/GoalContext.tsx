@@ -1001,6 +1001,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         buyType,
         runningCost,
         runningCostChg,
+        setBuyType,
+        setRunningCost,
+        setRunningCostChg,
       }}>
       {children ? children : <CalcTemplate />}
     </GoalContext.Provider>
