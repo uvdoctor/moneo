@@ -186,6 +186,7 @@ export default function UserSettings(): JSX.Element {
       await updateUserDetails({
         uname: owner,
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
+        le: lifeExpectancy
       });
       success("Updated Successfully");
     } catch (error) {
@@ -194,29 +195,15 @@ export default function UserSettings(): JSX.Element {
     setLoading(false);
   };
 
-  const updateOthersTab = async () => {
-    setLoading(true);
-    try {
-      await updateUserDetails({
-        uname: owner,
-        rp: riskProfile,
-        tax,
-        le: lifeExpectancy,
-      });
-      success("Updated Successfully");
-    } catch {
-      failure("Unable to update");
-    }
-    setLoading(false);
-  };
-
-  const updatePreferenceTab = async () => {
+  const updateProfileTab = async () => {
     setLoading(true);
     try {
       await updateUserDetails({
         uname: owner,
         dr: isDrManual ? discountRate : 0,
         notify,
+        rp: riskProfile,
+        tax,
       });
       success("Updated Successfully");
     } catch {
@@ -389,6 +376,30 @@ export default function UserSettings(): JSX.Element {
                   </Row>
                 </Col>
               )}
+                <Col span={24}>
+                  <Row gutter={[0, 5]}>
+                    <Col xs={24} sm={24} md={8}>
+                    <Col>
+                    <RadialInput
+                      pre="Life Expectancy"
+                      label="Years"
+                      value={lifeExpectancy}
+                      changeHandler={(val: number) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "lifeExpectancy", val },
+                        })
+                      }
+                      step={1}
+                      data={toStringArr(70, 100, 1)}
+                      labelBottom
+                      trackColor={COLORS.WHITE}
+                      info="This will be used to define the duration for which Financial Planning is Needed."
+                    />
+                  </Col>
+                    </Col>
+                  </Row>
+                </Col>
               <Col span={24}>
                 <Row justify="center">
                   <Col md={12}>
@@ -416,11 +427,48 @@ export default function UserSettings(): JSX.Element {
             {/* </Row> */}
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Profile" key="2">
-            <Row gutter={[24, 24]} justify="center">
-              <Col xs={24} sm={24} md={8}>
-                <Row gutter={[10, 0]}>
-                  <Col>
-                    <SelectInput
+            <Row gutter={[24, 24]}>
+                  <Col xs={24} sm={24} md={12}>
+                    <NumberInput
+                      unit="%"
+                      pre="Discount Rate"
+                      value={discountRate}
+                      changeHandler={setDiscountRate}
+                      disabled={!isDrManual}
+                      addBefore={
+                        <SelectInput
+                          pre=""
+                          value={isDrManual ? "manual" : "auto"}
+                          options={{ manual: "Manual", auto: "Auto" }}
+                          changeHandler={(value: string) =>
+                            dispatch({
+                              type: "single",
+                              data: {
+                                field: "isDrManual",
+                                val: value === "manual",
+                              },
+                            })
+                          }
+                        />
+                      }
+                    />
+                  </Col>
+                  <Col xs={24} sm={24} md={12}>
+                    Subscribe to offers and newsletters
+                    <br />
+                    <RadioInput
+                      options={["Yes", "No"]}
+                      value={notify ? "Yes" : "No"}
+                      changeHandler={(value: string) =>
+                        dispatch({
+                          type: "single",
+                          data: { field: "notify", val: value === "Yes" },
+                        })
+                      }
+                    />
+                  </Col>
+                  <Col xs={24} sm={24} md={12}>
+                  <SelectInput
                       info="How much Risk are You willing to take in order to achieve higher Investment Return?"
                       pre="Can Tolerate"
                       unit="Loss"
@@ -434,12 +482,8 @@ export default function UserSettings(): JSX.Element {
                       options={getRiskProfileOptions()}
                     />
                   </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={8}>
-                <Row gutter={[10, 0]}>
-                  <Col>
-                    <SelectInput
+                  <Col xs={24} sm={24} md={12}>
+                  <SelectInput
                       info="How much do you earn in a year?"
                       pre="Yearly Income"
                       value={tax}
@@ -452,33 +496,7 @@ export default function UserSettings(): JSX.Element {
                       options={getTaxLiabilityOptions()}
                     />
                   </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={8}>
-                <Row gutter={[10, 0]}>
-                  <Col>
-                    <RadialInput
-                      pre="Life Expectancy"
-                      label="Years"
-                      value={lifeExpectancy}
-                      changeHandler={(val: number) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "lifeExpectancy", val },
-                        })
-                      }
-                      step={1}
-                      data={toStringArr(70, 100, 1)}
-                      labelBottom
-                      trackColor={COLORS.WHITE}
-                      info="This will be used to define the duration for which Financial Planning is Needed."
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row justify="center">
-              <Col>
+              <Col span={24}>
                 <Button
                   type="primary"
                   loading={loading}
@@ -488,7 +506,7 @@ export default function UserSettings(): JSX.Element {
                     validateCaptcha("profile_settings").then(
                       (success: boolean) => {
                         if (!success) return;
-                        updateOthersTab();
+                        updateProfileTab();
                       }
                     );
                   }}>
@@ -687,9 +705,6 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
               </Col>
-              <Col xs={24} sm={24} md={12}>
-                <DeleteAccount />
-              </Col>
             </Row>
           </TabPane>
           <TabPane className="settings-tabpane-view" tab="Password" key="4">
@@ -699,67 +714,10 @@ export default function UserSettings(): JSX.Element {
               </Col>
             </Row>
           </TabPane>
-          <TabPane className="settings-tabpane-view" tab="Preferences" key="5">
-            <Row gutter={[24, 24]}>
-              <Col>
-                <Row gutter={[24, 24]}>
-                  <Col>
-                    <NumberInput
-                      unit="%"
-                      pre="Discount Rate"
-                      value={discountRate}
-                      changeHandler={setDiscountRate}
-                      disabled={!isDrManual}
-                      addBefore={
-                        <SelectInput
-                          pre=""
-                          value={isDrManual ? "manual" : "auto"}
-                          options={{ manual: "Manual", auto: "Auto" }}
-                          changeHandler={(value: string) =>
-                            dispatch({
-                              type: "single",
-                              data: {
-                                field: "isDrManual",
-                                val: value === "manual",
-                              },
-                            })
-                          }
-                        />
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    Subscribe to offers and newsletters
-                    <br />
-                    <RadioInput
-                      options={["Yes", "No"]}
-                      value={notify ? "Yes" : "No"}
-                      changeHandler={(value: string) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "notify", val: value === "Yes" },
-                        })
-                      }
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={24}>
-                <Button
-                  type="primary"
-                  loading={loading}
-                  style={{ color: COLORS.WHITE }}
-                  icon={<SaveOutlined />}
-                  onClick={() => {
-                    validateCaptcha("preferences_settings").then(
-                      (success: boolean) => {
-                        if (!success) return;
-                        updatePreferenceTab();
-                      }
-                    );
-                  }}>
-                  Save
-                </Button>
+          <TabPane className="settings-tabpane-view" tab="Delete Account" key="5">
+            <Row justify="start">
+            <Col>
+                <DeleteAccount/>
               </Col>
             </Row>
           </TabPane>
