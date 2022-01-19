@@ -278,26 +278,16 @@ export default function AddPropertyInput({
 				]}
 			>
 				<Col xs={24} md={12}>
-					<FormItem label="Name">
-						<TextInput
-							pre=""
-							value={name}
-							changeHandler={changeName}
-							size={"middle"}
-						/>
-					</FormItem>
-				</Col>
-				<Col xs={24} md={12}>
-					<FormItem label="Type">
+					<FormItem label={fields.type}>
 						<Row
 							gutter={[
 								{ xs: 0, sm: 0, md: 15 },
 								{ xs: 0, sm: 0, md: 15 },
 							]}
 						>
-							<Col xs={24} sm={12}>
+							<Col xs={24} md={12}>
 								{categoryOptions && (
-									<CascaderInput pre={''} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions}/>
+									<CascaderInput pre={''} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions} width={150}/>
 								)}
 							</Col>
 							<Col xs={24} md={12}>
@@ -357,12 +347,24 @@ export default function AddPropertyInput({
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
+					<FormItem label={fields.name}>
+						<TextInput
+							pre=""
+							value={name}
+							style={{ width : 180 }}
+							changeHandler={changeName}
+							size={"middle"}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
 					<FormItem label={fields.pin}>
 						<TextInput
 							pre=""
 							value={pin}
 							changeHandler={changePin}
 							size={"middle"}
+							style={{ width : 180 }}
 						/>
 					</FormItem>
 				</Col>
@@ -373,15 +375,17 @@ export default function AddPropertyInput({
 							value={address}
 							changeHandler={changeAddress}
 							size={"middle"}
+							style={{ width : 180 }}
 						/>
 					</FormItem>
 				</Col>
-				{city && (
+				
+				{city && state && (
 					<Col xs={24} md={12}>
-						City <strong>{city}</strong>
+						City <strong>{city}</strong><br/>
 					</Col>
 				)}
-				{state && (
+				{city && (
 					<Col xs={24} md={12}>
 						State <strong>{state}</strong>
 					</Col>
@@ -389,15 +393,7 @@ export default function AddPropertyInput({
 				{own && own[0] && (
 					<>
 						<Col xs={24}>
-							Owners{" "}
-							<Tooltip title={fields.owner}>
-								<Button
-									shape={"circle"}
-									onClick={onAddBtnClick}
-									icon={<PlusOutlined />}
-									disabled={Object.keys(allFamily).length === 1}
-								/>
-							</Tooltip>
+							{fields.owner}
 							{error && (
 								<Alert
 									type={"error"}
@@ -405,30 +401,38 @@ export default function AddPropertyInput({
 								/>
 							)}
 						</Col>
-						{own.map((own: OwnershipInput, i: number) => (
+						{own.map((owner: OwnershipInput, i: number) => (
 							<Col key={"own" + i} xs={24} md={12}>
 								<Row gutter={[10, 10]} align='bottom'>
-									<Col key={"own" + i}>
-										<SelectInput
-											pre={<UserOutlined />}
-											value={own.fId as string}
-											options={getFamilyOptions(allFamily)}
-											changeHandler={(key: string) => changeMember(i, key)}
-										/>
-									</Col>
 									<Col>
 										<NumberInput 
 											pre='' 
 											min={1} 
 											max={100} 
-											value={own.per} 
+											value={owner.per} 
 											changeHandler={(val:number)=>changePer(i,val)} 
 											step={0.1} 
-											unit='%'/>
+											unit='%'
+											addBefore={
+												<SelectInput
+													pre={<UserOutlined />}
+													value={owner.fId as string}
+													options={getFamilyOptions(allFamily)}
+													changeHandler={(key: string) => changeMember(i, key)}
+												/>}
+											/>
 									</Col>
 									<Button type="link" onClick={() => removeOwner(i)} danger>
 										<DeleteOutlined />
 									</Button>
+									{(own.length === i+1) && <Tooltip title={fields.owner}>
+										<Button
+											shape={"circle"}
+											onClick={onAddBtnClick}
+											icon={<PlusOutlined />}
+											disabled={Object.keys(allFamily).length === 1}
+										/>
+									</Tooltip>}
 								</Row>
 							</Col>
 						))}

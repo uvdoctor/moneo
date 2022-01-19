@@ -129,18 +129,18 @@ export default function AddHoldings({
 				centered
 				width="800px"
 				footer={[
-					<Button key="link" type="link" onClick={close}>
+					<Button key="cancel" type="link" onClick={close}>
 						Cancel
 					</Button>,
 					familyList.length > 1 ? (
 						<Dropdown overlay={menu} key={'add'}>
-							<Button key="link" type="primary" onClick={handleAddButtonClick}>
+							<Button key="addfamily" type="primary" onClick={handleAddButtonClick}>
 								{isPrimary ? 'Add' : 'Add Manually'}
 								<DownOutlined />
 							</Button>
 						</Dropdown>
 					) : (
-						<Button key="link" type="primary" onClick={handleAddButtonClick}>
+						<Button key="viewfamily" type="primary" onClick={handleAddButtonClick}>
 							{isPrimary ? 'Add' : 'Add Manually'}
 						</Button>
 					)

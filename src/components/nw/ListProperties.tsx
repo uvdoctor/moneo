@@ -255,10 +255,10 @@ export default function ListProperties({
 									size={"middle"} />
 							</Col>
 							<Col xs={8}>
-								<label>{data[i].city}</label>
+								City <strong>{data[i].city}</strong><br/>
 							</Col>
 							<Col xs={8}>
-								<label>{data[i].state}</label>
+								State <strong>{data[i].state}</strong><br/>
 							</Col>
 						</Row>
 					</Col>
@@ -272,23 +272,26 @@ export default function ListProperties({
 								owners.map((own: OwnershipInput, ind: number) => {
 									return (
 										<Col key={`owners-${ind}`}>
-											<SelectInput
-												pre={<UserOutlined />}
-												value={own.fId as string}
-												options={getFamilyOptions(allFamily)}
-												changeHandler={(val: string) => {
-													own.fId = val;
-													setMemberKey(val);
-													changeData([...data]);
-												} } />
-											<InputNumber
+											<NumberInput
 												min={1}
 												max={100}
 												value={own.per}
-												onChange={(val: number) => {
+												changeHandler={(val: number) => {
 													own.per = val;
 													changeData([...data]);
-												} } />
+												}} 
+												pre={''} 
+												addBefore={
+													<SelectInput
+														pre={<UserOutlined />}
+														value={own.fId as string}
+														options={getFamilyOptions(allFamily)}
+														changeHandler={(val: string) => {
+															own.fId = val;
+															setMemberKey(val);
+															changeData([...data]);
+														}} />}
+												/>
 											<Button
 												type="link"
 												onClick={() => removeOwners(i, ind)}
