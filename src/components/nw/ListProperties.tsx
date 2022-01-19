@@ -298,20 +298,17 @@ export default function ListProperties({
 											>
 												<DeleteOutlined />
 											</Button>
+											{(owners.length === ind+1) && <Tooltip title="Add Owners">
+												<Button
+													shape={"circle"}
+													onClick={() => onAddBtnClick(i)}
+													style={{ background: COLORS.GREEN }}
+													icon={<PlusOutlined />}
+													disabled={Object.keys(allFamily).length === 1} />
+											</Tooltip>}
 										</Col>
 									);
 								})}
-							&nbsp;&nbsp;
-							<Col>
-								<Tooltip title="Add Owners">
-									<Button
-										shape={"circle"}
-										onClick={() => onAddBtnClick(i)}
-										style={{ background: COLORS.GREEN }}
-										icon={<PlusOutlined />}
-										disabled={Object.keys(allFamily).length === 1} />
-								</Tooltip>
-							</Col>
 						</Row>
 					</Col>
 				</Row></>

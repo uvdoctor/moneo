@@ -35,7 +35,7 @@ export default function AddHoldings({
 	const [ newRec, setNewRec ] = useState<any>({});
 	const { setInstruments, instruments, childTab, saveHoldings, isDirty, allFamily }: any = useContext(NWContext);
 	const [ instrumentsList, setInstrumentsList ] = useState<Array<any>>([]);
-	const { STOCK, GOLDB, BOND, REIT, OIT, ETF, MF } = TAB;
+	const { STOCK, GOLDB, BOND, REIT, OIT, ETF, MF, PROP } = TAB;
 
 	const close = () => {
 		setModalVisibility(false);
@@ -67,6 +67,7 @@ export default function AddHoldings({
 	};
 
 	const handleAddButtonClick = () => {
+		if(childTab === PROP) return addHolding();
 		if (familyList.length === 1) {
 			const fid = familyList[0];
 			addFamilyMember(fid);
@@ -132,7 +133,7 @@ export default function AddHoldings({
 					<Button key="cancel" type="link" onClick={close}>
 						Cancel
 					</Button>,
-					familyList.length > 1 ? (
+					familyList.length > 1 && childTab !== PROP ? (
 						<Dropdown overlay={menu} key={'add'}>
 							<Button key="addfamily" type="primary" onClick={handleAddButtonClick}>
 								{isPrimary ? 'Add' : 'Add Manually'}
