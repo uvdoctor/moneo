@@ -6,7 +6,6 @@ import React, {
   useContext,
   Fragment,
 } from "react";
-import { initOptions } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import GoalDetails from "../goals/GoalDetails";
 import LoanDetails from "./LoanDetails";
@@ -86,13 +85,16 @@ function CalcContextProvider({
   if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
-  const nowYear = new Date().getFullYear();
   const [startYear, setStartYear] = useState<number>(
     goal.type === GoalType.FF && userInfo
       ? new Date(userInfo.dob).getFullYear()
+      : isPublicCalc
+      ? new Date().getFullYear()
       : goal.sy
   );
-  const [startMonth, setStartMonth] = useState<number>(goal.sm);
+  const [startMonth, setStartMonth] = useState<number>(
+    isPublicCalc ? new Date().getMonth() + 1 : goal.sm
+  );
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [currency, setCurrency] = useState<string>(
     goal.ccy ? goal.ccy : defaultCurrency
@@ -110,11 +112,6 @@ function CalcContextProvider({
   const [rating, setRating] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
-  const [eyOptions, setEYOptions] = useState(
-    goal.type && goal.type === GoalType.FF
-      ? initOptions(1960, nowYear - 15 - 1960)
-      : initOptions(startYear, 30)
-  );
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
@@ -450,8 +447,6 @@ function CalcContextProvider({
         endYear,
         changeEndYear,
         setEndYear,
-        eyOptions,
-        setEYOptions,
         error,
         setError,
         results,

@@ -31,7 +31,8 @@ export const calculateBuyAnnualNetCF = (
   runningCostChg: number
 ) => {
   let annualNetCF = 0;
-  let yearlyPrice = !index ? p : getCompoundedIncome(chgRate, p, index);
+  let yearlyPrice =
+    !index || chgRate <= 0 ? p : getCompoundedIncome(chgRate, p, index);
   let yearFactor = 1;
   if (!index) yearFactor = (12 - (startMonth - 1)) / 12;
   else if (index === duration - 1 && startMonth > 1)
@@ -42,7 +43,10 @@ export const calculateBuyAnnualNetCF = (
     annualNetCF += yearlyPrice * (aiPer / 100) * yearFactor;
   if (buyType === BuyType.V && runningCost)
     annualNetCF -=
-      yearFactor * getCompoundedIncome(runningCostChg, runningCost, index);
+      yearFactor *
+      (!index
+        ? runningCost
+        : getCompoundedIncome(runningCostChg, runningCost, index));
   return Math.round(annualNetCF);
 };
 //Tested

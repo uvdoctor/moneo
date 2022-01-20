@@ -88,7 +88,8 @@ export default function NumberInput({
       let num = currency
         ? parseInt(parseNumber(e.currentTarget.value, currency))
         : parseFloat(e.currentTarget.value);
-      if (!num || num < minNum) changeHandler(minNum);
+      if (!num) num = 0;
+      if (num < minNum) changeHandler(minNum);
     },
     style: {
       width: addBefore

@@ -8,8 +8,7 @@ import { BuyType, GoalType } from "../../api/goals";
 import { PlanContext } from "./PlanContext";
 import { getImpLevels } from "./goalutils";
 import DateInput from "../form/DateInput";
-import RadialInput from "../form/radialinput";
-import { toHumanFriendlyCurrency, toStringArr } from "../utils";
+import { toHumanFriendlyCurrency } from "../utils";
 import NumberInput from "../form/numberinput";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
@@ -28,6 +27,7 @@ export default function GoalDetails() {
     setCurrency,
     endYear,
     changeEndYear,
+    setAnalyzeFor,
   }: any = useContext(CalcContext);
   const lastStartYear = ffGoal
     ? ffGoal.sy + (ffGoal.loan?.dur as number) - 20
@@ -36,7 +36,6 @@ export default function GoalDetails() {
     manualMode,
     impLevel,
     setImpLevel,
-    sellAfter,
     setSellAfter,
     assetChgRate,
     setAssetChgRate,
@@ -47,6 +46,8 @@ export default function GoalDetails() {
     runningCostChg,
     setRunningCostChg,
     setBuyType,
+    setAMCostPer,
+    setAIPer,
   }: any = useContext(GoalContext);
   const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
   const showStartMonth =
@@ -70,10 +71,13 @@ export default function GoalDetails() {
   };
 
   useEffect(() => {
-    setAssetChgRate(
-      buyType === BuyType.P ? 5 : buyType === BuyType.E ? -25 : -15
-    );
-    setSellAfter(buyType === BuyType.P ? 20 : 5);
+    const isProp = buyType === BuyType.P;
+    setAssetChgRate(isProp ? 5 : buyType === BuyType.E ? -25 : -15);
+    setSellAfter(isProp ? 20 : 5);
+    setAnalyzeFor(isProp ? 30 : 10);
+    setAMCostPer(isProp || buyType === BuyType.V ? 2 : 0);
+    if (!isProp && buyType !== BuyType.V) setAIPer(0);
+    if (buyType !== BuyType.V) setRunningCost(0);
   }, [buyType]);
 
   return (
@@ -107,18 +111,20 @@ export default function GoalDetails() {
           />
         )}
 
-        <DateInput
-          title={goal.type === GoalType.B ? "Buy in" : "Starts"}
-          info={`${
-            showStartMonth ? "Month and year" : "Year"
-          } when you want to ${goal.type === GoalType.B ? "buy" : "spend"}.`}
-          startYearValue={startYear}
-          startYearHandler={changeStartYear}
-          startMonthHandler={showStartMonth ? changeStartMonth : null}
-          startMonthValue={showStartMonth ? startMonth : null}
-          initialValue={firstStartYear}
-          endValue={lastStartYear}
-        />
+        {!isPublicCalc ? (
+          <DateInput
+            title={goal.type === GoalType.B ? "Buy in" : "Starts"}
+            info={`${
+              showStartMonth ? "Month and year" : "Year"
+            } when you want to ${goal.type === GoalType.B ? "buy" : "spend"}.`}
+            startYearValue={startYear}
+            startYearHandler={changeStartYear}
+            startMonthHandler={showStartMonth ? changeStartMonth : null}
+            startMonthValue={showStartMonth ? startMonth : null}
+            initialValue={firstStartYear}
+            endValue={lastStartYear}
+          />
+        ) : null}
 
         {goal.type === GoalType.B && buyType === BuyType.V && (
           <NumberInput
@@ -152,19 +158,6 @@ export default function GoalDetails() {
             startYearHandler={changeEndYear}
             initialValue={startYear}
             endValue={lastStartYear + 20}
-          />
-        )}
-
-        {goal.type === GoalType.B && (
-          <RadialInput
-            info="Years after which you plan to sell."
-            label="Years"
-            pre="Sell After"
-            labelBottom={true}
-            data={toStringArr(3, 30)}
-            value={sellAfter}
-            step={1}
-            changeHandler={setSellAfter}
           />
         )}
 
