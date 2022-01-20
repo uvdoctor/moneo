@@ -105,12 +105,10 @@ export default function DateInput({
   };
 
   const disabledDate = (date: Date) => {
-    if (
-      endMonthHandler &&
-      date.getFullYear() === year &&
-      date.getMonth() + 1 > month
-    ) {
-      return date.getMonth() + 1 > month;
+    const dateYear = date.getFullYear();
+    if (Math.abs(dateYear - year) > 100) return true;
+    if (endMonthHandler && dateYear === year && date.getMonth() + 1 > month) {
+      return true;
     }
     if (!customDate || customDate.length === 0 || !date) return false;
     return (
@@ -146,23 +144,50 @@ export default function DateInput({
               const start = values?.[0];
               const end = values?.[1];
               if (start && end) {
-                startYearHandler(start.getFullYear());
-                endYearHandler && endYearHandler(end.getFullYear());
-                startMonthHandler && startMonthHandler(start.getMonth() + 1);
-                endMonthHandler && endMonthHandler(end.getMonth() + 1);
-                startDateHandler && startDateHandler(end.getDate());
+                const startYear = start.getFullYear();
+                startYearHandler(startYear > year ? year : startYear);
+                endYearHandler &&
+                  endYearHandler(
+                    end.getFullYear() < year ? year : end.getFullYear()
+                  );
+                startMonthHandler &&
+                  startMonthHandler(
+                    start.getMonth() > month - 1 && startYear >= year
+                      ? month - 1
+                      : start.getMonth()
+                  );
+                endMonthHandler &&
+                  endMonthHandler(
+                    end.getFullYear() < year ||
+                      (end.getFullYear() === year && end.getMonth() < month - 1)
+                      ? month - 1
+                      : end.getMonth()
+                  );
+                startDateHandler && startDateHandler(start.getDate());
                 endDateHandler && endDateHandler(end.getDate());
               }
             }}
             disabled={disabled}
             disabledDate={(date: Date) => disabledDate(date)}
             onOpenChange={onOpenChange}
+            value={[
+              new Date(
+                startYearValue ? startYearValue : year,
+                startMonthValue ? startMonthValue : month - 1,
+                startDateValue ? startDateValue : 1
+              ),
+              new Date(
+                endYearValue ? endYearValue : year + 1,
+                endMonthValue ? endMonthValue : month,
+                endDateValue ? endDateValue : 1
+              ),
+            ]}
           />
         ) : (
           <DatePicker
             picker={picker}
             allowClear={false}
-            size={size ? size : "middle"}
+            size={size ? size : "small"}
             defaultValue={parse(date as string, format, new Date())}
             format={format}
             onChange={(value: Date | null) => {
@@ -174,6 +199,13 @@ export default function DateInput({
             disabled={disabled}
             disabledDate={(date: Date) => disabledDate(date)}
             onOpenChange={onOpenChange}
+            value={
+              new Date(
+                startYearValue ? startYearValue : year,
+                startMonthValue ? startMonthValue : month,
+                startDateValue ? startDateValue : 1
+              )
+            }
           />
         )}
       </span>
