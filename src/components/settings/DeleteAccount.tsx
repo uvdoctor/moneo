@@ -89,6 +89,7 @@ export default function DeleteAccount() {
 			}
 		} else {
 			notification.error({ message: 'Enter the input correctly' });
+			setLoading(false);
 		}
 	};
 
