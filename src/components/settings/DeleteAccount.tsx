@@ -54,9 +54,9 @@ export default function DeleteAccount() {
 	};
 
 	const handleOk = () => {
+		setLoading(true);
 		if (input === 'delete') {
 			try {
-    		setLoading(true);
 				validateCaptcha('delete_change').then(async (success: boolean) => {
 					if (!success) return;
 					const user = await Auth.currentAuthenticatedUser();
@@ -78,17 +78,18 @@ export default function DeleteAccount() {
 						message: 'Deleted sucessfully',
 						description: 'Your account will be logged out automatically.'
 					});
+					setLoading(false);
 				});
 			} catch (err) {
 				notification.error({
 					message: 'Unable to delete your account',
 					description: `${err}`
 				});
+				setLoading(false);
 			}
 		} else {
 			notification.error({ message: 'Enter the input correctly' });
 		}
-		setLoading(false);
 	};
 
 	return (

@@ -1,16 +1,15 @@
-import { Button, Col, Form, Input, notification, Row } from 'antd';
+import { Col, Form, Input, notification, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Auth } from 'aws-amplify';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { FormInstance } from 'antd/lib/form';
-import { AppContext } from '../AppContext';
+import SaveButton from './SaveButton';
 
-interface PasswordInputProps {
+interface PasswordTabProps {
 	user: any;
 }
 
-export default function PasswordInput(user: PasswordInputProps) {
-	const { validateCaptcha }: any = useContext(AppContext);
+export default function PasswordTab({user}: PasswordTabProps) {
 	const [ disabledForm, setDisabledForm ] = useState<boolean>(true);
 	const [ form ] = useForm();
 	const inputEl = React.createRef<FormInstance>();
@@ -90,19 +89,11 @@ export default function PasswordInput(user: PasswordInputProps) {
 				</Row>
 			</Form.Item>
 			<Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          disabled={disabledForm}
-          onClick={() => {
-            validateCaptcha('password_change').then((success: boolean) => {
-              if (!success) return;
-              updatePassword();
-            });
-          }}
-        >
-          Submit
-        </Button>
+				<Row justify="center">
+					<Col xs={24} sm={24} md={16}>
+						<SaveButton disabledForm={disabledForm} onClick={updatePassword} action={'password'} />
+					</Col>
+				</Row>
 			</Form.Item>
 		</Form>
 	);
