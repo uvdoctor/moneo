@@ -107,10 +107,7 @@ export default function DateInput({
   const disabledDate = (date: Date) => {
     const dateYear = date.getFullYear();
     if (Math.abs(dateYear - year) > 100) return true;
-    if (endMonthHandler && dateYear === year && date.getMonth() + 1 > month) {
-      return true;
-    }
-    if (!customDate || customDate.length === 0 || !date) return false;
+    if (!customDate || !customDate.length || !date) return false;
     return (
       date.getFullYear() < customDate[0].getFullYear() ||
       date.getFullYear() > customDate[1].getFullYear()
