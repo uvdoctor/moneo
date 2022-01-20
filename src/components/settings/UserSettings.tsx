@@ -199,7 +199,7 @@ export default function UserSettings(): JSX.Element {
 				});
 			}
 		},
-		[ userInfo, user ]
+		[ userInfo, owner ]
 	);
 
 	useEffect(
