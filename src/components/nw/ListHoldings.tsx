@@ -110,7 +110,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
-			label: (
+			label: holding.name && (
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
@@ -120,7 +120,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				/>
 			),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
-			qty: (
+			qty: holding.qty && (
 				<NumberInput
 					pre=""
 					value={holding.qty as number}
