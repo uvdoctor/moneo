@@ -109,8 +109,8 @@ export default function DateInput({
     if (Math.abs(dateYear - year) > 100) return true;
     if (!customDate || !customDate.length || !date) return false;
     return (
-      date.getFullYear() < customDate[0].getFullYear() ||
-      date.getFullYear() > customDate[1].getFullYear()
+      dateYear < customDate[0].getFullYear() ||
+      dateYear > customDate[1].getFullYear()
     );
   };
 
