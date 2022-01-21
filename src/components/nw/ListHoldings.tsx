@@ -167,19 +167,21 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 
 	const expandedRow = (i: number) => {
 		const dataSource = getAllData(data[i], i);
+
 		return (
 			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 20 } ]}>
-				{dataSource &&
-					expandedColumns.map((item: any) => {
-						return (
+				{expandedColumns.map((item: any) => {
+					return (
+						dataSource[item] && (
 							<Col xs={24} sm={12} md={8} key={item}>
 								<Row gutter={[ 10, 5 ]}>
 									<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
 									<Col>{dataSource[item]}</Col>
 								</Row>
 							</Col>
-						);
-					})}
+						)
+					);
+				})}
 			</Row>
 		);
 	};
