@@ -67,8 +67,10 @@ export default function AddHoldings({
 	};
 
 	const handleAddButtonClick = () => {
-		if(childTab === PROP) return addHolding();
-		if (familyList.length === 1) {
+		if(childTab === PROP) {
+			addHolding();
+		}
+		else if (familyList.length === 1) {
 			const fid = familyList[0];
 			addFamilyMember(fid);
 			addHolding();
