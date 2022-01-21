@@ -53,7 +53,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		expandedColumns = [ 'fid' ];
 	} else if (childTab === OTHER) {
 		defaultColumns = [ 'amount', 'type', 'del' ];
-		expandedColumns = [ 'label', 'val', 'fid' ];
+		expandedColumns = [ 'label', 'fid' ];
 	} else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
 		defaultColumns = [ 'amount', 'val', 'del' ];
 		expandedColumns = [ 'type', 'fid' ];
