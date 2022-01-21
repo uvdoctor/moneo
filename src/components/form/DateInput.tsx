@@ -121,7 +121,7 @@ export default function DateInput({
     : "year";
   const { format, date, endDate } = data[picker];
 
-  return (
+  return ( 
     <Fragment>
       <div className={className ? className : "date"}>
         <LabelWithTooltip label={title} info={info} />

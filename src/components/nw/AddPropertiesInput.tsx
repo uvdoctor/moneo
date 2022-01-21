@@ -237,14 +237,19 @@ export default function AddPropertyInput({
 	);
 
 	const changeMv = (val?: number) => {
-		val
-			? setMv(val)
-			: // @ts-ignore
-			  setMv(getCompoundedIncome(rate, amount, duration()));
+		let mv = val;
+		if (val) {
+			setMv(val)
+		} else {
+			// @ts-ignore
+			const value = getCompoundedIncome(rate, amount, duration());
+			setMv(value)
+			mv = value;
+		}
 		setMvm(presentMonth);
 		setMvy(presentYear);
 		let rec = getNewRec();
-		rec.mv = val;
+		rec.mv = mv;
 		rec.mvm = presentMonth;
 		rec.mvy = presentYear;
 		setInput(rec);

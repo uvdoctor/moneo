@@ -20,7 +20,7 @@ import { PlusOutlined, DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined 
 import NumberInput from "../form/numberinput";
 import DateInput from "../form/DateInput";
 import { COLORS } from "../../CONSTANTS";
-import { toHumanFriendlyCurrency } from "../utils";
+import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
@@ -326,10 +326,10 @@ export default function ListProperties({
 			if (!doesPropertyMatch(data[i], selectedMembers, selectedCurrency))
 				continue;
 			const valuation = calculateProperty(data[i]);
-			if (valuation !== data[i].mv) {
+			if (valuation > 0 && valuation !== data[i].mv) {
 				data[i].mv = valuation;
-				data[i].mvm = today.getMonth() + 1;
-				data[i].mvy = today.getFullYear();
+				data[i].mvm = presentMonth;
+				data[i].mvy = presentYear;
 				changeData([...data])
 			}
 			dataSource.push({
