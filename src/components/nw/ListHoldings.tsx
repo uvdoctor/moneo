@@ -1,28 +1,26 @@
-import { Col, Empty, Row, Table } from 'antd';
+import { Button, Col, Empty, Row, Table } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import {
+	calculateValuation,
 	doesHoldingMatch,
 	getFamilyOptions,
 	hasDate,
 	hasminimumCol,
-	hasName,
 	hasPF,
-	hasQtyWithRate,
-	hasRate
+	hasQtyWithRate
 } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
-import Valuation from './Valuation';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
 import NumberInput from '../form/numberinput';
-import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
-import { useFullScreenBrowser } from 'react-browser-hooks';
-import { UserOutlined } from '@ant-design/icons';
+import { toHumanFriendlyCurrency } from '../utils';
+import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { calculateCompundingIncome } from './valuationutils';
+import { AppContext } from '../AppContext';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -32,41 +30,48 @@ interface ListHoldingsProps {
 	fields: any;
 }
 export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab, allFamily }: any = useContext(NWContext);
+	const { selectedMembers, selectedCurrency, childTab, allFamily, npsData }: any = useContext(NWContext);
+	const { ratesData, discountRate, userInfo }: any = useContext(AppContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
-	const fsb = useFullScreenBrowser();
+
 	const allColumns: any = {
-		cat: { title: fields.type, dataIndex: 'cat', key: 'cat' },
-		amt: { title: fields.amount, dataIndex: 'amt', key: 'amt' },
+		type: { title: fields.type, dataIndex: 'type', key: 'type' },
+		amount: { title: hasQtyWithRate(childTab) ? fields.qty : fields.amount, dataIndex: 'amount', key: 'amount' },
 		rate: { title: fields.rate, dataIndex: 'rate', key: 'rate' },
-		fid: { title: 'Valuation', key: 'fid', dataIndex: 'fid' },
+		val: { title: 'Valuation', key: 'val', dataIndex: 'val' },
 		date: { title: fields.date, dataIndex: 'date', key: 'date' },
 		label: { title: fields.name, dataIndex: 'label', key: 'label' },
-		qty: { title: fields.qty, dataIndex: 'qty', key: 'qty' }
+		qty: { title: fields.qty, dataIndex: 'qty', key: 'qty' },
+		del: { title: '', dataIndex: 'del', key: 'del', align: 'left' },
+		mat: { title: 'Maturity Amount', key: 'mat', dataIndex: 'mat' }
 	};
 	let defaultColumns: Array<string> = [];
 	let expandedColumns: Array<string> = [];
 	if (hasminimumCol(childTab)) {
-		defaultColumns = [ 'label', 'fid' ];
+		defaultColumns = [ 'amount', 'label', 'del' ];
+		expandedColumns = [ 'fid' ];
 	} else if (childTab === OTHER) {
-		defaultColumns = [ 'cat', 'fid' ];
-		expandedColumns = [ 'label' ];
+		defaultColumns = [ 'amount', 'type', 'del' ];
+		expandedColumns = [ 'label', 'val', 'fid' ];
 	} else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
-		defaultColumns = [ 'cat', 'fid' ];
-		expandedColumns = [ 'amt' ];
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'type', 'fid' ];
 	} else if (childTab === VEHICLE) {
-		defaultColumns = [ 'cat', 'fid' ];
-		expandedColumns = [ 'label', 'amt', 'date' ];
-	} else if (childTab === LENT || childTab === PF || childTab === LTDEP || childTab === P2P) {
-		defaultColumns = [ 'cat', 'fid' ];
-		expandedColumns = [ 'label', 'amt', 'date', 'rate', 'qty' ];
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'label', 'type', 'date', 'fid' ];
+	} else if (childTab === LENT || childTab === LTDEP || childTab === P2P) {
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'label', 'type', 'date', 'rate', 'mat', 'fid' ];
+	} else if (childTab === PF) {
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'type', 'rate', 'qty', 'mat', 'fid' ];
 	} else if (childTab === LOAN) {
-		defaultColumns = [ 'label', 'fid' ];
-		expandedColumns = [ 'amt', 'date', 'rate' ];
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'label', 'date', 'rate', 'fid' ];
 	} else if (childTab === INS) {
-		defaultColumns = [ 'cat', 'fid' ];
-		expandedColumns = [ 'date', 'amt', 'rate', 'qty' ];
+		defaultColumns = [ 'amount', 'val', 'del' ];
+		expandedColumns = [ 'type', 'date', 'rate', 'qty', 'fid' ];
 	}
 	const changeName = (val: any, i: number) => {
 		data[i].name = val;
@@ -81,178 +86,100 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		changeData([ ...data ]);
 	};
 
+	const changeChg = (chg: number, record: HoldingInput) => {
+		record.chg = chg;
+		changeData([ ...data ]);
+	};
+
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
 		changeData([ ...data ]);
 	};
 
-	const getAllData = (holding: HoldingInput, i: number) => {
-		const dataToRender = {
+	const removeHolding = (i: number) => {
+		data.splice(i, 1);
+		changeData([ ...data ]);
+	};
+
+	const getAllData = (holding: HoldingInput, i: number, valuation?: number) => {
+		const dataToRender: any = {
 			key: i,
-			cat: categoryOptions && (
+			amount: <Amount data={data} changeData={changeData} record={data[i]} />,
+			type: categoryOptions && (
 				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
 			),
-			fid: <Valuation data={data} changeData={changeData} record={holding} index={i} />,
+			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			label: (
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
 					value={holding.name as string}
 					size={'middle'}
-					style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
+					style={{ width: 200 }}
 				/>
-			)
+			),
+			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
+			rate: (
+				<NumberInput
+					pre=""
+					min={0}
+					max={50}
+					value={data[i].chg as number}
+					changeHandler={(val: number) => changeChg(val, data[i])}
+					step={0.1}
+					unit="%"
+				/>
+			),
+			qty: (
+				<NumberInput
+					pre=""
+					value={data[i].qty as number}
+					changeHandler={(val: number) => changeQty(val, i)}
+					currency={data[i].curr as string}
+				/>
+			),
+			mat: (
+				<label>
+					{toHumanFriendlyCurrency(calculateCompundingIncome(data[i]).maturityAmt, selectedCurrency)}
+				</label>
+			),
+			fid:
+				Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
+					<SelectInput
+						pre=""
+						value={data[i].fId ? data[i].fId : ''}
+						options={getFamilyOptions(allFamily)}
+						changeHandler={(key: string) => changeOwner(key, i)}
+					/>
+				) : (
+					<label>{getFamilyOptions(allFamily)[data[i].fId]}</label>
+				)
 		};
+
+		if (hasDate(childTab, data[i].subt as string) && expandedColumns.includes('date')) {
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={data[i]} />;
+		}
 		return dataToRender;
 	};
 
 	const expandedRow = (i: number) => {
+		const dataSource = getAllData(data[i], i, );
 		return (
-			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 10 } ]}>
-				{expandedColumns.includes('amt') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{hasQtyWithRate(childTab) ? fields.qty : fields.amount}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<Amount data={data} changeData={changeData} record={data[i]} />
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{hasDate(childTab, data[i].subt as string) &&
-				expandedColumns.includes('date') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.date}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<DateColumn data={data} changeData={changeData} record={data[i]} />
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{hasPF(childTab) &&
-				expandedColumns.includes('qty') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.qty}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<NumberInput
-											pre=""
-											value={data[i].qty as number}
-											changeHandler={(val: number) => changeQty(val, i)}
-											currency={data[i].curr as string}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{hasRate(childTab) &&
-				expandedColumns.includes('rate') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.rate}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<NumberInput
-											pre=""
-											min={0}
-											max={50}
-											value={data[i].chg as number}
-											changeHandler={(val: number) => changeChg(val, data[i])}
-											step={0.1}
-											unit="%"
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{(childTab === P2P || childTab === LENT || childTab === LTDEP) && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>Maturity Amount</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<label>
-											{toHumanFriendlyCurrency(
-												calculateCompundingIncome(data[i]).maturityAmt,
-												selectedCurrency
-											)}
-										</label>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{hasName(childTab) &&
-				expandedColumns.includes('label') && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]}>
-							<Col>{fields.name}</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										<TextInput
-											pre=""
-											changeHandler={(val: string) => changeName(val, i)}
-											value={data[i].name as string}
-											size={'middle'}
-											style={{ width: isMobileDevice(fsb) ? 120 : 200 }}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
-				{!hasminimumCol(childTab) && (
-					<Col xs={24} sm={12} md={8}>
-						<Row gutter={[ 10, 0 ]} align="middle">
-							<Col>
-								<UserOutlined />
-							</Col>
-							<Col>
-								<Row gutter={[ 10, 0 ]}>
-									<Col>
-										{Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
-											<SelectInput
-												pre=""
-												value={data[i].fId ? data[i].fId : ''}
-												options={getFamilyOptions(allFamily)}
-												changeHandler={(key: string) => changeOwner(key, i)}
-											/>
-										) : (
-											<label>{getFamilyOptions(allFamily)[data[i].fId]}</label>
-										)}
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Col>
-				)}
+			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 20 } ]}>
+				{expandedColumns.map((item: any) => {
+					return (
+						<Col xs={24} sm={12} md={8} key={item}>
+							<Row gutter={[ 10, 5 ]}>
+								<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
+								<Col>{dataSource[item]}</Col>
+							</Row>
+						</Col>
+					);
+				})}
 			</Row>
 		);
 	};
-	const changeChg = (chg: number, record: HoldingInput) => {
-		record.chg = chg;
-		changeData([ ...data ]);
-	};
+
 	const columns = defaultColumns.map((col: string) => allColumns[col]);
 
 	useEffect(
@@ -260,12 +187,21 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			let dataSource: Array<any> = [];
 			data.map((holding: HoldingInput, index: number) => {
 				if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-					dataSource.push(getAllData(holding, index));
+					const valuation = calculateValuation(
+						childTab,
+						holding,
+						userInfo,
+						discountRate,
+						ratesData,
+						selectedCurrency,
+						npsData
+					);
+					dataSource.push(getAllData(holding, index, valuation));
 				}
 			});
 			setDataSource([ ...dataSource ]);
 		},
-		[ data, selectedMembers, selectedCurrency ]
+		[ data, selectedMembers, selectedCurrency, discountRate ]
 	);
 
 	return dataSource.length ? (
@@ -283,7 +219,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			}
 			dataSource={dataSource}
 			size="small"
-			bordered
 		/>
 	) : (
 		<Empty description={<p>No data found.</p>} />

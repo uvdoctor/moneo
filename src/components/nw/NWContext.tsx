@@ -301,6 +301,7 @@ function NWContextProvider() {
             VF: "Voluntary Fund",
           }),
           fields: {
+            name: 'Comment',
             type: "Type",
             amount: "Amount",
             qty: "Contribution Per Year",
