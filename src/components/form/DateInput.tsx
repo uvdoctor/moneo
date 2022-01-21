@@ -199,7 +199,7 @@ export default function DateInput({
             value={
               new Date(
                 startYearValue ? startYearValue : year,
-                startMonthValue ? startMonthValue : month - 1,
+                startMonthValue ? startMonthValue : month,
                 startDateValue ? startDateValue : 1
               )
             }
