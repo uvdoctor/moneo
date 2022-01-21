@@ -71,7 +71,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		expandedColumns = [ 'label', 'date', 'rate', 'fid' ];
 	} else if (childTab === INS) {
 		defaultColumns = [ 'amount', 'val', 'del' ];
-		expandedColumns = [ 'type', 'date', 'rate', 'qty', 'fid' ];
+		expandedColumns = [ 'type', 'date', 'rate', 'fid' ];
 	}
 	const changeName = (val: any, i: number) => {
 		data[i].name = val;
