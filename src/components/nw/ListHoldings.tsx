@@ -9,7 +9,8 @@ import {
 	hasDate,
 	hasminimumCol,
 	hasPF,
-	hasQtyWithRate
+	hasQtyWithRate,
+	hasRate
 } from './nwutils';
 import Category from './Category';
 import Amount from './Amount';
@@ -119,63 +120,66 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				/>
 			),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
-			rate: (
-				<NumberInput
-					pre=""
-					min={0}
-					max={50}
-					value={data[i].chg as number}
-					changeHandler={(val: number) => changeChg(val, data[i])}
-					step={0.1}
-					unit="%"
-				/>
-			),
 			qty: (
 				<NumberInput
 					pre=""
-					value={data[i].qty as number}
+					value={holding.qty as number}
 					changeHandler={(val: number) => changeQty(val, i)}
-					currency={data[i].curr as string}
+					currency={holding.curr as string}
 				/>
 			),
 			mat: (
 				<label>
-					{toHumanFriendlyCurrency(calculateCompundingIncome(data[i]).maturityAmt, selectedCurrency)}
+					{toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)}
 				</label>
 			),
 			fid:
 				Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
 					<SelectInput
 						pre=""
-						value={data[i].fId ? data[i].fId : ''}
+						value={holding.fId ? holding.fId : ''}
 						options={getFamilyOptions(allFamily)}
 						changeHandler={(key: string) => changeOwner(key, i)}
 					/>
 				) : (
-					<label>{getFamilyOptions(allFamily)[data[i].fId]}</label>
+					<label>{getFamilyOptions(allFamily)[holding.fId]}</label>
 				)
 		};
 
-		if (hasDate(childTab, data[i].subt as string) && expandedColumns.includes('date')) {
-			dataToRender.date = <DateColumn data={data} changeData={changeData} record={data[i]} />;
+		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} />;
+		}
+		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
+			dataToRender.rate = (
+				<NumberInput
+					pre=""
+					min={0}
+					max={50}
+					value={holding.chg as number}
+					changeHandler={(val: number) => changeChg(val, holding)}
+					step={0.1}
+					unit="%"
+				/>
+			);
 		}
 		return dataToRender;
 	};
 
 	const expandedRow = (i: number) => {
-		const dataSource = getAllData(data[i], i, );
+		const dataSource = getAllData(data[i], i);
 		return (
 			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 20 } ]}>
-				{expandedColumns.map((item: any) => {
-					return (
-						<Col xs={24} sm={12} md={8} key={item}>
-							<Row gutter={[ 10, 5 ]}>
-								<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
-								<Col>{dataSource[item]}</Col>
-							</Row>
-						</Col>
-					);
-				})}
+				{dataSource &&
+					expandedColumns.map((item: any) => {
+						return (
+							<Col xs={24} sm={12} md={8} key={item}>
+								<Row gutter={[ 10, 5 ]}>
+									<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
+									<Col>{dataSource[item]}</Col>
+								</Row>
+							</Col>
+						);
+					})}
 			</Row>
 		);
 	};
