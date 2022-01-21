@@ -65,7 +65,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		expandedColumns = [ 'label', 'type', 'date', 'rate', 'mat', 'fid' ];
 	} else if (childTab === PF) {
 		defaultColumns = [ 'amount', 'val', 'del' ];
-		expandedColumns = [ 'type', 'rate', 'qty', 'mat', 'fid' ];
+		expandedColumns = [ 'type', 'rate', 'qty', 'fid' ];
 	} else if (childTab === LOAN) {
 		defaultColumns = [ 'amount', 'val', 'del' ];
 		expandedColumns = [ 'label', 'date', 'rate', 'fid' ];
