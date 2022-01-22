@@ -92,7 +92,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
         )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;
-          const { label, children, hasUploader, info, link, total } =
+          const { label, children, info, link, total } =
             tabsData[tabName];
           const allTotal =
             activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
@@ -141,7 +141,6 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                     </Col>
                     <Col>
                       <AddHoldings
-                        isPrimary={!hasUploader}
                         data={tabsData[tabName].data}
                         changeData={tabsData[tabName].setData}
                         title={`${tabsData[tabName].label} - Add Record`}

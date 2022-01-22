@@ -361,7 +361,7 @@ export default function AddPropertyInput({
 							size={"middle"}
 							style={{ width : 250 }}
 							post={city && state && (
-									<label>{`${city},${state}`}</label>)}
+									<label>{`${city}, ${state}`}</label>)}
 						/>
 					</FormItem>
 				</Col>
@@ -418,9 +418,9 @@ export default function AddPropertyInput({
 												/>}
 											/>
 									</Col>
-									<Button type="link" onClick={() => removeOwner(i)} danger>
+									{(i!==0) && <Button type="link" onClick={() => removeOwner(i)} danger>
 										<DeleteOutlined />
-									</Button>
+									</Button>}
 									{(own.length === i+1) && <Tooltip title={fields.owner}>
 										<Button
 											shape={"circle"}

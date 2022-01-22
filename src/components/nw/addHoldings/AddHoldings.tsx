@@ -14,7 +14,6 @@ require('./AddHoldings.less');
 interface AddHoldingsProps {
 	data: Array<any>;
 	changeData: Function;
-	isPrimary: boolean;
 	title: string;
 	categoryOptions?: any;
 	fields: any;
@@ -24,7 +23,6 @@ interface AddHoldingsProps {
 export default function AddHoldings({
 	data,
 	changeData,
-	isPrimary,
 	title,
 	categoryOptions,
 	fields,
@@ -67,10 +65,9 @@ export default function AddHoldings({
 	};
 
 	const handleAddButtonClick = () => {
-		if(childTab === PROP) {
+		if (childTab === PROP) {
 			addHolding();
-		}
-		else if (familyList.length === 1) {
+		} else if (familyList.length === 1) {
 			const fid = familyList[0];
 			addFamilyMember(fid);
 			addHolding();
@@ -105,12 +102,8 @@ export default function AddHoldings({
 	return (
 		<Fragment>
 			&nbsp;&nbsp;
-			<Button
-				type={isPrimary ? 'primary' : 'default'}
-				icon={<PlusOutlined />}
-				onClick={() => setModalVisibility(true)}
-			>
-				{isPrimary ? 'Add' : 'Add Manually'}
+			<Button type="primary" icon={<PlusOutlined />} onClick={() => setModalVisibility(true)}>
+				Add
 			</Button>
 			&nbsp;&nbsp;
 			<Button
@@ -129,6 +122,7 @@ export default function AddHoldings({
 				visible={isModalVisible}
 				okButtonProps={{ disabled: okDisabled }}
 				destroyOnClose
+				onCancel={close}
 				centered
 				width="800px"
 				footer={[
@@ -138,13 +132,13 @@ export default function AddHoldings({
 					familyList.length > 1 && childTab !== PROP ? (
 						<Dropdown overlay={menu} key={'add'}>
 							<Button key="addfamily" type="primary" onClick={handleAddButtonClick}>
-								{isPrimary ? 'Add' : 'Add Manually'}
+								Add
 								<DownOutlined />
 							</Button>
 						</Dropdown>
 					) : (
 						<Button key="viewfamily" type="primary" onClick={handleAddButtonClick}>
-							{isPrimary ? 'Add' : 'Add Manually'}
+							Add
 						</Button>
 					)
 				]}
