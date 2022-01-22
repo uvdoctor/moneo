@@ -62,6 +62,7 @@ export default function CalcHeader() {
                     fieldName="Goal Name"
                     minLength={3}
                     setError={setError}
+                    inline
                   />
                 )
               }
