@@ -93,7 +93,7 @@ export const calculateAddYears = (
 ) => {
   const result = addYears(new Date(yr, mon - 1, 1), yearsToAdd);
   const year = result.getFullYear();
-  const month = result.getMonth();
+  const month = result.getMonth()+1;
   return { year, month };
 };
 
@@ -185,6 +185,7 @@ export const calculateLoan = (holding: HoldingInput) => {
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
+  console.log(holding);
   let valuation = 0;
   let maturityAmt = 0;
   const remainingDuration = calculateDifferenceInYears(
