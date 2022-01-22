@@ -45,8 +45,8 @@ export const calculateBuyAnnualNetCF = (
     annualNetCF -=
       yearFactor *
       (!index
-        ? runningCost
-        : getCompoundedIncome(runningCostChg, runningCost, index));
+        ? runningCost * 12
+        : getCompoundedIncome(runningCostChg, runningCost * 12, index));
   return Math.round(annualNetCF);
 };
 //Tested
@@ -61,11 +61,29 @@ export const calculateTotalAmt = (
   let ta = 0;
   for (let i = 0; i < sellAfter; i++) {
     if (startYear + i < annualSY) continue;
-    let yearlyPrice = i === 0 ? price : getCompoundedIncome(chgRate, price, i);
+    let yearlyPrice =
+      i === 0 || chgRate <= 0 ? price : getCompoundedIncome(chgRate, price, i);
     ta += yearlyPrice * (annualPer / 100);
   }
   return Math.round(ta);
 };
+
+export const calculateTotalRunningCost = (
+  runningCost: number,
+  chgRate: number,
+  sellAfter: number
+) => {
+  if (!runningCost) return 0;
+  let ta = 0;
+  for (let i = 0; i < sellAfter; i++) {
+    ta +=
+      i === 0 || chgRate <= 0
+        ? runningCost * 12
+        : getCompoundedIncome(chgRate, runningCost * 12, i);
+  }
+  return Math.round(ta);
+};
+
 //Tested
 export const calculateSellPrice = (
   price: number,

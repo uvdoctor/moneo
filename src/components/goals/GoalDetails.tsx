@@ -13,6 +13,7 @@ import NumberInput from "../form/numberinput";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
 import RadioInput from "../form/RadioInput";
+import { calculateTotalRunningCost } from "./cfutils";
 
 export default function GoalDetails() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function GoalDetails() {
     setBuyType,
     setAMCostPer,
     setAIPer,
+    sellAfter,
   }: any = useContext(GoalContext);
   const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
   const showStartMonth =
@@ -133,6 +135,18 @@ export default function GoalDetails() {
             value={runningCost}
             changeHandler={setRunningCost}
             currency={currency}
+            post={
+              runningCost
+                ? `Total usage cost is ${toHumanFriendlyCurrency(
+                    calculateTotalRunningCost(
+                      runningCost,
+                      runningCostChg,
+                      sellAfter
+                    ),
+                    currency
+                  )}`
+                : ""
+            }
           />
         )}
 
