@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Section from "../form/section";
 import NumberInput from "../form/numberinput";
 import HSwitch from "../HSwitch";
-import { GoalType, TargetInput } from "../../api/goals";
+import { BuyType, GoalType, TargetInput } from "../../api/goals";
 import { toHumanFriendlyCurrency } from "../utils";
 import { GoalContext } from "./GoalContext";
 import { CalcContext } from "../calc/CalcContext";
@@ -34,6 +34,7 @@ export default function GoalPayment() {
     setEduCostSemester,
     isLoanMandatory,
     setManualMode,
+    buyType,
   }: any = useContext(GoalContext);
   const lastStartYear = ffGoal
     ? ffGoal.sy + (ffGoal.loan?.dur as number) - 20
@@ -76,7 +77,8 @@ export default function GoalPayment() {
     <Section
       title="Payment"
       toggle={
-        !isLoanMandatory && (
+        !isLoanMandatory &&
+        buyType === BuyType.P && (
           <HSwitch
             rightText="Multi-year custom plan"
             value={manualMode}

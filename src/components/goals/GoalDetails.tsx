@@ -38,18 +38,17 @@ export default function GoalDetails() {
     impLevel,
     setImpLevel,
     setSellAfter,
-    assetChgRate,
     setAssetChgRate,
-    sellPrice,
     buyType,
     runningCost,
     setRunningCost,
     runningCostChg,
-    setRunningCostChg,
     setBuyType,
     setAMCostPer,
     setAIPer,
     sellAfter,
+    setManualMode,
+    setWIPTargets,
   }: any = useContext(GoalContext);
   const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
   const showStartMonth =
@@ -60,8 +59,6 @@ export default function GoalDetails() {
   const buyTypes: any = {
     Property: BuyType.P,
     Vehicle: BuyType.V,
-    Electronics: BuyType.E,
-    Furniture: BuyType.F,
     Other: BuyType.O,
   };
 
@@ -74,12 +71,16 @@ export default function GoalDetails() {
 
   useEffect(() => {
     const isProp = buyType === BuyType.P;
-    setAssetChgRate(isProp ? 5 : buyType === BuyType.E ? -25 : -15);
+    setAssetChgRate(isProp ? 5 : buyType === BuyType.O ? -20 : -15);
     setSellAfter(isProp ? 20 : 5);
     setAnalyzeFor(isProp ? 30 : 10);
     setAMCostPer(isProp || buyType === BuyType.V ? 2 : 0);
     if (!isProp && buyType !== BuyType.V) setAIPer(0);
     if (buyType !== BuyType.V) setRunningCost(0);
+    if (manualMode && !isProp) {
+      setManualMode(0);
+      setWIPTargets([...[]]);
+    }
   }, [buyType]);
 
   return (
@@ -150,18 +151,6 @@ export default function GoalDetails() {
           />
         )}
 
-        {goal.type === GoalType.B && buyType === BuyType.V && runningCost && (
-          <NumberInput
-            pre="Usage cost changes"
-            info="Rate at which the usage cost changes in a year"
-            value={runningCostChg}
-            changeHandler={setRunningCostChg}
-            step={0.1}
-            max={10}
-            unit="% yearly"
-          />
-        )}
-
         {goal.type !== GoalType.B && !router.pathname.endsWith(ROUTES.LOAN) && (
           <DateInput
             title="Ends"
@@ -172,20 +161,6 @@ export default function GoalDetails() {
             startYearHandler={changeEndYear}
             initialValue={startYear}
             endValue={lastStartYear + 20}
-          />
-        )}
-
-        {goal.type === GoalType.B && (
-          <NumberInput
-            info="Approximate rate at which you expect resale value to change yearly."
-            pre="Assume resale value changes"
-            unit="% yearly"
-            post={`Sell price ${toHumanFriendlyCurrency(sellPrice, currency)}`}
-            min={-40}
-            max={15}
-            step={0.5}
-            value={assetChgRate}
-            changeHandler={setAssetChgRate}
           />
         )}
       </Section>

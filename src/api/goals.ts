@@ -280,8 +280,6 @@ export enum RiskProfile {
 export enum BuyType {
   P = "P",
   V = "V",
-  F = "F",
-  E = "E",
   O = "O",
 }
 

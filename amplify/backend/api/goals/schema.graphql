@@ -123,8 +123,6 @@ type PP {
 enum BuyType {
   P
   V
-  F
-  E
   O
 }
 

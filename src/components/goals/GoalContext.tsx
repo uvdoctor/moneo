@@ -721,7 +721,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       }
     }
     setInputTabs([...inputTabs]);
-  }, [error]);
+  }, [error, manualMode]);
 
   const getDiscountRate = (index: number) => {
     if (isPublicCalc) return dr;
