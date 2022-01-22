@@ -8,6 +8,7 @@ import {
 	getFamilyOptions,
 	hasDate,
 	hasminimumCol,
+	hasName,
 	hasPF,
 	hasQtyWithRate,
 	hasRate
@@ -110,7 +111,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
-			label: holding.name && (
+			label: hasName(childTab) && (
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
@@ -120,7 +121,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				/>
 			),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
-			qty: holding.qty && (
+			qty: hasPF(childTab) && (
 				<NumberInput
 					pre=""
 					value={holding.qty as number}
@@ -132,18 +133,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				<label>
 					{toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)}
 				</label>
-			),
-			fid:
-				Object.keys(getFamilyOptions(allFamily)).length > 1 ? (
-					<SelectInput
-						pre=""
-						value={holding.fId ? holding.fId : ''}
-						options={getFamilyOptions(allFamily)}
-						changeHandler={(key: string) => changeOwner(key, i)}
-					/>
-				) : (
-					<label>{getFamilyOptions(allFamily)[holding.fId]}</label>
-				)
+			)
 		};
 
 		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
@@ -159,6 +149,16 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 					changeHandler={(val: number) => changeChg(val, holding)}
 					step={0.1}
 					unit="%"
+				/>
+			);
+		}
+		if (Object.keys(getFamilyOptions(allFamily)).length > 1) {
+			dataToRender.fid = (
+				<SelectInput
+					pre=""
+					value={holding.fId ? holding.fId : ''}
+					options={getFamilyOptions(allFamily)}
+					changeHandler={(key: string) => changeOwner(key, i)}
 				/>
 			);
 		}
