@@ -251,6 +251,7 @@ export default function FamilyInput() {
             <Col>
               <TextInput
                 pre="PAN"
+                info="This is your PAN number"
                 placeholder="XXXXX1234X"
                 value={taxId}
                 changeHandler={setTaxId}
