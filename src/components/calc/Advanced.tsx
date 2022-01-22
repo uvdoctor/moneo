@@ -18,7 +18,6 @@ export default function Advanced() {
     assetChgRate,
     setAssetChgRate,
     sellPrice,
-    runningCost,
     runningCostChg,
     setRunningCostChg,
   }: any = useContext(GoalContext);
