@@ -104,12 +104,19 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	};
 
 	const getAllData = (holding: HoldingInput, i: number, valuation?: number) => {
-		if(!holding) return;
+		if (!holding) return;
 		const dataToRender: any = {
 			key: i,
 			amount: <Amount data={data} changeData={changeData} record={holding} />,
 			type: categoryOptions && (
-				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
+				<Category
+					category={''}
+					categoryOptions={categoryOptions}
+					subCategory={''}
+					record={holding}
+					changeData={changeData}
+					data={data}
+				/>
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
@@ -170,7 +177,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 
 	const expandedRow = (i: number) => {
 		const dataSource = getAllData(data[i], i);
-		if(!dataSource) return;
+		if (!dataSource) return;
 		return (
 			<Row gutter={[ { xs: 0, sm: 10, md: 30 }, { xs: 20, sm: 10, md: 20 } ]}>
 				{expandedColumns.map((item: any) => {

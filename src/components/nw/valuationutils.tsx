@@ -164,7 +164,6 @@ export const calculateInsurance = (
   } else {
     cashflows = Array(Math.round(remainingDuration)).fill(amt);
   }
-  console.log(cashflows);
   const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
   return npv;
 };
@@ -179,13 +178,11 @@ export const calculateLoan = (holding: HoldingInput) => {
   if (remainingDuration < 0 || isNaN(remainingDuration)) return 0;
   if (remainingDuration === 0) return holding.amt as number;
   const cashflows = Array(Math.round(remainingDuration)).fill(holding.amt);
-  console.log(cashflows);
   const npv = getNPV(holding.chg as number, cashflows, 0, true, true);
   return npv;
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
-  console.log(holding);
   let valuation = 0;
   let maturityAmt = 0;
   const remainingDuration = calculateDifferenceInYears(
