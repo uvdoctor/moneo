@@ -9,6 +9,7 @@ import { CalcContext } from "../calc/CalcContext";
 import { isLoanEligible } from "./goalutils";
 import DateInput from "../form/DateInput";
 import { PlanContext } from "./PlanContext";
+import { calculateTotalRunningCost } from "./cfutils";
 
 export default function GoalPayment() {
   const {
@@ -35,6 +36,10 @@ export default function GoalPayment() {
     isLoanMandatory,
     setManualMode,
     buyType,
+    runningCost,
+    setRunningCost,
+    runningCostChg,
+    sellAfter,
   }: any = useContext(GoalContext);
   const lastStartYear = ffGoal
     ? ffGoal.sy + (ffGoal.loan?.dur as number) - 20
@@ -130,6 +135,28 @@ export default function GoalPayment() {
                 rightText="Every 6 Months"
               />
             ) : null
+          }
+        />
+      )}
+
+      {goal.type === GoalType.B && buyType === BuyType.V && (
+        <NumberInput
+          pre="Monthly usage cost"
+          info="Monthly cost to use the vehicle (eg: fuel, driver, etc)"
+          value={runningCost}
+          changeHandler={setRunningCost}
+          currency={currency}
+          post={
+            runningCost
+              ? `Total usage cost is ${toHumanFriendlyCurrency(
+                  calculateTotalRunningCost(
+                    runningCost,
+                    runningCostChg,
+                    sellAfter
+                  ),
+                  currency
+                )}`
+              : ""
           }
         />
       )}

@@ -67,7 +67,7 @@ export default function Advanced() {
           {buyType === BuyType.P || buyType === BuyType.V ? (
             <TabPane key={2} tab="Other">
               <>
-                {buyType === BuyType.V && runningCost ? (
+                {buyType === BuyType.V ? (
                   <>
                     <NumberInput
                       pre="Usage cost changes"
