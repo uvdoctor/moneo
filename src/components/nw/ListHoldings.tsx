@@ -52,7 +52,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	let expandedColumns: Array<string> = [];
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'amount', 'label', 'del' ];
-		expandedColumns = [ 'fid' ];
+		expandedColumns = (Object.keys(getFamilyOptions(allFamily)).length > 1) ? [ 'fid' ] : [];
 	} else if (childTab === OTHER) {
 		defaultColumns = [ 'amount', 'type', 'del' ];
 		expandedColumns = [ 'label', 'fid' ];
