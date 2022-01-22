@@ -149,11 +149,24 @@ export default function ListProperties({
 		const owners = data[i].own;
 		return (
 			<>
-			{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) &&
-			<Row>
+			<Row gutter={[ 0, 10 ]}>
+				<Col xs={24} md={12}>
+					<TextInput
+						style={{ width: 300}}
+						pre={fields.name}
+						value={data[i].name as string}
+						changeHandler={(val: string) => {
+							data[i].name = val;
+							changeData([...data]);
+						}}
+						size={"middle"} />
+				</Col>
+				{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
+				<Col xs={24} md={12}>
 				{/* @ts-ignore */}
-				<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>
-			</Row>}
+					<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>
+				</Col>}
+			</Row>
 			<Row
 				gutter={[
 					{ xs: 0, sm: 10, md: 30 },
@@ -209,21 +222,6 @@ export default function ListProperties({
 											pre=""
 										/>
 								</Col>
-								</Row>
-							</Col>
-							<Col xs={24}>
-								<Row gutter={[10, 0]}>
-									<Col xs={24}>{fields.name}</Col>
-									<Col>
-										<TextInput
-											pre=""
-											value={data[i].name as string}
-											changeHandler={(val: string) => {
-												data[i].name = val;
-												changeData([...data]);
-											} }
-											size={"middle"} />
-									</Col>
 								</Row>
 							</Col>
 						</Row>

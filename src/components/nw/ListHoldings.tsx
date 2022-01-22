@@ -115,7 +115,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				<TextInput
 					pre=""
 					changeHandler={(val: string) => changeName(val, i)}
-					value={holding.name as string}
+					value={data[i].name as string}
 					size={'middle'}
 					style={{ width: 200 }}
 				/>
