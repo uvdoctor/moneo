@@ -30,6 +30,7 @@ interface DateInputProps {
   disabled?: boolean;
   initialValue?: number;
   endValue?: number;
+  dateWithEnddate?: boolean;
 }
 
 export default function DateInput({
@@ -52,6 +53,7 @@ export default function DateInput({
   disabled,
   initialValue,
   endValue,
+  dateWithEnddate
 }: DateInputProps) {
   const [customDate, setCustomDate] = useState<Array<Date>>([]);
   const today = new Date();
@@ -61,7 +63,7 @@ export default function DateInput({
     `${year - num}-${month}-${today.getDate()}`;
   const getMonthDate = () => `Apr-${year - 5}`;
   const getMonthEndDate = () => `Mar-${year + 1}`;
-
+  
   const data = {
     month: {
       format: "MMM-yyyy",
@@ -110,7 +112,7 @@ export default function DateInput({
     if (!customDate || !customDate.length || !date) return false;
     return (
       date.getFullYear() < customDate[0].getFullYear() ||
-      date.getFullYear() > customDate[1].getFullYear()
+      date.getFullYear() > customDate[1].getFullYear() 
     );
   };
 
@@ -120,7 +122,7 @@ export default function DateInput({
     ? "month"
     : "year";
   const { format, date, endDate } = data[picker];
-
+  
   return ( 
     <Fragment>
       <div className={className ? className : "date"}>
@@ -151,14 +153,14 @@ export default function DateInput({
                   startMonthHandler(
                     start.getMonth() > month - 1 && startYear >= year
                       ? month - 1
-                      : start.getMonth()
+                      : start.getMonth()+1
                   );
                 endMonthHandler &&
                   endMonthHandler(
                     end.getFullYear() < year ||
                       (end.getFullYear() === year && end.getMonth() < month - 1)
                       ? month - 1
-                      : end.getMonth()
+                      : end.getMonth()+1
                   );
                 startDateHandler && startDateHandler(start.getDate());
                 endDateHandler && endDateHandler(end.getDate());
@@ -170,12 +172,12 @@ export default function DateInput({
             value={[
               new Date(
                 startYearValue ? startYearValue : year,
-                startMonthValue ? startMonthValue : month - 1,
+                startMonthValue ? (startMonthValue-1) : (month - 1),
                 startDateValue ? startDateValue : 1
               ),
               new Date(
                 endYearValue ? endYearValue : year + 1,
-                endMonthValue ? endMonthValue : month,
+                endMonthValue ? (endMonthValue-1) : month,
                 endDateValue ? endDateValue : 1
               ),
             ]}
@@ -185,23 +187,32 @@ export default function DateInput({
             picker={picker}
             allowClear={false}
             size={size ? size : "small"}
-            defaultValue={parse(date as string, format, new Date())}
             format={format}
             onChange={(value: Date | null) => {
               if (!value) return;
               startDateHandler && startDateHandler(value?.getDate());
-              startMonthHandler && startMonthHandler(value?.getMonth() + 1);
-              startYearHandler && startYearHandler(value?.getFullYear());
+              startMonthHandler && 
+              startMonthHandler(
+                (value?.getMonth() > (month - 1) && (value?.getFullYear() >= year) && !dateWithEnddate)
+                  ? month
+                  : (value?.getMonth()+1)
+              )
+              startYearHandler && 
+              startYearHandler(
+                (value?.getFullYear() > year && !dateWithEnddate)
+                  ? year
+                  : value?.getFullYear()
+              )
             }}
             disabled={disabled}
             disabledDate={(date: Date) => disabledDate(date)}
             onOpenChange={onOpenChange}
-            value={
-              new Date(
-                startYearValue ? startYearValue : year,
-                startMonthValue ? (startMonthValue-1) : month - 1,
-                startDateValue ? startDateValue : 1
-              )
+            defaultValue={parse(date as string, format, new Date())}
+            value={new Date(
+              startYearValue ? startYearValue : year,
+              startMonthValue ? (startMonthValue-1) : (month - 1),
+              startDateValue ? (startDateValue-1) : 1
+            )
             }
           />
         )}
