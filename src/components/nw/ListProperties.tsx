@@ -168,7 +168,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
-									<Col>{fields.amount}</Col>
+									<Col xs={24}>{fields.amount}</Col>
 									<Col>
 										<NumberInput
 											pre=""
@@ -182,7 +182,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
-								<Col>{fields.date}</Col>
+								<Col xs={24}>{fields.date}</Col>
 								<Col>
 								<DateInput
 									title=''
@@ -197,7 +197,7 @@ export default function ListProperties({
 							</Col>
 							<Col>
 								<Row gutter={[10, 0]}>
-									<Col>{fields.rate}</Col>
+									<Col xs={24}>{fields.rate}</Col>
 									<Col>
 										<NumberInput
 											changeHandler={(val: number) => changeRate(i, val)}
@@ -213,7 +213,7 @@ export default function ListProperties({
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
-									<Col>{fields.name}</Col>
+									<Col xs={24}>{fields.name}</Col>
 									<Col>
 										<TextInput
 											pre=""
@@ -251,17 +251,15 @@ export default function ListProperties({
 									changeHandler={(val: string) => {
 										changePin(val, i);
 									} }
+									post={
+										data[i].city && data[i].state &&
+										<label>{`${data[i].city}, ${data[i].state}`}</label>
+									}
 									size={"middle"} />
-							</Col>
-							<Col xs={8}>
-								City <strong>{data[i].city}</strong><br/>
-							</Col>
-							<Col xs={8}>
-								State <strong>{data[i].state}</strong><br/>
 							</Col>
 						</Row>
 					</Col>
-					<Col xs={24} sm={12} md={8}>
+					{Object.keys(getFamilyOptions(allFamily)).length > 1 &&<Col xs={24} sm={12} md={8}>
 						<Row gutter={[0, 10]}>
 							<Col xs={24}>
 								<strong>{fields.owner}</strong>
@@ -310,7 +308,7 @@ export default function ListProperties({
 									);
 								})}
 						</Row>
-					</Col>
+					</Col>}
 				</Row></>
 		);
 	};

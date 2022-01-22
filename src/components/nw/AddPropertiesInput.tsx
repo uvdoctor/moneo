@@ -166,7 +166,7 @@ export default function AddPropertyInput({
 			country: selectedCurrency === "INR" ? "India" : "US",
 			state: state,
 			city: city,
-			own: own,
+			own: Object.keys(getFamilyOptions(allFamily)).length === 1 ? [ {fId: memberKey, per: 100 }] : own,
 			rate: rate,
 			mv: mv,
 			mvy: mvy,
@@ -351,6 +351,30 @@ export default function AddPropertyInput({
 						/>
 					</FormItem>
 				</Col>
+				
+				<Col xs={24} md={12}>
+					<FormItem label={fields.pin}>
+						<TextInput
+							pre=""
+							value={pin}
+							changeHandler={changePin}
+							size={"middle"}
+							style={{ width : 250 }}
+							post={city && state && (
+									<label>{`${city},${state}`}</label>)}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label={fields.address}>
+						<TextInput
+							pre=""
+							value={address}
+							changeHandler={changeAddress}
+							size={"middle"}
+						/>
+					</FormItem>
+				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label={fields.name}>
 						<TextInput
@@ -362,40 +386,7 @@ export default function AddPropertyInput({
 						/>
 					</FormItem>
 				</Col>
-				<Col xs={24} md={12}>
-					<FormItem label={fields.pin}>
-						<TextInput
-							pre=""
-							value={pin}
-							changeHandler={changePin}
-							size={"middle"}
-							style={{ width : 180 }}
-						/>
-					</FormItem>
-				</Col>
-				<Col xs={24} md={12}>
-					<FormItem label={fields.address}>
-						<TextInput
-							pre=""
-							value={address}
-							changeHandler={changeAddress}
-							size={"middle"}
-							style={{ width : 180 }}
-						/>
-					</FormItem>
-				</Col>
-				
-				{city && state && (
-					<Col xs={24} md={12}>
-						City <strong>{city}</strong><br/>
-					</Col>
-				)}
-				{city && (
-					<Col xs={24} md={12}>
-						State <strong>{state}</strong>
-					</Col>
-				)}
-				{own && own[0] && (
+				{Object.keys(getFamilyOptions(allFamily)).length > 1  && own && own[0] && (
 					<>
 						<Col xs={24}>
 							{fields.owner}
