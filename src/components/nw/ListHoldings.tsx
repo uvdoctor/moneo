@@ -52,7 +52,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	let expandedColumns: Array<string> = [];
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'amount', 'label', 'del' ];
-		expandedColumns = (Object.keys(getFamilyOptions(allFamily)).length > 1) ? [ 'fid' ] : [];
+		expandedColumns = Object.keys(getFamilyOptions(allFamily)).length > 1 ? [ 'fid' ] : [];
 	} else if (childTab === OTHER) {
 		defaultColumns = [ 'amount', 'type', 'del' ];
 		expandedColumns = [ 'label', 'fid' ];
@@ -111,15 +111,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				<Category data={data} changeData={changeData} categoryOptions={categoryOptions} record={holding} />
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
-			label: hasName(childTab) && (
-				<TextInput
-					pre=""
-					changeHandler={(val: string) => changeName(val, i)}
-					value={data[i].name as string}
-					size={'middle'}
-					style={{ width: 200 }}
-				/>
-			),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
 			qty: hasPF(childTab) && (
 				<NumberInput
@@ -156,9 +147,20 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			dataToRender.fid = (
 				<SelectInput
 					pre=""
-					value={holding.fId ? holding.fId : ''}
+					value={holding.fId}
 					options={getFamilyOptions(allFamily)}
 					changeHandler={(key: string) => changeOwner(key, i)}
+				/>
+			);
+		}
+		if (hasName(childTab) && holding.name) {
+			dataToRender.label = (
+				<TextInput
+					pre=""
+					changeHandler={(val: string) => changeName(val, i)}
+					value={holding.name as string}
+					size={'middle'}
+					style={{ width: 200 }}
 				/>
 			);
 		}
