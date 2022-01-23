@@ -9,8 +9,6 @@ import React, { Fragment } from "react";
 import { GA_TRACKING_ID } from "../lib/gtag";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { AppContextProvider } from "../components/AppContext";
 
 export interface CustomDocProps {
   readonly isProduction: boolean;
@@ -28,7 +26,6 @@ class CustomDoc extends NextDocument<CustomDocProps> {
 
   render() {
     const { isProduction } = this.props;
-    const RECAPTCHA_CLIENT_TOKEN = "6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP";
     if (isProduction) {
       Sentry.init({
         dsn: "https://1602dc188f824b5a8866649405d5246b@o1048380.ingest.sentry.io/6027644",
@@ -53,12 +50,8 @@ class CustomDoc extends NextDocument<CustomDocProps> {
           <link rel="manifest" href="manifest.json" />
         </Head>
         <body>
-          <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_CLIENT_TOKEN}>
-            <AppContextProvider>
-              <Main />
-              <NextScript />
-            </AppContextProvider>
-          </GoogleReCaptchaProvider>
+          <Main />
+          <NextScript />
         </body>
         <footer>
           {isProduction && (
