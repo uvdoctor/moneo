@@ -23,6 +23,7 @@ import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { calculateCompundingIncome } from './valuationutils';
 import { AppContext } from '../AppContext';
+import Rate from './Rate';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -88,11 +89,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		changeData([ ...data ]);
 	};
 
-	const changeChg = (chg: number, record: HoldingInput) => {
-		record.chg = chg;
-		changeData([ ...data ]);
-	};
-
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
 		changeData([ ...data ]);
@@ -139,17 +135,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={''} />;
 		}
 		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
-			dataToRender.rate = (
-				<NumberInput
-					pre=""
-					min={0}
-					max={50}
-					value={holding.chg as number}
-					changeHandler={(val: number) => changeChg(val, holding)}
-					step={0.1}
-					unit="%"
-				/>
-			);
+			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={''} data={data} />;
 		}
 		if (Object.keys(getFamilyOptions(allFamily)).length > 1) {
 			dataToRender.fid = (
