@@ -643,6 +643,20 @@ type UserIns
   ins: [Instrument!]!
 }
 
+type AA
+  @model
+  @aws_iam
+  @key(fields: ["uname"])
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+    ]
+  ) {
+  uname: String!
+  curr: AWSJSON
+  tgt: AWSJSON!
+}
 type EODPrices
   @model
   @aws_iam

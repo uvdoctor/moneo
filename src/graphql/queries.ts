@@ -1505,6 +1505,45 @@ export const listUserInss = /* GraphQL */ `
     }
   }
 `;
+export const getAa = /* GraphQL */ `
+  query GetAa($uname: String!) {
+    getAA(uname: $uname) {
+      uname
+      curr
+      tgt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listAAs = /* GraphQL */ `
+  query ListAAs(
+    $uname: String
+    $filter: ModelAAFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listAAs(
+      uname: $uname
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        uname
+        curr
+        tgt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getEodPrices = /* GraphQL */ `
   query GetEodPrices($id: String!) {
     getEODPrices(id: $id) {

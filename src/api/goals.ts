@@ -851,6 +851,40 @@ export type DeleteUserInsInput = {
   uname: string,
 };
 
+export type CreateAAInput = {
+  uname: string,
+  curr?: string | null,
+  tgt: string,
+};
+
+export type ModelAAConditionInput = {
+  curr?: ModelStringInput | null,
+  tgt?: ModelStringInput | null,
+  and?: Array< ModelAAConditionInput | null > | null,
+  or?: Array< ModelAAConditionInput | null > | null,
+  not?: ModelAAConditionInput | null,
+};
+
+export type AA = {
+  __typename: "AA",
+  uname?: string,
+  curr?: string | null,
+  tgt?: string,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type UpdateAAInput = {
+  uname: string,
+  curr?: string | null,
+  tgt?: string | null,
+};
+
+export type DeleteAAInput = {
+  uname: string,
+};
+
 export type CreateFeedbackInput = {
   id?: string | null,
   type: FeedbackType,
@@ -1552,7 +1586,7 @@ export type ModelIDInput = {
 
 export type ModelFeedbackConnection = {
   __typename: "ModelFeedbackConnection",
-  items?:  Array<Feedback >,
+  items?:  Array<Feedback | null >,
   nextToken?: string | null,
 };
 
@@ -1568,7 +1602,7 @@ export type ModelRatingFilterInput = {
 
 export type ModelRatingConnection = {
   __typename: "ModelRatingConnection",
-  items?:  Array<Rating >,
+  items?:  Array<Rating | null >,
   nextToken?: string | null,
 };
 
@@ -1614,7 +1648,7 @@ export type ModelGoalFilterInput = {
 
 export type ModelGoalConnection = {
   __typename: "ModelGoalConnection",
-  items?:  Array<Goal >,
+  items?:  Array<Goal | null >,
   nextToken?: string | null,
 };
 
@@ -1630,7 +1664,7 @@ export type ModelFamilyFilterInput = {
 
 export type ModelFamilyConnection = {
   __typename: "ModelFamilyConnection",
-  items?:  Array<Family >,
+  items?:  Array<Family | null >,
   nextToken?: string | null,
 };
 
@@ -1659,7 +1693,7 @@ export enum ModelSortDirection {
 
 export type ModelUserInfoConnection = {
   __typename: "ModelUserInfoConnection",
-  items?:  Array<UserInfo >,
+  items?:  Array<UserInfo | null >,
   nextToken?: string | null,
 };
 
@@ -1673,7 +1707,7 @@ export type ModelInsAnalyticsFilterInput = {
 
 export type ModelInsAnalyticsConnection = {
   __typename: "ModelInsAnalyticsConnection",
-  items?:  Array<InsAnalytics >,
+  items?:  Array<InsAnalytics | null >,
   nextToken?: string | null,
 };
 
@@ -1690,7 +1724,7 @@ export type ModelFeedsFilterInput = {
 
 export type ModelFeedsConnection = {
   __typename: "ModelFeedsConnection",
-  items?:  Array<Feeds >,
+  items?:  Array<Feeds | null >,
   nextToken?: string | null,
 };
 
@@ -1715,7 +1749,7 @@ export type ModelINExchgPriceFilterInput = {
 
 export type ModelINExchgPriceConnection = {
   __typename: "ModelINExchgPriceConnection",
-  items?:  Array<INExchgPrice >,
+  items?:  Array<INExchgPrice | null >,
   nextToken?: string | null,
 };
 
@@ -1730,7 +1764,7 @@ export type ModelInsMetaFilterInput = {
 
 export type ModelInsMetaConnection = {
   __typename: "ModelInsMetaConnection",
-  items?:  Array<InsMeta >,
+  items?:  Array<InsMeta | null >,
   nextToken?: string | null,
 };
 
@@ -1755,7 +1789,7 @@ export type ModelAllIndicesFilterInput = {
 
 export type ModelAllIndicesConnection = {
   __typename: "ModelAllIndicesConnection",
-  items?:  Array<AllIndices >,
+  items?:  Array<AllIndices | null >,
   nextToken?: string | null,
 };
 
@@ -1785,7 +1819,7 @@ export type ModelINBondPriceFilterInput = {
 
 export type ModelINBondPriceConnection = {
   __typename: "ModelINBondPriceConnection",
-  items?:  Array<INBondPrice >,
+  items?:  Array<INBondPrice | null >,
   nextToken?: string | null,
 };
 
@@ -1808,7 +1842,7 @@ export type ModelINMFPriceFilterInput = {
 
 export type ModelINMFPriceConnection = {
   __typename: "ModelINMFPriceConnection",
-  items?:  Array<INMFPrice >,
+  items?:  Array<INMFPrice | null >,
   nextToken?: string | null,
 };
 
@@ -1827,7 +1861,7 @@ export type ModelNPSPriceFilterInput = {
 
 export type ModelNPSPriceConnection = {
   __typename: "ModelNPSPriceConnection",
-  items?:  Array<NPSPrice >,
+  items?:  Array<NPSPrice | null >,
   nextToken?: string | null,
 };
 
@@ -1840,7 +1874,7 @@ export type ModelUserHoldingsFilterInput = {
 
 export type ModelUserHoldingsConnection = {
   __typename: "ModelUserHoldingsConnection",
-  items?:  Array<UserHoldings >,
+  items?:  Array<UserHoldings | null >,
   nextToken?: string | null,
 };
 
@@ -1853,7 +1887,22 @@ export type ModelUserInsFilterInput = {
 
 export type ModelUserInsConnection = {
   __typename: "ModelUserInsConnection",
-  items?:  Array<UserIns >,
+  items?:  Array<UserIns | null >,
+  nextToken?: string | null,
+};
+
+export type ModelAAFilterInput = {
+  uname?: ModelStringInput | null,
+  curr?: ModelStringInput | null,
+  tgt?: ModelStringInput | null,
+  and?: Array< ModelAAFilterInput | null > | null,
+  or?: Array< ModelAAFilterInput | null > | null,
+  not?: ModelAAFilterInput | null,
+};
+
+export type ModelAAConnection = {
+  __typename: "ModelAAConnection",
+  items?:  Array<AA | null >,
   nextToken?: string | null,
 };
 
@@ -1868,7 +1917,7 @@ export type ModelEODPricesFilterInput = {
 
 export type ModelEODPricesConnection = {
   __typename: "ModelEODPricesConnection",
-  items?:  Array<EODPrices >,
+  items?:  Array<EODPrices | null >,
   nextToken?: string | null,
 };
 
@@ -3390,6 +3439,57 @@ export type DeleteUserInsMutation = {
   } | null,
 };
 
+export type CreateAaMutationVariables = {
+  input?: CreateAAInput,
+  condition?: ModelAAConditionInput | null,
+};
+
+export type CreateAaMutation = {
+  createAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateAaMutationVariables = {
+  input?: UpdateAAInput,
+  condition?: ModelAAConditionInput | null,
+};
+
+export type UpdateAaMutation = {
+  updateAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteAaMutationVariables = {
+  input?: DeleteAAInput,
+  condition?: ModelAAConditionInput | null,
+};
+
+export type DeleteAaMutation = {
+  deleteAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateFeedbackMutationVariables = {
   input?: CreateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
@@ -4072,7 +4172,7 @@ export type ListFeedbacksQuery = {
       feedback: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4110,7 +4210,7 @@ export type ListRatingsQuery = {
       feedbackId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4326,7 +4426,7 @@ export type ListGoalsQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4366,7 +4466,7 @@ export type ListFamilysQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4420,7 +4520,7 @@ export type ListUserInfosQuery = {
       le: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4451,7 +4551,7 @@ export type RegByImQuery = {
       le: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4482,7 +4582,7 @@ export type RegByMobQuery = {
       le: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4513,7 +4613,7 @@ export type RegByEmailQuery = {
       le: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4544,7 +4644,7 @@ export type RegByDobQuery = {
       le: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4580,7 +4680,7 @@ export type ListInsAnalyticssQuery = {
       analytics: string,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4622,7 +4722,7 @@ export type ListFeedssQuery = {
       count: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4696,7 +4796,7 @@ export type ListInExchgPricesQuery = {
       ylow?: number | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4734,7 +4834,7 @@ export type ListInsMetasQuery = {
       ind?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4792,7 +4892,7 @@ export type ListAllIndicessQuery = {
       ind?: Industry | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4860,7 +4960,7 @@ export type ListInBondPricesQuery = {
       ytm?: number | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4914,7 +5014,7 @@ export type ListInmfPricesQuery = {
       tf?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -4960,7 +5060,7 @@ export type ListNpsPricesQuery = {
       price: number,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -5545,7 +5645,7 @@ export type ListUserHoldingssQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -5605,7 +5705,47 @@ export type ListUserInssQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } >,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetAaQueryVariables = {
+  uname?: string,
+};
+
+export type GetAaQuery = {
+  getAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListAAsQueryVariables = {
+  uname?: string | null,
+  filter?: ModelAAFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListAAsQuery = {
+  listAAs?:  {
+    __typename: "ModelAAConnection",
+    items:  Array< {
+      __typename: "AA",
+      uname: string,
+      curr?: string | null,
+      tgt: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -5643,7 +5783,7 @@ export type ListEodPricessQuery = {
       name?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -7574,6 +7714,54 @@ export type OnDeleteUserInsSubscription = {
       fId: string,
       curr: string,
     } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateAaSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateAaSubscription = {
+  onCreateAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateAaSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateAaSubscription = {
+  onUpdateAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteAaSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteAaSubscription = {
+  onDeleteAA?:  {
+    __typename: "AA",
+    uname: string,
+    curr?: string | null,
+    tgt: string,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
