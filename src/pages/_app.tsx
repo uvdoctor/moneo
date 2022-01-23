@@ -33,7 +33,5 @@ export default function MyApp({
 
 MyApp.getInitialProps = ({
   router: { query },
-  ctx: {
-    req: { headers },
-  },
+  ctx: { req: { headers } = {} } = {},
 }: any) => ({ query, headers });
