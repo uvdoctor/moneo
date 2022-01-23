@@ -17,13 +17,13 @@ import Category from './Category';
 import Amount from './Amount';
 import DateColumn from './DateColumn';
 import TextInput from '../form/textinput';
-import NumberInput from '../form/numberinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { calculateCompundingIncome } from './valuationutils';
 import { AppContext } from '../AppContext';
 import Rate from './Rate';
+import Contribution from './Contribution';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -80,14 +80,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		data[i].name = val;
 		changeData([ ...data ]);
 	};
-	const changeQty = (qty: number, i: number) => {
-		data[i].qty = qty;
-		if (hasPF(childTab)) {
-			data[i].sm = new Date().getMonth() + 1;
-			data[i].sy = new Date().getFullYear();
-		}
-		changeData([ ...data ]);
-	};
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
@@ -116,14 +108,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
-			qty: hasPF(childTab) && (
-				<NumberInput
-					pre=""
-					value={holding.qty as number}
-					changeHandler={(val: number) => changeQty(val, i)}
-					currency={holding.curr as string}
-				/>
-			),
+			qty: hasPF(childTab) && <Contribution changeData={changeData} data={data} record={holding} pre={''} />,
 			mat: (
 				<label>
 					{toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)}
