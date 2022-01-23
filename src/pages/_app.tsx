@@ -8,7 +8,5 @@ import React from "react";
 Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return (
-      <Component {...pageProps} />
-  );
+  return <Component {...pageProps} />;
 }

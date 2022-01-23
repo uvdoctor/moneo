@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
 import Head from "next/head";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import BasicAuthenticator from "./BasicAuthenticator";
 import BasicLayout from "./BasicLayout";
-import { AppContextProvider } from "./AppContext";
 
 interface BasicPageProps {
   className?: string;
@@ -19,7 +17,6 @@ interface BasicPageProps {
 }
 
 export default function BasicPage(props: BasicPageProps) {
-  const RECAPTCHA_CLIENT_TOKEN = "6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP";
   return (
     <Fragment>
       <Head>
@@ -78,35 +75,32 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_CLIENT_TOKEN}>
-      <AppContextProvider>
-        {props.secure ? 
-          <BasicAuthenticator>
-            <BasicLayout
-              className={props.className}
-              onBack={props.onBack}
-              fixedNav={props.fixedNav}
-              navScrollable={props.navScrollable}
-              noFooter={props.noFooter}
-              hideMenu={props.hideMenu}
-              title={props.menuTitle}
-            >
-              {props.children}
-            </BasicLayout>
-          </BasicAuthenticator>
-        : <BasicLayout
+
+      {props.secure ? (
+        <BasicAuthenticator>
+          <BasicLayout
             className={props.className}
             onBack={props.onBack}
             fixedNav={props.fixedNav}
             navScrollable={props.navScrollable}
             noFooter={props.noFooter}
             hideMenu={props.hideMenu}
-            title={props.menuTitle}
-          >
+            title={props.menuTitle}>
             {props.children}
-          </BasicLayout>}
-      </AppContextProvider>
-      </GoogleReCaptchaProvider>
+          </BasicLayout>
+        </BasicAuthenticator>
+      ) : (
+        <BasicLayout
+          className={props.className}
+          onBack={props.onBack}
+          fixedNav={props.fixedNav}
+          navScrollable={props.navScrollable}
+          noFooter={props.noFooter}
+          hideMenu={props.hideMenu}
+          title={props.menuTitle}>
+          {props.children}
+        </BasicLayout>
+      )}
     </Fragment>
   );
 }
