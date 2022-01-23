@@ -250,13 +250,7 @@
       ]
     }
   },
-  "storage": {
-    "goalimages": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    }
-  },
+  "storage": {},
   "interactions": {
     "scheduler": {
       "service": "Lex",

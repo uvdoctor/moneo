@@ -81,12 +81,6 @@ export type AmplifyDependentResourcesAttributes = {
             "LambdaExecutionRole": "string"
         }
     },
-    "storage": {
-        "goalimages": {
-            "BucketName": "string",
-            "Region": "string"
-        }
-    },
     "interactions": {
         "scheduler": {
             "Region": "string",
