@@ -1,13 +1,13 @@
-import { Form, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import ItemDisplay from '../calc/ItemDisplay';
-import TextInput from '../form/textinput';
 import ResultCarousel from '../ResultCarousel';
 import { presentMonth, presentYear } from '../utils';
 import Amount from './Amount';
 import Category from './Category';
+import Comment from './Comment';
 import Contribution from './Contribution';
 import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
@@ -21,13 +21,7 @@ interface AddHoldingInputProps {
 	fields: any;
 	defaultRate: number;
 }
-export default function AddHoldingInput({
-	setInput,
-	disableOk,
-	categoryOptions,
-	fields,
-	defaultRate
-}: AddHoldingInputProps) {
+export default function AddHoldingInput({ setInput, categoryOptions, fields, defaultRate }: AddHoldingInputProps) {
 	const { childTab, selectedCurrency, npsData, activeTab }: any = useContext(NWContext);
 	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, LTDEP } = TAB;
@@ -157,12 +151,6 @@ export default function AddHoldingInput({
 		newRec.qty = qty;
 		return newRec;
 	};
-	const changeName = (val: string) => {
-		setName(val);
-		let rec = getNewRec();
-		rec.name = val;
-		setInput(rec);
-	};
 
 	useEffect(
 		() => {
@@ -198,51 +186,52 @@ export default function AddHoldingInput({
 		]
 	);
 
-	const { Item: FormItem } = Form;
-
 	return (
-		<Form layout="vertical">
-			<Row justify="center">
-				<Col xs={24} sm={24}>
-					<ResultCarousel
-						results={
-							childTab === P2P || childTab === LENT || childTab === LTDEP ? (
-								[
-									<ItemDisplay
-										key="valuation"
-										label="Current Value"
-										result={valuation}
-										currency={selectedCurrency}
-										pl
-									/>,
-									<ItemDisplay
-										label="Maturity Amount"
-										key="maturity"
-										result={maturityAmt}
-										currency={selectedCurrency}
-										pl
-									/>
-								]
-							) : (
-								[
-									<ItemDisplay
-										key="valuation"
-										label="Current Value"
-										result={activeTab === LIABILITIES_TAB ? -valuation : valuation}
-										currency={selectedCurrency}
-										pl
-									/>
-								]
-							)
-						}
-					/>
-				</Col>
-			</Row>
-			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
-				{categoryOptions && (
-					<Col xs={24} md={12}>
-						<FormItem label={fields.type}>
+		<Row gutter={[ 0, 10 ]}>
+			<Col xs={24}>
+				<Row justify="center">
+					<Col xs={24} sm={24}>
+						<ResultCarousel
+							results={
+								childTab === P2P || childTab === LENT || childTab === LTDEP ? (
+									[
+										<ItemDisplay
+											key="valuation"
+											label="Current Value"
+											result={valuation}
+											currency={selectedCurrency}
+											pl
+										/>,
+										<ItemDisplay
+											label="Maturity Amount"
+											key="maturity"
+											result={maturityAmt}
+											currency={selectedCurrency}
+											pl
+										/>
+									]
+								) : (
+									[
+										<ItemDisplay
+											key="valuation"
+											label="Current Value"
+											result={activeTab === LIABILITIES_TAB ? -valuation : valuation}
+											currency={selectedCurrency}
+											pl
+										/>
+									]
+								)
+							}
+						/>
+					</Col>
+				</Row>
+			</Col>
+			<Col xs={24}>
+				<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
+					{categoryOptions && (
+						<Col xs={24} md={12}>
 							<Category
+								pre={fields.type}
 								categoryOptions={categoryOptions}
 								category={category}
 								subCategory={subCat}
@@ -252,75 +241,90 @@ export default function AddHoldingInput({
 								setCategory={setCategory}
 								setSubCat={setSubCat}
 							/>
-						</FormItem>
-					</Col>
-				)}
-				<Col xs={24} md={12}>
-					<Amount
-						qty={qty}
-						amt={amt}
-						setAmt={setAmt}
-						setQty={setQty}
-						changeData={setInput}
-						record={getNewRec()}
-						fields={fields}
-					/>
-				</Col>
-				{hasPF(childTab) && (
+						</Col>
+					)}
 					<Col xs={24} md={12}>
-						<Contribution
-							changeData={setInput}
-							record={getNewRec()}
-							pre={fields.qty}
+						<Amount
 							qty={qty}
+							amt={amt}
+							setAmt={setAmt}
 							setQty={setQty}
-						/>
-					</Col>
-				)}
-				{hasDate(childTab, category) && (
-					<Col xs={24} md={12}>
-						<DateColumn
 							changeData={setInput}
 							record={getNewRec()}
-							pre={fields.date}
-							sm={sm}
-							sy={sy}
-							ey={ey}
-							em={em}
-							setEm={setEm}
-							setEy={setEy}
-							setSm={setSm}
-							setSy={setSy}
+							fields={fields}
 						/>
 					</Col>
-				)}
-				{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
-					<Col xs={24} md={12}>
-						<Rate
-							changeData={setInput}
-							record={getNewRec()}
-							pre={fields.rate}
-							rate={rate}
-							setRate={setRate}
-						/>
-					</Col>
-				)}
-				{hasName(childTab) && (
-					<Col xs={24} md={12}>
-						<Row>
-							<Col>
-								<TextInput
-									pre="Comments"
-									value={name}
-									changeHandler={changeName}
-									size="middle"
-									info="Please add any comment you would like to add for your reference"
-								/>
-							</Col>
-						</Row>
-					</Col>
-				)}
-			</Row>
-		</Form>
+					{hasPF(childTab) && (
+						<Col xs={24} md={12}>
+							<Contribution
+								changeData={setInput}
+								record={getNewRec()}
+								pre={fields.qty}
+								qty={qty}
+								setQty={setQty}
+							/>
+						</Col>
+					)}
+					{hasDate(childTab, category) && (
+						<Col xs={24} md={12}>
+							<DateColumn
+								changeData={setInput}
+								record={getNewRec()}
+								pre={fields.date}
+								sm={sm}
+								sy={sy}
+								ey={ey}
+								em={em}
+								setEm={setEm}
+								setEy={setEy}
+								setSm={setSm}
+								setSy={setSy}
+							/>
+						</Col>
+					)}
+					{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
+						<Col xs={24} md={12}>
+							<Rate
+								changeData={setInput}
+								record={getNewRec()}
+								pre={fields.rate}
+								rate={rate}
+								setRate={setRate}
+							/>
+						</Col>
+					)}
+					{hasName(childTab) && (
+						<Col xs={24} md={12}>
+							<Comment
+								changeData={setInput}
+								record={getNewRec()}
+								pre={fields.name}
+								name={name}
+								setName={setName}
+							/>
+						</Col>
+					)}
+				</Row>
+			</Col>
+			{/* {hasName(childTab) && (
+				<Col xs={24}>
+					<Row gutter={[ 0, 10 ]}>
+						<Col xs={24}>
+							<strong>Comments</strong>
+							<hr />
+						</Col>
+						<Col xs={24}>
+							<Comment
+								changeData={setInput}
+								record={getNewRec()}
+								pre={''}
+								name={name}
+								setName={setName}
+							/>
+						</Col>
+					</Row>
+				</Col>
+			)} */}
+		</Row>
 	);
 }

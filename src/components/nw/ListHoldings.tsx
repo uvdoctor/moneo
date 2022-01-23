@@ -16,7 +16,6 @@ import {
 import Category from './Category';
 import Amount from './Amount';
 import DateColumn from './DateColumn';
-import TextInput from '../form/textinput';
 import { toHumanFriendlyCurrency } from '../utils';
 import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
@@ -24,6 +23,7 @@ import { calculateCompundingIncome } from './valuationutils';
 import { AppContext } from '../AppContext';
 import Rate from './Rate';
 import Contribution from './Contribution';
+import Comment from './Comment';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -76,10 +76,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		defaultColumns = [ 'amount', 'val', 'del' ];
 		expandedColumns = [ 'type', 'date', 'rate', 'fid' ];
 	}
-	const changeName = (val: any, i: number) => {
-		data[i].name = val;
-		changeData([ ...data ]);
-	};
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
@@ -109,11 +105,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
 			qty: hasPF(childTab) && <Contribution changeData={changeData} data={data} record={holding} pre={''} />,
-			mat: (
-				<label>
-					{toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)}
-				</label>
-			)
+			mat: toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)
 		};
 
 		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
@@ -133,15 +125,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			);
 		}
 		if (hasName(childTab)) {
-			dataToRender.label = (
-				<TextInput
-					pre=""
-					changeHandler={(val: string) => changeName(val, i)}
-					value={holding.name as string}
-					size={'middle'}
-					style={{ width: 200 }}
-				/>
-			);
+			dataToRender.label = <Comment changeData={changeData} data={data} record={holding} pre={''} />;
 		}
 		return dataToRender;
 	};
@@ -157,7 +141,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 							<Col xs={24} sm={12} md={8} key={item}>
 								<Row gutter={[ 10, 5 ]}>
 									<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
-									<Col>{dataSource[item]}</Col>
+									<Col xs={24}>{dataSource[item]}</Col>
 								</Row>
 							</Col>
 						)
