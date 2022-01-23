@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import ItemDisplay from '../calc/ItemDisplay';
-import NumberInput from '../form/numberinput';
 import TextInput from '../form/textinput';
 import ResultCarousel from '../ResultCarousel';
 import { presentMonth, presentYear } from '../utils';
 import Amount from './Amount';
 import Category from './Category';
+import Contribution from './Contribution';
 import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { hasDate, hasName, hasPF, hasRate, hasOnlyCategory, calculateValuation } from './nwutils';
@@ -164,14 +164,6 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeQty = (qty: number) => {
-		setQty(qty);
-		disableOk(qty <= 0);
-		let rec = getNewRec();
-		rec.qty = qty;
-		setInput(rec);
-	};
-
 	useEffect(
 		() => {
 			const valuation = calculateValuation(
@@ -276,15 +268,13 @@ export default function AddHoldingInput({
 				</Col>
 				{hasPF(childTab) && (
 					<Col xs={24} md={12}>
-						<FormItem label={fields.qty}>
-							<NumberInput
-								min={1}
-								pre=""
-								value={qty}
-								changeHandler={changeQty}
-								currency={selectedCurrency}
-							/>
-						</FormItem>
+						<Contribution
+							changeData={setInput}
+							record={getNewRec()}
+							pre={fields.qty}
+							qty={qty}
+							setQty={setQty}
+						/>
 					</Col>
 				)}
 				{hasDate(childTab, category) && (
