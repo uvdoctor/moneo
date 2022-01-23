@@ -122,10 +122,8 @@ export default function NWView() {
     ) : (
       <div style={{ textAlign: "center" }}>
         <p>&nbsp;</p>
-        <h3>Get a comprehensive financial health analysis.</h3>
         <h3>
-          Once you input data, Moneo will provide real-time valuation and Buy /
-          Hold / Sell analysis.
+          Please input data to get a comprehensive financial health analysis.
         </h3>
         <h3>More data you provide, better the analysis!</h3>
         <p>&nbsp;</p>
