@@ -3,24 +3,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import ItemDisplay from '../calc/ItemDisplay';
-import DateInput from '../form/DateInput';
 import NumberInput from '../form/numberinput';
 import TextInput from '../form/textinput';
 import ResultCarousel from '../ResultCarousel';
 import { presentMonth, presentYear } from '../utils';
 import Amount from './Amount';
 import Category from './Category';
+import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
-import {
-	hasDate,
-	hasName,
-	hasOnlyEnddate,
-	hasPF,
-	hasRate,
-	hasOnlyCategory,
-	isRangePicker,
-	calculateValuation
-} from './nwutils';
+import { hasDate, hasName, hasPF, hasRate, hasOnlyCategory, calculateValuation } from './nwutils';
 import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
 interface AddHoldingInputProps {
 	setInput: Function;
@@ -165,30 +156,6 @@ export default function AddHoldingInput({
 		newRec.qty = qty;
 		return newRec;
 	};
-	const changeStartMonth = (val: number) => {
-		setSm(val);
-		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.em = 0) : (rec.em = val)) : (rec.sm = val);
-		setInput(rec);
-	};
-	const changeStartYear = (val: number) => {
-		setSy(val);
-		let rec = getNewRec();
-		hasOnlyEnddate(childTab) ? (category === 'H' ? (rec.ey = 0) : (rec.ey = val)) : (rec.sy = val);
-		setInput(rec);
-	};
-	const changeEndMonth = (val: number) => {
-		setEm(val);
-		let rec = getNewRec();
-		rec.em = val;
-		setInput(rec);
-	};
-	const changeEndYear = (val: number) => {
-		setEy(val);
-		let rec = getNewRec();
-		rec.ey = val;
-		setInput(rec);
-	};
 	const changeName = (val: string) => {
 		setName(val);
 		let rec = getNewRec();
@@ -302,7 +269,15 @@ export default function AddHoldingInput({
 					</Col>
 				)}
 				<Col xs={24} md={12}>
-					<Amount qty={qty} amt={amt} setAmt={setAmt} setQty={setQty} changeData={setInput} record={getNewRec()} fields={fields}/>
+					<Amount
+						qty={qty}
+						amt={amt}
+						setAmt={setAmt}
+						setQty={setQty}
+						changeData={setInput}
+						record={getNewRec()}
+						fields={fields}
+					/>
 				</Col>
 				{hasPF(childTab) && (
 					<Col xs={24} md={12}>
@@ -319,24 +294,19 @@ export default function AddHoldingInput({
 				)}
 				{hasDate(childTab, category) && (
 					<Col xs={24} md={12}>
-						<FormItem label={fields.date}>
-							<Row gutter={[ 10, 0 ]}>
-								<Col>
-									<DateInput
-										title={''}
-										startMonthHandler={changeStartMonth}
-										startYearHandler={changeStartYear}
-										endMonthHandler={isRangePicker(childTab, category) ? changeEndMonth : undefined}
-										endYearHandler={isRangePicker(childTab, category) ? changeEndYear : undefined}
-										startMonthValue={sm}
-										endMonthValue={em}
-										startYearValue={sy}
-										endYearValue={ey}
-										size="middle"
-									/>
-								</Col>
-							</Row>
-						</FormItem>
+						<DateColumn
+							changeData={setInput}
+							record={getNewRec()}
+							pre={fields.date}
+							sm={sm}
+							sy={sy}
+							ey={ey}
+							em={em}
+							setEm={setEm}
+							setEy={setEy}
+							setSm={setSm}
+							setSy={setSy}
+						/>
 					</Col>
 				)}
 				{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
