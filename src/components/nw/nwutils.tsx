@@ -15,7 +15,7 @@ import {
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
-import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
+import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../BasicPage";
 import {
   calculateCompundingIncome,
   calculateCrypto,
@@ -599,14 +599,9 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const hasOnlyCategory = (childTab: string) =>
-  [
-    TAB.OTHER,
-    TAB.VEHICLE,
-    TAB.CRYPTO,
-    TAB.PF,
-    TAB.P2P,
-    TAB.LTDEP,
-  ].includes(childTab);
+  [TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P, TAB.LTDEP].includes(
+    childTab
+  );
 export const hasRate = (childTab: string) =>
   [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
 export const hasName = (childTab: string) =>
