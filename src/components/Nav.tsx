@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Layout, Drawer, Button, Affix } from "antd";
+import { Layout, Drawer, Button, Affix, Row } from "antd";
 import { useScroll } from "react-browser-hooks";
 import { MenuOutlined } from "@ant-design/icons";
 import MainMenu from "./MainMenu";
@@ -13,6 +13,7 @@ import Logo from "./Logo";
 
 require("./Nav.less");
 import { AppContext } from "./AppContext";
+import FSToggle from "./FSToggle";
 
 interface NavProps {
   onBack?: Function | undefined | null;
@@ -54,7 +55,14 @@ export default function Nav({
       {hideMenu ? (
         <>
           <Logo hideBackArrow />
-          <MainMenu hideMenu title={title} />
+          <FSToggle />
+          {title && (
+            <Row justify="center">
+              <h2>
+                <strong>{title}</strong>
+              </h2>
+            </Row>
+          )}
         </>
       ) : (
         <Fragment>
@@ -67,8 +75,7 @@ export default function Nav({
             placement="right"
             closable
             onClose={onCloseDrawer}
-            visible={showDrawer}
-          >
+            visible={showDrawer}>
             <MainMenu mode="inline" />
           </Drawer>
         </Fragment>

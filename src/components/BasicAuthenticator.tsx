@@ -5,22 +5,15 @@ import {
   AmplifySection,
 } from "@aws-amplify/ui-react";
 import { Auth, Hub } from "aws-amplify";
-import React, {
-  Fragment,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import {
   AuthState,
   Translations,
   onAuthUIStateChange,
 } from "@aws-amplify/ui-components";
-import { Row, Steps } from "antd";
+import { Row, Skeleton, Steps } from "antd";
 import Title from "antd/lib/typography/Title";
 import { createUserinfo, doesEmailExist } from "./userinfoutils";
-import Nav from "./Nav";
 import { AppContext } from "./AppContext";
 import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
@@ -49,7 +42,8 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { user, validateCaptcha, setUserInfo }: any = useContext(AppContext);
+  const { validateCaptcha, setUserInfo, appContextLoaded }: any =
+    useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -147,7 +141,7 @@ export default function BasicAuthenticator({
 
   const handleRegistrationSubmit = async () => {
     setLoading(true);
-    validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
+    validateCaptcha("registration").then(async (success: boolean) => {
       if (!success) return;
       const username = generateFromEmail(email);
       setUname(username);
@@ -186,7 +180,7 @@ export default function BasicAuthenticator({
 
   const verifyEmail = () => {
     setLoading(true);
-    validateCaptcha("NextButton_change").then(async (success: boolean) => {
+    validateCaptcha("registration_step").then(async (success: boolean) => {
       if (!success) return;
       setEmailError("");
       if (await doesEmailExist(email, "AWS_IAM")) {
@@ -208,67 +202,64 @@ export default function BasicAuthenticator({
   }, []);
 
   return (
-    <Fragment>
-      {!user && <Nav hideMenu title="Almost there..." />}
-      <AmplifyAuthContainer>
-        <AmplifyAuthenticator>
-          {authState === AuthState.ConfirmSignUp && (
-            <AmplifyConfirmSignUp
-              slot="confirm-sign-up"
-              user={cognitoUser}
-              handleAuthStateChange={handleConfirmSignUp}
-              formFields={[
-                {
-                  type: "code",
-                },
-              ]}
-            />
-          )}
-          {authState !== AuthState.SignIn && (
-            <AmplifySection slot="sign-up">
-              <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
-              <Steps current={state.step} size="small">
-                {steps.map((item) => (
-                  <Step key={item.title} title={item.title} />
-                ))}
-              </Steps>
-              <div className="steps-content">{steps[state.step].content}</div>
-              <div className="steps-action">
-                <Row justify="end">
-                  {state.step === 0 && (
-                    <Button type="link" htmlType="button" onClick={onCancel}>
-                      Cancel
-                    </Button>
-                  )}
-                  {state.step > 0 && (
-                    <Button type="link" onClick={() => prev()}>
-                      Back
-                    </Button>
-                  )}
-                  {state.step < 2 && (
-                    <Button
-                      type="primary"
-                      disabled={state.step === 0 && disable}
-                      onClick={state.step === 0 ? verifyEmail : next}
-                      loading={loading}>
-                      Next
-                    </Button>
-                  )}
-                  {state.step === 2 && (
-                    <Button
-                      type="primary"
-                      disabled={disable}
-                      onClick={handleRegistrationSubmit}>
-                      Done
-                    </Button>
-                  )}
-                </Row>
-              </div>
-            </AmplifySection>
-          )}
-          {children}
-        </AmplifyAuthenticator>
-      </AmplifyAuthContainer>
-    </Fragment>
+    <AmplifyAuthContainer>
+      <AmplifyAuthenticator>
+        {authState === AuthState.ConfirmSignUp && (
+          <AmplifyConfirmSignUp
+            slot="confirm-sign-up"
+            user={cognitoUser}
+            handleAuthStateChange={handleConfirmSignUp}
+            formFields={[
+              {
+                type: "code",
+              },
+            ]}
+          />
+        )}
+        {authState !== AuthState.SignIn && (
+          <AmplifySection slot="sign-up">
+            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+            <Steps current={state.step} size="small">
+              {steps.map((item) => (
+                <Step key={item.title} title={item.title} />
+              ))}
+            </Steps>
+            <div className="steps-content">{steps[state.step].content}</div>
+            <div className="steps-action">
+              <Row justify="end">
+                {state.step === 0 && (
+                  <Button type="link" htmlType="button" onClick={onCancel}>
+                    Cancel
+                  </Button>
+                )}
+                {state.step > 0 && (
+                  <Button type="link" onClick={() => prev()}>
+                    Back
+                  </Button>
+                )}
+                {state.step < 2 && (
+                  <Button
+                    type="primary"
+                    disabled={state.step === 0 && disable}
+                    onClick={state.step === 0 ? verifyEmail : next}
+                    loading={loading}>
+                    Next
+                  </Button>
+                )}
+                {state.step === 2 && (
+                  <Button
+                    type="primary"
+                    disabled={disable}
+                    onClick={handleRegistrationSubmit}>
+                    Done
+                  </Button>
+                )}
+              </Row>
+            </div>
+          </AmplifySection>
+        )}
+        {appContextLoaded ? children : <Skeleton active />}
+      </AmplifyAuthenticator>
+    </AmplifyAuthContainer>
   );
 }

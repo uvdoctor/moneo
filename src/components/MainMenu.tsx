@@ -1,30 +1,20 @@
 import React, { Fragment, useContext, useState } from "react";
-import { Avatar, Menu, Row } from "antd";
+import { Avatar, Menu } from "antd";
 import FSToggle from "./FSToggle";
 import { calcList } from "./landing/Calculator";
 import { COLORS, ROUTES } from "../CONSTANTS";
 import { useRouter } from "next/router";
 import { menuItem } from "./utils";
 import { AppContext } from "./AppContext";
-import {
-  UserOutlined,
-  PoweroffOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, PoweroffOutlined } from "@ant-design/icons";
 import { Auth, Hub } from "aws-amplify";
+import Link from "next/link";
 export interface MainMenuProps {
   mode?: any;
-  hideMenu?: boolean;
-  title?: string;
 }
 
-export default function MainMenu({
-  mode = "horizontal",
-  hideMenu,
-  title,
-}: MainMenuProps) {
-  const { user, appContextLoaded, setUser, owner }: any =
-    useContext(AppContext);
+export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
+  const { user, userChecked, setUser }: any = useContext(AppContext);
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>(router.pathname);
   const { SubMenu } = Menu;
@@ -39,19 +29,8 @@ export default function MainMenu({
     }
   };
 
-  return hideMenu ? (
+  return userChecked ? (
     <>
-      <FSToggle />
-      {title && (
-        <Row justify="center">
-          <h2>
-            <strong>{title}</strong>
-          </h2>
-        </Row>
-      )}
-    </>
-  ) : appContextLoaded ? (
-    <Fragment>
       <FSToggle />
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
         <SubMenu key="calcs" title="Calculate">
@@ -67,38 +46,38 @@ export default function MainMenu({
               Grow
             </Menu.Item>
             {menuItem("Contact Us", ROUTES.CONTACT_US, selectedKey)}
-            <SubMenu
-              key="usermenu"
-              title={
-                <Fragment>
-                  {user?.attributes?.picture ? (
-                    <Avatar size="large" src={user?.attributes.picture} />
-                  ) : (
-                    <Avatar
-                      size="small"
-                      icon={<UserOutlined />}
-                      style={{ backgroundColor: COLORS.GREEN }}
-                    />
-                  )}
-                  &nbsp;
-                  {user && user?.attributes?.name
-                    ? user?.attributes.name
-                    : user?.attributes?.preferred_username
-                    ? user?.attributes.preferred_username
-                    : owner}
-                </Fragment>
+            <Menu.Item
+              key={ROUTES.SETTINGS}
+              icon={
+                user?.attributes?.picture ? (
+                  <Avatar size="large" src={user?.attributes.picture} />
+                ) : selectedKey === ROUTES.SETTINGS ? (
+                  <Avatar
+                    size="large"
+                    icon={<UserOutlined />}
+                    style={{
+                      backgroundColor: COLORS.GREEN,
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    size="small"
+                    icon={<UserOutlined />}
+                    style={{
+                      backgroundColor: COLORS.DEFAULT,
+                    }}
+                  />
+                )
               }>
-              {menuItem(
-                "Settings",
-                ROUTES.SETTINGS,
-                selectedKey,
-                <SettingOutlined />
-              )}
-              <Menu.Item key="logout" onClick={handleLogout}>
-                <PoweroffOutlined style={{ color: COLORS.RED }} />
-                &nbsp;Logout
-              </Menu.Item>
-            </SubMenu>
+              <Link href={ROUTES.SETTINGS}>
+                <a></a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item
+              key="logout"
+              icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
+              onClick={handleLogout}
+            />
           </Fragment>
         ) : (
           <Fragment>
@@ -106,13 +85,7 @@ export default function MainMenu({
             {menuItem("Contact Us", ROUTES.CONTACT_US, selectedKey)}
           </Fragment>
         )}
-        {/**<Menu.Item>
-                <Link href={ROUTES.FEATURES}>
-                    <a>Features</a>
-                </Link>
-            </Menu.Item>
-        */}
       </Menu>
-    </Fragment>
+    </>
   ) : null;
 }

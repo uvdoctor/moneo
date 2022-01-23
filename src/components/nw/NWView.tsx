@@ -28,7 +28,7 @@ export default function NWView() {
   }: any = useContext(NWContext);
   const { appContextLoaded }: any = useContext(AppContext);
 
-  return appContextLoaded ? (
+  return appContextLoaded && !loadingHoldings ? (
     familyMemberKeys.length ? (
       <Fragment>
         <div className="primary-header">

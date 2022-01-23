@@ -18,6 +18,7 @@ function AppContextProvider({
   const [defaultCountry, setDefaultCountry] = useState<string>("US");
   const [defaultCurrency, setDefaultCurrency] = useState<string>("USD");
   const [appContextLoaded, setAppContextLoaded] = useState<boolean>(false);
+  const [userChecked, setUserChecked] = useState<boolean>(false);
   const [owner, setOwner] = useState<string>("");
   const [userInfo, setUserInfo] = useState<any>();
   const [discountRate, setDiscountRate] = useState<number>();
@@ -81,8 +82,9 @@ function AppContextProvider({
         setAppContextLoaded,
         setOwner,
         setUser,
-      }}
-    >
+        userChecked,
+        setUserChecked,
+      }}>
       {children}
     </AppContext.Provider>
   );

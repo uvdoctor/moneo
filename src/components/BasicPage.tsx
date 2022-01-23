@@ -1,10 +1,8 @@
 import React, { Fragment, useContext, useEffect } from "react";
 import { API, Auth, graphqlOperation, Hub } from "aws-amplify";
 import Head from "next/head";
-import BasicAuthenticator from "./BasicAuthenticator";
 import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
-import { Skeleton } from "antd";
 import simpleStorage from "simplestorage.js";
 import { CreateEODPricesInput, ListEodPricessQuery } from "../api/goals";
 import { ROUTES } from "../CONSTANTS";
@@ -33,7 +31,6 @@ export const LOCAL_DATA_TTL = { TTL: 86400000 }; //1 day
 
 export default function BasicPage(props: BasicPageProps) {
   const {
-    appContextLoaded,
     setAppContextLoaded,
     setUserInfo,
     setDiscountRate,
@@ -43,6 +40,8 @@ export default function BasicPage(props: BasicPageProps) {
     setOwner,
     userInfo,
     defaultCountry,
+    userChecked,
+    setUserChecked,
   }: any = useContext(AppContext);
   const router = useRouter();
 
@@ -80,11 +79,12 @@ export default function BasicPage(props: BasicPageProps) {
   };
 
   useEffect(() => {
+    console.log("After user checked: ", user);
     if (!user) return;
     initData();
     if (user.signInUserSession?.accessToken)
       setOwner(user.signInUserSession.accessToken.payload.username);
-  }, [user]);
+  }, [userChecked]);
 
   useEffect(() => {
     if (!owner) return;
@@ -94,11 +94,11 @@ export default function BasicPage(props: BasicPageProps) {
   useEffect(() => {
     if (!props.secure) {
       setAppContextLoaded(true);
-    } else {
-      Hub.listen("auth", initUser);
-      initUser();
-      return () => Hub.remove("auth", initUser);
+      return;
     }
+    Hub.listen("auth", initUser);
+    initUser();
+    return () => Hub.remove("auth", initUser);
   }, []);
 
   const initData = async () => {
@@ -109,7 +109,18 @@ export default function BasicPage(props: BasicPageProps) {
     }
   };
 
-  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  const initUser = async () => {
+    let user = null;
+    try {
+      user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+    } catch (e) {
+      console.log("Unable to authenticate user");
+      setUser(null);
+    } finally {
+      setUserChecked(true);
+    }
+  };
 
   const loadUserInfo = async () => {
     const userDetails = await getUserDetails(owner);
@@ -182,35 +193,17 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      {appContextLoaded ? (
-        props.secure ? (
-          <BasicAuthenticator>
-            <BasicLayout
-              className={props.className}
-              onBack={props.onBack}
-              fixedNav={props.fixedNav}
-              navScrollable={props.navScrollable}
-              noFooter={props.noFooter}
-              hideMenu={props.hideMenu}
-              title={props.menuTitle}>
-              {props.children}
-            </BasicLayout>
-          </BasicAuthenticator>
-        ) : (
-          <BasicLayout
-            className={props.className}
-            onBack={props.onBack}
-            fixedNav={props.fixedNav}
-            navScrollable={props.navScrollable}
-            noFooter={props.noFooter}
-            hideMenu={props.hideMenu}
-            title={props.menuTitle}>
-            {props.children}
-          </BasicLayout>
-        )
-      ) : (
-        <Skeleton active />
-      )}
+      <BasicLayout
+        className={props.className}
+        onBack={props.onBack}
+        fixedNav={props.fixedNav}
+        navScrollable={props.navScrollable}
+        noFooter={props.noFooter}
+        hideMenu={props.hideMenu}
+        title={props.menuTitle}
+        secure={props.secure}>
+        {props.children}
+      </BasicLayout>
     </Fragment>
   );
 }
