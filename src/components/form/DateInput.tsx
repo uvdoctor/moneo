@@ -187,12 +187,7 @@ export default function DateInput({
             onChange={(value: Date | null) => {
               if (!value) return;
               startDateHandler && startDateHandler(value?.getDate());
-              startMonthHandler && 
-              startMonthHandler(
-                value.getMonth() > month - 1 && value.getFullYear() >= year
-                  ? month - 1
-                  : value.getMonth()+1
-              );
+              startMonthHandler && startMonthHandler(value?.getMonth() + 1);
               startYearHandler && startYearHandler(value?.getFullYear());
             }}
             disabled={disabled}
