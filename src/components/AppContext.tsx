@@ -6,7 +6,11 @@ interface AppContextProviderProps {
   children: any;
 }
 
-function AppContextProvider({ children }: AppContextProviderProps) {
+function AppContextProvider({
+  query,
+  headers,
+  children,
+}: AppContextProviderProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [user, setUser] = useState<any | null>(null);
   const [defaultCountry, setDefaultCountry] = useState<string>("US");
@@ -58,6 +62,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   return (
     <AppContext.Provider
       value={{
+        query,
+        headers,
         defaultCountry,
         setDefaultCountry,
         defaultCurrency,
@@ -73,7 +79,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
         setAppContextLoaded,
         setOwner,
         setUser,
-      }}>
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
