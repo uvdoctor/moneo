@@ -93,6 +93,7 @@ export default function BasicPage(props: BasicPageProps) {
 
   useEffect(() => {
     if (!props.secure) {
+      setUserChecked(true);
       setAppContextLoaded(true);
       return;
     }
