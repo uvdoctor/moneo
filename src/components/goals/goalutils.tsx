@@ -258,7 +258,7 @@ export const createNewGoalInput = (
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 20;
-    bg.achg = 5;
+    bg.achg = 8;
     bg.amper = 2;
     bg.amsy = bg.sy;
     bg.aiper = 0;
