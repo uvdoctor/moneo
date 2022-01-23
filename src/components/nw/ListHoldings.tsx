@@ -141,7 +141,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 							<Col xs={24} sm={12} md={8} key={item}>
 								<Row gutter={[ 10, 5 ]}>
 									<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
-									<Col>{dataSource[item]}</Col>
+									<Col xs={24}>{dataSource[item]}</Col>
 								</Row>
 							</Col>
 						)
