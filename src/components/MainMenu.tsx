@@ -11,6 +11,7 @@ import {
   PoweroffOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { Auth, Hub } from "aws-amplify";
 export interface MainMenuProps {
   mode?: any;
   hideMenu?: boolean;
@@ -22,11 +23,21 @@ export default function MainMenu({
   hideMenu,
   title,
 }: MainMenuProps) {
-  const { user, appContextLoaded, handleLogout, owner }: any =
+  const { user, appContextLoaded, setUser, owner }: any =
     useContext(AppContext);
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>(router.pathname);
   const { SubMenu } = Menu;
+
+  const handleLogout = async () => {
+    try {
+      await Auth.signOut();
+      Hub.dispatch("auth", { event: "signOut" });
+      setUser(null);
+    } catch (error) {
+      console.log("error signing out: ", error);
+    }
+  };
 
   return hideMenu ? (
     <>

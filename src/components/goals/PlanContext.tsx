@@ -25,6 +25,8 @@ import {
 } from "./goalutils";
 import { useRouter } from "next/router";
 import { AppContext } from "../AppContext";
+import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
+import simpleStorage from "simplestorage.js";
 
 const PlanContext = createContext({});
 
@@ -39,13 +41,8 @@ function PlanContextProvider({
   goal,
   setGoal,
 }: PlanContextProviderProps) {
-  const {
-    ratesData,
-    appContextLoaded,
-    discountRate,
-    defaultCurrency,
-    userInfo,
-  }: any = useContext(AppContext);
+  const { appContextLoaded, discountRate, defaultCurrency, userInfo }: any =
+    useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
@@ -68,8 +65,12 @@ function PlanContextProvider({
   const [planError, setPlanError] = useState<string>("");
   const nowYear = new Date().getFullYear();
 
-  const getCurrencyFactor = (currency: string) =>
-    getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency);
+  const getCurrencyFactor = (currency: string) => {
+    const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
+    return (
+      getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency)
+    );
+  };
 
   const loadStateFromUserInfo = (g: CreateGoalInput) => {
     if (!userInfo) return;

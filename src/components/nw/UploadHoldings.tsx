@@ -14,7 +14,7 @@ import {
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../BasicPage";
 import { NWContext } from "./NWContext";
 import { extractISIN, getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";

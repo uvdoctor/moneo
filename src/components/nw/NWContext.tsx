@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 require("./nw.less");
 import NWView from "./NWView";
-import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../BasicPage";
 import {
   addFamilyMember,
   addHoldings,
@@ -60,6 +60,7 @@ import {
 import simpleStorage from "simplestorage.js";
 import { ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
+import { AppContext } from "../AppContext";
 
 const NWContext = createContext({});
 
@@ -113,8 +114,6 @@ export const LIABILITIES_VIEW = "liabilities";
 function NWContextProvider() {
   const {
     defaultCurrency,
-    insData,
-    setInsData,
     ratesData,
     owner,
     user,
@@ -247,20 +246,24 @@ function NWContextProvider() {
           setData: setLendings,
           total: totalLendings,
           rate: selectedCurrency === "INR" ? 5.5 : 1,
-          categoryOptions: getCascaderOptions({
-            BD: "Bank Deposit",
-            NBD: "Non-Bank Deposit",
-          }, { 
-            BD: {
-              "4": "Accumulates every 3 months" 
-            }, 
-            NBD: {
-              "0": "Paid out",
-              "4": "Accumulates every 3 months",
-              "2": "Accumulates every 6 months",
-              "1": "Accumulates every year"
-            }
-          }, false ),
+          categoryOptions: getCascaderOptions(
+            {
+              BD: "Bank Deposit",
+              NBD: "Non-Bank Deposit",
+            },
+            {
+              BD: {
+                "4": "Accumulates every 3 months",
+              },
+              NBD: {
+                "0": "Paid out",
+                "4": "Accumulates every 3 months",
+                "2": "Accumulates every 6 months",
+                "1": "Accumulates every year",
+              },
+            },
+            false
+          ),
           fields: {
             type: "Type & Interest",
             name: "Comment",
@@ -302,7 +305,7 @@ function NWContextProvider() {
             VF: "Voluntary Fund",
           }),
           fields: {
-            name: 'Comment',
+            name: "Comment",
             type: "Type",
             amount: "Amount",
             qty: "Contribution Per Year",
@@ -532,11 +535,12 @@ function NWContextProvider() {
           setData: setP2P,
           total: totalP2P,
           rate: 5,
-          categoryOptions: getCascaderOptions({ 
+          categoryOptions: getCascaderOptions({
             "0": "Paid out",
             "4": "Accumulates every 3 months",
             "2": "Accumulates every 6 months",
-            "1": "Accumulates every 1 months"}),
+            "1": "Accumulates every 1 months",
+          }),
           fields: {
             name: "Comment",
             amount: "Amount",
@@ -659,6 +663,7 @@ function NWContextProvider() {
     let mfIds: Set<string> = new Set();
     let otherIds: Set<string> = new Set();
     let initFromDB = false;
+    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     instruments.forEach((ins: InstrumentInput) => {
       if (ins.id.startsWith("INF")) mfIds.add(ins.id);
       else otherIds.add(ins.id);
@@ -688,7 +693,6 @@ function NWContextProvider() {
         (entry: INExchgPrice) => (insCache[entry.id as string] = entry)
       );
     }
-    setInsData(insCache);
     simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
     return insCache;
   };
@@ -841,7 +845,6 @@ function NWContextProvider() {
     let indexFunds = 0;
     let liquidFunds = 0;
     let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    if (!cachedData) cachedData = insData;
     instruments.forEach((instrument: InstrumentInput) => {
       const id = instrument.id;
       const data = cachedData[id];
