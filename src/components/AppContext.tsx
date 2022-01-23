@@ -3,6 +3,8 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const AppContext = createContext({});
 interface AppContextProviderProps {
+  query: string;
+  headers: any;
   children: any;
 }
 

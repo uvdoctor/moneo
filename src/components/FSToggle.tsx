@@ -6,7 +6,7 @@ import { AppContext } from "./AppContext";
 
 export default function FSToggle() {
 	const { fullScreen, toggle } = useFullScreen();
-	const { query } = useContext(AppContext);
+	const { query }: any = useContext(AppContext);
 
 	return query.isMobileApp ? null : (
 		<Button
