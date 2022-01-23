@@ -1,30 +1,18 @@
-import {
-	Button,
-	Col,
-	Empty,
-	Row,
-	Table,
-	Tooltip,
-} from "antd";
+import { Button, Col, Empty, Row, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
-import SelectInput from "../form/selectinput";
+import { PropertyInput, PropertyType } from "../../api/goals";
 import { NWContext } from "./NWContext";
 import TextInput from "../form/textinput";
-import {
-	doesPropertyMatch,
-	getDefaultMember,
-	getFamilyOptions,
-} from "./nwutils";
-import { PlusOutlined, DeleteOutlined, UserOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { doesPropertyMatch, getFamilyOptions } from "./nwutils";
+import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import DateInput from "../form/DateInput";
-import { COLORS } from "../../CONSTANTS";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
 import CascaderInput from "../form/CascaderInput";
+import Owner from "./Owner";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -44,9 +32,6 @@ export default function ListProperties({
 		NWContext
 	);
 	const [indexForMv, setIndexForMv] = useState<number | null>(null);
-	const [memberKey, setMemberKey] = useState<string>(
-		getDefaultMember(allFamily, selectedMembers)
-	);
 	const [dataSource, setDataSource] = useState<Array<any>>([]);
 	const [isEditMode, setIsEditMode] = useState<boolean>(false);
 	const today = new Date();
@@ -67,20 +52,6 @@ export default function ListProperties({
 				data[i].city = resdata[0].PostOffice[0].District;
 			}
 		}
-		changeData([...data]);
-	};
-
-	const onAddBtnClick = (index: number) => {
-		let count = 0;
-		data[index].own.map((item: OwnershipInput) => (count += item.per));
-		if (count < 100) {
-			data[index].own.push({ fId: memberKey, per: 100 - count });
-			changeData([...data]);
-		}
-	};
-
-	const removeOwners = (index: number, i: number) => {
-		data[index].own.splice(i, 1);
 		changeData([...data]);
 	};
 
@@ -146,7 +117,6 @@ export default function ListProperties({
 	};
 
 	const expandedRow = (i: number) => {
-		const owners = data[i].own;
 		return (
 			<>
 			<Row gutter={[ 0, 10 ]}>
@@ -260,54 +230,14 @@ export default function ListProperties({
 							</Col>
 						</Row>
 					</Col>
-					{Object.keys(getFamilyOptions(allFamily)).length > 1 &&<Col xs={24} sm={12} md={8}>
+					{Object.keys(getFamilyOptions(allFamily)).length > 1 &&
+					<Col xs={24} sm={12} md={8}>
 						<Row gutter={[0, 10]}>
 							<Col xs={24}>
 								<strong>{fields.owner}</strong>
 								<hr />
 							</Col>
-							{owners &&
-								owners.map((own: OwnershipInput, ind: number) => {
-									return (
-										<Col key={`owners-${ind}`}>
-											<NumberInput
-												min={1}
-												max={100}
-												value={own.per}
-												changeHandler={(val: number) => {
-													own.per = val;
-													changeData([...data]);
-												}} 
-												pre={<UserOutlined />} 
-												addBefore={
-													<SelectInput
-														pre={''}
-														value={own.fId as string}
-														options={getFamilyOptions(allFamily)}
-														changeHandler={(val: string) => {
-															own.fId = val;
-															setMemberKey(val);
-															changeData([...data]);
-														}} />}
-												/>
-											<Button
-												type="link"
-												onClick={() => removeOwners(i, ind)}
-												danger
-											>
-												<DeleteOutlined />
-											</Button>
-											{(owners.length === ind+1) && <Tooltip title="Add Owners">
-												<Button
-													shape={"circle"}
-													onClick={() => onAddBtnClick(i)}
-													style={{ background: COLORS.GREEN }}
-													icon={<PlusOutlined />}
-													disabled={Object.keys(allFamily).length === 1} />
-											</Tooltip>}
-										</Col>
-									);
-								})}
+								<Owner changeData={changeData} data={data} record={data[i]}/>	
 						</Row>
 					</Col>}
 				</Row></>

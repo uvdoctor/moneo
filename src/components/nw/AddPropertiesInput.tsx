@@ -1,11 +1,4 @@
-import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
-import {
-	Button,
-	Col,
-	Row,
-	Alert,
-	Tooltip,
-} from "antd";
+import { Col, Row, Alert } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
@@ -13,16 +6,13 @@ import ItemDisplay from "../calc/ItemDisplay";
 import CascaderInput from "../form/CascaderInput";
 import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
-import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
 import { NWContext } from "./NWContext";
-import {
-	getDefaultMember,
-	getFamilyOptions,
-} from "./nwutils";
+import { getFamilyOptions } from "./nwutils";
+import Owner from "./Owner";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 
 interface AddPropertiesInputProps {
@@ -38,15 +28,12 @@ export default function AddPropertyInput({
 	categoryOptions,
 	fields
 }: AddPropertiesInputProps) {
-	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(
+	const { allFamily, selectedCurrency }: any = useContext(
 		NWContext
 	);
 	const [subtype, setSubtype] = useState<PropertyType>(PropertyType.P);
 	const [own, setOwn] = useState<Array<OwnershipInput>>([]);
 	const [pin, setPin] = useState<any>("");
-	const [memberKey, setMemberKey] = useState<string>(
-		getDefaultMember(allFamily, selectedMembers)
-	);
 	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(0);
 	const [city, setCity] = useState<string>("");
@@ -164,7 +151,9 @@ export default function AddPropertyInput({
 			country: selectedCurrency === "INR" ? "India" : "US",
 			state: state,
 			city: city,
-			own: Object.keys(getFamilyOptions(allFamily)).length === 1 ? [ {fId: memberKey, per: 100 }] : own,
+			own: Object.keys(getFamilyOptions(allFamily)).length === 1 
+					? [ {fId: Object.keys(getFamilyOptions(allFamily))[0], per: 100 }]
+					: own,
 			rate: rate,
 			mv: mv,
 			mvy: mvy,
@@ -182,33 +171,9 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const changeMember = (i: number, key: string) => {
-		setMemberKey(key);
-		own[i].fId = key;
-		setOwn([...own]);
-	};
-
-	const changePer = (i: number, val: number) => {
-		own[i].per = val;
-		setOwn([...own]);
-		const count = ownerPercent();
-		if (count > 100) own[i].per = val - (count - 100);
-	};
-
-	const onAddBtnClick = () => {
-		const count = ownerPercent();
-		if (count < 100) {
-			own.push({ fId: memberKey, per: 100 - count });
-			setOwn([...own]);
-			let rec = getNewRec();
-			rec.own = own;
-			setInput(rec);
-		}
-	};
-
 	useEffect(() => {
 		if (!own.length) {
-			own.push({ fId: memberKey, per: 100 });
+			own.push({ fId: Object.keys(getFamilyOptions(allFamily))[0], per: 100 });
 			setOwn([...own]);
 			let rec = getNewRec();
 			rec.own = own;
@@ -252,15 +217,6 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const removeOwner = (index: number) => {
-		own.splice(index, 1);
-		setOwn([...own]);
-		let rec = getNewRec();
-		rec.own = own;
-		setInput(rec);
-	};
-
-
 	return (
 		<Row gutter={[ 0, 10 ]}>
 			<Col xs={24}>
@@ -294,7 +250,12 @@ export default function AddPropertyInput({
 						>
 							<Col xs={24} md={12}>
 								{categoryOptions && (
-									<CascaderInput pre={fields.type} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions} width={150}/>
+									<CascaderInput 
+										pre={fields.type} 
+										parentValue={subtype} 
+										parentChangeHandler={changeSubtype} 
+										options={categoryOptions} 
+										width={150}/>
 								)}
 							</Col>
 							<Col xs={24} md={12}>
@@ -382,41 +343,8 @@ export default function AddPropertyInput({
 								/>
 							)}
 						</Col>
-						{own.map((owner: OwnershipInput, i: number) => (
-							<Col key={"own" + i} xs={24} md={12}>
-								<Row gutter={[10, 10]} align='bottom'>
-									<Col>
-										<NumberInput 
-											pre={<UserOutlined />}
-											min={1} 
-											max={100} 
-											value={owner.per} 
-											changeHandler={(val:number)=>changePer(i,val)} 
-											step={0.1} 
-											unit='%'
-											addBefore={
-												<SelectInput
-													pre={''}
-													value={owner.fId as string}
-													options={getFamilyOptions(allFamily)}
-													changeHandler={(key: string) => changeMember(i, key)}
-												/>}
-											/>
-									</Col>
-									{(i!==0) && <Button type="link" onClick={() => removeOwner(i)} danger>
-										<DeleteOutlined />
-									</Button>}
-									{(own.length === i+1) && <Tooltip title={fields.owner}>
-										<Button
-											shape={"circle"}
-											onClick={onAddBtnClick}
-											icon={<PlusOutlined />}
-											disabled={Object.keys(allFamily).length === 1}
-										/>
-									</Tooltip>}
-								</Row>
-							</Col>
-						))}
+						{console.log(own, getNewRec())}
+						<Owner changeData={setInput} record={getNewRec()} owner={own} setOwner={setOwn}/>
 					</>
 				)}
 			</Row>

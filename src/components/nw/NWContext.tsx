@@ -207,6 +207,7 @@ function NWContextProvider() {
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
 
   const loadNPSSubCategories = async () => {
+    // @ts-ignore
     let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
     if (npsData) {
       setNPSData([...npsData]);
