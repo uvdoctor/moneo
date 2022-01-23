@@ -343,7 +343,6 @@ export default function AddPropertyInput({
 								/>
 							)}
 						</Col>
-						{console.log(own, getNewRec())}
 						<Owner changeData={setInput} record={getNewRec()} owner={own} setOwner={setOwn}/>
 					</>
 				)}
