@@ -8,6 +8,7 @@ import NumberInput from '../form/numberinput';
 import TextInput from '../form/textinput';
 import ResultCarousel from '../ResultCarousel';
 import { presentMonth, presentYear } from '../utils';
+import Amount from './Amount';
 import Category from './Category';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import {
@@ -15,13 +16,11 @@ import {
 	hasName,
 	hasOnlyEnddate,
 	hasPF,
-	hasQtyWithRate,
 	hasRate,
 	hasOnlyCategory,
 	isRangePicker,
 	calculateValuation
 } from './nwutils';
-import QuantityWithRate from './QuantityWithRate';
 import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
 interface AddHoldingInputProps {
 	setInput: Function;
@@ -210,13 +209,6 @@ export default function AddHoldingInput({
 		rec.qty = qty;
 		setInput(rec);
 	};
-	const changeAmt = (amt: number) => {
-		setAmt(amt);
-		disableOk(amt <= 0);
-		let rec = getNewRec();
-		rec.amt = amt;
-		setInput(rec);
-	};
 
 	useEffect(
 		() => {
@@ -309,25 +301,9 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasQtyWithRate(childTab) ? (
-					<Col xs={24} md={12}>
-						<FormItem label={fields.qty}>
-							<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat} />
-						</FormItem>
-					</Col>
-				) : (
-					<Col xs={24} md={12}>
-						<FormItem label={fields.amount}>
-							<NumberInput
-								pre=""
-								value={amt}
-								changeHandler={changeAmt}
-								currency={selectedCurrency}
-								min={1}
-							/>
-						</FormItem>
-					</Col>
-				)}
+				<Col xs={24} md={12}>
+					<Amount qty={qty} amt={amt} setAmt={setAmt} setQty={setQty} changeData={setInput} record={getNewRec()} fields={fields}/>
+				</Col>
 				{hasPF(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label={fields.qty}>

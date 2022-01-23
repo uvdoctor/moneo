@@ -28,7 +28,7 @@ export default function Category({
 }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, INS, LTDEP, PF, P2P, LENT } = TAB;
-	const isListHolding: boolean = data ? true : false;
+	const isListHolding: boolean = setCategory && category ? false : true;
 	const parentValue = isListHolding
 		? childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
 		: category;

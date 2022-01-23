@@ -161,7 +161,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				/>
 			);
 		}
-		if (hasName(childTab) && holding.name) {
+		if (hasName(childTab)) {
 			dataToRender.label = (
 				<TextInput
 					pre=""

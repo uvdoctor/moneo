@@ -1,62 +1,60 @@
-import { Row, Col } from 'antd';
 import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
+import { presentMonth, presentYear } from '../utils';
 import { NWContext, TAB } from './NWContext';
-import { hasPF } from './nwutils';
+import { hasPF, hasQtyWithRate } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 
 interface AmountProps {
-	data: Array<HoldingInput>;
+	data?: Array<HoldingInput>;
+	qty?: number;
+	amt?: number;
 	changeData: Function;
 	record: HoldingInput;
+	setAmt?: Function;
+	setQty?: Function;
+	fields?: any
 }
 
-export default function Amount({ data, changeData, record }: AmountProps) {
+export default function Amount({ data, changeData, record, setAmt, setQty, qty, amt, fields }: AmountProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { PM, CRYPTO, NPS } = TAB;
+	const { CRYPTO } = TAB;
+	const isListHolding: boolean = setAmt || setQty ? false : true;
+	const amount = isListHolding ? record.amt : amt;
+	const quantity = isListHolding ? record.qty : qty;
 
 	const changeAmt = (amt: number) => {
-		record.amt = amt;
+		setAmt && setAmt(amt);
 		if (hasPF(childTab)) {
-			record.sm = new Date().getMonth() + 1;
-			record.sy = new Date().getFullYear();
+			record.sm = presentMonth;
+			record.sy = presentYear;
 		}
-		changeData([ ...data ]);
+		record.amt = amt;
+		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
 	const changeQty = (qty: number) => {
+		setQty && setQty(qty);
 		record.qty = qty;
-		if (hasPF(childTab)) {
-			record.sm = new Date().getMonth() + 1;
-			record.sy = new Date().getFullYear();
-		}
-		changeData([ ...data ]);
+		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
-	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
-
-	return (
-		<Row align="top" gutter={[ 10, 10 ]}>
-			{hasQtyWithRate(childTab) ? (
-				<Col>
-					<QuantityWithRate
-						quantity={record.qty}
-						name={record.name as string}
-						subtype={childTab === CRYPTO ? record.name as string : record.subt as string}
-						onChange={(val: number) => changeQty(val)}
-					/>
-				</Col>
-			) : (
-				<Col>
-					<NumberInput
-						pre=""
-						value={record.amt as number}
-						changeHandler={(val: number) => changeAmt(val)}
-						currency={record.curr as string}
-					/>
-				</Col>
-			)}
-		</Row>
+	return hasQtyWithRate(childTab) ? (
+		<QuantityWithRate
+			pre={isListHolding ? '' : fields.qty}
+			quantity={quantity as number}
+			name={record.name as string}
+			subtype={childTab === CRYPTO ? record.name as string : record.subt as string}
+			onChange={(val: number) => changeQty(val)}
+		/>
+	) : (
+		<NumberInput
+			pre={isListHolding ? '' : fields.amount}
+			value={amount as number}
+			changeHandler={(val: number) => changeAmt(val)}
+			currency={record.curr as string}
+			min={1}
+		/>
 	);
 }

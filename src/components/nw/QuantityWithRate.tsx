@@ -1,6 +1,7 @@
 import { InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AppContext } from '../AppContext';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 import { toCurrency } from '../utils';
 import { TAB, NWContext, } from './NWContext';
 import { getCommodityRate, getCryptoRate } from './nwutils';
@@ -10,8 +11,10 @@ interface QuantityWithRateProps {
 	subtype: string;
   name: string;
 	onChange: Function;
+	pre?: string;
+	info?: string; 
 }
-export default function QuantityWithRate({ quantity, subtype, name, onChange }: QuantityWithRateProps) {
+export default function QuantityWithRate({ quantity, subtype, name, onChange, pre, info }: QuantityWithRateProps) {
 	const { selectedCurrency, childTab, npsData }: any = useContext(NWContext);
     const { ratesData }: any = useContext(AppContext);
     
@@ -26,13 +29,16 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 	
 	return (
 		<Fragment>
+			{pre && (
+        <LabelWithTooltip label={pre} info={info} />
+      )}
 			<InputNumber
 				value={quantity}
 				onChange={(quantity: number) => onChange(quantity)}
 				min={0}
 				max={100000}
 				step={0.1}
-				size='small'
+				size='middle'
 			/>
 			{` ${childTab === TAB.PM ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} `}
 		</Fragment>
