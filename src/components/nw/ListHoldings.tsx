@@ -1,5 +1,5 @@
 import { Button, Col, Empty, Row, Table } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { HoldingInput } from '../../api/goals';
 import { NWContext, TAB } from './NWContext';
 import {
@@ -24,6 +24,7 @@ import { AppContext } from '../AppContext';
 import Rate from './Rate';
 import Contribution from './Contribution';
 import Comment from './Comment';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -100,32 +101,48 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 					record={holding}
 					changeData={changeData}
 					data={data}
+					pre={fields.type}
 				/>
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
-			qty: hasPF(childTab) && <Contribution changeData={changeData} data={data} record={holding} pre={''} />,
-			mat: toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)
+			qty: hasPF(childTab) && (
+				<Contribution changeData={changeData} data={data} record={holding} pre={fields.qty} />
+			),
+			mat: (<Fragment>
+				<LabelWithTooltip label={"Maturity Amount"}/>
+				{toHumanFriendlyCurrency(calculateCompundingIncome(holding).maturityAmt, selectedCurrency)}
+				</Fragment>)
 		};
 
 		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
-			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={''} />;
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={fields.date} />;
 		}
 		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
-			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={''} data={data} />;
+			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={fields.rate} data={data} />;
 		}
 		if (Object.keys(getFamilyOptions(allFamily)).length > 1) {
 			dataToRender.fid = (
-				<SelectInput
-					pre=""
-					value={holding.fId}
-					options={getFamilyOptions(allFamily)}
-					changeHandler={(key: string) => changeOwner(key, i)}
-				/>
+				<Fragment>
+					<LabelWithTooltip label={<UserOutlined/>}/>
+					<SelectInput
+						pre=""
+						value={holding.fId}
+						options={getFamilyOptions(allFamily)}
+						changeHandler={(key: string) => changeOwner(key, i)}
+					/>
+				</Fragment>
 			);
 		}
 		if (hasName(childTab)) {
-			dataToRender.label = <Comment changeData={changeData} data={data} record={holding} pre={''} />;
+			dataToRender.label = (
+				<Comment
+					changeData={changeData}
+					data={data}
+					record={holding}
+					pre={expandedColumns.includes('label') ? fields.name : ''}
+				/>
+			);
 		}
 		return dataToRender;
 	};
@@ -139,10 +156,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 					return (
 						dataSource[item] && (
 							<Col xs={24} sm={12} md={8} key={item}>
-								<Row gutter={[ 10, 5 ]}>
-									<Col xs={24}>{item === 'fid' ? <UserOutlined /> : allColumns[item].title}</Col>
-									<Col xs={24}>{dataSource[item]}</Col>
-								</Row>
+								{dataSource[item]}
 							</Col>
 						)
 					);

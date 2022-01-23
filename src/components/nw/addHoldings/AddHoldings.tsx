@@ -8,7 +8,6 @@ import AddPropertiesInput from '../AddPropertiesInput';
 import { getFamilyOptions } from '../nwutils';
 import MenuItem from 'antd/lib/menu/MenuItem';
 import { InstrumentInput } from '../../../api/goals';
-
 require('./AddHoldings.less');
 
 interface AddHoldingsProps {

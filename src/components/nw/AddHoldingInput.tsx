@@ -306,25 +306,6 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 					)}
 				</Row>
 			</Col>
-			{/* {hasName(childTab) && (
-				<Col xs={24}>
-					<Row gutter={[ 0, 10 ]}>
-						<Col xs={24}>
-							<strong>Comments</strong>
-							<hr />
-						</Col>
-						<Col xs={24}>
-							<Comment
-								changeData={setInput}
-								record={getNewRec()}
-								pre={''}
-								name={name}
-								setName={setName}
-							/>
-						</Col>
-					</Row>
-				</Col>
-			)} */}
 		</Row>
 	);
 }
