@@ -125,10 +125,12 @@ export default function UserSettings(): JSX.Element {
 		setLoading(true);
 		try {
 			const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
-			await Auth.updateUserAttributes(user, {
-				name: name,
-				family_name: lastName
-			});
+			let input: {[key: string]: string} = {};
+			if(user?.attributes.name !== name) input.name = name;
+			if(user?.attributes.family_name !== lastName) input.family_name = lastName;
+			if(Object.keys(input).length) {
+				await Auth.updateUserAttributes(user, input);
+			}
 			await updateUserDetails({
 				uname: owner,
 				dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
@@ -199,7 +201,7 @@ export default function UserSettings(): JSX.Element {
 				});
 			}
 		},
-		[ userInfo, owner ]
+		[ userInfo ]
 	);
 
 	useEffect(

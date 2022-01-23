@@ -82,7 +82,7 @@ export default function PersoalTab({
 						/>
 					</FormItem>
 				</Col>
-				{dobDate && (
+				{dobDate ? (
 					<Col xs={24} md={12}>
 						<FormItem label={'Date of birth'}>
 							<DateInput
@@ -110,7 +110,7 @@ export default function PersoalTab({
 							/>
 						</FormItem>
 					</Col>
-				)}
+				): null}
 
 				<Col xs={24} md={12}>
 					<FormItem label={'Life Expectancy'}>
