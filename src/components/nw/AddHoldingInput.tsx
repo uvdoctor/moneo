@@ -12,6 +12,7 @@ import Category from './Category';
 import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { hasDate, hasName, hasPF, hasRate, hasOnlyCategory, calculateValuation } from './nwutils';
+import Rate from './Rate';
 import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
 interface AddHoldingInputProps {
 	setInput: Function;
@@ -162,13 +163,7 @@ export default function AddHoldingInput({
 		rec.name = val;
 		setInput(rec);
 	};
-	const changeRate = (val: number) => {
-		setRate(val);
-		disableOk(val <= 0);
-		let rec = getNewRec();
-		rec.chg = val;
-		setInput(rec);
-	};
+
 	const changeQty = (qty: number) => {
 		setQty(qty);
 		disableOk(qty <= 0);
@@ -311,17 +306,13 @@ export default function AddHoldingInput({
 				)}
 				{(hasRate(childTab) || (category !== 'L' && childTab === INS)) && (
 					<Col xs={24} md={12}>
-						<FormItem label={fields.rate}>
-							<NumberInput
-								pre={''}
-								min={0}
-								max={50}
-								value={rate}
-								changeHandler={changeRate}
-								step={0.1}
-								unit="%"
-							/>
-						</FormItem>
+						<Rate
+							changeData={setInput}
+							record={getNewRec()}
+							pre={fields.rate}
+							rate={rate}
+							setRate={setRate}
+						/>
 					</Col>
 				)}
 				{hasName(childTab) && (
