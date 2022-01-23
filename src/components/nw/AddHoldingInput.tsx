@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import ItemDisplay from '../calc/ItemDisplay';
-import TextInput from '../form/textinput';
 import ResultCarousel from '../ResultCarousel';
 import { presentMonth, presentYear } from '../utils';
 import Amount from './Amount';
 import Category from './Category';
+import Comment from './Comment';
 import Contribution from './Contribution';
 import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
@@ -307,17 +307,13 @@ export default function AddHoldingInput({
 				)}
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
-						<Row>
-							<Col>
-								<TextInput
-									pre="Comments"
-									value={name}
-									changeHandler={changeName}
-									size="middle"
-									info="Please add any comment you would like to add for your reference"
-								/>
-							</Col>
-						</Row>
+						<Comment
+							changeData={setInput}
+							record={getNewRec()}
+							pre={fields.name}
+							name={name}
+							setName={setName}
+						/>
 					</Col>
 				)}
 			</Row>
