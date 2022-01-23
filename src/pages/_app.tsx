@@ -25,7 +25,7 @@ export default function MyApp({
   return (
     <GoogleReCaptchaProvider reCaptchaKey="6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP">
       <AppContextProvider query={query} headers={headers}>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </AppContextProvider>
     </GoogleReCaptchaProvider>
   );
