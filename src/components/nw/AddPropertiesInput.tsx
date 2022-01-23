@@ -1,6 +1,5 @@
 import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import {
-	Form,
 	Button,
 	Col,
 	Row,
@@ -42,7 +41,7 @@ export default function AddPropertyInput({
 	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(
 		NWContext
 	);
-	const [subtype, setSubtype] = useState<string>("P");
+	const [subtype, setSubtype] = useState<PropertyType>(PropertyType.P);
 	const [own, setOwn] = useState<Array<OwnershipInput>>([]);
 	const [pin, setPin] = useState<any>("");
 	const [memberKey, setMemberKey] = useState<string>(
@@ -152,7 +151,6 @@ export default function AddPropertyInput({
 
 	const getNewRec = () => {
 		let newRec: PropertyInput = {
-			// @ts-ignore
 			type: subtype,
 			pin: pin,
 			purchase: {
@@ -241,8 +239,7 @@ export default function AddPropertyInput({
 		if (val) {
 			setMv(val)
 		} else {
-			// @ts-ignore
-			const value = getCompoundedIncome(rate, amount, duration());
+			const value = getCompoundedIncome(rate, amount, duration() as number);
 			setMv(value)
 			mv = value;
 		}
@@ -263,11 +260,13 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const { Item: FormItem } = Form;
 
 	return (
-		<Form layout="vertical">
-			<ResultCarousel
+		<Row gutter={[ 0, 10 ]}>
+			<Col xs={24}>
+				<Row justify="center">
+					<Col xs={24} sm={24}>
+					<ResultCarousel
 				results={[
 					<ItemDisplay
 						key="valuation"
@@ -276,15 +275,18 @@ export default function AddPropertyInput({
 						currency={selectedCurrency}
 						pl
 					/>]}/>
-			<Row
+					</Col>
+					</Row>
+				</Col>
+				<Col xs={24}>
+				<Row
 				gutter={[
 					{ xs: 0, sm: 0, md: 35 },
 					{ xs: 15, sm: 15, md: 15 },
 				]}
 			>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.type}>
-						<Row
+						<Row align="bottom"
 							gutter={[
 								{ xs: 0, sm: 0, md: 15 },
 								{ xs: 0, sm: 0, md: 15 },
@@ -292,7 +294,7 @@ export default function AddPropertyInput({
 						>
 							<Col xs={24} md={12}>
 								{categoryOptions && (
-									<CascaderInput pre={''} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions} width={150}/>
+									<CascaderInput pre={fields.type} parentValue={subtype} parentChangeHandler={changeSubtype} options={categoryOptions} width={150}/>
 								)}
 							</Col>
 							<Col xs={24} md={12}>
@@ -302,35 +304,29 @@ export default function AddPropertyInput({
 							}
 							</Col>
 						</Row>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.amount}>
 						<NumberInput
-							pre=""
+							pre={fields.amount}
 							min={1}
 							value={amount}
 							changeHandler={changeAmount}
 							currency={selectedCurrency}
 						/>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.date}>
 						<DateInput
-							title={''}
+							title={fields.date}
 							startMonthHandler={changePurchaseMonth}
 							startYearHandler={changePurchaseYear}
 							startMonthValue={sm}
 							startYearValue={sy}
 							size="middle"
 						/>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.rate}>
 						<NumberInput
-							pre={""}
+							pre={fields.rate}
 							min={1}
 							max={50}
 							value={rate}
@@ -338,24 +334,19 @@ export default function AddPropertyInput({
 							step={0.1}
 							unit="%"
 						/>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.mv}>
 						<NumberInput
-							pre=""
+							pre={fields.mv}
 							min={1}
 							value={mv}
 							changeHandler={changeMv}
 							currency={selectedCurrency}
 						/>
-					</FormItem>
 				</Col>
-				
 				<Col xs={24} md={12}>
-					<FormItem label={fields.pin}>
 						<TextInput
-							pre=""
+							pre={fields.pin}
 							value={pin}
 							changeHandler={changePin}
 							size={"middle"}
@@ -363,28 +354,22 @@ export default function AddPropertyInput({
 							post={city && state && (
 									<label>{`${city}, ${state}`}</label>)}
 						/>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.address}>
 						<TextInput
-							pre=""
+							pre={fields.address}
 							value={address}
 							changeHandler={changeAddress}
 							size={"middle"}
 						/>
-					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
-					<FormItem label={fields.name}>
 						<TextInput
-							pre=""
+							pre={fields.name}
 							value={name}
-							style={{ width : 180 }}
 							changeHandler={changeName}
 							size={"middle"}
 						/>
-					</FormItem>
 				</Col>
 				{Object.keys(getFamilyOptions(allFamily)).length > 1  && own && own[0] && (
 					<>
@@ -435,6 +420,7 @@ export default function AddPropertyInput({
 					</>
 				)}
 			</Row>
-		</Form>
+				</Col>
+			</Row>
 	);
 }

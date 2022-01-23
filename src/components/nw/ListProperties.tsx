@@ -150,17 +150,6 @@ export default function ListProperties({
 		return (
 			<>
 			<Row gutter={[ 0, 10 ]}>
-				<Col xs={24} md={12}>
-					<TextInput
-						style={{ width: 300}}
-						pre={fields.name}
-						value={data[i].name as string}
-						changeHandler={(val: string) => {
-							data[i].name = val;
-							changeData([...data]);
-						}}
-						size={"middle"} />
-				</Col>
 				{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
 				<Col xs={24} md={12}>
 				{/* @ts-ignore */}
@@ -254,6 +243,20 @@ export default function ListProperties({
 										<label>{`${data[i].city}, ${data[i].state}`}</label>
 									}
 									size={"middle"} />
+							</Col>
+							<Col xs={24}>
+								<strong>{fields.name}</strong>
+								<hr />
+							</Col>
+							<Col xs={24}>
+							<TextInput
+						pre={''}
+						value={data[i].name as string}
+						changeHandler={(val: string) => {
+							data[i].name = val;
+							changeData([...data]);
+						}}
+						size={"middle"} />
 							</Col>
 						</Row>
 					</Col>
