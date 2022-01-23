@@ -136,7 +136,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		};
 
 		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
-			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} />;
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={''} />;
 		}
 		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
 			dataToRender.rate = (
