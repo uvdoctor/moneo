@@ -5,7 +5,6 @@ import { NWContext } from "./NWContext";
 import TextInput from "../form/textinput";
 import { doesPropertyMatch, getFamilyOptions } from "./nwutils";
 import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
-import NumberInput from "../form/numberinput";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
@@ -17,6 +16,7 @@ import DateColumn from "./DateColumn";
 import Rate from "./Rate";
 import Comment from "./Comment";
 import Pincode from "./Pincode";
+import MarketValue from "./MarketValue";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -46,13 +46,6 @@ export default function ListProperties({
 
 	const changeRes = (val: boolean, i: number) => {
 		data[i].res = val;
-		changeData([...data]);
-	};
-
-	const changeMv = (i: number, val: number) => {
-		data[i].mv = val;
-		data[i].mvm = today.getMonth() + 1;
-		data[i].mvy = today.getFullYear();
 		changeData([...data]);
 	};
 
@@ -208,14 +201,9 @@ export default function ListProperties({
 						<Col>
 						<Row align={isEditMode ? 'top': 'middle'}>
 							<Col>
-							{isEditMode ? <NumberInput
-							changeHandler={(val: number) => changeMv(i, val)}
-							min={100}
-							value={data[i].mv as number}
-							step={100}
-							pre=""
-							currency={selectedCurrency}/>
-							: toHumanFriendlyCurrency(data[i].mv as number, selectedCurrency)}
+							{isEditMode ? 
+							<MarketValue changeData={changeData} record={data[i]} pre={""} data={data}/>
+							: toHumanFriendlyCurrency(Number(data[i].mv), data[i].curr)}
 						</Col>
 						<Col>
 							<Button

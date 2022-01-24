@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import ItemDisplay from "../calc/ItemDisplay";
-import NumberInput from "../form/numberinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import ResultCarousel from "../ResultCarousel";
@@ -12,6 +11,7 @@ import Amount from "./Amount";
 import Category from "./Category";
 import Comment from "./Comment";
 import DateColumn from "./DateColumn";
+import MarketValue from "./MarketValue";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
@@ -52,13 +52,6 @@ export default function AddPropertyInput({
 	const [ sm, setSm ] = useState<number>(4);
 	const [ sy, setSy ] = useState<number>(presentYear - 5);
 	const [valuation, setValuation] = useState<number>(0);
-
-	const duration = () => {
-		let rec = getNewRec();
-		if (rec.purchase) {
-			return calculateDifferenceInYears(presentMonth, presentYear, rec.purchase.month, rec.purchase.year);
-		}
-	};
 
 	const ownerPercent = () => {
 		let count = 0;
@@ -125,7 +118,16 @@ export default function AddPropertyInput({
 	}, [own, disableOk]);
 
 	useEffect(() => {
-		changeMv();
+		const duration = calculateDifferenceInYears(presentMonth, presentYear, sm, sy);
+		const value = getCompoundedIncome(rate, amount, duration);
+		setMv(value)
+		setMvm(presentMonth);
+		setMvy(presentYear);
+		let rec = getNewRec();
+		rec.mv = mv;
+		rec.mvm = presentMonth;
+		rec.mvy = presentYear;
+		setInput(rec);
 	}, [amount, rate, sm, sy]);
 
 	useEffect(
@@ -136,23 +138,6 @@ export default function AddPropertyInput({
 		[ amount, mv, mvm, mvy, sm, sy, rate ]
 	);
 
-	const changeMv = (val?: number) => {
-		let mv = val;
-		if (val) {
-			setMv(val)
-		} else {
-			const value = getCompoundedIncome(rate, amount, duration() as number);
-			setMv(value)
-			mv = value;
-		}
-		setMvm(presentMonth);
-		setMvy(presentYear);
-		let rec = getNewRec();
-		rec.mv = mv;
-		rec.mvm = presentMonth;
-		rec.mvy = presentYear;
-		setInput(rec);
-	};
 
 	return (
 		<Row gutter={[ 0, 10 ]}>
@@ -232,13 +217,14 @@ export default function AddPropertyInput({
 						setRate={setRate}/>
 				</Col>
 				<Col xs={24} md={12}>
-						<NumberInput
-							pre={fields.mv}
-							min={1}
-							value={mv}
-							changeHandler={changeMv}
-							currency={selectedCurrency}
-						/>
+					<MarketValue 
+						changeData={setInput} 
+						record={getNewRec()} 
+						pre={fields.mv} 
+						mv={mv} 
+						setMv={setMv} 
+						setMvm={setMvm} 
+						setMvy={setMvy}/>
 				</Col>
 				<Col xs={24} md={12}>
 						<Pincode 
