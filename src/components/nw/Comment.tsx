@@ -1,12 +1,11 @@
 import React from 'react';
-import { HoldingInput } from '../../api/goals';
 import TextInput from '../form/textinput';
 
 interface CommentProps {
-	data?: Array<HoldingInput>;
+	data?: Array<any>;
 	name?: string;
 	changeData: Function;
-	record: HoldingInput;
+	record: any;
 	setName?: Function;
 	pre: string;
 }

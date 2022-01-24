@@ -10,6 +10,7 @@ import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
 import Amount from "./Amount";
 import Category from "./Category";
+import Comment from "./Comment";
 import DateColumn from "./DateColumn";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
@@ -68,13 +69,6 @@ export default function AddPropertyInput({
 		setRes(val)
 		let rec = getNewRec();
 		rec.res = val;
-		setInput(rec);
-	};
-
-	const changeName = (val: string) => {
-		setName(val);
-		let rec = getNewRec();
-		rec.name = val;
 		setInput(rec);
 	};
 
@@ -288,12 +282,7 @@ export default function AddPropertyInput({
 						/>
 				</Col>
 				<Col xs={24} md={12}>
-						<TextInput
-							pre={fields.name}
-							value={name}
-							changeHandler={changeName}
-							size={"middle"}
-						/>
+					<Comment changeData={setInput} record={getNewRec()} pre={fields.name} setName={setName} name={name}/>
 				</Col>
 				{Object.keys(getFamilyOptions(allFamily)).length > 1  && own && own[0] && (
 					<>

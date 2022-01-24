@@ -15,6 +15,7 @@ import Category from "./Category";
 import Amount from "./Amount";
 import DateColumn from "./DateColumn";
 import Rate from "./Rate";
+import Comment from "./Comment";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -178,14 +179,11 @@ export default function ListProperties({
 								<hr />
 							</Col>
 							<Col xs={24}>
-							<TextInput
-						pre={''}
-						value={data[i].name as string}
-						changeHandler={(val: string) => {
-							data[i].name = val;
-							changeData([...data]);
-						}}
-						size={"middle"} />
+								<Comment 
+									changeData={changeData} 
+									record={data[i]} 
+									data={data}
+									pre={''} />
 							</Col>
 						</Row>
 					</Col>
