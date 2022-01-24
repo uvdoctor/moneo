@@ -15,6 +15,7 @@ import DateColumn from "./DateColumn";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
+import Pincode from "./Pincode";
 import Rate from "./Rate";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 
@@ -36,7 +37,7 @@ export default function AddPropertyInput({
 	);
 	const [subtype, setSubtype] = useState<PropertyType>(PropertyType.P);
 	const [own, setOwn] = useState<Array<OwnershipInput>>([]);
-	const [pin, setPin] = useState<any>("");
+	const [pin, setPin] = useState<string>("");
 	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(0);
 	const [city, setCity] = useState<string>("");
@@ -79,33 +80,10 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const changePin = async (val: any) => {
-		setPin(val);
-		if (selectedCurrency === "INR") {
-			if (val.length === 6) {
-				const response = await fetch(
-					`https://api.postalpincode.in/pincode/${val}`
-				);
-				const data = await response.json();
-				setState(data[0].PostOffice[0].State);
-				setCity(data[0].PostOffice[0].District);
-				let rec = getNewRec();
-				rec.state = state;
-				rec.city = city;
-				rec.pin = Number(pin);
-				setInput(rec);
-			}
-		} else {
-			let rec = getNewRec();
-			rec.pin = Number(pin);
-			setInput(rec);
-		}
-	};
-
 	const getNewRec = () => {
 		let newRec: PropertyInput = {
 			type: subtype,
-			pin: pin,
+			pin: Number(pin),
 			purchase: {
 				amt: amount,
 				month: sm,
@@ -263,15 +241,17 @@ export default function AddPropertyInput({
 						/>
 				</Col>
 				<Col xs={24} md={12}>
-						<TextInput
-							pre={fields.pin}
-							value={pin}
-							changeHandler={changePin}
-							size={"middle"}
-							style={{ width : 250 }}
-							post={city && state && (
-									<label>{`${city}, ${state}`}</label>)}
-						/>
+						<Pincode 
+							changeData={setInput} 
+							record={getNewRec()} 
+							pre={fields.pin} 
+							pin={pin} 
+							setPin={setPin} 
+							setState={setState} 
+							setCity={setCity}
+							state={state}
+							city={city}
+							/>
 				</Col>
 				<Col xs={24} md={12}>
 						<TextInput
