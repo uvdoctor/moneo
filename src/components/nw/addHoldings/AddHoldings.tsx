@@ -147,7 +147,6 @@ export default function AddHoldings({
 				) : childTab === TAB.PROP ? (
 					<AddPropertiesInput
 						setInput={setNewRec}
-						disableOk={setOkDisabled}
 						categoryOptions={categoryOptions}
 						fields={fields}
 					/>

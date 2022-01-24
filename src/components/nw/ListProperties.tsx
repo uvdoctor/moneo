@@ -7,7 +7,6 @@ import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
-import HSwitch from "../HSwitch";
 import Owner from "./Owner";
 import Category from "./Category";
 import Amount from "./Amount";
@@ -17,6 +16,7 @@ import Comment from "./Comment";
 import Pincode from "./Pincode";
 import MarketValue from "./MarketValue";
 import Address from "./Address";
+import Residential from "./Residential";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -42,11 +42,6 @@ export default function ListProperties({
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
 		changeData([...data]); 
-	};
-
-	const changeRes = (val: boolean, i: number) => {
-		data[i].res = val;
-		changeData([...data]);
 	};
 
 	useEffect(() => {
@@ -76,10 +71,9 @@ export default function ListProperties({
 		return (
 			<>
 			<Row gutter={[ 0, 10 ]}>
-				{data[i].type && !(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
+				{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
 				<Col xs={24} md={12}>
-				{/* @ts-ignore */}
-					<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>
+					<Residential changeData={changeData} record={data[i]} data={data}/>
 				</Col>}
 			</Row>
 			<Row

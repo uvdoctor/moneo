@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import ItemDisplay from "../calc/ItemDisplay";
-import HSwitch from "../HSwitch";
 import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
 import Address from "./Address";
@@ -17,18 +16,17 @@ import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
 import Pincode from "./Pincode";
 import Rate from "./Rate";
+import Residential from "./Residential";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 
 interface AddPropertiesInputProps {
 	setInput: Function;
-	disableOk: Function;
 	categoryOptions: any;
 	fields: any;
 }
 
 export default function AddPropertyInput({
 	setInput,
-	disableOk,
 	categoryOptions,
 	fields
 }: AddPropertiesInputProps) {
@@ -59,13 +57,6 @@ export default function AddPropertyInput({
 		return count;
 	};
 	
-	const changeRes = (val: boolean) => {
-		setRes(val)
-		let rec = getNewRec();
-		rec.res = val;
-		setInput(rec);
-	};
-
 	const getNewRec = () => {
 		let newRec: PropertyInput = {
 			type: subtype,
@@ -107,8 +98,7 @@ export default function AddPropertyInput({
 	useEffect(() => {
 		const count = ownerPercent();
 		setError(count < 100);
-		disableOk(count < 100);
-	}, [own, disableOk]);
+	}, [own]);
 
 	useEffect(() => {
 		const duration = calculateDifferenceInYears(presentMonth, presentYear, sm, sy);
@@ -174,12 +164,11 @@ export default function AddPropertyInput({
 										pre={fields.type}/>
 								)}
 							</Col>
-							<Col xs={24} md={12}>
-							{!(subtype === PropertyType.COMM || subtype === PropertyType.P ) &&
-							// @ts-ignore
-									<HSwitch value={res} setter={(val: boolean)=>changeRes(val)} rightText="I live here"/>
-							}
-							</Col>
+							{
+										!(subtype === PropertyType.COMM || subtype === PropertyType.P ) &&
+										<Col xs={24} md={12}>
+											<Residential changeData={setInput} record={getNewRec()} res={res} setRes={setRes}/>
+										</Col>}
 						</Row>
 				</Col>
 				<Col xs={24} md={12}>
