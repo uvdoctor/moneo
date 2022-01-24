@@ -1,10 +1,4 @@
-import React, {
-  createElement,
-  Fragment,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createElement, Fragment, useState } from "react";
 import { Layout, Drawer, Button, Affix, Row } from "antd";
 import { useScroll } from "react-browser-hooks";
 import { MenuOutlined } from "@ant-design/icons";
@@ -12,7 +6,6 @@ import MainMenu from "./MainMenu";
 import Logo from "./Logo";
 
 require("./Nav.less");
-import { AppContext } from "./AppContext";
 import FSToggle from "./FSToggle";
 
 interface NavProps {
@@ -30,22 +23,11 @@ export default function Nav({
   hideMenu,
   title,
 }: NavProps) {
-  const { defaultCurrency, setDefaultCurrency }: any = useContext(AppContext);
   const { top } = useScroll();
   const { Header } = Layout;
   const [showDrawer, setShowDrawer] = useState(false);
   const onShowDrawer = () => setShowDrawer(true);
   const onCloseDrawer = () => setShowDrawer(false);
-
-  useEffect(() => {
-    if (defaultCurrency !== "USD") return;
-    const host = window.location.hostname;
-    if (host.endsWith(".in")) {
-      setDefaultCurrency("INR");
-    } else if (host.endsWith(".uk")) {
-      setDefaultCurrency("GBP");
-    }
-  }, []);
 
   return createElement(
     scrollable ? Fragment : Affix,

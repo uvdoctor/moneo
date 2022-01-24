@@ -47,6 +47,12 @@ export default function Footer() {
       </Row>
       <Row justify="center">
         <Col>
+          <a target="_blank" href={ROUTES.ABOUT} rel="noreferrer">
+            About us
+          </a>
+          &nbsp; | &nbsp;
+        </Col>
+        <Col>
           <a target="_blank" href={ROUTES.TC} rel="noreferrer">
             Terms & Conditions
           </a>

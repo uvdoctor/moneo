@@ -6,9 +6,13 @@ import { COLORS, ROUTES } from "../CONSTANTS";
 import { useRouter } from "next/router";
 import { menuItem } from "./utils";
 import { AppContext } from "./AppContext";
-import { UserOutlined, PoweroffOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  PoweroffOutlined,
+  MailOutlined,
+  CalculatorOutlined,
+} from "@ant-design/icons";
 import { Auth, Hub } from "aws-amplify";
-import Link from "next/link";
 export interface MainMenuProps {
   mode?: any;
 }
@@ -29,11 +33,31 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
     }
   };
 
+  const isPublicCalc = () => {
+    for (let calc of calcList) {
+      if (calc.link === selectedKey) return true;
+    }
+    return false;
+  };
+
   return userChecked ? (
     <>
       <FSToggle />
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
-        <SubMenu key="calcs" title="Calculate">
+        <SubMenu
+          key="calcs"
+          title=""
+          icon={
+            isPublicCalc() ? (
+              <Avatar
+                size="large"
+                icon={<CalculatorOutlined />}
+                style={{ backgroundColor: COLORS.GREEN }}
+              />
+            ) : (
+              <CalculatorOutlined />
+            )
+          }>
           {calcList.map(({ name, link }, index: number) =>
             menuItem(name, link, selectedKey, null, link + index, true)
           )}
@@ -45,45 +69,46 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
             <Menu.Item key="Grow" disabled>
               Grow
             </Menu.Item>
-            {menuItem("Contact Us", ROUTES.CONTACT_US, selectedKey)}
-            <Menu.Item
-              key={ROUTES.SETTINGS}
-              icon={
-                user?.attributes?.picture ? (
-                  <Avatar size="large" src={user?.attributes.picture} />
-                ) : selectedKey === ROUTES.SETTINGS ? (
-                  <Avatar
-                    size="large"
-                    icon={<UserOutlined />}
-                    style={{
-                      backgroundColor: COLORS.GREEN,
-                    }}
-                  />
-                ) : (
-                  <Avatar
-                    size="small"
-                    icon={<UserOutlined />}
-                    style={{
-                      backgroundColor: COLORS.DEFAULT,
-                    }}
-                  />
-                )
-              }>
-              <Link href={ROUTES.SETTINGS}>
-                <a></a>
-              </Link>
-            </Menu.Item>
+            {menuItem(
+              "",
+              ROUTES.SETTINGS,
+              selectedKey,
+              user?.attributes?.picture ? (
+                <Avatar size="large" src={user?.attributes.picture} />
+              ) : selectedKey === ROUTES.SETTINGS ? (
+                <Avatar
+                  size="large"
+                  icon={<UserOutlined />}
+                  style={{
+                    backgroundColor: COLORS.GREEN,
+                  }}
+                />
+              ) : (
+                <UserOutlined />
+              )
+            )}
             <Menu.Item
               key="logout"
               icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
               onClick={handleLogout}
             />
           </Fragment>
-        ) : (
-          <Fragment>
-            {menuItem("About", ROUTES.ABOUT, selectedKey)}
-            {menuItem("Contact Us", ROUTES.CONTACT_US, selectedKey)}
-          </Fragment>
+        ) : null}
+        {menuItem(
+          "",
+          ROUTES.CONTACT_US,
+          selectedKey,
+          selectedKey === ROUTES.CONTACT_US ? (
+            <Avatar
+              size="large"
+              icon={<MailOutlined />}
+              style={{
+                backgroundColor: COLORS.GREEN,
+              }}
+            />
+          ) : (
+            <MailOutlined />
+          )
         )}
       </Menu>
     </>
