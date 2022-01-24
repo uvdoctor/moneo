@@ -599,7 +599,7 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const hasOnlyCategory = (childTab: string) =>
-  [TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P, TAB.LTDEP].includes(
+  [TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P, TAB.LTDEP, TAB.PROP].includes(
     childTab
   );
 export const hasRate = (childTab: string) =>

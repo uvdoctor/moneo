@@ -3,13 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import ItemDisplay from "../calc/ItemDisplay";
-import CascaderInput from "../form/CascaderInput";
 import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
+import Category from "./Category";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
@@ -164,13 +164,6 @@ export default function AddPropertyInput({
 		return newRec;
 	};
 
-	const changeSubtype = (value: any) => {
-		setSubtype(value);
-		let rec = getNewRec();
-		rec.type = value;
-		setInput(rec);
-	};
-
 	useEffect(() => {
 		if (!own.length) {
 			own.push({ fId: Object.keys(getFamilyOptions(allFamily))[0], per: 100 });
@@ -250,12 +243,7 @@ export default function AddPropertyInput({
 						>
 							<Col xs={24} md={12}>
 								{categoryOptions && (
-									<CascaderInput 
-										pre={fields.type} 
-										parentValue={subtype} 
-										parentChangeHandler={changeSubtype} 
-										options={categoryOptions} 
-										width={150}/>
+									<Category categoryOptions={categoryOptions} record={getNewRec()} changeData={setInput} category={subtype} setCategory={setSubtype} pre={fields.type}/>
 								)}
 							</Col>
 							<Col xs={24} md={12}>

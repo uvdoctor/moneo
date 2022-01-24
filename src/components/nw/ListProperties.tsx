@@ -11,8 +11,8 @@ import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
-import CascaderInput from "../form/CascaderInput";
 import Owner from "./Owner";
+import Category from "./Category";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -264,10 +264,7 @@ export default function ListProperties({
 			dataSource.push({
 				key: i,
 				type: categoryOptions && (
-					<CascaderInput pre={''} parentValue={data[i].type} parentChangeHandler={(val:any)=>{
-						data[i].type = val;
-						changeData([...data])
-					}} options={categoryOptions}/>
+					<Category categoryOptions={categoryOptions} record={data[i]} changeData={changeData} data={data}/>
 				),
 				val: (
 					<Row justify="space-between" align="middle">

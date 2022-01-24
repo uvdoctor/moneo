@@ -2,18 +2,17 @@ import React, { useContext, useEffect } from 'react';
 import { NWContext, TAB } from './NWContext';
 import CascaderInput from '../form/CascaderInput';
 import { getRateByCategory, hasOnlyCategory } from './nwutils';
-import { HoldingInput } from '../../api/goals';
 interface CategoryProps {
 	category?: string;
 	categoryOptions: any;
 	subCategory?: string;
-	record: HoldingInput;
+	record: any;
 	changeData: Function;
-	data?: Array<HoldingInput>;
+	data?: Array<any>;
 	setRate?: Function;
 	setCategory?: Function;
 	setSubCat?: Function;
-	pre?: string
+	pre?: string;
 }
 
 export default function Category({
@@ -29,10 +28,12 @@ export default function Category({
 	pre
 }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO, INS, LTDEP, PF, P2P, LENT } = TAB;
+	const { CRYPTO, INS, LTDEP, PF, P2P, LENT, PROP } = TAB;
 	const isListHolding: boolean = setCategory && category ? false : true;
 	const parentValue = isListHolding
-		? childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
+		? childTab === PROP
+			? record.type
+			: childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
 		: category;
 	const childValue = hasOnlyCategory(childTab)
 		? ''
@@ -41,9 +42,13 @@ export default function Category({
 
 	const changeCategory = (value: any) => {
 		setCategory && setCategory(value);
-		childTab === CRYPTO
-			? (record.name = value)
-			: childTab === P2P ? (record.chgF = Number(value)) : (record.subt = value);
+		if (childTab === PROP) {
+			record.type = value;
+		} else {
+			childTab === CRYPTO
+				? (record.name = value)
+				: childTab === P2P ? (record.chgF = Number(value)) : (record.subt = value);
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
@@ -75,6 +80,7 @@ export default function Category({
 			parentChangeHandler={changeCategory}
 			options={categoryOptions}
 			pre={pre}
+			width={childTab === PROP ? 150 : undefined}
 		/>
 	);
 }

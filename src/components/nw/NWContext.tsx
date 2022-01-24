@@ -1085,7 +1085,14 @@ function NWContextProvider() {
   };
 
   const priceProperties = () => {
-    if (!properties.length) return;
+    if (!properties.length) {
+      setTotalProperties(0);
+      setTotalOtherProperty(0);
+      setTotalCommercial(0);
+      setTotalResidential(0);
+      setTotalPolt(0);
+      return
+    }
     let total = 0;
     let totalOtherProperty = 0;
     let totalCommercial = 0;
@@ -1115,7 +1122,7 @@ function NWContextProvider() {
   };
 
   const priceVehicles = () => {
-    if (!vehicles.length) return;
+    if (!vehicles.length) return setTotalVehicles(0);
     let total = 0;
     vehicles.forEach((vehicle: HoldingInput) => {
       if (
@@ -1129,7 +1136,7 @@ function NWContextProvider() {
   };
 
   const priceCrypto = () => {
-    if (!crypto.length) return;
+    if (!crypto.length) return setTotalCrypto(0);
     let total = 0;
     crypto.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
@@ -1140,7 +1147,13 @@ function NWContextProvider() {
   };
 
   const pricePF = () => {
-    if (!pf.length) return;
+    if (!pf.length) {
+      setTotalPF(0);
+      setTotalPPF(0);
+      setTotalVPF(0);
+      setTotalEPF(0);
+      return;
+    }
     let total = 0;
     let totalPPF = 0;
     let totalVPF = 0;
@@ -1160,7 +1173,12 @@ function NWContextProvider() {
   };
 
   const priceNPS = () => {
-    if (!nps.length) return;
+    if (!nps.length) {
+      setTotalNPS(0);
+      setTotalNPSEquity(0);
+      setTotalNPSFixed(0);
+      return;
+    };
     let total = 0;
     let totalNPSFixed = 0;
     let totalNPSEquity = 0;
