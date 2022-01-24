@@ -92,6 +92,7 @@ export default function ListProperties({
 	}, [changeData, data, indexForMv]);
 
 	const expandedRow = (i: number) => {
+		if(!data[i]) return;
 		return (
 			<>
 			<Row gutter={[ 0, 10 ]}>
