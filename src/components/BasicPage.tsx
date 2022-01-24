@@ -79,7 +79,6 @@ export default function BasicPage(props: BasicPageProps) {
 
   useEffect(() => {
     if (!user) return;
-    initData();
     if (user.signInUserSession?.accessToken) {
       setOwner(user.signInUserSession.accessToken.payload.username);
       setUserChecked(true);
@@ -88,6 +87,7 @@ export default function BasicPage(props: BasicPageProps) {
 
   useEffect(() => {
     if (!owner) return;
+    initData();
     userInfo ? setAppContextLoaded(true) : loadUserInfo();
   }, [owner]);
 
