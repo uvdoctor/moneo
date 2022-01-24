@@ -14,6 +14,7 @@ import Owner from "./Owner";
 import Category from "./Category";
 import Amount from "./Amount";
 import DateColumn from "./DateColumn";
+import Rate from "./Rate";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -90,12 +91,6 @@ export default function ListProperties({
 		}
 	}, [changeData, data, indexForMv]);
 
-	const changeRate = (i: number, val: number) => {
-		data[i].rate = val;
-		changeData([...data]);
-		setIndexForMv(i);
-	};
-
 	const expandedRow = (i: number) => {
 		return (
 			<>
@@ -138,20 +133,13 @@ export default function ListProperties({
 									/>
 							</Col>
 							<Col>
-								<Row gutter={[10, 0]}>
-									<Col xs={24}>{fields.rate}</Col>
-									<Col>
-										<NumberInput
-											changeHandler={(val: number) => changeRate(i, val)}
-											min={1}
-											max={50}
-											value={data[i].rate as number}
-											step={0.1}
-											unit="%"
-											pre=""
-										/>
-								</Col>
-								</Row>
+								<Rate 
+									changeData={changeData} 
+									record={data[i]} 
+									pre={fields.rate} 
+									data={data} 
+									setIndexForMv={setIndexForMv} 
+									index={i}/>
 							</Col>
 						</Row>
 					</Col>

@@ -1,23 +1,31 @@
-import React from 'react';
-import { HoldingInput } from '../../api/goals';
+import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
+import { NWContext, TAB } from './NWContext';
 
 interface RateProps {
-	data?: Array<HoldingInput>;
+	data?: Array<any>;
 	rate?: number;
 	changeData: Function;
-	record: HoldingInput;
+	record: any;
 	setRate?: Function;
 	pre: string;
+	setIndexForMv?: Function;
+	index?: number;
 }
 
-export default function Rate({ data, changeData, record, pre, rate, setRate }: RateProps) {
+export default function Rate({ data, changeData, record, pre, rate, setRate, setIndexForMv, index }: RateProps) {
+	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setRate ? false : true;
-	const chg = isListHolding ? record.chg : rate;
+	const chg = isListHolding ? (childTab === TAB.PROP ? record.rate : record.chg) : rate;
 
 	const changeRate = (val: number) => {
 		setRate && setRate(val);
-		record.chg = val;
+		if (childTab === TAB.PROP) {
+			record.rate ? (record.rate = val) : '';
+			setIndexForMv && setIndexForMv(index);
+		} else {
+			record.chg = val;
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 

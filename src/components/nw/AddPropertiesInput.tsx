@@ -14,6 +14,7 @@ import DateColumn from "./DateColumn";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
+import Rate from "./Rate";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 
 interface AddPropertiesInputProps {
@@ -240,13 +241,13 @@ export default function AddPropertyInput({
 						</Row>
 				</Col>
 				<Col xs={24} md={12}>
-						<Amount 
-							changeData={setInput} 
-							record={getNewRec()} 
-							fields={fields} 
-							amt={amount} 
-							setAmt={setAmount}
-						/>
+					<Amount 
+						changeData={setInput} 
+						record={getNewRec()} 
+						fields={fields} 
+						amt={amount} 
+						setAmt={setAmount}
+					/>
 				</Col>
 				<Col xs={24} md={12}>
 					<DateColumn 
@@ -259,15 +260,12 @@ export default function AddPropertyInput({
 						setSy={setSy}/>
 				</Col>
 				<Col xs={24} md={12}>
-						<NumberInput
-							pre={fields.rate}
-							min={1}
-							max={50}
-							value={rate}
-							changeHandler={changeRate}
-							step={0.1}
-							unit="%"
-						/>
+					<Rate 
+						changeData={setInput} 
+						record={getNewRec()} 
+						pre={fields.rate} 
+						rate={rate} 
+						setRate={setRate}/>
 				</Col>
 				<Col xs={24} md={12}>
 						<NumberInput
