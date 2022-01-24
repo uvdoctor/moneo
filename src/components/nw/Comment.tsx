@@ -1,23 +1,24 @@
 import React from 'react';
+import { PropertyInput } from '../../api/goals';
 import TextInput from '../form/textinput';
 
 interface CommentProps {
-	data?: Array<any>;
+	data?: Array<PropertyInput>;
 	name?: string;
 	changeData: Function;
-	record: any;
+	record: PropertyInput;
 	setName?: Function;
 	pre: string;
 }
 
 export default function Comment({ data, changeData, record, pre, name, setName }: CommentProps) {
-	const isListHolding: boolean = setName ? false : true;
-	const comment = isListHolding ? record.name : name;
+	const isListProperty: boolean = setName ? false : true;
+	const comment = isListProperty ? record.name : name;
 
 	const changeComment = (val: string) => {
 		setName && setName(val);
 		record.name = val;
-		isListHolding && data ? changeData([ ...data ]) : changeData(record);
+		isListProperty && data ? changeData([ ...data ]) : changeData(record);
 	};
 
 	return (
