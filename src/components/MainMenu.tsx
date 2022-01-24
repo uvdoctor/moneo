@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
-import { Avatar, Menu } from "antd";
+import { Avatar, Menu, Skeleton } from "antd";
 import FSToggle from "./FSToggle";
 import { calcList } from "./landing/Calculator";
 import { COLORS, ROUTES } from "../CONSTANTS";
@@ -112,5 +112,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
         )}
       </Menu>
     </>
-  ) : null;
+  ) : (
+    <Skeleton active />
+  );
 }

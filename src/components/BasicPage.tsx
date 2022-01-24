@@ -40,7 +40,6 @@ export default function BasicPage(props: BasicPageProps) {
     setOwner,
     userInfo,
     defaultCountry,
-    userChecked,
     setUserChecked,
   }: any = useContext(AppContext);
   const router = useRouter();
@@ -81,9 +80,11 @@ export default function BasicPage(props: BasicPageProps) {
   useEffect(() => {
     if (!user) return;
     initData();
-    if (user.signInUserSession?.accessToken)
+    if (user.signInUserSession?.accessToken) {
       setOwner(user.signInUserSession.accessToken.payload.username);
-  }, [userChecked]);
+      setUserChecked(true);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!owner) return;
@@ -115,8 +116,6 @@ export default function BasicPage(props: BasicPageProps) {
     } catch (e) {
       console.log("Unable to authenticate user");
       setUser(null);
-    } finally {
-      setUserChecked(true);
     }
   };
 
