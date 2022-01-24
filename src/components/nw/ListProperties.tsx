@@ -2,7 +2,6 @@ import { Button, Col, Empty, Row, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { PropertyInput, PropertyType } from "../../api/goals";
 import { NWContext } from "./NWContext";
-import TextInput from "../form/textinput";
 import { doesPropertyMatch, getFamilyOptions } from "./nwutils";
 import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
@@ -17,6 +16,7 @@ import Rate from "./Rate";
 import Comment from "./Comment";
 import Pincode from "./Pincode";
 import MarketValue from "./MarketValue";
+import Address from "./Address";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -131,14 +131,11 @@ export default function ListProperties({
 								<hr />
 							</Col>
 							<Col xs={24}>
-								<TextInput
-									pre={""}
-									value={data[i].address as string}
-									changeHandler={(val: string) => {
-										data[i].address = val;
-										changeData([...data]);
-									} }
-									size={"middle"} />
+								<Address 
+									changeData={changeData} 
+									record={data[i]} 
+									pre={""} 
+									data={data}/>
 							</Col>
 							<Col xs={24}>
 								<Pincode 

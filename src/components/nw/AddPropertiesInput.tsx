@@ -3,10 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import ItemDisplay from "../calc/ItemDisplay";
-import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
 import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
+import Address from "./Address";
 import Amount from "./Amount";
 import Category from "./Category";
 import Comment from "./Comment";
@@ -63,13 +63,6 @@ export default function AddPropertyInput({
 		setRes(val)
 		let rec = getNewRec();
 		rec.res = val;
-		setInput(rec);
-	};
-
-	const changeAddress = (val: string) => {
-		setAddress(val);
-		let rec = getNewRec();
-		rec.address = val;
 		setInput(rec);
 	};
 
@@ -240,12 +233,7 @@ export default function AddPropertyInput({
 							/>
 				</Col>
 				<Col xs={24} md={12}>
-						<TextInput
-							pre={fields.address}
-							value={address}
-							changeHandler={changeAddress}
-							size={"middle"}
-						/>
+					<Address changeData={setInput} record={getNewRec()} pre={fields.address} setAdd={setAddress} add={address} />
 				</Col>
 				<Col xs={24} md={12}>
 					<Comment changeData={setInput} record={getNewRec()} pre={fields.name} setName={setName} name={name}/>
