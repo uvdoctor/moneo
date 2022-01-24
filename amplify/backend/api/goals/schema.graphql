@@ -669,6 +669,7 @@ type EODPrices
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
