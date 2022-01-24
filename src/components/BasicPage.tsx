@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { API, Auth, graphqlOperation, Hub } from "aws-amplify";
+import { API, Auth, graphqlOperation } from "aws-amplify";
 import Head from "next/head";
 import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
@@ -79,7 +79,6 @@ export default function BasicPage(props: BasicPageProps) {
   };
 
   useEffect(() => {
-    console.log("After user checked: ", user);
     if (!user) return;
     initData();
     if (user.signInUserSession?.accessToken)
@@ -97,9 +96,7 @@ export default function BasicPage(props: BasicPageProps) {
       setAppContextLoaded(true);
       return;
     }
-    Hub.listen("auth", initUser);
     initUser();
-    return () => Hub.remove("auth", initUser);
   }, []);
 
   const initData = async () => {
