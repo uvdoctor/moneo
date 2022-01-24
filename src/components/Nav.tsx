@@ -57,7 +57,8 @@ export default function Nav({
             placement="right"
             closable
             onClose={onCloseDrawer}
-            visible={showDrawer}>
+            visible={showDrawer}
+          >
             <MainMenu mode="inline" />
           </Drawer>
         </Fragment>

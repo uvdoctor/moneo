@@ -42,7 +42,6 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
 
   return userChecked ? (
     <>
-      <FSToggle />
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
         <SubMenu
           key="calcs"
@@ -57,7 +56,8 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
             ) : (
               <CalculatorOutlined />
             )
-          }>
+          }
+        >
           {calcList.map(({ name, link }, index: number) =>
             menuItem(name, link, selectedKey, null, link + index, true)
           )}
