@@ -13,6 +13,7 @@ import { calculateDifferenceInYears, calculateProperty } from "./valuationutils"
 import HSwitch from "../HSwitch";
 import Owner from "./Owner";
 import Category from "./Category";
+import Amount from "./Amount";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -103,13 +104,6 @@ export default function ListProperties({
 		}
 	}, [changeData, data, indexForMv]);
 
-	const changeAmt = (i: number, val: number) => {
-		// @ts-ignore
-		data[i].purchase?.amt = val;
-		changeData([...data]);
-		setIndexForMv(i);
-	};
-
 	const changeRate = (i: number, val: number) => {
 		data[i].rate = val;
 		changeData([...data]);
@@ -139,18 +133,7 @@ export default function ListProperties({
 								<hr />
 							</Col>
 							<Col xs={24}>
-								<Row gutter={[10, 0]}>
-									<Col xs={24}>{fields.amount}</Col>
-									<Col>
-										<NumberInput
-											pre=""
-											min={10}
-											value={data[i].purchase?.amt as number}
-											changeHandler={(val: number) => changeAmt(i, val)}
-											currency={selectedCurrency}
-											step={10} />
-									</Col>
-								</Row>
+								<Amount changeData={changeData} record={data[i]} fields={fields.amount} data={data} setIndexForMv={setIndexForMv} index={i}/>
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
