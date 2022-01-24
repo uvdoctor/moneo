@@ -11,8 +11,9 @@ import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
 import HSwitch from "../HSwitch";
-import CascaderInput from "../form/CascaderInput";
 import Owner from "./Owner";
+import Category from "./Category";
+import Amount from "./Amount";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -103,13 +104,6 @@ export default function ListProperties({
 		}
 	}, [changeData, data, indexForMv]);
 
-	const changeAmt = (i: number, val: number) => {
-		// @ts-ignore
-		data[i].purchase?.amt = val;
-		changeData([...data]);
-		setIndexForMv(i);
-	};
-
 	const changeRate = (i: number, val: number) => {
 		data[i].rate = val;
 		changeData([...data]);
@@ -139,18 +133,7 @@ export default function ListProperties({
 								<hr />
 							</Col>
 							<Col xs={24}>
-								<Row gutter={[10, 0]}>
-									<Col xs={24}>{fields.amount}</Col>
-									<Col>
-										<NumberInput
-											pre=""
-											min={10}
-											value={data[i].purchase?.amt as number}
-											changeHandler={(val: number) => changeAmt(i, val)}
-											currency={selectedCurrency}
-											step={10} />
-									</Col>
-								</Row>
+								<Amount changeData={changeData} record={data[i]} fields={fields.amount} data={data} setIndexForMv={setIndexForMv} index={i}/>
 							</Col>
 							<Col xs={24}>
 								<Row gutter={[10, 0]}>
@@ -264,10 +247,7 @@ export default function ListProperties({
 			dataSource.push({
 				key: i,
 				type: categoryOptions && (
-					<CascaderInput pre={''} parentValue={data[i].type} parentChangeHandler={(val:any)=>{
-						data[i].type = val;
-						changeData([...data])
-					}} options={categoryOptions}/>
+					<Category categoryOptions={categoryOptions} record={data[i]} changeData={changeData} data={data}/>
 				),
 				val: (
 					<Row justify="space-between" align="middle">

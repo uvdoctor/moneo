@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import { presentMonth, presentYear } from '../utils';
 import { NWContext, TAB } from './NWContext';
@@ -7,21 +6,34 @@ import { hasPF, hasQtyWithRate } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 
 interface AmountProps {
-	data?: Array<HoldingInput>;
+	data?: Array<any>;
 	qty?: number;
 	amt?: number;
 	changeData: Function;
-	record: HoldingInput;
+	record: any;
 	setAmt?: Function;
 	setQty?: Function;
-	fields?: any
+	fields?: any;
+	setIndexForMv?: Function;
+	index?: number;
 }
 
-export default function Amount({ data, changeData, record, setAmt, setQty, qty, amt, fields }: AmountProps) {
+export default function Amount({
+	data,
+	changeData,
+	record,
+	setAmt,
+	setQty,
+	qty,
+	amt,
+	fields,
+	setIndexForMv,
+	index
+}: AmountProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { CRYPTO } = TAB;
+	const { CRYPTO, PROP } = TAB;
 	const isListHolding: boolean = setAmt || setQty ? false : true;
-	const amount = isListHolding ? record.amt : amt;
+	const amount = isListHolding ? (childTab === PROP ? record.purchase.amt : record.amt) : amt;
 	const quantity = isListHolding ? record.qty : qty;
 
 	const changeAmt = (amt: number) => {
@@ -30,7 +42,12 @@ export default function Amount({ data, changeData, record, setAmt, setQty, qty, 
 			record.sm = presentMonth;
 			record.sy = presentYear;
 		}
-		record.amt = amt;
+		if (childTab === PROP) {
+			record.purchase ? (record.purchase.amt = amt) : '';
+			setIndexForMv && setIndexForMv(index);
+		} else {
+			record.amt = amt;
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
@@ -50,9 +67,9 @@ export default function Amount({ data, changeData, record, setAmt, setQty, qty, 
 		/>
 	) : (
 		<NumberInput
-			pre={isListHolding ? '' : fields.amount}
+			pre={childTab === PROP ? fields.amount : isListHolding ? '' : fields.amount}
 			value={amount as number}
-			changeHandler={(val: number) => changeAmt(val)}
+			changeHandler={changeAmt}
 			currency={record.curr as string}
 			min={1}
 		/>
