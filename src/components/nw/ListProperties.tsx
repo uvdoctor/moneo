@@ -6,7 +6,6 @@ import TextInput from "../form/textinput";
 import { doesPropertyMatch, getFamilyOptions } from "./nwutils";
 import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
-import DateInput from "../form/DateInput";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import { calculateDifferenceInYears, calculateProperty } from "./valuationutils";
@@ -14,6 +13,7 @@ import HSwitch from "../HSwitch";
 import Owner from "./Owner";
 import Category from "./Category";
 import Amount from "./Amount";
+import DateColumn from "./DateColumn";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -60,20 +60,6 @@ export default function ListProperties({
 		data[i].res = val;
 		changeData([...data]);
 	};
-
-	const changePurchaseMonth = (val: number, i: number) => {
-		// @ts-ignore
-		data[i].purchase.month = val
-		setIndexForMv(i);
-		changeData([...data]);
-	}
-
-	const changePurchaseYear = (val: number, i: number) => {
-		// @ts-ignore
-		data[i].purchase.year = val
-		setIndexForMv(i);
-		changeData([...data]);
-	}
 
 	const changeMv = (i: number, val: number) => {
 		data[i].mv = val;
@@ -133,22 +119,23 @@ export default function ListProperties({
 								<hr />
 							</Col>
 							<Col xs={24}>
-								<Amount changeData={changeData} record={data[i]} fields={fields.amount} data={data} setIndexForMv={setIndexForMv} index={i}/>
+								<Amount 
+									changeData={changeData} 
+									record={data[i]} 
+									fields={fields} 
+									data={data} 
+									setIndexForMv={setIndexForMv} 
+									index={i}/>
 							</Col>
 							<Col xs={24}>
-								<Row gutter={[10, 0]}>
-								<Col xs={24}>{fields.date}</Col>
-								<Col>
-								<DateInput
-									title=''
-									startMonthHandler={(val: number)=>changePurchaseMonth(val, i)}
-									startYearHandler={(val: number)=>changePurchaseYear(val, i)}
-									startMonthValue={data[i].purchase?.month}
-									startYearValue={data[i].purchase?.year as number}
-									size="middle"
-								/>
-							</Col>
-							</Row>
+								<DateColumn 
+									changeData={changeData} 
+									record={data[i]} 
+									data={data}
+									pre={fields.date}
+									setIndexForMv={setIndexForMv}
+									index={i}
+									/>
 							</Col>
 							<Col>
 								<Row gutter={[10, 0]}>

@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput, PropertyType } from "../../api/goals";
 import { getCompoundedIncome } from "../calc/finance";
 import ItemDisplay from "../calc/ItemDisplay";
-import DateInput from "../form/DateInput";
 import NumberInput from "../form/numberinput";
 import TextInput from "../form/textinput";
 import HSwitch from "../HSwitch";
@@ -11,6 +10,7 @@ import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
 import Amount from "./Amount";
 import Category from "./Category";
+import DateColumn from "./DateColumn";
 import { NWContext } from "./NWContext";
 import { getFamilyOptions } from "./nwutils";
 import Owner from "./Owner";
@@ -82,20 +82,6 @@ export default function AddPropertyInput({
 		setName(val);
 		let rec = getNewRec();
 		rec.name = val;
-		setInput(rec);
-	};
-
-	const changePurchaseMonth = (val: number) => {
-		setSm(val);
-		let rec = getNewRec();
-		if (rec.purchase) rec.purchase.month = val;
-		setInput(rec);
-	};
-
-	const changePurchaseYear = (val: number) => {
-		setSy(val);
-		let rec = getNewRec();
-		if (rec.purchase) rec.purchase.year = val;
 		setInput(rec);
 	};
 
@@ -263,14 +249,14 @@ export default function AddPropertyInput({
 						/>
 				</Col>
 				<Col xs={24} md={12}>
-						<DateInput
-							title={fields.date}
-							startMonthHandler={changePurchaseMonth}
-							startYearHandler={changePurchaseYear}
-							startMonthValue={sm}
-							startYearValue={sy}
-							size="middle"
-						/>
+					<DateColumn 
+						changeData={setInput} 
+						record={getNewRec()} 
+						pre={fields.date} 
+						sm={sm} 
+						sy={sy} 
+						setSm={setSm} 
+						setSy={setSy}/>
 				</Col>
 				<Col xs={24} md={12}>
 						<NumberInput

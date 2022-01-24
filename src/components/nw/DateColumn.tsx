@@ -1,14 +1,13 @@
 import React, { useContext, useEffect } from 'react';
-import { HoldingInput } from '../../api/goals';
-import { NATIONAL_SAVINGS_CERTIFICATE, NWContext } from './NWContext';
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import DateInput from '../form/DateInput';
 import { hasOnlyEnddate, isRangePicker } from './nwutils';
 import { calculateAddYears } from './valuationutils';
 
 interface MemberAndValuationProps {
-	data?: Array<HoldingInput>;
+	data?: Array<any>;
 	changeData: Function;
-	record: HoldingInput;
+	record: any;
 	sm?: number;
 	sy?: number;
 	em?: number;
@@ -18,6 +17,8 @@ interface MemberAndValuationProps {
 	setEm?: Function;
 	setEy?: Function;
 	pre: string;
+	setIndexForMv?: Function;
+	index?: number;
 }
 
 export default function MemberAndValuation({
@@ -32,28 +33,36 @@ export default function MemberAndValuation({
 	em,
 	ey,
 	sm,
-	sy
+	sy,
+	setIndexForMv,
+	index
 }: MemberAndValuationProps) {
 	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setSm && setSy ? false : true;
-
-	const startMonth = isListHolding ? record.sm : sm;
-	const startYear = isListHolding ? record.sy : sy;
+	const startMonth = isListHolding ? (childTab === TAB.PROP ? record.purchase.month : record.sm) : sm;
+	const startYear = isListHolding ? (childTab === TAB.PROP ? record.purchase.year : record.sy) : sy;
 	const endMonth = isListHolding ? record.em : em;
 	const endYear = isListHolding ? record.ey : ey;
 
 	const changeStartYear = (val: number) => {
 		setSy && setSy(val);
-		console.log(sy);
-
-		hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.ey = 0) : (record.ey = val)) : (record.sy = val);
+		if (childTab === TAB.PROP) {
+			record.purchase ? (record.purchase.year = val) : '';
+			setIndexForMv && setIndexForMv(index);
+		} else {
+			hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.ey = 0) : (record.ey = val)) : (record.sy = val);
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
 	const changeStartMonth = (val: number) => {
 		setSm && setSm(val);
-		console.log(val);
-		hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.em = 0) : (record.em = val)) : (record.sm = val);
+		if (childTab === TAB.PROP) {
+			record.purchase ? (record.purchase.month = val) : '';
+			setIndexForMv && setIndexForMv(index);
+		} else {
+			hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.em = 0) : (record.em = val)) : (record.sm = val);
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
