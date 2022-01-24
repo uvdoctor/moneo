@@ -1,18 +1,20 @@
 import React, { Fragment, useContext, useState } from "react";
 import { Avatar, Menu, Skeleton } from "antd";
-import FSToggle from "./FSToggle";
-import { calcList } from "./landing/Calculator";
-import { COLORS, ROUTES } from "../CONSTANTS";
-import { useRouter } from "next/router";
-import { menuItem } from "./utils";
-import { AppContext } from "./AppContext";
 import {
   UserOutlined,
   PoweroffOutlined,
   MailOutlined,
   CalculatorOutlined,
+  ShareAltOutlined,
 } from "@ant-design/icons";
 import { Auth, Hub } from "aws-amplify";
+import { calcList } from "./landing/Calculator";
+import { COLORS, ROUTES } from "../CONSTANTS";
+import { useRouter } from "next/router";
+import { menuItem } from "./utils";
+import { AppContext } from "./AppContext";
+import SocialShare from "./SocialShare";
+
 export interface MainMenuProps {
   mode?: any;
 }
@@ -110,6 +112,11 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
             <MailOutlined />
           )
         )}
+        <SubMenu key="social-share" title="" icon={<ShareAltOutlined />}>
+          <Menu.Item>
+            <SocialShare nonExpandable />
+          </Menu.Item>
+        </SubMenu>
       </Menu>
     </>
   ) : (

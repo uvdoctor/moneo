@@ -12,26 +12,14 @@ Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
 interface MyAppProps {
   Component: any;
   pageProps: any;
-  query: string;
-  headers: any;
 }
 
-export default function MyApp({
-  Component,
-  pageProps,
-  query,
-  headers,
-}: MyAppProps) {
+export default function MyApp({ Component, pageProps }: MyAppProps) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey="6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP">
-      <AppContextProvider query={query} headers={headers}>
+      <AppContextProvider>
         <Component {...pageProps} />
       </AppContextProvider>
     </GoogleReCaptchaProvider>
   );
 }
-
-MyApp.getInitialProps = ({
-  router: { query },
-  ctx: { req: { headers = {} } = {} } = {},
-}: any) => ({ query, headers });

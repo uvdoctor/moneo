@@ -3,16 +3,10 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const AppContext = createContext({});
 interface AppContextProviderProps {
-  query: string;
-  headers: any;
   children: any;
 }
 
-function AppContextProvider({
-  query,
-  headers,
-  children,
-}: AppContextProviderProps) {
+function AppContextProvider({ children }: AppContextProviderProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [user, setUser] = useState<any | null>(null);
   const [defaultCountry, setDefaultCountry] = useState<string>("US");
@@ -65,8 +59,6 @@ function AppContextProvider({
   return (
     <AppContext.Provider
       value={{
-        query,
-        headers,
         defaultCountry,
         setDefaultCountry,
         defaultCurrency,
@@ -84,7 +76,8 @@ function AppContextProvider({
         setUser,
         userChecked,
         setUserChecked,
-      }}>
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

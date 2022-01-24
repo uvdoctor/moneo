@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
+import React, { useContext, useEffect, useState } from "react";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import {
 	EmailShareButton,
 	EmailIcon,
@@ -20,26 +20,35 @@ import {
 	WhatsappShareButton,
 	WhatsappIcon,
 	ViberShareButton,
-	ViberIcon
-} from 'react-share';
+	ViberIcon,
+} from "react-share";
 
-require('./SocialShare.less');
-import { AppContext } from './AppContext';
+require("./SocialShare.less");
+import { AppContext } from "./AppContext";
 
-export default function SocialMediaShare() {
+export interface SocialMediaShareProps {
+	nonExpandable?: any;
+}
+
+export default function SocialMediaShare({
+	nonExpandable,
+}: SocialMediaShareProps) {
 	const { defaultCountry }: any = useContext(AppContext);
-	const websiteUrl = defaultCountry === 'IN' ? 'https://moneo.in' : 'https://gomoneo.com';
-	const [ url, setUrl ] = useState(websiteUrl);
+	const websiteUrl =
+		defaultCountry === "IN" ? "https://moneo.in" : "https://gomoneo.com";
+	const [url, setUrl] = useState(websiteUrl);
 
 	useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), []);
 
 	return (
-		<div className="social-share">
+		<div className={`social-share ${nonExpandable ? "non-expandable" : ""}`}>
 			<span className="expand-collapse-icon">
 				<CaretDownOutlined />
 				<CaretUpOutlined />
 			</span>
-			<p>{`Earn ${defaultCountry === 'IN' ? 'cashback' : '500 points'} for Every Referral`}</p>
+			<p>{`Earn ${
+				defaultCountry === "IN" ? "cashback" : "500 points"
+			} for Every Referral`}</p>
 			<div>
 				<EmailShareButton url={url} subject="Moneo - Your Money Coach">
 					<EmailIcon size={32} round />
@@ -56,7 +65,10 @@ export default function SocialMediaShare() {
 				<LinkedinShareButton url={url}>
 					<LinkedinIcon size={32} round />
 				</LinkedinShareButton>
-				<PinterestShareButton media={`${websiteUrl}/images/icons/tlogo256.png`} url={url}>
+				<PinterestShareButton
+					media={`${websiteUrl}/images/icons/tlogo256.png`}
+					url={url}
+				>
 					<PinterestIcon size={32} round />
 				</PinterestShareButton>
 				<TelegramShareButton url={url}>
