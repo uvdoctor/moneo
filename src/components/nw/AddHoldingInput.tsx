@@ -11,7 +11,7 @@ import Comment from './Comment';
 import Contribution from './Contribution';
 import DateColumn from './DateColumn';
 import { LIABILITIES_TAB, NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
-import { hasDate, hasName, hasPF, hasRate, hasOnlyCategory, calculateValuation } from './nwutils';
+import { hasDate, hasName, hasPF, hasRate, hasOnlyCategory, calculateValuation, hasOnlyEnddate } from './nwutils';
 import Rate from './Rate';
 import { calculateAddYears, calculateCompundingIncome } from './valuationutils';
 interface AddHoldingInputProps {
@@ -38,7 +38,7 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 	const [ rate, setRate ] = useState<number>(defaultRate);
 	const [ sm, setSm ] = useState<number>(presentMonth);
 	const [ em, setEm ] = useState<number>(presentMonth);
-	const [ sy, setSy ] = useState<number>(childTab === VEHICLE ? presentYear - 5 : presentYear);
+	const [ sy, setSy ] = useState<number>(childTab === VEHICLE ? presentYear - 5 : hasOnlyEnddate(childTab) ? (presentYear+2) : presentYear);
 	const [ ey, setEy ] = useState<number>(presentYear + 2);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ valuation, setValuation ] = useState<number>(0);
@@ -154,6 +154,8 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 
 	useEffect(
 		() => {
+			console.log(1, sm, sy);
+			
 			const valuation = calculateValuation(
 				childTab,
 				getNewRec(),
