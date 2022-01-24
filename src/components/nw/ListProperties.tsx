@@ -16,6 +16,7 @@ import Amount from "./Amount";
 import DateColumn from "./DateColumn";
 import Rate from "./Rate";
 import Comment from "./Comment";
+import Pincode from "./Pincode";
 require('./ListProperties.less');
 
 interface ListPropertiesProps {
@@ -41,21 +42,6 @@ export default function ListProperties({
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
 		changeData([...data]); 
-	};
-
-	const changePin = async (val: string, i: number) => {
-		data[i].pin = Number(val);
-		if (selectedCurrency === "INR") {
-			if (val.length === 6) {
-				const response = await fetch(
-					`https://api.postalpincode.in/pincode/${val}`
-				);
-				const resdata = await response.json();
-				data[i].state = resdata[0].PostOffice[0].State;
-				data[i].city = resdata[0].PostOffice[0].District;
-			}
-		}
-		changeData([...data]);
 	};
 
 	const changeRes = (val: boolean, i: number) => {
@@ -162,17 +148,11 @@ export default function ListProperties({
 									size={"middle"} />
 							</Col>
 							<Col xs={24}>
-								<TextInput
-									pre={""}
-									value={String(data[i].pin)}
-									changeHandler={(val: string) => {
-										changePin(val, i);
-									} }
-									post={
-										data[i].city && data[i].state &&
-										<label>{`${data[i].city}, ${data[i].state}`}</label>
-									}
-									size={"middle"} />
+								<Pincode 
+									changeData={changeData} 
+									record={data[i]} 
+									pre={""} 
+									data={data}/>
 							</Col>
 							<Col xs={24}>
 								<strong>{fields.name}</strong>
