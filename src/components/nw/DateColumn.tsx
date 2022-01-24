@@ -36,6 +36,7 @@ export default function MemberAndValuation({
 }: MemberAndValuationProps) {
 	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setSm && setSy ? false : true;
+
 	const startMonth = isListHolding ? record.sm : sm;
 	const startYear = isListHolding ? record.sy : sy;
 	const endMonth = isListHolding ? record.em : em;
@@ -43,12 +44,15 @@ export default function MemberAndValuation({
 
 	const changeStartYear = (val: number) => {
 		setSy && setSy(val);
+		console.log(sy);
+
 		hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.ey = 0) : (record.ey = val)) : (record.sy = val);
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 
 	const changeStartMonth = (val: number) => {
 		setSm && setSm(val);
+		console.log(val);
 		hasOnlyEnddate(childTab) ? (record.subt === 'H' ? (record.em = 0) : (record.em = val)) : (record.sm = val);
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
@@ -83,11 +87,12 @@ export default function MemberAndValuation({
 			startYearHandler={changeStartYear}
 			endMonthHandler={isRangePicker(childTab, record.subt as string) ? changeEndMonth : undefined}
 			endYearHandler={isRangePicker(childTab, record.subt as string) ? changeEndYear : undefined}
-			startMonthValue={hasOnlyEnddate(childTab) ? endMonth as number : startMonth as number}
+			startMonthValue={hasOnlyEnddate(childTab) && isListHolding ? endMonth as number : startMonth as number}
 			endMonthValue={endMonth as number}
-			startYearValue={hasOnlyEnddate(childTab) ? endYear as number : startYear as number}
+			startYearValue={hasOnlyEnddate(childTab) && isListHolding ? endYear as number : startYear as number}
 			endYearValue={endYear as number}
-			size='middle'
+			dateWithEnddate={hasOnlyEnddate(childTab) ? true : false}
+			size="middle"
 		/>
 	);
 }

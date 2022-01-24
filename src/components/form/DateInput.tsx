@@ -29,6 +29,7 @@ interface DateInputProps {
   disabled?: boolean;
   initialValue?: number;
   endValue?: number;
+  dateWithEnddate?: boolean;
 }
 
 export default function DateInput({
@@ -51,6 +52,7 @@ export default function DateInput({
   disabled,
   initialValue,
   endValue,
+  dateWithEnddate
 }: DateInputProps) {
   const [customDate, setCustomDate] = useState<Array<Date>>([]);
   const today = new Date();
@@ -182,13 +184,19 @@ export default function DateInput({
             picker={picker}
             allowClear={false}
             size={size ? size : "small"}
-            defaultValue={parse(date as string, format, new Date())}
             format={format}
             onChange={(value: Date | null) => {
               if (!value) return;
+              const monthValue = value.getMonth() > month - 1 && value.getFullYear() >= year && !dateWithEnddate
+              ? month - 1
+              : value.getMonth()+1
+              const yearValue =  value.getFullYear() >= year && !dateWithEnddate
+              ? year
+              : value?.getFullYear()
+              
               startDateHandler && startDateHandler(value?.getDate());
-              startMonthHandler && startMonthHandler(value?.getMonth() + 1);
-              startYearHandler && startYearHandler(value?.getFullYear());
+              startMonthHandler && startMonthHandler(monthValue);
+              startYearHandler && startYearHandler(yearValue);
             }}
             disabled={disabled}
             disabledDate={(date: Date) => disabledDate(date)}

@@ -154,8 +154,6 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 
 	useEffect(
 		() => {
-			console.log(1, sm, sy);
-			
 			const valuation = calculateValuation(
 				childTab,
 				getNewRec(),
