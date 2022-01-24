@@ -118,6 +118,7 @@ export default function BasicPage(props: BasicPageProps) {
     } catch (e) {
       console.log("Unable to authenticate user");
       setUser(null);
+      setUserChecked(true);
     }
   };
 
