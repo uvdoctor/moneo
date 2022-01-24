@@ -63,15 +63,7 @@ export default function AddPropertyInput({
 		own.map((item: any) => (count += item.per));
 		return count;
 	};
-
-	const changeRate = (val: number) => {
-		setRate(val);
-		disableOk(val <= 0);
-		let rec = getNewRec();
-		rec.rate = val;
-		setInput(rec);
-	};
-
+	
 	const changeRes = (val: boolean) => {
 		setRes(val)
 		let rec = getNewRec();
