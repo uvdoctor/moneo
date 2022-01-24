@@ -114,7 +114,7 @@ export default function ListProperties({
 		return (
 			<>
 			<Row gutter={[ 0, 10 ]}>
-				{!(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
+				{data[i].type && !(data[i].type === PropertyType.COMM || data[i].type === PropertyType.P ) && 
 				<Col xs={24} md={12}>
 				{/* @ts-ignore */}
 					<HSwitch value={data[i].res} setter={(val: boolean)=>changeRes(val, i)} rightText="I live here"/>
