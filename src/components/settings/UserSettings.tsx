@@ -73,7 +73,7 @@ const userReducer = (
   }
 };
 
-export default function UserSettings(): JSX.Element {
+export default function UserSettings() {
   const {
     user,
     defaultCountry,
@@ -101,6 +101,7 @@ export default function UserSettings(): JSX.Element {
     dobMonth,
     dobYear,
   } = userState;
+  const { appContextLoaded }: any = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
@@ -266,271 +267,280 @@ export default function UserSettings(): JSX.Element {
           <PageHeader title="Settings" />
         </Col>
       </Row>
-      {error ? <Alert type="error" message={error} /> : null}
-      {user ? (
-        <Tabs
-          className="settings-tab-view"
-          tabPosition={isMobileDevice(fsb) ? "top" : "left"}
-          type={isMobileDevice(fsb) ? "card" : "line"}
-          animated>
-          <TabPane className="settings-tabpane-view" tab="Personal" key="1">
-            <Row>
-              <Col span={24}>
-                <PersoalTab
-                  name={name}
-                  lastName={lastName}
-                  dispatch={dispatch}
-                  dobDate={dobDate}
-                  dobMonth={dobMonth}
-                  dobYear={dobYear}
-                  lifeExpectancy={lifeExpectancy}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={16}>
-                <SaveButton
-                  loading={loading}
-                  error={error}
-                  onClick={updatePersonalTab}
-                  action="personal"
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane className="settings-tabpane-view" tab="Profile" key="2">
-            <Row>
-              <Col span={24}>
-                <ProfileTab
-                  dispatch={dispatch}
-                  isDrManual={isDrManual}
-                  notify={notify}
-                  riskProfile={riskProfile}
-                  tax={tax}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={16}>
-                <SaveButton
-                  loading={loading}
-                  error={error}
-                  onClick={updateProfileTab}
-                  action="profile"
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane className="settings-tabpane-view" tab="Account" key="3">
-            <Row gutter={[0, 24]}>
-              <Col xs={24} sm={24} md={12}>
-                <Row gutter={[10, 10]}>
-                  <Col span={24}>Preferred login name</Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <TextInput
-                      pre=""
-                      value={prefuser}
-                      changeHandler={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "prefuser", val },
-                        })
-                      }
-                      fieldName="prefusername"
-                      setError={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "error", val },
-                        })
-                      }
-                      post={
-                        <Button
-                          type="link"
-                          style={{ color: COLORS.GREEN }}
-                          icon={<SaveOutlined />}
-                          disabled={error.length > 0 ? true : false}
-                          onClick={() => {
-                            validateCaptcha("prefusername_change").then(
-                              (success: boolean) => {
-                                if (!success) return;
-                                updatePrefUsername();
-                              }
-                            );
-                          }}
-                        />
-                      }
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Row gutter={[0, 10]}>
-                  <Col span={24}>Email</Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <TextInput
-                      pre=""
-                      placeholder={"abc@xyz.com"}
-                      value={email}
-                      changeHandler={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "email", val },
-                        })
-                      }
-                      pattern={
-                        "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
-                      }
-                      setError={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "error", val },
-                        })
-                      }
-                      fieldName="email"
-                      post={
-                        <OtpDialogue
-                          disableButton={disableButton(
-                            email,
-                            user?.attributes?.email
-                          )}
-                          action={"email"}
-                          onClickAction={() =>
-                            updateAccountTab(email, doesEmailExist, "Email", {
-                              email: email,
-                            })
-                          }
-                          email={email}
-                          mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
-                          im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
-                          resendOtp={sendOtp}
-                        />
-                      }
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Row gutter={[0, 10]}>
-                  <Col span={24}>Mobile</Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <TextInput
-                      pre=""
-                      prefix={countryCode?.value}
-                      value={mobile}
-                      changeHandler={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "mobile", val },
-                        })
-                      }
-                      fieldName="mobile"
-                      pattern="^[0-9]"
-                      setError={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "error", val },
-                        })
-                      }
-                      minLength={10}
-                      maxLength={10}
-                      post={
-                        <OtpDialogue
-                          disableButton={disableButton(
-                            user?.attributes?.phone_number,
-                            countryCode?.value + mobile
-                          )}
-                          action={"phone_number"}
-                          mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
-                          onClickAction={() =>
-                            updateAccountTab(
-                              mobile,
-                              doesMobExist,
-                              "Mobile Number",
-                              {
-                                phone_number: countryCode?.value + mobile,
-                              }
-                            )
-                          }
-                          resendOtp={sendOtp}
-                        />
-                      }
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
-                <Row gutter={[0, 10]}>
-                  <Col span={24}>Whatsapp</Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <TextInput
-                      pre=""
-                      prefix={countryCode?.value}
-                      value={whatsapp}
-                      changeHandler={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "whatsapp", val },
-                        })
-                      }
-                      fieldName="whatsapp"
-                      pattern="^[0-9]"
-                      setError={(val: any) =>
-                        dispatch({
-                          type: "single",
-                          data: { field: "error", val },
-                        })
-                      }
-                      minLength={10}
-                      maxLength={10}
-                      post={
-                        <OtpDialogue
-                          disableButton={disableButton(
-                            user?.attributes?.nickname,
-                            countryCode?.value + whatsapp
-                          )}
-                          action={"whatsapp_number"}
-                          im={parseFloat(countryCodeWithoutPlusSign + mobile)}
-                          onClickAction={() =>
-                            updateAccountTab(
-                              whatsapp,
-                              doesImExist,
-                              "Whatsapp Number",
-                              {
-                                nickname: countryCode?.value + whatsapp,
-                              }
-                            )
-                          }
-                        />
-                      }
-                    />
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox
-                      checked={whatsapp === mobile}
-                      onChange={(e) =>
-                        e.target.checked ? updateImIfSameAsMob() : null
-                      }>
-                      <strong>Whatsapp number same as mobile number</strong>
-                    </Checkbox>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane className="settings-tabpane-view" tab="Password" key="4">
-            <Row justify="start">
-              <Col>
-                <PasswordTab user={user} />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            className="settings-tabpane-view"
-            tab="Delete Account"
-            key="5">
-            <Row justify="start">
-              <Col>
-                <DeleteAccount />
-              </Col>
-            </Row>
-          </TabPane>
-        </Tabs>
+
+      {appContextLoaded ? (
+        <>
+          {error ? <Alert type="error" message={error} /> : null}
+          <Tabs
+            className="settings-tab-view"
+            tabPosition={isMobileDevice(fsb) ? "top" : "left"}
+            type={isMobileDevice(fsb) ? "card" : "line"}
+            animated>
+            <TabPane className="settings-tabpane-view" tab="Personal" key="1">
+              <Row>
+                <Col span={24}>
+                  <PersoalTab
+                    name={name}
+                    lastName={lastName}
+                    dispatch={dispatch}
+                    dobDate={dobDate}
+                    dobMonth={dobMonth}
+                    dobYear={dobYear}
+                    lifeExpectancy={lifeExpectancy}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={16}>
+                  <SaveButton
+                    loading={loading}
+                    error={error}
+                    onClick={updatePersonalTab}
+                    action="personal"
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane className="settings-tabpane-view" tab="Profile" key="2">
+              <Row>
+                <Col span={24}>
+                  <ProfileTab
+                    dispatch={dispatch}
+                    isDrManual={isDrManual}
+                    notify={notify}
+                    riskProfile={riskProfile}
+                    tax={tax}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={16}>
+                  <SaveButton
+                    loading={loading}
+                    error={error}
+                    onClick={updateProfileTab}
+                    action="profile"
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane className="settings-tabpane-view" tab="Account" key="3">
+              <Row gutter={[0, 24]}>
+                <Col xs={24} sm={24} md={12}>
+                  <Row gutter={[10, 10]}>
+                    <Col span={24}>Preferred login name</Col>
+                    <Col xs={24} sm={24} md={12}>
+                      <TextInput
+                        pre=""
+                        value={prefuser}
+                        changeHandler={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "prefuser", val },
+                          })
+                        }
+                        fieldName="prefusername"
+                        setError={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "error", val },
+                          })
+                        }
+                        post={
+                          <Button
+                            type="link"
+                            style={{ color: COLORS.GREEN }}
+                            icon={<SaveOutlined />}
+                            disabled={error.length > 0 ? true : false}
+                            onClick={() => {
+                              validateCaptcha("prefusername_change").then(
+                                (success: boolean) => {
+                                  if (!success) return;
+                                  updatePrefUsername();
+                                }
+                              );
+                            }}
+                          />
+                        }
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Row gutter={[0, 10]}>
+                    <Col span={24}>Email</Col>
+                    <Col xs={24} sm={24} md={12}>
+                      <TextInput
+                        pre=""
+                        placeholder={"abc@xyz.com"}
+                        value={email}
+                        changeHandler={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "email", val },
+                          })
+                        }
+                        pattern={
+                          "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
+                        }
+                        setError={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "error", val },
+                          })
+                        }
+                        fieldName="email"
+                        post={
+                          <OtpDialogue
+                            disableButton={disableButton(
+                              email,
+                              user?.attributes?.email
+                            )}
+                            action={"email"}
+                            onClickAction={() =>
+                              updateAccountTab(email, doesEmailExist, "Email", {
+                                email: email,
+                              })
+                            }
+                            email={email}
+                            mob={parseFloat(
+                              countryCodeWithoutPlusSign + mobile
+                            )}
+                            im={parseFloat(
+                              countryCodeWithoutPlusSign + whatsapp
+                            )}
+                            resendOtp={sendOtp}
+                          />
+                        }
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Row gutter={[0, 10]}>
+                    <Col span={24}>Mobile</Col>
+                    <Col xs={24} sm={24} md={12}>
+                      <TextInput
+                        pre=""
+                        prefix={countryCode?.value}
+                        value={mobile}
+                        changeHandler={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "mobile", val },
+                          })
+                        }
+                        fieldName="mobile"
+                        pattern="^[0-9]"
+                        setError={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "error", val },
+                          })
+                        }
+                        minLength={10}
+                        maxLength={10}
+                        post={
+                          <OtpDialogue
+                            disableButton={disableButton(
+                              user?.attributes?.phone_number,
+                              countryCode?.value + mobile
+                            )}
+                            action={"phone_number"}
+                            mob={parseFloat(
+                              countryCodeWithoutPlusSign + mobile
+                            )}
+                            onClickAction={() =>
+                              updateAccountTab(
+                                mobile,
+                                doesMobExist,
+                                "Mobile Number",
+                                {
+                                  phone_number: countryCode?.value + mobile,
+                                }
+                              )
+                            }
+                            resendOtp={sendOtp}
+                          />
+                        }
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Row gutter={[0, 10]}>
+                    <Col span={24}>Whatsapp</Col>
+                    <Col xs={24} sm={24} md={12}>
+                      <TextInput
+                        pre=""
+                        prefix={countryCode?.value}
+                        value={whatsapp}
+                        changeHandler={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "whatsapp", val },
+                          })
+                        }
+                        fieldName="whatsapp"
+                        pattern="^[0-9]"
+                        setError={(val: any) =>
+                          dispatch({
+                            type: "single",
+                            data: { field: "error", val },
+                          })
+                        }
+                        minLength={10}
+                        maxLength={10}
+                        post={
+                          <OtpDialogue
+                            disableButton={disableButton(
+                              user?.attributes?.nickname,
+                              countryCode?.value + whatsapp
+                            )}
+                            action={"whatsapp_number"}
+                            im={parseFloat(countryCodeWithoutPlusSign + mobile)}
+                            onClickAction={() =>
+                              updateAccountTab(
+                                whatsapp,
+                                doesImExist,
+                                "Whatsapp Number",
+                                {
+                                  nickname: countryCode?.value + whatsapp,
+                                }
+                              )
+                            }
+                          />
+                        }
+                      />
+                    </Col>
+                    <Col span={24}>
+                      <Checkbox
+                        checked={whatsapp === mobile}
+                        onChange={(e) =>
+                          e.target.checked ? updateImIfSameAsMob() : null
+                        }>
+                        <strong>Whatsapp number same as mobile number</strong>
+                      </Checkbox>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane className="settings-tabpane-view" tab="Password" key="4">
+              <Row justify="start">
+                <Col>
+                  <PasswordTab user={user} />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane
+              className="settings-tabpane-view"
+              tab="Delete Account"
+              key="5">
+              <Row justify="start">
+                <Col>
+                  <DeleteAccount />
+                </Col>
+              </Row>
+            </TabPane>
+          </Tabs>
+        </>
       ) : (
         <Skeleton active />
       )}
