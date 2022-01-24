@@ -25,8 +25,6 @@ import Rate from "./Rate";
 import Contribution from "./Contribution";
 import Comment from "./Comment";
 import LabelWithTooltip from "../form/LabelWithTooltip";
-import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
-import simpleStorage from "simplestorage.js";
 require("./ListHoldings.less");
 
 interface ListHoldingsProps {
@@ -233,7 +231,6 @@ export default function ListHoldings({
           holding,
           userInfo,
           discountRate,
-          simpleStorage.get(LOCAL_RATES_DATA_KEY),
           selectedCurrency,
           npsData
         );

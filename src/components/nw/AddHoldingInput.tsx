@@ -159,7 +159,6 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 				getNewRec(),
 				userInfo,
 				discountRate,
-				ratesData,
 				selectedCurrency,
 				npsData
 			);

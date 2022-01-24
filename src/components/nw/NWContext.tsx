@@ -114,7 +114,6 @@ export const LIABILITIES_VIEW = "liabilities";
 function NWContextProvider() {
   const {
     defaultCurrency,
-    ratesData,
     owner,
     user,
     discountRate,
@@ -813,7 +812,7 @@ function NWContextProvider() {
     let totalPGold = 0;
     preciousMetals.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        const value = calculatePM(holding, ratesData, selectedCurrency);
+        const value = calculatePM(holding, selectedCurrency);
         total += value;
         if (holding.subt === AssetSubType.Gold) totalPGold += value;
       }
@@ -1140,7 +1139,7 @@ function NWContextProvider() {
     let total = 0;
     crypto.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        total += calculateCrypto(holding, ratesData, selectedCurrency);
+        total += calculateCrypto(holding, selectedCurrency);
       }
     });
     setTotalCrypto(total);

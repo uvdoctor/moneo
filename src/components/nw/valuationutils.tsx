@@ -3,12 +3,14 @@ import {
   differenceInCalendarYears,
   differenceInMonths,
 } from "date-fns";
+import simpleStorage from "simplestorage.js";
 import {
   AssetType,
   CreateNPSPriceInput,
   HoldingInput,
   PropertyInput,
 } from "../../api/goals";
+import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { getCommodityRate, getCryptoRate } from "./nwutils";
 const today = new Date();
@@ -99,9 +101,9 @@ export const calculateAddYears = (
 
 export const calculatePM = (
   holding: HoldingInput,
-  ratesData: any,
   selectedCurrency: string
 ) => {
+  const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
   const rate = getCommodityRate(
     ratesData,
     holding.subt as string,
@@ -252,9 +254,9 @@ export const calculateVehicle = (holding: HoldingInput) => {
 
 export const calculateCrypto = (
   holding: HoldingInput,
-  ratesData: any,
   selectedCurrency: string
 ) => {
+  const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
   const rate = getCryptoRate(
     ratesData,
     holding.name as string,
