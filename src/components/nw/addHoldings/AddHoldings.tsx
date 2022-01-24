@@ -54,8 +54,8 @@ export default function AddHoldings({
 
 	const addFamilyMember = (fid: string) => {
 		if (hasInstruments(childTab)) {
-			const updatedinstruments = instrumentsList.map((item: InstrumentInput) => (item.fId = fid));
-			setInstrumentsList([ ...updatedinstruments, ...instruments ]);
+			instrumentsList.map((item: InstrumentInput) => (!item.fId ? item.fId = fid : '' ));
+			setInstrumentsList([ ...instrumentsList ]);
 		} else {
 			const rec = newRec;
 			rec.fId = fid;
