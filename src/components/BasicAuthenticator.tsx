@@ -42,7 +42,7 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { validateCaptcha, setUser, setUserInfo, appContextLoaded }: any =
+  const { validateCaptcha, user, setUser, setUserInfo, appContextLoaded }: any =
     useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
@@ -58,7 +58,6 @@ export default function BasicAuthenticator({
   );
   const [uname, setUname] = useState<string>("");
   const [state, dispatch] = useReducer(stepReducer, { step: 0 });
-  const [cognitoUser, setCognitoUser] = useState<any>();
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
@@ -117,13 +116,18 @@ export default function BasicAuthenticator({
   };
 
   const handleConfirmSignUp = async () => {
-    await Auth.signIn(uname, password).then((user) => {
+    /*await Auth.signIn(uname, password).then((user) => {
       setUser(user);
       Hub.dispatch("UI Auth", {
         event: "AuthStateChange",
         message: AuthState.SignedIn,
         data: user,
       });
+    });*/
+    Hub.dispatch("UI Auth", {
+      event: "AuthStateChange",
+      message: AuthState.SignedIn,
+      data: user,
     });
     setUserInfo(
       await createUserinfo({
@@ -152,7 +156,7 @@ export default function BasicAuthenticator({
         attributes: { email: email },
       })
         .then((response) => {
-          setCognitoUser(response.user);
+          setUser(response.user);
           Hub.dispatch("UI Auth", {
             event: "AuthStateChange",
             message: AuthState.ConfirmSignUp,
@@ -208,7 +212,7 @@ export default function BasicAuthenticator({
         {authState === AuthState.ConfirmSignUp && (
           <AmplifyConfirmSignUp
             slot="confirm-sign-up"
-            user={cognitoUser}
+            user={user}
             handleAuthStateChange={handleConfirmSignUp}
             formFields={[
               {
