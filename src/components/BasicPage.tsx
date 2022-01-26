@@ -38,7 +38,7 @@ export default function BasicPage(props: BasicPageProps) {
       user = await Auth.currentAuthenticatedUser();
       setUser(user);
     } catch (e) {
-      console.log("Unable to authenticate user");
+      console.log("Unable to authenticate user: ", e);
       setUser(null);
       setUserChecked(true);
     }
