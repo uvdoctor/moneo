@@ -116,18 +116,13 @@ export default function BasicAuthenticator({
   };
 
   const handleConfirmSignUp = async () => {
-    /*await Auth.signIn(uname, password).then((user) => {
+    await Auth.signIn(uname, password).then((user) => {
       setUser(user);
       Hub.dispatch("UI Auth", {
         event: "AuthStateChange",
         message: AuthState.SignedIn,
         data: user,
       });
-    });*/
-    Hub.dispatch("UI Auth", {
-      event: "AuthStateChange",
-      message: AuthState.SignedIn,
-      data: user,
     });
     setUserInfo(
       await createUserinfo({
