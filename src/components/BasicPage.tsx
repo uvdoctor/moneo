@@ -18,7 +18,7 @@ interface BasicPageProps {
 }
 
 export default function BasicPage(props: BasicPageProps) {
-  const { setAppContextLoaded, user, setUser, setUserChecked }: any =
+  const { setAppContextLoaded, setUser, setUserChecked }: any =
     useContext(AppContext);
 
   useEffect(() => {
