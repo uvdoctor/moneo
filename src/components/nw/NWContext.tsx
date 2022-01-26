@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 require("./nw.less");
 import NWView from "./NWView";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../BasicPage";
 import {
   addFamilyMember,
   addHoldings,
@@ -58,7 +57,7 @@ import {
   calculateLoan,
 } from "./valuationutils";
 import simpleStorage from "simplestorage.js";
-import { ROUTES } from "../../CONSTANTS";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY, ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
 import { AppContext } from "../AppContext";
 
@@ -112,13 +111,8 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
 function NWContextProvider() {
-  const {
-    defaultCurrency,
-    owner,
-    user,
-    discountRate,
-    userInfo,
-  }: any = useContext(AppContext);
+  const { defaultCurrency, owner, user, discountRate, userInfo }: any =
+    useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [preciousMetals, setPreciousMetals] = useState<Array<HoldingInput>>([]);
@@ -1090,7 +1084,7 @@ function NWContextProvider() {
       setTotalCommercial(0);
       setTotalResidential(0);
       setTotalPolt(0);
-      return
+      return;
     }
     let total = 0;
     let totalOtherProperty = 0;
@@ -1177,7 +1171,7 @@ function NWContextProvider() {
       setTotalNPSEquity(0);
       setTotalNPSFixed(0);
       return;
-    };
+    }
     let total = 0;
     let totalNPSFixed = 0;
     let totalNPSEquity = 0;

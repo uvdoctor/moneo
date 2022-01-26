@@ -13,9 +13,12 @@ import {
   TAB,
 } from "./NWContext";
 import { getFXRate } from "../utils";
-import { COLORS } from "../../CONSTANTS";
+import {
+  COLORS,
+  LOCAL_DATA_TTL,
+  LOCAL_INSTRUMENT_RAW_DATA_KEY,
+} from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
-import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../BasicPage";
 import {
   calculateCompundingIncome,
   calculateCrypto,
@@ -435,8 +438,11 @@ export const getCommodityRate = (
   purity: string,
   currency: string
 ) => {
-  let rate =
-    ratesData ? subtype === APIt.AssetSubType.Gold ? ratesData[GOLD] : ratesData[subtype] : 0;
+  let rate = ratesData
+    ? subtype === APIt.AssetSubType.Gold
+      ? ratesData[GOLD]
+      : ratesData[subtype]
+    : 0;
   if (!rate) return 0;
   return (
     (rate * getFXRate(ratesData, currency) * Number.parseFloat(purity)) /
@@ -599,9 +605,15 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const hasOnlyCategory = (childTab: string) =>
-  [TAB.OTHER, TAB.VEHICLE, TAB.CRYPTO, TAB.PF, TAB.P2P, TAB.LTDEP, TAB.PROP].includes(
-    childTab
-  );
+  [
+    TAB.OTHER,
+    TAB.VEHICLE,
+    TAB.CRYPTO,
+    TAB.PF,
+    TAB.P2P,
+    TAB.LTDEP,
+    TAB.PROP,
+  ].includes(childTab);
 export const hasRate = (childTab: string) =>
   [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
 export const hasName = (childTab: string) =>

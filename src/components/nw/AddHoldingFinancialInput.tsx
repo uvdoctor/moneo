@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Divider, Badge } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
-import { COLORS } from "../../CONSTANTS";
+import { COLORS, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { AssetType } from "../../api/goals";
 import HoldingInput from "./AddHoldingFinancialInputForm";
 import {
@@ -11,7 +11,6 @@ import {
   toReadableNumber,
 } from "../utils";
 import { getColourForAssetType } from "./nwutils";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../BasicPage";
 
 export default function AddHoldingFinancialInput(props: any) {
   const [holdings, setHoldings] = useState<{}[]>([]);

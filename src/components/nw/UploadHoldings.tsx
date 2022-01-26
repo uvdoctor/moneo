@@ -14,7 +14,6 @@ import {
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../BasicPage";
 import { NWContext } from "./NWContext";
 import { extractISIN, getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";
@@ -41,6 +40,7 @@ import SelectInput from "../form/selectinput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import HSwitch from "../HSwitch";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 
 export default function UploadHoldings() {
   const {

@@ -42,7 +42,7 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { validateCaptcha, setUserInfo, appContextLoaded }: any =
+  const { validateCaptcha, setUser, setUserInfo, appContextLoaded }: any =
     useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
@@ -118,6 +118,7 @@ export default function BasicAuthenticator({
 
   const handleConfirmSignUp = async () => {
     await Auth.signIn(uname, password).then((user) => {
+      setUser(user);
       Hub.dispatch("UI Auth", {
         event: "AuthStateChange",
         message: AuthState.SignedIn,

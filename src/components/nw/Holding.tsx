@@ -19,8 +19,7 @@ import {
 import { AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
 import { getColourForAssetType } from "./nwutils";
-import { COLORS } from "../../CONSTANTS";
-import { LOCAL_INS_DATA_KEY } from "../BasicPage";
+import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 import { faCoins, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -34,6 +34,11 @@ export const ASSET_CATEGORIES = {
   ALTERNATIVE: "Alternative",
 };
 
+export const LOCAL_INS_DATA_KEY = "insData";
+export const LOCAL_RATES_DATA_KEY = "ratesData";
+export const LOCAL_INSTRUMENT_RAW_DATA_KEY = "instrumentData";
+export const LOCAL_DATA_TTL = { TTL: 86400000 }; //1 day
+
 export const COLORS = {
   GREEN: "#499824",
   RED: "#FF0000",

@@ -1,7 +1,7 @@
 import { InputNumber } from "antd";
 import React, { Fragment, useContext } from "react";
 import simpleStorage from "simplestorage.js";
-import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
+import { LOCAL_RATES_DATA_KEY } from "../../CONSTANTS";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import { toCurrency } from "../utils";
 import { TAB, NWContext } from "./NWContext";

@@ -1,15 +1,8 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { API, Auth, graphqlOperation, Hub } from "aws-amplify";
+import { Auth, Hub } from "aws-amplify";
 import Head from "next/head";
 import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
-import simpleStorage from "simplestorage.js";
-import { CreateEODPricesInput, ListEodPricessQuery } from "../api/goals";
-import { ROUTES } from "../CONSTANTS";
-import { listEodPricess } from "../graphql/queries";
-import { useRouter } from "next/router";
-import { getUserDetails } from "./userinfoutils";
-import { getDiscountRate } from "./utils";
 
 interface BasicPageProps {
   className?: string;
@@ -24,72 +17,9 @@ interface BasicPageProps {
   menuTitle?: string;
 }
 
-export const LOCAL_INS_DATA_KEY = "insData";
-export const LOCAL_RATES_DATA_KEY = "ratesData";
-export const LOCAL_INSTRUMENT_RAW_DATA_KEY = "instrumentData";
-export const LOCAL_DATA_TTL = { TTL: 86400000 }; //1 day
-
 export default function BasicPage(props: BasicPageProps) {
-  const {
-    setAppContextLoaded,
-    setUserInfo,
-    setDiscountRate,
-    user,
-    owner,
-    setUser,
-    setOwner,
-    userInfo,
-    defaultCountry,
-    setUserChecked,
-  }: any = useContext(AppContext);
-  const router = useRouter();
-
-  const loadFXCommCryptoRates = async () => {
-    const {
-      data: { listEODPricess },
-    } = (await API.graphql(graphqlOperation(listEodPricess))) as {
-      data: ListEodPricessQuery;
-    };
-    return listEODPricess?.items?.length
-      ? (listEODPricess.items as Array<CreateEODPricesInput>)
-      : null;
-  };
-
-  const initializeFXCommCryptoRates = async () => {
-    let ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
-    if (ratesData) {
-      return;
-    }
-    try {
-      let result: Array<CreateEODPricesInput> | null =
-        await loadFXCommCryptoRates();
-      ratesData = {};
-      if (result && result.length) {
-        result.forEach(
-          (record: CreateEODPricesInput) =>
-            (ratesData[record.id] = record.price)
-        );
-      }
-      simpleStorage.set(LOCAL_RATES_DATA_KEY, ratesData, LOCAL_DATA_TTL);
-    } catch (err) {
-      console.log("Unable to fetch fx, commodities & crypto rates: ", err);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    if (!user) return;
-    if (user.signInUserSession?.accessToken) {
-      setOwner(user.signInUserSession.accessToken.payload.username);
-      setUserChecked(true);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!owner) return;
-    initData();
-    userInfo ? setAppContextLoaded(true) : loadUserInfo();
-  }, [owner]);
+  const { setAppContextLoaded, user, setUser, setUserChecked }: any =
+    useContext(AppContext);
 
   useEffect(() => {
     if (!props.secure) {
@@ -97,18 +27,11 @@ export default function BasicPage(props: BasicPageProps) {
       setAppContextLoaded(true);
       return;
     }
+    if (user) return;
     Hub.listen("auth", initUser);
     initUser();
     return () => Hub.remove("auth", initUser);
   }, []);
-
-  const initData = async () => {
-    if (!user) return;
-    let route = router.pathname;
-    if (route === ROUTES.GET || route === ROUTES.SET) {
-      await initializeFXCommCryptoRates();
-    }
-  };
 
   const initUser = async () => {
     let user = null;
@@ -119,19 +42,6 @@ export default function BasicPage(props: BasicPageProps) {
       console.log("Unable to authenticate user");
       setUser(null);
       setUserChecked(true);
-    }
-  };
-
-  const loadUserInfo = async () => {
-    const userDetails = await getUserDetails(owner);
-    if (userDetails) {
-      setUserInfo(userDetails);
-      setDiscountRate(
-        !userDetails?.dr
-          ? getDiscountRate(userDetails?.rp, defaultCountry)
-          : userDetails?.dr
-      );
-      setAppContextLoaded(true);
     }
   };
 

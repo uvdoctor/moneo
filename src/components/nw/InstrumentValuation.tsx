@@ -3,9 +3,8 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
 import { toHumanFriendlyCurrency } from "../utils";
-import { COLORS } from "../../CONSTANTS";
+import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { FilterTwoTone } from "@ant-design/icons";
-import { LOCAL_INS_DATA_KEY } from "../BasicPage";
 import {
   AssetSubType,
   AssetType,

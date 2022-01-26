@@ -10,7 +10,7 @@ import {
   HoldingInput,
   PropertyInput,
 } from "../../api/goals";
-import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
+import { LOCAL_RATES_DATA_KEY } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { getCommodityRate, getCryptoRate } from "./nwutils";
 const today = new Date();
@@ -95,7 +95,7 @@ export const calculateAddYears = (
 ) => {
   const result = addYears(new Date(yr, mon - 1, 1), yearsToAdd);
   const year = result.getFullYear();
-  const month = result.getMonth()+1;
+  const month = result.getMonth() + 1;
   return { year, month };
 };
 

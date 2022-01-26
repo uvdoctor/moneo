@@ -13,7 +13,7 @@ import {
   TaxLiability,
   UpdateGoalInput,
 } from "../../api/goals";
-import { ROUTES } from "../../CONSTANTS";
+import { LOCAL_RATES_DATA_KEY, ROUTES } from "../../CONSTANTS";
 import { appendValue, getFXRate, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import {
@@ -25,7 +25,6 @@ import {
 } from "./goalutils";
 import { useRouter } from "next/router";
 import { AppContext } from "../AppContext";
-import { LOCAL_RATES_DATA_KEY } from "../BasicPage";
 import simpleStorage from "simplestorage.js";
 
 const PlanContext = createContext({});
