@@ -27,7 +27,6 @@ export default function BasicPage(props: BasicPageProps) {
       setAppContextLoaded(true);
       return;
     }
-    if (user) return;
     Hub.listen("auth", initUser);
     initUser();
     return () => Hub.remove("auth", initUser);

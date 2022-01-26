@@ -42,7 +42,7 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { validateCaptcha, user, setUser, setUserInfo, appContextLoaded }: any =
+  const { validateCaptcha, setUserInfo, appContextLoaded }: any =
     useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
@@ -62,6 +62,7 @@ export default function BasicAuthenticator({
     `${new Date().getFullYear() - 25}-06-01`
   );
   const [lifeExpectancy, setLifeExpectancy] = useState<number>(90);
+  const [cognitoUser, setCognitoUser] = useState<any | null>(null);
   const { Step } = Steps;
 
   const steps = [
@@ -117,7 +118,6 @@ export default function BasicAuthenticator({
 
   const handleConfirmSignUp = async () => {
     await Auth.signIn(uname, password).then((user) => {
-      setUser(user);
       Hub.dispatch("UI Auth", {
         event: "AuthStateChange",
         message: AuthState.SignedIn,
@@ -151,7 +151,7 @@ export default function BasicAuthenticator({
         attributes: { email: email },
       })
         .then((response) => {
-          setUser(response.user);
+          setCognitoUser(response.user);
           Hub.dispatch("UI Auth", {
             event: "AuthStateChange",
             message: AuthState.ConfirmSignUp,
@@ -207,7 +207,7 @@ export default function BasicAuthenticator({
         {authState === AuthState.ConfirmSignUp && (
           <AmplifyConfirmSignUp
             slot="confirm-sign-up"
-            user={user}
+            user={cognitoUser}
             handleAuthStateChange={handleConfirmSignUp}
             formFields={[
               {
