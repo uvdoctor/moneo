@@ -1,17 +1,30 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
-  price: Number[];
+  rate: number;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { body: { isin }, method } = req;
-	console.log('Going to get data for isin: ', isin);
-	if (method === 'POST') {
-		fetch('https://finnhub.io/api/v1/search?q=IN&token=sandbox_c024huv48v6vllnqoro0')
-			.then(res => res.json()).then(data => console.log(data))
-			.catch(error => console.log("Error while fetching from finnhub: ", error));
-	} else {
-		res.status(405).end(`Method ${method} Not Allowed`);
-	}
+  const {
+    method,
+    body: { id },
+  } = req;
+  if (method === "POST") {
+    fetch(
+      `https://eodhistoricaldata.com/api/real-time/${id}?api_token=60d03a689523a3.63944368&fmt=json`
+    )
+      .then((data) =>
+        data.json().then((response) => {
+          res.status(200).json({ rate: response.close });
+        })
+      )
+      .catch((err) => {
+        console.log(`Error while getting eod price for ${id} due to ${err}`);
+        let defaultVal = 0;
+        res.status(200).json({ rate: defaultVal });
+      });
+  } else {
+    res.status(405).end(`Method ${method} Not Allowed`);
+  }
 };
