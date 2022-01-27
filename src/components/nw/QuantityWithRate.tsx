@@ -24,6 +24,16 @@ export default function QuantityWithRate({
   info,
 }: QuantityWithRateProps) {
   const { selectedCurrency, childTab, npsData, fxRates }: any = useContext(NWContext);
+  // const [ratesData, setRatesData] = useState({});
+
+  // useEffect(()=>{
+  //   if(!name || !subtype) return;
+  //   const value = childTab === TAB.CRYPTO ? (async () => await getCryptoData(`${name}-USD`, 'CC'))() : (async () => await getCryptoData(subtype === "GOLD" ? "GC" : subtype, 'COMM'))();
+  //   console.log(value);
+  //   simpleStorage.set(LOCAL_RATES_DATA_KEY, value.rate, LOCAL_DATA_TTL);
+  //   let ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
+  //   setRatesData(ratesData);
+  // },[subtype, name])
 
   const getRate = (subtype: string, name: string) => {
     if (childTab === TAB.NPS) {

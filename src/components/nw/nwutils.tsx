@@ -439,11 +439,9 @@ export const getCommodityRate = (
   currency: string,
   fxRates: any
 ) => {
-  let rate = ratesData
-    ? subtype === APIt.AssetSubType.Gold
-      ? ratesData[GOLD]
-      : ratesData[subtype]
-    : 0;
+  let rate = subtype === APIt.AssetSubType.Gold
+    ? ratesData[GOLD]
+    : ratesData[subtype];
   if (!rate) return 0;
   return (
     (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
@@ -647,7 +645,7 @@ export const calculateValuation = (
   const {
     PM,
     CRYPTO,
-    LENT: LENT,
+    LENT,
     NPS,
     PF,
     VEHICLE,

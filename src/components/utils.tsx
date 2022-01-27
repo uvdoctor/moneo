@@ -849,3 +849,40 @@ export const getFXData = async (token: string) => {
   return defaultFXRates;
 };
 
+export const getCryptoData = async (id: string, type: string) => {
+  await fetch("/api/price", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({
+      id: id,
+      type: type,
+    }),
+  })
+  .then((res: any) => res.json())
+  .then((data: any) => {
+    console.log(data)
+    return data;
+  })
+  .catch(() => {
+    return 0;
+  });
+};
+
+export const defaultCryptoRates: {[key: string]: number} = {
+  'BTC-USD': 36392.30,
+  'LTC-USD': 107.26,
+  "ETH-USD": 2456.48,
+  "XRP-USD": 0.605290,
+  "DASH-USD": 90.95,
+  "XMR-USD": 144.30,
+  "ETC-USD": 24.04,
+  "BCH-USD": 286.53,
+  "DOGE-USD": 0.14,
+  "XLM-USD": 36.23,
+  GC: 58.45,
+  PL: 33.19,
+  SI: 0.76,
+  PA: 74.66,
+}
