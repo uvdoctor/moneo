@@ -821,16 +821,31 @@ export const getDiscountRate = (rp: string, country: string) => {
 export const presentMonth = new Date().getMonth() + 1;
 export const presentYear = new Date().getFullYear();
 
-export const defaultFXRates: {[key:string]: number} = {
-  AUD: 1.4135,
-  CAD: 1.2717,
-  CHF: 0.9248,
-  CNY: 6.3496,
-  EUR: 0.8913,
-  GBP: 0.7448,
-  INR: 75.19,
-  JPY: 114.658,
-  NZD: 1.5134,
-  SEK: 9.3483
+export const getFXData = async (token: string) => {
+  const defaultFXRates: {[key: string]: number} = {
+    AUD: 1.4135,
+    CAD: 1.2717,
+    CHF: 0.9248,
+    CNY: 6.3496,
+    EUR: 0.8913,
+    GBP: 0.7448,
+    INR: 75.19,
+    JPY: 114.658,
+    NZD: 1.5134,
+    SEK: 9.3483 
+  }
+  const currencyList = Object.keys(defaultFXRates);
+	for (let curr of currencyList) {
+    try {
+		const data = await fetch(
+			`https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=${token}&fmt=json`
+		);
+    const response = await data.json();
+		defaultFXRates[curr] = response.close;
+    } catch {
+			break;
+    }
+	}
+  return defaultFXRates;
 };
 

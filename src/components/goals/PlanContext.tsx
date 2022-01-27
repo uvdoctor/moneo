@@ -13,7 +13,7 @@ import {
   TaxLiability,
   UpdateGoalInput,
 } from "../../api/goals";
-import { LOCAL_RATES_DATA_KEY, ROUTES } from "../../CONSTANTS";
+import { ROUTES } from "../../CONSTANTS";
 import { appendValue, getFXRate, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import {
@@ -25,7 +25,6 @@ import {
 } from "./goalutils";
 import { useRouter } from "next/router";
 import { AppContext } from "../AppContext";
-import simpleStorage from "simplestorage.js";
 
 const PlanContext = createContext({});
 
@@ -33,12 +32,14 @@ interface PlanContextProviderProps {
   goal: CreateGoalInput | null;
   setGoal: Function;
   children: ReactNode;
+  fxRates: any;
 }
 
 function PlanContextProvider({
   children,
   goal,
   setGoal,
+  fxRates
 }: PlanContextProviderProps) {
   const { appContextLoaded, discountRate, defaultCurrency, userInfo }: any =
     useContext(AppContext);
@@ -65,9 +66,8 @@ function PlanContextProvider({
   const nowYear = new Date().getFullYear();
 
   const getCurrencyFactor = (currency: string) => {
-    const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
     return (
-      getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency)
+      getFXRate(fxRates, defaultCurrency) / getFXRate(fxRates, currency)
     );
   };
 

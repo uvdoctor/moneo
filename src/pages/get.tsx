@@ -4,7 +4,7 @@ import Amplify from 'aws-amplify';
 import awsexports from '../aws-exports';
 import BasicPage from '../components/BasicPage';
 import { InferGetStaticPropsType } from 'next';
-import { defaultFXRates } from '../components/utils';
+import { getFXData } from '../components/utils';
 
 Amplify.configure({ ...awsexports, ssr: true });
 
@@ -17,19 +17,8 @@ function Get({ fxRates }: InferGetStaticPropsType<typeof getStaticProps>) {
 }
 
 export async function getStaticProps() {
-	const currencyList = Object.keys(defaultFXRates);
-	for (let curr of currencyList) {
-    try {
-		const data = await fetch(
-			`https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=60d03a689523a3.63944368&fmt=json`
-		);
-    const response = await data.json();
-		defaultFXRates[curr] = response.close;
-    } catch {
-			break;
-    }
-	}
-	let fxRates = defaultFXRates;
+	const token = '60d03a689523a3.63944368';
+	let fxRates = await getFXData(token);
 	return {
 		props: {
 			fxRates
