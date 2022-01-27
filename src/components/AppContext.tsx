@@ -82,7 +82,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   const initData = async () => {
     if (!user) return;
     let route = router.pathname;
-    if (route === ROUTES.GET || route === ROUTES.SET) {
+    if (route === ROUTES.GET) {
       await initializeFXCommCryptoRates();
     }
   };
