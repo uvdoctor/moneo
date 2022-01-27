@@ -820,3 +820,5 @@ export const getDiscountRate = (rp: string, country: string) => {
 
 export const presentMonth = new Date().getMonth() + 1;
 export const presentYear = new Date().getFullYear();
+
+export const currencyListToCall = [ 'EUR', 'INR', 'AUD', 'CAD', 'JPY', 'CNY', 'CHF', 'GBP', 'SEK', 'NZD' ];

@@ -110,7 +110,7 @@ export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
-function NWContextProvider() {
+function NWContextProvider({ratesData}: any) {
   const { defaultCurrency, owner, user, discountRate, userInfo }: any =
     useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
@@ -218,6 +218,8 @@ function NWContextProvider() {
     }
   };
 
+  console.log(ratesData);
+  
   const tabs = {
     Cash: {
       label: "Cash",
