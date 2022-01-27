@@ -23,7 +23,7 @@ export default function QuantityWithRate({
   pre,
   info,
 }: QuantityWithRateProps) {
-  const { selectedCurrency, childTab, npsData }: any = useContext(NWContext);
+  const { selectedCurrency, childTab, npsData, fxRates }: any = useContext(NWContext);
 
   const getRate = (subtype: string, name: string) => {
     if (childTab === TAB.NPS) {
@@ -32,8 +32,8 @@ export default function QuantityWithRate({
     }
     const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
     if (childTab === TAB.CRYPTO)
-      return getCryptoRate(ratesData, subtype, selectedCurrency);
-    return getCommodityRate(ratesData, subtype, name, selectedCurrency);
+      return getCryptoRate(ratesData, subtype, selectedCurrency, fxRates);
+    return getCommodityRate(ratesData, subtype, name, selectedCurrency, fxRates);
   };
 
   return (

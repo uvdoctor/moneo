@@ -45,6 +45,7 @@ export default function ListHoldings({
     childTab,
     allFamily,
     npsData,
+    fxRates
   }: any = useContext(NWContext);
   const { discountRate, userInfo }: any = useContext(AppContext);
   const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } =
@@ -232,7 +233,8 @@ export default function ListHoldings({
           userInfo,
           discountRate,
           selectedCurrency,
-          npsData
+          npsData,
+          fxRates
         );
         dataSource.push(getAllData(holding, index, valuation));
       }

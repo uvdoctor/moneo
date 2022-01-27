@@ -110,7 +110,7 @@ export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
-function NWContextProvider({ratesData}: any) {
+function NWContextProvider({fxRates}: any) {
   const { defaultCurrency, owner, user, discountRate, userInfo }: any =
     useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
@@ -218,8 +218,6 @@ function NWContextProvider({ratesData}: any) {
     }
   };
 
-  console.log(ratesData);
-  
   const tabs = {
     Cash: {
       label: "Cash",
@@ -808,7 +806,7 @@ function NWContextProvider({ratesData}: any) {
     let totalPGold = 0;
     preciousMetals.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        const value = calculatePM(holding, selectedCurrency);
+        const value = calculatePM(holding, selectedCurrency, fxRates);
         total += value;
         if (holding.subt === AssetSubType.Gold) totalPGold += value;
       }
@@ -1135,7 +1133,7 @@ function NWContextProvider({ratesData}: any) {
     let total = 0;
     crypto.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        total += calculateCrypto(holding, selectedCurrency);
+        total += calculateCrypto(holding, selectedCurrency, fxRates);
       }
     });
     setTotalCrypto(total);
@@ -1420,6 +1418,7 @@ function NWContextProvider({ratesData}: any) {
         totalNPSFixed,
         familyMemberKeys,
         setFamilyMemberKeys,
+        fxRates
       }}>
       <NWView />
     </NWContext.Provider>

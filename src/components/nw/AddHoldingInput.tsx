@@ -22,7 +22,7 @@ interface AddHoldingInputProps {
 	defaultRate: number;
 }
 export default function AddHoldingInput({ setInput, categoryOptions, fields, defaultRate }: AddHoldingInputProps) {
-	const { childTab, selectedCurrency, npsData, activeTab }: any = useContext(NWContext);
+	const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any = useContext(NWContext);
 	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, LTDEP } = TAB;
 	const [ category, setCategory ] = useState<string>(
@@ -160,7 +160,8 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 				userInfo,
 				discountRate,
 				selectedCurrency,
-				npsData
+				npsData,
+				fxRates
 			);
 			setValuation(valuation);
 			const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;

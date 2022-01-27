@@ -4,37 +4,35 @@ import Amplify from 'aws-amplify';
 import awsexports from '../aws-exports';
 import BasicPage from '../components/BasicPage';
 import { InferGetStaticPropsType } from 'next';
-import { currencyListToCall } from '../components/utils';
+import { defaultFXRates } from '../components/utils';
 
 Amplify.configure({ ...awsexports, ssr: true });
 
-function Get({ ratesData }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Get({ fxRates }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
 		<BasicPage title="Moneo - Get" secure>
-			<NWContextProvider ratesData={ratesData} />
+			<NWContextProvider fxRates={fxRates} />
 		</BasicPage>
 	);
 }
 
 export async function getStaticProps() {
-	let ratesData: { [key: string]: number } = {};
-	const token = '60d03a689523a3.63944368';
-	for (let curr of currencyListToCall) {
-    let response;
+	const currencyList = Object.keys(defaultFXRates);
+	for (let curr of currencyList) {
     try {
 		const data = await fetch(
-			`https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=${token}&fmt=json`
+			`https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=60d03a689523a3.63944368&fmt=json`
 		);
-    response = await data.json();
+    const response = await data.json();
+		defaultFXRates[curr] = response.close;
     } catch {
-      response = null;
+			break;
     }
-		ratesData[curr] = response ? response.close : 0;
 	}
-	
+	let fxRates = defaultFXRates;
 	return {
 		props: {
-			ratesData
+			fxRates
 		}
 	};
 }

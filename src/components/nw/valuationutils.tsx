@@ -26,7 +26,7 @@ export const getCashFlows = (
 ) => {
   let cashflows: any = [];
   let count = 0;
-  let monthLeftForCurrentYear = 12 - (today.getMonth() + 1);
+  let monthLeftForCurrentYear = 12 - (presentMonth);
   let bygoneTimeToCalculateForCI = isMonth
     ? (monthLeftForCurrentYear + bygoneDuration) / 12
     : bygoneDuration;
@@ -101,14 +101,16 @@ export const calculateAddYears = (
 
 export const calculatePM = (
   holding: HoldingInput,
-  selectedCurrency: string
+  selectedCurrency: string,
+  fxRates: any
 ) => {
   const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
   const rate = getCommodityRate(
     ratesData,
     holding.subt as string,
     holding.name as string,
-    selectedCurrency
+    selectedCurrency,
+    fxRates
   );
   return holding.qty * rate;
 };
@@ -254,13 +256,15 @@ export const calculateVehicle = (holding: HoldingInput) => {
 
 export const calculateCrypto = (
   holding: HoldingInput,
-  selectedCurrency: string
+  selectedCurrency: string,
+  fxRates: any
 ) => {
   const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
   const rate = getCryptoRate(
     ratesData,
     holding.name as string,
-    selectedCurrency
+    selectedCurrency,
+    fxRates,
   );
   return holding.qty * rate;
 };

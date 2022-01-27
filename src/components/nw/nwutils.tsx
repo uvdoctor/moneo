@@ -436,7 +436,8 @@ export const getCommodityRate = (
   ratesData: any,
   subtype: string,
   purity: string,
-  currency: string
+  currency: string,
+  fxRates: any
 ) => {
   let rate = ratesData
     ? subtype === APIt.AssetSubType.Gold
@@ -445,7 +446,7 @@ export const getCommodityRate = (
     : 0;
   if (!rate) return 0;
   return (
-    (rate * getFXRate(ratesData, currency) * Number.parseFloat(purity)) /
+    (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
     (subtype === APIt.AssetSubType.Gold ? 24 : 100)
   );
 };
@@ -453,11 +454,12 @@ export const getCommodityRate = (
 export const getCryptoRate = (
   ratesData: any,
   cryptoCode: string,
-  currency: string
+  currency: string,
+  fxRates: any
 ) => {
   let rate = ratesData[cryptoCode];
   if (!rate) return 0;
-  return rate * getFXRate(ratesData, currency);
+  return rate * getFXRate(fxRates, currency);
 };
 
 export const getIndustry = (at: APIt.Industry) => {
@@ -639,7 +641,8 @@ export const calculateValuation = (
   userInfo: any,
   discountRate: number,
   selectedCurrency: string,
-  npsData: any
+  npsData: any,
+  fxRates: any
 ) => {
   const {
     PM,
@@ -669,10 +672,10 @@ export const calculateValuation = (
       value = calculateLoan(record);
       break;
     case CRYPTO:
-      value = calculateCrypto(record, selectedCurrency);
+      value = calculateCrypto(record, selectedCurrency, fxRates);
       break;
     case PM:
-      value = calculatePM(record, selectedCurrency);
+      value = calculatePM(record, selectedCurrency, fxRates);
       break;
     case LENT:
     case P2P:
