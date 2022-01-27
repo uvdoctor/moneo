@@ -32,7 +32,7 @@ interface PlanContextProviderProps {
   goal: CreateGoalInput | null;
   setGoal: Function;
   children: ReactNode;
-  fxRates: any;
+  fxRates?: any;
 }
 
 function PlanContextProvider({
