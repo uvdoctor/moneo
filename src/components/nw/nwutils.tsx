@@ -138,13 +138,7 @@ export const doesHoldingMatch = (
   const subType = instrument.subt;
   if (
     !subType ||
-    ![
-      APIt.AssetSubType.C,
-      APIt.AssetSubType.Gold,
-      SILVER,
-      PALLADIUM,
-      PLATINUM,
-    ].includes(subType)
+    ![APIt.AssetSubType.Gold, SILVER, PALLADIUM, PLATINUM].includes(subType)
   ) {
     if (instrument.curr !== selectedCurrency) return false;
   }
@@ -431,33 +425,33 @@ export const getColourForAssetType = (at: string) => {
   }
 };
 
-export const getCommodityRate = async(
+export const getCommodityRate = async (
   subtype: string,
   purity: string,
   currency: string,
   fxRates: any
 ) => {
-  return await getPrice(subtype === APIt.AssetSubType.Gold ? "GC" : subtype, 'COMM')
-  .then((rate)=> {
-    if (!rate) return 0;
-    return (
-      (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
-      (subtype === APIt.AssetSubType.Gold ? 24 : 100)
-    );
-  })
-  .catch(()=>0);
+  return await getPrice(
+    subtype === APIt.AssetSubType.Gold ? "GC" : subtype,
+    "COMM"
+  )
+    .then((rate) => {
+      if (!rate) return 0;
+      return (
+        (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
+        (subtype === APIt.AssetSubType.Gold ? 24 : 100)
+      );
+    })
+    .catch(() => 0);
 };
 
-export const getCryptoRate = (
-  id: string,
-  currency: string,
-  fxRates: any
-) => {
-  return getPrice(id, 'CC').then((rate)=> {
-    if (!rate) return 0;
-    return rate * getFXRate(fxRates, currency);
-  })
-  .catch(()=>0);
+export const getCryptoRate = (id: string, currency: string, fxRates: any) => {
+  return getPrice(id, "CC")
+    .then((rate) => {
+      if (!rate) return 0;
+      return rate * getFXRate(fxRates, currency);
+    })
+    .catch(() => 0);
 };
 
 export const getIndustry = (at: APIt.Industry) => {
@@ -633,7 +627,7 @@ export const hasOnlyEnddate = (childTab: string) =>
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 
-export const  calculateValuation = async (
+export const calculateValuation = async (
   childTab: string,
   record: APIt.HoldingInput,
   userInfo: any,
@@ -642,18 +636,7 @@ export const  calculateValuation = async (
   npsData: any,
   fxRates: any
 ) => {
-  const {
-    PM,
-    CRYPTO,
-    LENT,
-    NPS,
-    PF,
-    VEHICLE,
-    LOAN,
-    INS,
-    P2P,
-    LTDEP,
-  } = TAB;
+  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, LTDEP } = TAB;
   let value = 0;
   switch (childTab) {
     case INS:
