@@ -546,8 +546,8 @@ export const includesAny = (value: string, items: Array<string>) => {
   return false;
 };
 
-export const getFXRate = (ratesData: any, currency: string) => {
-  if (ratesData[currency]) return ratesData[currency];
+export const getFXRate = (fxRates: any, currency: string) => {
+  if (fxRates[currency]) return fxRates[currency];
   const peggedRates: any = getPeggedCurrencyRates();
   return peggedRates[currency];
 };

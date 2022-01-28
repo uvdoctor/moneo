@@ -23,7 +23,7 @@ interface AddHoldingInputProps {
 }
 export default function AddHoldingInput({ setInput, categoryOptions, fields, defaultRate }: AddHoldingInputProps) {
 	const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any = useContext(NWContext);
-	const { userInfo, discountRate, ratesData }: any = useContext(AppContext);
+	const { userInfo, discountRate }: any = useContext(AppContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, LTDEP } = TAB;
 	const [ category, setCategory ] = useState<string>(
 		categoryOptions ? categoryOptions.length && categoryOptions[0].value : ''
@@ -174,7 +174,6 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 			childTab,
 			userInfo,
 			discountRate,
-			ratesData,
 			selectedCurrency,
 			npsData,
 			qty
