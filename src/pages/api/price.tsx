@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { defaultCryptoRates } from '../../components/utils';
+import { defaultPrices } from '../../components/utils';
 
 type Data = {
 	rate: number;
@@ -10,8 +10,9 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { method, body: { id, type } } = req;
 	const apiKeys = [ '611a020d72d487.59800610', '611a01dc0083c5.1967043', '61f26f046a8311.03934960' ];
 	const getCryptoRate = (index: number) => {
+		let name =  type === "CC" ? id+'-USD' : id;
 		let token = apiKeys[index];
-		fetch(`https://eodhistoricaldata.com/api/real-time/${id}.${type}?api_token=${token}&fmt=json`)
+		fetch(`https://eodhistoricaldata.com/api/real-time/${name}.${type}?api_token=${token}&fmt=json`)
 			.then((data) =>
 				data.json().then((response) => {
 					console.log(response);
@@ -24,7 +25,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 					index++;
 					getCryptoRate(index);
 				} else {
-					res.status(200).json({ rate: defaultCryptoRates[id] });
+					res.status(200).json({ rate: defaultPrices[id] });
 				}
 			});
 	};

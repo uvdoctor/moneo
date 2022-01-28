@@ -38,7 +38,9 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 	const [ rate, setRate ] = useState<number>(defaultRate);
 	const [ sm, setSm ] = useState<number>(presentMonth);
 	const [ em, setEm ] = useState<number>(presentMonth);
-	const [ sy, setSy ] = useState<number>(childTab === VEHICLE ? presentYear - 5 : hasOnlyEnddate(childTab) ? (presentYear+2) : presentYear);
+	const [ sy, setSy ] = useState<number>(
+		childTab === VEHICLE ? presentYear - 5 : hasOnlyEnddate(childTab) ? presentYear + 2 : presentYear
+	);
 	const [ ey, setEy ] = useState<number>(presentYear + 2);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ valuation, setValuation ] = useState<number>(0);
@@ -154,16 +156,9 @@ export default function AddHoldingInput({ setInput, categoryOptions, fields, def
 
 	useEffect(
 		() => {
-			const valuation = calculateValuation(
-				childTab,
-				getNewRec(),
-				userInfo,
-				discountRate,
-				selectedCurrency,
-				npsData,
-				fxRates
-			);
-			setValuation(valuation);
+			calculateValuation(childTab, getNewRec(), userInfo, discountRate, selectedCurrency, npsData, fxRates)
+				.then((valuation) => setValuation(valuation))
+				.catch(() => setValuation(0));
 			const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
 			setMaturityAmt(maturityAmt);
 		},

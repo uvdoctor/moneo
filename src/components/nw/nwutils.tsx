@@ -4,7 +4,6 @@ import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
-  GOLD,
   NATIONAL_SAVINGS_CERTIFICATE,
   PALLADIUM,
   PLATINUM,
@@ -12,7 +11,7 @@ import {
   SUKANYA_SAMRIDDHI_YOJANA,
   TAB,
 } from "./NWContext";
-import { getFXRate } from "../utils";
+import { getFXRate, getPrice } from "../utils";
 import {
   COLORS,
   LOCAL_DATA_TTL,
@@ -432,32 +431,33 @@ export const getColourForAssetType = (at: string) => {
   }
 };
 
-export const getCommodityRate = (
-  ratesData: any,
+export const getCommodityRate = async(
   subtype: string,
   purity: string,
   currency: string,
   fxRates: any
 ) => {
-  let rate = subtype === APIt.AssetSubType.Gold
-    ? ratesData[GOLD]
-    : ratesData[subtype];
-  if (!rate) return 0;
-  return (
-    (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
-    (subtype === APIt.AssetSubType.Gold ? 24 : 100)
-  );
+  return await getPrice(subtype === APIt.AssetSubType.Gold ? "GC" : subtype, 'COMM')
+  .then((rate)=> {
+    if (!rate) return 0;
+    return (
+      (rate * getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
+      (subtype === APIt.AssetSubType.Gold ? 24 : 100)
+    );
+  })
+  .catch(()=>0);
 };
 
 export const getCryptoRate = (
-  ratesData: any,
-  cryptoCode: string,
+  id: string,
   currency: string,
   fxRates: any
 ) => {
-  let rate = ratesData[cryptoCode];
-  if (!rate) return 0;
-  return rate * getFXRate(fxRates, currency);
+  return getPrice(id, 'CC').then((rate)=> {
+    if (!rate) return 0;
+    return rate * getFXRate(fxRates, currency);
+  })
+  .catch(()=>0);
 };
 
 export const getIndustry = (at: APIt.Industry) => {
@@ -633,7 +633,7 @@ export const hasOnlyEnddate = (childTab: string) =>
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 
-export const calculateValuation = (
+export const  calculateValuation = async (
   childTab: string,
   record: APIt.HoldingInput,
   userInfo: any,
@@ -670,10 +670,10 @@ export const calculateValuation = (
       value = calculateLoan(record);
       break;
     case CRYPTO:
-      value = calculateCrypto(record, selectedCurrency, fxRates);
+      value = await calculateCrypto(record, selectedCurrency, fxRates);
       break;
     case PM:
-      value = calculatePM(record, selectedCurrency, fxRates);
+      value = await calculatePM(record, selectedCurrency, fxRates);
       break;
     case LENT:
     case P2P:

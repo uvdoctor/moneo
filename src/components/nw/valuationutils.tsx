@@ -3,14 +3,12 @@ import {
   differenceInCalendarYears,
   differenceInMonths,
 } from "date-fns";
-import simpleStorage from "simplestorage.js";
 import {
   AssetType,
   CreateNPSPriceInput,
   HoldingInput,
   PropertyInput,
 } from "../../api/goals";
-import { LOCAL_RATES_DATA_KEY } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { getCommodityRate, getCryptoRate } from "./nwutils";
 const today = new Date();
@@ -97,22 +95,6 @@ export const calculateAddYears = (
   const year = result.getFullYear();
   const month = result.getMonth() + 1;
   return { year, month };
-};
-
-export const calculatePM = (
-  holding: HoldingInput,
-  selectedCurrency: string,
-  fxRates: any
-) => {
-  const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
-  const rate = getCommodityRate(
-    ratesData,
-    holding.subt as string,
-    holding.name as string,
-    selectedCurrency,
-    fxRates
-  );
-  return holding.qty * rate;
 };
 
 export const calculateInsurance = (
@@ -259,14 +241,24 @@ export const calculateCrypto = (
   selectedCurrency: string,
   fxRates: any
 ) => {
-  const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
-  const rate = getCryptoRate(
-    ratesData,
+  return getCryptoRate(
     holding.name as string,
     selectedCurrency,
     fxRates,
-  );
-  return holding.qty * rate;
+  ).then((rate)=>holding.qty * rate).catch(()=>0)
+};
+
+export const calculatePM = (
+  holding: HoldingInput,
+  selectedCurrency: string,
+  fxRates: any
+) => {
+  return getCommodityRate(
+    holding.subt as string,
+    holding.name as string,
+    selectedCurrency,
+    fxRates
+  ).then((rate)=>holding.qty * rate).catch(()=>0)
 };
 
 export const calculateProvidentFund = (holding: HoldingInput) => {

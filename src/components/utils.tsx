@@ -1,7 +1,8 @@
 import { Menu } from "antd";
 import Link from "next/link";
+import simpleStorage from "simplestorage.js";
 import { RiskProfile, TaxLiability } from "../api/goals";
-import { ASSET_CATEGORIES, COLORS } from "../CONSTANTS";
+import { ASSET_CATEGORIES, COLORS, LOCAL_DATA_TTL } from "../CONSTANTS";
 
 export function getCurrencyList() {
   return {
@@ -849,8 +850,10 @@ export const getFXData = async (token: string) => {
   return defaultFXRates;
 };
 
-export const getCryptoData = async (id: string, type: string) => {
-  await fetch("/api/price", {
+export const getPrice = async (id: string, type: string) => {
+  let rate = simpleStorage.get(id);
+  if(rate) return rate;
+  return await fetch("/api/price", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -860,27 +863,27 @@ export const getCryptoData = async (id: string, type: string) => {
       type: type,
     }),
   })
-  .then((res: any) => res.json())
-  .then((data: any) => {
-    console.log(data)
-    return data;
+  .then(async(res: any) => {
+    const re = await res.json()
+    simpleStorage.set(id, re.rate, LOCAL_DATA_TTL);
+    return re.rate;
   })
   .catch(() => {
-    return 0;
+    return defaultPrices[id]
   });
 };
 
-export const defaultCryptoRates: {[key: string]: number} = {
-  'BTC-USD': 36392.30,
-  'LTC-USD': 107.26,
-  "ETH-USD": 2456.48,
-  "XRP-USD": 0.605290,
-  "DASH-USD": 90.95,
-  "XMR-USD": 144.30,
-  "ETC-USD": 24.04,
-  "BCH-USD": 286.53,
-  "DOGE-USD": 0.14,
-  "XLM-USD": 36.23,
+export const defaultPrices: {[key: string]: number} = {
+  'BTC': 36392.30,
+  'LTC': 107.26,
+  "ETH": 2456.48,
+  "XRP": 0.605290,
+  "DASH": 90.95,
+  "XMR": 144.30,
+  "ETC": 24.04,
+  "BCH": 286.53,
+  "DOGE": 0.14,
+  "XLM": 36.23,
   GC: 58.45,
   PL: 33.19,
   SI: 0.76,

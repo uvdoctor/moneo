@@ -804,9 +804,9 @@ function NWContextProvider({fxRates}: any) {
     }
     let total = 0;
     let totalPGold = 0;
-    preciousMetals.forEach((holding: HoldingInput) => {
+    preciousMetals.forEach(async(holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        const value = calculatePM(holding, selectedCurrency, fxRates);
+        const value = await calculatePM(holding, selectedCurrency, fxRates);
         total += value;
         if (holding.subt === AssetSubType.Gold) totalPGold += value;
       }
@@ -1131,9 +1131,9 @@ function NWContextProvider({fxRates}: any) {
   const priceCrypto = () => {
     if (!crypto.length) return setTotalCrypto(0);
     let total = 0;
-    crypto.forEach((holding: HoldingInput) => {
+    crypto.forEach(async(holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        total += calculateCrypto(holding, selectedCurrency, fxRates);
+        total += await calculateCrypto(holding, selectedCurrency, fxRates);
       }
     });
     setTotalCrypto(total);
