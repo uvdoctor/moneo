@@ -892,6 +892,7 @@ export const defaultPrices: {[key: string]: number} = {
 }
 
 export const cryptoList = {
+  BTC: "Bitcoin",
   ZRX:"0x", 
   "1INCH": "1inch",
   AAVE: "Aave", 
@@ -915,7 +916,6 @@ export const cryptoList = {
   BOND: "BarnBridge",
   BAT: "Basic Attention Token",
   BICO: "Biconomy", 
-  BTC: "Bitcoin",
   BCH: "Bitcoin Cash", 
   BLZ: "Bluzelle",
   AUCTION: "Bounce Token AUCTION", 
