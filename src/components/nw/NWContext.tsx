@@ -806,13 +806,19 @@ function NWContextProvider({fxRates}: any) {
     let totalPGold = 0;
     preciousMetals.forEach(async(holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        const value = await calculatePM(holding, selectedCurrency, fxRates);
-        total += value;
-        if (holding.subt === AssetSubType.Gold) totalPGold += value;
+        calculatePM(holding, selectedCurrency, fxRates).then((rate)=>{
+          total += rate
+          if (holding.subt === AssetSubType.Gold) totalPGold += rate;
+          setTotalPM(total);
+          setTotalPGold(totalPGold);
+        }).catch(()=>{
+          total+=0
+          if (holding.subt === AssetSubType.Gold) totalPGold += 0;
+          setTotalPM(total);
+          setTotalPGold(totalPGold);
+        })
       }
     });
-    setTotalPM(total);
-    setTotalPGold(totalPGold);
   };
 
   const isLargeCap = (data: any) =>
@@ -1131,12 +1137,17 @@ function NWContextProvider({fxRates}: any) {
   const priceCrypto = () => {
     if (!crypto.length) return setTotalCrypto(0);
     let total = 0;
-    crypto.forEach(async(holding: HoldingInput) => {
+    crypto.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        total += await calculateCrypto(holding, selectedCurrency, fxRates);
+        calculateCrypto(holding, selectedCurrency, fxRates).then((rate)=>{
+          total += rate
+          setTotalCrypto(total);
+        }).catch(()=>{
+          total+=0
+          setTotalCrypto(total);
+        })
       }
     });
-    setTotalCrypto(total);
   };
 
   const pricePF = () => {
