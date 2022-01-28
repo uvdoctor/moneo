@@ -35,6 +35,11 @@ export default function CascaderInput({
 			parentChangeHandler(value[0]);
 		}
 	};
+
+	const filter = (inputValue: string, path: any[]) => {
+		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+	}
+
 	return (
 		<Fragment>
 			<LabelWithTooltip label={pre} info={info} />
@@ -44,6 +49,7 @@ export default function CascaderInput({
 				defaultValue={defaultValue}
 				options={options}
 				onChange={onChange}
+				showSearch={{ filter }}
 			/>
 		</Fragment>
 	);
