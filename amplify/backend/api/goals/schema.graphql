@@ -657,22 +657,3 @@ type AA
   curr: AWSJSON
   tgt: AWSJSON!
 }
-type EODPrices
-  @model
-  @aws_iam
-  @key(fields: ["id"])
-  @auth(
-    rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
-    ]
-  ) {
-  id: String!
-  price: Float!
-  name: String
-}

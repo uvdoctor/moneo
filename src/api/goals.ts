@@ -1525,39 +1525,6 @@ export type DeleteNPSPriceInput = {
   id: string,
 };
 
-export type CreateEODPricesInput = {
-  id: string,
-  price: number,
-  name?: string | null,
-};
-
-export type ModelEODPricesConditionInput = {
-  price?: ModelFloatInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelEODPricesConditionInput | null > | null,
-  or?: Array< ModelEODPricesConditionInput | null > | null,
-  not?: ModelEODPricesConditionInput | null,
-};
-
-export type EODPrices = {
-  __typename: "EODPrices",
-  id?: string,
-  price?: number,
-  name?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateEODPricesInput = {
-  id: string,
-  price?: number | null,
-  name?: string | null,
-};
-
-export type DeleteEODPricesInput = {
-  id: string,
-};
-
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelFeedbackTypeInput | null,
@@ -1903,21 +1870,6 @@ export type ModelAAFilterInput = {
 export type ModelAAConnection = {
   __typename: "ModelAAConnection",
   items?:  Array<AA | null >,
-  nextToken?: string | null,
-};
-
-export type ModelEODPricesFilterInput = {
-  id?: ModelStringInput | null,
-  price?: ModelFloatInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelEODPricesFilterInput | null > | null,
-  or?: Array< ModelEODPricesFilterInput | null > | null,
-  not?: ModelEODPricesFilterInput | null,
-};
-
-export type ModelEODPricesConnection = {
-  __typename: "ModelEODPricesConnection",
-  items?:  Array<EODPrices | null >,
   nextToken?: string | null,
 };
 
@@ -4081,54 +4033,6 @@ export type DeleteNpsPriceMutation = {
   } | null,
 };
 
-export type CreateEodPricesMutationVariables = {
-  input?: CreateEODPricesInput,
-  condition?: ModelEODPricesConditionInput | null,
-};
-
-export type CreateEodPricesMutation = {
-  createEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateEodPricesMutationVariables = {
-  input?: UpdateEODPricesInput,
-  condition?: ModelEODPricesConditionInput | null,
-};
-
-export type UpdateEodPricesMutation = {
-  updateEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteEodPricesMutationVariables = {
-  input?: DeleteEODPricesInput,
-  condition?: ModelEODPricesConditionInput | null,
-};
-
-export type DeleteEodPricesMutation = {
-  deleteEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type GetFeedbackQueryVariables = {
   id?: string,
 };
@@ -5745,44 +5649,6 @@ export type ListAAsQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetEodPricesQueryVariables = {
-  id?: string,
-};
-
-export type GetEodPricesQuery = {
-  getEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListEodPricessQueryVariables = {
-  id?: string | null,
-  filter?: ModelEODPricesFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListEodPricessQuery = {
-  listEODPricess?:  {
-    __typename: "ModelEODPricesConnection",
-    items:  Array< {
-      __typename: "EODPrices",
-      id: string,
-      price: number,
-      name?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -7765,38 +7631,5 @@ export type OnDeleteAaSubscription = {
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
-  } | null,
-};
-
-export type OnCreateEodPricesSubscription = {
-  onCreateEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateEodPricesSubscription = {
-  onUpdateEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteEodPricesSubscription = {
-  onDeleteEODPrices?:  {
-    __typename: "EODPrices",
-    id: string,
-    price: number,
-    name?: string | null,
-    createdAt: string,
-    updatedAt: string,
   } | null,
 };
