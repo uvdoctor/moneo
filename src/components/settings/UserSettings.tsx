@@ -33,7 +33,7 @@ import {
 } from "../userinfoutils";
 import DeleteAccount from "./DeleteAccount";
 import SaveButton from "./SaveButton";
-import PersoalTab from "./PersonalTab";
+import PersonalTab from "./PersonalTab";
 import ProfileTab from "./ProfileTab";
 require("./UserSettings.less");
 
@@ -279,7 +279,7 @@ export default function UserSettings() {
             <TabPane className="settings-tabpane-view" tab="Personal" key="1">
               <Row>
                 <Col span={24}>
-                  <PersoalTab
+                  <PersonalTab
                     name={name}
                     lastName={lastName}
                     dispatch={dispatch}
@@ -287,6 +287,7 @@ export default function UserSettings() {
                     dobMonth={dobMonth}
                     dobYear={dobYear}
                     lifeExpectancy={lifeExpectancy}
+                    user={user}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={16}>
