@@ -239,12 +239,10 @@ export const calculateVehicle = (holding: HoldingInput) => {
 export const calculateCrypto = (
   holding: HoldingInput,
   selectedCurrency: string,
-  fxRates: any
 ) => {
   return getCryptoRate(
     holding.name as string,
     selectedCurrency,
-    fxRates,
   ).then((rate)=>holding.qty * rate).catch(()=>0)
 };
 

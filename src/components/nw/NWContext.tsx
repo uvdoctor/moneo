@@ -44,7 +44,7 @@ import {
   MFSchemeType,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
-import { includesAny, initOptions } from "../utils";
+import { cryptoList, includesAny, initOptions } from "../utils";
 import {
   calculateCrypto,
   calculateNPS,
@@ -493,18 +493,7 @@ function NWContextProvider({fxRates}: any) {
           data: crypto,
           setData: setCrypto,
           total: totalCrypto,
-          categoryOptions: getCascaderOptions({
-            [BTC]: "Bitcoin",
-            [BTC_CASH]: "Bitcoin Cash",
-            [DASH]: "Dash",
-            [DOGECOIN]: "Dogecoin",
-            [ETHEREUM]: "Ethereum",
-            [ETHEREUM_CLASSIC]: "Ethereum Classic",
-            [RIPPLE]: "Ripple XRP",
-            [LITECOIN]: "Litecoin",
-            [MONERO]: "Monero",
-            [STELLAR]: "Stellar",
-          }),
+          categoryOptions: getCascaderOptions(cryptoList),
           fields: {
             type: "Type",
             qty: "Quantity",
@@ -1139,7 +1128,7 @@ function NWContextProvider({fxRates}: any) {
     let total = 0;
     crypto.forEach((holding: HoldingInput) => {
       if (doesMemberMatch(holding, selectedMembers)) {
-        calculateCrypto(holding, selectedCurrency, fxRates).then((rate)=>{
+        calculateCrypto(holding, selectedCurrency).then((rate)=>{
           total += rate
           setTotalCrypto(total);
         }).catch(()=>{

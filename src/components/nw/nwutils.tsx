@@ -445,12 +445,9 @@ export const getCommodityRate = async (
     .catch(() => 0);
 };
 
-export const getCryptoRate = (id: string, currency: string, fxRates: any) => {
-  return getPrice(id, "CC")
-    .then((rate) => {
-      if (!rate) return 0;
-      return rate * getFXRate(fxRates, currency);
-    })
+export const getCryptoRate = (id: string, currency: string) => {
+  return getPrice(id, "CC", currency)
+    .then((rate) => rate)
     .catch(() => 0);
 };
 
@@ -653,7 +650,7 @@ export const calculateValuation = async (
       value = calculateLoan(record);
       break;
     case CRYPTO:
-      value = await calculateCrypto(record, selectedCurrency, fxRates);
+      value = await calculateCrypto(record, selectedCurrency);
       break;
     case PM:
       value = await calculatePM(record, selectedCurrency, fxRates);
