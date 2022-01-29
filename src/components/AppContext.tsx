@@ -21,22 +21,23 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
   const validateCaptcha = async (action: string) => {
     if (!executeRecaptcha) return false;
-    const token = await executeRecaptcha(action);
-    let result = await fetch("/api/verifycaptcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({
-        token: token,
-      }),
-    })
-      .then(async (captchRes: any) => await captchRes.json())
-      .catch((e) => {
-        console.log("Error while validating captcha: ", e);
-        return false;
+    try {
+      const token = await executeRecaptcha(action);
+      let captchaRes = await fetch("/api/verifycaptcha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
       });
-    return result.success;
+      let result = await captchaRes.json();
+      return result.success;
+    } catch (e) {
+      console.log(`Error while validating captcha for ${action}: ${e}`);
+      return false;
+    }
   };
 
   useEffect(() => {
