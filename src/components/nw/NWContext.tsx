@@ -68,16 +68,6 @@ export const GOLD = "GC";
 export const SILVER = "SI";
 export const PLATINUM = "PL";
 export const PALLADIUM = "PA";
-export const BTC = "BTC";
-export const BTC_CASH = "BCH";
-export const ETHEREUM = "ETH";
-export const RIPPLE = "XRP";
-export const LITECOIN = "LTC";
-export const DASH = "DASH";
-export const MONERO = "XMR";
-export const ETHEREUM_CLASSIC = "ETC";
-export const DOGECOIN = "DOGE";
-export const STELLAR = "XLM";
 
 export const TAB = {
   PM: "Precious Metals",
