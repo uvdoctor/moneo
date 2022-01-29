@@ -20,7 +20,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   const [discountRate, setDiscountRate] = useState<number>();
 
   const validateCaptcha = async (action: string) => {
-    //@ts-ignore
+    if (!executeRecaptcha) return false;
     const token = await executeRecaptcha(action);
     let result = await fetch("/api/verifycaptcha", {
       method: "POST",
@@ -31,13 +31,12 @@ function AppContextProvider({ children }: AppContextProviderProps) {
         token: token,
       }),
     })
-      .then((captchRes: any) => captchRes.json())
-      .then((data: any) => data.success)
-      .catch((e: any) => {
-        console.log("error while validating captcha ", e);
+      .then(async (captchRes: any) => await captchRes.json())
+      .catch((e) => {
+        console.log("Error while validating captcha: ", e);
         return false;
       });
-    return result;
+    return result.success;
   };
 
   useEffect(() => {
