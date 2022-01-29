@@ -101,6 +101,7 @@ export default function GoalPayment() {
           startYearHandler={changeEndYear}
           initialValue={startYear}
           endValue={lastStartYear + 20}
+          dateWithEnddate
         />
       )}
 

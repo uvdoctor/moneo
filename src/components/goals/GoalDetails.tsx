@@ -124,6 +124,7 @@ export default function GoalDetails() {
                 startMonthValue={showStartMonth ? startMonth : null}
                 initialValue={firstStartYear}
                 endValue={lastStartYear}
+                dateWithEnddate
               />
             ) : null}
 
@@ -138,6 +139,7 @@ export default function GoalDetails() {
                   startYearHandler={changeEndYear}
                   initialValue={startYear}
                   endValue={lastStartYear + 20}
+                  dateWithEnddate
                 />
               )}
           </Section>
