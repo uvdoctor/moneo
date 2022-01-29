@@ -595,6 +595,9 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
+export const isLargeCap = (data: any) =>
+    data?.meta?.mcap === APIt.MCap.L || data?.mcap === APIt.MCap.L;
+
 export const hasOnlyCategory = (childTab: string) =>
   [
     TAB.OTHER,

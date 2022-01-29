@@ -5,15 +5,11 @@ import {
   addFamilyMember,
   addHoldings,
   addInsHoldings,
-  doesHoldingMatch,
-  doesMemberMatch,
-  doesPropertyMatch,
   getCascaderOptions,
   getFamilysList,
   getNPSData,
   getNPSFundManagers,
   getRelatedCurrencies,
-  isFund,
   loadAllFamilyMembers,
   loadAllHoldings,
   loadInsHoldings,
@@ -26,35 +22,38 @@ import {
 import { notification } from "antd";
 import {
   AssetSubType,
-  AssetType,
   CreateUserHoldingsInput,
   CreateNPSPriceInput,
   HoldingInput,
   INBondPrice,
   INExchgPrice,
   INMFPrice,
-  InsType,
   PropertyInput,
   UpdateUserHoldingsInput,
   InstrumentInput,
   CreateUserInsInput,
   UpdateUserInsInput,
   PropertyType,
-  MCap,
-  MFSchemeType,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
-import { cryptoList, includesAny, initOptions } from "../utils";
+import { cryptoList, initOptions } from "../utils";
 import {
-  calculateCrypto,
-  calculateNPS,
-  calculateProvidentFund,
-  calculateProperty,
-  calculateVehicle,
-  calculateCompundingIncome,
-  calculateInsurance,
-  calculatePM,
-  calculateLoan,
+  priceInstruments,
+  pricePM,
+  priceInsurance,
+  priceLoans,
+  priceLendings,
+  priceLtdep,
+  priceP2P,
+  priceAngel,
+  priceOthers,
+  priceCredit,
+  priceSavings,
+  priceProperties,
+  priceNPS,
+  pricePF,
+  priceVehicles,
+  priceCrypto,
 } from "./valuationutils";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY, ROUTES } from "../../CONSTANTS";
@@ -785,131 +784,6 @@ function NWContextProvider({fxRates}: any) {
     totalFInv,
   ]);
 
-  const pricePM = () => {
-    if (!preciousMetals.length) {
-      setTotalPM(0);
-      setTotalPGold(0);
-      return;
-    }
-    let total = 0;
-    let totalPGold = 0;
-    preciousMetals.forEach(async(holding: HoldingInput) => {
-      if (doesMemberMatch(holding, selectedMembers)) {
-        calculatePM(holding, selectedCurrency, fxRates).then((rate)=>{
-          total += rate
-          if (holding.subt === AssetSubType.Gold) totalPGold += rate;
-          setTotalPM(total);
-          setTotalPGold(totalPGold);
-        }).catch(()=>{
-          total+=0
-          if (holding.subt === AssetSubType.Gold) totalPGold += 0;
-          setTotalPM(total);
-          setTotalPGold(totalPGold);
-        })
-      }
-    });
-  };
-
-  const isLargeCap = (data: any) =>
-    data?.meta?.mcap === MCap.L || data?.mcap === MCap.L;
-
-  const priceInstruments = () => {
-    let total = 0;
-    let totalFGold = 0;
-    let totalFRE = 0;
-    let totalInv = 0;
-    let totalFFixed = 0;
-    let totalFEquity = 0;
-    let totalBonds = 0;
-    let totalStocks = 0;
-    let totalMFs = 0;
-    let totalETFs = 0;
-    let largeCapStocks = 0;
-    let largeCapFunds = 0;
-    let largeCapETFs = 0;
-    let multiCap = 0;
-    let fmp = 0;
-    let intervalFunds = 0;
-    let indexFunds = 0;
-    let liquidFunds = 0;
-    let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    instruments.forEach((instrument: InstrumentInput) => {
-      const id = instrument.id;
-      const data = cachedData[id];
-      if (
-        data &&
-        doesHoldingMatch(instrument, selectedMembers, selectedCurrency)
-      ) {
-        let value = instrument.qty * data.price;
-        total += value;
-        if (data.itype === InsType.ETF) totalETFs += value;
-        else if (isFund(instrument.id)) totalMFs += value;
-        if (data.subt === AssetSubType.GoldB) totalFGold += value;
-        else if (data.itype && data.itype === InsType.REIT) totalFRE += value;
-        else if (data.itype && data.itype === InsType.InvIT) totalInv += value;
-        else if (data.type === AssetType.E) {
-          totalFEquity += value;
-          if (isLargeCap(data)) {
-            if (data.itype === InsType.ETF) largeCapETFs += value;
-            else
-              isFund(instrument.id)
-                ? (largeCapFunds += value)
-                : (largeCapStocks += value);
-          } else multiCap += value;
-          if (!isFund(id) && !data.itype) totalStocks += value;
-        } else if (data.type === AssetType.F) {
-          totalFFixed += value;
-          if (data.subt === AssetSubType.I) indexFunds += value;
-          else if (data.subt === AssetSubType.L) liquidFunds += value;
-          else if (data.mftype && data.subt === AssetSubType.HB) {
-            if (data.mftype === MFSchemeType.I) intervalFunds += value;
-            if (data.mftype === MFSchemeType.C) fmp += value;
-          } else totalBonds += value;
-        } else if (data.type === AssetType.H) {
-          if (includesAny(data.name as string, ["conservative"])) {
-            totalFFixed += 0.7 * value;
-            totalFEquity += 0.3 * value;
-            multiCap += 0.3 * value;
-          } else if (includesAny(data.name as string, ["multi-asset"])) {
-            totalFGold += 0.1 * value;
-            totalFEquity += 0.6 * value;
-            totalFFixed += 0.3 * value;
-            multiCap += 0.6 * value;
-            totalBonds += 0.3 * value;
-          } else if (includesAny(data.name as string, ["balanced"])) {
-            totalFEquity += 0.6 * value;
-            totalFFixed += 0.4 * value;
-            multiCap += 0.6 * value;
-            totalBonds += 0.4 * value;
-          } else {
-            totalFFixed += 0.7 * value;
-            totalFEquity += 0.3 * value;
-            multiCap += 0.3 * value;
-            totalBonds += 0.7 * value;
-          }
-        }
-      }
-    });
-    setTotalInstruments(total);
-    setTotalFGold(totalFGold);
-    setTotalFEquity(totalFEquity);
-    setTotalFFixed(totalFFixed);
-    setTotalFRE(totalFRE);
-    setTotalFInv(totalInv);
-    setTotalStocks(totalStocks);
-    setTotalBonds(totalBonds);
-    setTotalETFs(totalETFs);
-    setTotalMFs(totalMFs);
-    setTotalLargeCapStocks(largeCapStocks);
-    setTotalLargeCapFunds(largeCapFunds);
-    setTotalLargeCapETF(largeCapETFs);
-    setTotalMultiCap(multiCap);
-    setTotalIndexFunds(indexFunds);
-    setTotalFMP(fmp);
-    setTotalIntervalFunds(intervalFunds);
-    setTotalLiquidFunds(liquidFunds);
-  };
-
   const saveHoldings = async () => {
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
@@ -959,238 +833,6 @@ function NWContextProvider({fxRates}: any) {
     setIsDirty(false);
   };
 
-  const calculateNPV = (holdings: Array<HoldingInput>, setTotal: Function) => {
-    if (!holdings.length) return setTotal(0);
-    let total = 0;
-    holdings.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        discountRate &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateInsurance(
-          holding,
-          discountRate,
-          userInfo?.le,
-          userInfo?.dob
-        );
-      }
-    });
-    setTotal(total);
-  };
-
-  const priceLoans = () => {
-    if (!loans.length) return setTotalLoans(0);
-    let total = 0;
-    loans.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateLoan(holding);
-      }
-    });
-    setTotalLoans(total);
-  };
-
-  const priceInsurance = () => {
-    calculateNPV(insurance, setTotalInsurance);
-  };
-
-  const priceLendings = () => {
-    if (!lendings.length) return setTotalLendings(0);
-    let total = 0;
-    lendings.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateCompundingIncome(holding).valuation;
-      }
-    });
-    setTotalLendings(total);
-  };
-
-  const priceLtdep = () => {
-    if (!ltdep.length) return setTotalLtdep(0);
-    let total = 0;
-    ltdep.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateCompundingIncome(holding).valuation;
-      }
-    });
-    setTotalLtdep(total);
-  };
-
-  const priceP2P = () => {
-    if (!p2p.length) return setTotalP2P(0);
-    let total = 0;
-    p2p.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateCompundingIncome(holding).valuation;
-      }
-    });
-    setTotalP2P(total);
-  };
-
-  const calculateBalance = (
-    records: Array<HoldingInput>,
-    setTotal: Function
-  ) => {
-    if (!records.length) return setTotal(0);
-    let total = 0;
-    records.forEach((record: HoldingInput) => {
-      if (
-        record &&
-        doesHoldingMatch(record, selectedMembers, selectedCurrency)
-      ) {
-        total += record.amt as number;
-      }
-    });
-    setTotal(total);
-  };
-
-  const priceCredit = () => {
-    calculateBalance(credit, setTotalCredit);
-  };
-
-  const priceSavings = () => {
-    calculateBalance(savings, setTotalSavings);
-  };
-
-  const priceOthers = () => {
-    calculateBalance(others, setTotalOthers);
-  };
-
-  const priceAngel = () => {
-    calculateBalance(angel, setTotalAngel);
-  };
-
-  const priceProperties = () => {
-    if (!properties.length) {
-      setTotalProperties(0);
-      setTotalOtherProperty(0);
-      setTotalCommercial(0);
-      setTotalResidential(0);
-      setTotalPolt(0);
-      return;
-    }
-    let total = 0;
-    let totalOtherProperty = 0;
-    let totalCommercial = 0;
-    let totalResidential = 0;
-    let totalPlot = 0;
-    properties.forEach((property: PropertyInput) => {
-      if (!doesPropertyMatch(property, selectedMembers, selectedCurrency))
-        return;
-      const value = calculateProperty(property);
-      total += value;
-      if (property.type === PropertyType.P) totalPlot += value;
-      if (property.type === PropertyType.OTHER) totalOtherProperty += value;
-      if (
-        property.type === PropertyType.A ||
-        property.type === PropertyType.H ||
-        property.type === PropertyType.C ||
-        property.type === PropertyType.T
-      )
-        totalResidential += value;
-      if (property.type === PropertyType.COMM) totalCommercial += value;
-    });
-    setTotalProperties(total);
-    setTotalOtherProperty(totalOtherProperty);
-    setTotalCommercial(totalCommercial);
-    setTotalResidential(totalResidential);
-    setTotalPolt(totalPlot);
-  };
-
-  const priceVehicles = () => {
-    if (!vehicles.length) return setTotalVehicles(0);
-    let total = 0;
-    vehicles.forEach((vehicle: HoldingInput) => {
-      if (
-        vehicle &&
-        doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)
-      ) {
-        total += calculateVehicle(vehicle);
-      }
-    });
-    setTotalVehicles(total);
-  };
-
-  const priceCrypto = () => {
-    if (!crypto.length) return setTotalCrypto(0);
-    let total = 0;
-    crypto.forEach((holding: HoldingInput) => {
-      if (doesMemberMatch(holding, selectedMembers)) {
-        calculateCrypto(holding, selectedCurrency).then((rate)=>{
-          total += rate
-          setTotalCrypto(total);
-        }).catch(()=>{
-          total+=0
-          setTotalCrypto(total);
-        })
-      }
-    });
-  };
-
-  const pricePF = () => {
-    if (!pf.length) {
-      setTotalPF(0);
-      setTotalPPF(0);
-      setTotalVPF(0);
-      setTotalEPF(0);
-      return;
-    }
-    let total = 0;
-    let totalPPF = 0;
-    let totalVPF = 0;
-    let totalEPF = 0;
-    pf.forEach((record: HoldingInput) => {
-      if (doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-        total = calculateProvidentFund(record);
-        if (record.subt === "PF") totalPPF += total;
-        if (record.subt === "VF") totalVPF += total;
-        if (record.subt === "EF") totalEPF += total;
-      }
-    });
-    setTotalPF(total);
-    setTotalPPF(totalPPF);
-    setTotalVPF(totalVPF);
-    setTotalEPF(totalEPF);
-  };
-
-  const priceNPS = () => {
-    if (!nps.length) {
-      setTotalNPS(0);
-      setTotalNPSEquity(0);
-      setTotalNPSFixed(0);
-      return;
-    }
-    let total = 0;
-    let totalNPSFixed = 0;
-    let totalNPSEquity = 0;
-    nps.forEach((holding: HoldingInput) => {
-      if (
-        holding &&
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
-        const { value, fixed, equity } = calculateNPS(holding, npsData);
-        total += value;
-        totalNPSFixed += fixed;
-        totalNPSEquity += equity;
-      }
-    });
-    setTotalNPS(total);
-    setTotalNPSEquity(totalNPSEquity);
-    setTotalNPSFixed(totalNPSFixed);
-  };
-
   useEffect(() => {
     setTotalEquity(totalAngel + totalFEquity + totalNPSEquity);
   }, [totalAngel, totalFEquity, totalNPSEquity]);
@@ -1200,90 +842,136 @@ function NWContextProvider({fxRates}: any) {
   }, [totalFFixed, totalNPSFixed, totalP2P]);
 
   useEffect(() => {
-    priceInstruments();
-    pricePM();
-    pricePF();
-    priceNPS();
-    priceProperties();
-    priceVehicles();
-    priceOthers();
-    priceCrypto();
-    priceLendings();
-    priceLtdep();
-    priceInsurance();
-    priceLoans();
-    priceCredit();
-    priceSavings();
-    priceP2P();
-  }, [selectedMembers, selectedCurrency]);
+    const { 
+      total,
+      totalFGold,
+      totalFEquity,
+      totalFRE,
+      totalFFixed,
+      totalInv,
+      totalStocks,
+      totalBonds,
+      totalETFs,
+      totalMFs,
+      largeCapStocks,
+      largeCapFunds,
+      largeCapETFs,
+      multiCap,
+      indexFunds,
+      fmp,
+      intervalFunds,
+      liquidFunds } = priceInstruments(instruments, selectedMembers, selectedCurrency);
+    setTotalInstruments(total);
+    setTotalFGold(totalFGold);
+    setTotalFEquity(totalFEquity);
+    setTotalFFixed(totalFFixed);
+    setTotalFRE(totalFRE);
+    setTotalFInv(totalInv);
+    setTotalStocks(totalStocks);
+    setTotalBonds(totalBonds);
+    setTotalETFs(totalETFs);
+    setTotalMFs(totalMFs);
+    setTotalLargeCapStocks(largeCapStocks);
+    setTotalLargeCapFunds(largeCapFunds);
+    setTotalLargeCapETF(largeCapETFs);
+    setTotalMultiCap(multiCap);
+    setTotalIndexFunds(indexFunds);
+    setTotalFMP(fmp);
+    setTotalIntervalFunds(intervalFunds);
+    setTotalLiquidFunds(liquidFunds);
+  }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
-    priceInstruments();
-  }, [instruments]);
+    const getValue = async() => {
+      const { total, totalPGold } = await pricePM(preciousMetals, selectedMembers, selectedCurrency, fxRates);
+      setTotalPM(total);
+      setTotalPGold(totalPGold);
+    }
+    getValue();
+  }, [ preciousMetals, selectedMembers, selectedCurrency ]);
 
   useEffect(() => {
-    pricePM();
-  }, [preciousMetals]);
+    const getValue = async() => {
+      const total = await priceCrypto(crypto, selectedMembers, selectedCurrency);
+      setTotalCrypto(total);
+    }
+    getValue();
+  }, [crypto, preciousMetals, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceCrypto();
-  }, [crypto]);
+    const total = priceAngel(angel, selectedMembers, selectedCurrency);
+    setTotalAngel(total);
+  }, [angel, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceAngel();
-  }, [angel]);
+    const total = priceOthers(others, selectedMembers, selectedCurrency);
+    setTotalOthers(total);
+  }, [others, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceOthers();
-  }, [others]);
+    const { total, totalPPF, totalVPF, totalEPF } = pricePF(pf, selectedMembers, selectedCurrency);
+    setTotalPF(total);
+    setTotalEPF(totalEPF);
+    setTotalVPF(totalVPF);
+    setTotalPPF(totalPPF)
+  }, [pf, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    pricePF();
-  }, [pf]);
+    const { total, totalNPSEquity, totalNPSFixed } = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
+    setTotalNPS(total);
+    setTotalNPSEquity(totalNPSEquity);
+    setTotalNPSFixed(totalNPSFixed);
+  }, [nps, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceNPS();
-  }, [nps]);
+    const total = priceLoans(loans, selectedMembers, selectedCurrency);
+    setTotalLoans(total)
+  }, [loans, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
-    priceLoans();
-  }, [loans, discountRate]);
+    const total = priceCredit(credit, selectedMembers, selectedCurrency);
+    setTotalCredit(total)
+  }, [credit, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceCredit();
-  }, [credit]);
+    const total = priceInsurance(insurance, selectedMembers, selectedCurrency, discountRate, userInfo);
+    setTotalInsurance(total)
+  }, [insurance, discountRate, selectedCurrency, userInfo, selectedMembers]);
 
   useEffect(() => {
-    priceInsurance();
-  }, [insurance, discountRate]);
+    const { total, totalOtherProperty, totalCommercial, totalResidential, totalPlot } 
+      = priceProperties(properties, selectedMembers, selectedCurrency);
+    setTotalProperties(total);
+    setTotalOtherProperty(totalOtherProperty);
+    setTotalCommercial(totalCommercial);
+    setTotalResidential(totalResidential);
+    setTotalPolt(totalPlot);
+  }, [properties, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceProperties();
-  }, [properties]);
+    const total = priceVehicles(vehicles, selectedMembers, selectedCurrency);
+    setTotalVehicles(total);
+  }, [selectedCurrency, selectedMembers, vehicles]);
 
   useEffect(() => {
-    priceVehicles();
-  }, [vehicles]);
+    const total = priceLendings(lendings, selectedMembers, selectedCurrency);
+    setTotalLendings(total);
+  }, [lendings, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceInstruments();
-  }, [instruments]);
+    const total = priceLtdep(ltdep, selectedMembers, selectedCurrency);
+    setTotalLtdep(total)
+  }, [ltdep, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceLendings();
-  }, [lendings]);
+    const total = priceP2P(p2p, selectedMembers, selectedCurrency);
+    setTotalP2P(total);
+  }, [p2p, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    priceLtdep();
-  }, [ltdep]);
-
-  useEffect(() => {
-    priceP2P();
-  }, [p2p]);
-
-  useEffect(() => {
-    priceSavings();
-  }, [savings]);
+    const total = priceSavings(savings, selectedMembers, selectedCurrency);
+    setTotalSavings(total);
+  }, [savings, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
     setIsDirty(true);
