@@ -14,6 +14,7 @@ import TextInput from "../form/textinput";
 import { GoalContext } from "../goals/GoalContext";
 import { GoalType } from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
+import GoalImage from "./GoalImage";
 
 export default function CalcHeader() {
   const { isPublicCalc }: any = useContext(PlanContext);
@@ -55,7 +56,7 @@ export default function CalcHeader() {
                 ) : (
                   <TextInput
                     pre={(getGoalTypes() as any)[goal.type]}
-                    // prefix={<GoalImage />}
+                    prefix={<GoalImage />}
                     placeholder="Goal Name"
                     value={name}
                     changeHandler={setName}
