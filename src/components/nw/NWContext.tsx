@@ -549,6 +549,7 @@ function NWContextProvider({ fxRates }: any) {
   };
 
   useEffect(() => {
+    if (!owner) return;
     initializeHoldings().then(() => {
       setLoadingHoldings(false);
     });
