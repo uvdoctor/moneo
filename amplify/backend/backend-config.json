@@ -236,6 +236,13 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "moneoutilslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "goals",
           "attributes": [
