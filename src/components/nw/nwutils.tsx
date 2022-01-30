@@ -377,13 +377,11 @@ export const getColourForAssetType = (at: string) => {
 
 export const getCommodityRate = async (subtype: string, purity: string, currency: string, fxRates: any) => {
 	return await getPrice(subtype === APIt.AssetSubType.Gold ? 'GC' : subtype, 'COMM')
-		.then((rate) => {
-			if (!rate) return 0;
+		.then((result) => {
+			if (!result) return 0;
+			const rate = Number((result / 31.1).toFixed(2));
 			return (
-				rate *
-				getFXRate(fxRates, currency) *
-				Number.parseFloat(purity) /
-				(subtype === APIt.AssetSubType.Gold ? 24 : 100)
+				rate * (getFXRate(fxRates, currency) * (Number.parseFloat(purity)) / (subtype === APIt.AssetSubType.Gold ? 24 : 100))
 			);
 		})
 		.catch(() => 0);
