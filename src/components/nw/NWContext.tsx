@@ -98,7 +98,7 @@ export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
-function NWContextProvider({fxRates}: any) {
+function NWContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, user, discountRate, userInfo }: any =
     useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
@@ -484,6 +484,14 @@ function NWContextProvider({fxRates}: any) {
         insCache[mf.id as string] = mf;
         mfIds.delete(mf.id as string);
       });
+    if (otherIds.size) {
+      let exchgEntries: Array<INExchgPrice> | null =
+        await loadMatchingINExchange(Array.from(otherIds));
+      exchgEntries?.forEach((entry: INExchgPrice) => {
+        insCache[entry.id as string] = entry;
+        otherIds.delete(entry.id as string);
+      });
+    }
     mfIds.forEach((id: string) => otherIds.add(id));
     let bonds: Array<INBondPrice> | null = null;
     if (otherIds.size) bonds = await loadMatchingINBond(Array.from(otherIds));
@@ -492,13 +500,7 @@ function NWContextProvider({fxRates}: any) {
         insCache[bond.id as string] = bond;
         otherIds.delete(bond.id as string);
       });
-    if (otherIds.size) {
-      let exchgEntries: Array<INExchgPrice> | null =
-        await loadMatchingINExchange(Array.from(otherIds));
-      exchgEntries?.forEach(
-        (entry: INExchgPrice) => (insCache[entry.id as string] = entry)
-      );
-    }
+
     simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
     return insCache;
   };
@@ -667,7 +669,7 @@ function NWContextProvider({fxRates}: any) {
   }, [totalFFixed, totalNPSFixed, totalP2P]);
 
   useEffect(() => {
-    const { 
+    const {
       total,
       totalFGold,
       totalFEquity,
@@ -685,7 +687,8 @@ function NWContextProvider({fxRates}: any) {
       indexFunds,
       fmp,
       intervalFunds,
-      liquidFunds } = priceInstruments(instruments, selectedMembers, selectedCurrency);
+      liquidFunds,
+    } = priceInstruments(instruments, selectedMembers, selectedCurrency);
     setTotalInstruments(total);
     setTotalFGold(totalFGold);
     setTotalFEquity(totalFEquity);
@@ -707,19 +710,28 @@ function NWContextProvider({fxRates}: any) {
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
-    const getValue = async() => {
-      const { total, totalPGold } = await pricePM(preciousMetals, selectedMembers, selectedCurrency, fxRates);
+    const getValue = async () => {
+      const { total, totalPGold } = await pricePM(
+        preciousMetals,
+        selectedMembers,
+        selectedCurrency,
+        fxRates
+      );
       setTotalPM(total);
       setTotalPGold(totalPGold);
-    }
+    };
     getValue();
-  }, [ preciousMetals, selectedMembers, selectedCurrency ]);
+  }, [preciousMetals, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
-    const getValue = async() => {
-      const total = await priceCrypto(crypto, selectedMembers, selectedCurrency);
+    const getValue = async () => {
+      const total = await priceCrypto(
+        crypto,
+        selectedMembers,
+        selectedCurrency
+      );
       setTotalCrypto(total);
-    }
+    };
     getValue();
   }, [crypto, preciousMetals, selectedCurrency, selectedMembers]);
 
@@ -734,15 +746,24 @@ function NWContextProvider({fxRates}: any) {
   }, [others, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    const { total, totalPPF, totalVPF, totalEPF } = pricePF(pf, selectedMembers, selectedCurrency);
+    const { total, totalPPF, totalVPF, totalEPF } = pricePF(
+      pf,
+      selectedMembers,
+      selectedCurrency
+    );
     setTotalPF(total);
     setTotalEPF(totalEPF);
     setTotalVPF(totalVPF);
-    setTotalPPF(totalPPF)
+    setTotalPPF(totalPPF);
   }, [pf, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    const { total, totalNPSEquity, totalNPSFixed } = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
+    const { total, totalNPSEquity, totalNPSFixed } = priceNPS(
+      nps,
+      selectedMembers,
+      selectedCurrency,
+      npsData
+    );
     setTotalNPS(total);
     setTotalNPSEquity(totalNPSEquity);
     setTotalNPSFixed(totalNPSFixed);
@@ -750,22 +771,33 @@ function NWContextProvider({fxRates}: any) {
 
   useEffect(() => {
     const total = priceLoans(loans, selectedMembers, selectedCurrency);
-    setTotalLoans(total)
+    setTotalLoans(total);
   }, [loans, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
     const total = priceCredit(credit, selectedMembers, selectedCurrency);
-    setTotalCredit(total)
+    setTotalCredit(total);
   }, [credit, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    const total = priceInsurance(insurance, selectedMembers, selectedCurrency, discountRate, userInfo);
-    setTotalInsurance(total)
+    const total = priceInsurance(
+      insurance,
+      selectedMembers,
+      selectedCurrency,
+      discountRate,
+      userInfo
+    );
+    setTotalInsurance(total);
   }, [insurance, discountRate, selectedCurrency, userInfo, selectedMembers]);
 
   useEffect(() => {
-    const { total, totalOtherProperty, totalCommercial, totalResidential, totalPlot } 
-      = priceProperties(properties, selectedMembers, selectedCurrency);
+    const {
+      total,
+      totalOtherProperty,
+      totalCommercial,
+      totalResidential,
+      totalPlot,
+    } = priceProperties(properties, selectedMembers, selectedCurrency);
     setTotalProperties(total);
     setTotalOtherProperty(totalOtherProperty);
     setTotalCommercial(totalCommercial);
@@ -785,7 +817,7 @@ function NWContextProvider({fxRates}: any) {
 
   useEffect(() => {
     const total = priceLtdep(ltdep, selectedMembers, selectedCurrency);
-    setTotalLtdep(total)
+    setTotalLtdep(total);
   }, [ltdep, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
@@ -931,7 +963,7 @@ function NWContextProvider({fxRates}: any) {
         totalNPSFixed,
         familyMemberKeys,
         setFamilyMemberKeys,
-        fxRates
+        fxRates,
       }}>
       <NWView />
     </NWContext.Provider>

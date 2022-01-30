@@ -275,13 +275,12 @@ export const getRelatedCurrencies = (
 };
 
 const getORIdList = (list: Array<any>, ids: Array<string>) => {
-  let uniqueIds = new Set();
   ids.forEach((id: string) => {
-    if (uniqueIds.has(id)) return;
-    uniqueIds.add(id);
     list.push({ id: { eq: id } });
   });
-  return { or: list };
+  return {
+    or: list,
+  };
 };
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
