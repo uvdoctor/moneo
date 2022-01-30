@@ -35,13 +35,6 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
     }
   };
 
-  const isPublicCalc = () => {
-    for (let calc of calcList) {
-      if (calc.link === selectedKey) return true;
-    }
-    return false;
-  };
-
   return userChecked ? (
     <>
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
