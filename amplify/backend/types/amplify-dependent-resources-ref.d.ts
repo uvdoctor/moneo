@@ -78,6 +78,12 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "moneoutilslayer": {
             "Arn": "string"
+        },
+        "feedback": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "storage": {
