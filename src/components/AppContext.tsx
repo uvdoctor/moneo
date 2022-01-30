@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { getUserDetails } from "./userinfoutils";
 import { getDiscountRate } from "./utils";
+import { Storage } from "aws-amplify";
 
 const AppContext = createContext({});
 interface AppContextProviderProps {
@@ -68,6 +69,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     if (!owner) return;
+    Storage.configure({ level: "private" });
     userInfo ? setAppContextLoaded(true) : loadUserInfo();
   }, [owner]);
 

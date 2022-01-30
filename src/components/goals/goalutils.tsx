@@ -331,20 +331,14 @@ export const getDefaultIconForGoalType = (goalType: APIt.GoalType) => {
   }
 };
 
-Storage.configure({ level: "private" });
-
 export const goalImgStorage = {
-  getUrlFromKey: async (key: string) => {
-    return Storage.vault.get(key, { expires: 9999 });
-  },
-  storeGoalImg: async (file: File) => {
-    return await Storage.put(file.name, file, {
+  getUrlFromKey: async (key: string) =>
+    Storage.vault.get(key, { expires: 9999 }),
+  storeGoalImg: async (file: File) =>
+    await Storage.put(file.name, file, {
       contentType: "image",
-    });
-  },
-  removeGoalImg: async (key: string) => {
-    return await Storage.remove(key);
-  },
+    }),
+  removeGoalImg: async (key: string) => await Storage.remove(key),
   validateImg: (file: File) => {
     // size validation
     const maxAllowedSize = 250000;
