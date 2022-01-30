@@ -270,32 +270,29 @@ export default function UploadHoldings() {
       const textContent = await page.getTextContent();
       for (let j = 0; j < textContent.items.length; j++) {
         let value = textContent.items[j].str.trim();
-        if (!value.length || value.length > 50) continue;
+        if (!value.length) continue;
         if (!taxId && value.length >= 10) {
           taxId = extractPAN(value);
           if (taxId) {
-            console.log("Detected PAN: ", taxId);
             setTaxId(taxId);
+            setError("");
             continue;
           }
-        }
-        if (!holdingStarted) {
-          holdingStarted = includesAny(value, ["holding"]);
-          if (holdingStarted) console.log("holding started...", value);
-          continue;
         }
         if (!eof && includesAny(value, ["end of report", "end of statement"])) {
           console.log("Detected end: ", value);
           eof = true;
         }
         if (
+          holdingStarted &&
           includesAny(value, [
             "transaction details",
-            "commission",
             "transaction statement",
             "statement of transactions",
             "other details",
             "txn:",
+            "mode of",
+            "nominee",
           ])
         ) {
           console.log("Ending holdings: ", value);
@@ -303,7 +300,16 @@ export default function UploadHoldings() {
           holdingStarted = false;
           continue;
         }
-        console.log("Value is: ", value);
+        if (value.length > 50) continue;
+        if (!holdingStarted) {
+          holdingStarted = includesAny(value, [
+            "holding",
+            "held as on",
+            "held as of",
+          ]);
+          if (holdingStarted) console.log("holding started...", value);
+          continue;
+        }
         if (holdingStarted && !isin) {
           if (
             includesAny(value, [
@@ -434,7 +440,7 @@ export default function UploadHoldings() {
                 <HSwitch
                   value={overwrite}
                   setter={setOverwrite}
-                  leftText="Do you want to overwrite?"
+                  rightText="Overwrite existing data"
                 />
               </Row>
             </Fragment>
