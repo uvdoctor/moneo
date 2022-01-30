@@ -9,14 +9,14 @@ const subject = {
 exports.handler = (event) => {
 	event.Records.forEach((record) => {
 		if (record.eventName == 'INSERT') {
-			// <p>User:- ${uname ? "Registered" : "Not Registered"}</p>
-			const { name, email, feedback, type } = record.dynamodb.NewImage;
+			const { name, email, feedback, type, uname } = record.dynamodb.NewImage;
 			const firstName = name.M.fn ? name.M.fn.S : '';
 			const lastName = name.M.ln ? name.M.ln.S : '';
 			const template = `<html>
       <body>
         <h3>${firstName} ${lastName}</h3>
         <div>
+					<p>User:- ${uname.S ? "Registered" : "Not Registered"}</p>
           <p>Email: -${email.S}</p>
           <p>${feedback.S}</p>
         </div>
