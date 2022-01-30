@@ -16,12 +16,13 @@ import {
   loadMatchingINBond,
   loadMatchingINExchange,
   loadMatchingINMutual,
+  categoryOptions,
   updateHoldings,
   updateInsHoldings,
+  fields,
 } from "./nwutils";
 import { notification } from "antd";
 import {
-  AssetSubType,
   CreateUserHoldingsInput,
   CreateNPSPriceInput,
   HoldingInput,
@@ -33,10 +34,8 @@ import {
   InstrumentInput,
   CreateUserInsInput,
   UpdateUserInsInput,
-  PropertyType,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
-import { cryptoList, initOptions } from "../utils";
 import {
   priceInstruments,
   pricePM,
@@ -217,10 +216,7 @@ function NWContextProvider({fxRates}: any) {
           data: savings,
           setData: setSavings,
           total: totalSavings,
-          fields: {
-            name: "Comment",
-            amount: "Amount",
-          },
+          fields: fields(TAB.SAV),
         },
         [TAB.LENT]: {
           label: TAB.LENT,
@@ -228,50 +224,17 @@ function NWContextProvider({fxRates}: any) {
           setData: setLendings,
           total: totalLendings,
           rate: selectedCurrency === "INR" ? 5.5 : 1,
-          categoryOptions: getCascaderOptions(
-            {
-              BD: "Bank Deposit",
-              NBD: "Non-Bank Deposit",
-            },
-            {
-              BD: {
-                "4": "Accumulates every 3 months",
-              },
-              NBD: {
-                "0": "Paid out",
-                "4": "Accumulates every 3 months",
-                "2": "Accumulates every 6 months",
-                "1": "Accumulates every year",
-              },
-            },
-            false
-          ),
-          fields: {
-            type: "Type & Interest",
-            name: "Comment",
-            amount: "Amount",
-            date: "Start Date & Maturity Date",
-            rate: "Rate",
-          },
+          categoryOptions: categoryOptions(TAB.LENT),
+          fields: fields(TAB.LENT),
         },
         [TAB.LTDEP]: {
           label: TAB.LTDEP,
           data: ltdep,
           setData: setLtdep,
           total: totalLtdep,
-          categoryOptions: getCascaderOptions({
-            [NATIONAL_SAVINGS_CERTIFICATE]: "National Savings Certificate",
-            [SUKANYA_SAMRIDDHI_YOJANA]: "Sukanya Samriddhi Yojana",
-          }),
+          categoryOptions: categoryOptions(TAB.LTDEP),
           rate: 6.8,
-          fields: {
-            type: "Type",
-            name: "Comment",
-            amount: "Amount",
-            date: "Start Date",
-            rate: "Rate",
-            duration: "Duration",
-          },
+          fields: fields(TAB.LTDEP),
         },
         [TAB.PF]: {
           label: TAB.PF,
@@ -281,18 +244,8 @@ function NWContextProvider({fxRates}: any) {
           setData: setPF,
           total: totalPF,
           rate: 7.1,
-          categoryOptions: getCascaderOptions({
-            PF: "Pension Fund",
-            EF: "Employee Fund",
-            VF: "Voluntary Fund",
-          }),
-          fields: {
-            name: "Comment",
-            type: "Type",
-            amount: "Amount",
-            qty: "Contribution Per Year",
-            rate: "Rate",
-          },
+          categoryOptions: categoryOptions(TAB.PF),
+          fields: fields(TAB.PF),
         },
       },
     },
@@ -305,106 +258,32 @@ function NWContextProvider({fxRates}: any) {
           data: properties,
           setData: setProperties,
           total: totalProperties,
-          categoryOptions: getCascaderOptions({
-            [PropertyType.P]: "Plot",
-            [PropertyType.A]: "Apartment",
-            [PropertyType.H]: "House",
-            [PropertyType.C]: "Condominium",
-            [PropertyType.COMM]: "Commercial",
-            [PropertyType.T]: "Townhouse",
-            [PropertyType.OTHER]: "Others",
-          }),
-          fields: {
-            type: "Type",
-            name: "Comment",
-            amount: "Purchase Amount",
-            date: "Purchase Date",
-            rate: "Appreciation Rate",
-            mv: "Market Value",
-            pin: "Pincode",
-            address: "Address",
-            owner: "Owners",
-          },
+          categoryOptions: categoryOptions(TAB.PROP),
+          fields: fields(TAB.PROP),
         },
         [TAB.VEHICLE]: {
           label: TAB.VEHICLE,
           data: vehicles,
           setData: setVehicles,
           total: totalVehicles,
-          categoryOptions: getCascaderOptions({
-            2: "Two-Wheeler",
-            3: "Three-Wheeler",
-            4: "Four-Wheeler",
-          }),
-          fields: {
-            type: "Type",
-            name: "Comment",
-            amount: "Purchase Amount",
-            date: "Purchase Date",
-          },
+          categoryOptions: categoryOptions(TAB.VEHICLE),
+          fields: fields(TAB.VEHICLE),
         },
         [TAB.PM]: {
           label: TAB.PM,
           data: preciousMetals,
           setData: setPreciousMetals,
           total: totalPM,
-          categoryOptions: getCascaderOptions(
-            {
-              [AssetSubType.Gold]: "Gold",
-              [SILVER]: "Silver",
-              [PLATINUM]: "Platinum",
-              [PALLADIUM]: "Palladium",
-            },
-            {
-              [AssetSubType.Gold]: initOptions(8, 16),
-              [SILVER]: {
-                "100": "Pure",
-                "95.8": "Brittania (95.8%)",
-                "92.5": "Sterling (92.5%)",
-                "90": "Coin (90%)",
-                "80": "Jewellery (80%)",
-              },
-              [PLATINUM]: {
-                "100": "Pure",
-                "95": "95%",
-                "90": "90%",
-                "85": "85%",
-                "80": "80%",
-                "50": "50%",
-              },
-              [PALLADIUM]: {
-                "100": "Pure",
-                "95": "95%",
-                "90": "90%",
-                "85": "85%",
-                "80": "80%",
-                "50": "50%",
-              },
-            },
-            false
-          ),
-          fields: {
-            type: "Type & Purity",
-            qty: "Quantity",
-          },
+          categoryOptions: categoryOptions(TAB.PM),
+          fields: fields(TAB.PM),
         },
         [TAB.OTHER]: {
           label: TAB.OTHER,
           data: others,
           setData: setOthers,
           total: totalOthers,
-          categoryOptions: getCascaderOptions({
-            Art: "Art",
-            Watch: "Watch",
-            Club: "Club Membership",
-            Time: "Time Sharing Membership",
-            Other: "Other",
-          }),
-          fields: {
-            type: "Type",
-            name: "Comment",
-            amount: "Amount",
-          },
+          categoryOptions: categoryOptions(TAB.OTHER),
+          fields: fields(TAB.OTHER),
         },
       },
     },
@@ -482,11 +361,8 @@ function NWContextProvider({fxRates}: any) {
           data: crypto,
           setData: setCrypto,
           total: totalCrypto,
-          categoryOptions: getCascaderOptions(cryptoList),
-          fields: {
-            type: "Type",
-            qty: "Quantity",
-          },
+          categoryOptions: categoryOptions(TAB.CRYPTO),
+          fields: fields(TAB.CRYPTO),
         },
         [TAB.ANGEL]: {
           label: TAB.ANGEL,
@@ -495,10 +371,7 @@ function NWContextProvider({fxRates}: any) {
           data: angel,
           setData: setAngel,
           total: totalAngel,
-          fields: {
-            name: "Comment",
-            amount: "Amount",
-          },
+          fields: fields(TAB.ANGEL),
         },
         [TAB.P2P]: {
           label: TAB.P2P,
@@ -506,19 +379,8 @@ function NWContextProvider({fxRates}: any) {
           setData: setP2P,
           total: totalP2P,
           rate: 5,
-          categoryOptions: getCascaderOptions({
-            "0": "Paid out",
-            "4": "Accumulates every 3 months",
-            "2": "Accumulates every 6 months",
-            "1": "Accumulates every 1 months",
-          }),
-          fields: {
-            name: "Comment",
-            amount: "Amount",
-            date: "Start Date & Maturity Date",
-            rate: "Rate",
-            type: "Interest",
-          },
+          categoryOptions: categoryOptions(TAB.P2P),
+          fields: fields(TAB.P2P),
         },
         [TAB.NPS]: {
           label: TAB.NPS,
@@ -532,10 +394,7 @@ function NWContextProvider({fxRates}: any) {
             npsSubcategory,
             false
           ),
-          fields: {
-            type: "Fund Manager & Scheme",
-            qty: "Quantity",
-          },
+          fields: fields(TAB.NPS),
         },
       },
     },
@@ -548,12 +407,7 @@ function NWContextProvider({fxRates}: any) {
           setData: setLoans,
           total: totalLoans,
           rate: 6,
-          fields: {
-            name: "Comment",
-            amount: "Monthly Installment",
-            rate: "Rate of Interest",
-            date: "End date",
-          },
+          fields: fields(TAB.LOAN),
         },
         [TAB.INS]: {
           label: TAB.INS,
@@ -561,34 +415,15 @@ function NWContextProvider({fxRates}: any) {
           total: totalInsurance,
           setData: setInsurance,
           rate: 6,
-          categoryOptions: getCascaderOptions(
-            {
-              L: "Life",
-              H: "Health",
-              P: "Property",
-              V: "Vehicle",
-              O: "Others",
-            },
-            { 1: "Yearly", 12: "Monthly" },
-            true
-          ),
-          fields: {
-            type: "Type & Premium Mode",
-            name: "Comment",
-            amount: "Premium Amount",
-            rate: "Premium increases",
-            date: "End date",
-          },
+          categoryOptions: categoryOptions(TAB.INS),
+          fields: fields(TAB.INS),
         },
         [TAB.CREDIT]: {
           label: TAB.CREDIT,
           data: credit,
           total: totalCredit,
           setData: setCredit,
-          fields: {
-            name: "Comment",
-            amount: "Amount",
-          },
+          fields: fields(TAB.CREDIT),
         },
       },
     },
