@@ -474,23 +474,6 @@ export const sendMail = async (template: any, subject: string) => {
     });
 };
 
-export const emailTemplate = (template: any, rating?: any) => {
-  const lastName = template.lastName ? template.lastName : "";
-  const ratingContent = `<h3>Rating:- ${rating}</h3>`;
-  const content = `<html>
-  <body>
-   <h3>${template.firstName} ${lastName}</h3>
-   ${rating ? ratingContent : ""}
-    <div>
-      <p>User:- ${template.reg}</p>
-      <p>Email: -${template.email}</p>
-      <p>${template.content}</p>
-    </div>
-  </body>
-  </html>`;
-  return content;
-};
-
 const dateToUTC = (date: string) => {
   let constituents = date.split("/");
   return Date.UTC(

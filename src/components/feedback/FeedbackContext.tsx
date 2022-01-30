@@ -3,9 +3,7 @@ import * as mutations from '../../graphql/mutations';
 import { API } from 'aws-amplify';
 import { CreateFeedbackMutation } from '../../api/goals';
 import { Form, notification } from 'antd';
-import { sendMail } from '../utils';
 import { AppContext } from '../AppContext';
-import { emailTemplate  } from '../../components/utils';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 
 const FeedbackContext = createContext({});
@@ -51,18 +49,6 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				{ data: CreateFeedbackMutation };
 				if (rating && rating < 4) setFeedbackId(data.createFeedback?.id); 
 				form.resetFields();
-				const mailTemplate = {
-					firstName : data.createFeedback?.name.fn,
-					lastName : data.createFeedback?.name.ln,
-					email: data.createFeedback?.email,
-					content: data.createFeedback?.feedback,
-					type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question')),
-					reg: user && user.attributes?.email ? "Registered" : "Not Registered",
-					rating: rating ? rating : ''
-				}
-				const template = rating ? emailTemplate(mailTemplate, rating) : emailTemplate(mailTemplate);
-				const subject = rating ? `Rating-${mailTemplate.type}` : mailTemplate.type;
-				sendMail(template, subject);
 				openNotificationWithIcon('success', 'Success', 'Feedback saved successfully');
 			} catch (e) {
 				console.log(e)

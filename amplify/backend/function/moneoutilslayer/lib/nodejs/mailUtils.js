@@ -1,20 +1,13 @@
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const client = new SESClient({});
 
-const client = new SESClient({
-	region: 'us-east-1',
-	apiVersion: '2010-12-01',
-	credentials: {
-		accessKeyId: 'AKIAROHCVNGYBO5Y6IPU',
-		secretAccessKey: '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'
-	}
-});
-
-const sendMail = (body, subject) => {
+const sendMail = (body, subject, toAddresses, source) => {
 	const params = {
 		Destination: {
-			ToAddresses: [ 'emailumangdoctor@gmail.com' ]
+			// toAddresses - Array
+			ToAddresses: toAddresses
 		},
-		Source: 'no-reply@moneo.money',
+		Source: source,
 		Message: {
 			Body: {
 				Html: {
@@ -24,7 +17,7 @@ const sendMail = (body, subject) => {
 			},
 			Subject: {
 				Charset: 'UTF-8',
-				Data: `Moneo Feedback - ${subject}`
+				Data: subject
 			}
 		}
 	};
