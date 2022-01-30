@@ -324,152 +324,139 @@ export default function UserSettings() {
             <TabPane className="settings-tabpane-view" tab="Account" key="3">
               <Row gutter={[0, 24]}>
                 <Col xs={24} sm={24} md={12}>
-                  <Row gutter={[10, 10]}>
-                    <Col span={24}>Preferred login name</Col>
-                    <Col xs={24} sm={24} md={12}>
-                      <TextInput
-                        pre=""
-                        value={prefuser}
-                        changeHandler={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "prefuser", val },
-                          })
-                        }
-                        fieldName="prefusername"
-                        setError={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "error", val },
-                          })
-                        }
-                        post={
-                          <Button
-                            type="link"
-                            style={{ color: COLORS.GREEN }}
-                            icon={<SaveOutlined />}
-                            disabled={error.length > 0 ? true : false}
-                            onClick={() => {
-                              validateCaptcha("prefusername_change").then(
-                                (success: boolean) => {
-                                  if (!success) return;
-                                  updatePrefUsername();
-                                }
-                              );
-                            }}
-                          />
-                        }
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Row gutter={[0, 10]}>
-                    <Col span={24}>Email</Col>
-                    <Col xs={24} sm={24} md={12}>
-                      <TextInput
-                        pre=""
-                        placeholder={"abc@xyz.com"}
-                        value={email}
-                        changeHandler={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "email", val },
-                          })
-                        }
-                        pattern={
-                          "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
-                        }
-                        setError={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "error", val },
-                          })
-                        }
-                        fieldName="email"
-                        post={
-                          <OtpDialogue
-                            disableButton={disableButton(
-                              email,
-                              user?.attributes?.email
-                            )}
-                            action={"email"}
-                            onClickAction={() =>
-                              updateAccountTab(email, doesEmailExist, "Email", {
-                                email: email,
-                              })
+                  <TextInput
+                    pre="Preferred login name"
+                    value={prefuser}
+                    changeHandler={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "prefuser", val },
+                      })
+                    }
+                    style={{ width: 300}}
+                    fieldName="prefusername"
+                    setError={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "error", val },
+                      })
+                    }
+                    post={
+                      <Button
+                        type="link"
+                        style={{ color: COLORS.GREEN }}
+                        icon={<SaveOutlined />}
+                        disabled={error.length > 0 ? true : false}
+                        onClick={() => {
+                          validateCaptcha("prefusername_change").then(
+                            (success: boolean) => {
+                              if (!success) return;
+                              updatePrefUsername();
                             }
-                            email={email}
-                            mob={parseFloat(
-                              countryCodeWithoutPlusSign + mobile
-                            )}
-                            im={parseFloat(
-                              countryCodeWithoutPlusSign + whatsapp
-                            )}
-                            resendOtp={sendOtp}
-                          />
-                        }
+                          );
+                        }}
                       />
-                    </Col>
-                  </Row>
+                    }
+                  />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
-                  <Row gutter={[0, 10]}>
-                    <Col span={24}>Mobile</Col>
-                    <Col xs={24} sm={24} md={12}>
-                      <TextInput
-                        pre=""
-                        prefix={countryCode?.value}
-                        value={mobile}
-                        changeHandler={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "mobile", val },
+                  <TextInput
+                    pre="Email"
+                    placeholder={"abc@xyz.com"}
+                    value={email}
+                    changeHandler={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "email", val },
+                      })
+                    }
+                    pattern={
+                      "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
+                    }
+                    setError={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "error", val },
+                      })
+                    }
+                    style={{ width: 300}}
+                    fieldName="email"
+                    post={
+                      <OtpDialogue
+                        disableButton={disableButton(
+                          email,
+                          user?.attributes?.email
+                        )}
+                        action={"email"}
+                        onClickAction={() =>
+                          updateAccountTab(email, doesEmailExist, "Email", {
+                            email: email,
                           })
                         }
-                        fieldName="mobile"
-                        pattern="^[0-9]"
-                        setError={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "error", val },
-                          })
-                        }
-                        minLength={10}
-                        maxLength={10}
-                        post={
-                          <OtpDialogue
-                            disableButton={disableButton(
-                              user?.attributes?.phone_number,
-                              countryCode?.value + mobile
-                            )}
-                            action={"phone_number"}
-                            mob={parseFloat(
-                              countryCodeWithoutPlusSign + mobile
-                            )}
-                            onClickAction={() =>
-                              updateAccountTab(
-                                mobile,
-                                doesMobExist,
-                                "Mobile Number",
-                                {
-                                  phone_number: countryCode?.value + mobile,
-                                }
-                              )
+                        email={email}
+                        mob={parseFloat(
+                          countryCodeWithoutPlusSign + mobile
+                        )}
+                        im={parseFloat(
+                          countryCodeWithoutPlusSign + whatsapp
+                        )}
+                        resendOtp={sendOtp}
+                      />
+                    }
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <TextInput
+                    pre="Mobile"
+                    prefix={countryCode?.value}
+                    value={mobile}
+                    changeHandler={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "mobile", val },
+                      })
+                    }
+                    style={{ width: 300}}
+                    fieldName="mobile"
+                    pattern="^[0-9]"
+                    setError={(val: any) =>
+                      dispatch({
+                        type: "single",
+                        data: { field: "error", val },
+                      })
+                    }
+                    minLength={10}
+                    maxLength={10}
+                    post={
+                      <OtpDialogue
+                        disableButton={disableButton(
+                          user?.attributes?.phone_number,
+                          countryCode?.value + mobile
+                        )}
+                        action={"phone_number"}
+                        mob={parseFloat(
+                          countryCodeWithoutPlusSign + mobile
+                        )}
+                        onClickAction={() =>
+                          updateAccountTab(
+                            mobile,
+                            doesMobExist,
+                            "Mobile Number",
+                            {
+                              phone_number: countryCode?.value + mobile,
                             }
-                            resendOtp={sendOtp}
-                          />
+                          )
                         }
+                        resendOtp={sendOtp}
                       />
-                    </Col>
-                  </Row>
+                    }
+                  />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Row gutter={[0, 10]}>
-                    <Col span={24}>Whatsapp</Col>
                     <Col xs={24} sm={24} md={12}>
                       <TextInput
-                        pre=""
+                        pre="Whatsapp"
                         prefix={countryCode?.value}
                         value={whatsapp}
                         changeHandler={(val: any) =>
