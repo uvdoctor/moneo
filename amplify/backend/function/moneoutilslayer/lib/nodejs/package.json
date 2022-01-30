@@ -2,6 +2,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.49.0"
+  }
 }
