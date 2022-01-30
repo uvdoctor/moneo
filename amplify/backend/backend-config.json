@@ -247,7 +247,7 @@
     }
   },
   "storage": {
-    "usercontent": {
+    "userimages": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

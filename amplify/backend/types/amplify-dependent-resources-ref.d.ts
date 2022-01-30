@@ -87,7 +87,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "usercontent": {
+        "userimages": {
             "BucketName": "string",
             "Region": "string"
         }
