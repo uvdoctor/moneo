@@ -13,6 +13,7 @@ export const getFeedback = /* GraphQL */ `
         ln
       }
       feedback
+      uname
       createdAt
       updatedAt
     }
@@ -34,6 +35,7 @@ export const listFeedbacks = /* GraphQL */ `
           ln
         }
         feedback
+        uname
         createdAt
         updatedAt
       }

@@ -8,6 +8,7 @@ export type UpdateFeedbackInput = {
   email?: string | null,
   name?: NameInput | null,
   feedback?: string | null,
+  uname?: string | null,
 };
 
 export enum FeedbackType {
@@ -26,6 +27,7 @@ export type ModelFeedbackConditionInput = {
   type?: ModelFeedbackTypeInput | null,
   email?: ModelStringInput | null,
   feedback?: ModelStringInput | null,
+  uname?: ModelStringInput | null,
   and?: Array< ModelFeedbackConditionInput | null > | null,
   or?: Array< ModelFeedbackConditionInput | null > | null,
   not?: ModelFeedbackConditionInput | null,
@@ -83,6 +85,7 @@ export type Feedback = {
   email?: string,
   name?: Name,
   feedback?: string,
+  uname?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -891,6 +894,7 @@ export type CreateFeedbackInput = {
   email: string,
   name: NameInput,
   feedback: string,
+  uname?: string | null,
 };
 
 export type CreateRatingInput = {
@@ -1530,6 +1534,7 @@ export type ModelFeedbackFilterInput = {
   type?: ModelFeedbackTypeInput | null,
   email?: ModelStringInput | null,
   feedback?: ModelStringInput | null,
+  uname?: ModelStringInput | null,
   and?: Array< ModelFeedbackFilterInput | null > | null,
   or?: Array< ModelFeedbackFilterInput | null > | null,
   not?: ModelFeedbackFilterInput | null,
@@ -1890,6 +1895,7 @@ export type UpdateFeedbackMutation = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1912,6 +1918,7 @@ export type DeleteFeedbackMutation = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3459,6 +3466,7 @@ export type CreateFeedbackMutation = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4049,6 +4057,7 @@ export type GetFeedbackQuery = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4074,6 +4083,7 @@ export type ListFeedbacksQuery = {
         ln?: string | null,
       },
       feedback: string,
+      uname?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5666,6 +5676,7 @@ export type OnCreateFeedbackSubscription = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5683,6 +5694,7 @@ export type OnUpdateFeedbackSubscription = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5700,6 +5712,7 @@ export type OnDeleteFeedbackSubscription = {
       ln?: string | null,
     },
     feedback: string,
+    uname?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

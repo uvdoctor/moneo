@@ -39,6 +39,7 @@ type Feedback
   email: String!
   name: Name!
   feedback: String!
+  uname: String
 }
 
 type Rating

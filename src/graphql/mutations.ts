@@ -16,6 +16,7 @@ export const updateFeedback = /* GraphQL */ `
         ln
       }
       feedback
+      uname
       createdAt
       updatedAt
     }
@@ -35,6 +36,7 @@ export const deleteFeedback = /* GraphQL */ `
         ln
       }
       feedback
+      uname
       createdAt
       updatedAt
     }
@@ -1452,6 +1454,7 @@ export const createFeedback = /* GraphQL */ `
         ln
       }
       feedback
+      uname
       createdAt
       updatedAt
     }
