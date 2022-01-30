@@ -29,7 +29,7 @@ export default function PersonalTab({
 	user
 }: PersonalTabProps) {
 	return (
-		<Row gutter={[ 20, 20 ]}>
+		<Row gutter={[ 32, 20 ]}>
 			<Col className="personal-tabpane-image-view">
 				<ImageInput user={user} />
 			</Col>
