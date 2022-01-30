@@ -87,9 +87,7 @@
     "adminQueries": false,
     "triggers": {},
     "hostedUI": false,
-    "userPoolGroupList": [
-      "temp"
-    ],
+    "userPoolGroupList": [],
     "serviceName": "Cognito",
     "useEnabledMfas": false,
     "authRoleArn": {
