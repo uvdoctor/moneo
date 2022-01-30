@@ -99,8 +99,13 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
 function NWContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner, user, discountRate, userInfo }: any =
-    useContext(AppContext);
+  const {
+    defaultCurrency,
+    owner,
+    appContextLoaded,
+    discountRate,
+    userInfo,
+  }: any = useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [preciousMetals, setPreciousMetals] = useState<Array<HoldingInput>>([]);
@@ -473,7 +478,7 @@ function NWContextProvider({ fxRates }: any) {
     instruments.forEach((ins: InstrumentInput) => {
       if (ins.id.startsWith("INF")) mfIds.add(ins.id);
       else otherIds.add(ins.id);
-      if (!initFromDB && insData && !insData[ins.id]) initFromDB = true;
+      if (!initFromDB && (!insData || !insData[ins.id])) initFromDB = true;
     });
     if (!initFromDB) return insData;
     let insCache: any = {};
@@ -500,7 +505,6 @@ function NWContextProvider({ fxRates }: any) {
         insCache[bond.id as string] = bond;
         otherIds.delete(bond.id as string);
       });
-
     simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
     return insCache;
   };
@@ -522,9 +526,10 @@ function NWContextProvider({ fxRates }: any) {
     setSelectedCurrency(Object.keys(currencyList)[0]);
     setCurrencyList(currencyList);
     if (allHoldings) setHoldings(true);
-    if (insHoldings) setInsholdings(true);
-    if (insHoldings?.uname && insHoldings?.ins?.length)
+    if (insHoldings?.uname && insHoldings?.ins?.length) {
       await initializeInsData(insHoldings?.ins);
+      setInsholdings(true);
+    }
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
     setPreciousMetals([...(allHoldings?.pm ? allHoldings.pm : [])]);
     setPF([...(allHoldings?.pf ? allHoldings.pf : [])]);
@@ -541,13 +546,13 @@ function NWContextProvider({ fxRates }: any) {
     setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
     setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
     setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
-    setLoadingHoldings(false);
   };
 
   useEffect(() => {
-    if (!user || !owner) return;
-    initializeHoldings();
-  }, [user, owner]);
+    initializeHoldings().then(() => {
+      setLoadingHoldings(false);
+    });
+  }, [appContextLoaded]);
 
   useEffect(() => {
     setNW(totalAssets - totalLiabilities);
