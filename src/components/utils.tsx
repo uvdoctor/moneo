@@ -454,26 +454,6 @@ export const toHumanFriendlyCurrency = (val: number, currency: string) => {
   )} ${unit}`;
 };
 
-export const sendMail = async (template: any, subject: string) => {
-  await fetch("/api/sendemail", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify({
-      template: template,
-      subject: subject,
-    }),
-  })
-    .then((res: any) => res.json())
-    .then((data: any) => {
-      return data.success;
-    })
-    .catch(() => {
-      return false;
-    });
-};
-
 const dateToUTC = (date: string) => {
   let constituents = date.split("/");
   return Date.UTC(
