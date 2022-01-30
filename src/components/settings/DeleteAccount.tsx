@@ -135,6 +135,7 @@ export default function DeleteAccount() {
           value={input}
           changeHandler={setInput}
           style={{ width: 200 }}
+          placeholder="delete"
         />
       </Col>
       <Col>
@@ -146,7 +147,7 @@ export default function DeleteAccount() {
           loading={loading}
           disabled={loading}
           icon={<DeleteOutlined />}>
-          Delete My Account
+          Delete Account
         </Button>
       </Col>
     </Row>

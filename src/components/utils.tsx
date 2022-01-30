@@ -488,8 +488,8 @@ export const menuItem = (
 ) => (
   <Menu.Item
     key={key ? key : path}
+    icon={icon ? icon : null}
     className={multiCol ? "multi-col-submenu" : ""}>
-    {icon ? <>{icon} </> : null}
     {selectedKey !== path ? (
       <Link href={path}>
         <a>{name}</a>
@@ -786,7 +786,7 @@ export const presentMonth = new Date().getMonth() + 1;
 export const presentYear = new Date().getFullYear();
 
 export const getFXData = async (token: string) => {
-  const defaultFXRates: {[key: string]: number} = {
+  const defaultFXRates: { [key: string]: number } = {
     AUD: 1.4135,
     CAD: 1.2717,
     CHF: 0.9248,
@@ -796,26 +796,26 @@ export const getFXData = async (token: string) => {
     INR: 75.19,
     JPY: 114.658,
     NZD: 1.5134,
-    SEK: 9.3483 
-  }
+    SEK: 9.3483,
+  };
   const currencyList = Object.keys(defaultFXRates);
-	for (let curr of currencyList) {
+  for (let curr of currencyList) {
     try {
-		const data = await fetch(
-			`https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=${token}&fmt=json`
-		);
-    const response = await data.json();
-		defaultFXRates[curr] = response.close;
+      const data = await fetch(
+        `https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=${token}&fmt=json`
+      );
+      const response = await data.json();
+      defaultFXRates[curr] = response.close;
     } catch {
-			break;
+      break;
     }
-	}
+  }
   return defaultFXRates;
 };
 
 export const getPrice = async (id: string, type: string, currency?: string) => {
   let rate = simpleStorage.get(id);
-  if(rate) return rate;
+  if (rate) return rate;
   return await fetch("/api/price", {
     method: "POST",
     headers: {
@@ -824,187 +824,187 @@ export const getPrice = async (id: string, type: string, currency?: string) => {
     body: JSON.stringify({
       id: id,
       type: type,
-      currency: currency ? currency : '',
+      currency: currency ? currency : "",
     }),
   })
-  .then(async(res: any) => {
-    const re = await res.json()
-    simpleStorage.set(id, re.rate, LOCAL_DATA_TTL);
-    return re.rate;
-  })
-  .catch(() => {
-    return defaultPrices[id]
-  });
+    .then(async (res: any) => {
+      const re = await res.json();
+      simpleStorage.set(id, re.rate, LOCAL_DATA_TTL);
+      return re.rate;
+    })
+    .catch(() => {
+      return defaultPrices[id];
+    });
 };
 
-export const defaultPrices: {[key: string]: number} = {
-  'BTC': 36392.30,
-  'LTC': 107.26,
-  "ETH": 2456.48,
-  "XRP": 0.605290,
-  "DASH": 90.95,
-  "XMR": 144.30,
-  "ETC": 24.04,
-  "BCH": 286.53,
-  "DOGE": 0.14,
-  "XLM": 36.23,
+export const defaultPrices: { [key: string]: number } = {
+  BTC: 36392.3,
+  LTC: 107.26,
+  ETH: 2456.48,
+  XRP: 0.60529,
+  DASH: 90.95,
+  XMR: 144.3,
+  ETC: 24.04,
+  BCH: 286.53,
+  DOGE: 0.14,
+  XLM: 36.23,
   GC: 58.45,
   PL: 33.19,
   SI: 0.76,
   PA: 74.66,
-}
+};
 
 export const cryptoList = {
   BTC: "Bitcoin",
-  ZRX:"0x", 
+  ZRX: "0x",
   "1INCH": "1inch",
-  AAVE: "Aave", 
-  ALCX: "Alchemix", 
-  ACH: "Alchemy Pay", 
-  AGLD: "Adventure Gold", 
-  ALGO: "Algorand", 
-  AMP: "Amp", 
-  FORTH: "Ampleforth Governance Token", 
-  ANKR: "Ankr", 
+  AAVE: "Aave",
+  ALCX: "Alchemix",
+  ACH: "Alchemy Pay",
+  AGLD: "Adventure Gold",
+  ALGO: "Algorand",
+  AMP: "Amp",
+  FORTH: "Ampleforth Governance Token",
+  ANKR: "Ankr",
   API3: "API3",
   ARPA: "ARPA Chain",
   ASM: "Assemble Protocol",
-  REP: "Augur", 
-  AVAX: "Avalanche", 
+  REP: "Augur",
+  AVAX: "Avalanche",
   AXS: "Axie Infinity",
-  BADGER: "Badger DAO", 
+  BADGER: "Badger DAO",
   BAL: "Balancer",
   BNT: "Bancor Network Token",
   BAND: "Band Protocol",
   BOND: "BarnBridge",
   BAT: "Basic Attention Token",
-  BICO: "Biconomy", 
-  BCH: "Bitcoin Cash", 
+  BICO: "Biconomy",
+  BCH: "Bitcoin Cash",
   BLZ: "Bluzelle",
-  AUCTION: "Bounce Token AUCTION", 
-  BTRST: "Braintrust", 
-  ADA: "Cardano", 
-  CTSI: "Cartesi", 
-  CGLD: "Celo", 
-  LINK: "Chainlink", 
-  CHZ: "Chiliz", 
-  CVC: "Civic", 
-  CLV: "Clover Finance", 
-  COMP: "Compound", 
-  ATOM: "Cosmos", 
+  AUCTION: "Bounce Token AUCTION",
+  BTRST: "Braintrust",
+  ADA: "Cardano",
+  CTSI: "Cartesi",
+  CGLD: "Celo",
+  LINK: "Chainlink",
+  CHZ: "Chiliz",
+  CVC: "Civic",
+  CLV: "Clover Finance",
+  COMP: "Compound",
+  ATOM: "Cosmos",
   COTI: "COTI",
   COVAL: "COVAL",
   CTX: "Cryptex Finance",
   CRO: "Crypto.com Chain",
   CRV: "Curve DAO Token",
-  DAI: "Dai", 
-  DASH: "Dash", 
+  DAI: "Dai",
+  DASH: "Dash",
   MANA: "Decentraland",
   DESO: "Decentralized Social",
   DDX: "DerivaDAO",
   YFII: "DFI.Money",
-  DIA: "Dia", 
+  DIA: "Dia",
   DNT: "District0x",
   DOGE: "Dogecoin",
   ENJ: "Enjin Coin",
-  MLN: "Enzyme", 
+  MLN: "Enzyme",
   EOS: "EOS",
   ETH: "Ethereum",
-  ETC: "Ethereum Classic", 
+  ETC: "Ethereum Classic",
   ENS: "Ethereum Name Service",
-  FET: "Fetch.ai", 
-  FIL: "Filecoin", 
-  FX: "Function X", 
-  GALA: "Gala", 
-  GTC: "Gitcoin", 
-  GODS: "Gods Unchained", 
+  FET: "Fetch.ai",
+  FIL: "Filecoin",
+  FX: "Function X",
+  GALA: "Gala",
+  GTC: "Gitcoin",
+  GODS: "Gods Unchained",
   GFI: "Goldfinch",
-  GNT: "Golem", 
+  GNT: "Golem",
   GYEN: "GYEN",
-  FARM: "Harvest Finance", 
-  ZEN: "Horizen", 
+  FARM: "Harvest Finance",
+  ZEN: "Horizen",
   IDEX: "IDEX",
-  RLC: "iExec RLC", 
-  IMX: "Immutable X", 
-  ICP: "Internet Computer", 
-  INV: "Inverse Finance", 
-  IOTX: "IoTeX", 
-  JASMY: "Jasmy", 
-  KEEP: "Keep Network", 
-  KRL: "Kryll", 
-  KNC: "Kyber Network", 
+  RLC: "iExec RLC",
+  IMX: "Immutable X",
+  ICP: "Internet Computer",
+  INV: "Inverse Finance",
+  IOTX: "IoTeX",
+  JASMY: "Jasmy",
+  KEEP: "Keep Network",
+  KRL: "Kryll",
+  KNC: "Kyber Network",
   LCX: "LCX",
-  LQTY: "Liquity", 
-  LTC: "Litecoin", 
-  LPT: "Livepeer (LPT)", 
-  LOOM: "Loom Network", 
-  LRC: "Loopring", 
-  MKR: "Maker", 
-  MPL: "Maple", 
-  MASK: "Mask Network", 
-  MDT: "Measurable Data Token", 
-  MIR: "Mirror Protocol", 
-  MCO2: "Moss Carbon Credit", 
-  MUSD: "mStableUSD", 
+  LQTY: "Liquity",
+  LTC: "Litecoin",
+  LPT: "Livepeer (LPT)",
+  LOOM: "Loom Network",
+  LRC: "Loopring",
+  MKR: "Maker",
+  MPL: "Maple",
+  MASK: "Mask Network",
+  MDT: "Measurable Data Token",
+  MIR: "Mirror Protocol",
+  MCO2: "Moss Carbon Credit",
+  MUSD: "mStableUSD",
   NKN: "NKN",
-  NU: "NuCypher", 
-  NMR: "Numeraire", 
-  OMG: "OMG Network", 
-  OXT: "Orchid", 
-  OGN: "Origin Token", 
-  TRAC: "OriginTrail", 
+  NU: "NuCypher",
+  NMR: "Numeraire",
+  OMG: "OMG Network",
+  OXT: "Orchid",
+  OGN: "Origin Token",
+  TRAC: "OriginTrail",
   ORN: "Orion Protocol",
-  PAX: "Paxos Standard", 
-  PERP: "Perpetual Protocol", 
-  PLA: "PlayDapp", 
-  PLU: "Pluton", 
-  DOT: "Polkadot", 
+  PAX: "Paxos Standard",
+  PERP: "Perpetual Protocol",
+  PLA: "PlayDapp",
+  PLU: "Pluton",
+  DOT: "Polkadot",
   POLS: "Polkastarter",
-  MATIC: "Polygon", 
-  POLY: "Polymath", 
-  NCT: "Polyswarm", 
-  POWR: "Powerledger", 
-  PRO: "Propy", 
-  QNT: "Quant", 
-  QUICK: "QuickSwap", 
-  RAD: "Radicle", 
-  RAI: "Rai Reflex Index", 
-  RLY: "Rally", 
-  RGT: "Rari Governance Token", 
-  RARI: "Rarible", 
-  REN: "Ren", 
-  REQ: "Request", 
-  RBN: "Ribbon Finance", 
-  FOX: "Shapeshift FOX Token", 
-  SHIB: "Shiba Inu", 
-  SHPING: "Shping Coin", 
-  SKL: "SKALE", 
-  SOL: "Solana", 
-  SPELL: "Spell Token", 
-  STX: "Stacks", 
-  XLM: "Stellar Lumens", 
+  MATIC: "Polygon",
+  POLY: "Polymath",
+  NCT: "Polyswarm",
+  POWR: "Powerledger",
+  PRO: "Propy",
+  QNT: "Quant",
+  QUICK: "QuickSwap",
+  RAD: "Radicle",
+  RAI: "Rai Reflex Index",
+  RLY: "Rally",
+  RGT: "Rari Governance Token",
+  RARI: "Rarible",
+  REN: "Ren",
+  REQ: "Request",
+  RBN: "Ribbon Finance",
+  FOX: "Shapeshift FOX Token",
+  SHIB: "Shiba Inu",
+  SHPING: "Shping Coin",
+  SKL: "SKALE",
+  SOL: "Solana",
+  SPELL: "Spell Token",
+  STX: "Stacks",
+  XLM: "Stellar Lumens",
   STORJ: "STORJ",
   SUKU: "SUKU",
-  SUPER: "SuperFarm", 
-  SUSHI: "SushiSwap", 
-  SNX: "Synthetix Network Token", 
-  TBTC: "tBTC", 
-  TRB: "Tellor", 
-  UST: "TerraUSD", 
-  USDT: "Tether", 
-  XTZ: "Tezos", 
-  GRT: "The Graph", 
-  TRIBE: "Tribe", 
-  TRU: "TrueFi", 
+  SUPER: "SuperFarm",
+  SUSHI: "SushiSwap",
+  SNX: "Synthetix Network Token",
+  TBTC: "tBTC",
+  TRB: "Tellor",
+  UST: "TerraUSD",
+  USDT: "Tether",
+  XTZ: "Tezos",
+  GRT: "The Graph",
+  TRIBE: "Tribe",
+  TRU: "TrueFi",
   UMA: "UMA",
-  UNFI: "Unifi Protocol DAO", 
-  UNI: "Uniswap", 
-  USDC: "USD Coin", 
-  VGX: "Voyager Token", 
-  WBTC: "Wrapped Bitcoin", 
-  wCFG: "Wrapped Centrifuge", 
-  WLUNA: "Wrapped LUNA", 
+  UNFI: "Unifi Protocol DAO",
+  UNI: "Uniswap",
+  USDC: "USD Coin",
+  VGX: "Voyager Token",
+  WBTC: "Wrapped Bitcoin",
+  wCFG: "Wrapped Centrifuge",
+  WLUNA: "Wrapped LUNA",
   XYO: "XYO Network",
-  YFI: "yearn.finance", 
-  ZEC: "Zcash" 
-}
+  YFI: "yearn.finance",
+  ZEC: "Zcash",
+};

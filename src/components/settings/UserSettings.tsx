@@ -333,7 +333,7 @@ export default function UserSettings() {
                         data: { field: "prefuser", val },
                       })
                     }
-                    style={{ width: 300}}
+                    style={{ width: 300 }}
                     fieldName="prefusername"
                     setError={(val: any) =>
                       dispatch({
@@ -379,7 +379,7 @@ export default function UserSettings() {
                         data: { field: "error", val },
                       })
                     }
-                    style={{ width: 300}}
+                    style={{ width: 300 }}
                     fieldName="email"
                     post={
                       <OtpDialogue
@@ -394,12 +394,8 @@ export default function UserSettings() {
                           })
                         }
                         email={email}
-                        mob={parseFloat(
-                          countryCodeWithoutPlusSign + mobile
-                        )}
-                        im={parseFloat(
-                          countryCodeWithoutPlusSign + whatsapp
-                        )}
+                        mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
+                        im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
                         resendOtp={sendOtp}
                       />
                     }
@@ -416,7 +412,7 @@ export default function UserSettings() {
                         data: { field: "mobile", val },
                       })
                     }
-                    style={{ width: 300}}
+                    style={{ width: 300 }}
                     fieldName="mobile"
                     pattern="^[0-9]"
                     setError={(val: any) =>
@@ -434,9 +430,7 @@ export default function UserSettings() {
                           countryCode?.value + mobile
                         )}
                         action={"phone_number"}
-                        mob={parseFloat(
-                          countryCodeWithoutPlusSign + mobile
-                        )}
+                        mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
                         onClickAction={() =>
                           updateAccountTab(
                             mobile,
@@ -517,10 +511,7 @@ export default function UserSettings() {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane
-              className="settings-tabpane-view"
-              tab="Delete Account"
-              key="5">
+            <TabPane className="settings-tabpane-view" tab="Delete" key="5">
               <Row justify="start">
                 <Col>
                   <DeleteAccount />

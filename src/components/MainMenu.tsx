@@ -4,7 +4,7 @@ import {
   UserOutlined,
   PoweroffOutlined,
   MailOutlined,
-  CalculatorOutlined,
+  SettingOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { Auth, Hub } from "aws-amplify";
@@ -45,21 +45,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
   return userChecked ? (
     <>
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
-        <SubMenu
-          key="calcs"
-          title=""
-          icon={
-            isPublicCalc() ? (
-              <Avatar
-                size="large"
-                icon={<CalculatorOutlined />}
-                style={{ backgroundColor: COLORS.GREEN }}
-              />
-            ) : (
-              <CalculatorOutlined />
-            )
-          }
-        >
+        <SubMenu key="calcs" title="Calculate">
           {calcList.map(({ name, link }, index: number) =>
             menuItem(name, link, selectedKey, null, link + index, true)
           )}
@@ -71,29 +57,28 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
             <Menu.Item key="Grow" disabled>
               Grow
             </Menu.Item>
-            {menuItem(
-              "",
-              ROUTES.SETTINGS,
-              selectedKey,
-              user?.attributes?.picture ? (
-                <Avatar size="large" src={user?.attributes.picture} />
-              ) : selectedKey === ROUTES.SETTINGS ? (
-                <Avatar
-                  size="large"
-                  icon={<UserOutlined />}
-                  style={{
-                    backgroundColor: COLORS.GREEN,
-                  }}
-                />
-              ) : (
-                <UserOutlined />
-              )
-            )}
-            <Menu.Item
-              key="logout"
-              icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
-              onClick={handleLogout}
-            />
+            <SubMenu
+              key="settingsmenu"
+              icon={
+                user?.attributes?.picture ? (
+                  <Avatar size="large" src={user?.attributes.picture} />
+                ) : (
+                  <UserOutlined />
+                )
+              }>
+              {menuItem(
+                "Settings",
+                ROUTES.SETTINGS,
+                selectedKey,
+                <SettingOutlined />
+              )}
+              <Menu.Item
+                key="logout"
+                icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
+                onClick={handleLogout}>
+                Logout
+              </Menu.Item>
+            </SubMenu>
           </Fragment>
         ) : null}
         {menuItem(

@@ -61,7 +61,10 @@ export default function BasicPage(props: BasicPageProps) {
         />
         <meta name="application-name" content="Moneo" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="description" content="Your family's financial coach" />
+        <meta
+          name="description"
+          content="Your family financial coach that champions your goals"
+        />
         <meta
           name="Personal finance management app"
           content="Automated Banking, Investing and Financial Planning, Moneo, Finance coach, Money Coach,
@@ -69,12 +72,15 @@ Personal finance for Millennial, personal finance advisor, personal finance, Dig
 personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
 finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA, Neo Banking India"
         />
-        <meta property="og:title" content="Moneo - Get. Set. Grow." />
+        <meta
+          property="og:title"
+          content="Moneo - Get &#8594; Set &#8594; Grow"
+        />
         <meta
           property="og:description"
           content="
           Hello! 🖐 
-          I just got up to $200 credit for Stress-free Financial Independence and Achieving My Goals! 😄
+          I just signed up for worry-free financial independence! 😄
           Did You? 😎"
         />
         <meta
@@ -91,7 +97,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="twitter:title" content="Moneo" />
         <meta
           name="twitter:description"
-          content="Your Money Coach for Stress-free Financial Independence & Achieving Goals."
+          content="Your family financial coach that champions your goals."
         />
         <meta
           name="twitter:image"
