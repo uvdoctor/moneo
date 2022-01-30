@@ -6,7 +6,8 @@
     "resourceNameTruncated": "moneobacb277e",
     "userPoolName": "moneobacb277e_userpool_bacb277e",
     "autoVerifiedAttributes": [
-      "email", "phone_number"
+      "email",
+      "phone_number"
     ],
     "mfaConfiguration": "OPTIONAL",
     "mfaTypes": [
@@ -87,8 +88,7 @@
     "triggers": {},
     "hostedUI": false,
     "userPoolGroupList": [
-      "free",
-      "paid"
+      "temp"
     ],
     "serviceName": "Cognito",
     "useEnabledMfas": false,

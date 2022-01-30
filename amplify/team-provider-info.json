@@ -58,12 +58,6 @@
           "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion50367227-build.zip"
         }
       },
-      "interactions": {
-        "scheduler": {
-          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/scheduler-596f54744d6867517132-build.zip"
-        }
-      },
       "auth": {
         "moneobacb277ebacb277e": {}
       }

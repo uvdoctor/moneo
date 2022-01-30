@@ -251,36 +251,8 @@
     "usercontent": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "moneobacb277ebacb277e",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
-          "attributes": [
-            "freeGroupRole"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
-          "attributes": [
-            "paidGroupRole"
-          ]
-        }
-      ]
+      "dependsOn": []
     }
   },
-  "interactions": {
-    "scheduler": {
-      "service": "Lex",
-      "providerPlugin": "awscloudformation",
-      "build": true
-    }
-  }
+  "interactions": {}
 }

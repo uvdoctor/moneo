@@ -8,17 +8,5 @@
     "CREATE_AND_UPDATE",
     "READ",
     "DELETE"
-  ],
-  "groupAccess": {
-    "free": [
-      "CREATE_AND_UPDATE",
-      "READ",
-      "DELETE"
-    ],
-    "paid": [
-      "CREATE_AND_UPDATE",
-      "READ",
-      "DELETE"
-    ]
-  }
+  ]
 }

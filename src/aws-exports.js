@@ -36,14 +36,6 @@ const awsmobile = {
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_user_files_s3_bucket": "usercontent104733-dev",
     "aws_user_files_s3_bucket_region": "us-east-1",
-    "aws_bots": "enable",
-    "aws_bots_config": [
-        {
-            "name": "ScheduleAppointment_dev",
-            "alias": "$LATEST",
-            "region": "us-east-1"
-        }
-    ],
     "aws_cognito_login_mechanisms": [
         "PREFERRED_USERNAME"
     ]

@@ -1,8 +1,7 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
         "userPoolGroups": {
-            "freeGroupRole": "string",
-            "paidGroupRole": "string"
+            "tempGroupRole": "string"
         },
         "moneobacb277ebacb277e": {
             "IdentityPoolId": "string",
@@ -88,13 +87,6 @@ export type AmplifyDependentResourcesAttributes = {
         "usercontent": {
             "BucketName": "string",
             "Region": "string"
-        }
-    },
-    "interactions": {
-        "scheduler": {
-            "Region": "string",
-            "BotName": "string",
-            "FunctionArn": "string"
         }
     }
 }

@@ -1,10 +1,6 @@
 [
   {
-    "groupName": "free",
+    "groupName": "temp",
     "precedence": 1
-  },
-  {
-    "groupName": "paid",
-    "precedence": 2
   }
 ]
