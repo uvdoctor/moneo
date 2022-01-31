@@ -17,14 +17,14 @@ import Category from './Category';
 import Amount from './Amount';
 import DateColumn from './DateColumn';
 import { toHumanFriendlyCurrency } from '../utils';
-import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
-import SelectInput from '../form/selectinput';
+import { DeleteOutlined } from '@ant-design/icons';
 import { calculateCompundingIncome } from './valuationutils';
 import { AppContext } from '../AppContext';
 import Rate from './Rate';
 import Contribution from './Contribution';
 import Comment from './Comment';
 import LabelWithTooltip from '../form/LabelWithTooltip';
+import MemberInput from './MemberInput';
 require('./ListHoldings.less');
 
 interface ListHoldingsProps {
@@ -129,15 +129,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		}
 		if (Object.keys(getFamilyOptions(allFamily)).length > 1) {
 			dataToRender.fid = (
-				<Fragment>
-					<LabelWithTooltip label={<UserOutlined />} />
-					<SelectInput
-						pre=""
-						value={holding.fId}
-						options={getFamilyOptions(allFamily)}
-						changeHandler={(key: string) => changeOwner(key, i)}
-					/>
-				</Fragment>
+				<MemberInput value={holding.fId} changeHandler={(key: string)=>changeOwner(key, i)} pre/>
 			);
 		}
 		if (hasName(childTab)) {

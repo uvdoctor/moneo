@@ -6,6 +6,7 @@ import LabelWithTooltip from "./LabelWithTooltip";
 interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
+	style?: object;
 	pre: string | ReactNode;
 	post?: ReactNode;
 	options?: any;
@@ -25,6 +26,7 @@ export default function SelectInput(props: SelectInputProps) {
 			<LabelWithTooltip label={props.pre} info={props.info} />
 			<Select
 				showSearch
+				style={props.style}
 				optionFilterProp="children"
 				value={props.currency ? props.value : selectOptions[props.value]}
 				onChange={(value: string) => props.changeHandler(value)}

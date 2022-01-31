@@ -29,18 +29,17 @@ import { extractPAN, getQty } from "./parseutils";
 import { includesAny } from "../utils";
 import {
   addMemberIfNeeded,
-  getFamilyOptions,
   isBond,
   isFund,
   loadMatchingINBond,
   loadMatchingINExchange,
   loadMatchingINMutual,
 } from "./nwutils";
-import SelectInput from "../form/selectinput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import HSwitch from "../HSwitch";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import MemberInput from "./MemberInput";
 
 export default function UploadHoldings() {
   const {
@@ -421,16 +420,12 @@ export default function UploadHoldings() {
                   {taxId ? (
                     <strong>{taxId}</strong>
                   ) : (
-                    <SelectInput
-                      pre=""
+                    <MemberInput 
                       value={memberKey ? memberKey : "Select a Member"}
-                      options={getFamilyOptions(allFamily)}
                       changeHandler={(key: string) => {
                         setMemberKey(key);
                         setError("");
-                      }}
-                    />
-                  )}
+                      }}/> )}
                 </Col>
                 <Col>
                   <Badge count={uploadedInstruments.length} />
