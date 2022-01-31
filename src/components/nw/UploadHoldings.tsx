@@ -283,6 +283,7 @@ export default function UploadHoldings() {
           console.log("Detected end: ", value);
           eof = true;
         }
+        if (value.length > 50) continue;
         if (
           holdingStarted &&
           includesAny(value, [
@@ -293,6 +294,7 @@ export default function UploadHoldings() {
             "txn:",
             "mode of",
             "nominee",
+            "total expense ratio",
           ])
         ) {
           console.log("Ending holdings: ", value);
@@ -300,7 +302,6 @@ export default function UploadHoldings() {
           holdingStarted = false;
           continue;
         }
-        if (value.length > 50) continue;
         if (!holdingStarted) {
           holdingStarted = includesAny(value, [
             "holding",

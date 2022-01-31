@@ -99,13 +99,8 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
 function NWContextProvider({ fxRates }: any) {
-  const {
-    defaultCurrency,
-    owner,
-    appContextLoaded,
-    discountRate,
-    userInfo,
-  }: any = useContext(AppContext);
+  const { defaultCurrency, owner, discountRate, userInfo }: any =
+    useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [preciousMetals, setPreciousMetals] = useState<Array<HoldingInput>>([]);
@@ -553,7 +548,7 @@ function NWContextProvider({ fxRates }: any) {
     initializeHoldings().then(() => {
       setLoadingHoldings(false);
     });
-  }, [appContextLoaded]);
+  }, [owner]);
 
   useEffect(() => {
     setNW(totalAssets - totalLiabilities);
