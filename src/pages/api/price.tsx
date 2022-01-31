@@ -14,8 +14,9 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		fetch(`https://api.coinbase.com/v2/prices/${id}-${currency}/sell`)
 			.then((data) =>
 				data.json().then((response) => {
+					const amount = response.data.amount
 					console.log(response.data.amount);
-					res.status(200).json({ rate: response.data.amount });
+					res.status(200).json({ rate: amount });
 				})
 			)
 			.catch((err) => {

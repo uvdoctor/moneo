@@ -128,7 +128,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		}
 		if (Object.keys(familyOptions).length > 1) {
 			dataToRender.fid = (
-				<MemberInput value={holding.fId} changeHandler={(key: string)=>changeOwner(key, i)} pre/>
+				<MemberInput value={holding.fId} changeHandler={(key: string) => changeOwner(key, i)} pre />
 			);
 		}
 		if (hasName(childTab)) {
@@ -166,21 +166,26 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 
 	useEffect(
 		() => {
-			let dataSource: Array<any> = [];
-			setDataSource([...[]])
-			data.map((holding: HoldingInput, index: number) => {
-				if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-					calculateValuation(childTab, holding, userInfo, discountRate, selectedCurrency, npsData, fxRates)
-						.then((valuation) => {
-							dataSource.push(getAllData(holding, index, valuation));
-							setDataSource([ ...dataSource ]);
-						})
-						.catch(() => {
-							dataSource.push(getAllData(holding, index, 0));
-							setDataSource([ ...dataSource ]);
-						});
+			const getData = async () => {
+				let dataSource: Array<any> = [];
+				setDataSource([ ...[] ]);
+				for (let index = 0; index < data.length; index++) {
+					if (data[index] && doesHoldingMatch(data[index], selectedMembers, selectedCurrency)) {
+						const valuation = await calculateValuation(
+							childTab,
+							data[index],
+							userInfo,
+							discountRate,
+							selectedCurrency,
+							npsData,
+							fxRates
+						);
+						dataSource.push(getAllData(data[index], index, valuation));
+						setDataSource([ ...dataSource ]);
+					}
 				}
-			});
+			};
+			getData();
 		},
 		[ data, selectedMembers, selectedCurrency, discountRate, familyOptions ]
 	);
