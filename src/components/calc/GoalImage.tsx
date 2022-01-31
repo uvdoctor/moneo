@@ -47,7 +47,7 @@ export default function GoalImage() {
         const prevGoalImgKey = goalImgKey;
         setGoalImgKey(key);
         setGoalImgUrl(url);
-        if (goal.img !== prevGoalImgKey && !isImageShared) await goalImgStorage.removeGoalImg(prevGoalImgKey);
+        if (goal.img !== prevGoalImgKey && !isImageShared && prevGoalImgKey) await goalImgStorage.removeGoalImg(prevGoalImgKey);
         inputEl.current.value = "";
       }
     } catch (error) {
