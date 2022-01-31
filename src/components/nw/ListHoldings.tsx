@@ -176,8 +176,10 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	useEffect(
 		() => {
 			let dataSource: Array<any> = [];
+			setDataSource([...[]])
 			data.map((holding: HoldingInput, index: number) => {
-				if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+					console.log(1);
 					calculateValuation(childTab, holding, userInfo, discountRate, selectedCurrency, npsData, fxRates)
 						.then((valuation) => {
 							dataSource.push(getAllData(holding, index, valuation));

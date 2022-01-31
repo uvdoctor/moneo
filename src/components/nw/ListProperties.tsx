@@ -158,6 +158,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 	useEffect(
 		() => {
 			let dataSource: Array<any> = [];
+			setDataSource([ ...[] ]);
 			for (let i = 0; i < data.length; ++i) {
 				if (!doesPropertyMatch(data[i], selectedMembers, selectedCurrency)) continue;
 				const valuation = calculateProperty(data[i]);
