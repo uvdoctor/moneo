@@ -179,7 +179,6 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			setDataSource([...[]])
 			data.map((holding: HoldingInput, index: number) => {
 				if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-					console.log(1);
 					calculateValuation(childTab, holding, userInfo, discountRate, selectedCurrency, npsData, fxRates)
 						.then((valuation) => {
 							dataSource.push(getAllData(holding, index, valuation));
