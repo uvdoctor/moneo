@@ -2,7 +2,7 @@ import { Button, Col, Empty, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { PropertyInput, PropertyType } from '../../api/goals';
 import { NWContext } from './NWContext';
-import { doesPropertyMatch, getFamilyOptions } from './nwutils';
+import { doesPropertyMatch } from './nwutils';
 import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from '../utils';
 import { getCompoundedIncome } from '../calc/finance';
@@ -27,7 +27,7 @@ interface ListPropertiesProps {
 }
 
 export default function ListProperties({ data, changeData, categoryOptions, fields }: ListPropertiesProps) {
-	const { selectedCurrency, allFamily, selectedMembers }: any = useContext(NWContext);
+	const { selectedCurrency, selectedMembers, familyOptions }: any = useContext(NWContext);
 	const [ indexForMv, setIndexForMv ] = useState<number | null>(null);
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
 	const [ isEditMode, setIsEditMode ] = useState<boolean>(false);
@@ -134,7 +134,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 							</Col>
 						</Row>
 					</Col>
-					{Object.keys(getFamilyOptions(allFamily)).length > 1 && (
+					{Object.keys(familyOptions).length > 1 && (
 						<Col xs={24} sm={12} md={8}>
 							<Row gutter={[ 0, 10 ]}>
 								<Col xs={24}>
@@ -214,7 +214,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 			}
 			setDataSource([ ...dataSource ]);
 		},
-		[ data, selectedMembers, selectedCurrency, isEditMode ]
+		[ data, selectedMembers, selectedCurrency, isEditMode, familyOptions ]
 	);
 
 	return dataSource.length ? (

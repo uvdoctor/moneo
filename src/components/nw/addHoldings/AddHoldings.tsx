@@ -5,7 +5,6 @@ import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
 import { NWContext, TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
-import { getFamilyOptions } from '../nwutils';
 import MenuItem from 'antd/lib/menu/MenuItem';
 import { InstrumentInput } from '../../../api/goals';
 require('./AddHoldings.less');
@@ -30,7 +29,7 @@ export default function AddHoldings({
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>({});
-	const { setInstruments, instruments, childTab, saveHoldings, isDirty, allFamily }: any = useContext(NWContext);
+	const { setInstruments, instruments, childTab, saveHoldings, isDirty, familyOptions }: any = useContext(NWContext);
 	const [ instrumentsList, setInstrumentsList ] = useState<Array<any>>([]);
 	const { STOCK, GOLDB, BOND, REIT, OIT, ETF, MF, PROP } = TAB;
 
@@ -38,7 +37,7 @@ export default function AddHoldings({
 		setModalVisibility(false);
 	};
 
-	const familyList = Object.keys(getFamilyOptions(allFamily));
+	const familyList = Object.keys(familyOptions);
 	const hasInstruments = (childTab: string) => [ MF, STOCK, GOLDB, BOND, REIT, OIT, ETF ].includes(childTab);
 
 	const addHolding = () => {
@@ -81,9 +80,9 @@ export default function AddHoldings({
 
 	const menu = (
 		<Menu onClick={handleMenuClick}>
-			{Object.keys(getFamilyOptions(allFamily)).map((key: string) => (
+			{Object.keys(familyOptions).map((key: string) => (
 				<MenuItem key={key} icon={<UserOutlined />}>
-					{getFamilyOptions(allFamily)[key]}
+					{familyOptions[key]}
 				</MenuItem>
 			))}
 		</Menu>

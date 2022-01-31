@@ -190,6 +190,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalLtdep, setTotalLtdep] = useState<number>(0);
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
+  const [familyOptions, setFamilyOptions] = useState<Object>({});
 
   const loadNPSSubCategories = async () => {
     // @ts-ignore
@@ -970,6 +971,8 @@ function NWContextProvider({ fxRates }: any) {
         familyMemberKeys,
         setFamilyMemberKeys,
         fxRates,
+        familyOptions,
+        setFamilyOptions
       }}>
       <NWView />
     </NWContext.Provider>

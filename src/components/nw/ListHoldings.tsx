@@ -5,7 +5,6 @@ import { NWContext, TAB } from './NWContext';
 import {
 	calculateValuation,
 	doesHoldingMatch,
-	getFamilyOptions,
 	hasDate,
 	hasminimumCol,
 	hasName,
@@ -34,7 +33,7 @@ interface ListHoldingsProps {
 	fields: any;
 }
 export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
-	const { selectedMembers, selectedCurrency, childTab, allFamily, npsData, fxRates }: any = useContext(NWContext);
+	const { selectedMembers, selectedCurrency, childTab, npsData, fxRates, familyOptions }: any = useContext(NWContext);
 	const { discountRate, userInfo }: any = useContext(AppContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
@@ -58,7 +57,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 	let expandedColumns: Array<string> = [];
 	if (hasminimumCol(childTab)) {
 		defaultColumns = [ 'amount', 'label', 'del' ];
-		expandedColumns = Object.keys(getFamilyOptions(allFamily)).length > 1 ? [ 'fid' ] : [];
+		expandedColumns = Object.keys(familyOptions).length > 1 ? [ 'fid' ] : [];
 	} else if (childTab === OTHER) {
 		defaultColumns = [ 'amount', 'type', 'del' ];
 		expandedColumns = [ 'label', 'fid' ];
@@ -127,7 +126,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
 			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={fields.rate} data={data} />;
 		}
-		if (Object.keys(getFamilyOptions(allFamily)).length > 1) {
+		if (Object.keys(familyOptions).length > 1) {
 			dataToRender.fid = (
 				<MemberInput value={holding.fId} changeHandler={(key: string)=>changeOwner(key, i)} pre/>
 			);
@@ -183,7 +182,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 				}
 			});
 		},
-		[ data, selectedMembers, selectedCurrency, discountRate ]
+		[ data, selectedMembers, selectedCurrency, discountRate, familyOptions ]
 	);
 
 	return dataSource.length ? (
