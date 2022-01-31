@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NWContext, TAB } from './NWContext';
 import CascaderInput from '../form/CascaderInput';
 import { getRateByCategory, hasOnlyCategory } from './nwutils';
@@ -30,15 +30,38 @@ export default function Category({
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, INS, LTDEP, PF, P2P, LENT, PROP } = TAB;
 	const isListHolding: boolean = setCategory && category ? false : true;
-	const parentValue = isListHolding
-		? childTab === PROP
-			? record.type
-			: childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
-		: category;
-	const childValue = hasOnlyCategory(childTab)
-		? ''
-		: isListHolding ? (childTab === INS || childTab === LENT ? record.chgF : record.name) : subCategory;
+	const [ parentValue, setParentValue ] = useState<string>(
+		isListHolding && record
+			? childTab === PROP
+				? record.type
+				: childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
+			: category
+	);
+	const [ childValue, setChildValue ] = useState<string>(
+		hasOnlyCategory(childTab)
+			? ''
+			: isListHolding ? (childTab === INS || childTab === LENT ? record.chgF : record.name) : subCategory
+	);
+
 	const type = isListHolding ? record.subt : parentValue;
+
+	useEffect(
+		() => {
+			setParentValue(
+				isListHolding && record
+					? childTab === PROP
+						? record.type
+						: childTab === CRYPTO ? record.name : childTab === P2P ? record.chgF : record.subt
+					: category
+			);
+			setChildValue(
+				hasOnlyCategory(childTab)
+					? ''
+					: isListHolding ? (childTab === INS || childTab === LENT ? record.chgF : record.name) : subCategory
+			);
+		},
+		[ record, childTab ]
+	);
 
 	const changeCategory = (value: any) => {
 		setCategory && setCategory(value);

@@ -1,11 +1,11 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { OwnershipInput, PropertyInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
-import SelectInput from '../form/selectinput';
 import { PlusOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Tooltip } from 'antd';
-import { getDefaultMember, getFamilyOptions } from './nwutils';
+import { getDefaultMember } from './nwutils';
 import { NWContext } from './NWContext';
+import MemberInput from './MemberInput';
 
 interface OwnerProps {
 	data?: Array<PropertyInput>;
@@ -50,18 +50,15 @@ export default function Owner({ data, changeData, record, owner, setOwner }: Own
 										step={0.1}
 										unit="%"
 										addBefore={
-											<SelectInput
-												pre={''}
-												value={own.fId as string}
-												options={getFamilyOptions(allFamily)}
-												changeHandler={(key: string) => {
-													setMemberKey(key);
-													own.fId = key;
-													setOwner && owner && setOwner([ ...owner ]);
-													isListProperties && data
-														? changeData([ ...data ])
-														: changeData(record);
-												}}
+											<MemberInput value={own.fId as string} changeHandler={(key: string) => {
+												setMemberKey(key);
+												own.fId = key;
+												setOwner && owner && setOwner([ ...owner ]);
+												isListProperties && data
+													? changeData([ ...data ])
+													: changeData(record);
+											}}
+											style={{ width: '125px' }}
 											/>
 										}
 									/>

@@ -39,8 +39,9 @@ export default function ImageInput({ user }: ImageInputProps) {
           goalImgStorage.validateImg(file);
           const result: any = await goalImgStorage.storeGoalImg(file);
           const url = await goalImgStorage.getUrlFromKey(result.key);
-          if (user?.attributes.profile !== result.key)
+          if (user?.attributes?.profile && user?.attributes.profile !== result.key) {
             await goalImgStorage.removeGoalImg(user?.attributes.profile);
+          }
           await updateProfile(url, result.key);
           inputEl.current.value = "";
           setLoader(false);

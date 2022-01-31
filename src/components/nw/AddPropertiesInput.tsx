@@ -12,7 +12,6 @@ import Comment from './Comment';
 import DateColumn from './DateColumn';
 import MarketValue from './MarketValue';
 import { NWContext } from './NWContext';
-import { getFamilyOptions } from './nwutils';
 import Owner from './Owner';
 import Pincode from './Pincode';
 import Rate from './Rate';
@@ -26,7 +25,7 @@ interface AddPropertiesInputProps {
 }
 
 export default function AddPropertyInput({ setInput, categoryOptions, fields }: AddPropertiesInputProps) {
-	const { allFamily, selectedCurrency }: any = useContext(NWContext);
+	const { selectedCurrency, familyOptions }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<PropertyType>(PropertyType.P);
 	const [ own, setOwn ] = useState<Array<OwnershipInput>>([]);
 	const [ pin, setPin ] = useState<string>('');
@@ -62,8 +61,8 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 			state: state,
 			city: city,
 			own:
-				Object.keys(getFamilyOptions(allFamily)).length === 1
-					? [ { fId: Object.keys(getFamilyOptions(allFamily))[0], per: 100 } ]
+				Object.keys(familyOptions).length === 1
+					? [ { fId: Object.keys(familyOptions)[0], per: 100 } ]
 					: own,
 			rate: rate,
 			mv: mv,
@@ -77,7 +76,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 
 	useEffect(() => {
 		if (!own.length) {
-			own.push({ fId: Object.keys(getFamilyOptions(allFamily))[0], per: 100 });
+			own.push({ fId: Object.keys(familyOptions)[0], per: 100 });
 			setOwn([ ...own ]);
 			let rec = getNewRec();
 			rec.own = own;
@@ -230,7 +229,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							name={name}
 						/>
 					</Col>
-					{Object.keys(getFamilyOptions(allFamily)).length > 1 &&
+					{Object.keys(familyOptions).length > 1 &&
 					own &&
 					own[0] && (
 						<Fragment>
