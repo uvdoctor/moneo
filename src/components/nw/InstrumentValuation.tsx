@@ -98,8 +98,7 @@ export default function InstrumentValuation() {
     },
   ];
 
-  const handleChange = (_pagination: any, filters: any, _sorters: any) =>
-    setFilteredInfo(filters);
+  const handleChange = (_pagination: any, filters: any, _sorters: any) => setFilteredInfo({id:filters[childTab]});
 
   const subtTagsData = () => {
     // @ts-ignore
@@ -155,13 +154,8 @@ export default function InstrumentValuation() {
     let ids: Set<string> = new Set();
     filteredInstruments.forEach((instrument: InstrumentInput) => {
       const id = instrument.id;
-      if (!ids.has(id)) {
-        filteredNames.push({
-          text: insData[id] ? insData[id].name : id,
-          value: id,
-        });
-      }
-      ids.add(id);
+      if (!ids.has(id)) filteredNames.push({ text: insData[id] ? insData[id].name : id, value: id });
+			ids.add(id);
     });
     setNameFilterValues([...filteredNames]);
   }, [filteredInstruments]);
