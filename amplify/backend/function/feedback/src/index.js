@@ -38,5 +38,6 @@ const processData = async (data) => {
 };
 
 exports.handler = async (event) => {
+	console.log(JSON.stringify(event, null, 2));
 	return await processData(event.Records);
 };
