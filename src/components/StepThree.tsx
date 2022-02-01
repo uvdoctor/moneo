@@ -2,9 +2,8 @@ import React, { Fragment } from "react";
 import { Alert, Checkbox, Col, Form, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
-import SelectInput from "./form/selectinput";
-import { getRiskProfileOptions } from "./utils";
 import TaxLiabilityInput from "./TaxLiabilityInput";
+import RiskProfile from "./RiskProfile";
 
 interface StepThreeProps {
   riskProfile: string;
@@ -33,14 +32,7 @@ export default function StepThree(props: StepThreeProps) {
       </Row>
       <Row gutter={[0, 20]}>
         <Col xs={24} sm={12} md={12} lg={12}>
-          <SelectInput
-            info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-            pre="Can Tolerate"
-            unit="Loss"
-            value={props.riskProfile}
-            changeHandler={props.setRiskProfile}
-            options={getRiskProfileOptions()}
-          />
+          <RiskProfile value={props.riskProfile} changeHandler={props.setRiskProfile}/>
         </Col>
         <Col xs={24} sm={12} md={12} lg={12}>
           <TaxLiabilityInput value={props.taxLiability} changeHandler={props.setTaxLiability}/>

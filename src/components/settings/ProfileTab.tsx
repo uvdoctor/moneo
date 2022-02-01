@@ -1,11 +1,11 @@
 import { Col, Form, Row } from 'antd';
 import React, { useContext } from 'react';
-import { getRiskProfileOptions } from '../utils';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import RadioInput from '../form/RadioInput';
 import { AppContext } from '../AppContext';
 import TaxLiabilityInput from '../TaxLiabilityInput';
+import RiskProfile from '../RiskProfile';
 
 interface ProfileTabProps {
 	isDrManual: boolean;
@@ -65,17 +65,13 @@ export default function ProfileTab({ isDrManual, notify, riskProfile, tax, dispa
 					<FormItem label={''}>
 						<Row>
 							<Col>
-								<SelectInput
-									info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-									pre="Can Tolerate"
-									unit="Loss"
+								<RiskProfile
 									value={riskProfile}
 									changeHandler={(val: string) =>
 										dispatch({
 											type: 'single',
 											data: { field: 'riskProfile', val }
 										})}
-									options={getRiskProfileOptions()}
 								/>
 							</Col>
 						</Row>

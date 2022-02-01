@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import { CalcContext } from '../calc/CalcContext';
 import DateInput from '../form/DateInput';
 import Section from '../form/section';
-import SelectInput from '../form/selectinput';
+import RiskProfile from '../RiskProfile';
 import TaxLiabilityInput from '../TaxLiabilityInput';
-import { getRiskProfileOptions } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 
 export default function FIUserDetails() {
@@ -23,14 +22,7 @@ export default function FIUserDetails() {
 				endValue={nowYear - 15}
 			/>
 			<TaxLiabilityInput value={taxLiability} changeHandler={setTaxLiability} />
-			<SelectInput
-				info="How much risk are you willing to take in order to achieve higher investment return?"
-				pre="Can tolerate"
-				unit="loss"
-				value={riskProfile}
-				changeHandler={setRiskProfile}
-				options={getRiskProfileOptions()}
-			/>
+			<RiskProfile value={riskProfile} changeHandler={setRiskProfile}/>
 		</Section>
 	);
 }
