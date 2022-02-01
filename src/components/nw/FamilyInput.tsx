@@ -25,7 +25,7 @@ import {
   UpdateFamilyInput,
 } from "../../api/goals";
 import SelectInput from "../form/selectinput";
-import { getTaxLiabilityOptions } from "../utils";
+import TaxLiabilityInput from "../TaxLiabilityInput";
 
 export const ALL_FAMILY = "All";
 
@@ -248,13 +248,7 @@ export default function FamilyInput() {
               />
             </Col>
             <Col>
-              <SelectInput
-                info="How much do you earn in a year?"
-                pre="Yearly Income"
-                value={taxLiability}
-                changeHandler={setTaxLiability}
-                options={getTaxLiabilityOptions()}
-              />
+              <TaxLiabilityInput value={taxLiability} changeHandler={setTaxLiability}/>
             </Col>
             <Col>
               <TextInput

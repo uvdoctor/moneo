@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { toStringArr } from './utils';
 import DateInput from './form/DateInput';
-import RadialInput from './form/radialinput';
 import { Col, Row } from 'antd';
+import LifeExpectancy from './LifeExpectancy';
 
 interface StepTwoProps {
 	setDOB: Function;
@@ -38,16 +37,7 @@ export default function StepTwo({ setDOB, lifeExpectancy, setLifeExpectancy }: S
 				/>
 			</Col>
 			<Col span={24}>
-				<RadialInput
-					pre="Life Expectancy"
-					label="Years"
-					value={lifeExpectancy}
-					changeHandler={setLifeExpectancy}
-					step={1}
-					data={toStringArr(70, 100, 1)}
-					labelBottom
-					info="This will be used to define the duration for which Financial Planning is Needed."
-				/>
+				<LifeExpectancy value={lifeExpectancy} changeHandler={setLifeExpectancy} />
 			</Col>
 		</Row>
 	);
