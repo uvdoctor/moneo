@@ -740,14 +740,14 @@ export const getFieldsAndInfo = (tab: string) => {
         type: "Type",
         name: "Comment",
         amount: "Amount",
-        date: "Start Date",
+        date: "Start Date & Maturity Date",
         rate: "Rate",
         duration: "Duration",
       },
       info: {
         type: "Long Term Deposit Types",
         amount: "Deposits Amount",
-        date: "Enter the start date",
+        date: "Date Range",
         rate: "Interest Rate",
         duration: "Number of duration",
       }

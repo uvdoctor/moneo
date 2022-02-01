@@ -93,8 +93,8 @@ export default function MemberAndValuation({
 
 	return (
 		<DateInput
-			title={pre}
-			info={info}
+			title={record.subt === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" :  pre}
+			info={record.subt === NATIONAL_SAVINGS_CERTIFICATE ? "Start Date" :  info}
 			startMonthHandler={changeStartMonth}
 			startYearHandler={changeStartYear}
 			endMonthHandler={isRangePicker(childTab, record.subt as string) ? changeEndMonth : undefined}
