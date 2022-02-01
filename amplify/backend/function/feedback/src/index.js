@@ -6,24 +6,30 @@ const subject = {
 	Q: 'Question'
 };
 
-exports.handler = (event) => {
-	event.Records.forEach((record) => {
+const processData = async (data) => {
+	console.log(data);
+	for (record of data) {
 		if (record.eventName == 'INSERT') {
-			const { name, email, feedback, type, uname } = record.dynamodb.NewImage;
+			const data = record.dynamodb.NewImage;
+			console.log(data);
+			const { name, email, feedback, type, uname } = data;
 			const firstName = name.M.fn ? name.M.fn.S : '';
 			const lastName = name.M.ln ? name.M.ln.S : '';
 			const template = `<html>
       <body>
         <h3>${firstName} ${lastName}</h3>
         <div>
-					<p>User:- ${uname.S ? "Registered" : "Not Registered"}</p>
+					<p>User:- ${uname.S ? 'Registered' : 'Not Registered'}</p>
           <p>Email: -${email.S}</p>
           <p>${feedback.S}</p>
         </div>
       </body>
       </html>`;
-			sendMail(template, subject[type.S], ['emailumangdoctor@gmail.com'], 'no-reply@moneo.money');
+			await sendMail(template, subject[type.S], [ 'emailumangdoctor@gmail.com' ], 'no-reply@moneo.money');
 		}
-	});
-	return Promise.resolve('Successfully processed DynamoDB record');
+	}
+};
+
+exports.handler = async (event) => {
+	return await processData(event.Records);
 };
