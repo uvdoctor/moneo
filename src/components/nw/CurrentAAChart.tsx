@@ -50,7 +50,7 @@ export default function CurrentAAChart() {
     totalLiquidFunds,
     totalIntervalFunds,
     totalFMP,
-    totalStLendings
+    totalStLendings,
   }: any = useContext(NWContext);
   const [data, setData] = useState<Array<any>>([]);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
@@ -130,7 +130,10 @@ export default function CurrentAAChart() {
         Long-term cash includes
         <br />
         {buildValuationString("Long-term Schemes", totalLtdep)}
-        {buildValuationString("Long Term Deposits", totalLendings-totalStLendings)}
+        {buildValuationString(
+          "Long Term Deposits",
+          totalLendings - totalStLendings
+        )}
         {buildValuationString("PPF", totalPPF)}
         {buildValuationString("Employee PF", totalEPF)}
         {buildValuationString("Voluntary PF", totalVPF)}
@@ -140,10 +143,6 @@ export default function CurrentAAChart() {
     );
 
   const initChartData = () => {
-    if (!totalAssets) {
-      setData([...[]]);
-      return;
-    }
     setEmergencyInfo(buildEmergencyInfo());
     setLongTermInfo(buildLongTermInfo());
     let data: Array<any> = [];
@@ -225,14 +224,20 @@ export default function CurrentAAChart() {
   return totalAssets ? (
     <div className="container chart">
       <h3>
-        Total Asset Allocation of{" "}
-        {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}
+        {`Total allocation of ${toHumanFriendlyCurrency(
+          totalAssets,
+          selectedCurrency
+        )} by asset type`}
       </h3>
       <CashAA
         emergencyPer={((totalSavings + totalStLendings) / totalAssets) * 100}
         emergency={totalSavings + totalStLendings}
-        longTerm={totalLtdep+ totalLendings- totalStLendings  + totalPF}
-        longTermPer={((totalLtdep + totalLendings- totalStLendings + totalPF) / totalAssets) * 100}
+        longTerm={totalLtdep + totalLendings - totalStLendings + totalPF}
+        longTermPer={
+          ((totalLtdep + totalLendings - totalStLendings + totalPF) /
+            totalAssets) *
+          100
+        }
         currency={selectedCurrency}
         // @ts-ignore
         emergencyInfo={emergencyInfo}

@@ -59,7 +59,7 @@
         },
         "feedback": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/feedback-766e31786473366b2b6c-build.zip"
+          "s3Key": "amplify-builds/feedback-705a326a42506e4d6675-build.zip"
         }
       },
       "auth": {

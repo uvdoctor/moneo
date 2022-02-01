@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Badge, Col, Empty, Row, Skeleton, Tabs, Tooltip } from "antd";
 import { TAB, NWContext, LIABILITIES_TAB, LIABILITIES_VIEW } from "./NWContext";
 import AddHoldings from "./addHoldings/AddHoldings";
@@ -11,6 +11,7 @@ import InfoCircleOutlined from "@ant-design/icons/lib/icons/InfoCircleOutlined";
 import TabInfo from "./TabInfo";
 import CurrentAAChart from "./CurrentAAChart";
 import { getCascaderOptions, getNPSFundManagers, hasRate } from "./nwutils";
+import RiskAllocationChart from "./RiskAllocationChart";
 
 interface HoldingTabViewProps {
   liabilities?: boolean;
@@ -35,6 +36,9 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
   }: any = useContext(NWContext);
 
   const { TabPane } = Tabs;
+  const RISK_CHART = "Risk";
+  const ASSET_CHART = "Asset";
+  const [chartType, setChartType] = useState<string>(RISK_CHART);
 
   useEffect(() => {
     setActiveTab(
@@ -87,13 +91,22 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
         }>
         {isRoot && !liabilities && (
           <TabPane disabled={!totalAssets} key={TAB.SUMMARY} tab={TAB.SUMMARY}>
-            <CurrentAAChart />
+            <Tabs
+              activeKey={chartType}
+              type="line"
+              onChange={(activeKey) => setChartType(activeKey)}>
+              <TabPane key={RISK_CHART} tab={RISK_CHART}>
+                <RiskAllocationChart />
+              </TabPane>
+              <TabPane key={ASSET_CHART} tab={ASSET_CHART}>
+                <CurrentAAChart />
+              </TabPane>
+            </Tabs>
           </TabPane>
         )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;
-          const { label, children, info, link, total } =
-            tabsData[tabName];
+          const { label, children, info, link, total } = tabsData[tabName];
           const allTotal =
             activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
           const allocationPer =
@@ -153,9 +166,17 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                               )
                             : tabsData[tabName].categoryOptions
                         }
-                        fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
-                        info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
-                        defaultRate={hasRate(childTab) ? tabsData[tabName].rate : 0}
+                        fields={
+                          tabsData[tabName].fieldsAndInfo &&
+                          tabsData[tabName].fieldsAndInfo.fields
+                        }
+                        info={
+                          tabsData[tabName].fieldsAndInfo &&
+                          tabsData[tabName].fieldsAndInfo.info
+                        }
+                        defaultRate={
+                          hasRate(childTab) ? tabsData[tabName].rate : 0
+                        }
                       />
                     </Col>
                   </Row>
@@ -168,8 +189,14 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                           data={tabsData[tabName].data}
                           changeData={tabsData[tabName].setData}
                           categoryOptions={tabsData[tabName].categoryOptions}
-                          fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
-                          info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
+                          fields={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.fields
+                          }
+                          info={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.info
+                          }
                         />
                       ) : (
                         <ListHoldings
@@ -184,8 +211,14 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                                 )
                               : tabsData[tabName].categoryOptions
                           }
-                          fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
-                          info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
+                          fields={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.fields
+                          }
+                          info={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.info
+                          }
                         />
                       )
                     ) : (
