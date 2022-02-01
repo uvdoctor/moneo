@@ -50,6 +50,7 @@ export default function CurrentAAChart() {
     totalLiquidFunds,
     totalIntervalFunds,
     totalFMP,
+    totalStLendings
   }: any = useContext(NWContext);
   const [data, setData] = useState<Array<any>>([]);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
@@ -116,7 +117,7 @@ export default function CurrentAAChart() {
         Emergency cash includes
         <br />
         {buildValuationString("Savings", totalSavings)}
-        {buildValuationString("Deposits", totalLendings)}
+        {buildValuationString("Short Term Deposits", totalStLendings)}
         {buildValuationString("Liquid funds", totalLiquidFunds)}
       </>
     ) : (
@@ -129,6 +130,7 @@ export default function CurrentAAChart() {
         Long-term cash includes
         <br />
         {buildValuationString("Long-term Schemes", totalLtdep)}
+        {buildValuationString("Long Term Deposits", totalLendings-totalStLendings)}
         {buildValuationString("PPF", totalPPF)}
         {buildValuationString("Employee PF", totalEPF)}
         {buildValuationString("Voluntary PF", totalVPF)}
@@ -227,10 +229,10 @@ export default function CurrentAAChart() {
         {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}
       </h3>
       <CashAA
-        emergencyPer={((totalSavings + totalLendings) / totalAssets) * 100}
-        emergency={totalSavings + totalLendings}
-        longTerm={totalLtdep + totalPF}
-        longTermPer={((totalLtdep + totalPF) / totalAssets) * 100}
+        emergencyPer={((totalSavings + totalStLendings) / totalAssets) * 100}
+        emergency={totalSavings + totalStLendings}
+        longTerm={totalLtdep+ totalLendings- totalStLendings  + totalPF}
+        longTermPer={((totalLtdep + totalLendings- totalStLendings + totalPF) / totalAssets) * 100}
         currency={selectedCurrency}
         // @ts-ignore
         emergencyInfo={emergencyInfo}

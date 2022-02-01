@@ -126,15 +126,15 @@ export const calculateLoan = (holding: HoldingInput) => {
 };
 
 export const calculateCompundingIncome = (holding: HoldingInput) => {
-	let valuation = 0;
-	let maturityAmt = 0;
+	let [valuation, maturityAmt, isShortTerm] = [0, 0, true];
 	const remainingDuration = calculateDifferenceInYears(
 		holding.em as number,
 		holding.ey as number,
 		presentMonth,
 		presentYear
 	);
-	if (remainingDuration < 0) return { valuation, maturityAmt };
+	if (remainingDuration < 0) return { valuation, maturityAmt };	
+	if(remainingDuration >= 1) isShortTerm = false;
 	if (!holding.chgF)
 		return {
 			valuation: holding.amt as number,
@@ -154,7 +154,7 @@ export const calculateCompundingIncome = (holding: HoldingInput) => {
 		durationFromStartToEnd,
 		holding.chgF
 	);
-	return { valuation, maturityAmt };
+	return { valuation, maturityAmt, isShortTerm };
 };
 
 export const calculateProperty = (property: PropertyInput) => {
@@ -370,12 +370,15 @@ export const priceLendings = (
 	selectedCurrency: string
 ) => {
 	let total = 0;
+	let totalShortTerm = 0;
 	holdings.forEach((holding: HoldingInput) => {
 		if (holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
-			total += calculateCompundingIncome(holding).valuation;
+			const { valuation, isShortTerm } = calculateCompundingIncome(holding); 
+			total += valuation;
+			if(isShortTerm) totalShortTerm += valuation;
 		}
 	});
-	return total;
+	return { total, totalShortTerm};
 };
 
 export const priceLtdep = (holdings: Array<HoldingInput>, selectedMembers: Array<string>, selectedCurrency: string) => {

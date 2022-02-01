@@ -186,6 +186,7 @@ function NWContextProvider({ fxRates }: any) {
   const [view, setView] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
   const [familyOptions, setFamilyOptions] = useState<Object>({});
+  const [totalStLendings, setTotalStLendings ] = useState<number>(0);
 
   const loadNPSSubCategories = async () => {
     // @ts-ignore
@@ -813,8 +814,9 @@ function NWContextProvider({ fxRates }: any) {
   }, [selectedCurrency, selectedMembers, vehicles]);
 
   useEffect(() => {
-    const total = priceLendings(lendings, selectedMembers, selectedCurrency);
+    const { total, totalShortTerm } = priceLendings(lendings, selectedMembers, selectedCurrency);
     setTotalLendings(total);
+    setTotalStLendings(totalShortTerm);
   }, [lendings, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
@@ -967,7 +969,8 @@ function NWContextProvider({ fxRates }: any) {
         setFamilyMemberKeys,
         fxRates,
         familyOptions,
-        setFamilyOptions
+        setFamilyOptions,
+        totalStLendings
       }}>
       <NWView />
     </NWContext.Provider>
