@@ -13,6 +13,7 @@ interface CategoryProps {
 	setCategory?: Function;
 	setSubCat?: Function;
 	pre?: string;
+	info?: string;
 }
 
 export default function Category({
@@ -25,7 +26,8 @@ export default function Category({
 	setRate,
 	setCategory,
 	setSubCat,
-	pre
+	pre,
+	info
 }: CategoryProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, INS, LTDEP, PF, P2P, LENT, PROP } = TAB;
@@ -103,6 +105,7 @@ export default function Category({
 			parentChangeHandler={changeCategory}
 			options={categoryOptions}
 			pre={pre}
+			info={info}
 			width={childTab === PROP ? 150 : undefined}
 		/>
 	);

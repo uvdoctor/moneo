@@ -24,9 +24,10 @@ interface ListPropertiesProps {
 	changeData: Function;
 	categoryOptions: any;
 	fields: any;
+	info: any
 }
 
-export default function ListProperties({ data, changeData, categoryOptions, fields }: ListPropertiesProps) {
+export default function ListProperties({ data, changeData, categoryOptions, fields, info }: ListPropertiesProps) {
 	const { selectedCurrency, selectedMembers, familyOptions }: any = useContext(NWContext);
 	const [ indexForMv, setIndexForMv ] = useState<number | null>(null);
 	const [ dataSource, setDataSource ] = useState<Array<any>>([]);
@@ -89,6 +90,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 									data={data}
 									setIndexForMv={setIndexForMv}
 									index={i}
+									info={info}
 								/>
 							</Col>
 							<Col xs={24}>
@@ -99,6 +101,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 									pre={fields.date}
 									setIndexForMv={setIndexForMv}
 									index={i}
+									info={info.date}
 								/>
 							</Col>
 							<Col>
@@ -109,6 +112,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 									data={data}
 									setIndexForMv={setIndexForMv}
 									index={i}
+									info={info.rate}
 								/>
 							</Col>
 						</Row>
@@ -120,7 +124,7 @@ export default function ListProperties({ data, changeData, categoryOptions, fiel
 								<hr />
 							</Col>
 							<Col xs={24}>
-								<Address changeData={changeData} record={data[i]} pre={''} data={data} />
+								<Address changeData={changeData} record={data[i]} pre={''} data={data}/>
 							</Col>
 							<Col xs={24}>
 								<Pincode changeData={changeData} record={data[i]} pre={''} data={data} />

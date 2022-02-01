@@ -16,6 +16,7 @@ interface AddHoldingsProps {
 	categoryOptions?: any;
 	fields: any;
 	defaultRate: number;
+	info: any;
 }
 
 export default function AddHoldings({
@@ -24,7 +25,8 @@ export default function AddHoldings({
 	title,
 	categoryOptions,
 	fields,
-	defaultRate
+	defaultRate,
+	info
 }: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
@@ -148,6 +150,7 @@ export default function AddHoldings({
 						setInput={setNewRec}
 						categoryOptions={categoryOptions}
 						fields={fields}
+						info={info}
 					/>
 				) : (
 					<AddHoldingInput
@@ -156,6 +159,7 @@ export default function AddHoldings({
 						categoryOptions={categoryOptions}
 						fields={fields}
 						defaultRate={defaultRate}
+						info={info}
 					/>
 				)}
 			</Modal>

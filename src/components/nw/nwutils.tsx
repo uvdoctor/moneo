@@ -697,7 +697,7 @@ export const getRateByCategory = (at: string) => {
   return funds[at];
 };
 
-export const fields = (tab: string) => {
+export const getFieldsAndInfo = (tab: string) => {
   const {
     SAV,
     PM,
@@ -715,78 +715,166 @@ export const fields = (tab: string) => {
     ANGEL,
     CREDIT,
   } = TAB;
-  const field: { [key: string]: {} } = {
-    [SAV]: { name: "Comment", amount: "Amount" },
+  const fieldsAndInfo: { [key: string]: { fields: {}, info: {}  } } = {
+    [SAV]: {
+      fields: { name: "Comment", amount: "Amount" },
+      info: { amount: "Balance available in your bank account"}
+    },
     [LENT]: {
-      type: "Type & Interest",
-      name: "Comment",
-      amount: "Amount",
-      date: "Start Date & Maturity Date",
-      rate: "Rate",
+      fields: {
+        type: "Type & Interest",
+        name: "Comment",
+        amount: "Amount",
+        date: "Start Date & Maturity Date",
+        rate: "Rate" 
+      },
+      info: {
+        type: "Deposit type and Interest Payout Frequency",
+        amount: "Deposits amount",
+        date: "Date range",
+        rate: "Interest Rate" 
+      }
     },
     [LTDEP]: {
-      type: "Type",
-      name: "Comment",
-      amount: "Amount",
-      date: "Start Date",
-      rate: "Rate",
-      duration: "Duration",
+      fields: {
+        type: "Type",
+        name: "Comment",
+        amount: "Amount",
+        date: "Start Date",
+        rate: "Rate",
+        duration: "Duration",
+      },
+      info: {
+        type: "Long Term Deposit Types",
+        amount: "Deposits Amount",
+        date: "Enter the start date",
+        rate: "Interest Rate",
+        duration: "Number of duration",
+      }
     },
     [PF]: {
-      name: "Comment",
-      type: "Type",
-      amount: "Amount",
-      qty: "Contribution Per Year",
-      rate: "Rate",
+      fields: {
+        name: "Comment",
+        type: "Type",
+        amount: "Amount",
+        qty: "Contribution Per Year",
+        rate: "Rate",
+      },
+      info: {
+        type: "Pension Fund Type",
+        amount: "Amount",
+        qty: "Amount Contributed Every Year",
+        rate: "Interest Rate",
+      }
     },
     [PROP]: {
-      type: "Type",
-      name: "Comment",
-      amount: "Purchase Amount",
-      date: "Purchase Date",
-      rate: "Appreciation Rate",
-      mv: "Market Value",
-      pin: "Pincode",
-      address: "Address",
-      owner: "Owners",
+      fields: {
+        type: "Type",
+        name: "Comment",
+        amount: "Purchase Amount",
+        date: "Purchase Date",
+        rate: "Appreciation Rate",
+        mv: "Market Value",
+        pin: "Pincode",
+        address: "Address",
+        owner: "Owners",
+      },
+      info: {
+        type: "Property Type",
+        amount: "Amount paid while buying property",
+        date: "Purchase Date",
+        rate: "Appreciation Rate",
+        mv: "Value of the property in present time",
+        pin: "Pincode",
+        address: "Address",
+        owner: "Add owners and their percentage shared",
+      }
     },
     [VEHICLE]: {
-      type: "Type",
-      name: "Comment",
-      amount: "Purchase Amount",
-      date: "Purchase Date",
+      fields: {
+        type: "Type",
+        name: "Comment",
+        amount: "Purchase Amount",
+        date: "Purchase Date",
+      },
+      info: {
+        type: "Vehicle Type",
+        amount: "Purchase Amount",
+        date: "Purchase Date",
+      }
     },
-    [PM]: { type: "Type & Purity", qty: "Quantity" },
-    [OTHER]: { type: "Type", name: "Comment", amount: "Amount" },
-    [CRYPTO]: { type: "Type", qty: "Quantity" },
-    [ANGEL]: { name: "Comment", amount: "Amount" },
+    [PM]: { 
+      fields: { type: "Type & Purity", qty: "Quantity" },
+      info: { type: "Metals type and purity", qty: "Specify the quantity in grams" },
+    },
+    [OTHER]: {
+      fields: { type: "Type", name: "Comment", amount: "Amount" },
+      info: { type: "Type", amount: "Amount" },
+    },
+    [CRYPTO]: {
+      fields: { type: "Type", qty: "Quantity" },
+      info: { type: "Type of CryptoCurrency you invested in", qty: "Quantity purchased in crypto" },
+    },
+    [ANGEL]: {
+      fields: { name: "Comment", amount: "Amount" },
+      info: { amount: "Amount invested in Startups" },
+    },
     [P2P]: {
-      name: "Comment",
-      amount: "Amount",
-      date: "Start Date & Maturity Date",
-      rate: "Rate",
-      type: "Interest",
+      fields: {
+        name: "Comment",
+        amount: "Amount",
+        date: "Start Date & Maturity Date",
+        rate: "Rate",
+        type: "Interest",
+      },
+      info: {
+        amount: "Amount lended to an individual",
+        date: "Start Date & Maturity Date",
+        rate: "Interest Rate",
+        type: "Interest Payout Frequency",
+      }
     },
-    [NPS]: { type: "Fund Manager & Scheme", qty: "Quantity" },
+    [NPS]: {
+      fields: { type: "Fund Manager & Scheme", qty: "Quantity" },
+      info: { type: "Specify the Fund manager and Scheme Type of National Pension Scheme", qty: "Quantity" }
+    },
     [LOAN]: {
-      name: "Comment",
-      amount: "Monthly Installment",
-      rate: "Rate of Interest",
-      date: "End date",
+      fields: {
+        name: "Comment",
+        amount: "Monthly Installment",
+        rate: "Interest Rate",
+        date: "End date",
+      },
+      info: {
+        amount: "Monthly Installment",
+        rate: "Interest Rate",
+        date: "End date",
+      }
     },
     [INS]: {
-      type: "Type & Premium Mode",
-      name: "Comment",
-      amount: "Premium Amount",
-      rate: "Premium increases",
-      date: "End date",
+      fields: {
+        type: "Type & Premium Mode",
+        name: "Comment",
+        amount: "Premium Amount",
+        rate: "Premium increases",
+        date: "End date",
+      },
+      info: {
+        type: "Insurance type & Premium Mode",
+        amount: "Premium Amount",
+        rate: "Premium increases",
+        date: "End date",
+      }
     },
-    [CREDIT]: { name: "Comment", amount: "Amount" },
+    [CREDIT]: {
+      fields: { name: "Comment", amount: "Amount" },
+      info: { amount: "Amount" }, 
+    }
   };
-  return field[tab];
+  return fieldsAndInfo[tab];
 };
 
-export const categoryOptions = (tab: string) => {
+export const getCategoryOptions = (tab: string) => {
   const { PM, CRYPTO, LENT, PF, VEHICLE, INS, LTDEP, PROP, OTHER } = TAB;
   const category: { [key: string]: {} } = {
     [LENT]: getCascaderOptions(

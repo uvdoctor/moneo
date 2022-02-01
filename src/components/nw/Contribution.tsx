@@ -10,9 +10,10 @@ interface ContributionProps {
 	record: HoldingInput;
 	setQty?: Function;
 	pre: string;
+	info: string;
 }
 
-export default function Contribution({ data, changeData, record, pre, qty, setQty }: ContributionProps) {
+export default function Contribution({ data, changeData, record, pre, qty, setQty, info }: ContributionProps) {
 	const isListHolding: boolean = setQty ? false : true;
 	const quantity = isListHolding ? record.qty : qty;
 
@@ -27,6 +28,7 @@ export default function Contribution({ data, changeData, record, pre, qty, setQt
 	return (
 		<NumberInput
 			pre={pre}
+			info={info}
 			value={quantity as number}
 			changeHandler={changeQty}
 			currency={record.curr as string}

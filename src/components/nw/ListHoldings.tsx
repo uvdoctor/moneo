@@ -31,8 +31,9 @@ interface ListHoldingsProps {
 	changeData: Function;
 	categoryOptions: any;
 	fields: any;
+	info: any;
 }
-export default function ListHoldings({ data, changeData, categoryOptions, fields }: ListHoldingsProps) {
+export default function ListHoldings({ data, changeData, categoryOptions, fields, info }: ListHoldingsProps) {
 	const { selectedMembers, selectedCurrency, childTab, npsData, fxRates, familyOptions }: any = useContext(NWContext);
 	const { discountRate, userInfo }: any = useContext(AppContext);
 	const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
@@ -98,19 +99,18 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 			amount: <Amount data={data} changeData={changeData} record={holding} />,
 			type: categoryOptions && (
 				<Category
-					category={''}
 					categoryOptions={categoryOptions}
-					subCategory={''}
 					record={holding}
 					changeData={changeData}
 					data={data}
 					pre={fields.type}
+					info={info.type}
 				/>
 			),
 			val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
 			del: <Button type="link" onClick={() => removeHolding(i)} danger icon={<DeleteOutlined />} />,
 			qty: hasPF(childTab) && (
-				<Contribution changeData={changeData} data={data} record={holding} pre={fields.qty} />
+				<Contribution changeData={changeData} data={data} record={holding} pre={fields.qty} info={info.qty}/>
 			),
 			mat: (
 				<Fragment>
@@ -121,10 +121,10 @@ export default function ListHoldings({ data, changeData, categoryOptions, fields
 		};
 
 		if (hasDate(childTab, holding.subt as string) && expandedColumns.includes('date')) {
-			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={fields.date} />;
+			dataToRender.date = <DateColumn data={data} changeData={changeData} record={holding} pre={fields.date} info={info.date}/>;
 		}
 		if (hasRate(childTab) || (holding.subt !== 'L' && childTab === INS)) {
-			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={fields.rate} data={data} />;
+			dataToRender.rate = <Rate changeData={changeData} record={holding} pre={fields.rate} data={data} info={info.rate}/>;
 		}
 		if (Object.keys(familyOptions).length > 1) {
 			dataToRender.fid = (

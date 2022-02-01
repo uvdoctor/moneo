@@ -9,9 +9,10 @@ interface AddressProps {
 	record: PropertyInput;
 	setAdd?: Function;
 	pre: string;
+	info?: string;
 }
 
-export default function Address({ data, changeData, record, pre, add, setAdd }: AddressProps) {
+export default function Address({ data, changeData, record, pre, add, setAdd, info }: AddressProps) {
 	const isListProperty: boolean = setAdd ? false : true;
 	const address = isListProperty ? record.address : add;
 
@@ -21,5 +22,5 @@ export default function Address({ data, changeData, record, pre, add, setAdd }: 
 		isListProperty && data ? changeData([ ...data ]) : changeData(record);
 	};
 
-	return <TextInput pre={pre} value={address as string} changeHandler={changeAddress} size="middle" />;
+	return <TextInput pre={pre} value={address as string} changeHandler={changeAddress} size="middle" info={info}/>;
 }

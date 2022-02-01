@@ -16,6 +16,7 @@ interface AmountProps {
 	fields?: any;
 	setIndexForMv?: Function;
 	index?: number;
+	info?: any
 }
 
 export default function Amount({
@@ -28,7 +29,8 @@ export default function Amount({
 	amt,
 	fields,
 	setIndexForMv,
-	index
+	index,
+	info
 }: AmountProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { CRYPTO, PROP } = TAB;
@@ -60,6 +62,7 @@ export default function Amount({
 	return hasQtyWithRate(childTab) ? (
 		<QuantityWithRate
 			pre={isListHolding ? '' : fields.qty}
+			info={isListHolding ? '' : info.qty}
 			quantity={quantity as number}
 			name={record.name as string}
 			subtype={childTab === CRYPTO ? record.name as string : record.subt as string}
@@ -68,6 +71,7 @@ export default function Amount({
 	) : (
 		<NumberInput
 			pre={childTab === PROP ? fields.amount : isListHolding ? '' : fields.amount}
+			info={childTab === PROP ? info.amount : isListHolding ? '' : info.amount}
 			value={amount as number}
 			changeHandler={changeAmt}
 			currency={record.curr as string}

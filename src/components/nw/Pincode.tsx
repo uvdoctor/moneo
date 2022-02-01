@@ -13,6 +13,7 @@ interface PincodeProps {
 	setPin?: Function;
 	setState?: Function;
 	setCity?: Function;
+	info?: string;
 }
 
 export default function Pincode({
@@ -25,7 +26,8 @@ export default function Pincode({
 	setState,
 	setCity,
 	city,
-	state
+	state,
+	info
 }: PincodeProps) {
 	const isListProperty: boolean = setPin ? false : true;
 	const pincode = isListProperty ? record.pin : pin;
@@ -58,6 +60,7 @@ export default function Pincode({
 	return (
 		<TextInput
 			pre={pre}
+			info={info}
 			value={String(pincode)}
 			changeHandler={changePin}
 			size={'middle'}

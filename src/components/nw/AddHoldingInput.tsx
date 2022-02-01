@@ -33,12 +33,14 @@ interface AddHoldingInputProps {
   categoryOptions: any;
   fields: any;
   defaultRate: number;
+  info: any
 }
 export default function AddHoldingInput({
   setInput,
   categoryOptions,
   fields,
   defaultRate,
+  info
 }: AddHoldingInputProps) {
   const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any =
     useContext(NWContext);
@@ -269,6 +271,7 @@ export default function AddHoldingInput({
                 setRate={setRate}
                 setCategory={setCategory}
                 setSubCat={setSubCat}
+                info={info.type}
               />
             </Col>
           )}
@@ -281,6 +284,7 @@ export default function AddHoldingInput({
               changeData={setInput}
               record={getNewRec()}
               fields={fields}
+              info={info}
             />
           </Col>
           {hasPF(childTab) && (
@@ -291,6 +295,7 @@ export default function AddHoldingInput({
                 pre={fields.qty}
                 qty={qty}
                 setQty={setQty}
+                info={info.qty}
               />
             </Col>
           )}
@@ -300,6 +305,7 @@ export default function AddHoldingInput({
                 changeData={setInput}
                 record={getNewRec()}
                 pre={fields.date}
+                info={info.date}
                 sm={sm}
                 sy={sy}
                 ey={ey}
@@ -317,6 +323,7 @@ export default function AddHoldingInput({
                 changeData={setInput}
                 record={getNewRec()}
                 pre={fields.rate}
+                info={info.rate}
                 rate={rate}
                 setRate={setRate}
               />

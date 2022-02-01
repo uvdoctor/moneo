@@ -12,9 +12,10 @@ interface MarketValueProps {
 	setMv?: Function;
 	setMvm?: Function;
 	setMvy?: Function;
+	info?: any
 }
 
-export default function MarketValue({ data, changeData, record, pre, mv, setMv, setMvm, setMvy }: MarketValueProps) {
+export default function MarketValue({ data, changeData, record, pre, mv, setMv, setMvm, setMvy, info }: MarketValueProps) {
 	const isListProperty: boolean = setMv ? false : true;
 	const marketValue = isListProperty ? record.mv : mv;
 
@@ -31,6 +32,7 @@ export default function MarketValue({ data, changeData, record, pre, mv, setMv, 
 	return (
 		<NumberInput
 			pre={pre}
+			info={info}
 			min={1}
 			value={marketValue as number}
 			changeHandler={changeMv}

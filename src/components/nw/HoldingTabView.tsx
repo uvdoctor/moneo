@@ -153,7 +153,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                               )
                             : tabsData[tabName].categoryOptions
                         }
-                        fields={tabsData[tabName].fields}
+                        fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
+                        info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
                         defaultRate={hasRate(childTab) ? tabsData[tabName].rate : 0}
                       />
                     </Col>
@@ -167,7 +168,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                           data={tabsData[tabName].data}
                           changeData={tabsData[tabName].setData}
                           categoryOptions={tabsData[tabName].categoryOptions}
-                          fields={tabsData[tabName].fields}
+                          fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
+                          info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
                         />
                       ) : (
                         <ListHoldings
@@ -182,7 +184,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                                 )
                               : tabsData[tabName].categoryOptions
                           }
-                          fields={tabsData[tabName].fields}
+                          fields={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.fields}
+                          info={tabsData[tabName].fieldsAndInfo && tabsData[tabName].fieldsAndInfo.info}
                         />
                       )
                     ) : (

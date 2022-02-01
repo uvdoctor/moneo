@@ -19,6 +19,7 @@ interface MemberAndValuationProps {
 	pre: string;
 	setIndexForMv?: Function;
 	index?: number;
+	info: string;
 }
 
 export default function MemberAndValuation({
@@ -35,7 +36,8 @@ export default function MemberAndValuation({
 	sm,
 	sy,
 	setIndexForMv,
-	index
+	index,
+	info
 }: MemberAndValuationProps) {
 	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setSm && setSy ? false : true;
@@ -92,6 +94,7 @@ export default function MemberAndValuation({
 	return (
 		<DateInput
 			title={pre}
+			info={info}
 			startMonthHandler={changeStartMonth}
 			startYearHandler={changeStartYear}
 			endMonthHandler={isRangePicker(childTab, record.subt as string) ? changeEndMonth : undefined}

@@ -11,9 +11,10 @@ interface RateProps {
 	pre: string;
 	setIndexForMv?: Function;
 	index?: number;
+	info: string;
 }
 
-export default function Rate({ data, changeData, record, pre, rate, setRate, setIndexForMv, index }: RateProps) {
+export default function Rate({ data, changeData, record, pre, rate, setRate, setIndexForMv, index, info }: RateProps) {
 	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setRate ? false : true;
 	const chg = isListHolding ? (childTab === TAB.PROP ? record.rate : record.chg) : rate;
@@ -30,6 +31,6 @@ export default function Rate({ data, changeData, record, pre, rate, setRate, set
 	};
 
 	return (
-		<NumberInput pre={pre} min={0} max={50} value={chg as number} changeHandler={changeRate} step={0.1} unit="%" />
+		<NumberInput pre={pre} info={info} min={0} max={50} value={chg as number} changeHandler={changeRate} step={0.1} unit="%" />
 	);
 }

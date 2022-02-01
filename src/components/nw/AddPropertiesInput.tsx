@@ -22,9 +22,10 @@ interface AddPropertiesInputProps {
 	setInput: Function;
 	categoryOptions: any;
 	fields: any;
+	info: any
 }
 
-export default function AddPropertyInput({ setInput, categoryOptions, fields }: AddPropertiesInputProps) {
+export default function AddPropertyInput({ setInput, categoryOptions, fields, info }: AddPropertiesInputProps) {
 	const { selectedCurrency, familyOptions }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<PropertyType>(PropertyType.P);
 	const [ own, setOwn ] = useState<Array<OwnershipInput>>([]);
@@ -148,6 +149,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 										category={subtype}
 										setCategory={setSubtype}
 										pre={fields.type}
+										info={info.type}
 									/>
 								)}
 							</Col>
@@ -163,6 +165,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							changeData={setInput}
 							record={getNewRec()}
 							fields={fields}
+							info={info}
 							amt={amount}
 							setAmt={setAmount}
 						/>
@@ -176,6 +179,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							sy={sy}
 							setSm={setSm}
 							setSy={setSy}
+							info={info.date}
 						/>
 					</Col>
 					<Col xs={24} md={12}>
@@ -185,6 +189,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							pre={fields.rate}
 							rate={rate}
 							setRate={setRate}
+							info={info.rate}
 						/>
 					</Col>
 					<Col xs={24} md={12}>
@@ -196,6 +201,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							setMv={setMv}
 							setMvm={setMvm}
 							setMvy={setMvy}
+							info={fields.mv}
 						/>
 					</Col>
 					<Col xs={24} md={12}>
@@ -209,6 +215,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							setCity={setCity}
 							state={state}
 							city={city}
+							info={info.pin}
 						/>
 					</Col>
 					<Col xs={24} md={12}>
@@ -216,6 +223,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 							changeData={setInput}
 							record={getNewRec()}
 							pre={fields.address}
+							info={info.address}
 							setAdd={setAddress}
 							add={address}
 						/>
@@ -242,7 +250,7 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields }: 
 									/>
 								)}
 							</Col>
-							<Owner changeData={setInput} record={getNewRec()} owner={own} setOwner={setOwn} />
+							<Owner changeData={setInput} record={getNewRec()} owner={own} setOwner={setOwn}/>
 						</Fragment>
 					)}
 				</Row>
