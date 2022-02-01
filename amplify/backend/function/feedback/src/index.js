@@ -22,7 +22,7 @@ const processData = async (data) => {
 						<body>
 							<h3>${firstName} ${lastName}</h3>
 							<div>
-								<p>User:- ${uname.S ? 'Registered' : 'Not Registered'}</p>
+								<p>User:- ${uname ? 'Registered' : 'Not Registered'}</p>
 								<p>Email: -${email.S}</p>
 								<p>${feedback.S}</p>
 							</div>
