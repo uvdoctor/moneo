@@ -101,6 +101,7 @@ export default function RiskAllocationChart() {
         label={{
           visible: true,
           type: "outer",
+          autoRotate: false,
           formatter: (angleField) =>
             `${toReadableNumber(angleField.value, 2)}%`,
           style: {
