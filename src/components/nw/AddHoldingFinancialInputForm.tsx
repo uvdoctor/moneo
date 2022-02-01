@@ -76,6 +76,9 @@ const dataReducer = (
       return {
         ...dataState,
         ...{
+          instrumentData: {},
+          suggestions: [],
+          buttonState: false,
           assetType: "",
           type: "",
           price: 0,
@@ -117,7 +120,7 @@ export default function HoldingInput(props: any) {
   });
   const { instrumentData, suggestions, buttonState, assetType } =
     dataState;
-
+  
   const onSearch = (searchText: any) => {
     const data = instrumentData[optionTableMap[assetType]]
       ? instrumentData[optionTableMap[assetType]].filter(
@@ -131,7 +134,6 @@ export default function HoldingInput(props: any) {
   const addToHoldings = () => {
     props.addToHoldings(holdingState, rawDetails);
     dispatch({ type: "reset", data: {} });
-    dispatchDataState({ type: "reset", data: {} });
   };
 
   const getFilters = (option: string) => {
@@ -203,6 +205,7 @@ export default function HoldingInput(props: any) {
   }; 
 
   useEffect(() => {
+    dispatchDataState({ type: "reset", data: {} });
     changeAssetType(childTab);
   }, [childTab])
 
