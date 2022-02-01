@@ -13,6 +13,7 @@ const processData = async (data) => {
 			const data = record.dynamodb.NewImage;
 			console.log(data);
 			const { name, email, feedback, type, uname } = data;
+			console.log( name, email, feedback, type, uname );
 			const firstName = name.M.fn ? name.M.fn.S : '';
 			const lastName = name.M.ln ? name.M.ln.S : '';
 			const template = `<html>
