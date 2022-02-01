@@ -1,10 +1,11 @@
 import { Col, Form, Row } from 'antd';
 import React, { useContext } from 'react';
-import { getRiskProfileOptions, getTaxLiabilityOptions } from '../utils';
+import { getRiskProfileOptions } from '../utils';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import RadioInput from '../form/RadioInput';
 import { AppContext } from '../AppContext';
+import TaxLiabilityInput from '../TaxLiabilityInput';
 
 interface ProfileTabProps {
 	isDrManual: boolean;
@@ -17,7 +18,7 @@ interface ProfileTabProps {
 export default function ProfileTab({ isDrManual, notify, riskProfile, tax, dispatch }: ProfileTabProps) {
 	const { discountRate, setDiscountRate }: any = useContext(AppContext);
 	const { Item: FormItem } = Form;
-	
+
 	return (
 		<Form layout="vertical">
 			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
@@ -84,16 +85,13 @@ export default function ProfileTab({ isDrManual, notify, riskProfile, tax, dispa
 					<FormItem label={''}>
 						<Row>
 							<Col>
-								<SelectInput
-									info="How much do you earn in a year?"
-									pre="Yearly Income"
+								<TaxLiabilityInput
 									value={tax}
 									changeHandler={(val: string) =>
 										dispatch({
 											type: 'single',
 											data: { field: 'tax', val }
 										})}
-									options={getTaxLiabilityOptions()}
 								/>
 							</Col>
 						</Row>

@@ -3,7 +3,8 @@ import { Alert, Checkbox, Col, Form, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
 import SelectInput from "./form/selectinput";
-import { getRiskProfileOptions, getTaxLiabilityOptions } from "./utils";
+import { getRiskProfileOptions } from "./utils";
+import TaxLiabilityInput from "./TaxLiabilityInput";
 
 interface StepThreeProps {
   riskProfile: string;
@@ -42,13 +43,7 @@ export default function StepThree(props: StepThreeProps) {
           />
         </Col>
         <Col xs={24} sm={12} md={12} lg={12}>
-          <SelectInput
-            info="How much do you earn in a year?"
-            pre="Yearly Income"
-            value={props.taxLiability}
-            changeHandler={props.setTaxLiability}
-            options={getTaxLiabilityOptions()}
-          />
+          <TaxLiabilityInput value={props.taxLiability} changeHandler={props.setTaxLiability}/>
         </Col>
         <Col span={24}>
           <Form
