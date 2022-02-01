@@ -8,7 +8,6 @@ const subject = {
 
 const processData = async (data) => {
 	return new Promise(async (resolve, reject) => {
-		console.log(data);
 		for (record of data) {
 			try {
 				if (record.eventName == 'INSERT') {
