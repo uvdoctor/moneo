@@ -42,7 +42,8 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 							type: feedbackType,
 							feedback: feedback,
 							name: { fn: fn, ln: lastName },
-							email: emailAddress
+							email: emailAddress,
+							uname: user ? owner : ''
 						}
 					},
 					authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS }) as 
