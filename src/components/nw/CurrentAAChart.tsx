@@ -15,7 +15,6 @@ export default function CurrentAAChart() {
   const {
     totalCash,
     totalSavings,
-    totalAlternative,
     totalLendings,
     totalFGold,
     totalPGold,
@@ -38,10 +37,8 @@ export default function CurrentAAChart() {
     totalNPSEquity,
     totalNPSFixed,
     totalCrypto,
-    totalFixed,
     totalP2P,
     totalLtdep,
-    totalBonds,
     totalPM,
     totalLargeCapStocks,
     totalLargeCapFunds,
@@ -51,7 +48,10 @@ export default function CurrentAAChart() {
     totalLiquidFunds,
     totalIntervalFunds,
     totalFMP,
+    totalFFixed,
     totalStLendings,
+    totalBonds,
+    totalStocks,
   }: any = useContext(NWContext);
   const [data, setData] = useState<Array<any>>([]);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
@@ -62,39 +62,29 @@ export default function CurrentAAChart() {
       total: totalLargeCapETF,
     },
     "Large-cap Stocks & Funds": {
-      color: "#fdd0cb",
+      color: "#ffa698",
       total: totalLargeCapStocks + totalLargeCapFunds + totalNPSEquity,
     },
     "Multi-cap Stocks & Funds": {
       color: "#e78284",
       total: totalMultiCap,
     },
-    "Bonds and Funds": {
-      color: "#aa8dfa",
-      total: totalBonds + totalNPSFixed,
-    },
-    "Other Fixed": {
+    "Bonds & Fixed Income Funds": {
       color: COLORS.BLUE,
-      total:
-        totalFixed - totalLiquidFunds - totalBonds - totalNPSFixed - totalP2P,
+      total: totalFFixed - totalLiquidFunds + totalNPSFixed,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#ffc107", total: totalFRE },
     Gold: { color: "#f6e05e", total: totalFGold + totalPGold },
     "P2P Lending": { color: COLORS.ORANGE, total: totalP2P },
-    "Start-up Investments & Collections": {
-      color: "#ffab00",
-      total: totalAngel + totalOthers,
-    },
     Others: {
       color: "#aa8dfa",
       total:
-        totalAlternative -
-        totalFGold -
-        totalPGold -
-        totalProperties -
-        totalFRE -
-        totalCrypto,
+        totalOthers +
+        totalFInv +
+        totalAngel +
+        totalVehicles +
+        (totalPM - totalPGold),
     },
     Crypto: { color: COLORS.RED, total: totalCrypto },
   };
@@ -166,45 +156,76 @@ export default function CurrentAAChart() {
 
   const breakdownAssetInfo = (asset: string) => {
     if (asset === "Gold")
-      return getTooltipDesc({
-        "Physical Gold": totalPGold,
-        "Gold Bonds": totalFGold,
-      }, selectedCurrency, totalAssets);
-    if (asset === "Other Fixed")
-      return getTooltipDesc({
-        "Fixed Maturity Plan": totalFMP,
-        "Interval Funds": totalIntervalFunds,
-        "Index Funds": totalIndexFunds,
-      }, selectedCurrency, totalAssets);
+      return getTooltipDesc(
+        {
+          "Physical Gold": totalPGold,
+          "Gold Bonds": totalFGold,
+        },
+        selectedCurrency,
+        totalAssets
+      );
     if (asset === "Real-estate")
-      return getTooltipDesc({
-        Commercial: totalCommercial,
-        Residential: totalResidential,
-        Plot: totalPlot,
-        Other: totalOtherProperty,
-      }, selectedCurrency, totalAssets);
-    if (asset === "Start-up Investments & Collections")
-      return getTooltipDesc({
-        "Start-up Investments": totalAngel,
-        Collections: totalOthers,
-      }, selectedCurrency, totalAssets);
+      return getTooltipDesc(
+        {
+          Commercial: totalCommercial,
+          Residential: totalResidential,
+          Plot: totalPlot,
+          Other: totalOtherProperty,
+        },
+        selectedCurrency,
+        totalAssets
+      );
     if (asset === "Others")
-      return getTooltipDesc({
-        "Precious Metals": totalPM - totalPGold,
-        "Other Investment Trusts": totalFInv,
-        Vehicles: totalVehicles,
-      }, selectedCurrency, totalAssets);
+      return getTooltipDesc(
+        {
+          "Other Precious Metals": totalPM - totalPGold,
+          "Start-up Investments": totalAngel,
+          "Other Investment Trusts": totalFInv,
+          Vehicles: totalVehicles,
+          "Memberships & Collections": totalOthers,
+        },
+        selectedCurrency,
+        totalAssets
+      );
     if (asset === "Large-cap Stocks & Funds")
-      return getTooltipDesc({
-        "Large-cap Stocks": totalLargeCapStocks,
-        "Large-cap Mutual Funds": totalLargeCapFunds,
-        "NPS Equity Schemes": totalNPSEquity,
-      }, selectedCurrency, totalAssets);
-    if (asset === "Bonds & Funds")
-      return getTooltipDesc({
-        "NPS Bond Schemes": totalNPSFixed,
-        "Other Bonds & Funds": totalBonds,
-      }, selectedCurrency, totalAssets);
+      return getTooltipDesc(
+        {
+          "Large-cap Stocks": totalLargeCapStocks,
+          "Large-cap Mutual Funds": totalLargeCapFunds,
+          "NPS Equity Schemes": totalNPSEquity,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (asset === "Multi-cap Stocks & Funds")
+      return getTooltipDesc(
+        {
+          "Multi-cap Stocks": totalStocks - totalLargeCapStocks,
+          "Multi-cap Mutual Funds":
+            totalMultiCap - (totalStocks - totalLargeCapStocks),
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (asset === "Bonds & Fixed Income Funds")
+      return getTooltipDesc(
+        {
+          "NPS Bond Schemes": totalNPSFixed,
+          Bonds: totalBonds,
+          "Fixed Maturity Plan": totalFMP,
+          "Interval Funds": totalIntervalFunds,
+          "Index Funds": totalIndexFunds,
+          "Other Funds":
+            totalFFixed -
+            totalBonds -
+            totalFMP -
+            totalIntervalFunds -
+            totalIndexFunds -
+            totalLiquidFunds,
+        },
+        selectedCurrency,
+        totalAssets
+      );
     return "";
   };
 

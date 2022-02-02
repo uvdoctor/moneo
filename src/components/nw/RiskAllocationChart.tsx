@@ -28,7 +28,7 @@ export default function RiskAllocationChart() {
     selectedCurrency,
     totalFFixed,
     totalMultiCap,
-    totalInv,
+    totalFInv,
     totalLiquidFunds,
   }: any = useContext(NWContext);
   const LOW_RISK = "Low risk";
@@ -38,9 +38,9 @@ export default function RiskAllocationChart() {
   const SPECULATIVE = "Gamble";
   const riskColors: any = {
     [LOW_RISK]: COLORS.GREEN,
-    [MED_RISK]: COLORS.BLUE,
-    [HIGH_RISK]: COLORS.ORANGE,
-    [VH_RISK]: "#ffab00",
+    [MED_RISK]: "#ffc107",
+    [HIGH_RISK]: "#ffa698",
+    [VH_RISK]: COLORS.ORANGE,
     [SPECULATIVE]: COLORS.RED,
   };
   const [data, setData] = useState<Array<any>>([]);
@@ -63,7 +63,7 @@ export default function RiskAllocationChart() {
       totalFRE;
     const highRiskVal = totalFEquity - totalMultiCap + totalNPSEquity;
     const veryHighRiskVal =
-      totalOthers + totalVehicles + totalP2P + totalInv + totalMultiCap;
+      totalOthers + totalVehicles + totalP2P + totalFInv + totalMultiCap;
     const speculativeVal = totalAngel + totalCrypto;
     if (lowRiskVal) data.push(buildDataItem(LOW_RISK, lowRiskVal));
     if (mediumRiskVal) data.push(buildDataItem(MED_RISK, mediumRiskVal));
