@@ -38,6 +38,8 @@ export default function RiskAllocationChart() {
     totalBonds,
     totalLargeCapFunds,
     totalLargeCapStocks,
+    totalStocks,
+    totalETFs,
   }: any = useContext(NWContext);
   const riskColors: any = {
     [RiskProfile.VC]: COLORS.GREEN,
@@ -110,6 +112,7 @@ export default function RiskAllocationChart() {
         {
           "Large-cap Stocks": totalLargeCapStocks,
           "Large-cap Mutual Funds": totalLargeCapFunds,
+          ETFs: totalETFs,
           "NPS Equity Schemes": totalNPSEquity,
         },
         selectedCurrency,
@@ -119,10 +122,12 @@ export default function RiskAllocationChart() {
       return getTooltipDesc(
         {
           Vehicles: totalVehicles,
-          Collections: totalOthers,
+          "Multi-cap Stocks": totalStocks - totalLargeCapStocks,
+          "Multi-cap Mutual Funds":
+            totalMultiCap - (totalStocks - totalLargeCapStocks),
+          "Memberships & Collections": totalOthers,
           "P2P Lending": totalP2P,
           "Other Investment Trusts": totalFInv,
-          "Other Stocks": totalMultiCap,
         },
         selectedCurrency,
         totalAssets
