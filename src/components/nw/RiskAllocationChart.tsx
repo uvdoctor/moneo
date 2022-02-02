@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
+import { getTooltipDesc } from "./nwutils";
 
 const PieChart = dynamic(() => import("bizcharts/lib/plots/PieChart"), {
   ssr: false,
@@ -73,6 +74,62 @@ export default function RiskAllocationChart() {
     setData([...data]);
   };
 
+  const breakdownRiskInfo = (risk: string) => {
+    if (risk === LOW_RISK)
+      return getTooltipDesc(
+        {
+          Cash: totalCash,
+          Properties: totalProperties,
+          "Physical Gold": totalPGold,
+          "Gold Bonds": totalFGold,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (risk === MED_RISK)
+      return getTooltipDesc(
+        {
+          "Precious Metals": totalPM - totalPGold,
+          "Other Bonds & Funds": totalFFixed - totalLiquidFunds,
+          "NPS Bond Schemes": totalNPSFixed,
+          REITS: totalFRE,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (risk === HIGH_RISK)
+      return getTooltipDesc(
+        {
+          "Large-cap Stocks": totalFEquity - totalMultiCap,
+          "NPS Equity Schemes": totalNPSEquity,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (risk === VH_RISK)
+      return getTooltipDesc(
+        {
+          Vehicles: totalVehicles,
+          Collections: totalOthers,
+          "P2P Lending": totalP2P,
+          "Other Investment Trusts": totalFInv,
+          "Other Stocks": totalMultiCap,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    if (risk === SPECULATIVE)
+      return getTooltipDesc(
+        {
+          "Start-up Investments": totalAngel,
+          Crypto: totalCrypto,
+        },
+        selectedCurrency,
+        totalAssets
+      );
+    return "";
+  };
+
   useEffect(() => {
     if (!totalAssets) {
       setData([...[]]);
@@ -83,12 +140,10 @@ export default function RiskAllocationChart() {
 
   return (
     <div className="container chart">
-      <h3>
-        {`Total allocation of ${toHumanFriendlyCurrency(
-          totalAssets,
-          selectedCurrency
-        )} by risk`}
-      </h3>
+      <h3>{`Total allocation of ${toHumanFriendlyCurrency(
+        totalAssets,
+        selectedCurrency
+      )} by risk`}</h3>
       <PieChart
         data={data}
         title={{
@@ -96,11 +151,17 @@ export default function RiskAllocationChart() {
         }}
         meta={{
           value: {
-            formatter: (v: any) =>
-              `${toHumanFriendlyCurrency(
-                (v * totalAssets) / 100,
-                selectedCurrency
-              )} (${toReadableNumber(v, 2)}%)`,
+            formatter: (v: any) => {
+              const riskData = data.find((item) => item.value === v);
+              return v
+                ? `<b>${toHumanFriendlyCurrency(
+                    (v * totalAssets) / 100,
+                    selectedCurrency
+                  )}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(
+                    riskData.risk
+                  )}`
+                : "";
+            },
           },
         }}
         label={{
