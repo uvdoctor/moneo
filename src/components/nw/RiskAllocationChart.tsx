@@ -24,6 +24,10 @@ export default function RiskAllocationChart() {
     totalVehicles,
     totalOthers,
     totalPGold,
+    totalAngel,
+    totalStocks,
+    totalLargeCapStocks,
+    totalLargeCapFunds,
     selectedCurrency,
   }: any = useContext(NWContext);
   const LOW_RISK = "Low risk";
@@ -50,17 +54,21 @@ export default function RiskAllocationChart() {
     const lowRiskVal = totalCash + totalProperties + totalPGold + totalFGold;
     const mediumRiskVal =
       totalPM + totalBonds + totalNPSFixed + totalETFs + totalFRE - totalPGold;
-    const highRiskVal =
-      totalVehicles +
-      totalOthers +
-      totalFinancial -
+    const highRiskVal = totalOthers + totalLargeCapStocks + totalLargeCapFunds;
+    totalFinancial -
       totalCrypto -
       totalBonds -
       totalFGold -
       totalFRE -
       totalNPSFixed -
+      totalAngel -
       totalETFs;
-    const veryHighRiskVal = totalCrypto;
+    const veryHighRiskVal =
+      totalVehicles +
+      totalAngel +
+      totalCrypto +
+      totalStocks -
+      totalLargeCapStocks;
     if (lowRiskVal) data.push(buildDataItem(LOW_RISK, lowRiskVal));
     if (mediumRiskVal) data.push(buildDataItem(MED_RISK, mediumRiskVal));
     if (highRiskVal) data.push(buildDataItem(HIGH_RISK, highRiskVal));
