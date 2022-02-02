@@ -11,7 +11,7 @@ import {
   SUKANYA_SAMRIDDHI_YOJANA,
   TAB,
 } from "./NWContext";
-import { cryptoList, getFXRate, getPrice, initOptions } from "../utils";
+import { cryptoList, getFXRate, getPrice, initOptions, toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import {
   COLORS,
   LOCAL_DATA_TTL,
@@ -980,4 +980,18 @@ export const getCategoryOptions = (tab: string) => {
     ),
   };
   return category[tab];
+};
+
+export const getTooltipDesc = (records: any, selectedCurrency: string, totalAssets: number) => {
+  let data: any = "";
+  Object.keys(records).map((value) => {
+    if (!records[value]) return;
+    const amount = toHumanFriendlyCurrency(records[value], selectedCurrency);
+    const percentage = toReadableNumber(
+      (records[value] / totalAssets) * 100,
+      2
+    );
+    data += `${amount} (${percentage}%) of ${value}<br/><br/>`;
+  });
+  return data ? `<br/><br/>Includes<br/><br/>${data}` : "";
 };

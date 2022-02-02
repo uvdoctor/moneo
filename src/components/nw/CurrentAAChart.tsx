@@ -5,6 +5,7 @@ import { COLORS } from "../../CONSTANTS";
 import CashAA from "../goals/CashAA";
 import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { NWContext } from "./NWContext";
+import { getTooltipDesc } from "./nwutils";
 
 const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
   ssr: false,
@@ -163,61 +164,47 @@ export default function CurrentAAChart() {
     initChartData();
   }, [totalAssets]);
 
-  const getTooltipDesc = (records: any) => {
-    let data: any = "";
-    Object.keys(records).map((value) => {
-      if (!records[value]) return;
-      const amount = toHumanFriendlyCurrency(records[value], selectedCurrency);
-      const percentage = toReadableNumber(
-        (records[value] / totalAssets) * 100,
-        2
-      );
-      data += `${amount} (${percentage}%) of ${value}<br/><br/>`;
-    });
-    return data ? `<br/><br/>Includes<br/><br/>${data}` : "";
-  };
-
   const breakdownAssetInfo = (asset: string) => {
     if (asset === "Gold")
       return getTooltipDesc({
         "Physical Gold": totalPGold,
         "Gold Bonds": totalFGold,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Other Fixed")
       return getTooltipDesc({
         "Fixed Maturity Plan": totalFMP,
         "Interval Funds": totalIntervalFunds,
         "Index Funds": totalIndexFunds,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Real-estate")
       return getTooltipDesc({
         Commercial: totalCommercial,
         Residential: totalResidential,
         Plot: totalPlot,
         Other: totalOtherProperty,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Start-up Investments & Collections")
       return getTooltipDesc({
         "Start-up Investments": totalAngel,
         Collections: totalOthers,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Others")
       return getTooltipDesc({
         "Precious Metals": totalPM - totalPGold,
         "Other Investment Trusts": totalFInv,
         Vehicles: totalVehicles,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Large-cap Stocks & Funds")
       return getTooltipDesc({
         "Large-cap Stocks": totalLargeCapStocks,
         "Large-cap Mutual Funds": totalLargeCapFunds,
         "NPS Equity Schemes": totalNPSEquity,
-      });
+      }, selectedCurrency, totalAssets);
     if (asset === "Bonds & Funds")
       return getTooltipDesc({
         "NPS Bond Schemes": totalNPSFixed,
         "Other Bonds & Funds": totalBonds,
-      });
+      }, selectedCurrency, totalAssets);
     return "";
   };
 
