@@ -192,18 +192,23 @@ export default function RiskAllocationChart() {
 					visible: true
 				}}
 				meta={{
-					value: {
-						formatter: (v: any) => {
-							const riskData = data.find((item) => item.value === v);
-							return v
-								? `<b>${toHumanFriendlyCurrency(
-										v * totalAssets / 100,
-										selectedCurrency
-									)}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(riskData.risk)}`
-								: '';
-						}
-					}
-				}}
+          risk: {
+            formatter: (v: any) => riskAttributes[v].label,
+          },
+          value: {
+            formatter: (v: any) => {
+              const riskData = data.find((item) => item.value === v);
+              return v
+                ? `<b>${toHumanFriendlyCurrency(
+                    (v * totalAssets) / 100,
+                    selectedCurrency
+                  )}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(
+                    riskData.risk
+                  )}`
+                : "";
+            },
+          },
+        }}
 				label={{
 					visible: true,
 					type: 'outer',
@@ -226,7 +231,6 @@ export default function RiskAllocationChart() {
 				colorField="risk"
 				legend={{
 					position: 'top',
-					formatter: (risk) => riskAttributes[risk].label
 				}}
 				color={({ risk }: any) => riskAttributes[risk].color}
 			/>
