@@ -41,12 +41,12 @@ export default function RiskAllocationChart() {
     totalStocks,
     totalETFs,
   }: any = useContext(NWContext);
-  const riskColors: any = {
-    [RiskProfile.VC]: COLORS.GREEN,
-    [RiskProfile.C]: "#ffc107",
-    [RiskProfile.M]: "#ffa698",
-    [RiskProfile.A]: COLORS.ORANGE,
-    [RiskProfile.VA]: COLORS.RED,
+  const riskAttributes: any = {
+    [RiskProfile.VC]: { label: "Very low", color: COLORS.GREEN },
+    [RiskProfile.C]: { label: "Low", color: "#ffc107" },
+    [RiskProfile.M]: { label: "Medium", color: "#ffa698" },
+    [RiskProfile.A]: { label: "High", color: COLORS.ORANGE },
+    [RiskProfile.VA]: { label: "Very high", color: COLORS.RED },
   };
   const [data, setData] = useState<Array<any>>([]);
 
@@ -199,8 +199,11 @@ export default function RiskAllocationChart() {
         ]}
         angleField="value"
         colorField="risk"
-        legend={{ position: "top" }}
-        color={({ risk }: any) => riskColors[risk]}
+        legend={{
+          position: "top",
+          formatter: (risk) => riskAttributes[risk].label,
+        }}
+        color={({ risk }: any) => riskAttributes[risk].color}
       />
     </div>
   );
