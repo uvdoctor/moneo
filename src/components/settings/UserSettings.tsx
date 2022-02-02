@@ -142,6 +142,7 @@ export default function UserSettings() {
       );
       if (attr === "Whatsapp Number") {
         const result = await updateUserDetails({ uname: owner, im: data as number });
+        console.log(result);
         setUserInfo(result)
       }
       return true;
@@ -186,6 +187,8 @@ export default function UserSettings() {
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
         le: lifeExpectancy,
       });
+      console.log(result);
+      
       setUserInfo(result)
       success("Updated Successfully");
     } catch (error) {
@@ -204,6 +207,8 @@ export default function UserSettings() {
         rp: riskProfile,
         tax,
       });
+      console.log(results);
+      
       setUserInfo(results)
       success("Updated Successfully");
     } catch (error) {
@@ -240,23 +245,22 @@ export default function UserSettings() {
   }, [countryCode?.value, user]);
 
   useEffect(() => {
-    if (userInfo) {
-      const { rp, notify, dr, tax, le, dob } = userInfo;
-      const date = new Date(dob);
-      dispatch({
-        type: "userUpdate",
-        data: {
-          riskProfile: rp,
-          notify,
-          tax,
-          isDrManual: !dr ? 0 : 1,
-          lifeExpectancy: le,
-          dobYear: date.getFullYear(),
-          dobMonth: date.getMonth() + 1,
-          dobDate: date.getDate(),
-        },
+    if(!userInfo) return;
+    const { rp, notify, dr, tax, le, dob } = userInfo;
+    const date = new Date(dob);
+    dispatch({
+      type: "userUpdate",
+      data: {
+        riskProfile: rp,
+        notify,
+        tax,
+        isDrManual: !dr ? 0 : 1,
+        lifeExpectancy: le,
+        dobYear: date.getFullYear(),
+        dobMonth: date.getMonth() + 1,
+        dobDate: date.getDate(),
+      },
       });
-    }
   }, [userInfo]);
 
   useEffect(() => {
@@ -306,7 +310,7 @@ export default function UserSettings() {
             </TabPane>
             <TabPane className="settings-tabpane-view" tab="Profile" key="2">
               <Row>
-                <Col span={24}>
+                {userInfo  && <Col span={24}>
                   <ProfileTab
                     dispatch={dispatch}
                     isDrManual={isDrManual}
@@ -314,7 +318,7 @@ export default function UserSettings() {
                     riskProfile={riskProfile}
                     tax={tax}
                   />
-                </Col>
+                </Col>}
                 <Col xs={24} sm={24} md={16}>
                   <SaveButton
                     loading={loading}

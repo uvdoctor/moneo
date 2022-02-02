@@ -74,10 +74,12 @@ export const doesImExist = async (im: Number) => {
 
 export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
   try {
-    return await API.graphql({
-      query: mutations.updateUserInfo,
-      variables: { input: input },
-    });
+    const { data } =  (await API.graphql(
+      graphqlOperation(mutations.updateUserInfo, { input: input })
+    )) as {
+      data: APIt.UpdateUserInfoMutation;
+    };
+    return data.updateUserInfo as APIt.UpdateUserInfoInput;
   } catch (e) {
     console.log("Error while updating table", e);
   }
