@@ -979,6 +979,7 @@ function NWContextProvider({ fxRates }: any) {
         totalPhysical,
         totalFinancial,
         totalETFs,
+        totalFFixed,
       }}>
       <NWView />
     </NWContext.Provider>
