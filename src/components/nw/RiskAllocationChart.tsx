@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
+import { getRiskProfileOptions, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { NWContext } from './NWContext';
 import { getTooltipDesc } from './nwutils';
 import { RiskProfile } from '../../api/goals';
 import { AppContext } from '../AppContext';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 
 const PieChart = dynamic(() => import('bizcharts/lib/plots/PieChart'), {
 	ssr: false
@@ -176,16 +177,13 @@ export default function RiskAllocationChart() {
 	return (
 		<div className="container chart">
 			<h3>{`Total allocation of ${toHumanFriendlyCurrency(totalAssets, selectedCurrency)} by risk`}</h3>
-			{excessRiskPercent ? (
-				<h3 style={{ color: COLORS.RED}}>
-					{`${toReadableNumber(
-						excessRiskPercent,
-						2
-					)}% - Allocation of your assets does not match your Risk Profile `}
-				</h3>
-			) : (
-				''
-			)}
+			<h3 style={{ color: COLORS.RED }}>
+			<LabelWithTooltip label={`${toReadableNumber(excessRiskPercent,2)}
+				% - Allocation of your assets does not match your Risk Profile `} 
+				// @ts-ignore
+				info={`Given that you can tolerate ${getRiskProfileOptions()[userInfo?.rp]} loss, your risk Profile is 
+				${riskAttributes[userInfo?.rp].label} and your allocation includes assets of greater risk.`}/>
+			</h3>
 			<PieChart
 				data={data}
 				title={{
