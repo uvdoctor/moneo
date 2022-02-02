@@ -169,7 +169,7 @@ export default function RiskAllocationChart() {
   };
 
   useEffect(() => {
-    if (!totalAssets || !userInfo) {
+    if (!totalAssets) {
       setData([...[]]);
       return;
     }
