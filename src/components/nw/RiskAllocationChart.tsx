@@ -168,6 +168,9 @@ export default function RiskAllocationChart() {
           visible: true,
         }}
         meta={{
+          risk: {
+            formatter: (v: any) => riskAttributes[v].label,
+          },
           value: {
             formatter: (v: any) => {
               const riskData = data.find((item) => item.value === v);
@@ -205,7 +208,6 @@ export default function RiskAllocationChart() {
         colorField="risk"
         legend={{
           position: "top",
-          formatter: (risk) => riskAttributes[risk].label,
         }}
         color={({ risk }: any) => riskAttributes[risk].color}
       />
