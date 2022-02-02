@@ -24,7 +24,7 @@ const extractData = async (fileName, codes, isinMap, table) => {
           fileName === "ind_niftymidcap150list.csv"
         )
           schema.mcap = codes.mcap;
-
+        isinMap[record[codes.id]] = record[codes.id];
         batches.push({ PutRequest: { Item: schema } });
         count++;
         if (count === 25) {
