@@ -163,7 +163,7 @@ export default function RiskAllocationChart() {
 			}
 			initChartData();
 		},
-		[ totalAssets, userInfo ]
+		[ totalAssets ]
 	);
 
   useEffect(()=>{
