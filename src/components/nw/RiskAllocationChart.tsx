@@ -58,7 +58,7 @@ export default function RiskAllocationChart() {
 		const lowRiskVal = totalCash + totalProperties + totalPGold + totalFGold;
 		const mediumRiskVal = totalPM - totalPGold + (totalFFixed - totalLiquidFunds) + totalNPSFixed + totalFRE;
 		const highRiskVal = totalFEquity - totalMultiCap + totalNPSEquity;
-		const veryHighRiskVal = totalOthers + totalVehicles + totalP2P + totalInv + totalMultiCap;
+		const veryHighRiskVal = totalOthers + totalVehicles + totalP2P + totalFInv + totalMultiCap;
 		const speculativeVal = totalAngel + totalCrypto;
 		if (lowRiskVal) data.push(buildDataItem(LOW_RISK, lowRiskVal));
 		if (mediumRiskVal) data.push(buildDataItem(MED_RISK, mediumRiskVal));
@@ -154,10 +154,6 @@ export default function RiskAllocationChart() {
 									)}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(riskData.risk)}`
 								: '';
 						}
-						// `${toHumanFriendlyCurrency(
-						//   (v * totalAssets) / 100,
-						//   selectedCurrency
-						// )} (${toReadableNumber(v, 2)}%)`,
 					}
 				}}
 				label={{
