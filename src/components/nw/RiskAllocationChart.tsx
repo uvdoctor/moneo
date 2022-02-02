@@ -40,6 +40,9 @@ export default function RiskAllocationChart() {
     totalLargeCapStocks,
     totalStocks,
     totalETFs,
+    totalPPF,
+    totalEPF,
+    totalVPF,
   }: any = useContext(NWContext);
   const riskAttributes: any = {
     [RiskProfile.VC]: { label: "Very low", color: COLORS.GREEN },
@@ -91,6 +94,9 @@ export default function RiskAllocationChart() {
           Properties: totalProperties,
           "Physical Gold": totalPGold,
           "Gold Bonds": totalFGold,
+          PPF: totalPPF,
+          "Employee PF": totalEPF,
+          "Voluntary PF": totalVPF,
         },
         selectedCurrency,
         totalAssets
