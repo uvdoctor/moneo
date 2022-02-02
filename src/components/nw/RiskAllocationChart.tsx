@@ -62,24 +62,22 @@ export default function RiskAllocationChart() {
 
   const initChartData = () => {
     let data: Array<any> = [];
-    const lowRiskVal = totalCash + totalProperties + totalPGold + totalFGold;
-    const mediumRiskVal =
+    const vcVal = totalCash + totalProperties + totalPGold + totalFGold;
+    const cVal =
       totalPM -
       totalPGold +
       (totalFFixed - totalLiquidFunds) +
       totalNPSFixed +
       totalFRE;
-    const highRiskVal = totalFEquity - totalMultiCap + totalNPSEquity;
-    const veryHighRiskVal =
+    const mVal = totalFEquity - totalMultiCap + totalNPSEquity;
+    const hVal =
       totalOthers + totalVehicles + totalP2P + totalFInv + totalMultiCap;
-    const speculativeVal = totalAngel + totalCrypto;
-    if (lowRiskVal) data.push(buildDataItem(RiskProfile.VC, lowRiskVal));
-    if (mediumRiskVal) data.push(buildDataItem(RiskProfile.C, mediumRiskVal));
-    if (highRiskVal) data.push(buildDataItem(RiskProfile.M, highRiskVal));
-    if (veryHighRiskVal)
-      data.push(buildDataItem(RiskProfile.A, veryHighRiskVal));
-    if (speculativeVal)
-      data.push(buildDataItem(RiskProfile.VA, speculativeVal));
+    const vhVal = totalAngel + totalCrypto;
+    if (vcVal) data.push(buildDataItem(RiskProfile.VC, vcVal));
+    if (cVal) data.push(buildDataItem(RiskProfile.C, cVal));
+    if (mVal) data.push(buildDataItem(RiskProfile.M, mVal));
+    if (hVal) data.push(buildDataItem(RiskProfile.A, hVal));
+    if (vhVal) data.push(buildDataItem(RiskProfile.VA, vhVal));
     setData([...data]);
   };
 
