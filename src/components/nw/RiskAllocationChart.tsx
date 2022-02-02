@@ -177,13 +177,13 @@ export default function RiskAllocationChart() {
 	return (
 		<div className="container chart">
 			<h3>{`Total allocation of ${toHumanFriendlyCurrency(totalAssets, selectedCurrency)} by risk`}</h3>
-			<h3 style={{ color: COLORS.RED }}>
+			{excessRiskPercent ? <h3 style={{ color: COLORS.RED }}>
 			<LabelWithTooltip label={`${toReadableNumber(excessRiskPercent,2)}
 				% - Allocation of your assets does not match your Risk Profile `} 
 				// @ts-ignore
 				info={`Given that you can tolerate ${getRiskProfileOptions()[userInfo?.rp]} loss, your risk Profile is 
 				${riskAttributes[userInfo?.rp].label} and your allocation includes assets of greater risk.`}/>
-			</h3>
+			</h3> : null}
 			<PieChart
 				data={data}
 				title={{
