@@ -13,35 +13,36 @@ export default function RiskAllocationChart() {
 	const {
 		totalCash,
 		totalProperties,
-		totalBonds,
 		totalCrypto,
 		totalAssets,
 		totalFGold,
 		totalPM,
 		totalNPSFixed,
 		totalFRE,
-		totalETFs,
 		totalVehicles,
 		totalOthers,
 		totalPGold,
 		totalAngel,
-		totalStocks,
-		totalLargeCapStocks,
-		totalLargeCapFunds,
 		totalP2P,
 		totalNPSEquity,
 		selectedCurrency,
-		totalMutual
+		totalFFixed,
+		totalFEquity,
+		totalMultiCap,
+		totalInv,
+		totalLiquidFunds
 	}: any = useContext(NWContext);
 	const LOW_RISK = 'Low risk';
 	const MED_RISK = 'Medium risk';
 	const HIGH_RISK = 'High risk';
 	const VH_RISK = 'Very high risk';
+	const SPECULATIVE = 'Gamble';
 	const riskColors: any = {
 		[LOW_RISK]: COLORS.GREEN,
 		[MED_RISK]: COLORS.BLUE,
 		[HIGH_RISK]: COLORS.ORANGE,
-		[VH_RISK]: COLORS.RED
+		[VH_RISK]: '#ffab00',
+		[SPECULATIVE]: COLORS.RED
 	};
 	const [ data, setData ] = useState<Array<any>>([]);
 
@@ -55,20 +56,15 @@ export default function RiskAllocationChart() {
 	const initChartData = () => {
 		let data: Array<any> = [];
 		const lowRiskVal = totalCash + totalProperties + totalPGold + totalFGold;
-		const mediumRiskVal = totalPM + totalBonds + totalNPSFixed + totalETFs + totalFRE - totalPGold;
-		const highRiskVal = totalOthers + totalLargeCapStocks + totalLargeCapFunds + totalP2P + totalNPSEquity;
-		const veryHighRiskVal =
-			totalVehicles +
-			totalAngel +
-			totalCrypto +
-			totalStocks -
-			totalLargeCapStocks +
-			totalMutual -
-			totalLargeCapFunds;
+		const mediumRiskVal = totalPM - totalPGold + (totalFFixed - totalLiquidFunds) + totalNPSFixed + totalFRE;
+		const highRiskVal = totalFEquity - totalMultiCap + totalNPSEquity;
+		const veryHighRiskVal = totalOthers + totalVehicles + totalP2P + totalInv + totalMultiCap;
+		const speculativeVal = totalAngel + totalCrypto;
 		if (lowRiskVal) data.push(buildDataItem(LOW_RISK, lowRiskVal));
 		if (mediumRiskVal) data.push(buildDataItem(MED_RISK, mediumRiskVal));
 		if (highRiskVal) data.push(buildDataItem(HIGH_RISK, highRiskVal));
 		if (veryHighRiskVal) data.push(buildDataItem(VH_RISK, veryHighRiskVal));
+		if (speculativeVal) data.push(buildDataItem(SPECULATIVE, speculativeVal));
 		setData([ ...data ]);
 	};
 
@@ -88,9 +84,8 @@ export default function RiskAllocationChart() {
 			return getTooltipDesc(
 				{
 					'Precious Metals': totalPM - totalPGold,
-					'Other Bonds & Funds': totalBonds,
+					'Other Bonds & Funds': totalFFixed - totalLiquidFunds,
 					'NPS Bond Schemes': totalNPSFixed,
-					ETFs: totalETFs,
 					REITS: totalFRE
 				},
 				selectedCurrency,
@@ -99,11 +94,8 @@ export default function RiskAllocationChart() {
 		if (risk === HIGH_RISK)
 			return getTooltipDesc(
 				{
-					Collections: totalOthers,
-					'Large-cap Stocks': totalLargeCapStocks,
-					'Large-cap Mutual Funds': totalLargeCapFunds,
-					'NPS Equity Schemes': totalNPSEquity,
-					'P2P Lending': totalP2P
+					'Large-cap Stocks': totalFEquity - totalMultiCap,
+					'NPS Equity Schemes': totalNPSEquity
 				},
 				selectedCurrency,
 				totalAssets
@@ -112,10 +104,19 @@ export default function RiskAllocationChart() {
 			return getTooltipDesc(
 				{
 					Vehicles: totalVehicles,
+					Collections: totalOthers,
+					'P2P Lending': totalP2P,
+					'Other Investment Trusts': totalInv,
+					'Other Stocks': totalMultiCap
+				},
+				selectedCurrency,
+				totalAssets
+			);
+		if (risk === SPECULATIVE)
+			return getTooltipDesc(
+				{
 					'Start-up Investments': totalAngel,
-					Crypto: totalCrypto,
-					'Mutual Funds': totalMutual,
-					'Other Stocks': totalStocks - totalLargeCapStocks - totalLargeCapFunds
+					Crypto: totalCrypto
 				},
 				selectedCurrency,
 				totalAssets
