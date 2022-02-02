@@ -3,7 +3,7 @@ import { Alert, Checkbox, Col, Form, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
 import TaxLiabilityInput from "./TaxLiabilityInput";
-import RiskProfile from "./RiskProfile";
+import RiskProfileInput from "./RiskProfileInput";
 
 interface StepThreeProps {
   riskProfile: string;
@@ -32,10 +32,16 @@ export default function StepThree(props: StepThreeProps) {
       </Row>
       <Row gutter={[0, 20]}>
         <Col xs={24} sm={12} md={12} lg={12}>
-          <RiskProfile value={props.riskProfile} changeHandler={props.setRiskProfile}/>
+          <RiskProfileInput
+            value={props.riskProfile}
+            changeHandler={props.setRiskProfile}
+          />
         </Col>
         <Col xs={24} sm={12} md={12} lg={12}>
-          <TaxLiabilityInput value={props.taxLiability} changeHandler={props.setTaxLiability}/>
+          <TaxLiabilityInput
+            value={props.taxLiability}
+            changeHandler={props.setTaxLiability}
+          />
         </Col>
         <Col span={24}>
           <Form

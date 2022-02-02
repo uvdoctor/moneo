@@ -4,6 +4,7 @@ import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 import { getTooltipDesc } from "./nwutils";
+import { RiskProfile } from "../../api/goals";
 
 const PieChart = dynamic(() => import("bizcharts/lib/plots/PieChart"), {
   ssr: false,
@@ -30,19 +31,20 @@ export default function RiskAllocationChart() {
     totalFFixed,
     totalMultiCap,
     totalFInv,
+    totalSavings,
+    totalLendings,
     totalLiquidFunds,
+    totalLtdep,
+    totalBonds,
+    totalLargeCapFunds,
+    totalLargeCapStocks,
   }: any = useContext(NWContext);
-  const LOW_RISK = "Low risk";
-  const MED_RISK = "Medium risk";
-  const HIGH_RISK = "High risk";
-  const VH_RISK = "Very high risk";
-  const SPECULATIVE = "Gamble";
   const riskColors: any = {
-    [LOW_RISK]: COLORS.GREEN,
-    [MED_RISK]: "#ffc107",
-    [HIGH_RISK]: "#ffa698",
-    [VH_RISK]: COLORS.ORANGE,
-    [SPECULATIVE]: COLORS.RED,
+    [RiskProfile.VC]: COLORS.GREEN,
+    [RiskProfile.C]: "#ffc107",
+    [RiskProfile.M]: "#ffa698",
+    [RiskProfile.A]: COLORS.ORANGE,
+    [RiskProfile.VA]: COLORS.RED,
   };
   const [data, setData] = useState<Array<any>>([]);
 
@@ -66,19 +68,24 @@ export default function RiskAllocationChart() {
     const veryHighRiskVal =
       totalOthers + totalVehicles + totalP2P + totalFInv + totalMultiCap;
     const speculativeVal = totalAngel + totalCrypto;
-    if (lowRiskVal) data.push(buildDataItem(LOW_RISK, lowRiskVal));
-    if (mediumRiskVal) data.push(buildDataItem(MED_RISK, mediumRiskVal));
-    if (highRiskVal) data.push(buildDataItem(HIGH_RISK, highRiskVal));
-    if (veryHighRiskVal) data.push(buildDataItem(VH_RISK, veryHighRiskVal));
-    if (speculativeVal) data.push(buildDataItem(SPECULATIVE, speculativeVal));
+    if (lowRiskVal) data.push(buildDataItem(RiskProfile.VC, lowRiskVal));
+    if (mediumRiskVal) data.push(buildDataItem(RiskProfile.C, mediumRiskVal));
+    if (highRiskVal) data.push(buildDataItem(RiskProfile.M, highRiskVal));
+    if (veryHighRiskVal)
+      data.push(buildDataItem(RiskProfile.A, veryHighRiskVal));
+    if (speculativeVal)
+      data.push(buildDataItem(RiskProfile.VA, speculativeVal));
     setData([...data]);
   };
 
   const breakdownRiskInfo = (risk: string) => {
-    if (risk === LOW_RISK)
+    if (risk === RiskProfile.VC)
       return getTooltipDesc(
         {
-          Cash: totalCash,
+          Savings: totalSavings,
+          Deposits: totalLendings,
+          "Long-term Schemes": totalLtdep,
+          "Liquid Funds": totalLiquidFunds,
           Properties: totalProperties,
           "Physical Gold": totalPGold,
           "Gold Bonds": totalFGold,
@@ -86,27 +93,29 @@ export default function RiskAllocationChart() {
         selectedCurrency,
         totalAssets
       );
-    if (risk === MED_RISK)
+    if (risk === RiskProfile.C)
       return getTooltipDesc(
         {
           "Precious Metals": totalPM - totalPGold,
-          "Other Bonds & Funds": totalFFixed - totalLiquidFunds,
+          Bonds: totalBonds,
+          "Fixed Income Funds": totalFFixed - totalBonds - totalLiquidFunds,
           "NPS Bond Schemes": totalNPSFixed,
-          REITS: totalFRE,
+          REITs: totalFRE,
         },
         selectedCurrency,
         totalAssets
       );
-    if (risk === HIGH_RISK)
+    if (risk === RiskProfile.M)
       return getTooltipDesc(
         {
-          "Large-cap Stocks": totalFEquity - totalMultiCap,
+          "Large-cap Stocks": totalLargeCapStocks,
+          "Large-cap Mutual Funds": totalLargeCapFunds,
           "NPS Equity Schemes": totalNPSEquity,
         },
         selectedCurrency,
         totalAssets
       );
-    if (risk === VH_RISK)
+    if (risk === RiskProfile.A)
       return getTooltipDesc(
         {
           Vehicles: totalVehicles,
@@ -118,7 +127,7 @@ export default function RiskAllocationChart() {
         selectedCurrency,
         totalAssets
       );
-    if (risk === SPECULATIVE)
+    if (risk === RiskProfile.VA)
       return getTooltipDesc(
         {
           "Start-up Investments": totalAngel,
