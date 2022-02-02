@@ -74,7 +74,7 @@ export const doesImExist = async (im: Number) => {
 
 export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
   try {
-    await API.graphql({
+    return await API.graphql({
       query: mutations.updateUserInfo,
       variables: { input: input },
     });

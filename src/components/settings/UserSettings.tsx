@@ -82,6 +82,8 @@ export default function UserSettings() {
     userInfo,
     discountRate,
     setDiscountRate,
+    appContextLoaded, 
+    setUserInfo
   }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const {
@@ -101,7 +103,6 @@ export default function UserSettings() {
     dobMonth,
     dobYear,
   } = userState;
-  const { appContextLoaded }: any = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
@@ -140,7 +141,8 @@ export default function UserSettings() {
         }`
       );
       if (attr === "Whatsapp Number") {
-        await updateUserDetails({ uname: owner, im: data as number });
+        const result = await updateUserDetails({ uname: owner, im: data as number });
+        setUserInfo(result)
       }
       return true;
     } catch (error) {
@@ -179,11 +181,12 @@ export default function UserSettings() {
       if (Object.keys(input).length) {
         await Auth.updateUserAttributes(user, input);
       }
-      await updateUserDetails({
+      const result = await updateUserDetails({
         uname: owner,
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
         le: lifeExpectancy,
       });
+      setUserInfo(result)
       success("Updated Successfully");
     } catch (error) {
       failure(`Unable to update ${error}`);
@@ -194,13 +197,14 @@ export default function UserSettings() {
   const updateProfileTab = async () => {
     setLoading(true);
     try {
-      await updateUserDetails({
+      const results = await updateUserDetails({
         uname: owner,
         dr: isDrManual ? discountRate : 0,
         notify,
         rp: riskProfile,
         tax,
       });
+      setUserInfo(results)
       success("Updated Successfully");
     } catch (error) {
       failure("Unable to update");
