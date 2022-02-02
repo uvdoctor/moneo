@@ -142,7 +142,6 @@ export default function UserSettings() {
       );
       if (attr === "Whatsapp Number") {
         const result = await updateUserDetails({ uname: owner, im: data as number });
-        console.log(result);
         setUserInfo(result)
       }
       return true;
@@ -187,8 +186,6 @@ export default function UserSettings() {
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
         le: lifeExpectancy,
       });
-      console.log(result);
-      
       setUserInfo(result)
       success("Updated Successfully");
     } catch (error) {
@@ -207,8 +204,6 @@ export default function UserSettings() {
         rp: riskProfile,
         tax,
       });
-      console.log(results);
-      
       setUserInfo(results)
       success("Updated Successfully");
     } catch (error) {
