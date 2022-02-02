@@ -29,7 +29,7 @@ export default function RiskAllocationChart() {
 		totalFFixed,
 		totalFEquity,
 		totalMultiCap,
-		totalInv,
+		totalFInv,
 		totalLiquidFunds
 	}: any = useContext(NWContext);
 	const LOW_RISK = 'Low risk';
@@ -106,7 +106,7 @@ export default function RiskAllocationChart() {
 					Vehicles: totalVehicles,
 					Collections: totalOthers,
 					'P2P Lending': totalP2P,
-					'Other Investment Trusts': totalInv,
+					'Other Investment Trusts': totalFInv,
 					'Other Stocks': totalMultiCap
 				},
 				selectedCurrency,
