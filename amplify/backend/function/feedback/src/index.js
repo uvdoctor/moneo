@@ -6,7 +6,7 @@ const subject = {
 	Q: 'Question'
 };
 
-const processData = async (data) => {
+const processData = (data) => {
 	return new Promise(async (resolve, reject) => {
 		for (record of data) {
 			try {
@@ -27,7 +27,8 @@ const processData = async (data) => {
 							</div>
 						</body>
 						</html>`;
-					await sendMail(template, subject[type.S], [ 'emailumangdoctor@gmail.com' ], 'no-reply@moneo.money');
+					const message = await sendMail(template, subject[type.S], ['emailumangdoctor@gmail.com'], 'no-reply@moneo.money');
+					console.log(message)
 				}
 			} catch (err) {
 				reject(err);
@@ -38,6 +39,5 @@ const processData = async (data) => {
 };
 
 exports.handler = async (event) => {
-	console.log(JSON.stringify(event, null, 2));
 	return await processData(event.Records);
 };
