@@ -11,13 +11,16 @@ import {
   CreateUserHoldingsInput,
   CreateUserInsInput,
   HoldingInput,
+  INBondPrice,
+  INExchgPrice,
+  INMFPrice,
   InstrumentInput,
   InsType,
   MFSchemeType,
   PropertyInput,
   PropertyType,
 } from "../../api/goals";
-import { LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { includesAny } from "../utils";
 import {
@@ -28,12 +31,54 @@ import {
   getCryptoRate,
   isFund,
   isLargeCap,
+  loadMatchingINBond,
+  loadMatchingINExchange,
+  loadMatchingINMutual,
 } from "./nwutils";
 const today = new Date();
 const presentMonth = today.getMonth() + 1;
 const presentYear = today.getFullYear();
 
-export const getCashFlows = (
+const initializeInsData = async (instruments: Array<InstrumentInput>) => {
+  let mfIds: Set<string> = new Set();
+  let otherIds: Set<string> = new Set();
+  let initFromDB = false;
+  const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  instruments.forEach((ins: InstrumentInput) => {
+    if (ins.id.startsWith("INF")) mfIds.add(ins.id);
+    else otherIds.add(ins.id);
+    if (!initFromDB && (!insData || !insData[ins.id])) initFromDB = true;
+  });
+  if (!initFromDB) return insData;
+  let insCache: any = {};
+  let mfs: Array<INMFPrice> | null = null;
+  if (mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
+  if (mfs)
+    mfs.forEach((mf: INMFPrice) => {
+      insCache[mf.id as string] = mf;
+      mfIds.delete(mf.id as string);
+    });
+  if (otherIds.size) {
+    let exchgEntries: Array<INExchgPrice> | null =
+      await loadMatchingINExchange(Array.from(otherIds));
+    exchgEntries?.forEach((entry: INExchgPrice) => {
+      insCache[entry.id as string] = entry;
+      otherIds.delete(entry.id as string);
+    });
+  }
+  mfIds.forEach((id: string) => otherIds.add(id));
+  let bonds: Array<INBondPrice> | null = null;
+  if (otherIds.size) bonds = await loadMatchingINBond(Array.from(otherIds));
+  if (bonds)
+    bonds.forEach((bond: INBondPrice) => {
+      insCache[bond.id as string] = bond;
+      otherIds.delete(bond.id as string);
+    });
+  simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
+  return insCache;
+};
+
+const getCashFlows = (
   amt: number,
   bygoneDuration: number,
   remainingDuration: number,
@@ -315,7 +360,7 @@ export const calculateNPS = (
   return { value, fixed, equity };
 };
 
-export const priceInstruments = (
+export const priceInstruments = async (
   instruments: Array<InstrumentInput>,
   selectedMembers: Array<string>,
   selectedCurrency: string
@@ -339,6 +384,9 @@ export const priceInstruments = (
   let indexFunds = 0;
   let liquidFunds = 0;
   let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  if (!cachedData) {
+    cachedData = await initializeInsData(instruments);
+  }
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
@@ -698,7 +746,7 @@ export const calculateTotalAssets = async (
 ) => {
   let totalAssets = 0;
   if (insHoldings?.ins) {
-    const { total } = priceInstruments(
+    const { total } = await priceInstruments(
       insHoldings.ins,
       selectedMembers,
       selectedCurrency

@@ -13,9 +13,6 @@ import {
   loadAllFamilyMembers,
   loadAllHoldings,
   loadInsHoldings,
-  loadMatchingINBond,
-  loadMatchingINExchange,
-  loadMatchingINMutual,
   getCategoryOptions,
   updateHoldings,
   updateInsHoldings,
@@ -26,9 +23,6 @@ import {
   CreateUserHoldingsInput,
   CreateNPSPriceInput,
   HoldingInput,
-  INBondPrice,
-  INExchgPrice,
-  INMFPrice,
   PropertyInput,
   UpdateUserHoldingsInput,
   InstrumentInput,
@@ -54,8 +48,7 @@ import {
   priceVehicles,
   priceCrypto,
 } from "./valuationutils";
-import simpleStorage from "simplestorage.js";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY, ROUTES } from "../../CONSTANTS";
+import { ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
 import { AppContext } from "../AppContext";
 
@@ -467,45 +460,6 @@ function NWContextProvider({ fxRates }: any) {
     }
   };
 
-  const initializeInsData = async (instruments: Array<InstrumentInput>) => {
-    let mfIds: Set<string> = new Set();
-    let otherIds: Set<string> = new Set();
-    let initFromDB = false;
-    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    instruments.forEach((ins: InstrumentInput) => {
-      if (ins.id.startsWith("INF")) mfIds.add(ins.id);
-      else otherIds.add(ins.id);
-      if (!initFromDB && (!insData || !insData[ins.id])) initFromDB = true;
-    });
-    if (!initFromDB) return insData;
-    let insCache: any = {};
-    let mfs: Array<INMFPrice> | null = null;
-    if (mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
-    if (mfs)
-      mfs.forEach((mf: INMFPrice) => {
-        insCache[mf.id as string] = mf;
-        mfIds.delete(mf.id as string);
-      });
-    if (otherIds.size) {
-      let exchgEntries: Array<INExchgPrice> | null =
-        await loadMatchingINExchange(Array.from(otherIds));
-      exchgEntries?.forEach((entry: INExchgPrice) => {
-        insCache[entry.id as string] = entry;
-        otherIds.delete(entry.id as string);
-      });
-    }
-    mfIds.forEach((id: string) => otherIds.add(id));
-    let bonds: Array<INBondPrice> | null = null;
-    if (otherIds.size) bonds = await loadMatchingINBond(Array.from(otherIds));
-    if (bonds)
-      bonds.forEach((bond: INBondPrice) => {
-        insCache[bond.id as string] = bond;
-        otherIds.delete(bond.id as string);
-      });
-    simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
-    return insCache;
-  };
-
   const initializeHoldings = async () => {
     await initializeFamilyList();
     let allHoldings: CreateUserHoldingsInput | null = null;
@@ -524,7 +478,6 @@ function NWContextProvider({ fxRates }: any) {
     setCurrencyList(currencyList);
     if (allHoldings) setHoldings(true);
     if (insHoldings?.uname && insHoldings?.ins?.length) {
-      await initializeInsData(insHoldings?.ins);
       setInsholdings(true);
     }
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
@@ -672,44 +625,47 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalFFixed, totalNPSFixed, totalP2P]);
 
   useEffect(() => {
-    const {
-      total,
-      totalFGold,
-      totalFEquity,
-      totalFRE,
-      totalFFixed,
-      totalInv,
-      totalStocks,
-      totalBonds,
-      totalETFs,
-      totalMFs,
-      largeCapStocks,
-      largeCapFunds,
-      largeCapETFs,
-      multiCap,
-      indexFunds,
-      fmp,
-      intervalFunds,
-      liquidFunds,
-    } = priceInstruments(instruments, selectedMembers, selectedCurrency);
-    setTotalInstruments(total);
-    setTotalFGold(totalFGold);
-    setTotalFEquity(totalFEquity);
-    setTotalFFixed(totalFFixed);
-    setTotalFRE(totalFRE);
-    setTotalFInv(totalInv);
-    setTotalStocks(totalStocks);
-    setTotalBonds(totalBonds);
-    setTotalETFs(totalETFs);
-    setTotalMFs(totalMFs);
-    setTotalLargeCapStocks(largeCapStocks);
-    setTotalLargeCapFunds(largeCapFunds);
-    setTotalLargeCapETF(largeCapETFs);
-    setTotalMultiCap(multiCap);
-    setTotalIndexFunds(indexFunds);
-    setTotalFMP(fmp);
-    setTotalIntervalFunds(intervalFunds);
-    setTotalLiquidFunds(liquidFunds);
+    const getValue = async () => {
+      const {
+        total,
+        totalFGold,
+        totalFEquity,
+        totalFRE,
+        totalFFixed,
+        totalInv,
+        totalStocks,
+        totalBonds,
+        totalETFs,
+        totalMFs,
+        largeCapStocks,
+        largeCapFunds,
+        largeCapETFs,
+        multiCap,
+        indexFunds,
+        fmp,
+        intervalFunds,
+        liquidFunds,
+      } = await priceInstruments(instruments, selectedMembers, selectedCurrency);
+      setTotalInstruments(total);
+      setTotalFGold(totalFGold);
+      setTotalFEquity(totalFEquity);
+      setTotalFFixed(totalFFixed);
+      setTotalFRE(totalFRE);
+      setTotalFInv(totalInv);
+      setTotalStocks(totalStocks);
+      setTotalBonds(totalBonds);
+      setTotalETFs(totalETFs);
+      setTotalMFs(totalMFs);
+      setTotalLargeCapStocks(largeCapStocks);
+      setTotalLargeCapFunds(largeCapFunds);
+      setTotalLargeCapETF(largeCapETFs);
+      setTotalMultiCap(multiCap);
+      setTotalIndexFunds(indexFunds);
+      setTotalFMP(fmp);
+      setTotalIntervalFunds(intervalFunds);
+      setTotalLiquidFunds(liquidFunds);
+  }
+  getValue()
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
@@ -981,7 +937,8 @@ function NWContextProvider({ fxRates }: any) {
         totalETFs,
         totalFFixed,
         totalStocks,
-      }}>
+      }}
+    >
       <NWView />
     </NWContext.Provider>
   );
