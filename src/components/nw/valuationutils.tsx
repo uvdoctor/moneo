@@ -8,6 +8,8 @@ import {
   AssetSubType,
   AssetType,
   CreateNPSPriceInput,
+  CreateUserHoldingsInput,
+  CreateUserInsInput,
   HoldingInput,
   InstrumentInput,
   InsType,
@@ -684,4 +686,139 @@ export const priceNPS = (
     }
   });
   return { total, totalNPSFixed, totalNPSEquity };
+};
+
+export const calculateTotalAssets = async (
+  holdings: CreateUserHoldingsInput,
+  insHoldings: CreateUserInsInput,
+  selectedMembers: Array<string>,
+  selectedCurrency: string,
+  fxRates: any,
+  npsData: any
+) => {
+  let totalAssets = 0;
+  if (insHoldings?.ins) {
+    const { total } = priceInstruments(
+      insHoldings.ins,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.pm) {
+    const { total } = await pricePM(
+      holdings.pm,
+      selectedMembers,
+      selectedCurrency,
+      fxRates
+    );
+    totalAssets += total;
+  }
+  if (holdings?.crypto) {
+    const total = await priceCrypto(
+      holdings.crypto,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.pf) {
+    const { total } = pricePF(holdings.pf, selectedMembers, selectedCurrency);
+    totalAssets += total;
+  }
+  if (holdings?.nps) {
+    const { total } = priceNPS(
+      holdings.nps,
+      selectedMembers,
+      selectedCurrency,
+      npsData
+    );
+    totalAssets += total;
+  }
+  if (holdings?.vehicles) {
+    const total = priceVehicles(
+      holdings.vehicles,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.property) {
+    const { total } = priceProperties(
+      holdings.property,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.savings) {
+    const total = priceSavings(
+      holdings.savings,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.dep) {
+    const { total } = priceLendings(
+      holdings.dep,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.ltdep) {
+    const total = priceLtdep(holdings.ltdep, selectedMembers, selectedCurrency);
+    totalAssets += total;
+  }
+  if (holdings?.other) {
+    const total = priceOthers(
+      holdings.other,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalAssets += total;
+  }
+  if (holdings?.angel) {
+    const total = priceAngel(holdings.angel, selectedMembers, selectedCurrency);
+    totalAssets += total;
+  }
+  if (holdings?.p2p) {
+    const total = priceP2P(holdings.p2p, selectedMembers, selectedCurrency);
+    totalAssets += total;
+  }
+  return totalAssets;
+};
+
+export const calculateTotalLiabilities = (
+  holdings: CreateUserHoldingsInput,
+  selectedMembers: Array<string>,
+  selectedCurrency: string,
+  discountRate: number,
+  userInfo: any
+) => {
+  let totalLiabilities = 0;
+  if (holdings?.ins) {
+    const total = priceInsurance(
+      holdings.ins,
+      selectedMembers,
+      selectedCurrency,
+      discountRate,
+      userInfo
+    );
+    totalLiabilities += total;
+  }
+  if (holdings?.loans) {
+    const total = priceLoans(holdings.loans, selectedMembers, selectedCurrency);
+    totalLiabilities += total;
+  }
+  if (holdings?.credit) {
+    const total = priceCredit(
+      holdings.credit,
+      selectedMembers,
+      selectedCurrency
+    );
+    totalLiabilities += total;
+  }
+  return totalLiabilities;
 };
