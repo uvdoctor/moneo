@@ -11,7 +11,14 @@ import {
   SUKANYA_SAMRIDDHI_YOJANA,
   TAB,
 } from "./NWContext";
-import { cryptoList, getFXRate, getPrice, initOptions, toHumanFriendlyCurrency, toReadableNumber } from "../utils";
+import {
+  cryptoList,
+  getFXRate,
+  getPrice,
+  initOptions,
+  toHumanFriendlyCurrency,
+  toReadableNumber,
+} from "../utils";
 import {
   COLORS,
   LOCAL_DATA_TTL,
@@ -538,16 +545,15 @@ export const financialAssetTypes = [
 ];
 
 export const getNPSData = async () => {
-  try {
-    const {
-      data: { listNPSPrices },
-    } = (await API.graphql({
-      query: queries.listNpsPrices,
-    })) as { data: APIt.ListNpsPricesQuery };
-    return listNPSPrices?.items;
-  } catch (e) {
-    console.log("Error while fetching NPS data: ", e);
-  }
+  const {
+    data: { listNPSPrices },
+  } = (await API.graphql(graphqlOperation(queries.listNpsPrices))) as {
+    data: APIt.ListNpsPricesQuery;
+  };
+  let npsData: Array<APIt.CreateNPSPriceInput> | null = listNPSPrices?.items?.length
+    ? (listNPSPrices.items as Array<APIt.CreateNPSPriceInput>)
+    : null;
+  return npsData;
 };
 
 export const getInstrumentDataWithKey = async (
@@ -715,10 +721,10 @@ export const getFieldsAndInfo = (tab: string) => {
     ANGEL,
     CREDIT,
   } = TAB;
-  const fieldsAndInfo: { [key: string]: { fields: {}, info: {}  } } = {
+  const fieldsAndInfo: { [key: string]: { fields: {}, info: {} } } = {
     [SAV]: {
       fields: { name: "Comment", amount: "Amount" },
-      info: { amount: "Balance available in your bank account"}
+      info: { amount: "Balance available in your bank account" },
     },
     [LENT]: {
       fields: {
@@ -726,14 +732,14 @@ export const getFieldsAndInfo = (tab: string) => {
         name: "Comment",
         amount: "Amount",
         date: "Start Date & Maturity Date",
-        rate: "Rate" 
+        rate: "Rate",
       },
       info: {
         type: "Deposit type and Interest Payout Frequency",
         amount: "Deposits amount",
         date: "Date range",
-        rate: "Interest Rate" 
-      }
+        rate: "Interest Rate",
+      },
     },
     [LTDEP]: {
       fields: {
@@ -750,7 +756,7 @@ export const getFieldsAndInfo = (tab: string) => {
         date: "Date Range",
         rate: "Interest Rate",
         duration: "Number of duration",
-      }
+      },
     },
     [PF]: {
       fields: {
@@ -765,7 +771,7 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Amount",
         qty: "Amount Contributed Every Year",
         rate: "Interest Rate",
-      }
+      },
     },
     [PROP]: {
       fields: {
@@ -788,7 +794,7 @@ export const getFieldsAndInfo = (tab: string) => {
         pin: "Pincode",
         address: "Address",
         owner: "Add owners and their percentage shared",
-      }
+      },
     },
     [VEHICLE]: {
       fields: {
@@ -801,11 +807,14 @@ export const getFieldsAndInfo = (tab: string) => {
         type: "Vehicle Type",
         amount: "Purchase Amount",
         date: "Purchase Date",
-      }
+      },
     },
-    [PM]: { 
+    [PM]: {
       fields: { type: "Type & Purity", qty: "Quantity" },
-      info: { type: "Metals type and purity", qty: "Specify the quantity in grams" },
+      info: {
+        type: "Metals type and purity",
+        qty: "Specify the quantity in grams",
+      },
     },
     [OTHER]: {
       fields: { type: "Type", name: "Comment", amount: "Amount" },
@@ -813,7 +822,10 @@ export const getFieldsAndInfo = (tab: string) => {
     },
     [CRYPTO]: {
       fields: { type: "Type", qty: "Quantity" },
-      info: { type: "Type of CryptoCurrency you invested in", qty: "Quantity purchased in crypto" },
+      info: {
+        type: "Type of CryptoCurrency you invested in",
+        qty: "Quantity purchased in crypto",
+      },
     },
     [ANGEL]: {
       fields: { name: "Comment", amount: "Amount" },
@@ -832,11 +844,14 @@ export const getFieldsAndInfo = (tab: string) => {
         date: "Start Date & Maturity Date",
         rate: "Interest Rate",
         type: "Interest Payout Frequency",
-      }
+      },
     },
     [NPS]: {
       fields: { type: "Fund Manager & Scheme", qty: "Quantity" },
-      info: { type: "Specify the Fund manager and Scheme Type of National Pension Scheme", qty: "Quantity" }
+      info: {
+        type: "Specify the Fund manager and Scheme Type of National Pension Scheme",
+        qty: "Quantity",
+      },
     },
     [LOAN]: {
       fields: {
@@ -849,7 +864,7 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Monthly Installment",
         rate: "Interest Rate",
         date: "End date",
-      }
+      },
     },
     [INS]: {
       fields: {
@@ -864,12 +879,12 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
-      }
+      },
     },
     [CREDIT]: {
       fields: { name: "Comment", amount: "Amount" },
-      info: { amount: "Amount" }, 
-    }
+      info: { amount: "Amount" },
+    },
   };
   return fieldsAndInfo[tab];
 };
@@ -982,7 +997,11 @@ export const getCategoryOptions = (tab: string) => {
   return category[tab];
 };
 
-export const getTooltipDesc = (records: any, selectedCurrency: string, totalAssets: number) => {
+export const getTooltipDesc = (
+  records: any,
+  selectedCurrency: string,
+  totalAssets: number
+) => {
   let data: any = "";
   Object.keys(records).map((value) => {
     if (!records[value]) return;

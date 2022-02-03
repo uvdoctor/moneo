@@ -59,8 +59,9 @@ const initializeInsData = async (instruments: Array<InstrumentInput>) => {
       mfIds.delete(mf.id as string);
     });
   if (otherIds.size) {
-    let exchgEntries: Array<INExchgPrice> | null =
-      await loadMatchingINExchange(Array.from(otherIds));
+    let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(
+      Array.from(otherIds)
+    );
     exchgEntries?.forEach((entry: INExchgPrice) => {
       insCache[entry.id as string] = entry;
       otherIds.delete(entry.id as string);
@@ -737,8 +738,8 @@ export const priceNPS = (
 };
 
 export const calculateTotalAssets = async (
-  holdings: CreateUserHoldingsInput,
-  insHoldings: CreateUserInsInput,
+  holdings: CreateUserHoldingsInput | null,
+  insHoldings: CreateUserInsInput | null,
   selectedMembers: Array<string>,
   selectedCurrency: string,
   fxRates: any,

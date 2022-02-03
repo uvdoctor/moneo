@@ -182,8 +182,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
 
   const loadNPSSubCategories = async () => {
-    // @ts-ignore
-    let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
+    let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
     if (npsData) {
       setNPSData([...npsData]);
       let subCategories: any = getNPSFundManagers();
