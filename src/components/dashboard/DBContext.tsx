@@ -56,11 +56,12 @@ function DBContextProvider({ fxRates }: any) {
   };
 
   useEffect(() => {
+    if(!owner ) return;
     const initializeData = async () => {
       await initializeHoldings();
     };
     initializeData();
-  }, []);
+  }, [owner]);
 
   return (
     <DBContext.Provider
