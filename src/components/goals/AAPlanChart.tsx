@@ -6,6 +6,7 @@ import { CalcContext } from "../calc/CalcContext";
 import { FIGoalContext } from "./FIGoalContext";
 import { Row, Col } from "antd";
 import { PlanContext } from "./PlanContext";
+import { COLORS } from "../../CONSTANTS";
 
 const ColumnChart = dynamic(() => import("bizcharts/lib/plots/ColumnChart"), {
   ssr: false,
@@ -63,6 +64,18 @@ export default function AAPlanChart() {
 
   return (
     <Row>
+      <Col
+        span={24}
+        style={{
+          borderBottom: 2,
+          marginBottom: 10,
+          borderBottomColor: COLORS.LIGHT_GRAY,
+        }}>
+        <Row justify="center">
+          Target Asset Allocation from year&nbsp;
+          <strong>{`${new Date().getFullYear() + 1} onwards`}</strong>
+        </Row>
+      </Col>
       <Col span={24} style={{ minHeight: "400px" }}>
         <ColumnChart
           data={data}
