@@ -11,7 +11,7 @@ import { getTooltipDesc } from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
-import { Row } from "antd";
+import { Col, Row } from "antd";
 
 const PieChart = dynamic(() => import("bizcharts/lib/plots/PieChart"), {
   ssr: false,
@@ -185,84 +185,88 @@ export default function RiskAllocationChart() {
   }, [data, userInfo]);
 
   return (
-    <div className="container chart">
-      <Row justify="center">
-        <h3>{`Total allocation of ${toHumanFriendlyCurrency(
-          totalAssets,
-          selectedCurrency
-        )} by risk`}</h3>
-      </Row>
-      {excessRiskPercent ? (
+    <Row align="middle" className="container chart">
+      <Col xs={24} md={12}>
         <Row justify="center">
-          <h3 style={{ color: COLORS.RED }}>
-            <LabelWithTooltip
-              label={`Risk on ${toReadableNumber(
-                excessRiskPercent,
-                2
-              )}% of assets exceeds your risk appetite`}
-              // @ts-ignore
-              info={`Given that you can tolerate ${
-                riskProfileOptions[userInfo?.rp]
-              } loss, your risk profile is 
+          <h3>{`Total allocation of ${toHumanFriendlyCurrency(
+            totalAssets,
+            selectedCurrency
+          )} by risk`}</h3>
+        </Row>
+        {excessRiskPercent ? (
+          <Row justify="center">
+            <h3 style={{ color: COLORS.RED }}>
+              <LabelWithTooltip
+                label={`${toReadableNumber(
+                  excessRiskPercent,
+                  2
+                )}% of assets have higher risk `}
+                // @ts-ignore
+                info={`Given that you can tolerate ${
+                  riskProfileOptions[userInfo?.rp]
+                } loss, your risk profile is 
 				${
           riskAttributes[userInfo?.rp].label
         }. Current allocation includes ${toReadableNumber(
-                excessRiskPercent,
-                2
-              )}% of assets with greater risk.`}
-            />
-          </h3>
-        </Row>
-      ) : null}
-      <PieChart
-        data={data}
-        title={{
-          visible: true,
-        }}
-        meta={{
-          risk: {
-            formatter: (v: any) => riskAttributes[v].label,
-          },
-          value: {
-            formatter: (v: any) => {
-              const riskData = data.find((item) => item.value === v);
-              return v
-                ? `<b>${toHumanFriendlyCurrency(
-                    (v * totalAssets) / 100,
-                    selectedCurrency
-                  )}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(
-                    riskData.risk
-                  )}`
-                : "";
+                  excessRiskPercent,
+                  2
+                )}% of assets with higher risk.`}
+              />
+            </h3>
+          </Row>
+        ) : null}
+      </Col>
+      <Col style={{ minWidth: 400 }}>
+        <PieChart
+          data={data}
+          title={{
+            visible: true,
+          }}
+          meta={{
+            risk: {
+              formatter: (v: any) => riskAttributes[v].label,
             },
-          },
-        }}
-        label={{
-          visible: true,
-          type: "outer",
-          autoRotate: false,
-          formatter: (angleField) =>
-            `${toReadableNumber(angleField.value, 2)}%`,
-          style: {
-            fontFamily: "'Jost', sans-serif",
-            fontSize: 14,
-            fill: COLORS.DEFAULT,
-          },
-        }}
-        autoFit
-        interactions={[
-          {
-            type: "zoom",
-            enable: false,
-          },
-        ]}
-        angleField="value"
-        colorField="risk"
-        legend={{
-          position: "top",
-        }}
-        color={({ risk }: any) => riskAttributes[risk].color}
-      />
-    </div>
+            value: {
+              formatter: (v: any) => {
+                const riskData = data.find((item) => item.value === v);
+                return v
+                  ? `<b>${toHumanFriendlyCurrency(
+                      (v * totalAssets) / 100,
+                      selectedCurrency
+                    )}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(
+                      riskData.risk
+                    )}`
+                  : "";
+              },
+            },
+          }}
+          label={{
+            visible: true,
+            type: "outer",
+            autoRotate: false,
+            formatter: (angleField) =>
+              `${toReadableNumber(angleField.value, 2)}%`,
+            style: {
+              fontFamily: "'Jost', sans-serif",
+              fontSize: 14,
+              fill: COLORS.DEFAULT,
+            },
+          }}
+          autoFit
+          interactions={[
+            {
+              type: "zoom",
+              enable: false,
+            },
+          ]}
+          angleField="value"
+          colorField="risk"
+          legend={{
+            position: "top",
+          }}
+          color={({ risk }: any) => riskAttributes[risk].color}
+        />
+      </Col>
+    </Row>
   );
 }
