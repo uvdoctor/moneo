@@ -567,6 +567,7 @@ export const onCreateInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
+        uni
         createdAt
         updatedAt
       }
@@ -595,6 +596,7 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
+        uni
         createdAt
         updatedAt
       }
@@ -623,6 +625,7 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
+        uni
         createdAt
         updatedAt
       }
@@ -641,6 +644,7 @@ export const onCreateInsMeta = /* GraphQL */ `
       id
       mcap
       ind
+      uni
       createdAt
       updatedAt
     }
@@ -652,6 +656,7 @@ export const onUpdateInsMeta = /* GraphQL */ `
       id
       mcap
       ind
+      uni
       createdAt
       updatedAt
     }
@@ -663,6 +668,7 @@ export const onDeleteInsMeta = /* GraphQL */ `
       id
       mcap
       ind
+      uni
       createdAt
       updatedAt
     }

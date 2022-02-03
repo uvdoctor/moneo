@@ -585,6 +585,7 @@ export const getInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
+        uni
         createdAt
         updatedAt
       }
@@ -626,6 +627,7 @@ export const listInExchgPrices = /* GraphQL */ `
           id
           mcap
           ind
+          uni
           createdAt
           updatedAt
         }
@@ -646,6 +648,7 @@ export const getInsMeta = /* GraphQL */ `
       id
       mcap
       ind
+      uni
       createdAt
       updatedAt
     }
@@ -670,6 +673,7 @@ export const listInsMetas = /* GraphQL */ `
         id
         mcap
         ind
+        uni
         createdAt
         updatedAt
       }

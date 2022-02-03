@@ -379,6 +379,7 @@ type InsMeta
   id: String!
   mcap: MCap
   ind: String
+  uni: Boolean
 }
 
 type AllIndices
