@@ -8,11 +8,7 @@ import {
 import SelectInput from "../form/selectinput";
 import FISummaryHeader from "./FISummaryHeader";
 import { Button, Col, Dropdown, Menu, Row, Tabs } from "antd";
-import {
-  faChartLine,
-  faChartPie,
-  faChartBar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChartLine, faChartBar } from "@fortawesome/free-solid-svg-icons";
 import GoalSummary from "./GoalSummary";
 import { PlanContext } from "./PlanContext";
 import YearlyCFChart from "./YearlyCFChart";
@@ -21,11 +17,13 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import { GoalType } from "../../api/goals";
 import { DownOutlined, AimOutlined } from "@ant-design/icons";
 import { FIGoalContextProvider } from "./FIGoalContext";
-import DynamicAAChart from "./DynamicAAChart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FIPortfolioChart from "./FIPortfolioChart";
 import { COLORS } from "../../CONSTANTS";
 import PlanStart from "./PlanStart";
+import TargetAAChart from "./TargetAAChart";
+import AAPlanChart from "./AAPlanChart";
+import RadioInput from "../form/RadioInput";
 
 interface PlanViewProps {
   activeTab: string;
@@ -36,6 +34,13 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
   const { allGoals, ffGoal, setGoal }: any = useContext(PlanContext);
   const { TabPane } = Tabs;
   const [impFilter, setImpFilter] = useState<string>("");
+  const MILESTONES_CHART = "Milestones";
+  const currentYear = new Date().getFullYear();
+  const AA_CHART = currentYear + " Target";
+  const [chartType, setChartType] = useState<string>(MILESTONES_CHART);
+  const YEARLY_VIEW = "Yearly";
+  const ALL_VIEW = "All";
+  const [view, setView] = useState<string>(ALL_VIEW);
 
   return ffGoal ? (
     <Fragment>
@@ -87,32 +92,43 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
           tab={
             <Fragment>
               <FontAwesomeIcon icon={faChartLine} />
-              &nbsp;&nbsp;Milestones
+              &nbsp;&nbsp;Portfolio
             </Fragment>
           }>
           <CalcContextProvider calculateFor={ffGoal}>
             <FIGoalContextProvider>
-              <FIPortfolioChart />
-            </FIGoalContextProvider>
-          </CalcContextProvider>
-        </TabPane>
-        <TabPane
-          key="2"
-          tab={
-            <Fragment>
-              <FontAwesomeIcon icon={faChartPie} />
-              &nbsp;&nbsp;Allocation
-            </Fragment>
-          }>
-          <CalcContextProvider calculateFor={ffGoal}>
-            <FIGoalContextProvider>
-              <DynamicAAChart />
+              <Tabs activeKey={chartType} onChange={setChartType} type="line">
+                <TabPane key={MILESTONES_CHART} tab={MILESTONES_CHART}>
+                  <FIPortfolioChart />
+                </TabPane>
+                <TabPane key={AA_CHART} tab={AA_CHART}>
+                  <TargetAAChart />
+                </TabPane>
+                <TabPane
+                  key={currentYear + 1}
+                  tab={
+                    <Fragment>
+                      {`${currentYear + 1} onwards `}
+                      <RadioInput
+                        options={[ALL_VIEW, YEARLY_VIEW]}
+                        value={view}
+                        changeHandler={setView}
+                      />
+                    </Fragment>
+                  }>
+                  {view === YEARLY_VIEW ? (
+                    <TargetAAChart yearChangeable />
+                  ) : (
+                    <AAPlanChart />
+                  )}
+                </TabPane>
+              </Tabs>
             </FIGoalContextProvider>
           </CalcContextProvider>
         </TabPane>
         {allGoals?.length && (
           <TabPane
-            key={"3"}
+            key={"2"}
             tab={
               <Fragment>
                 <AimOutlined />
@@ -146,7 +162,7 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
         )}
         {allGoals?.length && (
           <TabPane
-            key={"4"}
+            key={"3"}
             tab={
               <Fragment>
                 <FontAwesomeIcon icon={faChartBar} />

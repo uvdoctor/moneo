@@ -39,7 +39,7 @@ function PlanContextProvider({
   children,
   goal,
   setGoal,
-  fxRates
+  fxRates,
 }: PlanContextProviderProps) {
   const { appContextLoaded, discountRate, defaultCurrency, userInfo }: any =
     useContext(AppContext);
@@ -66,9 +66,7 @@ function PlanContextProvider({
   const nowYear = new Date().getFullYear();
 
   const getCurrencyFactor = (currency: string) => {
-    return (
-      getFXRate(fxRates, defaultCurrency) / getFXRate(fxRates, currency)
-    );
+    return getFXRate(fxRates, defaultCurrency) / getFXRate(fxRates, currency);
   };
 
   const loadStateFromUserInfo = (g: CreateGoalInput) => {
@@ -136,7 +134,6 @@ function PlanContextProvider({
   ) => {
     if (!ffGoal) return;
     let result = findEarliestFFYear(ffGoal, mergedCFs, ffYear, mustCFs, tryCFs);
-    console.log("FF result: ", result);
     setFFResult(result);
     setOppCostCache({});
     setRR([...result.rr]);

@@ -37,7 +37,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import FIUserDetails from "../goals/FIUserDetails";
 import LoanSchedule from "./LoanSchedule";
-import DynamicAAChart from "../goals/DynamicAAChart";
 import FIMonthlyInvTargetChart from "./FIMonthlyInvTargetChart";
 import { AppContext } from "../AppContext";
 import * as mutations from "../../graphql/mutations";
@@ -51,6 +50,7 @@ import { Modal } from "antd";
 import { WarningOutlined } from "@ant-design/icons";
 import Advanced from "./Advanced";
 import FIAdvanced from "../goals/FIAdvanced";
+import TargetAAChart from "../goals/TargetAAChart";
 
 const CalcContext = createContext({});
 
@@ -119,6 +119,7 @@ function CalcContextProvider({
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [oppCost, setOppCost] = useState<number>(0);
   const [wipGoal, setWipGoal] = useState<CreateGoalInput | null>(goal);
+  const nowYear = new Date().getFullYear();
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
 
@@ -184,10 +185,10 @@ function CalcContextProvider({
         content: <FIPortfolioChart />,
       },
       {
-        label: "Target Allocation",
+        label: `${nowYear} Allocation`,
         active: true,
         svg: faChartPie,
-        content: <DynamicAAChart />,
+        content: <TargetAAChart />,
       },
       {
         label: "Investment Targets",

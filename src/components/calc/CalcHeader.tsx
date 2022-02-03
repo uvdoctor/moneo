@@ -112,23 +112,10 @@ export default function CalcHeader() {
                 &nbsp;&nbsp;{ratingLabel ? ratingLabel : ratingLabels[rating]}
               </Col>
               {!isPublicCalc && (
-                <Col>
-                  <Row>
-                    <Tooltip
-                      title={
-                        <div className="tooltip-share">
-                          <SocialShare />
-                        </div>
-                      }>
-                      <ShareAltOutlined />
-                    </Tooltip>
-                    &nbsp;&nbsp;
-                    <div
-                      onClick={() => handleSubmit(true)}
-                      style={{ color: COLORS.WHITE, cursor: "pointer" }}>
-                      <CloseOutlined />
-                    </div>
-                  </Row>
+                <Col
+                  onClick={() => handleSubmit(true)}
+                  style={{ color: COLORS.WHITE, cursor: "pointer" }}>
+                  <CloseOutlined />
                 </Col>
               )}
             </Row>
