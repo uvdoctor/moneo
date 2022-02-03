@@ -37,6 +37,7 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
   const MILESTONES_CHART = "Milestones";
   const currentYear = new Date().getFullYear();
   const AA_CHART = currentYear + " Target";
+  const AA_FUTURE_CHART = currentYear + 1 + " onwards";
   const [chartType, setChartType] = useState<string>(MILESTONES_CHART);
   const YEARLY_VIEW = "Yearly";
   const ALL_VIEW = "All";
@@ -105,15 +106,20 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
                   <TargetAAChart />
                 </TabPane>
                 <TabPane
-                  key={currentYear + 1}
+                  key={AA_FUTURE_CHART}
                   tab={
                     <Fragment>
-                      {`${currentYear + 1} onwards `}
-                      <RadioInput
-                        options={[ALL_VIEW, YEARLY_VIEW]}
-                        value={view}
-                        changeHandler={setView}
-                      />
+                      {AA_FUTURE_CHART}
+                      {chartType === AA_FUTURE_CHART ? (
+                        <>
+                          &nbsp;
+                          <RadioInput
+                            options={[ALL_VIEW, YEARLY_VIEW]}
+                            value={view}
+                            changeHandler={setView}
+                          />
+                        </>
+                      ) : null}
                     </Fragment>
                   }>
                   {view === YEARLY_VIEW ? (
