@@ -718,6 +718,43 @@ export const listInsBhSs = /* GraphQL */ `
     }
   }
 `;
+export const getInsUni = /* GraphQL */ `
+  query GetInsUni($id: String!) {
+    getInsUni(id: $id) {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInsUnis = /* GraphQL */ `
+  query ListInsUnis(
+    $id: String
+    $filter: ModelInsUniFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInsUnis(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        curr
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getAllIndices = /* GraphQL */ `
   query GetAllIndices($id: String!) {
     getAllIndices(id: $id) {

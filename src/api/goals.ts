@@ -1209,6 +1209,39 @@ export type DeleteInsBHSInput = {
   id: string,
 };
 
+export type CreateInsUniInput = {
+  id: string,
+  sid?: string | null,
+  curr?: string | null,
+};
+
+export type ModelInsUniConditionInput = {
+  sid?: ModelStringInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelInsUniConditionInput | null > | null,
+  or?: Array< ModelInsUniConditionInput | null > | null,
+  not?: ModelInsUniConditionInput | null,
+};
+
+export type InsUni = {
+  __typename: "InsUni",
+  id?: string,
+  sid?: string | null,
+  curr?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateInsUniInput = {
+  id: string,
+  sid?: string | null,
+  curr?: string | null,
+};
+
+export type DeleteInsUniInput = {
+  id: string,
+};
+
 export type CreateAllIndicesInput = {
   id: string,
   name: string,
@@ -1807,6 +1840,21 @@ export type ModelInsBHSFilterInput = {
 export type ModelInsBHSConnection = {
   __typename: "ModelInsBHSConnection",
   items?:  Array<InsBHS | null >,
+  nextToken?: string | null,
+};
+
+export type ModelInsUniFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelInsUniFilterInput | null > | null,
+  or?: Array< ModelInsUniFilterInput | null > | null,
+  not?: ModelInsUniFilterInput | null,
+};
+
+export type ModelInsUniConnection = {
+  __typename: "ModelInsUniConnection",
+  items?:  Array<InsUni | null >,
   nextToken?: string | null,
 };
 
@@ -3862,6 +3910,54 @@ export type DeleteInsBhsMutation = {
   } | null,
 };
 
+export type CreateInsUniMutationVariables = {
+  input?: CreateInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
+};
+
+export type CreateInsUniMutation = {
+  createInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInsUniMutationVariables = {
+  input?: UpdateInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
+};
+
+export type UpdateInsUniMutation = {
+  updateInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInsUniMutationVariables = {
+  input?: DeleteInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
+};
+
+export type DeleteInsUniMutation = {
+  deleteInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateAllIndicesMutationVariables = {
   input?: CreateAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
@@ -4912,6 +5008,44 @@ export type ListInsBhSsQuery = {
       fun?: string | null,
       tech?: string | null,
       ca?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInsUniQueryVariables = {
+  id?: string,
+};
+
+export type GetInsUniQuery = {
+  getInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInsUnisQueryVariables = {
+  id?: string | null,
+  filter?: ModelInsUniFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInsUnisQuery = {
+  listInsUnis?:  {
+    __typename: "ModelInsUniConnection",
+    items:  Array< {
+      __typename: "InsUni",
+      id: string,
+      sid?: string | null,
+      curr?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6581,6 +6715,39 @@ export type OnDeleteInsBhsSubscription = {
     fun?: string | null,
     tech?: string | null,
     ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInsUniSubscription = {
+  onCreateInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInsUniSubscription = {
+  onUpdateInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInsUniSubscription = {
+  onDeleteInsUni?:  {
+    __typename: "InsUni",
+    id: string,
+    sid?: string | null,
+    curr?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

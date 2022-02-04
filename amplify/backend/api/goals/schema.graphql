@@ -407,6 +407,25 @@ type InsBHS
   ca: AWSJSON
 }
 
+type InsUni
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  sid: String
+  curr: String
+}
+
 type AllIndices
   @model
   @aws_iam

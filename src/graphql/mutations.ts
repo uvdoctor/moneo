@@ -1745,6 +1745,48 @@ export const deleteInsBhs = /* GraphQL */ `
     }
   }
 `;
+export const createInsUni = /* GraphQL */ `
+  mutation CreateInsUni(
+    $input: CreateInsUniInput!
+    $condition: ModelInsUniConditionInput
+  ) {
+    createInsUni(input: $input, condition: $condition) {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInsUni = /* GraphQL */ `
+  mutation UpdateInsUni(
+    $input: UpdateInsUniInput!
+    $condition: ModelInsUniConditionInput
+  ) {
+    updateInsUni(input: $input, condition: $condition) {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInsUni = /* GraphQL */ `
+  mutation DeleteInsUni(
+    $input: DeleteInsUniInput!
+    $condition: ModelInsUniConditionInput
+  ) {
+    deleteInsUni(input: $input, condition: $condition) {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createAllIndices = /* GraphQL */ `
   mutation CreateAllIndices(
     $input: CreateAllIndicesInput!

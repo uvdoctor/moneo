@@ -707,6 +707,39 @@ export const onDeleteInsBhs = /* GraphQL */ `
     }
   }
 `;
+export const onCreateInsUni = /* GraphQL */ `
+  subscription OnCreateInsUni {
+    onCreateInsUni {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInsUni = /* GraphQL */ `
+  subscription OnUpdateInsUni {
+    onUpdateInsUni {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInsUni = /* GraphQL */ `
+  subscription OnDeleteInsUni {
+    onDeleteInsUni {
+      id
+      sid
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateAllIndices = /* GraphQL */ `
   subscription OnCreateAllIndices {
     onCreateAllIndices {
