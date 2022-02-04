@@ -1,33 +1,47 @@
-const { pushData, getTableNameFromInitialWord, getDataFromTable, updateData } = require('/opt/nodejs/insertIntoDB');
-const table = 'Universe';
-const getAndPushData = async(records) => {
-  const universeData =  await getDataFromTable(table);
+const {
+  pushData,
+  getTableNameFromInitialWord,
+  appendGenericFields,
+} = require("/opt/nodejs/insertIntoDB");
+const table = "Universe";
 
-  records.forEach(record => {
-    const uname =  record.dynamodb.Keys.uname.S;
-  //   if(record.eventName === 'INSERT') {
-  //     record.dynamodb.NewImage.ins.L.map((item)=> {
-  //       const doesExist = universeData.find((item) => item.id === item.M.id.S);
-  //       if(!doesExist) pushData();
-  //     })
-  //   if(record.eventName === 'MODIFY') {
-  //     let isUnique = [];
-  //     record.dynamodb.NewImage.ins.L.map((item)=> {
+const getAndPushData = (data, tableName) => {
+  return new Promise(async (resolve, reject) => {
+    let batches = [];
+    let batchRecords = [];
+    let count = 0;
+    for (record of data) {
+      try {
+        if (record.eventName === "INSERT" || record.eventName === "MODIFY") {
+          record.dynamodb.NewImage.ins.L.map((item) => {
+            const schema = appendGenericFields({ id: item.M.id.S }, table);
+            batches.push({ PutRequest: { Item: schema } });
+            count++;
+            if (count === 25) {
+              batchRecords.push(batches);
+              batches = [];
+              count = 0;
+            }
+          });
+        }
+        // if (record.eventName === "REMOVE") {
+        //   // OldImage
+        // }
+      } catch (err) {
+        reject(err);
+      }
+    }
+    console.log(batches, batchRecords);
+    if (count < 25 && count > 0) {
+      batchRecords.push(batches);
+    }
+    const result = await pushData(data, tableName);
+    console.log(result);
+    resolve();
+  });
+};
 
-
-  //     })
-
-  //   }
-  //   if(record.eventName === 'REMOVE') {
-  //     // OldImage
-
-  //   }
-  })
-}
-
-
-
-exports.handler = event => {
-    getAndPushData(event.Records)
-    return Promise.resolve('Successfully processed DynamoDB record');
+exports.handler = async (event) => {
+  const tableName = await getTableNameFromInitialWord(table);
+  return await getAndPushData(event.Records, tableName);
 };
