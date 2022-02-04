@@ -3,6 +3,7 @@ import { Col, PageHeader, Row, Skeleton } from "antd";
 import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
 import { DBContext } from "./DBContext";
+import { ROUTES } from "../../CONSTANTS";
 require("./DBView.less");
 
 export default function DBView() {
@@ -31,24 +32,31 @@ export default function DBView() {
                       pl
                       info={"Net Worth equals what you own minus what you owe."}
                     />
+                    {!(totalAssets-totalLiabilities) ? <a href={ROUTES.GET}>
+                       Discover your networth
+                    </a> : null}
                   </Col>
-                  <Col xs={12}>
-                    <ItemDisplay
-                      label="You Own"
-                      result={totalAssets}
-                      currency={defaultCurrency}
-                      info="This is the total valuation of the assets you own."
-                    />
-                  </Col>
-                  <Col xs={12}>
-                    <ItemDisplay
-                      label="You Owe"
-                      result={-totalLiabilities}
-                      currency={defaultCurrency}
-                      info="This is the total valuation of all the money you owe."
-                      pl
-                    />
-                  </Col>
+                  {totalAssets || totalLiabilities ? (
+                    <Col xs={12}>
+                      <ItemDisplay
+                        label="You Own"
+                        result={totalAssets}
+                        currency={defaultCurrency}
+                        info="This is the total valuation of the assets you own."
+                      />
+                    </Col>
+                  ) : null}
+                  {totalAssets || totalLiabilities ? (
+                    <Col xs={12}>
+                      <ItemDisplay
+                        label="You Owe"
+                        result={-totalLiabilities}
+                        currency={defaultCurrency}
+                        info="This is the total valuation of all the money you owe."
+                        pl
+                      />
+                    </Col>
+                  ) : null}
                 </Row>
               </div>
             </Col>

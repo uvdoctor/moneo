@@ -593,13 +593,11 @@ function NWContextProvider({ fxRates }: any) {
         await addHoldings(updatedHoldings);
         setHoldings(true);
       }
-      if (instruments.length) {
-        if (insHoldings) {
-          await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
-        } else {
-          await addInsHoldings(updatedInsHoldings);
-          setInsholdings(true);
-        }
+      if (insHoldings) {
+        await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
+      } else {
+        await addInsHoldings(updatedInsHoldings);
+        setInsholdings(true);
       }
       notification.success({
         message: "Data saved",
@@ -644,7 +642,11 @@ function NWContextProvider({ fxRates }: any) {
         fmp,
         intervalFunds,
         liquidFunds,
-      } = await priceInstruments(instruments, selectedMembers, selectedCurrency);
+      } = await priceInstruments(
+        instruments,
+        selectedMembers,
+        selectedCurrency
+      );
       setTotalInstruments(total);
       setTotalFGold(totalFGold);
       setTotalFEquity(totalFEquity);
@@ -663,8 +665,8 @@ function NWContextProvider({ fxRates }: any) {
       setTotalFMP(fmp);
       setTotalIntervalFunds(intervalFunds);
       setTotalLiquidFunds(liquidFunds);
-  }
-  getValue()
+    };
+    getValue();
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
