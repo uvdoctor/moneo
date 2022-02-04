@@ -31,12 +31,13 @@ const getAndPushData = (data, tableName) => {
         reject(err);
       }
     }
-    console.log(batches, batchRecords);
     if (count < 25 && count > 0) {
       batchRecords.push(batches);
     }
-    const result = await pushData(data, tableName);
-    console.log(result);
+    for (let batch in batchRecords) {
+      const results = await pushData(batchRecords[batch], tableName);
+      console.log(results);
+    }
     resolve();
   });
 };
@@ -44,4 +45,4 @@ const getAndPushData = (data, tableName) => {
 exports.handler = async (event) => {
   const tableName = await getTableNameFromInitialWord(table);
   return await getAndPushData(event.Records, tableName);
-};
+};  
