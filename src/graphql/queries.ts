@@ -585,7 +585,6 @@ export const getInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -627,7 +626,6 @@ export const listInExchgPrices = /* GraphQL */ `
           id
           mcap
           ind
-          uni
           createdAt
           updatedAt
         }
@@ -648,7 +646,6 @@ export const getInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
       createdAt
       updatedAt
     }
@@ -673,7 +670,47 @@ export const listInsMetas = /* GraphQL */ `
         id
         mcap
         ind
-        uni
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInsBhs = /* GraphQL */ `
+  query GetInsBhs($id: String!) {
+    getInsBHS(id: $id) {
+      id
+      rec
+      fun
+      tech
+      ca
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInsBhSs = /* GraphQL */ `
+  query ListInsBhSs(
+    $id: String
+    $filter: ModelInsBHSFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInsBHSs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        rec
+        fun
+        tech
+        ca
         createdAt
         updatedAt
       }

@@ -1095,7 +1095,6 @@ export type InsMeta = {
   id?: string,
   mcap?: MCap | null,
   ind?: string | null,
-  uni?: boolean | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1132,13 +1131,11 @@ export type CreateInsMetaInput = {
   id: string,
   mcap?: MCap | null,
   ind?: string | null,
-  uni?: boolean | null,
 };
 
 export type ModelInsMetaConditionInput = {
   mcap?: ModelMCapInput | null,
   ind?: ModelStringInput | null,
-  uni?: ModelBooleanInput | null,
   and?: Array< ModelInsMetaConditionInput | null > | null,
   or?: Array< ModelInsMetaConditionInput | null > | null,
   not?: ModelInsMetaConditionInput | null,
@@ -1153,10 +1150,62 @@ export type UpdateInsMetaInput = {
   id: string,
   mcap?: MCap | null,
   ind?: string | null,
-  uni?: boolean | null,
 };
 
 export type DeleteInsMetaInput = {
+  id: string,
+};
+
+export type CreateInsBHSInput = {
+  id: string,
+  rec?: Recommendation | null,
+  fun?: string | null,
+  tech?: string | null,
+  ca?: string | null,
+};
+
+export enum Recommendation {
+  B = "B",
+  H = "H",
+  S = "S",
+}
+
+
+export type ModelInsBHSConditionInput = {
+  rec?: ModelRecommendationInput | null,
+  fun?: ModelStringInput | null,
+  tech?: ModelStringInput | null,
+  ca?: ModelStringInput | null,
+  and?: Array< ModelInsBHSConditionInput | null > | null,
+  or?: Array< ModelInsBHSConditionInput | null > | null,
+  not?: ModelInsBHSConditionInput | null,
+};
+
+export type ModelRecommendationInput = {
+  eq?: Recommendation | null,
+  ne?: Recommendation | null,
+};
+
+export type InsBHS = {
+  __typename: "InsBHS",
+  id?: string,
+  rec?: Recommendation | null,
+  fun?: string | null,
+  tech?: string | null,
+  ca?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateInsBHSInput = {
+  id: string,
+  rec?: Recommendation | null,
+  fun?: string | null,
+  tech?: string | null,
+  ca?: string | null,
+};
+
+export type DeleteInsBHSInput = {
   id: string,
 };
 
@@ -1733,7 +1782,6 @@ export type ModelInsMetaFilterInput = {
   id?: ModelStringInput | null,
   mcap?: ModelMCapInput | null,
   ind?: ModelStringInput | null,
-  uni?: ModelBooleanInput | null,
   and?: Array< ModelInsMetaFilterInput | null > | null,
   or?: Array< ModelInsMetaFilterInput | null > | null,
   not?: ModelInsMetaFilterInput | null,
@@ -1742,6 +1790,23 @@ export type ModelInsMetaFilterInput = {
 export type ModelInsMetaConnection = {
   __typename: "ModelInsMetaConnection",
   items?:  Array<InsMeta | null >,
+  nextToken?: string | null,
+};
+
+export type ModelInsBHSFilterInput = {
+  id?: ModelStringInput | null,
+  rec?: ModelRecommendationInput | null,
+  fun?: ModelStringInput | null,
+  tech?: ModelStringInput | null,
+  ca?: ModelStringInput | null,
+  and?: Array< ModelInsBHSFilterInput | null > | null,
+  or?: Array< ModelInsBHSFilterInput | null > | null,
+  not?: ModelInsBHSFilterInput | null,
+};
+
+export type ModelInsBHSConnection = {
+  __typename: "ModelInsBHSConnection",
+  items?:  Array<InsBHS | null >,
   nextToken?: string | null,
 };
 
@@ -3615,7 +3680,6 @@ export type CreateInExchgPriceMutation = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3650,7 +3714,6 @@ export type UpdateInExchgPriceMutation = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3685,7 +3748,6 @@ export type DeleteInExchgPriceMutation = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3709,7 +3771,6 @@ export type CreateInsMetaMutation = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3726,7 +3787,6 @@ export type UpdateInsMetaMutation = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3743,7 +3803,60 @@ export type DeleteInsMetaMutation = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInsBhsMutationVariables = {
+  input?: CreateInsBHSInput,
+  condition?: ModelInsBHSConditionInput | null,
+};
+
+export type CreateInsBhsMutation = {
+  createInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInsBhsMutationVariables = {
+  input?: UpdateInsBHSInput,
+  condition?: ModelInsBHSConditionInput | null,
+};
+
+export type UpdateInsBhsMutation = {
+  updateInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInsBhsMutationVariables = {
+  input?: DeleteInsBHSInput,
+  condition?: ModelInsBHSConditionInput | null,
+};
+
+export type DeleteInsBhsMutation = {
+  deleteInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4673,7 +4786,6 @@ export type GetInExchgPriceQuery = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4713,7 +4825,6 @@ export type ListInExchgPricesQuery = {
         id: string,
         mcap?: MCap | null,
         ind?: string | null,
-        uni?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4738,7 +4849,6 @@ export type GetInsMetaQuery = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4760,7 +4870,48 @@ export type ListInsMetasQuery = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInsBhsQueryVariables = {
+  id?: string,
+};
+
+export type GetInsBhsQuery = {
+  getInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInsBhSsQueryVariables = {
+  id?: string | null,
+  filter?: ModelInsBHSFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInsBhSsQuery = {
+  listInsBHSs?:  {
+    __typename: "ModelInsBHSConnection",
+    items:  Array< {
+      __typename: "InsBHS",
+      id: string,
+      rec?: Recommendation | null,
+      fun?: string | null,
+      tech?: string | null,
+      ca?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6293,7 +6444,6 @@ export type OnCreateInExchgPriceSubscription = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6323,7 +6473,6 @@ export type OnUpdateInExchgPriceSubscription = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6353,7 +6502,6 @@ export type OnDeleteInExchgPriceSubscription = {
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
-      uni?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6372,7 +6520,6 @@ export type OnCreateInsMetaSubscription = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6384,7 +6531,6 @@ export type OnUpdateInsMetaSubscription = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6396,7 +6542,45 @@ export type OnDeleteInsMetaSubscription = {
     id: string,
     mcap?: MCap | null,
     ind?: string | null,
-    uni?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInsBhsSubscription = {
+  onCreateInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInsBhsSubscription = {
+  onUpdateInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInsBhsSubscription = {
+  onDeleteInsBHS?:  {
+    __typename: "InsBHS",
+    id: string,
+    rec?: Recommendation | null,
+    fun?: string | null,
+    tech?: string | null,
+    ca?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

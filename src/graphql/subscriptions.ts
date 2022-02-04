@@ -567,7 +567,6 @@ export const onCreateInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -596,7 +595,6 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -625,7 +623,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -644,7 +641,6 @@ export const onCreateInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
       createdAt
       updatedAt
     }
@@ -656,7 +652,6 @@ export const onUpdateInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
       createdAt
       updatedAt
     }
@@ -668,7 +663,45 @@ export const onDeleteInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInsBhs = /* GraphQL */ `
+  subscription OnCreateInsBhs {
+    onCreateInsBHS {
+      id
+      rec
+      fun
+      tech
+      ca
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInsBhs = /* GraphQL */ `
+  subscription OnUpdateInsBhs {
+    onUpdateInsBHS {
+      id
+      rec
+      fun
+      tech
+      ca
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInsBhs = /* GraphQL */ `
+  subscription OnDeleteInsBhs {
+    onDeleteInsBHS {
+      id
+      rec
+      fun
+      tech
+      ca
       createdAt
       updatedAt
     }

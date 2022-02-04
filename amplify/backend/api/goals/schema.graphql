@@ -379,7 +379,32 @@ type InsMeta
   id: String!
   mcap: MCap
   ind: String
-  uni: Boolean
+}
+
+enum Recommendation {
+  B
+  H
+  S
+}
+type InsBHS
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  rec: Recommendation
+  fun: AWSJSON
+  tech: AWSJSON
+  ca: AWSJSON
 }
 
 type AllIndices

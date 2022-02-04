@@ -1581,7 +1581,6 @@ export const createInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -1613,7 +1612,6 @@ export const updateInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -1645,7 +1643,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
         id
         mcap
         ind
-        uni
         createdAt
         updatedAt
       }
@@ -1667,7 +1664,6 @@ export const createInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
       createdAt
       updatedAt
     }
@@ -1682,7 +1678,6 @@ export const updateInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
       createdAt
       updatedAt
     }
@@ -1697,7 +1692,54 @@ export const deleteInsMeta = /* GraphQL */ `
       id
       mcap
       ind
-      uni
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInsBhs = /* GraphQL */ `
+  mutation CreateInsBhs(
+    $input: CreateInsBHSInput!
+    $condition: ModelInsBHSConditionInput
+  ) {
+    createInsBHS(input: $input, condition: $condition) {
+      id
+      rec
+      fun
+      tech
+      ca
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInsBhs = /* GraphQL */ `
+  mutation UpdateInsBhs(
+    $input: UpdateInsBHSInput!
+    $condition: ModelInsBHSConditionInput
+  ) {
+    updateInsBHS(input: $input, condition: $condition) {
+      id
+      rec
+      fun
+      tech
+      ca
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInsBhs = /* GraphQL */ `
+  mutation DeleteInsBhs(
+    $input: DeleteInsBHSInput!
+    $condition: ModelInsBHSConditionInput
+  ) {
+    deleteInsBHS(input: $input, condition: $condition) {
+      id
+      rec
+      fun
+      tech
+      ca
       createdAt
       updatedAt
     }
