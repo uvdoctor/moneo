@@ -3,7 +3,7 @@ const {
   getTableNameFromInitialWord,
   appendGenericFields,
 } = require("/opt/nodejs/insertIntoDB");
-const table = "Universe";
+const table = "InsUni";
 
 const getAndPushData = (data, tableName) => {
   return new Promise(async (resolve, reject) => {
