@@ -38,12 +38,18 @@ export default function AddHoldingFinancialInput(props: any) {
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
+    let price = 0;
+    let type = '';
     const {
       holding: { curr, qty, id },
       key,
     } = props;
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    const { price, type } = insData[id];
+    if (insData[id]) {
+      const value = insData[id];
+      price = value.price;
+      type = value.type;
+    }
     return (
       <Row className="holding" gutter={[16, 50]} key={key}>
         <Col span={24}>
