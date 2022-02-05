@@ -1,5 +1,5 @@
-import { Badge, Empty, Table, Tag } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import { Col, Empty, Row, Table } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
 import { toHumanFriendlyCurrency } from "../utils";
@@ -17,12 +17,13 @@ import simpleStorage from "simplestorage.js";
 import {
   doesHoldingMatch,
   getAssetTypes,
-  getColourForAssetType,
   getMarketCap,
   getFixedCategories,
   isFund,
   isBond,
+  getCascaderOptions,
 } from "./nwutils";
+import CascaderMultiple from "../form/CascaderMultiple";
 
 export default function InstrumentValuation() {
   const {
@@ -38,26 +39,27 @@ export default function InstrumentValuation() {
   const [filterByTag, setFilterByTag] = useState<Array<InstrumentInput>>([]);
   const [nameFilterValues, setNameFilterValues] = useState<Array<Object>>([{}]);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
-  const [tags, setTags] = useState<{ [key: string]: string }>({});
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
-  const [subtTags, setSubtTags] = useState<{ [key: string]: string }>({});
   const [selectedSubtTags, setSelectedSubtTags] = useState<Array<string>>([]);
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
-  const { CheckableTag } = Tag;
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
   const bondTags = { CB: "Corporate Bond", GB: "Government Bond" };
-  const tagsData: {
-    Stocks: { tags: {} };
-    "Mutual Funds": { tags: {}; subt: {} };
-    Bonds: { tags: {} };
-  } = {
-    Stocks: { tags: getMarketCap() },
-    "Mutual Funds": {
-      tags: getAssetTypes(),
-      subt: { E: getMarketCap(), F: getFixedCategories() },
-    },
-    Bonds: { tags: bondTags },
+  const tagsData = (childTab: string) => {
+    const data: any = {
+      Stocks: getCascaderOptions(
+        { ind: "Industry", mcap: "Capitalization" },
+        { ind: { F: "Finance", T: "Technology", B: "Bank" }, mcap: getMarketCap() },
+        false
+      ),
+      "Mutual Funds": getCascaderOptions(
+        getAssetTypes(),
+        { E: getMarketCap(), F: getFixedCategories(), H: {}, A: {} },
+        false
+      ),
+      Bonds: getCascaderOptions(bondTags),
+    };
+    return data[childTab];
   };
 
   const hasTags = (childTab: string): Boolean =>
@@ -98,33 +100,8 @@ export default function InstrumentValuation() {
     },
   ];
 
-  const handleChange = (_pagination: any, filters: any, _sorters: any) => setFilteredInfo({id:filters[childTab]});
-
-  const subtTagsData = () => {
-    // @ts-ignore
-    const { E, F } = tagsData[childTab].subt;
-    if (
-      selectedTags.includes(AssetType.E) &&
-      selectedTags.includes(AssetType.F)
-    ) {
-      setSubtTags({ ...E, ...F });
-      setSelectedSubtTags([...Object.keys(E), ...Object.keys(F)]);
-      return;
-    }
-    if (selectedTags.includes(AssetType.E)) {
-      setSubtTags(E);
-      setSelectedSubtTags([...Object.keys(E)]);
-      return;
-    }
-    if (selectedTags.includes(AssetType.F)) {
-      setSubtTags(F);
-      setSelectedSubtTags([...Object.keys(F)]);
-      return;
-    }
-    setSubtTags({});
-    setSelectedSubtTags([]);
-    return;
-  };
+  const handleChange = (_pagination: any, filters: any, _sorters: any) =>
+    setFilteredInfo({ id: filters[childTab] });
 
   const setTotal = () => {
     let [total, filterAmt, cachedData] = [
@@ -154,8 +131,12 @@ export default function InstrumentValuation() {
     let ids: Set<string> = new Set();
     filteredInstruments.forEach((instrument: InstrumentInput) => {
       const id = instrument.id;
-      if (!ids.has(id)) filteredNames.push({ text: insData[id] ? insData[id].name : id, value: id });
-			ids.add(id);
+      if (!ids.has(id))
+        filteredNames.push({
+          text: insData[id] ? insData[id].name : id,
+          value: id,
+        });
+      ids.add(id);
     });
     setNameFilterValues([...filteredNames]);
   }, [filteredInstruments]);
@@ -169,15 +150,6 @@ export default function InstrumentValuation() {
     selectedTags,
     filterByTag,
   ]);
-
-  useEffect(() => {
-    // @ts-ignore
-    hasTags(childTab) ? setTags(tagsData[childTab].tags) : setTags({});
-  }, [childTab]);
-
-  useEffect(() => {
-    if (childTab === MF) subtTagsData();
-  }, [selectedTags]);
 
   useEffect(() => {
     filterInstrumentsByTabs();
@@ -265,15 +237,16 @@ export default function InstrumentValuation() {
             (selectedSubtTags.includes("LF") && subt === L)
           );
         }
-        if (childTab === STOCK && data) {
+        if (childTab === STOCK && data && selectedTags.length) {
           return (
-            (selectedTags.includes(MCap.L) &&
+            (selectedSubtTags.includes(MCap.L) &&
               data.meta &&
               data.meta.mcap === MCap.L) ||
-            (selectedTags.includes("Multi") &&
+            (selectedSubtTags.includes("Multi") &&
               ((data.meta && data.meta.mcap !== MCap.L) ||
                 !data.meta ||
-                !data.meta.mcap))
+                !data.meta.mcap)) ||
+            (selectedTags.includes("mcap") && selectedSubtTags.length === 0)
           );
         } else if (childTab === BOND && data) {
           const { subt } = data;
@@ -287,73 +260,44 @@ export default function InstrumentValuation() {
   };
 
   return instruments.length ? (
-    <Fragment>
-      <p style={{ textAlign: "center" }}>
-        {Object.keys(tags).map((tag: string) => (
-          <CheckableTag
-            key={tag}
-            style={{
-              backgroundColor: COLORS.WHITE,
-              opacity: selectedTags.indexOf(tag) > -1 ? 1 : 0.5,
-            }}
-            checked={selectedTags.indexOf(tag) > -1}
-            onChange={(checked: boolean) => {
-              if (checked) {
-                selectedTags.push(tag);
-                setSelectedTags([...selectedTags]);
-              } else
-                setSelectedTags([
-                  ...selectedTags.filter((t: string) => t !== tag),
-                ]);
-            }}>
-            <Badge
-              count={tags[tag]}
-              style={{ background: COLORS.LIGHT_GRAY, color: "black" }}
-            />
-          </CheckableTag>
-        ))}
-      </p>
-      <p style={{ textAlign: "center" }}>
-        {childTab === MF &&
-          subtTags &&
-          Object.keys(subtTags).map((tag: string) => (
-            <CheckableTag
-              key={tag}
-              style={{
-                backgroundColor: COLORS.WHITE,
-                opacity: selectedSubtTags.indexOf(tag) > -1 ? 1 : 0.5,
-              }}
-              checked={selectedSubtTags.indexOf(tag) > -1}
-              onChange={(checked: boolean) => {
-                if (checked) {
-                  selectedSubtTags.push(tag);
-                  setSelectedSubtTags([...selectedSubtTags]);
-                } else
-                  setSelectedSubtTags([
-                    ...selectedSubtTags.filter((t: string) => t !== tag),
-                  ]);
-              }}>
-              <Badge
-                count={subtTags[tag]}
-                style={{
-                  background: getColourForAssetType(tag),
-                  color: "black",
-                }}
+    <Row gutter={[10, 10]}>
+      {hasTags(childTab) ? (
+        <Col xs={24} sm={24}>
+          <Row justify="center" align="middle">
+            <Col>
+              <FilterTwoTone
+                twoToneColor={
+                  selectedTags.length ? COLORS.GREEN : COLORS.DEFAULT
+                }
+                style={{ fontSize: 20 }}
               />
-            </CheckableTag>
-          ))}
-      </p>
-      {filteredInstruments.length ? (
-        <Table
-          dataSource={selectedTags.length ? filterByTag : filteredInstruments}
-          //@ts-ignore
-          columns={columns}
-          size="small"
-          bordered
-          onChange={handleChange}
-        />
+            </Col>
+            <Col>
+              <CascaderMultiple
+                pre=""
+                options={tagsData(childTab)}
+                parentValue={selectedTags}
+                childValue={selectedSubtTags}
+                parentChangeHandler={(val: any) => setSelectedTags(val)}
+                childChangeHandler={(val: any) => setSelectedSubtTags(val)}
+              />
+            </Col>
+          </Row>
+        </Col>
       ) : null}
-    </Fragment>
+      <Col span={24}>
+        {filteredInstruments.length ? (
+          <Table
+            dataSource={selectedTags.length ? filterByTag : filteredInstruments}
+            //@ts-ignore
+            columns={columns}
+            size="small"
+            bordered
+            onChange={handleChange}
+          />
+        ) : null}
+      </Col>
+    </Row>
   ) : (
     <Empty description={<p>No data found.</p>} />
   );
