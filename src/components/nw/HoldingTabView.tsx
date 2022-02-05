@@ -33,6 +33,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
     totalLiabilities,
     view,
     npsSubcategory,
+    loadingInstruments,
   }: any = useContext(NWContext);
 
   const { TabPane } = Tabs;
@@ -88,13 +89,15 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
         }}
         tabBarExtraContent={
           !isRoot && activeTab === "Financial" ? <UploadHoldings /> : null
-        }>
+        }
+      >
         {isRoot && !liabilities && (
           <TabPane disabled={!totalAssets} key={TAB.SUMMARY} tab={TAB.SUMMARY}>
             <Tabs
               activeKey={chartType}
               type="line"
-              onChange={(activeKey) => setChartType(activeKey)}>
+              onChange={(activeKey) => setChartType(activeKey)}
+            >
               <TabPane key={RISK_CHART} tab={RISK_CHART}>
                 <RiskAllocationChart />
               </TabPane>
@@ -117,15 +120,14 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
               tab={
                 <Fragment>
                   {label}
-                  {!children &&
-                    (activeTab === "Financial" || activeTab === "Retirement") &&
-                    !liabilities && (
-                      <Tooltip
-                        title={<TabInfo info={info} link={link} />}
-                        color={COLORS.DEFAULT}>
-                        <InfoCircleOutlined />
-                      </Tooltip>
-                    )}
+                  {!children && activeTab === "Financial" && !liabilities && (
+                    <Tooltip
+                      title={<TabInfo info={info} link={link} />}
+                      color={COLORS.DEFAULT}
+                    >
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  )}
                   {allocationPer ? (
                     <>
                       {!info && " "}
@@ -137,7 +139,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                     </>
                   ) : null}
                 </Fragment>
-              }>
+              }
+            >
               {children ? (
                 renderTabs(children, Object.keys(children)[0])
               ) : (
@@ -180,7 +183,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                       />
                     </Col>
                   </Row>
-                  {!loadingHoldings ? (
+                  {!loadingHoldings && !loadingInstruments ? (
                     tabsData[tabName].data.length ? (
                       tabsData[tabName].contentComp ? (
                         tabsData[tabName].contentComp

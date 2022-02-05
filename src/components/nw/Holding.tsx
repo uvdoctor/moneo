@@ -33,7 +33,7 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  const price = insData[holding.id] ? insData[holding.id].price : 0;
+  const price = insData && insData[holding.id] ? insData[holding.id].price : 0;
   const { allFamily }: any = useContext(NWContext);
   const [total, setTotal] = useState<number>(holding.qty * price);
   const [isEditMode, setEditMode] = useState(false);

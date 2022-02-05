@@ -180,6 +180,7 @@ function NWContextProvider({ fxRates }: any) {
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
   const [familyOptions, setFamilyOptions] = useState<Object>({});
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
+  const [loadingInstruments, setLoadingInstruments] = useState<boolean>(false);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -623,6 +624,7 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     const getValue = async () => {
+      setLoadingInstruments(true)
       const {
         total,
         totalFGold,
@@ -645,7 +647,7 @@ function NWContextProvider({ fxRates }: any) {
       } = await priceInstruments(
         instruments,
         selectedMembers,
-        selectedCurrency
+        selectedCurrency,
       );
       setTotalInstruments(total);
       setTotalFGold(totalFGold);
@@ -666,6 +668,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalIntervalFunds(intervalFunds);
       setTotalLiquidFunds(liquidFunds);
     };
+    setLoadingInstruments(false)
     getValue();
   }, [instruments, selectedMembers, selectedCurrency]);
 
@@ -938,6 +941,7 @@ function NWContextProvider({ fxRates }: any) {
         totalETFs,
         totalFFixed,
         totalStocks,
+        loadingInstruments
       }}
     >
       <NWView />
