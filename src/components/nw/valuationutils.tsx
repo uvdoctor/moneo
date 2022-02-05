@@ -745,23 +745,76 @@ export const calculateTotalAssets = async (
   fxRates: any,
   npsData: any
 ) => {
-  let totalAssets = 0;
+  let totalSavings = 0;
+  let totalLendings = 0;
+  let totalFGold = 0;
+  let totalPGold = 0;
+  let totalFRE = 0;
+  let totalFInv = 0;
+  let totalProperties = 0;
+  let totalAngel = 0;
+  let totalOthers = 0;
+  let totalVehicles = 0;
+  let totalPF = 0;
+  let totalOtherProperty = 0;
+  let totalCommercial = 0;
+  let totalResidential = 0;
+  let totalPlot = 0;
+  let totalEPF = 0;
+  let totalVPF = 0;
+  let totalPPF = 0;
+  let totalNPSEquity = 0;
+  let totalNPSFixed = 0;
+  let totalCrypto = 0;
+  let totalP2P = 0;
+  let totalLtdep = 0;
+  let totalPM = 0;
+  let totalLargeCapStocks = 0;
+  let totalLargeCapFunds = 0;
+  let totalMultiCap = 0;
+  let totalLargeCapETF = 0;
+  let totalIndexFunds = 0;
+  let totalLiquidFunds = 0;
+  let totalIntervalFunds = 0;
+  let totalFMP = 0;
+  let totalFFixed = 0;
+  let totalStLendings = 0;
+  let totalBonds = 0;
+  let totalStocks = 0;
+  let totalNPS = 0;
+  let totalInstruments = 0;
+
   if (insHoldings?.ins) {
-    const { total } = await priceInstruments(
+    const value = await priceInstruments(
       insHoldings.ins,
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalInstruments += value.total;
+    totalFGold += value.totalFGold;
+    totalFFixed += value.totalFFixed;
+    totalFRE += value.totalFRE;
+    totalFInv += value.totalInv;
+    totalBonds += value.totalBonds;
+    totalStocks += value.totalStocks;
+    totalLargeCapStocks += value.largeCapStocks;
+    totalLargeCapFunds += value.largeCapFunds;
+    totalLargeCapETF += value.largeCapETFs;
+    totalMultiCap += value.multiCap;
+    totalIndexFunds += value.indexFunds;
+    totalFMP += value.fmp;
+    totalIntervalFunds = value.intervalFunds;
+    totalLiquidFunds += value.liquidFunds;
   }
   if (holdings?.pm) {
-    const { total } = await pricePM(
+    const value = await pricePM(
       holdings.pm,
       selectedMembers,
       selectedCurrency,
       fxRates
     );
-    totalAssets += total;
+    totalPM += value.total;
+    totalPGold += value.totalPGold;
   }
   if (holdings?.crypto) {
     const total = await priceCrypto(
@@ -769,20 +822,25 @@ export const calculateTotalAssets = async (
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalCrypto += total;
   }
   if (holdings?.pf) {
-    const { total } = pricePF(holdings.pf, selectedMembers, selectedCurrency);
-    totalAssets += total;
+    const value = pricePF(holdings.pf, selectedMembers, selectedCurrency);
+    totalPF += value.total;
+    totalEPF += value.totalEPF;
+    totalVPF += value.totalVPF;
+    totalPPF += value.totalPPF;
   }
   if (holdings?.nps) {
-    const { total } = priceNPS(
+    const value = priceNPS(
       holdings.nps,
       selectedMembers,
       selectedCurrency,
       npsData
     );
-    totalAssets += total;
+    totalNPS += value.total;
+    totalNPSEquity += value.totalNPSEquity;
+    totalNPSFixed += value.totalNPSFixed;
   }
   if (holdings?.vehicles) {
     const total = priceVehicles(
@@ -790,15 +848,19 @@ export const calculateTotalAssets = async (
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalVehicles += total;
   }
   if (holdings?.property) {
-    const { total } = priceProperties(
+    const value = priceProperties(
       holdings.property,
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalProperties += value.total;
+    totalOtherProperty += value.totalOtherProperty;
+    totalCommercial += value.totalCommercial;
+    totalResidential += value.totalResidential;
+    totalPlot += value.totalPlot;
   }
   if (holdings?.savings) {
     const total = priceSavings(
@@ -806,19 +868,20 @@ export const calculateTotalAssets = async (
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalSavings += total;
   }
   if (holdings?.dep) {
-    const { total } = priceLendings(
+    const { total, totalShortTerm } = priceLendings(
       holdings.dep,
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalLendings += total;
+    totalStLendings += totalShortTerm;
   }
   if (holdings?.ltdep) {
     const total = priceLtdep(holdings.ltdep, selectedMembers, selectedCurrency);
-    totalAssets += total;
+    totalLtdep += total;
   }
   if (holdings?.other) {
     const total = priceOthers(
@@ -826,17 +889,68 @@ export const calculateTotalAssets = async (
       selectedMembers,
       selectedCurrency
     );
-    totalAssets += total;
+    totalOthers += total;
   }
   if (holdings?.angel) {
     const total = priceAngel(holdings.angel, selectedMembers, selectedCurrency);
-    totalAssets += total;
+    totalAngel += total;
   }
   if (holdings?.p2p) {
     const total = priceP2P(holdings.p2p, selectedMembers, selectedCurrency);
-    totalAssets += total;
+    totalP2P += total;
   }
-  return totalAssets;
+
+  const totalCash =
+    totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds;
+  const totalPhysical = totalProperties + totalVehicles + totalPM + totalOthers;
+  const totalFinancial =
+    totalInstruments +
+    totalAngel +
+    totalCrypto +
+    totalP2P +
+    totalNPS -
+    totalLiquidFunds;
+  const totalAssets = totalCash + totalPhysical + totalFinancial;
+  return {
+    totalCash,
+    totalSavings,
+    totalLendings,
+    totalFGold,
+    totalPGold,
+    totalFRE,
+    totalFInv,
+    totalProperties,
+    totalAssets,
+    totalAngel,
+    totalOthers,
+    totalVehicles,
+    totalPF,
+    totalOtherProperty,
+    totalCommercial,
+    totalResidential,
+    totalPlot,
+    totalEPF,
+    totalVPF,
+    totalPPF,
+    totalNPSEquity,
+    totalNPSFixed,
+    totalCrypto,
+    totalP2P,
+    totalLtdep,
+    totalPM,
+    totalLargeCapStocks,
+    totalLargeCapFunds,
+    totalMultiCap,
+    totalLargeCapETF,
+    totalIndexFunds,
+    totalLiquidFunds,
+    totalIntervalFunds,
+    totalFMP,
+    totalFFixed,
+    totalStLendings,
+    totalBonds,
+    totalStocks,
+  };
 };
 
 export const calculateTotalLiabilities = (

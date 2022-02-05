@@ -28,7 +28,7 @@ function DBContextProvider({ fxRates }: any) {
       );
       let insHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
       let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
-      const assets = await calculateTotalAssets(
+      const { totalAssets } = await calculateTotalAssets(
         allHoldings,
         insHoldings,
         [ALL_FAMILY],
@@ -36,7 +36,7 @@ function DBContextProvider({ fxRates }: any) {
         fxRates,
         npsData
       );
-      setTotalAssets(assets);
+      setTotalAssets(totalAssets);
       if (allHoldings) {
         const liabilities = calculateTotalLiabilities(
           allHoldings,
