@@ -476,7 +476,7 @@ function NWContextProvider({ fxRates }: any) {
     setSelectedCurrency(Object.keys(currencyList)[0]);
     setCurrencyList(currencyList);
     if (allHoldings) setHoldings(true);
-    if (insHoldings?.uname && insHoldings?.ins?.length) {
+    if (insHoldings) {
       setInsholdings(true);
     }
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
