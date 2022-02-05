@@ -129,8 +129,10 @@ export default function AddHoldings({
 					<Button key="cancel" type="link" onClick={close}>
 						Cancel
 					</Button>,
+
 					familyList.length > 1 && childTab !== PROP ? (
-						<Dropdown overlay={menu} key={'add'}>
+						
+						<Dropdown overlay={menu} key={'add'} disabled={hasInstruments(childTab) && instrumentsList.length === 0}>
 							<Button key="addfamily" type="primary" onClick={handleAddButtonClick}>
 								Add
 								<DownOutlined />

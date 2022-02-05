@@ -259,9 +259,7 @@ export default function HoldingInput(props: any) {
 
       <Col flex={2}>
         <label>&nbsp;</label> <br />
-        <Button type="default" onClick={addToHoldings} disabled={buttonState}>
-          <PlusOutlined />
-        </Button>
+        <Button type="default" onClick={addToHoldings} disabled={buttonState} shape={'circle'} icon={<PlusOutlined />}/>
       </Col>
     </Row>) : 
     ( 
