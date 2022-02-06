@@ -49,9 +49,10 @@ export default function InstrumentValuation() {
   const tagsData = (childTab: string) => {
     const data: any = {
       Stocks: getCascaderOptions(
-        { 
-          // ind: "Industry", 
-          mcap: "Capitalization" },
+        {
+          // ind: "Industry",
+          mcap: "Capitalization",
+        },
 
         {
           // ind: { F: "Finance", T: "Technology", B: "Bank" },
@@ -217,14 +218,12 @@ export default function InstrumentValuation() {
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
         const data = cachedData[id];
-        if (
-          childTab === MF &&
-          selectedSubtTags.length &&
-          selectedTags.indexOf(data.type as string) > -1
-        ) {
+        if (childTab === MF && selectedTags.indexOf(data.type as string) > -1) {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
           const { subt, mftype, type, mcap } = data;
           return (
+            (selectedTags.indexOf(data.type as string) > -1 &&
+              selectedSubtTags.length === 0) ||
             (selectedSubtTags.includes(MCap.L) && mcap === MCap.L) ||
             (selectedSubtTags.includes("Multi") &&
               (mcap !== MCap.L || !mcap)) ||
