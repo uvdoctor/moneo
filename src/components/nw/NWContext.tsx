@@ -668,8 +668,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalIntervalFunds(intervalFunds);
       setTotalLiquidFunds(liquidFunds);
     };
-    getValue();
-    setLoadingInstruments(false);
+    getValue().then(() => setLoadingInstruments(false));
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
