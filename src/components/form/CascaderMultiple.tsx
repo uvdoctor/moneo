@@ -56,7 +56,6 @@ export default function CascaderMultiple({
       <LabelWithTooltip label={pre} info={info} />
       <Cascader
         allowClear={false}
-        bordered={false}
         style={{ width: isMobileDevice(fsb) ? 250 : width ? width : 500 }}
         defaultValue={defaultValue}
         options={options}

@@ -49,9 +49,12 @@ export default function InstrumentValuation() {
   const tagsData = (childTab: string) => {
     const data: any = {
       Stocks: getCascaderOptions(
-        { ind: "Industry", mcap: "Capitalization" },
+        { 
+          // ind: "Industry", 
+          mcap: "Capitalization" },
+
         {
-          ind: { F: "Finance", T: "Technology", B: "Bank" },
+          // ind: { F: "Finance", T: "Technology", B: "Bank" },
           mcap: getMarketCap(),
         },
         false
@@ -269,14 +272,6 @@ export default function InstrumentValuation() {
         {hasTags(childTab) ? (
           <Col xs={24} sm={24}>
             <Row justify="center" align="middle">
-              <Col>
-                <FilterTwoTone
-                  twoToneColor={
-                    selectedTags.length ? COLORS.GREEN : COLORS.DEFAULT
-                  }
-                  style={{ fontSize: 20 }}
-                />
-              </Col>
               <Col>
                 <CascaderMultiple
                   pre=""
