@@ -187,11 +187,10 @@ export default function UploadHoldings() {
         )
       : memberKey;
     if (uploadedInstruments.length) {
-      let condition = (instrument: any) =>
-        overwrite ? instrument?.fId !== member : instrument?.fId === member;
       let filteredIns: Array<InstrumentInput> = instruments.filter(
         (instrument: InstrumentInput) =>
-          instrument.curr === selectedCurrency && condition(instrument)
+          instrument.curr === selectedCurrency &&
+          (overwrite ? instrument.fId !== member : true)
       );
       uploadedInstruments.forEach((instrument: InstrumentInput) => {
         instrument.curr = currency;
@@ -421,12 +420,14 @@ export default function UploadHoldings() {
                   {taxId ? (
                     <strong>{taxId}</strong>
                   ) : (
-                    <MemberInput 
+                    <MemberInput
                       value={memberKey ? memberKey : "Select a Member"}
                       changeHandler={(key: string) => {
                         setMemberKey(key);
                         setError("");
-                      }}/> )}
+                      }}
+                    />
+                  )}
                 </Col>
                 <Col>
                   <Badge count={uploadedInstruments.length} />
