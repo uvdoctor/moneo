@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Table } from "antd";
+import { Col, Empty, Row, Skeleton, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
@@ -32,6 +32,7 @@ export default function InstrumentValuation() {
     selectedCurrency,
     childTab,
     selectedMembers,
+    loadingInstruments,
   }: any = useContext(NWContext);
   const [filteredInstruments, setFilteredInstruments] = useState<
     Array<InstrumentInput>
@@ -49,7 +50,10 @@ export default function InstrumentValuation() {
     const data: any = {
       Stocks: getCascaderOptions(
         { ind: "Industry", mcap: "Capitalization" },
-        { ind: { F: "Finance", T: "Technology", B: "Bank" }, mcap: getMarketCap() },
+        {
+          ind: { F: "Finance", T: "Technology", B: "Bank" },
+          mcap: getMarketCap(),
+        },
         false
       ),
       "Mutual Funds": getCascaderOptions(
@@ -259,46 +263,52 @@ export default function InstrumentValuation() {
     setFilterByTag([...filterDataByTag]);
   };
 
-  return instruments.length ? (
-    <Row gutter={[10, 10]}>
-      {hasTags(childTab) ? (
-        <Col xs={24} sm={24}>
-          <Row justify="center" align="middle">
-            <Col>
-              <FilterTwoTone
-                twoToneColor={
-                  selectedTags.length ? COLORS.GREEN : COLORS.DEFAULT
-                }
-                style={{ fontSize: 20 }}
-              />
-            </Col>
-            <Col>
-              <CascaderMultiple
-                pre=""
-                options={tagsData(childTab)}
-                parentValue={selectedTags}
-                childValue={selectedSubtTags}
-                parentChangeHandler={(val: any) => setSelectedTags(val)}
-                childChangeHandler={(val: any) => setSelectedSubtTags(val)}
-              />
-            </Col>
-          </Row>
-        </Col>
-      ) : null}
-      <Col span={24}>
-        {filteredInstruments.length ? (
-          <Table
-            dataSource={selectedTags.length ? filterByTag : filteredInstruments}
-            //@ts-ignore
-            columns={columns}
-            size="small"
-            bordered
-            onChange={handleChange}
-          />
+  return !loadingInstruments ? (
+    instruments.length ? (
+      <Row gutter={[10, 10]}>
+        {hasTags(childTab) ? (
+          <Col xs={24} sm={24}>
+            <Row justify="center" align="middle">
+              <Col>
+                <FilterTwoTone
+                  twoToneColor={
+                    selectedTags.length ? COLORS.GREEN : COLORS.DEFAULT
+                  }
+                  style={{ fontSize: 20 }}
+                />
+              </Col>
+              <Col>
+                <CascaderMultiple
+                  pre=""
+                  options={tagsData(childTab)}
+                  parentValue={selectedTags}
+                  childValue={selectedSubtTags}
+                  parentChangeHandler={(val: any) => setSelectedTags(val)}
+                  childChangeHandler={(val: any) => setSelectedSubtTags(val)}
+                />
+              </Col>
+            </Row>
+          </Col>
         ) : null}
-      </Col>
-    </Row>
+        <Col span={24}>
+          {filteredInstruments.length ? (
+            <Table
+              dataSource={
+                selectedTags.length ? filterByTag : filteredInstruments
+              }
+              //@ts-ignore
+              columns={columns}
+              size="small"
+              bordered
+              onChange={handleChange}
+            />
+          ) : null}
+        </Col>
+      </Row>
+    ) : (
+      <Empty description={<p>No data found.</p>} />
+    )
   ) : (
-    <Empty description={<p>No data found.</p>} />
+    <Skeleton active />
   );
 }

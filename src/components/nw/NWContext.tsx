@@ -624,7 +624,7 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     const getValue = async () => {
-      setLoadingInstruments(true)
+      setLoadingInstruments(true);
       const {
         total,
         totalFGold,
@@ -647,7 +647,7 @@ function NWContextProvider({ fxRates }: any) {
       } = await priceInstruments(
         instruments,
         selectedMembers,
-        selectedCurrency,
+        selectedCurrency
       );
       setTotalInstruments(total);
       setTotalFGold(totalFGold);
@@ -668,8 +668,8 @@ function NWContextProvider({ fxRates }: any) {
       setTotalIntervalFunds(intervalFunds);
       setTotalLiquidFunds(liquidFunds);
     };
-    setLoadingInstruments(false)
     getValue();
+    setLoadingInstruments(false);
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
@@ -941,9 +941,8 @@ function NWContextProvider({ fxRates }: any) {
         totalETFs,
         totalFFixed,
         totalStocks,
-        loadingInstruments
-      }}
-    >
+        loadingInstruments,
+      }}>
       <NWView />
     </NWContext.Provider>
   );
