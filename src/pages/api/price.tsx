@@ -15,13 +15,8 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const getCryptoRate = () => {
     fetch(`https://api.coinbase.com/v2/prices/${id}-${currency}/sell`)
-      .then((data) =>
-        data.json().then((response) => {
-          const amount = response.data.amount;
-          console.log(response.data.amount);
-          res.status(200).json({ rate: amount });
-        })
-      )
+      .then((data) => data.json())
+      .then((response) => res.status(200).json({ rate: response.data.amount }))
       .catch((err) => {
         console.log(
           `Error while getting coinbase price for ${id} due to ${err}`
@@ -32,14 +27,10 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const getCommodityRate = () => {
     fetch(
-      `https://eodhistoricaldata.com/api/real-time/${id}.${type}?api_token=${eodKey}&fmt=json`
+      `https://eodhistoricaldata.com/api/eod/${id}.${type}?api_token=${eodKey}&fmt=json&filter=last_close`
     )
-      .then((data) =>
-        data.json().then((response) => {
-          console.log(response);
-          res.status(200).json({ rate: response.close });
-        })
-      )
+      .then((data) => data.json())
+      .then((rate) => res.status(200).json({ rate: rate }))
       .catch((err) => {
         console.log(`Error while getting eod price for ${id} due to ${err}`);
         res.status(200).json({ rate: defaultPrices[id] });
