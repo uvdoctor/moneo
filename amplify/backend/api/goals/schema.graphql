@@ -360,6 +360,9 @@ type INExchgPrice
   under: String
   yhigh: Float
   ylow: Float
+  beta: Float
+  mcap: Float
+  mcapt: MCap
 }
 
 type InsMeta

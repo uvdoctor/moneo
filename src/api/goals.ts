@@ -999,6 +999,9 @@ export type CreateINExchgPriceInput = {
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
+  beta?: number | null,
+  mcap?: number | null,
+  mcapt?: MCap | null,
 };
 
 export enum AssetType {
@@ -1037,6 +1040,14 @@ export enum InsType {
 }
 
 
+export enum MCap {
+  S = "S",
+  M = "M",
+  L = "L",
+  H = "H",
+}
+
+
 export type ModelINExchgPriceConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -1050,6 +1061,9 @@ export type ModelINExchgPriceConditionInput = {
   under?: ModelStringInput | null,
   yhigh?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
+  beta?: ModelFloatInput | null,
+  mcap?: ModelFloatInput | null,
+  mcapt?: ModelMCapInput | null,
   and?: Array< ModelINExchgPriceConditionInput | null > | null,
   or?: Array< ModelINExchgPriceConditionInput | null > | null,
   not?: ModelINExchgPriceConditionInput | null,
@@ -1070,6 +1084,11 @@ export type ModelInsTypeInput = {
   ne?: InsType | null,
 };
 
+export type ModelMCapInput = {
+  eq?: MCap | null,
+  ne?: MCap | null,
+};
+
 export type INExchgPrice = {
   __typename: "INExchgPrice",
   id?: string,
@@ -1086,6 +1105,9 @@ export type INExchgPrice = {
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
+  beta?: number | null,
+  mcap?: number | null,
+  mcapt?: MCap | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1098,14 +1120,6 @@ export type InsMeta = {
   createdAt?: string,
   updatedAt?: string,
 };
-
-export enum MCap {
-  S = "S",
-  M = "M",
-  L = "L",
-  H = "H",
-}
-
 
 export type UpdateINExchgPriceInput = {
   id: string,
@@ -1121,6 +1135,9 @@ export type UpdateINExchgPriceInput = {
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
+  beta?: number | null,
+  mcap?: number | null,
+  mcapt?: MCap | null,
 };
 
 export type DeleteINExchgPriceInput = {
@@ -1139,11 +1156,6 @@ export type ModelInsMetaConditionInput = {
   and?: Array< ModelInsMetaConditionInput | null > | null,
   or?: Array< ModelInsMetaConditionInput | null > | null,
   not?: ModelInsMetaConditionInput | null,
-};
-
-export type ModelMCapInput = {
-  eq?: MCap | null,
-  ne?: MCap | null,
 };
 
 export type UpdateInsMetaInput = {
@@ -1800,6 +1812,9 @@ export type ModelINExchgPriceFilterInput = {
   under?: ModelStringInput | null,
   yhigh?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
+  beta?: ModelFloatInput | null,
+  mcap?: ModelFloatInput | null,
+  mcapt?: ModelMCapInput | null,
   and?: Array< ModelINExchgPriceFilterInput | null > | null,
   or?: Array< ModelINExchgPriceFilterInput | null > | null,
   not?: ModelINExchgPriceFilterInput | null,
@@ -3735,6 +3750,9 @@ export type CreateInExchgPriceMutation = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3769,6 +3787,9 @@ export type UpdateInExchgPriceMutation = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3803,6 +3824,9 @@ export type DeleteInExchgPriceMutation = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4889,6 +4913,9 @@ export type GetInExchgPriceQuery = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4928,6 +4955,9 @@ export type ListInExchgPricesQuery = {
       under?: string | null,
       yhigh?: number | null,
       ylow?: number | null,
+      beta?: number | null,
+      mcap?: number | null,
+      mcapt?: MCap | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6585,6 +6615,9 @@ export type OnCreateInExchgPriceSubscription = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6614,6 +6647,9 @@ export type OnUpdateInExchgPriceSubscription = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6643,6 +6679,9 @@ export type OnDeleteInExchgPriceSubscription = {
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
+    beta?: number | null,
+    mcap?: number | null,
+    mcapt?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
