@@ -107,14 +107,14 @@ const mergeEodAndExchgData = (exchgData, eodData) => {
 		element.map((item) => {
 			const data = eodData.find((re) => re.code === item.PutRequest.Item.sid);
 			if (!data) return;
-			const { code, name, MarketCapitalization, adjusted_close, hi_250d, lo_250d, prev_close, beta } = data;
+			const { code, name, MarketCapitalization, adjusted_close, hi_250d, lo_250d, close, Beta } = data;
 			item.PutRequest.Item.sid = code;
 			item.PutRequest.Item.name = name;
 			item.PutRequest.Item.price = adjusted_close;
-			item.PutRequest.Item.prev = prev_close;
+			item.PutRequest.Item.prev = close;
 			item.PutRequest.Item.yhigh = hi_250d;
 			item.PutRequest.Item.ylow = lo_250d;
-			item.PutRequest.Item.beta = beta;
+			item.PutRequest.Item.beta = Beta;
 			item.PutRequest.Item.mcap = MarketCapitalization;
 			item.PutRequest.Item.mcapt = getMarketCapType(MarketCapitalization);
 		});
