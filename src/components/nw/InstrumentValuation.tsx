@@ -141,7 +141,7 @@ export default function InstrumentValuation() {
       const id = instrument.id;
       if (!ids.has(id))
         filteredNames.push({
-          text: insData[id] ? insData[id].name : id,
+          text: insData && insData[id] ? insData[id].name : id,
           value: id,
         });
       ids.add(id);
