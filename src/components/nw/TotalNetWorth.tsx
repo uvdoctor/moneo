@@ -3,7 +3,7 @@ import ItemDisplay from "../calc/ItemDisplay";
 import { NWContext } from "./NWContext";
 
 export default function TotalNetWorth() {
-  const { nw, selectedCurrency, loadingHoldings, loadingInstruments }: any =
+  const { nw, selectedCurrency, loadingInstruments }: any =
     useContext(NWContext);
 
   return (
@@ -14,7 +14,7 @@ export default function TotalNetWorth() {
         currency={selectedCurrency}
         pl
         info={"Net Worth equals what you own minus what you owe."}
-        loading={loadingHoldings || loadingInstruments}
+        loading={loadingInstruments}
       />
     </div>
   );

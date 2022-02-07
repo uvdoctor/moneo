@@ -71,7 +71,7 @@ export default function NWView() {
                                 result={totalAssets}
                                 currency={selectedCurrency}
                                 info="This is the total valuation of the assets you own."
-                                loading={loadingHoldings || loadingInstruments}
+                                loading={loadingInstruments}
                               />
                             </Col>
                           </Row>
@@ -89,7 +89,6 @@ export default function NWView() {
                                 result={-totalLiabilities}
                                 currency={selectedCurrency}
                                 info="This is the total valuation of all the money you owe."
-                                loading={loadingHoldings}
                                 pl
                               />
                             </Col>
