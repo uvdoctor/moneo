@@ -729,7 +729,7 @@ function NWContextProvider({ fxRates }: any) {
     setTotalNPS(total);
     setTotalNPSEquity(totalNPSEquity);
     setTotalNPSFixed(totalNPSFixed);
-  }, [nps, selectedCurrency, selectedMembers]);
+  }, [nps, selectedCurrency, selectedMembers, npsData]);
 
   useEffect(() => {
     const total = priceLoans(loans, selectedMembers, selectedCurrency);
