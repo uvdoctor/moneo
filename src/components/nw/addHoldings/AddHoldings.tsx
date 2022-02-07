@@ -102,7 +102,7 @@ export default function AddHoldings({
 	return (
 		<Fragment>
 			&nbsp;&nbsp;
-			<Button type="primary" icon={<PlusOutlined />} onClick={() => setModalVisibility(true)}>
+			<Button type={hasInstruments(childTab) ? 'default' : 'primary'} icon={<PlusOutlined />} onClick={() => setModalVisibility(true)}>
 				Add
 			</Button>
 			&nbsp;&nbsp;
