@@ -3,6 +3,8 @@ import { Auth, Hub } from "aws-amplify";
 import Head from "next/head";
 import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
+import { CognitoUser } from "@aws-amplify/auth";
+import { AuthState } from "@aws-amplify/ui-components";
 
 interface BasicPageProps {
   className?: string;
@@ -18,8 +20,17 @@ interface BasicPageProps {
 }
 
 export default function BasicPage(props: BasicPageProps) {
-  const { setAppContextLoaded, setUser, setUserChecked }: any =
+  const { setAppContextLoaded, user, setUser, setUserChecked }: any =
     useContext(AppContext);
+
+  const listener = (data: any) => {
+    const { payload } = data;
+    if (
+      payload.message === AuthState.SignedIn &&
+      payload.data instanceof CognitoUser
+    )
+      setUser(payload.data);
+  };
 
   useEffect(() => {
     if (!props.secure) {
@@ -27,19 +38,17 @@ export default function BasicPage(props: BasicPageProps) {
       setAppContextLoaded(true);
       return;
     }
-    Hub.listen("auth", initUser);
+    Hub.listen("UI Auth", listener);
     initUser();
-    return () => Hub.remove("auth", initUser);
+    return () => Hub.remove("UI Auth", listener);
   }, []);
 
   const initUser = async () => {
-    let user = null;
+    if (user) return;
     try {
-      user = await Auth.currentAuthenticatedUser();
-      setUser(user);
+      setUser(await Auth.currentAuthenticatedUser());
     } catch (e) {
       console.log("Unable to authenticate user: ", e);
-      setUser(null);
       setUserChecked(true);
     }
   };

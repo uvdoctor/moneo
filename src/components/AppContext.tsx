@@ -17,7 +17,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   const [appContextLoaded, setAppContextLoaded] = useState<boolean>(false);
   const [userChecked, setUserChecked] = useState<boolean>(false);
   const [owner, setOwner] = useState<string>("");
-  const [userInfo, setUserInfo] = useState<any>();
+  const [userInfo, setUserInfo] = useState<any | null>(null);
   const [discountRate, setDiscountRate] = useState<number>();
 
   const validateCaptcha = async (action: string) => {
@@ -70,21 +70,19 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   useEffect(() => {
     if (!owner) return;
     Storage.configure({ level: "private" });
-    userInfo ? setAppContextLoaded(true) : loadUserInfo();
+    loadUserInfo().then(() => true);
   }, [owner]);
 
-  const loadUserInfo = async () => {
-    const userDetails = await getUserDetails(owner);
-    if (userDetails) {
-      setUserInfo(userDetails);
-      setDiscountRate(
-        !userDetails?.dr
-          ? getDiscountRate(userDetails?.rp, defaultCountry)
-          : userDetails?.dr
-      );
-      setAppContextLoaded(true);
-    }
-  };
+  useEffect(() => {
+    setDiscountRate(
+      !userInfo?.dr
+        ? getDiscountRate(userInfo?.rp, defaultCountry)
+        : userInfo?.dr
+    );
+    setAppContextLoaded(true);
+  }, [userInfo]);
+
+  const loadUserInfo = async () => setUserInfo(await getUserDetails(owner));
 
   return (
     <AppContext.Provider

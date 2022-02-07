@@ -42,8 +42,7 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { validateCaptcha, setUserInfo, appContextLoaded }: any =
-    useContext(AppContext);
+  const { validateCaptcha, appContextLoaded }: any = useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -117,26 +116,23 @@ export default function BasicAuthenticator({
   };
 
   const handleConfirmSignUp = async () => {
-    await Auth.signIn(uname, password).then((user) => {
-      Hub.dispatch("UI Auth", {
-        event: "AuthStateChange",
-        message: AuthState.SignedIn,
-        data: user,
-      });
+    const user = await Auth.signIn(uname, password);
+    await createUserinfo({
+      uname,
+      email,
+      notify,
+      dob: DOB,
+      tax: taxLiability,
+      rp: riskProfile,
+      dr: 0,
+      tc: new Date().toISOString(),
+      le: lifeExpectancy,
     });
-    setUserInfo(
-      await createUserinfo({
-        uname,
-        email,
-        notify,
-        dob: DOB,
-        tax: taxLiability,
-        rp: riskProfile,
-        dr: 0,
-        tc: new Date().toISOString(),
-        le: lifeExpectancy,
-      })
-    );
+    Hub.dispatch("UI Auth", {
+      event: "AuthStateChange",
+      message: AuthState.SignedIn,
+      data: user,
+    });
   };
 
   const handleRegistrationSubmit = async () => {
@@ -208,7 +204,7 @@ export default function BasicAuthenticator({
           <AmplifyConfirmSignUp
             slot="confirm-sign-up"
             user={cognitoUser}
-            handleAuthStateChange={handleConfirmSignUp}
+            handleAuthStateChange={async () => await handleConfirmSignUp()}
             formFields={[
               {
                 type: "code",

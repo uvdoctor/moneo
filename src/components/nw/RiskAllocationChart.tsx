@@ -68,7 +68,7 @@ export default function RiskAllocationChart() {
   const buildDataItem = (risk: string, val: number) => {
     return {
       risk,
-      value: (val * 100) / totalAssets,
+      value: (val * 100) / (totalAssets - totalVehicles),
     };
   };
 
@@ -82,8 +82,7 @@ export default function RiskAllocationChart() {
       totalNPSFixed +
       totalFRE;
     const mVal = totalFEquity - totalMultiCap + totalNPSEquity;
-    const hVal =
-      totalOthers + totalVehicles + totalP2P + totalFInv + totalMultiCap;
+    const hVal = totalOthers + totalP2P + totalFInv + totalMultiCap;
     const vhVal = totalAngel + totalCrypto;
     if (vcVal) data.push(buildDataItem(RiskProfile.VC, vcVal));
     if (cVal) data.push(buildDataItem(RiskProfile.C, cVal));
@@ -147,7 +146,6 @@ export default function RiskAllocationChart() {
     if (risk === RiskProfile.A)
       return getTooltipDesc(
         {
-          Vehicles: totalVehicles,
           "Multi-cap Stocks": totalStocks - totalLargeCapStocks,
           "Multi-cap Mutual Funds":
             totalMultiCap - (totalStocks - totalLargeCapStocks),
