@@ -43,6 +43,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   }
 
   function onCancel() {
+    setInstruments([...instruments]);
     setEditMode(false);
   }
 
@@ -144,7 +145,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                   onChange={(val) => {
                     holding.qty = val as number;
                     if (onChange) onChange(holding);
-                    setInstruments([...instruments]);
                   }}
                 />
               ) : (
