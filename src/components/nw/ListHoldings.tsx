@@ -117,7 +117,7 @@ export default function ListHoldings({
           record={holding}
           changeData={changeData}
           data={data}
-          pre={fields.type}
+          pre={childTab === OTHER ? '' :fields.type}
           info={info.type}
         />
       ),
@@ -245,7 +245,7 @@ export default function ListHoldings({
       }
     };
     getData();
-  }, [data, selectedMembers, selectedCurrency, discountRate, familyOptions]);
+  }, [data, selectedMembers, selectedCurrency, discountRate, familyOptions, childTab, npsData]);
 
   return dataSource.length ? (
     <Table

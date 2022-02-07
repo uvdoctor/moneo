@@ -23,6 +23,7 @@ import {
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { includesAny } from "../utils";
+import { ALL_FAMILY } from "./FamilyInput";
 import {
   doesHoldingMatch,
   doesMemberMatch,
@@ -640,7 +641,17 @@ export const priceProperties = (
   let totalPlot = 0;
   properties.forEach((property: PropertyInput) => {
     if (!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
-    const value = calculateProperty(property);
+    const result = calculateProperty(property);
+    let value = 0;
+    if (!selectedMembers.includes(ALL_FAMILY)) {
+      for (let owner of property.own) {
+        if (selectedMembers.includes(owner.fId)) {
+          value += (result * owner.per) / 100;
+        }
+      }
+    } else {
+      value = result;
+    }
     total += value;
     if (property.type === PropertyType.P) totalPlot += value;
     if (property.type === PropertyType.OTHER) totalOtherProperty += value;

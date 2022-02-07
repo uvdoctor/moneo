@@ -224,7 +224,7 @@ export default function RiskAllocationChart() {
           }}
           meta={{
             risk: {
-              formatter: (v: any) => riskAttributes[v].label,
+              formatter: (v: any) => riskAttributes[v] ? riskAttributes[v].label : '',
             },
             value: {
               formatter: (v: any) => {
@@ -264,7 +264,7 @@ export default function RiskAllocationChart() {
           legend={{
             position: "top",
           }}
-          color={({ risk }: any) => riskAttributes[risk].color}
+          color={({ risk }: any) => riskAttributes[risk] ? riskAttributes[risk].color : COLORS.DEFAULT}
         />
       </Col>
     </Row>
