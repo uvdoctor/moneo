@@ -117,7 +117,7 @@ export default function ListHoldings({
           record={holding}
           changeData={changeData}
           data={data}
-          pre={fields.type}
+          pre={childTab === OTHER ? '' :fields.type}
           info={info.type}
         />
       ),
