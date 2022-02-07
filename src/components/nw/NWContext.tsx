@@ -9,7 +9,6 @@ import {
   getFamilysList,
   getNPSData,
   getNPSFundManagers,
-  getRelatedCurrencies,
   loadAllFamilyMembers,
   loadAllHoldings,
   loadInsHoldings,
@@ -92,7 +91,7 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
 function NWContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner, discountRate, userInfo }: any =
+  const { defaultCurrency, owner, discountRate, userInfo, user }: any =
     useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
@@ -112,7 +111,6 @@ function NWContextProvider({ fxRates }: any) {
   const [credit, setCredit] = useState<Array<HoldingInput>>([]);
   const [p2p, setP2P] = useState<Array<HoldingInput>>([]);
   const [selectedMembers, setSelectedMembers] = useState<Array<string>>([]);
-  const [currencyList, setCurrencyList] = useState<any>({});
   const [selectedCurrency, setSelectedCurrency] = useState<string>("");
   const [nw, setNW] = useState<number>(0);
   const [totalAssets, setTotalAssets] = useState<number>(0);
@@ -473,9 +471,7 @@ function NWContextProvider({ fxRates }: any) {
         description: "Sorry! Unable to fetch holdings.",
       });
     }
-    let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
-    setSelectedCurrency(Object.keys(currencyList)[0]);
-    setCurrencyList(currencyList);
+    setSelectedCurrency(defaultCurrency);
     if (allHoldings) setHoldings(true);
     if (insHoldings) {
       setInsholdings(true);
@@ -499,11 +495,11 @@ function NWContextProvider({ fxRates }: any) {
   };
 
   useEffect(() => {
-    if (!owner) return;
+    if (!owner || !user) return;
     initializeHoldings().then(() => {
       setLoadingHoldings(false);
     });
-  }, [owner]);
+  }, [owner, user]);
 
   useEffect(() => {
     setNW(totalAssets - totalLiabilities);
@@ -841,8 +837,6 @@ function NWContextProvider({ fxRates }: any) {
         activeTabSum,
         setActiveTabSum,
         loadingHoldings,
-        currencyList,
-        setCurrencyList,
         totalInstruments,
         totalProperties,
         totalCrypto,

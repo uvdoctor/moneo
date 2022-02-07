@@ -1,9 +1,8 @@
 import React, { Fragment, useContext } from "react";
 import HoldingTabView from "./HoldingTabView";
 import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Button, Col, PageHeader, Radio, Row, Skeleton } from "antd";
+import { Button, Col, PageHeader, Radio, Row, Skeleton, Spin } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
-import SelectInput from "../form/selectinput";
 
 require("./nw.less");
 import FamilyInput from "./FamilyInput";
@@ -16,47 +15,34 @@ require("./NWView.less");
 export default function NWView() {
   const {
     selectedCurrency,
-    setSelectedCurrency,
     loadingHoldings,
-    currencyList,
     totalAssets,
     totalLiabilities,
     view,
     setView,
     addSelfMember,
     familyMemberKeys,
+    loadingInstruments,
   }: any = useContext(NWContext);
   const { appContextLoaded }: any = useContext(AppContext);
 
-  return appContextLoaded && !loadingHoldings ? (
-    familyMemberKeys.length ? (
-      <Fragment>
-        <div className="primary-header">
-          <Row>
-            <Col span={24}>
-              <PageHeader
-                title="Financial Health Analysis"
-                extra={[
-                  <SelectInput
-                    key="currency"
-                    pre=""
-                    value={selectedCurrency}
-                    changeHandler={setSelectedCurrency}
-                    options={currencyList}
-                    loading={loadingHoldings}
-                  />,
-                ]}
-              />
-            </Col>
-          </Row>
-          <Row justify="center" align="middle" className="secondary-header">
-            <Col>
-              <FamilyInput />
-            </Col>
-          </Row>
-        </div>
-        <div className="nw-container">
-          {!loadingHoldings ? (
+  return (
+    <Fragment>
+      <div className="primary-header">
+        <Row>
+          <Col span={24}>
+            <PageHeader title="Financial Health Analysis" />
+          </Col>
+        </Row>
+        <Row justify="center" align="middle" className="secondary-header">
+          <Col>
+            {appContextLoaded && !loadingHoldings ? <FamilyInput /> : <Spin />}
+          </Col>
+        </Row>
+      </div>
+      {appContextLoaded && !loadingHoldings ? (
+        familyMemberKeys.length ? (
+          <div className="nw-container">
             <Fragment>
               <Row justify="center" gutter={16}>
                 <Col xs={24} sm={24} md={16} lg={8}>
@@ -85,6 +71,7 @@ export default function NWView() {
                                 result={totalAssets}
                                 currency={selectedCurrency}
                                 info="This is the total valuation of the assets you own."
+                                loading={loadingHoldings || loadingInstruments}
                               />
                             </Col>
                           </Row>
@@ -102,6 +89,7 @@ export default function NWView() {
                                 result={-totalLiabilities}
                                 currency={selectedCurrency}
                                 info="This is the total valuation of all the money you owe."
+                                loading={loadingHoldings}
                                 pl
                               />
                             </Col>
@@ -114,26 +102,25 @@ export default function NWView() {
               </Row>
               <HoldingTabView liabilities={view !== ASSETS_VIEW} />
             </Fragment>
-          ) : (
-            <Skeleton active />
-          )}
-        </div>
-      </Fragment>
-    ) : (
-      <div style={{ textAlign: "center" }}>
-        <p>&nbsp;</p>
-        <h3>
-          Please input data to get a comprehensive financial health analysis.
-        </h3>
-        <h3>More data you provide, better the analysis!</h3>
-        <p>&nbsp;</p>
-        <Button type="primary" onClick={() => addSelfMember()}>
-          Get Started
-        </Button>
-        <p>&nbsp;</p>
-      </div>
-    )
-  ) : (
-    <Skeleton active />
+          </div>
+        ) : (
+          <div style={{ textAlign: "center" }}>
+            <p>&nbsp;</p>
+            <h3>
+              Please input data to get a comprehensive financial health
+              analysis.
+            </h3>
+            <h3>More data you provide, better the analysis!</h3>
+            <p>&nbsp;</p>
+            <Button type="primary" onClick={() => addSelfMember()}>
+              Get Started
+            </Button>
+            <p>&nbsp;</p>
+          </div>
+        )
+      ) : (
+        <Skeleton active />
+      )}
+    </Fragment>
   );
 }

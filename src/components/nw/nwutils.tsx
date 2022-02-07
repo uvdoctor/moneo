@@ -263,24 +263,6 @@ export const updateHoldings = async (
   }
 };
 
-export const getRelatedCurrencies = (
-  holdings: APIt.CreateUserHoldingsInput | null,
-  defaultCurrency: string
-) => {
-  let currencyList: any = { [defaultCurrency]: defaultCurrency };
-  if (!holdings || !Object.keys(holdings).length) return currencyList;
-  Object.keys(holdings).forEach((key) => {
-    //@ts-ignore
-    let val: Array<any> | null | string = holdings[key];
-    if (val && val instanceof Array) {
-      val.forEach((obj: any) => {
-        if (!currencyList[obj.curr]) currencyList[obj.curr] = obj.curr;
-      });
-    }
-  });
-  return currencyList;
-};
-
 const getORIdList = (list: Array<any>, ids: Array<string>) => {
   ids.forEach((id: string) => {
     list.push({ id: { eq: id } });
@@ -550,7 +532,8 @@ export const getNPSData = async () => {
   } = (await API.graphql(graphqlOperation(queries.listNpsPrices))) as {
     data: APIt.ListNpsPricesQuery;
   };
-  let npsData: Array<APIt.CreateNPSPriceInput> | null = listNPSPrices?.items?.length
+  let npsData: Array<APIt.CreateNPSPriceInput> | null = listNPSPrices?.items
+    ?.length
     ? (listNPSPrices.items as Array<APIt.CreateNPSPriceInput>)
     : null;
   return npsData;
@@ -721,7 +704,7 @@ export const getFieldsAndInfo = (tab: string) => {
     ANGEL,
     CREDIT,
   } = TAB;
-  const fieldsAndInfo: { [key: string]: { fields: {}, info: {} } } = {
+  const fieldsAndInfo: { [key: string]: { fields: {}; info: {} } } = {
     [SAV]: {
       fields: { name: "Comment", amount: "Amount" },
       info: { amount: "Balance available in your bank account" },

@@ -19,7 +19,7 @@ function Get({ fxRates }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps = async () => {
   return {
     props: {
-      fxRates: await getFXData("60d03a689523a3.63944368"),
+      fxRates: await getFXData("61ff9bf3d40797.93512142"),
     },
   };
 };

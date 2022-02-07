@@ -48,9 +48,6 @@ export default function UploadHoldings() {
     allFamily,
     familyMemberKeys,
     setFamilyMemberKeys,
-    currencyList,
-    setCurrencyList,
-    setSelectedCurrency,
     selectedCurrency,
     setSelectedMembers,
   }: any = useContext(NWContext);
@@ -165,19 +162,8 @@ export default function UploadHoldings() {
     return null;
   };
 
-  const selectCurrency = () => {
-    let currency = "INR";
-    if (!currencyList[currency]) {
-      currencyList[currency] = currency;
-      setCurrencyList(currencyList);
-    }
-    setSelectedCurrency(currency);
-    return currency;
-  };
-
   const addInstruments = async () => {
     setProcessing(true);
-    let currency = selectCurrency();
     let member = taxId
       ? await addMemberIfNeeded(
           allFamily,
@@ -193,7 +179,7 @@ export default function UploadHoldings() {
           (overwrite ? instrument.fId !== member : true)
       );
       uploadedInstruments.forEach((instrument: InstrumentInput) => {
-        instrument.curr = currency;
+        instrument.curr = selectedCurrency;
         instrument.fId = member as string;
       });
       filteredIns.push(...uploadedInstruments);

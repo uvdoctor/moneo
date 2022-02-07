@@ -11,7 +11,7 @@ import { getTooltipDesc } from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
-import { Col, Row } from "antd";
+import { Col, Empty, Row, Skeleton } from "antd";
 
 const PieChart = dynamic(() => import("bizcharts/lib/plots/PieChart"), {
   ssr: false,
@@ -50,6 +50,8 @@ export default function RiskAllocationChart() {
     totalPPF,
     totalEPF,
     totalVPF,
+    loadingHoldings,
+    loadingInstruments,
   }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
   const riskAttributes: any = {
@@ -184,7 +186,9 @@ export default function RiskAllocationChart() {
     calculateRiskAppetite();
   }, [data, userInfo]);
 
-  return (
+  return loadingHoldings || loadingInstruments ? (
+    <Skeleton active />
+  ) : totalAssets ? (
     <Row align="middle" className="container chart">
       <Col xs={24} md={12}>
         <Row justify="center">
@@ -224,7 +228,8 @@ export default function RiskAllocationChart() {
           }}
           meta={{
             risk: {
-              formatter: (v: any) => riskAttributes[v] ? riskAttributes[v].label : '',
+              formatter: (v: any) =>
+                riskAttributes[v] ? riskAttributes[v].label : "",
             },
             value: {
               formatter: (v: any) => {
@@ -264,9 +269,13 @@ export default function RiskAllocationChart() {
           legend={{
             position: "top",
           }}
-          color={({ risk }: any) => riskAttributes[risk] ? riskAttributes[risk].color : COLORS.DEFAULT}
+          color={({ risk }: any) =>
+            riskAttributes[risk] ? riskAttributes[risk].color : COLORS.DEFAULT
+          }
         />
       </Col>
     </Row>
+  ) : (
+    <Empty />
   );
 }

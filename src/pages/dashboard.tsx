@@ -8,7 +8,9 @@ import { DBContextProvider } from "../components/dashboard/DBContext";
 
 Amplify.configure({ ...awsexports, ssr: true });
 
-function Dashboard({ fxRates }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Dashboard({
+  fxRates,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <BasicPage title="Moneo - Dashboard" secure>
       <DBContextProvider fxRates={fxRates} />
@@ -19,7 +21,7 @@ function Dashboard({ fxRates }: InferGetStaticPropsType<typeof getStaticProps>) 
 export const getStaticProps = async () => {
   return {
     props: {
-      fxRates: await getFXData("61f26f046a8311.03934960"),
+      fxRates: await getFXData("61ff9bf3d40797.93512142"),
     },
   };
 };
