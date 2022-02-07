@@ -123,7 +123,7 @@ export default function InstrumentValuation() {
     dataToFilter.map((instrument: InstrumentInput) => {
       const id = instrument.id;
       const price =
-        instrument.qty * (cachedData[id] ? cachedData[id].price : 0);
+        instrument.qty * (cachedData && cachedData[id] ? cachedData[id].price : 0);
       if (filteredInfo.id) {
         if (filteredInfo.id.some((item: string) => item === id))
           filterAmt += price;
@@ -177,6 +177,7 @@ export default function InstrumentValuation() {
           instrument.id,
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
+        if(!cachedData) return;
         const data = cachedData[id];
         if (
           !data &&
@@ -217,6 +218,7 @@ export default function InstrumentValuation() {
           instrument.id,
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
+        if(!cachedData) return;
         const data = cachedData[id];
         if (childTab === MF && selectedTags.indexOf(data.type as string) > -1) {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
