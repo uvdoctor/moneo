@@ -245,7 +245,7 @@ export default function ListHoldings({
       }
     };
     getData();
-  }, [data, selectedMembers, selectedCurrency, discountRate, familyOptions, childTab]);
+  }, [data, selectedMembers, selectedCurrency, discountRate, familyOptions, childTab, npsData]);
 
   return dataSource.length ? (
     <Table
