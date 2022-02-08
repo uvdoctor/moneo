@@ -42,7 +42,9 @@ export default function ListProperties({
     useContext(NWContext);
   const [indexForMv, setIndexForMv] = useState<number | null>(null);
   const [dataSource, setDataSource] = useState<Array<any>>([]);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<
+    Array<{ index: number; mode: boolean }>
+  >([]);
   const today = new Date();
   const removeHolding = (i: number) => {
     data.splice(i, 1);
@@ -225,7 +227,7 @@ export default function ListProperties({
             <Col>
               <Row align={isEditMode ? "top" : "middle"}>
                 <Col>
-                  {isEditMode ? (
+                  {isEditMode.length && isEditMode[0].index === i ? (
                     <MarketValue
                       changeData={changeData}
                       record={data[i]}
@@ -239,9 +241,17 @@ export default function ListProperties({
                 <Col>
                   <Button
                     type="link"
-                    icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                    icon={
+                      isEditMode.length && isEditMode[0].index === i ? (
+                        <SaveOutlined />
+                      ) : (
+                        <EditOutlined />
+                      )
+                    }
                     onClick={() =>
-                      isEditMode ? setIsEditMode(false) : setIsEditMode(true)
+                      isEditMode.length
+                        ? setIsEditMode([...[]])
+                        : setIsEditMode([...[{ index: i, mode: true }]])
                     }
                   />
                 </Col>
@@ -250,7 +260,12 @@ export default function ListProperties({
                     {valuationByMembers.map(
                       (item: { fid: string; value: number }, index) => (
                         <label key={`fid-${index}`}>
-                          {`${familyOptions[item.fid]} - ${item.value}`}
+                          {`${
+                            familyOptions[item.fid]
+                          } - ${toHumanFriendlyCurrency(
+                            Number(item.value),
+                            data[i].curr
+                          )}`}
                           <br />
                         </label>
                       )
