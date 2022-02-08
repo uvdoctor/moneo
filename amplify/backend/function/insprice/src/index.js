@@ -16,18 +16,18 @@ const {
   getTableNameFromInitialWord,
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
+const { getEODdata } = require("/opt/nodejs/eod");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
   extractDataFromCSV,
   addMetaData,
-	mergeEodAndExchgData
+  mergeEodAndExchgData,
 } = require("./bhavUtils");
 const { mkdir } = fsPromise;
 const table = "INExchgPrice";
 const isinMap = {};
 const dataToPushInFeeds = [];
-let token = '';
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -77,10 +77,7 @@ const getAndPushData = (diff) => {
         );
         let eodData;
         try {
-          const response = await fetch(
-            `https://eodhistoricaldata.com/api/eod-bulk-last-day/${exchg}?api_token=${token}&fmt=json&filter=extended`
-          );
-          eodData = await response.json();
+          eodData = await getEODdata(exchg);
         } catch (error) {
           console.log(error);
         }
