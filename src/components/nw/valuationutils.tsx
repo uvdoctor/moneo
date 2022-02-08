@@ -275,15 +275,34 @@ export const calculateCompundingIncome = (holding: HoldingInput) => {
   return { valuation, maturityAmt, isShortTerm };
 };
 
-export const calculateProperty = (property: PropertyInput) => {
+export const calculateProperty = (
+  property: PropertyInput,
+  selectedMembers: Array<string>
+) => {
+  let valuationByMembers: Array<{ fid: string; value: number }> = [];
+  let total = 0;
   const duration = calculateDifferenceInYears(
     presentMonth,
     presentYear,
     property.mvm as number,
     property.mvy as number
   );
-  if (duration < 0) return property.mv as number;
-  return getCompoundedIncome(property.rate, property.mv as number, duration);
+  if (duration < 0) {
+    total = property.mv as number;
+    return { total, valuationByMembers };
+  }
+  total = getCompoundedIncome(property.rate, property.mv as number, duration);
+  if (!selectedMembers.includes(ALL_FAMILY)) {
+    for (let owner of property.own) {
+      if (selectedMembers.includes(owner.fId)) {
+        valuationByMembers.push({
+          fid: owner.fId,
+          value: (total * owner.per) / 100,
+        });
+      }
+    }
+  }
+  return { total, valuationByMembers };
 };
 
 export const calculateVehicle = (holding: HoldingInput) => {
@@ -641,17 +660,12 @@ export const priceProperties = (
   let totalPlot = 0;
   properties.forEach((property: PropertyInput) => {
     if (!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
-    const result = calculateProperty(property);
+    const result = calculateProperty(property, selectedMembers);
     let value = 0;
-    if (!selectedMembers.includes(ALL_FAMILY)) {
-      for (let owner of property.own) {
-        if (selectedMembers.includes(owner.fId)) {
-          value += (result * owner.per) / 100;
-        }
-      }
-    } else {
-      value = result;
-    }
+    if (selectedMembers.includes(ALL_FAMILY)) value = result.total;
+    result.valuationByMembers.map((item: { fid: string; value: number }) => {
+      value += item.value;
+    });
     total += value;
     if (property.type === PropertyType.P) totalPlot += value;
     if (property.type === PropertyType.OTHER) totalOtherProperty += value;

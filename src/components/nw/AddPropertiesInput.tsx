@@ -26,7 +26,7 @@ interface AddPropertiesInputProps {
 }
 
 export default function AddPropertyInput({ setInput, categoryOptions, fields, info }: AddPropertiesInputProps) {
-	const { selectedCurrency, familyOptions }: any = useContext(NWContext);
+	const { selectedCurrency, familyOptions, selectedMembers }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<PropertyType>(PropertyType.P);
 	const [ own, setOwn ] = useState<Array<OwnershipInput>>([]);
 	const [ pin, setPin ] = useState<string>('');
@@ -111,8 +111,8 @@ export default function AddPropertyInput({ setInput, categoryOptions, fields, in
 
 	useEffect(
 		() => {
-			const valuation = calculateProperty(getNewRec());
-			setValuation(valuation);
+			const valuation = calculateProperty(getNewRec(), selectedMembers);
+			setValuation(valuation.total);
 		},
 		[ amount, mv, mvm, mvy, sm, sy, rate ]
 	);
