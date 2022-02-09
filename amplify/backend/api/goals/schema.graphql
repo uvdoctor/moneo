@@ -255,6 +255,7 @@ enum AssetSubType {
   V
   Cash
   P2P
+  War
 }
 
 enum Industry {

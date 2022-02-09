@@ -1030,6 +1030,7 @@ export enum AssetSubType {
   V = "V",
   Cash = "Cash",
   P2P = "P2P",
+  War = "War",
 }
 
 
