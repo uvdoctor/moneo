@@ -1,9 +1,10 @@
 import React, { createElement, Fragment, useState } from "react";
 import { Layout, Drawer, Button, Affix, Row } from "antd";
 import { useScroll } from "react-browser-hooks";
-import { MenuOutlined } from "@ant-design/icons";
+import { MenuOutlined, SearchOutlined } from "@ant-design/icons";
 import MainMenu from "./MainMenu";
 import Logo from "./Logo";
+import Search from "./Search";
 
 require("./Nav.less");
 import FSToggle from "./FSToggle";
@@ -25,9 +26,12 @@ export default function Nav({
 }: NavProps) {
   const { top } = useScroll();
   const { Header } = Layout;
+  const [showSearchDrawer, setSearchDrawer] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const onShowDrawer = () => setShowDrawer(true);
   const onCloseDrawer = () => setShowDrawer(false);
+  const onShowSearchDrawer = () => setSearchDrawer(true);
+  const onCloseSearchDrawer = () => setSearchDrawer(false);
 
   return createElement(
     scrollable ? Fragment : Affix,
@@ -53,6 +57,9 @@ export default function Nav({
           <Button type="text" onClick={onShowDrawer}>
             <MenuOutlined />
           </Button>
+          <Button type="text" onClick={onShowSearchDrawer}>
+            <SearchOutlined />
+          </Button>
           <Drawer
             placement="right"
             closable
@@ -60,6 +67,14 @@ export default function Nav({
             visible={showDrawer}
           >
             <MainMenu mode="inline" />
+          </Drawer>
+          <Drawer
+            placement="right"
+            closable
+            onClose={onCloseSearchDrawer}
+            visible={showSearchDrawer}
+          >
+            <Search inline />
           </Drawer>
         </Fragment>
       )}

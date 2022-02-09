@@ -8,6 +8,9 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { Auth, Hub } from "aws-amplify";
+import { isMobileDevice } from "./utils";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import Search from "./Search";
 import { calcList } from "./landing/Calculator";
 import { COLORS, ROUTES } from "../CONSTANTS";
 import { useRouter } from "next/router";
@@ -20,6 +23,7 @@ export interface MainMenuProps {
 }
 
 export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
+  const fsb = useFullScreenBrowser();
   const { user, userChecked, setUser }: any = useContext(AppContext);
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>(router.pathname);
@@ -38,6 +42,11 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
   return userChecked ? (
     <>
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
+        {!isMobileDevice(fsb) && (
+          <Menu.Item key="Search">
+            <Search />
+          </Menu.Item>
+        )}
         <SubMenu key="calcs" title="Calculate">
           {calcList.map(({ name, link }, index: number) =>
             menuItem(name, link, selectedKey, null, link + index, true)
@@ -58,7 +67,8 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
                 ) : (
                   <UserOutlined />
                 )
-              }>
+              }
+            >
               {menuItem(
                 "Settings",
                 ROUTES.SETTINGS,
@@ -68,7 +78,8 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
               <Menu.Item
                 key="logout"
                 icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
-                onClick={handleLogout}>
+                onClick={handleLogout}
+              >
                 Logout
               </Menu.Item>
             </SubMenu>
