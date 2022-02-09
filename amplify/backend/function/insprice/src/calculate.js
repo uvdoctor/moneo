@@ -101,9 +101,9 @@ const calcSchema = (
   bondTable
 ) => {
   let updateSchema = {};
-  const type = record[codes.type];
-  const subt = record[codes.subt];
-  const name = record[codes.name];
+  const type = record[codes.type].trim();
+  const subt = record[codes.subt].trim();
+  const name = record[codes.name].trim();
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   const subtType = calc[exchg].calcSubType(type, subt, name);
   const assetType = calc[exchg].calcType(type, subt, name);
@@ -111,7 +111,7 @@ const calcSchema = (
   updateSchema = JSON.parse(JSON.stringify(schema));
   updateSchema.id = record[codes.id];
   updateSchema.sid = record[codes.sid].trim();
-  updateSchema.name = name.trim();
+  updateSchema.name = name;
   updateSchema.type = assetType;
   updateSchema.subt = subtType;
   updateSchema.price = parse(record[codes.price]);
