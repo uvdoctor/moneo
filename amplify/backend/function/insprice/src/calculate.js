@@ -110,6 +110,8 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
         return (schema.subt = calc[exchg].calcSubType(type, subt, name));
       case "itype":
         return (schema.itype = calc[exchg].calcInsType(type, subt, name));
+      case "sid":
+        return (schema.sid = record[codes.sid].trim());
       default:
         schema[key] = record[codes[key]];
     }
