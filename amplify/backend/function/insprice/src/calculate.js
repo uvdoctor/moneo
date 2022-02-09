@@ -4,6 +4,7 @@ const calc = {
   BSE: {
     calcType: (type, subt, name) => {
       if (subt === "IF") return "A";
+      if (subt === "W") return "H";
       if (
         (name.includes("ETF") && type === "Q" && subt === "B") ||
         (type === "Q" && (subt === "F" || subt === "E")) ||
@@ -16,6 +17,7 @@ const calc = {
 
     calcSubType: (type, subt, name) => {
       if (name.includes("LIQUID")) return "L";
+      if (subt === "W") return "War";
       if (name.includes("ETF") && type === "Q" && subt === "B") return "I";
       if (type === "Q" && subt === "F") return "GBO";
       if ((type === "B" && subt === "G") || (type === "Q" && subt === "E"))
@@ -36,8 +38,9 @@ const calc = {
 
   NSE: {
     calcType: (type, subt, name) => {
-      const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
+      const fixed = ["GB", "GS", "N", "Y", "Z"];
       if (type === "IV" || type === "RR") return "A";
+      if (type.startsWith("W")) return "H";
       if (
         (name.includes("ETF") &&
           (name.includes("GOLD") ||
@@ -58,6 +61,7 @@ const calc = {
       if (name.includes("LIQUID")) return "L";
       if (type === "RR" || type === "IV") return "R";
       if (name.includes("ETF") && name.includes("GOLD")) return "Gold";
+      if (type.startsWith("W")) return "War";
       if (
         (name.includes("ETF") && name.includes("GILT")) ||
         type === "GC" ||
@@ -72,12 +76,7 @@ const calc = {
         name.includes("SEN")
       )
         return "I";
-      if (
-        type.includes("N") ||
-        type.includes("Y") ||
-        type.includes("Z") ||
-        type.includes("W")
-      )
+      if (type.includes("N") || type.includes("Y") || type.includes("Z"))
         return "CB";
       if (type === "GB") return "GoldB";
       return "S";
@@ -107,7 +106,12 @@ const calcSchema = (
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   const subtType = calc[exchg].calcSubType(type, subt, name);
   const assetType = calc[exchg].calcType(type, subt, name);
-  const isBond = assetType === "F" ? true : false;
+  if (subtType === "L") return;
+  const isBond =
+    (exchg === "BSE" && subtType === "GBO") ||
+    (exchg === "NSE" && (subtType === "CB" || subtType === "GBO"))
+      ? true
+      : false;
   updateSchema = JSON.parse(JSON.stringify(schema));
   updateSchema.id = record[codes.id];
   updateSchema.sid = record[codes.sid].trim();
