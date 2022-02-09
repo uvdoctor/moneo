@@ -107,7 +107,7 @@ const calcSchema = (
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   const subtType = calc[exchg].calcSubType(type, subt, name);
   const assetType = calc[exchg].calcType(type, subt, name);
-  const isBond = subtType === "CB" && assetType === "F" ? true : false;
+  const isBond = assetType === "F" ? true : false;
   updateSchema = JSON.parse(JSON.stringify(schema));
   updateSchema.id = record[codes.id];
   updateSchema.sid = record[codes.sid].trim();
