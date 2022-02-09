@@ -3,6 +3,7 @@ const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
 const { tempDir } = require("/opt/nodejs/utility");
 const { calcSchema } = require("./calculate");
+const { getCBDataByISIN, calculateYTM } = require("/opt/nodejs/corporateBond");
 
 const extractDataFromCSV = async (
   fileName,
@@ -22,9 +23,10 @@ const extractDataFromCSV = async (
     let bondCount = 0;
     let bondBatches = [];
     let bondBatchRecords = [];
-    fs.createReadStream(`${tempDir}/${fileName}`)
+    const stream = fs
+      .createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
-      .on("data", (record) => {
+      .on("data", async (record) => {
         if (isinMap[record[codes.id]]) return;
         const { updateSchema, isBond } = calcSchema(
           record,
@@ -38,6 +40,32 @@ const extractDataFromCSV = async (
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
         if (isBond) {
+          let cbdata;
+          try {
+            stream.pause();
+            cbdata = await getCBDataByISIN(dataToPush.id);
+          } finally {
+            stream.resume();
+          }
+          if (cbdata) {
+            const { sm, sy, mm, my, rate, fv, name } = cbdata;
+            dataToPush.sm = sm;
+            dataToPush.sy = sy;
+            dataToPush.mm = mm;
+            dataToPush.my = my;
+            dataToPush.rate = rate ? Number(rate) : -1;
+            dataToPush.fv = Number(fv);
+            dataToPush.name = name;
+            dataToPush.ytm = calculateYTM(
+              rate,
+              sm,
+              sy,
+              mm,
+              my,
+              fv,
+              dataToPush.price
+            );
+          }
           bondBatches.push({ PutRequest: { Item: dataToPush } });
           bondCount++;
           if (bondCount === 25) {

@@ -12,6 +12,7 @@
     "@aws-sdk/client-dynamodb": "latest",
     "@aws-sdk/lib-dynamodb": "latest",
     "axios": "latest",
-    "extract-zip": "latest"
+    "extract-zip": "latest",
+    "jsdom": "latest"
   }
 }
