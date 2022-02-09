@@ -1,4 +1,4 @@
-const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
+const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
 
 const calc = {
   BSE: {
@@ -91,35 +91,52 @@ const calc = {
   },
 };
 
-const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
+const calcSchema = (
+  record,
+  codes,
+  schema,
+  exchg,
+  isinMap,
+  table,
+  bondTable
+) => {
+  let updateSchema = {};
   const type = record[codes.type];
   const subt = record[codes.subt];
   const name = record[codes.name];
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
-  Object.keys(schema).map((key) => {
-    switch (key) {
-      case "name":
-        return (schema.name = name.trim());
-      case "price":
-        return (schema[key] = parse(record[codes[key]]));
-      case "prev":
-        return (schema[key] = parse(record[codes[key]]));
-      case "type":
-        return (schema.type = calc[exchg].calcType(type, subt, name));
-      case "subt":
-        return (schema.subt = calc[exchg].calcSubType(type, subt, name));
-      case "itype":
-        return (schema.itype = calc[exchg].calcInsType(type, subt, name));
-      case "sid":
-        return (schema.sid = record[codes.sid].trim());
-      default:
-        schema[key] = record[codes[key]];
-    }
-  });
-  if(schema.id.startsWith('INF')) schema.itype = "ETF";
-  schema.exchg = exchg;
-  appendGenericFields(schema, table)
+  const subtType = calc[exchg].calcSubType(type, subt, name);
+  const assetType = calc[exchg].calcType(type, subt, name);
+  const isBond = subtType === "CB" && assetType === "F" ? true : false;
+  updateSchema = JSON.parse(JSON.stringify(schema));
+  updateSchema.id = record[codes.id];
+  updateSchema.sid = record[codes.sid].trim();
+  updateSchema.name = name.trim();
+  updateSchema.type = assetType;
+  updateSchema.subt = subtType;
+  updateSchema.price = parse(record[codes.price]);
+  if (isBond) {
+    updateSchema.sm = 0;
+    updateSchema.sy = 0;
+    updateSchema.mm = 0;
+    updateSchema.my = 0;
+    updateSchema.fr = false;
+    updateSchema.tf = false;
+    updateSchema.cr = null;
+    updateSchema.rate = -1;
+    updateSchema.fv = 100;
+    updateSchema.ytm = 0;
+    delete updateSchema.itype;
+    delete updateSchema.prev;
+    appendGenericFields(updateSchema, bondTable);
+  } else {
+    updateSchema.itype = calc[exchg].calcInsType(type, subt, name);
+    updateSchema.prev = parse(record[codes.prev]);
+    if (updateSchema.id.startsWith("INF")) updateSchema.itype = "ETF";
+    appendGenericFields(updateSchema, table);
+  }
+  updateSchema.exchg = exchg;
   isinMap[record[codes.id]] = record[codes.id];
-  return schema;
+  return { updateSchema, isBond };
 };
 module.exports = { calc, calcSchema };

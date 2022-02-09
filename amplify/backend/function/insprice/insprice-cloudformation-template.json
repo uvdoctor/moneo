@@ -311,6 +311,14 @@
                 "dynamodb:*"
               ],
               "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice-*"
+            },
+            {
+              "Sid": "ReadWriteTable",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:*"
+              ],
+              "Resource": "arn:aws:dynamodb:*:*:table/INBondPrice-*"
             }
           ]
         }

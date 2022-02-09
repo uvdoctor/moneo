@@ -26,12 +26,14 @@ const {
 } = require("./bhavUtils");
 const { mkdir } = fsPromise;
 const table = "INExchgPrice";
+const bondTable = "INBondPrice";
 const isinMap = {};
 const dataToPushInFeeds = [];
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
     const tableName = await getTableNameFromInitialWord(table);
+    const bondTableName = await getTableNameFromInitialWord(bondTable);
     console.log("Table name fetched: ", tableName);
     const { apiArray, partOfDataApiArray } = constructedApiArray(diff);
     const nameMap = {};
@@ -65,7 +67,7 @@ const getAndPushData = (diff) => {
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const exchgData = await extractDataFromCSV(
+        const { exchgData, bondData } = await extractDataFromCSV(
           fileName,
           exchg,
           codes,
@@ -73,7 +75,8 @@ const getAndPushData = (diff) => {
           table,
           isinMap,
           nameMap,
-          weekHLMap
+          weekHLMap,
+          bondTable
         );
         let eodData;
         try {
@@ -103,6 +106,9 @@ const getAndPushData = (diff) => {
         const data = await addMetaData(mergeData, metaData);
         for (let batch in data) {
           await pushData(data[batch], tableName);
+        }
+        for (let batch in bondData) {
+          await pushData(bondData[batch], bondTableName);
         }
         dataToPushInFeeds.push({
           table,

@@ -12,54 +12,73 @@ const extractDataFromCSV = async (
   table,
   isinMap,
   nameMap,
-  weekHLMap
+  weekHLMap,
+  bondTable
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
     let count = 0;
+    let bondCount = 0;
+    let bondBatches = [];
+    let bondBatchRecords = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
         if (isinMap[record[codes.id]]) return;
-        const updateSchema = calcSchema(
+        const { updateSchema, isBond } = calcSchema(
           record,
           codes,
           schema,
           exchg,
           isinMap,
-          table
+          table,
+          bondTable
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-        const id = dataToPush.id;
-        const sid = dataToPush.sid;
-        if (nameMap[id]) {
-          dataToPush.name = nameMap[id].name;
-          dataToPush.fv = nameMap[id].fv;
-          if (nameMap[id].under) dataToPush.under = nameMap[id].under;
-        }
-        if (weekHLMap[sid]) {
-          dataToPush.yhigh = weekHLMap[sid].yhigh;
-          dataToPush.ylow = weekHLMap[sid].ylow;
-        }
-        batches.push({ PutRequest: { Item: dataToPush } });
-        count++;
-        if (count === 25) {
-          batchRecords.push(batches);
-          batches = [];
-          count = 0;
+        if (isBond) {
+          bondBatches.push({ PutRequest: { Item: dataToPush } });
+          bondCount++;
+          if (bondCount === 25) {
+            bondBatchRecords.push(bondBatches);
+            bondBatches = [];
+            bondCount = 0;
+          }
+        } else {
+          const id = dataToPush.id;
+          const sid = dataToPush.sid;
+          if (nameMap[id]) {
+            dataToPush.name = nameMap[id].name;
+            dataToPush.fv = nameMap[id].fv;
+            if (nameMap[id].under) dataToPush.under = nameMap[id].under;
+          }
+          if (weekHLMap[sid]) {
+            dataToPush.yhigh = weekHLMap[sid].yhigh;
+            dataToPush.ylow = weekHLMap[sid].ylow;
+          }
+          batches.push({ PutRequest: { Item: dataToPush } });
+          count++;
+          if (count === 25) {
+            batchRecords.push(batches);
+            batches = [];
+            count = 0;
+          }
         }
       })
       .on("end", async () => {
         if (count < 25 && count > 0) {
           batchRecords.push(batches);
         }
+        if (bondCount < 25 && bondCount > 0) {
+          bondBatchRecords.push(bondBatches);
+        }
         await cleanDirectory(
           tempDir,
           `${fileName} of ${exchg} results extracted successfully and directory is cleaned`
         );
-        resolve(batchRecords);
+        const data = { exchgData: batchRecords, bondData: bondBatchRecords };
+        resolve(data);
       })
       .on("error", (err) => {
         cleanDirectory(
