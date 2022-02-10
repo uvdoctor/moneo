@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Dropdown, Radio, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 interface SearchProps {
 	inline?: boolean;
@@ -8,11 +9,11 @@ interface SearchProps {
 
 export default function Search({ inline }: SearchProps) {
 	const data = [
-		"Bharti Airtel",
-		"State bank of India",
-		"Reliance",
-		"HDFC Bank",
-		"Tata motors",
+		{ name: "Bharti Airtel", symbol: "BHARTIARTL" },
+		{ name: "State bank of India", symbol: "SBIN" },
+		{ name: "Reliance", symbol: "RELIANCE" },
+		{ name: "HDFC Bank", symbol: "HDFCBANK" },
+		{ name: "Tata motors", symbol: "TATAMOTORS" },
 	];
 	interface InlineListProps {
 		style?: any;
@@ -42,7 +43,13 @@ export default function Search({ inline }: SearchProps) {
 						}
 						bordered
 						dataSource={data}
-						renderItem={(item) => <List.Item>{item}</List.Item>}
+						renderItem={({ name, symbol }) => (
+							<List.Item>
+								<Link href={`/stockDetail/${symbol}`}>
+									<a>{name}</a>
+								</Link>
+							</List.Item>
+						)}
 					/>
 				</>
 			}
