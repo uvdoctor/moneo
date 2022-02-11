@@ -16,7 +16,7 @@ const {
   getTableNameFromInitialWord,
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
-const { getEODdata } = require("/opt/nodejs/eod");
+const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
@@ -25,16 +25,16 @@ const {
   mergeEodAndExchgData,
 } = require("./bhavUtils");
 const { mkdir } = fsPromise;
-const table = "INExchgPrice";
+const exchgTable = "INExchgPrice";
 const bondTable = "INBondPrice";
 const isinMap = {};
 const dataToPushInFeeds = [];
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
-    const tableName = await getTableNameFromInitialWord(table);
+    const exchgTableName = await getTableNameFromInitialWord(exchgTable);
     const bondTableName = await getTableNameFromInitialWord(bondTable);
-    console.log("Table name fetched: ", tableName);
+    console.log("Table name fetched: ", exchgTableName, bondTableName);
     const { apiArray, partOfDataApiArray } = constructedApiArray(diff);
     const nameMap = {};
     const weekHLMap = {};
@@ -54,7 +54,7 @@ const getAndPushData = (diff) => {
           weekHLMap
         );
         dataToPushInFeeds.push({
-          table,
+          table: exchgTable,
           dataCount,
           identifier: `${id}${ind + 1}`,
           url,
@@ -72,19 +72,23 @@ const getAndPushData = (diff) => {
           exchg,
           codes,
           schema,
-          table,
+          exchgTable,
           isinMap,
           nameMap,
           weekHLMap,
           bondTable
         );
         let eodData;
+        let splitData;
+        let dividendData;
         try {
           eodData = await getEODdata(exchg);
+          splitData = await getSplitInfo(exchg);
+          dividendData = await getDividendInfo(exchg);
         } catch (error) {
           console.log(error);
         }
-        const mergeData = mergeEodAndExchgData(exchgData, eodData);
+        const mergeData = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
         const client = new LambdaClient({ region: process.env.REGION });
         const params = {
           FunctionName: process.env.FUNCTION_INSMETA_NAME,
@@ -105,13 +109,13 @@ const getAndPushData = (diff) => {
         }
         const data = await addMetaData(mergeData, metaData);
         for (let batch in data) {
-          await pushData(data[batch], tableName);
+          await pushData(data[batch], exchgTableName);
         }
         for (let batch in bondData) {
           await pushData(bondData[batch], bondTableName);
         }
         dataToPushInFeeds.push({
-          table,
+          table: exchgTable,
           dataCount: data,
           identifier: exchg,
           url,

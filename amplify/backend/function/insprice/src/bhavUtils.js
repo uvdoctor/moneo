@@ -3,69 +3,46 @@ const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
 const { tempDir } = require("/opt/nodejs/utility");
 const { calcSchema } = require("./calculate");
-const { getCBDataByISIN, calculateYTM } = require("/opt/nodejs/corporateBond");
 
 const extractDataFromCSV = async (
   fileName,
   exchg,
   codes,
   schema,
-  table,
+  exchgTable,
   isinMap,
   nameMap,
   weekHLMap,
   bondTable
 ) => {
   const end = new Promise((resolve, reject) => {
-    let batches = [];
-    let batchRecords = [];
-    let count = 0;
-    let bondCount = 0;
-    let bondBatches = [];
-    let bondBatchRecords = [];
+    let [exchgBatches, exchgBatchRecords, exchgCount] = [[], [], 0];
+    let [bondBatches, bondBatchRecords, bondCount] = [[], [], 0];
     const stream = fs
       .createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", async (record) => {
         if (isinMap[record[codes.id]]) return;
-        const { updateSchema, isBond } = calcSchema(
-          record,
-          codes,
-          schema,
-          exchg,
-          isinMap,
-          table,
-          bondTable
-        );
-        if (!updateSchema) return;
+        let [updateSchema, isBond] = [{}, false];
+        try {
+          stream.pause();
+          const data = await calcSchema(
+            record,
+            codes,
+            schema,
+            exchg,
+            isinMap,
+            exchgTable,
+            bondTable
+          );
+          updateSchema = data.updateSchema;
+          isBond = data.isBond;
+        } finally {
+          stream.resume();
+        }
+        if (Object.keys(updateSchema).length === 0) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
         if (isBond) {
-          let cbdata;
-          try {
-            stream.pause();
-            cbdata = await getCBDataByISIN(dataToPush.id);
-          } finally {
-            stream.resume();
-          }
-          if (cbdata) {
-            const { sm, sy, mm, my, rate, fv, name } = cbdata;
-            dataToPush.sm = sm;
-            dataToPush.sy = sy;
-            dataToPush.mm = mm;
-            dataToPush.my = my;
-            dataToPush.rate = isNaN(rate) ? -1 : Number(rate);
-            dataToPush.fv = Number(fv);
-            dataToPush.name = name ? name : dataToPush.name;
-            dataToPush.ytm = calculateYTM(
-              rate,
-              sm,
-              sy,
-              mm,
-              my,
-              fv,
-              dataToPush.price
-            );
-          }
           bondBatches.push({ PutRequest: { Item: dataToPush } });
           bondCount++;
           if (bondCount === 25) {
@@ -85,18 +62,18 @@ const extractDataFromCSV = async (
             dataToPush.yhigh = weekHLMap[sid].yhigh;
             dataToPush.ylow = weekHLMap[sid].ylow;
           }
-          batches.push({ PutRequest: { Item: dataToPush } });
-          count++;
-          if (count === 25) {
-            batchRecords.push(batches);
-            batches = [];
-            count = 0;
+          exchgBatches.push({ PutRequest: { Item: dataToPush } });
+          exchgCount++;
+          if (exchgCount === 25) {
+            exchgBatchRecords.push(exchgBatches);
+            exchgBatches = [];
+            exchgCount = 0;
           }
         }
       })
       .on("end", async () => {
-        if (count < 25 && count > 0) {
-          batchRecords.push(batches);
+        if (exchgCount < 25 && exchgCount > 0) {
+          exchgBatchRecords.push(exchgBatches);
         }
         if (bondCount < 25 && bondCount > 0) {
           bondBatchRecords.push(bondBatches);
@@ -105,7 +82,10 @@ const extractDataFromCSV = async (
           tempDir,
           `${fileName} of ${exchg} results extracted successfully and directory is cleaned`
         );
-        const data = { exchgData: batchRecords, bondData: bondBatchRecords };
+        const data = {
+          exchgData: exchgBatchRecords,
+          bondData: bondBatchRecords,
+        };
         resolve(data);
       })
       .on("error", (err) => {
@@ -173,35 +153,52 @@ const getMarketCapType = (marketcap) => {
   return "S";
 };
 
-const mergeEodAndExchgData = (exchgData, eodData) => {
-  if (!eodData) return exchgData;
+const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
+  if (!(eodData || splitData || dividendData)) return exchgData;
   exchgData.map((element) => {
     element.map((item) => {
-      const data = eodData.find(
-        (re) =>
-          re.code.includes(item.PutRequest.Item.sid) ||
-          item.PutRequest.Item.sid === re.code
-      );
-      if (!data) return;
-      const {
-        code,
-        name,
-        MarketCapitalization,
-        adjusted_close,
-        hi_250d,
-        lo_250d,
-        close,
-        Beta,
-      } = data;
-      item.PutRequest.Item.sid = code;
-      item.PutRequest.Item.name = name;
-      item.PutRequest.Item.price = adjusted_close;
-      item.PutRequest.Item.prev = close;
-      item.PutRequest.Item.yhigh = hi_250d;
-      item.PutRequest.Item.ylow = lo_250d;
-      item.PutRequest.Item.beta = Beta;
-      item.PutRequest.Item.mcap = MarketCapitalization;
-      item.PutRequest.Item.mcapt = getMarketCapType(MarketCapitalization);
+      const getData = (data) =>
+        data.find(
+          (re) =>
+            re.code.includes(item.PutRequest.Item.sid) ||
+            item.PutRequest.Item.sid === re.code
+        );
+      const eod = eodData && getData(eodData);
+      const split = splitData && getData(splitData);
+      const dividend = dividendData && getData(dividendData);
+      if (split) {
+        item.PutRequest.Item.splitd = split.date;
+        let value = split.split.replace(/\//g, "");
+        value = value.replace(/\\/g, ":");
+        item.PutRequest.Item.split = value;
+      }
+      if (dividend) {
+        item.PutRequest.Item.divdd = dividend.date;
+        item.PutRequest.Item.divrd = dividend.recordDate;
+        item.PutRequest.Item.divpd = dividend.paymentDate;
+        item.PutRequest.Item.div = split.dividend;
+      }
+      if (eod) {
+        const {
+          code,
+          name,
+          MarketCapitalization,
+          adjusted_close,
+          hi_250d,
+          lo_250d,
+          close,
+          Beta,
+        } = eod;
+        item.PutRequest.Item.sid = code;
+        item.PutRequest.Item.name = name;
+        item.PutRequest.Item.price = adjusted_close;
+        item.PutRequest.Item.prev = close;
+        item.PutRequest.Item.yhigh = item.PutRequest.Item.yhigh ? item.PutRequest.Item.yhigh : hi_250d;
+        item.PutRequest.Item.ylow =  item.PutRequest.Item.ylow ? item.PutRequest.Item.ylow : lo_250d;
+        item.PutRequest.Item.beta = Beta;
+        item.PutRequest.Item.mcap = MarketCapitalization;
+        item.PutRequest.Item.mcapt = getMarketCapType(MarketCapitalization);
+      }
     });
   });
   return exchgData;

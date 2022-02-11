@@ -1,4 +1,5 @@
 const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
+const { getCBDataByISIN, calculateYTM } = require("/opt/nodejs/corporateBond");
 
 const calc = {
   BSE: {
@@ -90,7 +91,7 @@ const calc = {
   },
 };
 
-const calcSchema = (
+const calcSchema = async (
   record,
   codes,
   schema,
@@ -114,7 +115,6 @@ const calcSchema = (
       ? true
       : false;
   if (subtType === "L") return { updateSchema, isBond };
-
   updateSchema = JSON.parse(JSON.stringify(schema));
   updateSchema.id = record[codes.id];
   updateSchema.sid = record[codes.sid].trim();
@@ -123,16 +123,27 @@ const calcSchema = (
   updateSchema.subt = subtType;
   updateSchema.price = parse(record[codes.price]);
   if (isBond) {
-    updateSchema.sm = 0;
-    updateSchema.sy = 0;
-    updateSchema.mm = 0;
-    updateSchema.my = 0;
+    let cbdata = await getCBDataByISIN(updateSchema.id);
+    updateSchema.sm = cbdata ? cbdata.sm : 0;
+    updateSchema.sy = cbdata ? cbdata.sy : 0;
+    updateSchema.mm = cbdata ? cbdata.mm : 0;
+    updateSchema.my = cbdata ? cbdata.my : 0;
     updateSchema.fr = false;
     updateSchema.tf = false;
     updateSchema.cr = null;
-    updateSchema.rate = -1;
-    updateSchema.fv = 100;
-    updateSchema.ytm = 0;
+    updateSchema.rate = cbdata ? cbdata.rate : -1;
+    updateSchema.fv = cbdata ? cbdata.fv : 100;
+    updateSchema.ytm = cbdata
+      ? calculateYTM(
+          updateSchema.rate,
+          updateSchema.sm,
+          updateSchema.sy,
+          updateSchema.mm,
+          updateSchema.my,
+          updateSchema.fv,
+          updateSchema.price
+        )
+      : 0;
     delete updateSchema.itype;
     delete updateSchema.prev;
     appendGenericFields(updateSchema, bondTable);
