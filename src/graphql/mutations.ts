@@ -1588,6 +1588,14 @@ export const createInExchgPrice = /* GraphQL */ `
       under
       yhigh
       ylow
+      whigh
+      wlow
+      split
+      div
+      splitd
+      divdd
+      divrd
+      divpd
       beta
       mcap
       mcapt
@@ -1622,6 +1630,14 @@ export const updateInExchgPrice = /* GraphQL */ `
       under
       yhigh
       ylow
+      whigh
+      wlow
+      split
+      div
+      splitd
+      divdd
+      divrd
+      divpd
       beta
       mcap
       mcapt
@@ -1656,6 +1672,14 @@ export const deleteInExchgPrice = /* GraphQL */ `
       under
       yhigh
       ylow
+      whigh
+      wlow
+      split
+      div
+      splitd
+      divdd
+      divrd
+      divpd
       beta
       mcap
       mcapt

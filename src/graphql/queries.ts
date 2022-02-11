@@ -592,6 +592,14 @@ export const getInExchgPrice = /* GraphQL */ `
       under
       yhigh
       ylow
+      whigh
+      wlow
+      split
+      div
+      splitd
+      divdd
+      divrd
+      divpd
       beta
       mcap
       mcapt
@@ -636,6 +644,14 @@ export const listInExchgPrices = /* GraphQL */ `
         under
         yhigh
         ylow
+        whigh
+        wlow
+        split
+        div
+        splitd
+        divdd
+        divrd
+        divpd
         beta
         mcap
         mcapt

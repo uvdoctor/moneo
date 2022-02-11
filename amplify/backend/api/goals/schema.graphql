@@ -361,6 +361,12 @@ type INExchgPrice
   under: String
   yhigh: Float
   ylow: Float
+  split: String
+  div: Float
+  splitd: AWSDate
+  divdd: AWSDate
+  divrd: AWSDate
+  divpd: AWSDate
   beta: Float
   mcap: Float
   mcapt: MCap
