@@ -123,7 +123,8 @@ const calcSchema = async (
   updateSchema.subt = subtType;
   updateSchema.price = parse(record[codes.price]);
   if (isBond) {
-    let cbdata = await getCBDataByISIN(updateSchema.id);
+    let cbdata;
+    // cbdata = await getCBDataByISIN(updateSchema.id);
     updateSchema.sm = cbdata ? cbdata.sm : 0;
     updateSchema.sy = cbdata ? cbdata.sy : 0;
     updateSchema.mm = cbdata ? cbdata.mm : 0;

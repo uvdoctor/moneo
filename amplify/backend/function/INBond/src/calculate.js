@@ -87,9 +87,9 @@ const calcSchema = async (record, codes, schema, typeExchg, isinMap, table) => {
     codes.sDate ? record[codes.mDate].trim() : ""
   );
   let cbdata;
-  if (!record[codes.sDate] && schema.subt === "CB") {
-    cbdata = await getCBDataByISIN(schema.id);
-  }
+  // if (!record[codes.sDate] && schema.subt === "CB") {
+    // cbdata = await getCBDataByISIN(schema.id);
+  // }
   schema.sm = cbdata ? cbdata.sm : startDate.month;
   schema.sy = cbdata ? cbdata.sy : startDate.year;
   schema.mm = cbdata ? cbdata.mm : maturityDate.month;
