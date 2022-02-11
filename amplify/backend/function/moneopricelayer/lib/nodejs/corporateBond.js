@@ -58,13 +58,12 @@ const getCBDataByISIN = (isin) => {
       if (Object.keys(schema).length === 0) resolve();
       const start = getMonthYearByDate(schema["Issue Date"]);
       const end = getMonthYearByDate(schema["Maturity Date"]);
+      const rate = Number(schema["Issue Name"].replace("%", ""));
       const updatedSchema = {
         sid: schema["Security Name"] ? schema["Security Name"] : "",
         type: schema["Security Type"] ? schema["Security Type"] : "",
         name: schema.Issuer ? schema.Issuer : "",
-        rate: schema["Issue Name"]
-          ? Number(schema["Issue Name"].replace("%", ""))
-          : -1,
+        rate: schema["Issue Name"] && !isNaN(rate) ? rate : -1,
         fv: schema["Face Value"] ? Number(schema["Face Value"]) : 100,
         sm: start.month,
         sy: start.year,
