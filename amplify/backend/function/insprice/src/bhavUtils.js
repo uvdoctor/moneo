@@ -53,9 +53,9 @@ const extractDataFromCSV = async (
             dataToPush.sy = sy;
             dataToPush.mm = mm;
             dataToPush.my = my;
-            dataToPush.rate = rate ? Number(rate) : -1;
+            dataToPush.rate = isNaN(rate) ? -1 : Number(rate);
             dataToPush.fv = Number(fv);
-            dataToPush.name = name;
+            dataToPush.name = name ? name : dataToPush.name;
             dataToPush.ytm = calculateYTM(
               rate,
               sm,

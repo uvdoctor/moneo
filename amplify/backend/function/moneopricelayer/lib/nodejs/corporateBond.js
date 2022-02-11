@@ -3,7 +3,7 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
 const getMonthYearByDate = (date) => {
-  if(!date) return { month: 0, year: 0}
+  if (!date) return { month: 0, year: 0 };
   const monthsArray = [
     "Jan",
     "Feb",
@@ -27,7 +27,7 @@ const calculateYTM = (rate, sm, sy, mm, my, fv, mprice) => {
   const couponAmt = (fv * Number(rate)) / 100;
   const ytm = (couponAmt + (fv - mprice) / numOfYear) / ((fv + mprice) / 2);
   const ytmFinal = Math.round(ytm * 1000) / 1000;
-  if (ytmFinal < 0 || isNaN(ytmFinal)) return 0;
+  if (ytmFinal < 0 || isNaN(ytmFinal) || ytmFinal === Infinity) return 0;
   return ytmFinal;
 };
 
@@ -55,14 +55,16 @@ const getCBDataByISIN = (isin) => {
             schema[array[0]] = array[1];
           }
         });
-
+      if (Object.keys(schema).length === 0) resolve();
       const start = getMonthYearByDate(schema["Issue Date"]);
       const end = getMonthYearByDate(schema["Maturity Date"]);
       const updatedSchema = {
-        sid: schema["Security Name"] ? schema["Security Name"] : '',
-        type: schema["Security Type"] ? schema["Security Type"] : '',
-        name: schema.Issuer ? schema.Issuer : '',
-        rate: schema["Issue Name"] ? Number(schema["Issue Name"].replace("%", "")) : -1,
+        sid: schema["Security Name"] ? schema["Security Name"] : "",
+        type: schema["Security Type"] ? schema["Security Type"] : "",
+        name: schema.Issuer ? schema.Issuer : "",
+        rate: schema["Issue Name"]
+          ? Number(schema["Issue Name"].replace("%", ""))
+          : -1,
         fv: schema["Face Value"] ? Number(schema["Face Value"]) : 100,
         sm: start.month,
         sy: start.year,
@@ -71,8 +73,7 @@ const getCBDataByISIN = (isin) => {
       };
       resolve(updatedSchema);
     } catch (error) {
-      console.log(error);
-      reject();
+      resolve();
     }
   });
 };
