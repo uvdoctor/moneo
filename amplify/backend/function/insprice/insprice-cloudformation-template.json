@@ -313,7 +313,7 @@
               "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice-*"
             },
             {
-              "Sid": "ReadWriteTable",
+              "Sid": "ReadWriteBondTable",
               "Effect": "Allow",
               "Action": [
                 "dynamodb:*"
