@@ -46,4 +46,19 @@ const getFundamentalData = async (symbol, exchg) => {
   };
 };
 
-module.exports = { getEODdata, getFundamentalData };
+const getSplitInfo = async (exchg) => {
+  const url = `https://eodhistoricaldata.com/api/eod-bulk-last-day/${exchg}?api_token=${token}&type=splits&fmt=json`;
+  return await getData(url);
+};
+
+const getDividendInfo = async (exchg) => {
+  const url = `https://eodhistoricaldata.com/api/eod-bulk-last-day/${exchg}?api_token=${token}&type=dividends&fmt=json`;
+  return await getData(url);
+};
+
+module.exports = {
+  getEODdata,
+  getFundamentalData,
+  getSplitInfo,
+  getDividendInfo,
+};
