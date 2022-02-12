@@ -15,8 +15,8 @@ export default function Filter({
 }: FilterProps) {
   const { SubMenu } = Menu;
 
-  const onClose = (index: number) => {
-    selectedKeys.splice(index, 1);
+  const onClose = (item: string) => {
+    selectedKeys.splice(selectedKeys.indexOf(item), 1);
     setSelectedKeys([...selectedKeys]);
   };
 
@@ -69,7 +69,7 @@ export default function Filter({
         {selectedKeys.map((item: string, ind: number) => (
           <Tag
             closable
-            onClose={() => onClose(ind)}
+            onClose={() => onClose(item)}
             key={`tag-${ind}`}
             color="blue"
           >
