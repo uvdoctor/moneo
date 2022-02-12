@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input, Dropdown, Radio, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -8,13 +8,30 @@ interface SearchProps {
 }
 
 export default function Search({ inline }: SearchProps) {
-	const data = [
-		{ name: "Bharti Airtel", symbol: "BHARTIARTL" },
-		{ name: "State bank of India", symbol: "SBIN" },
-		{ name: "Reliance", symbol: "RELIANCE" },
-		{ name: "HDFC Bank", symbol: "HDFCBANK" },
-		{ name: "Tata motors", symbol: "TATAMOTORS" },
-	];
+	const [searchResults, setSearchResults] = useState([
+		{
+			Code: "SBIN",
+			Exchange: "NSE",
+			Name: "State Bank of India",
+			Type: "Common Stock",
+			Country: "India",
+			Currency: "INR",
+			ISIN: "INE062A01020",
+			previousClose: 529.6,
+			previousCloseDate: "2022-02-11",
+		},
+		{
+			Code: "SBIN",
+			Exchange: "BSE",
+			Name: "STATE BANK OF INDIA",
+			Type: "Common Stock",
+			Country: "India",
+			Currency: "INR",
+			ISIN: "INE062A01020",
+			previousClose: 529.3,
+			previousCloseDate: "2022-02-11",
+		},
+	]);
 	interface InlineListProps {
 		style?: any;
 		children?: any;
@@ -26,6 +43,25 @@ export default function Search({ inline }: SearchProps) {
 		</div>
 	);
 	const Comp = inline ? InlineList : Dropdown;
+	let searchTimeout;
+	const onSearch = ({ target: { value } }) => {
+		if (searchTimeout) clearTimeout(searchTimeout);
+
+		searchTimeout = setTimeout(() => {
+			console.log(value);
+			getSearchData(value);
+		}, 500);
+	};
+	const getSearchData = async (text) => {
+		try {
+			const response = await fetch(`/api/search?text=${text}`);
+			const data = await response.json();
+
+			setSearchResults(data);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	return (
 		<Comp
@@ -42,11 +78,21 @@ export default function Search({ inline }: SearchProps) {
 							</Radio.Group>
 						}
 						bordered
-						dataSource={data}
-						renderItem={({ name, symbol }) => (
+						dataSource={searchResults}
+						renderItem={({
+							Code,
+							Exchange,
+							Name,
+							Type,
+							Country,
+							Currency,
+							ISIN,
+							previousClose,
+							previousCloseDate,
+						}) => (
 							<List.Item>
-								<Link href={`/stockDetail/${symbol}`}>
-									<a>{name}</a>
+								<Link href={`/stockDetail/${Code}`}>
+									<a>{Name}</a>
 								</Link>
 							</List.Item>
 						)}
@@ -59,6 +105,7 @@ export default function Search({ inline }: SearchProps) {
 				size="large"
 				placeholder="Search stocks, bonds and MF's"
 				prefix={<SearchOutlined />}
+				onChange={onSearch}
 			/>
 		</Comp>
 	);
