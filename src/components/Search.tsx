@@ -43,8 +43,8 @@ export default function Search({ inline }: SearchProps) {
 		</div>
 	);
 	const Comp = inline ? InlineList : Dropdown;
-	let searchTimeout;
-	const onSearch = ({ target: { value } }) => {
+	let searchTimeout: any;
+	const onSearch = ({ target: { value } }: any) => {
 		if (searchTimeout) clearTimeout(searchTimeout);
 
 		searchTimeout = setTimeout(() => {
@@ -52,7 +52,7 @@ export default function Search({ inline }: SearchProps) {
 			getSearchData(value);
 		}, 500);
 	};
-	const getSearchData = async (text) => {
+	const getSearchData = async (text: string) => {
 		try {
 			const response = await fetch(`/api/search?text=${text}`);
 			const data = await response.json();
@@ -79,17 +79,7 @@ export default function Search({ inline }: SearchProps) {
 						}
 						bordered
 						dataSource={searchResults}
-						renderItem={({
-							Code,
-							Exchange,
-							Name,
-							Type,
-							Country,
-							Currency,
-							ISIN,
-							previousClose,
-							previousCloseDate,
-						}) => (
+						renderItem={({ Code, Name }) => (
 							<List.Item>
 								<Link href={`/stockDetail/${Code}`}>
 									<a>{Name}</a>
