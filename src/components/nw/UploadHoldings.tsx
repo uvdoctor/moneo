@@ -29,6 +29,7 @@ import { extractPAN, getQty } from "./parseutils";
 import { includesAny } from "../utils";
 import {
   addMemberIfNeeded,
+  getFamilyMemberOptions,
   isBond,
   isFund,
   loadMatchingINBond,
@@ -50,6 +51,7 @@ export default function UploadHoldings() {
     setFamilyMemberKeys,
     selectedCurrency,
     setSelectedMembers,
+    setFamilyOptions
   }: any = useContext(NWContext);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
@@ -161,6 +163,10 @@ export default function UploadHoldings() {
     }
     return null;
   };
+
+  useEffect(()=>{
+    setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily))
+  },[allFamily, familyMemberKeys])
 
   const addInstruments = async () => {
     setProcessing(true);

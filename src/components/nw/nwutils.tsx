@@ -997,3 +997,12 @@ export const getTooltipDesc = (
   });
   return data ? `<br/><br/>Includes<br/><br/>${data}` : "";
 };
+
+export const getFamilyMemberOptions = (
+  familyMemberKeys: string[],
+  allFamily: any
+) => {
+  let opts: any = {};
+  familyMemberKeys.forEach((key: string) => (opts[key] = allFamily[key].name));
+  return opts;
+};

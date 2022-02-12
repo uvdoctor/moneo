@@ -18,7 +18,7 @@ import {
 } from "@ant-design/icons";
 import { COLORS } from "../../CONSTANTS";
 import TextInput from "../form/textinput";
-import { addFamilyMember, updateFamilyMember } from "./nwutils";
+import { addFamilyMember, getFamilyMemberOptions, updateFamilyMember } from "./nwutils";
 import {
   CreateFamilyInput,
   TaxLiability,
@@ -67,17 +67,9 @@ export default function FamilyInput() {
     setTaxLiability(TaxLiability.M);
   };
 
-  const getFamilyMemberOptions = () => {
-    let opts: any = {};
-    familyMemberKeys.forEach(
-      (key: string) => (opts[key] = allFamily[key].name)
-    );
-    return opts;
-  };
-
   useEffect(()=>{
-    setFamilyOptions(getFamilyMemberOptions())
-  },[allFamily])
+    setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily))
+  },[allFamily, familyMemberKeys])
 
   useEffect(() => {
     if (!mode || mode !== EDIT_MODE) return resetState();
@@ -105,7 +97,7 @@ export default function FamilyInput() {
       setSelectedMembers([...[member.id]]);
       familyMemberKeys.push(member.id as string);
       setFamilyMemberKeys([...familyMemberKeys]);
-      setFamilyOptions(getFamilyMemberOptions())
+      setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily))
       notification.success({
         message: "New Family Member Added",
         description: `Success! ${name} has been added to your family list.`,
@@ -131,7 +123,7 @@ export default function FamilyInput() {
       });
       if (!member) return;
       allFamily[id] = { name: member.name, taxId: member.tid, tax: member.tax };
-      setFamilyOptions(getFamilyMemberOptions())
+      setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily))
       setMode("");
       notification.success({
         message: "Family Member Updated",
