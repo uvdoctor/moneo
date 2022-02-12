@@ -16,8 +16,8 @@ export default function Filter({
   const { SubMenu } = Menu;
 
   const onClose = (item: string) => {
-    selectedKeys.splice(selectedKeys.indexOf(item), 1);
-    setSelectedKeys([...selectedKeys]);
+    const tags = selectedKeys.filter((tag) => tag !== item);
+    setSelectedKeys([...tags]);
   };
 
   const handleClick = (e: any) => {
