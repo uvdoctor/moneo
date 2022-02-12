@@ -21,9 +21,8 @@ import {
   getFixedCategories,
   isFund,
   isBond,
-  getCascaderOptions,
 } from "./nwutils";
-import CascaderMultiple from "../form/CascaderMultiple";
+import Filter from "../form/Filter";
 
 export default function InstrumentValuation() {
   const {
@@ -41,31 +40,21 @@ export default function InstrumentValuation() {
   const [nameFilterValues, setNameFilterValues] = useState<Array<Object>>([{}]);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
-  const [selectedSubtTags, setSelectedSubtTags] = useState<Array<string>>([]);
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
   const bondTags = { CB: "Corporate Bond", GB: "Government Bond" };
   const tagsData = (childTab: string) => {
     const data: any = {
-      Stocks: getCascaderOptions(
-        {
-          // ind: "Industry",
-          mcap: "Capitalization",
-        },
-
-        {
-          // ind: { F: "Finance", T: "Technology", B: "Bank" },
-          mcap: getMarketCap(),
-        },
-        false
-      ),
-      "Mutual Funds": getCascaderOptions(
-        getAssetTypes(),
-        { E: getMarketCap(), F: getFixedCategories(), H: {}, A: {} },
-        false
-      ),
-      Bonds: getCascaderOptions(bondTags),
+      Stocks: {
+        main: { mcap: "Capitalization" },
+        sub: { mcap: getMarketCap() },
+      },
+      "Mutual Funds": {
+        main: getAssetTypes(),
+        sub: { E: getMarketCap(), F: getFixedCategories(), H: {}, A: {} },
+      },
+      Bonds: { main: bondTags },
     };
     return data[childTab];
   };
@@ -98,7 +87,7 @@ export default function InstrumentValuation() {
       render: (record: InstrumentInput) => {
         return (
           <Holding
-            key={record.id}
+            key={`id-${record.id}`}
             holding={record as InstrumentInput}
             onDelete={delRecord}
             onChange={setTotal}
@@ -123,7 +112,8 @@ export default function InstrumentValuation() {
     dataToFilter.map((instrument: InstrumentInput) => {
       const id = instrument.id;
       const price =
-        instrument.qty * (cachedData && cachedData[id] ? cachedData[id].price : 0);
+        instrument.qty *
+        (cachedData && cachedData[id] ? cachedData[id].price : 0);
       if (filteredInfo.id) {
         if (filteredInfo.id.some((item: string) => item === id))
           filterAmt += price;
@@ -165,7 +155,7 @@ export default function InstrumentValuation() {
 
   useEffect(() => {
     filterInstrumentsByTags();
-  }, [selectedTags, selectedSubtTags]);
+  }, [selectedTags]);
 
   const filterInstrumentsByTabs = () => {
     if (!instruments.length) return;
@@ -177,7 +167,7 @@ export default function InstrumentValuation() {
           instrument.id,
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
-        if(!cachedData) return;
+        if (!cachedData) return;
         const data = cachedData[id];
         if (
           !data &&
@@ -218,49 +208,47 @@ export default function InstrumentValuation() {
           instrument.id,
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
-        if(!cachedData) return;
+        if (!cachedData) return;
         const data = cachedData[id];
-        if (childTab === MF && selectedTags.indexOf(data.type as string) > -1) {
+        if (childTab === MF && data && selectedTags.length) {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
           const { subt, mftype, type, mcap } = data;
           return (
-            (selectedTags.indexOf(data.type as string) > -1 &&
-              selectedSubtTags.length === 0) ||
-            (selectedSubtTags.includes(MCap.L) && mcap === MCap.L) ||
-            (selectedSubtTags.includes("Multi") &&
-              (mcap !== MCap.L || !mcap)) ||
-            (selectedSubtTags.includes("CB") &&
+            (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
+            (selectedTags.includes("Multi") && (mcap !== MCap.L || !mcap)) ||
+            (selectedTags.includes("CB") &&
               (subt === CB || mftype === MFSchemeType.O)) ||
-            (selectedSubtTags.includes("I") &&
+            (selectedTags.includes("I") &&
               type === AssetType.F &&
               subt === I) ||
-            (selectedSubtTags.includes("GovB") &&
-              (subt === GB || subt === GBO)) ||
-            (selectedSubtTags.includes("IF") &&
+            (selectedTags.includes("GovB") && (subt === GB || subt === GBO)) ||
+            (selectedTags.includes("IF") &&
               subt === HB &&
               mftype === MFSchemeType.I) ||
-            (selectedSubtTags.includes("FMP") &&
+            (selectedTags.includes("FMP") &&
               subt === HB &&
               mftype === MFSchemeType.C) ||
-            (selectedSubtTags.includes("LF") && subt === L)
+            (selectedTags.includes("LF") && subt === L)
           );
         }
         if (childTab === STOCK && data && selectedTags.length) {
           return (
-            (selectedSubtTags.includes(MCap.L) &&
+            (selectedTags.includes(MCap.L) &&
               data.meta &&
               data.meta.mcap === MCap.L) ||
-            (selectedSubtTags.includes("Multi") &&
+            (selectedTags.includes("Multi") &&
               ((data.meta && data.meta.mcap !== MCap.L) ||
                 !data.meta ||
                 !data.meta.mcap)) ||
-            (selectedTags.includes("mcap") && selectedSubtTags.length === 0)
+            (selectedTags.includes("mcap") && selectedTags.length === 0)
           );
-        } else if (childTab === BOND && data) {
+        } else if (childTab === BOND && data && selectedTags.length) {
           const { subt } = data;
           const { GB, CB, GBO } = AssetSubType;
-          if (selectedTags.includes(GB)) return subt === GB || subt === GBO;
-          if (selectedTags.includes(CB)) return subt === CB;
+          return (
+            (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
+            (selectedTags.includes(CB) && subt === CB)
+          );
         }
       }
     );
@@ -272,18 +260,11 @@ export default function InstrumentValuation() {
       <Row gutter={[10, 10]}>
         {hasTags(childTab) ? (
           <Col xs={24} sm={24}>
-            <Row justify="center" align="middle">
-              <Col>
-                <CascaderMultiple
-                  pre=""
-                  options={tagsData(childTab)}
-                  parentValue={selectedTags}
-                  childValue={selectedSubtTags}
-                  parentChangeHandler={(val: any) => setSelectedTags(val)}
-                  childChangeHandler={(val: any) => setSelectedSubtTags(val)}
-                />
-              </Col>
-            </Row>
+            <Filter
+              options={tagsData(childTab)}
+              selectedKeys={selectedTags}
+              setSelectedKeys={setSelectedTags}
+            />
           </Col>
         ) : null}
         <Col span={24}>
