@@ -40,8 +40,6 @@ export default function Filter({
       }
       tagOptions[key] = options.main[key];
     });
-    console.log(tagOptions);
-
     return tagOptions[key];
   };
 
@@ -66,7 +64,7 @@ export default function Filter({
   return (
     <Row justify="space-between" align="middle">
       <Col>
-        {selectedKeys.map((item: string, ind: number) => (
+        {selectedKeys.length ? selectedKeys.map((item: string, ind: number) => (
           <Tag
             closable
             onClose={() => onClose(item)}
@@ -75,7 +73,7 @@ export default function Filter({
           >
             {getTagLabel(item)}
           </Tag>
-        ))}
+        )): null}
       </Col>
       <Col>
         <Dropdown overlay={menu}>
