@@ -17,7 +17,8 @@ import simpleStorage from "simplestorage.js";
 import {
   doesHoldingMatch,
   getAssetTypes,
-  getMarketCap,
+  getStockMarketCap,
+  getMutualFundMarketCap,
   getFixedCategories,
   isFund,
   isBond,
@@ -48,11 +49,16 @@ export default function InstrumentValuation() {
     const data: any = {
       Stocks: {
         main: { mcap: "Capitalization" },
-        sub: { mcap: getMarketCap() },
+        sub: { mcap: getStockMarketCap() },
       },
       "Mutual Funds": {
         main: getAssetTypes(),
-        sub: { E: getMarketCap(), F: getFixedCategories(), H: {}, A: {} },
+        sub: {
+          E: getMutualFundMarketCap(),
+          F: getFixedCategories(),
+          H: {},
+          A: {},
+        },
       },
       Bonds: { main: bondTags },
     };
@@ -214,39 +220,36 @@ export default function InstrumentValuation() {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
           const { subt, mftype, type, mcap } = data;
           return (
-            selectedTags.includes(AssetType.H) && type === AssetType.H ||
-            selectedTags.includes(AssetType.A) && type === AssetType.A ||
-            (type === AssetType.E && (
-              (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
-            (selectedTags.includes("Multi")  && (mcap !== MCap.L || !mcap))
-            )) ||
-            (type === AssetType.F && (
-            (selectedTags.includes("CB") &&
-              (subt === CB || mftype === MFSchemeType.O)) ||
-            (selectedTags.includes("I") &&
-              type === AssetType.F &&
-              subt === I) ||
-            (selectedTags.includes("GovB") && (subt === GB || subt === GBO)) ||
-            (selectedTags.includes("IF") &&
-              subt === HB &&
-              mftype === MFSchemeType.I) ||
-            (selectedTags.includes("FMP") &&
-              subt === HB &&
-              mftype === MFSchemeType.C) ||
-            (selectedTags.includes("LF") && subt === L)
-            ))
+            (selectedTags.includes(AssetType.H) && type === AssetType.H) ||
+            (selectedTags.includes(AssetType.A) && type === AssetType.A) ||
+            (type === AssetType.E &&
+              ((selectedTags.includes(MCap.L) && mcap === MCap.L) ||
+                (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
+                (selectedTags.includes("HC") && mcap === MCap.H) ||
+                (selectedTags.includes(MCap.S) &&
+                  (mcap === MCap.S || !mcap)))) ||
+            (type === AssetType.F &&
+              ((selectedTags.includes("CB") &&
+                (subt === CB || mftype === MFSchemeType.O)) ||
+                (selectedTags.includes("I") &&
+                  type === AssetType.F &&
+                  subt === I) ||
+                (selectedTags.includes("GovB") &&
+                  (subt === GB || subt === GBO)) ||
+                (selectedTags.includes("IF") &&
+                  subt === HB &&
+                  mftype === MFSchemeType.I) ||
+                (selectedTags.includes("FMP") &&
+                  subt === HB &&
+                  mftype === MFSchemeType.C) ||
+                (selectedTags.includes("LF") && subt === L)))
           );
         }
         if (childTab === STOCK && data && selectedTags.length) {
           return (
-            (selectedTags.includes(MCap.L) &&
-              data.meta &&
-              data.meta.mcap === MCap.L) ||
-            (selectedTags.includes("Multi") &&
-              ((data.meta && data.meta.mcap !== MCap.L) ||
-                !data.meta ||
-                !data.meta.mcap)) ||
-            (selectedTags.includes("mcap") && selectedTags.length === 0)
+            (selectedTags.includes(MCap.L) && data.mcapt === MCap.L) ||
+            (selectedTags.includes(MCap.M) && data.mcapt === MCap.M) ||
+            (selectedTags.includes(MCap.S) && data.mcapt === MCap.S)
           );
         } else if (childTab === BOND && data && selectedTags.length) {
           const { subt } = data;

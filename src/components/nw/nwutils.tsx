@@ -343,10 +343,21 @@ export const getAssetTypes = () => {
   };
 };
 
-export const getMarketCap = () => {
+export const getStockMarketCap = () => {
   return {
     [APIt.MCap.L]: "Large Cap",
-    Multi: "Multi Cap",
+    [APIt.MCap.M]: "Mid Cap",
+    [APIt.MCap.S]: "Small Cap",
+  };
+};
+
+export const getMutualFundMarketCap = () => {
+  return {
+    [APIt.MCap.L]: "Large Cap",
+    [APIt.MCap.M]: "Mid Cap",
+    [APIt.MCap.S]: "Small Cap",
+    HC: "Hybrid Cap",
+    // [APIt.MCap.H]: "Hybrid Cap",
   };
 };
 
@@ -592,7 +603,7 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
 export const isLargeCap = (data: any) =>
-  data?.meta?.mcap === APIt.MCap.L || data?.mcap === APIt.MCap.L;
+  data?.mcapt === APIt.MCap.L || data?.mcap === APIt.MCap.L;
 
 export const hasOnlyCategory = (childTab: string) =>
   [
