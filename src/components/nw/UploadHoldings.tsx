@@ -231,10 +231,11 @@ export default function UploadHoldings() {
 
   const loadData = async (insMap: Map<string, number>, currency: string) => {
     setLoading(true);
-    await loadInstruments(Array.from(insMap.keys()));
+    const insData = await loadInstruments(Array.from(insMap.keys()));
     let uploadedInstruments: Array<InstrumentInput> = [];
     insMap.forEach((value: number, id: string) => {
       uploadedInstruments.push({
+        sid: insData[id].sid,
         id: id,
         qty: value,
         fId: "",

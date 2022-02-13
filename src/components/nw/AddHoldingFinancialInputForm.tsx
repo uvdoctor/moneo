@@ -13,6 +13,7 @@ interface InstrumentsData {
 interface Holding {
   qty: number;
   name: string;
+  sid: string;
   fId: string;
   id: string;
   curr: string;
@@ -55,6 +56,7 @@ const holdingReducer = (
           name: "",
           fId: '',
           id: "",
+          sid: "",
           curr: "INR",
           subt: "",
         },
@@ -102,6 +104,7 @@ export default function HoldingInput(props: any) {
     name: "",
     fId: '',
     id: "",
+    sid: "",
     curr: "INR",
     subt: "",
   });
@@ -181,7 +184,7 @@ export default function HoldingInput(props: any) {
   };
 
   const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["qty", "name", "id"];
+    const toValidateArr = ["qty", "name", "id", "sid"];
     const toValidateHoldingState = Object.assign(
       {},
       holdingState,
@@ -226,14 +229,14 @@ export default function HoldingInput(props: any) {
             });
           }}
           onSelect={(option, obj) => {
-            const { price, id, type, subt } = obj;
+            const { price, id, type, subt, sid } = obj;
             dispatch({
               type: "formUpdate",
-              data: { name: option, id, type, subt },
+              data: { name: option, id, type, subt, sid },
             });
             dispatchDataState({ type: "formUpdate", data: { price } });
             setRawDetails({ [id]: obj });
-            updateButtonStatus({ name: option, id });
+            updateButtonStatus({ name: option, id, sid });
           }}
           value={holdingState.name}
           onSearch={onSearch}
