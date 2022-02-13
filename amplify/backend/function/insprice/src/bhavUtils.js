@@ -180,7 +180,7 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         item.PutRequest.Item.divdd = dividend.date;
         item.PutRequest.Item.divrd = dividend.recordDate;
         item.PutRequest.Item.divpd = dividend.paymentDate;
-        item.PutRequest.Item.div = split.dividend;
+        item.PutRequest.Item.div = dividend.dividend;
       }
       if (eod) {
         const {
