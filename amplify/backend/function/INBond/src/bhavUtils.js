@@ -16,25 +16,18 @@ const extractDataFromCSV = async (
     let batches = [];
     let batchRecords = [];
     let count = 0;
-    const stream = fs
-      .createReadStream(`${tempDir}/${fileName}`)
+    fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
-      .on("data", async (record) => {
+      .on("data", (record) => {
         if (isinMap[record[codes.id]]) return;
-        let updateSchema;
-        try {
-          stream.pause();
-          updateSchema = await calcSchema(
-            record,
-            codes,
-            schema,
-            typeExchg,
-            isinMap,
-            table
-          );
-        } finally {
-          stream.resume();
-        }
+        const updateSchema = calcSchema(
+          record,
+          codes,
+          schema,
+          typeExchg,
+          isinMap,
+          table
+        );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
         batches.push({ PutRequest: { Item: dataToPush } });
@@ -54,7 +47,7 @@ const extractDataFromCSV = async (
           tempDir,
           `${fileName} of ${typeExchg} results extracted successfully and directory is cleaned`
         );
-				console.log(batchRecords.length);
+        console.log(batchRecords.length);
         resolve(batchRecords);
       })
       .on("error", (err) => {

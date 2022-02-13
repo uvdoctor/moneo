@@ -95,7 +95,7 @@ const getRate = (record, codes) => {
   return rate;
 };
 
-const calcSchema = async (record, codes, schema, typeExchg, isinMap, table) => {
+const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   if (!record[codes.id] || record[codes.subt] === "MC") return;
   schema.id = record[codes.id];
   if (!schema.id.startsWith("IN")) return;
