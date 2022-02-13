@@ -581,19 +581,10 @@ export const getInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -633,19 +624,10 @@ export const listInExchgPrices = /* GraphQL */ `
         itype
         price
         prev
-        meta {
-          id
-          mcap
-          ind
-          createdAt
-          updatedAt
-        }
         fv
         under
         yhigh
         ylow
-        whigh
-        wlow
         split
         div
         splitd
@@ -655,43 +637,6 @@ export const listInExchgPrices = /* GraphQL */ `
         beta
         mcap
         mcapt
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInsMeta = /* GraphQL */ `
-  query GetInsMeta($id: String!) {
-    getInsMeta(id: $id) {
-      id
-      mcap
-      ind
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsMetas = /* GraphQL */ `
-  query ListInsMetas(
-    $id: String
-    $filter: ModelInsMetaFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsMetas(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        mcap
-        ind
         createdAt
         updatedAt
       }
@@ -746,6 +691,9 @@ export const getInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
@@ -770,6 +718,9 @@ export const listInsUnis = /* GraphQL */ `
         id
         sid
         curr
+        fun
+        tech
+        other
         createdAt
         updatedAt
       }
