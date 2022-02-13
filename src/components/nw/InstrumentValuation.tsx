@@ -216,8 +216,11 @@ export default function InstrumentValuation() {
           return (
             selectedTags.includes(AssetType.H) && type === AssetType.H ||
             selectedTags.includes(AssetType.A) && type === AssetType.A ||
-            (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
-            (selectedTags.includes("Multi") && (mcap !== MCap.L || !mcap)) ||
+            (type === AssetType.E && (
+              (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
+            (selectedTags.includes("Multi")  && (mcap !== MCap.L || !mcap))
+            )) ||
+            (type === AssetType.F && (
             (selectedTags.includes("CB") &&
               (subt === CB || mftype === MFSchemeType.O)) ||
             (selectedTags.includes("I") &&
@@ -231,6 +234,7 @@ export default function InstrumentValuation() {
               subt === HB &&
               mftype === MFSchemeType.C) ||
             (selectedTags.includes("LF") && subt === L)
+            ))
           );
         }
         if (childTab === STOCK && data && selectedTags.length) {
