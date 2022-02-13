@@ -1794,6 +1794,7 @@ export const onCreateUserIns = /* GraphQL */ `
       ins {
         id
         sid
+        exchg
         qty
         pur {
           amt
@@ -1818,6 +1819,7 @@ export const onUpdateUserIns = /* GraphQL */ `
       ins {
         id
         sid
+        exchg
         qty
         pur {
           amt
@@ -1842,6 +1844,7 @@ export const onDeleteUserIns = /* GraphQL */ `
       ins {
         id
         sid
+        exchg
         qty
         pur {
           amt

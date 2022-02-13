@@ -1509,6 +1509,7 @@ export const getUserIns = /* GraphQL */ `
       ins {
         id
         sid
+        exchg
         qty
         pur {
           amt
@@ -1546,6 +1547,7 @@ export const listUserInss = /* GraphQL */ `
         ins {
           id
           sid
+          exchg
           qty
           fId
           curr

@@ -814,6 +814,7 @@ export type CreateUserInsInput = {
 export type InstrumentInput = {
   id: string,
   sid?: string | null,
+  exchg?: string | null,
   qty: number,
   pur?: Array< PurchaseInput > | null,
   fId: string,
@@ -839,6 +840,7 @@ export type Instrument = {
   __typename: "Instrument",
   id?: string,
   sid?: string | null,
+  exchg?: string | null,
   qty?: number,
   pur?:  Array<Purchase > | null,
   fId?: string,
@@ -3448,6 +3450,7 @@ export type CreateUserInsMutation = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -3479,6 +3482,7 @@ export type UpdateUserInsMutation = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -3510,6 +3514,7 @@ export type DeleteUserInsMutation = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -5822,6 +5827,7 @@ export type GetUserInsQuery = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -5858,6 +5864,7 @@ export type ListUserInssQuery = {
         __typename: "Instrument",
         id: string,
         sid?: string | null,
+        exchg?: string | null,
         qty: number,
         fId: string,
         curr: string,
@@ -7818,6 +7825,7 @@ export type OnCreateUserInsSubscription = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -7848,6 +7856,7 @@ export type OnUpdateUserInsSubscription = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",
@@ -7878,6 +7887,7 @@ export type OnDeleteUserInsSubscription = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      exchg?: string | null,
       qty: number,
       pur?:  Array< {
         __typename: "Purchase",

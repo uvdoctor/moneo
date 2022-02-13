@@ -580,6 +580,7 @@ type Holding {
 type Instrument {
   id: String!
   sid: String
+  exchg: String
   qty: Float!
   pur: [Purchase!]
   fId: String!
