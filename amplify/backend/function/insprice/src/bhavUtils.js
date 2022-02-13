@@ -13,33 +13,25 @@ const extractDataFromCSV = async (
   isinMap,
   nameMap,
   weekHLMap,
+  mcaptMap,
   bondTable
 ) => {
   const end = new Promise((resolve, reject) => {
     let [exchgBatches, exchgBatchRecords, exchgCount] = [[], [], 0];
     let [bondBatches, bondBatchRecords, bondCount] = [[], [], 0];
-    const stream = fs
-      .createReadStream(`${tempDir}/${fileName}`)
+    fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
-      .on("data", async (record) => {
+      .on("data", (record) => {
         if (isinMap[record[codes.id]]) return;
-        let [updateSchema, isBond] = [{}, false];
-        try {
-          stream.pause();
-          const data = await calcSchema(
-            record,
-            codes,
-            schema,
-            exchg,
-            isinMap,
-            exchgTable,
-            bondTable
-          );
-          updateSchema = data.updateSchema;
-          isBond = data.isBond;
-        } finally {
-          stream.resume();
-        }
+        const { updateSchema, isBond } = calcSchema(
+          record,
+          codes,
+          schema,
+          exchg,
+          isinMap,
+          exchgTable,
+          bondTable
+        );
         if (Object.keys(updateSchema).length === 0) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
         if (isBond) {
@@ -54,9 +46,14 @@ const extractDataFromCSV = async (
           const id = dataToPush.id;
           const sid = dataToPush.sid;
           if (nameMap[id]) {
-            dataToPush.name = nameMap[id].name;
+            dataToPush.name = nameMap[id].name
+              ? nameMap[id].name
+              : dataToPush.name;
             dataToPush.fv = nameMap[id].fv;
             if (nameMap[id].under) dataToPush.under = nameMap[id].under;
+          }
+          if (mcaptMap[id]) {
+            dataToPush.mcapt = mcaptMap[id].mcapt;
           }
           if (weekHLMap[sid]) {
             dataToPush.yhigh = weekHLMap[sid].yhigh;
@@ -99,7 +96,13 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
+const extractPartOfData = async (
+  fileName,
+  codes,
+  nameMap,
+  weekHLMap,
+  mcaptMap
+) => {
   const end = new Promise((resolve, reject) => {
     let count = 0;
     const csvFormat = fileName.includes("CM_52_wk_High_low")
@@ -109,6 +112,14 @@ const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
       .pipe(csvFormat)
       .on("data", (record) => {
         const parse = (data) => (parseFloat(data) ? parseFloat(data) : null);
+        if (
+          fileName === "ind_nifty100list.csv" ||
+          fileName === "ind_niftymidcap150list.csv"
+        ) {
+          mcaptMap[record[codes.id]] = {
+            mcapt: codes.mcap,
+          };
+        }
         if (fileName.includes("CM_52_wk_High_low")) {
           weekHLMap[record[codes.sid]] = {
             yhigh: parse(record[codes.yhigh]),
@@ -144,13 +155,6 @@ const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
       });
   });
   return await end;
-};
-
-const getMarketCapType = (marketcap) => {
-  const mcap = marketcap / 10000000;
-  if (mcap > 5000 && mcap < 20000) return "M";
-  if (mcap > 20000) return "L";
-  return "S";
 };
 
 const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
@@ -193,34 +197,22 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         item.PutRequest.Item.name = name;
         item.PutRequest.Item.price = adjusted_close;
         item.PutRequest.Item.prev = close;
-        item.PutRequest.Item.yhigh = item.PutRequest.Item.yhigh ? item.PutRequest.Item.yhigh : hi_250d;
-        item.PutRequest.Item.ylow =  item.PutRequest.Item.ylow ? item.PutRequest.Item.ylow : lo_250d;
+        item.PutRequest.Item.yhigh = item.PutRequest.Item.yhigh
+          ? item.PutRequest.Item.yhigh
+          : hi_250d;
+        item.PutRequest.Item.ylow = item.PutRequest.Item.ylow
+          ? item.PutRequest.Item.ylow
+          : lo_250d;
         item.PutRequest.Item.beta = Beta;
         item.PutRequest.Item.mcap = MarketCapitalization;
-        item.PutRequest.Item.mcapt = getMarketCapType(MarketCapitalization);
       }
     });
   });
   return exchgData;
 };
 
-const addMetaData = async (exchgData, data) => {
-  exchgData.map((element) => {
-    element.map((item) => {
-      const metaData = data.Items.find(
-        (re) => re.id === item.PutRequest.Item.id
-      );
-      if (!metaData) return;
-      item.PutRequest.Item.meta = metaData;
-    });
-  });
-
-  return exchgData;
-};
-
 module.exports = {
   extractDataFromCSV,
   extractPartOfData,
-  addMetaData,
   mergeEodAndExchgData,
 };

@@ -1,6 +1,4 @@
 const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
-const { getCBDataByISIN, calculateYTM } = require("/opt/nodejs/corporateBond");
-
 const calc = {
   BSE: {
     calcType: (type, subt, name) => {
@@ -23,7 +21,7 @@ const calc = {
       if (type === "Q" && subt === "F") return "GBO";
       if ((type === "B" && subt === "G") || (type === "Q" && subt === "E"))
         return "GoldB";
-      if (subt === "W" || (subt === "F" && (type === "B" || type === "D")))
+      if ((subt === "F" && (type === "B" || type === "D")))
         return "CB";
       if (subt === "IF") return "R";
       return "S";
@@ -91,7 +89,7 @@ const calc = {
   },
 };
 
-const calcSchema = async (
+const calcSchema = (
   record,
   codes,
   schema,
@@ -123,32 +121,21 @@ const calcSchema = async (
   updateSchema.subt = subtType;
   updateSchema.price = parse(record[codes.price]);
   if (isBond) {
-    let cbdata;
-    // cbdata = await getCBDataByISIN(updateSchema.id);
-    updateSchema.sm = cbdata ? cbdata.sm : 0;
-    updateSchema.sy = cbdata ? cbdata.sy : 0;
-    updateSchema.mm = cbdata ? cbdata.mm : 0;
-    updateSchema.my = cbdata ? cbdata.my : 0;
+    updateSchema.sm = 0;
+    updateSchema.sy =  0;
+    updateSchema.mm =  0;
+    updateSchema.my =  0;
     updateSchema.fr = false;
     updateSchema.tf = false;
     updateSchema.cr = null;
-    updateSchema.rate = cbdata ? cbdata.rate : -1;
-    updateSchema.fv = cbdata ? cbdata.fv : 100;
-    updateSchema.ytm = cbdata
-      ? calculateYTM(
-          updateSchema.rate,
-          updateSchema.sm,
-          updateSchema.sy,
-          updateSchema.mm,
-          updateSchema.my,
-          updateSchema.fv,
-          updateSchema.price
-        )
-      : 0;
+    updateSchema.rate = -1;
+    updateSchema.fv =  100;
+    updateSchema.ytm = 0;
     delete updateSchema.itype;
     delete updateSchema.prev;
     appendGenericFields(updateSchema, bondTable);
   } else {
+    updateSchema.mcapt = "S";
     updateSchema.itype = calc[exchg].calcInsType(type, subt, name);
     updateSchema.prev = parse(record[codes.prev]);
     if (updateSchema.id.startsWith("INF")) updateSchema.itype = "ETF";

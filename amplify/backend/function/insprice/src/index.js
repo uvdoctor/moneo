@@ -4,7 +4,6 @@
 	REGION
 Amplify Params - DO NOT EDIT */ const fs = require("fs");
 const fsPromise = require("fs/promises");
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
 const {
   cleanDirectory,
   downloadZip,
@@ -21,7 +20,6 @@ const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
   extractDataFromCSV,
-  addMetaData,
   mergeEodAndExchgData,
 } = require("./bhavUtils");
 const { mkdir } = fsPromise;
@@ -38,6 +36,7 @@ const getAndPushData = (diff) => {
     const { apiArray, partOfDataApiArray } = constructedApiArray(diff);
     const nameMap = {};
     const weekHLMap = {};
+    const mcaptMap = {}
     try {
       if (fs.existsSync(tempDir)) {
         await cleanDirectory(tempDir, "Initial cleaning completed");
@@ -51,7 +50,8 @@ const getAndPushData = (diff) => {
           fileName,
           codes,
           nameMap,
-          weekHLMap
+          weekHLMap,
+          mcaptMap
         );
         dataToPushInFeeds.push({
           table: exchgTable,
@@ -76,6 +76,7 @@ const getAndPushData = (diff) => {
           isinMap,
           nameMap,
           weekHLMap,
+          mcaptMap,
           bondTable
         );
         let eodData;
@@ -88,26 +89,8 @@ const getAndPushData = (diff) => {
         } catch (error) {
           console.log(error);
         }
-        const mergeData = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
-        const client = new LambdaClient({ region: process.env.REGION });
-        const params = {
-          FunctionName: process.env.FUNCTION_INSMETA_NAME,
-          InvocationType: "RequestResponse",
-          LogType: "Tail",
-          Payload: '{ "data": "get" }',
-        };
-        const command = new InvokeCommand(params);
-        const asciiDecoder = new TextDecoder("ascii");
-        let metaData = {};
-        try {
-          const { Payload } = await client.send(command);
-          const data = asciiDecoder.decode(Payload);
-          metaData = JSON.parse(data);
-        } catch (error) {
-          console.error(error.message);
-          throw error;
-        }
-        const data = await addMetaData(mergeData, metaData);
+        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
+        console.log(data.length);
         for (let batch in data) {
           await pushData(data[batch], exchgTableName);
         }
