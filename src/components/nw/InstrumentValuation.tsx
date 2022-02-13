@@ -214,6 +214,8 @@ export default function InstrumentValuation() {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
           const { subt, mftype, type, mcap } = data;
           return (
+            selectedTags.includes(AssetType.H) && type === AssetType.H ||
+            selectedTags.includes(AssetType.A) && type === AssetType.A ||
             (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
             (selectedTags.includes("Multi") && (mcap !== MCap.L || !mcap)) ||
             (selectedTags.includes("CB") &&

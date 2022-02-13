@@ -48,7 +48,7 @@ export default function Filter({
   const menu = (
     <Menu multiple onClick={handleClick} selectedKeys={selectedKeys}>
       {Object.keys(options.main).map((key) => {
-        if (options.sub) {
+        if (options.sub && Object.keys(options.sub[key]).length) {
           return (
             <SubMenu key={key} title={options.main[key]}>
               {Object.keys(options.sub[key]).map((subkey) => (
