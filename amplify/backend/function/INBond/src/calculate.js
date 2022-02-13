@@ -1,9 +1,4 @@
 const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
-const {
-  calculateYTM,
-  getMonthYearByDate,
-  getCBDataByISIN,
-} = require("/opt/nodejs/corporateBond");
 
 const calc = {
   calcSubType: (subt) => {
@@ -61,6 +56,35 @@ const calc = {
   },
 };
 
+const getMonthYearByDate = (date) => {
+  if (!date) return { month: 0, year: 0 };
+  const monthsArray = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const parts = date.split("-");
+  return { month: monthsArray.indexOf(parts[1]) + 1, year: parts[2] };
+};
+
+const calculateYTM = (rate, sm, sy, mm, my, fv, mprice) => {
+  const numOfYear = (12 - sm) / 12 + (my - sy - 1) + mm / 12;
+  const couponAmt = (fv * Number(rate)) / 100;
+  const ytm = (couponAmt + (fv - mprice) / numOfYear) / ((fv + mprice) / 2);
+  const ytmFinal = Math.round(ytm * 1000) / 1000;
+  if (ytmFinal < 0 || isNaN(ytmFinal) || ytmFinal === Infinity) return 0;
+  return ytmFinal;
+};
+
 const getRate = (record, codes) => {
   const reset = record[codes.rate];
   const name = record[codes.name];
@@ -75,7 +99,7 @@ const calcSchema = async (record, codes, schema, typeExchg, isinMap, table) => {
   if (!record[codes.id] || record[codes.subt] === "MC") return;
   schema.id = record[codes.id];
   if (!schema.id.startsWith("IN")) return;
-  schema.sid = record[codes.sid];
+  schema.sid = record[codes.sid].trim();
   schema.price = calc.calcPrice(record[codes.price]);
   schema.type = "F";
   schema.subt = calc.calcSubType(record[codes.subt]);
@@ -86,43 +110,25 @@ const calcSchema = async (record, codes, schema, typeExchg, isinMap, table) => {
   const maturityDate = getMonthYearByDate(
     codes.sDate ? record[codes.mDate].trim() : ""
   );
-  let cbdata;
-  // if (!record[codes.sDate] && schema.subt === "CB") {
-    // cbdata = await getCBDataByISIN(schema.id);
-  // }
-  schema.sm = cbdata ? cbdata.sm : startDate.month;
-  schema.sy = cbdata ? cbdata.sy : startDate.year;
-  schema.mm = cbdata ? cbdata.mm : maturityDate.month;
-  schema.my = cbdata ? cbdata.my : maturityDate.year;
-  schema.name = cbdata
-    ? cbdata.name
-    : record[codes.name]
-    ? record[codes.name]
-    : record[codes.sid];
+  schema.sm = startDate.month;
+  schema.sy = startDate.year;
+  schema.mm = maturityDate.month;
+  schema.my = maturityDate.year;
+  schema.name = record[codes.name] ? record[codes.name].trim() : record[codes.sid].trim();
   schema.fr = calc.calcFR(record[codes.frate]);
   schema.tf = calc.calcTF(record[codes.subt]);
   schema.cr = calc.calcCR(record[codes.crstr]);
-  schema.rate = cbdata ? cbdata.rate : getRate(record, codes);
-  schema.fv = cbdata ? cbdata.fv : 100;
-  schema.ytm = cbdata
-    ? calculateYTM(
-        cbdata.rate,
-        cbdata.sm,
-        cbdata.sy,
-        cbdata.mm,
-        cbdata.my,
-        cbdata.fv,
-        schema.price
-      )
-    : calculateYTM(
-        schema.rate,
-        startDate.month,
-        startDate.year,
-        maturityDate.month,
-        maturityDate.year,
-        100,
-        schema.price
-      );
+  schema.rate = getRate(record, codes);
+  schema.fv = 100;
+  schema.ytm = calculateYTM(
+    schema.rate,
+    startDate.month,
+    startDate.year,
+    maturityDate.month,
+    maturityDate.year,
+    100,
+    schema.price
+  );
   appendGenericFields(schema, table);
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
