@@ -1577,19 +1577,10 @@ export const createInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -1619,19 +1610,10 @@ export const updateInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -1661,19 +1643,10 @@ export const deleteInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -1683,48 +1656,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createInsMeta = /* GraphQL */ `
-  mutation CreateInsMeta(
-    $input: CreateInsMetaInput!
-    $condition: ModelInsMetaConditionInput
-  ) {
-    createInsMeta(input: $input, condition: $condition) {
-      id
-      mcap
-      ind
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsMeta = /* GraphQL */ `
-  mutation UpdateInsMeta(
-    $input: UpdateInsMetaInput!
-    $condition: ModelInsMetaConditionInput
-  ) {
-    updateInsMeta(input: $input, condition: $condition) {
-      id
-      mcap
-      ind
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsMeta = /* GraphQL */ `
-  mutation DeleteInsMeta(
-    $input: DeleteInsMetaInput!
-    $condition: ModelInsMetaConditionInput
-  ) {
-    deleteInsMeta(input: $input, condition: $condition) {
-      id
-      mcap
-      ind
       createdAt
       updatedAt
     }
@@ -1787,6 +1718,9 @@ export const createInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
@@ -1801,6 +1735,9 @@ export const updateInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
@@ -1815,6 +1752,9 @@ export const deleteInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }

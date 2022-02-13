@@ -59,10 +59,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "insmeta",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "Name"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -119,28 +120,6 @@
       ]
     },
     "NPSPrice": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneopricelayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "goals",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
-    "insmeta": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",

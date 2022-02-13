@@ -999,8 +999,6 @@ export type CreateINExchgPriceInput = {
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
-  whigh?: number | null,
-  wlow?: number | null,
   split?: string | null,
   div?: number | null,
   splitd?: string | null,
@@ -1070,8 +1068,6 @@ export type ModelINExchgPriceConditionInput = {
   under?: ModelStringInput | null,
   yhigh?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
-  whigh?: ModelFloatInput | null,
-  wlow?: ModelFloatInput | null,
   split?: ModelStringInput | null,
   div?: ModelFloatInput | null,
   splitd?: ModelStringInput | null,
@@ -1117,13 +1113,10 @@ export type INExchgPrice = {
   itype?: InsType | null,
   price?: number,
   prev?: number,
-  meta?: InsMeta,
   fv?: number | null,
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
-  whigh?: number | null,
-  wlow?: number | null,
   split?: string | null,
   div?: number | null,
   splitd?: string | null,
@@ -1133,15 +1126,6 @@ export type INExchgPrice = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type InsMeta = {
-  __typename: "InsMeta",
-  id?: string,
-  mcap?: MCap | null,
-  ind?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1160,8 +1144,6 @@ export type UpdateINExchgPriceInput = {
   under?: string | null,
   yhigh?: number | null,
   ylow?: number | null,
-  whigh?: number | null,
-  wlow?: number | null,
   split?: string | null,
   div?: number | null,
   splitd?: string | null,
@@ -1174,30 +1156,6 @@ export type UpdateINExchgPriceInput = {
 };
 
 export type DeleteINExchgPriceInput = {
-  id: string,
-};
-
-export type CreateInsMetaInput = {
-  id: string,
-  mcap?: MCap | null,
-  ind?: string | null,
-};
-
-export type ModelInsMetaConditionInput = {
-  mcap?: ModelMCapInput | null,
-  ind?: ModelStringInput | null,
-  and?: Array< ModelInsMetaConditionInput | null > | null,
-  or?: Array< ModelInsMetaConditionInput | null > | null,
-  not?: ModelInsMetaConditionInput | null,
-};
-
-export type UpdateInsMetaInput = {
-  id: string,
-  mcap?: MCap | null,
-  ind?: string | null,
-};
-
-export type DeleteInsMetaInput = {
   id: string,
 };
 
@@ -1258,11 +1216,17 @@ export type CreateInsUniInput = {
   id: string,
   sid?: string | null,
   curr?: string | null,
+  fun?: string | null,
+  tech?: string | null,
+  other?: string | null,
 };
 
 export type ModelInsUniConditionInput = {
   sid?: ModelStringInput | null,
   curr?: ModelStringInput | null,
+  fun?: ModelStringInput | null,
+  tech?: ModelStringInput | null,
+  other?: ModelStringInput | null,
   and?: Array< ModelInsUniConditionInput | null > | null,
   or?: Array< ModelInsUniConditionInput | null > | null,
   not?: ModelInsUniConditionInput | null,
@@ -1273,6 +1237,9 @@ export type InsUni = {
   id?: string,
   sid?: string | null,
   curr?: string | null,
+  fun?: string | null,
+  tech?: string | null,
+  other?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1281,6 +1248,9 @@ export type UpdateInsUniInput = {
   id: string,
   sid?: string | null,
   curr?: string | null,
+  fun?: string | null,
+  tech?: string | null,
+  other?: string | null,
 };
 
 export type DeleteInsUniInput = {
@@ -1845,8 +1815,6 @@ export type ModelINExchgPriceFilterInput = {
   under?: ModelStringInput | null,
   yhigh?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
-  whigh?: ModelFloatInput | null,
-  wlow?: ModelFloatInput | null,
   split?: ModelStringInput | null,
   div?: ModelFloatInput | null,
   splitd?: ModelStringInput | null,
@@ -1864,21 +1832,6 @@ export type ModelINExchgPriceFilterInput = {
 export type ModelINExchgPriceConnection = {
   __typename: "ModelINExchgPriceConnection",
   items?:  Array<INExchgPrice | null >,
-  nextToken?: string | null,
-};
-
-export type ModelInsMetaFilterInput = {
-  id?: ModelStringInput | null,
-  mcap?: ModelMCapInput | null,
-  ind?: ModelStringInput | null,
-  and?: Array< ModelInsMetaFilterInput | null > | null,
-  or?: Array< ModelInsMetaFilterInput | null > | null,
-  not?: ModelInsMetaFilterInput | null,
-};
-
-export type ModelInsMetaConnection = {
-  __typename: "ModelInsMetaConnection",
-  items?:  Array<InsMeta | null >,
   nextToken?: string | null,
 };
 
@@ -1903,6 +1856,9 @@ export type ModelInsUniFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   curr?: ModelStringInput | null,
+  fun?: ModelStringInput | null,
+  tech?: ModelStringInput | null,
+  other?: ModelStringInput | null,
   and?: Array< ModelInsUniFilterInput | null > | null,
   or?: Array< ModelInsUniFilterInput | null > | null,
   not?: ModelInsUniFilterInput | null,
@@ -3779,20 +3735,10 @@ export type CreateInExchgPriceMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -3824,20 +3770,10 @@ export type UpdateInExchgPriceMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -3869,20 +3805,10 @@ export type DeleteInExchgPriceMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -3892,54 +3818,6 @@ export type DeleteInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateInsMetaMutationVariables = {
-  input?: CreateInsMetaInput,
-  condition?: ModelInsMetaConditionInput | null,
-};
-
-export type CreateInsMetaMutation = {
-  createInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInsMetaMutationVariables = {
-  input?: UpdateInsMetaInput,
-  condition?: ModelInsMetaConditionInput | null,
-};
-
-export type UpdateInsMetaMutation = {
-  updateInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInsMetaMutationVariables = {
-  input?: DeleteInsMetaInput,
-  condition?: ModelInsMetaConditionInput | null,
-};
-
-export type DeleteInsMetaMutation = {
-  deleteInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4010,6 +3888,9 @@ export type CreateInsUniMutation = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4026,6 +3907,9 @@ export type UpdateInsUniMutation = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4042,6 +3926,9 @@ export type DeleteInsUniMutation = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4966,20 +4853,10 @@ export type GetInExchgPriceQuery = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -5016,20 +4893,10 @@ export type ListInExchgPricesQuery = {
       itype?: InsType | null,
       price: number,
       prev: number,
-      meta?:  {
-        __typename: "InsMeta",
-        id: string,
-        mcap?: MCap | null,
-        ind?: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       fv?: number | null,
       under?: string | null,
       yhigh?: number | null,
       ylow?: number | null,
-      whigh?: number | null,
-      wlow?: number | null,
       split?: string | null,
       div?: number | null,
       splitd?: string | null,
@@ -5039,44 +4906,6 @@ export type ListInExchgPricesQuery = {
       beta?: number | null,
       mcap?: number | null,
       mcapt?: MCap | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInsMetaQueryVariables = {
-  id?: string,
-};
-
-export type GetInsMetaQuery = {
-  getInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInsMetasQueryVariables = {
-  id?: string | null,
-  filter?: ModelInsMetaFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInsMetasQuery = {
-  listInsMetas?:  {
-    __typename: "ModelInsMetaConnection",
-    items:  Array< {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5136,6 +4965,9 @@ export type GetInsUniQuery = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5157,6 +4989,9 @@ export type ListInsUnisQuery = {
       id: string,
       sid?: string | null,
       curr?: string | null,
+      fun?: string | null,
+      tech?: string | null,
+      other?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6684,20 +6519,10 @@ export type OnCreateInExchgPriceSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -6724,20 +6549,10 @@ export type OnUpdateInExchgPriceSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -6764,20 +6579,10 @@ export type OnDeleteInExchgPriceSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    meta?:  {
-      __typename: "InsMeta",
-      id: string,
-      mcap?: MCap | null,
-      ind?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     fv?: number | null,
     under?: string | null,
     yhigh?: number | null,
     ylow?: number | null,
-    whigh?: number | null,
-    wlow?: number | null,
     split?: string | null,
     div?: number | null,
     splitd?: string | null,
@@ -6787,39 +6592,6 @@ export type OnDeleteInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateInsMetaSubscription = {
-  onCreateInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInsMetaSubscription = {
-  onUpdateInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInsMetaSubscription = {
-  onDeleteInsMeta?:  {
-    __typename: "InsMeta",
-    id: string,
-    mcap?: MCap | null,
-    ind?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6870,6 +6642,9 @@ export type OnCreateInsUniSubscription = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6881,6 +6656,9 @@ export type OnUpdateInsUniSubscription = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6892,6 +6670,9 @@ export type OnDeleteInsUniSubscription = {
     id: string,
     sid?: string | null,
     curr?: string | null,
+    fun?: string | null,
+    tech?: string | null,
+    other?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

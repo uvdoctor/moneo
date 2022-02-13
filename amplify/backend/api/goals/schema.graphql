@@ -356,7 +356,6 @@ type INExchgPrice
   itype: InsType
   price: Float!
   prev: Float!
-  meta: InsMeta
   fv: Int
   under: String
   yhigh: Float
@@ -370,25 +369,6 @@ type INExchgPrice
   beta: Float
   mcap: Float
   mcapt: MCap
-}
-
-type InsMeta
-  @model
-  @aws_iam
-  @key(fields: ["id"])
-  @auth(
-    rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [read] }
-    ]
-  ) {
-  id: String!
-  mcap: MCap
-  ind: String
 }
 
 enum Recommendation {
@@ -434,6 +414,9 @@ type InsUni
   id: String!
   sid: String
   curr: String
+  fun: AWSJSON
+  tech: AWSJSON
+  other: AWSJSON
 }
 
 type AllIndices

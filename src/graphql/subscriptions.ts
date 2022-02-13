@@ -563,19 +563,10 @@ export const onCreateInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -602,19 +593,10 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -641,19 +623,10 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       itype
       price
       prev
-      meta {
-        id
-        mcap
-        ind
-        createdAt
-        updatedAt
-      }
       fv
       under
       yhigh
       ylow
-      whigh
-      wlow
       split
       div
       splitd
@@ -663,39 +636,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateInsMeta = /* GraphQL */ `
-  subscription OnCreateInsMeta {
-    onCreateInsMeta {
-      id
-      mcap
-      ind
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInsMeta = /* GraphQL */ `
-  subscription OnUpdateInsMeta {
-    onUpdateInsMeta {
-      id
-      mcap
-      ind
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInsMeta = /* GraphQL */ `
-  subscription OnDeleteInsMeta {
-    onDeleteInsMeta {
-      id
-      mcap
-      ind
       createdAt
       updatedAt
     }
@@ -746,6 +686,9 @@ export const onCreateInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
@@ -757,6 +700,9 @@ export const onUpdateInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
@@ -768,6 +714,9 @@ export const onDeleteInsUni = /* GraphQL */ `
       id
       sid
       curr
+      fun
+      tech
+      other
       createdAt
       updatedAt
     }
