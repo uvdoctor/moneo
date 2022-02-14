@@ -28,7 +28,7 @@ export default function Filter({ options }: FilterProps) {
 
   const getTagLabel = (key: string) => {
     const tagOptions: any = {};
-    if(Object.keys(options).length === 0) return '';
+    if(!options) return '';
     Object.keys(options.main).map((key) => {
       if (options.sub) {
         Object.keys(options.sub[key]).map(
