@@ -412,8 +412,8 @@ type InsUni
     ]
   ) {
   id: String!
-  ana: AWSJSON!
-  risk: RiskProfile!
+  ana: AWSJSON
+  risk: RiskProfile
 }
 
 type AllIndices
@@ -582,6 +582,8 @@ type Instrument {
   pur: [Purchase!]
   fId: String!
   curr: String!
+  type: AssetType
+  subt: AssetSubType
 }
 
 enum PropertyType {

@@ -819,7 +819,39 @@ export type InstrumentInput = {
   pur?: Array< PurchaseInput > | null,
   fId: string,
   curr: string,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
 };
+
+export enum AssetType {
+  E = "E",
+  F = "F",
+  A = "A",
+  H = "H",
+}
+
+
+export enum AssetSubType {
+  S = "S",
+  A = "A",
+  CB = "CB",
+  GB = "GB",
+  HB = "HB",
+  GBO = "GBO",
+  GoldB = "GoldB",
+  Gold = "Gold",
+  I = "I",
+  L = "L",
+  R = "R",
+  C = "C",
+  M = "M",
+  O = "O",
+  V = "V",
+  Cash = "Cash",
+  P2P = "P2P",
+  War = "War",
+}
+
 
 export type ModelUserInsConditionInput = {
   and?: Array< ModelUserInsConditionInput | null > | null,
@@ -845,6 +877,8 @@ export type Instrument = {
   pur?:  Array<Purchase > | null,
   fId?: string,
   curr?: string,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
 };
 
 export type UpdateUserInsInput = {
@@ -1011,36 +1045,6 @@ export type CreateINExchgPriceInput = {
   mcap?: number | null,
   mcapt?: MCap | null,
 };
-
-export enum AssetType {
-  E = "E",
-  F = "F",
-  A = "A",
-  H = "H",
-}
-
-
-export enum AssetSubType {
-  S = "S",
-  A = "A",
-  CB = "CB",
-  GB = "GB",
-  HB = "HB",
-  GBO = "GBO",
-  GoldB = "GoldB",
-  Gold = "Gold",
-  I = "I",
-  L = "L",
-  R = "R",
-  C = "C",
-  M = "M",
-  O = "O",
-  V = "V",
-  Cash = "Cash",
-  P2P = "P2P",
-  War = "War",
-}
-
 
 export enum InsType {
   ETF = "ETF",
@@ -1216,8 +1220,8 @@ export type DeleteInsBHSInput = {
 
 export type CreateInsUniInput = {
   id: string,
-  ana: string,
-  risk: RiskProfile,
+  ana?: string | null,
+  risk?: RiskProfile | null,
 };
 
 export type ModelInsUniConditionInput = {
@@ -1231,8 +1235,8 @@ export type ModelInsUniConditionInput = {
 export type InsUni = {
   __typename: "InsUni",
   id?: string,
-  ana?: string,
-  risk?: RiskProfile,
+  ana?: string | null,
+  risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3447,6 +3451,8 @@ export type CreateUserInsMutation = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -3479,6 +3485,8 @@ export type UpdateUserInsMutation = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -3511,6 +3519,8 @@ export type DeleteUserInsMutation = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -3876,8 +3886,8 @@ export type CreateInsUniMutation = {
   createInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3892,8 +3902,8 @@ export type UpdateInsUniMutation = {
   updateInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3908,8 +3918,8 @@ export type DeleteInsUniMutation = {
   deleteInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4944,8 +4954,8 @@ export type GetInsUniQuery = {
   getInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4965,8 +4975,8 @@ export type ListInsUnisQuery = {
     items:  Array< {
       __typename: "InsUni",
       id: string,
-      ana: string,
-      risk: RiskProfile,
+      ana?: string | null,
+      risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5809,6 +5819,8 @@ export type GetUserInsQuery = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -5838,6 +5850,8 @@ export type ListUserInssQuery = {
         qty: number,
         fId: string,
         curr: string,
+        type?: AssetType | null,
+        subt?: AssetSubType | null,
       } >,
       createdAt: string,
       updatedAt: string,
@@ -6617,8 +6631,8 @@ export type OnCreateInsUniSubscription = {
   onCreateInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6628,8 +6642,8 @@ export type OnUpdateInsUniSubscription = {
   onUpdateInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6639,8 +6653,8 @@ export type OnDeleteInsUniSubscription = {
   onDeleteInsUni?:  {
     __typename: "InsUni",
     id: string,
-    ana: string,
-    risk: RiskProfile,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7798,6 +7812,8 @@ export type OnCreateUserInsSubscription = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -7829,6 +7845,8 @@ export type OnUpdateUserInsSubscription = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,
@@ -7860,6 +7878,8 @@ export type OnDeleteUserInsSubscription = {
       } > | null,
       fId: string,
       curr: string,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     createdAt: string,
     updatedAt: string,

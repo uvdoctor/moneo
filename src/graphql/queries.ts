@@ -1514,6 +1514,8 @@ export const getUserIns = /* GraphQL */ `
         }
         fId
         curr
+        type
+        subt
       }
       createdAt
       updatedAt
@@ -1545,6 +1547,8 @@ export const listUserInss = /* GraphQL */ `
           qty
           fId
           curr
+          type
+          subt
         }
         createdAt
         updatedAt
