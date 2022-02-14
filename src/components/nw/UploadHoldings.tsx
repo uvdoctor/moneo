@@ -241,6 +241,8 @@ export default function UploadHoldings() {
         qty: value,
         fId: "",
         curr: currency,
+        type: insData[id].type,
+        subt: insData[id].subt
       });
     });
     setLoading(false);

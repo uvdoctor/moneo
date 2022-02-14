@@ -19,6 +19,7 @@ interface Holding {
   curr: string;
   subt: string;
   exchg: string;
+  type: string;
 }
 
 interface DataState {
@@ -60,7 +61,8 @@ const holdingReducer = (
           sid: "",
           curr: "INR",
           subt: "",
-          exchg: ""
+          exchg: "",
+          type: ""
         },
       };
     default:
@@ -109,7 +111,8 @@ export default function HoldingInput(props: any) {
     sid: "",
     curr: "INR",
     subt: "",
-    exchg: ""
+    exchg: "",
+    type: ""
   });
   const { qty } = holdingState;
   const [dataState, dispatchDataState] = useReducer(dataReducer, {
@@ -232,14 +235,14 @@ export default function HoldingInput(props: any) {
             });
           }}
           onSelect={(option, obj) => {
-            const { price, id, type, subt, sid, exchg } = obj;
+            const { price, id, type, sid, exchg, subt } = obj;
             dispatch({
               type: "formUpdate",
-              data: { name: option, id, type, subt, sid, exchg },
+              data: { name: option, id, type, subt, sid, exchg, },
             });
             dispatchDataState({ type: "formUpdate", data: { price } });
             setRawDetails({ [id]: obj });
-            updateButtonStatus({ name: option, id, sid, exchg });
+            updateButtonStatus({ name: option, id });
           }}
           value={holdingState.name}
           onSearch={onSearch}

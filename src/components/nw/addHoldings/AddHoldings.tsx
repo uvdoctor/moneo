@@ -112,8 +112,7 @@ export default function AddHoldings({
   const updateInstruments = (instrumentsToAdd: []) => {
     instrumentsToAdd.map((item: any) => {
       if (item.name) delete item.name;
-      if (item.type) delete item.type;
-      if (item.subt) delete item.subt;
+      if (!item.exchg) item.exchg = null
     });
     setInstrumentsList([...instrumentsToAdd, ...instruments]);
   };
