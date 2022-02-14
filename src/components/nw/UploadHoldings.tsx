@@ -236,6 +236,7 @@ export default function UploadHoldings() {
     insMap.forEach((value: number, id: string) => {
       uploadedInstruments.push({
         sid: insData[id].sid,
+        exchg: insData[id].exchg ? insData[id].exchg : null,
         id: id,
         qty: value,
         fId: "",
