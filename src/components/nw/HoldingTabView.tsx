@@ -10,7 +10,7 @@ import ListProperties from "./ListProperties";
 import InfoCircleOutlined from "@ant-design/icons/lib/icons/InfoCircleOutlined";
 import TabInfo from "./TabInfo";
 import CurrentAAChart from "./CurrentAAChart";
-import { getCascaderOptions, getNPSFundManagers, hasRate } from "./nwutils";
+import { getCascaderOptions, getNPSFundManagers, hasRate, hasTags } from "./nwutils";
 import RiskAllocationChart from "./RiskAllocationChart";
 
 interface HoldingTabViewProps {
@@ -164,6 +164,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                               )
                             : tabsData[tabName].categoryOptions
                         }
+                        filterOption={hasTags(childTab) ? tabsData[tabName].filterOption : ''}
                         fields={
                           tabsData[tabName].fieldsAndInfo &&
                           tabsData[tabName].fieldsAndInfo.fields

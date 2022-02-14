@@ -12,6 +12,9 @@ import { NWContext, TAB } from "../NWContext";
 import AddPropertiesInput from "../AddPropertiesInput";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { InstrumentInput } from "../../../api/goals";
+import { hasTags } from "../nwutils";
+import Filter from "./Filter";
+
 require("./AddHoldings.less");
 
 interface AddHoldingsProps {
@@ -22,6 +25,7 @@ interface AddHoldingsProps {
   fields: any;
   defaultRate: number;
   info: any;
+  filterOption: any;
 }
 
 export default function AddHoldings({
@@ -32,6 +36,7 @@ export default function AddHoldings({
   fields,
   defaultRate,
   info,
+  filterOption
 }: AddHoldingsProps) {
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const [okDisabled, setOkDisabled] = useState<boolean>(true);
@@ -115,6 +120,11 @@ export default function AddHoldings({
 
   return (
     <Fragment>
+      {hasTags(childTab) ? (
+          <Filter
+            options={filterOption}
+          />
+      ) : null}
       &nbsp;&nbsp;
       <Button
         type={hasInstruments(childTab) ? "default" : "primary"}
@@ -170,8 +180,8 @@ export default function AddHoldings({
               key="viewfamily"
               type="primary"
               onClick={handleAddButtonClick}
-							disabled={
-              	hasInstruments(childTab) && instrumentsList.length === 0
+              disabled={
+                hasInstruments(childTab) && instrumentsList.length === 0
               }
             >
               Add

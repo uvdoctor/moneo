@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Skeleton, Table } from "antd";
+import { Empty, Skeleton, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
@@ -14,16 +14,7 @@ import {
   MFSchemeType,
 } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import {
-  doesHoldingMatch,
-  getAssetTypes,
-  getStockMarketCap,
-  getMutualFundMarketCap,
-  getFixedCategories,
-  isFund,
-  isBond,
-} from "./nwutils";
-import Filter from "../form/Filter";
+import { doesHoldingMatch, isFund, isBond } from "./nwutils";
 
 export default function InstrumentValuation() {
   const {
@@ -33,6 +24,7 @@ export default function InstrumentValuation() {
     childTab,
     selectedMembers,
     loadingInstruments,
+    selectedTags,
   }: any = useContext(NWContext);
   const [filteredInstruments, setFilteredInstruments] = useState<
     Array<InstrumentInput>
@@ -40,33 +32,9 @@ export default function InstrumentValuation() {
   const [filterByTag, setFilterByTag] = useState<Array<InstrumentInput>>([]);
   const [nameFilterValues, setNameFilterValues] = useState<Array<Object>>([{}]);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
-  const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
-  const bondTags = { CB: "Corporate Bond", GB: "Government Bond" };
-  const tagsData = (childTab: string) => {
-    const data: any = {
-      Stocks: {
-        main: { mcap: "Capitalization" },
-        sub: { mcap: getStockMarketCap() },
-      },
-      "Mutual Funds": {
-        main: getAssetTypes(),
-        sub: {
-          E: getMutualFundMarketCap(),
-          F: getFixedCategories(),
-          H: {},
-          A: {},
-        },
-      },
-      Bonds: { main: bondTags },
-    };
-    return data[childTab];
-  };
-
-  const hasTags = (childTab: string): Boolean =>
-    [STOCK, MF, BOND].includes(childTab);
   const delRecord = (id: string) =>
     setInstruments([
       ...instruments.filter((record: InstrumentInput) => record.id !== id),
@@ -266,31 +234,16 @@ export default function InstrumentValuation() {
 
   return !loadingInstruments ? (
     instruments.length ? (
-      <Row gutter={[10, 10]}>
-        {hasTags(childTab) ? (
-          <Col xs={24} sm={24}>
-            <Filter
-              options={tagsData(childTab)}
-              selectedKeys={selectedTags}
-              setSelectedKeys={setSelectedTags}
-            />
-          </Col>
-        ) : null}
-        <Col span={24}>
-          {filteredInstruments.length ? (
-            <Table
-              dataSource={
-                selectedTags.length ? filterByTag : filteredInstruments
-              }
-              //@ts-ignore
-              columns={columns}
-              size="small"
-              bordered
-              onChange={handleChange}
-            />
-          ) : null}
-        </Col>
-      </Row>
+      filteredInstruments.length ? (
+        <Table
+          dataSource={selectedTags.length ? filterByTag : filteredInstruments}
+          //@ts-ignore
+          columns={columns}
+          size="small"
+          bordered
+          onChange={handleChange}
+        />
+      ) : null
     ) : (
       <Empty description={<p>No data found.</p>} />
     )

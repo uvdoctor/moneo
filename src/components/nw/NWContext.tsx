@@ -16,6 +16,10 @@ import {
   updateHoldings,
   updateInsHoldings,
   getFieldsAndInfo,
+  getStockMarketCap,
+  getAssetTypes,
+  getMutualFundMarketCap,
+  getFixedCategories,
 } from "./nwutils";
 import { notification } from "antd";
 import {
@@ -179,6 +183,7 @@ function NWContextProvider({ fxRates }: any) {
   const [familyOptions, setFamilyOptions] = useState<Object>({});
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
   const [loadingInstruments, setLoadingInstruments] = useState<boolean>(false);
+  const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -292,6 +297,10 @@ function NWContextProvider({ fxRates }: any) {
           setData: setInstruments,
           total: totalStocks,
           contentComp: <InstrumentValuation />,
+          filterOption: {
+            main: { mcap: "Capitalization" },
+            sub: { mcap: getStockMarketCap() },
+          }
         },
         [TAB.MF]: {
           label: TAB.MF,
@@ -301,6 +310,15 @@ function NWContextProvider({ fxRates }: any) {
           setData: setInstruments,
           total: totalMFs,
           contentComp: <InstrumentValuation />,
+          filterOption: {
+            main: getAssetTypes(),
+            sub: {
+              E: getMutualFundMarketCap(),
+              F: getFixedCategories(),
+              H: {},
+              A: {},
+            },
+          }
         },
         [TAB.BOND]: {
           label: TAB.BOND,
@@ -310,6 +328,7 @@ function NWContextProvider({ fxRates }: any) {
           setData: setInstruments,
           total: totalBonds,
           contentComp: <InstrumentValuation />,
+          filterOption: { main: { CB: "Corporate Bond", GB: "Government Bond" } }
         },
         [TAB.GOLDB]: {
           label: TAB.GOLDB,
@@ -935,6 +954,8 @@ function NWContextProvider({ fxRates }: any) {
         totalFFixed,
         totalStocks,
         loadingInstruments,
+        selectedTags,
+        setSelectedTags
       }}>
       <NWView />
     </NWContext.Provider>

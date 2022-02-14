@@ -633,6 +633,8 @@ export const hasOnlyEnddate = (childTab: string) =>
   [TAB.LOAN, TAB.INS].includes(childTab);
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
+export const hasTags = (childTab: string): Boolean =>
+  [TAB.STOCK, TAB.MF, TAB.BOND].includes(childTab);
 
 export const calculateValuation = async (
   childTab: string,
