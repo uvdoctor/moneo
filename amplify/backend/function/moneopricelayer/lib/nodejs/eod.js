@@ -16,34 +16,21 @@ const getEODdata = async (exchg) => {
 const getFundamentalData = async (symbol, exchg) => {
   const url = `https://eodhistoricaldata.com/api/fundamentals/${symbol}.${exchg}?api_token=${token}`;
   const data = await getData(url);
-  const {
-    General,
-    AnalystRatings,
-    Earnings,
-    Financials,
-    Highlights,
-    Holders,
-    InsiderTransactions,
-    SharesStats,
-    SplitsDividends,
-    Technicals,
-    Valuation,
-    outstandingShares,
-  } = data;
-  return {
-    General,
-    AnalystRatings,
-    Earnings,
-    Financials,
-    Highlights,
-    Holders,
-    InsiderTransactions,
-    SharesStats,
-    SplitsDividends,
-    Technicals,
-    Valuation,
-    outstandingShares,
-  };
+  // const {
+  //   General,
+  //   AnalystRatings,
+  //   Earnings,
+  //   Financials,
+  //   Highlights,
+  //   Holders,
+  //   InsiderTransactions,
+  //   SharesStats,
+  //   SplitsDividends,
+  //   Technicals,
+  //   Valuation,
+  //   outstandingShares,
+  // } = data;
+  return data;
 };
 
 const getSplitInfo = async (exchg) => {

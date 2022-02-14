@@ -1,32 +1,51 @@
+const { getFundamentalData } = require("/opt/nodejs/eod");
 const {
   pushData,
   getTableNameFromInitialWord,
+  getDataFromTable,
   appendGenericFields,
 } = require("/opt/nodejs/insertIntoDB");
 const table = "InsUni";
 
 const getAndPushData = (data, tableName) => {
   return new Promise(async (resolve, reject) => {
+    const insuniTableData = await getDataFromTable(tableName);
     let batches = [];
     let batchRecords = [];
     let count = 0;
-    for (record of data) {
+    for (let record of data) {
       try {
         if (record.eventName === "INSERT" || record.eventName === "MODIFY") {
-          record.dynamodb.NewImage.ins.L.map((item) => {
-            const schema = appendGenericFields({ id: item.M.id.S }, table);
-            batches.push({ PutRequest: { Item: schema } });
-            count++;
-            if (count === 25) {
-              batchRecords.push(batches);
-              batches = [];
-              count = 0;
+          const newRecords = record.dynamodb.NewImage.ins.L;
+          for (let item of newRecords) {
+            const id = item.M.id.S;
+            const sid = item.M.sid.S;
+            const exchg = item.M.exchg.S;
+            const curr = item.M.curr.S;
+            const idAlreadyExists = insuniTableData.Items.some(
+              (item) => item.id === id
+            );
+            if (!idAlreadyExists) {
+              const fundamentalData = await getFundamentalData(sid, exchg);
+              console.log(fundamentalData);
+              let schema = {
+                id: id,
+                sid: sid,
+                curr: curr,
+                fun: fundamentalData,
+              };
+              schema = appendGenericFields(schema, table);
+              console.log(schema);
+              batches.push({ PutRequest: { Item: schema } });
+              count++;
+              if (count === 25) {
+                batchRecords.push(batches);
+                batches = [];
+                count = 0;
+              }
             }
-          });
+          }
         }
-        // if (record.eventName === "REMOVE") {
-        //   // OldImage
-        // }
       } catch (err) {
         reject(err);
       }
@@ -45,4 +64,4 @@ const getAndPushData = (data, tableName) => {
 exports.handler = async (event) => {
   const tableName = await getTableNameFromInitialWord(table);
   return await getAndPushData(event.Records, tableName);
-};  
+};
