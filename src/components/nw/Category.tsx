@@ -30,7 +30,7 @@ export default function Category({
   info,
 }: CategoryProps) {
   const { childTab }: any = useContext(NWContext);
-  const { CRYPTO, INS, LTDEP, PF, P2P, LENT, PROP } = TAB;
+  const { CRYPTO, LTDEP, PF, P2P, LENT, PROP } = TAB;
   console.log(categoryOptions, record);
   const isListHolding: boolean = setCategory && category ? false : true;
   const parent =
@@ -46,7 +46,7 @@ export default function Category({
   const child = hasOnlyCategory(childTab)
     ? ""
     : isListHolding
-    ? childTab === INS || childTab === LENT
+    ? childTab === LENT
       ? record.chgF
       : record.name
     : subCategory;
@@ -76,7 +76,7 @@ export default function Category({
 
   const changeSubCategory = (value: any) => {
     setSubCat && setSubCat(value);
-    childTab === INS || childTab === LENT
+    childTab === LENT
       ? (record.chgF = Number(value))
       : (record.name = value);
     isListHolding && data ? changeData([...data]) : changeData(record);
