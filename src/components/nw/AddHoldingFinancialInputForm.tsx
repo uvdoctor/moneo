@@ -187,7 +187,7 @@ export default function HoldingInput(props: any) {
   };
 
   const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["qty", "name", "id", "sid", "exchg"];
+    const toValidateArr = ["qty", "name", "id"];
     const toValidateHoldingState = Object.assign(
       {},
       holdingState,
