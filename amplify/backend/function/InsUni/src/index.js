@@ -30,9 +30,8 @@ const getAndPushData = (data, tableName) => {
               console.log(fundamentalData);
               let schema = {
                 id: id,
-                sid: sid,
-                curr: curr,
-                fun: fundamentalData ? fundamentalData : null,
+                risk: "H",
+                ana: fundamentalData ? fundamentalData : null,
               };
               schema = appendGenericFields(schema, table);
               console.log(schema);
