@@ -43,7 +43,7 @@
         },
         "InsUni": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/InsUni-342f4a4b424a53493046-build.zip"
+          "s3Key": "amplify-builds/InsUni-6c545677637141774f4e-build.zip"
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
