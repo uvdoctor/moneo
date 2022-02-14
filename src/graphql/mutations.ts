@@ -1719,11 +1719,8 @@ export const createInsUni = /* GraphQL */ `
   ) {
     createInsUni(input: $input, condition: $condition) {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -1736,11 +1733,8 @@ export const updateInsUni = /* GraphQL */ `
   ) {
     updateInsUni(input: $input, condition: $condition) {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -1753,11 +1747,8 @@ export const deleteInsUni = /* GraphQL */ `
   ) {
     deleteInsUni(input: $input, condition: $condition) {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }

@@ -684,11 +684,8 @@ export const onCreateInsUni = /* GraphQL */ `
   subscription OnCreateInsUni {
     onCreateInsUni {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -698,11 +695,8 @@ export const onUpdateInsUni = /* GraphQL */ `
   subscription OnUpdateInsUni {
     onUpdateInsUni {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -712,11 +706,8 @@ export const onDeleteInsUni = /* GraphQL */ `
   subscription OnDeleteInsUni {
     onDeleteInsUni {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }

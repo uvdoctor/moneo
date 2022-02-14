@@ -689,11 +689,8 @@ export const getInsUni = /* GraphQL */ `
   query GetInsUni($id: String!) {
     getInsUni(id: $id) {
       id
-      sid
-      curr
-      fun
-      tech
-      other
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -716,11 +713,8 @@ export const listInsUnis = /* GraphQL */ `
     ) {
       items {
         id
-        sid
-        curr
-        fun
-        tech
-        other
+        ana
+        risk
         createdAt
         updatedAt
       }

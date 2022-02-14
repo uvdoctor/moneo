@@ -412,11 +412,8 @@ type InsUni
     ]
   ) {
   id: String!
-  sid: String
-  curr: String
-  fun: AWSJSON
-  tech: AWSJSON
-  other: AWSJSON
+  ana: AWSJSON!
+  risk: RiskProfile!
 }
 
 type AllIndices
