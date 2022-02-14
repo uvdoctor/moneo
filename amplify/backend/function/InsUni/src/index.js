@@ -19,18 +19,25 @@ const getAndPushData = (data, tableName) => {
           const newRecords = record.dynamodb.NewImage.ins.L;
           for (let item of newRecords) {
             const id = item.M.id.S;
-            const sid = item.M.sid.S;
-            const exchg = item.M.exchg.S;
-            const curr = item.M.curr.S;
+            const sid = item.M.sid ? item.M.sid.S : null;
+            const exchg = item.M.exchg ? item.M.exchg.S : null;
+            const type = item.M.type ? item.M.type.S : null;
+            const subt = item.M.subt ? item.M.subt.S : null;
             const idAlreadyExists = insuniTableData.Items.some(
               (item) => item.id === id
             );
             if (!idAlreadyExists) {
-              const fundamentalData = await getFundamentalData(sid, exchg);
-              console.log(fundamentalData);
+              let fundamentalData;
+              if (
+                (exchg === "NSE" || exchg === "BSE") &&
+                type === "E" &&
+                subt === "S"
+              ) {
+                fundamentalData = await getFundamentalData(sid, exchg);
+              }
               let schema = {
                 id: id,
-                risk: "H",
+                risk: "M",
                 ana: fundamentalData ? fundamentalData : null,
               };
               schema = appendGenericFields(schema, table);
