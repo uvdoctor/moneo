@@ -149,14 +149,14 @@ export default function DateInput({
                 startMonthHandler &&
                   startMonthHandler(
                     start.getMonth() > month - 1 && startYear >= year
-                      ? month - 1
+                      ? month
                       : start.getMonth()+1
                   );
                 endMonthHandler &&
                   endMonthHandler(
                     end.getFullYear() < year ||
                       (end.getFullYear() === year && end.getMonth() < month - 1)
-                      ? month - 1
+                      ? month
                       : end.getMonth()+1
                   );
                 startDateHandler && startDateHandler(start.getDate());
@@ -188,7 +188,7 @@ export default function DateInput({
             onChange={(value: Date | null) => {
               if (!value) return;
               const monthValue = value.getMonth() > month - 1 && value.getFullYear() >= year && !dateWithEnddate
-              ? month - 1
+              ? month
               : value.getMonth()+1
               const yearValue =  value.getFullYear() >= year && !dateWithEnddate
               ? year

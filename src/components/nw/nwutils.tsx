@@ -28,7 +28,6 @@ import simpleStorage from "simplestorage.js";
 import {
   calculateCompundingIncome,
   calculateCrypto,
-  calculateInsurance,
   calculateLoan,
   calculateNPS,
   calculatePM,
@@ -618,19 +617,16 @@ export const hasOnlyCategory = (childTab: string) =>
 export const hasRate = (childTab: string) =>
   [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
 export const hasName = (childTab: string) =>
-  ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.INS, TAB.PF].includes(childTab);
+  ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.PF].includes(childTab);
 export const hasQtyWithRate = (childTab: string) =>
   [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
 export const isRangePicker = (childTab: string, category: string) =>
   [TAB.LENT, TAB.P2P, TAB.LTDEP].includes(childTab) &&
   category !== NATIONAL_SAVINGS_CERTIFICATE;
-export const hasDate = (childTab: string, category: string | undefined) =>
-  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.INS, TAB.P2P, TAB.LTDEP].includes(
-    childTab
-  ) && category !== "H";
+export const hasDate = (childTab: string) =>
+  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
-export const hasOnlyEnddate = (childTab: string) =>
-  [TAB.LOAN, TAB.INS].includes(childTab);
+export const hasOnlyEnddate = (childTab: string) => [TAB.LOAN].includes(childTab);
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 export const hasTags = (childTab: string): Boolean =>
@@ -639,25 +635,13 @@ export const hasTags = (childTab: string): Boolean =>
 export const calculateValuation = async (
   childTab: string,
   record: APIt.HoldingInput,
-  userInfo: any,
-  discountRate: number,
   selectedCurrency: string,
   npsData: any,
   fxRates: any
 ) => {
-  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, P2P, LTDEP } = TAB;
+  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, P2P, LTDEP } = TAB;
   let value = 0;
   switch (childTab) {
-    case INS:
-      if (discountRate) {
-        value = calculateInsurance(
-          record,
-          discountRate,
-          userInfo?.le,
-          userInfo?.dob
-        );
-      }
-      break;
     case LOAN:
       value = calculateLoan(record);
       break;
@@ -709,7 +693,6 @@ export const getFieldsAndInfo = (tab: string) => {
     PF,
     VEHICLE,
     LOAN,
-    INS,
     P2P,
     LTDEP,
     PROP,
@@ -862,21 +845,6 @@ export const getFieldsAndInfo = (tab: string) => {
         date: "End date",
       },
     },
-    [INS]: {
-      fields: {
-        type: "Type & Premium Mode",
-        name: "Comment",
-        amount: "Premium Amount",
-        rate: "Premium increases",
-        date: "End date",
-      },
-      info: {
-        type: "Insurance type & Premium Mode",
-        amount: "Premium Amount",
-        rate: "Premium increases",
-        date: "End date",
-      },
-    },
     [CREDIT]: {
       fields: { name: "Comment", amount: "Amount" },
       info: { amount: "Amount" },
@@ -886,7 +854,7 @@ export const getFieldsAndInfo = (tab: string) => {
 };
 
 export const getCategoryOptions = (tab: string) => {
-  const { PM, CRYPTO, LENT, PF, VEHICLE, INS, LTDEP, PROP, OTHER } = TAB;
+  const { PM, CRYPTO, LENT, PF, VEHICLE, LTDEP, PROP, OTHER } = TAB;
   const category: { [key: string]: {} } = {
     [LENT]: getCascaderOptions(
       {
@@ -978,17 +946,6 @@ export const getCategoryOptions = (tab: string) => {
       "2": "Accumulates every 6 months",
       "1": "Accumulates every 1 months",
     }),
-    [INS]: getCascaderOptions(
-      {
-        L: "Life",
-        H: "Health",
-        P: "Property",
-        V: "Vehicle",
-        O: "Others",
-      },
-      { 1: "Yearly", 12: "Monthly" },
-      true
-    ),
   };
   return category[tab];
 };

@@ -36,7 +36,6 @@ import InstrumentValuation from "./InstrumentValuation";
 import {
   priceInstruments,
   pricePM,
-  priceInsurance,
   priceLoans,
   priceLendings,
   priceLtdep,
@@ -81,7 +80,6 @@ export const TAB = {
   ANGEL: "Start-ups",
   PROP: "Properties",
   LOAN: "Loans",
-  INS: "Insurance",
   CREDIT: "Credit",
   REIT: "REITs",
   OIT: "Other Investments",
@@ -95,7 +93,7 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 
 function NWContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner, discountRate, userInfo, user }: any =
+  const { defaultCurrency, owner, userInfo, user }: any =
     useContext(AppContext);
   const [allFamily, setAllFamily] = useState<any | null>(null);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
@@ -111,7 +109,6 @@ function NWContextProvider({ fxRates }: any) {
   const [crypto, setCrypto] = useState<Array<HoldingInput>>([]);
   const [angel, setAngel] = useState<Array<HoldingInput>>([]);
   const [loans, setLoans] = useState<Array<HoldingInput>>([]);
-  const [insurance, setInsurance] = useState<Array<HoldingInput>>([]);
   const [credit, setCredit] = useState<Array<HoldingInput>>([]);
   const [p2p, setP2P] = useState<Array<HoldingInput>>([]);
   const [selectedMembers, setSelectedMembers] = useState<Array<string>>([]);
@@ -135,7 +132,6 @@ function NWContextProvider({ fxRates }: any) {
   const [totalAngel, setTotalAngel] = useState<number>(0);
   const [totalLendings, setTotalLendings] = useState<number>(0);
   const [totalLoans, setTotalLoans] = useState<number>(0);
-  const [totalInsurance, setTotalInsurance] = useState<number>(0);
   const [totalCredit, setTotalCredit] = useState<number>(0);
   const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
   const [totalOthers, setTotalOthers] = useState<number>(0);
@@ -421,15 +417,6 @@ function NWContextProvider({ fxRates }: any) {
           rate: 6,
           fieldsAndInfo: getFieldsAndInfo(TAB.LOAN),
         },
-        [TAB.INS]: {
-          label: TAB.INS,
-          data: insurance,
-          total: totalInsurance,
-          setData: setInsurance,
-          rate: 6,
-          categoryOptions: getCategoryOptions(TAB.INS),
-          fieldsAndInfo: getFieldsAndInfo(TAB.INS),
-        },
         [TAB.CREDIT]: {
           label: TAB.CREDIT,
           data: credit,
@@ -503,7 +490,6 @@ function NWContextProvider({ fxRates }: any) {
     setVehicles([...(allHoldings?.vehicles ? allHoldings.vehicles : [])]);
     setProperties([...(allHoldings?.property ? allHoldings.property : [])]);
     setLoans([...(allHoldings?.loans ? allHoldings.loans : [])]);
-    setInsurance([...(allHoldings?.ins ? allHoldings.ins : [])]);
     setCredit([...(allHoldings?.credit ? allHoldings.credit : [])]);
     setSavings([...(allHoldings?.savings ? allHoldings.savings : [])]);
     setLendings([...(allHoldings?.dep ? allHoldings.dep : [])]);
@@ -553,8 +539,8 @@ function NWContextProvider({ fxRates }: any) {
   ]);
 
   useEffect(() => {
-    setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
-  }, [totalLoans, totalInsurance, totalCredit]);
+    setTotalLiabilities(totalLoans + totalCredit);
+  }, [totalLoans, totalCredit]);
 
   useEffect(() => {
     setTotalAssets(totalCash + totalPhysical + totalFinancial);
@@ -601,7 +587,6 @@ function NWContextProvider({ fxRates }: any) {
     updatedHoldings.nps = nps;
     updatedHoldings.crypto = crypto;
     updatedHoldings.credit = credit;
-    updatedHoldings.ins = insurance;
     try {
       if (holdings) {
         await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -757,17 +742,6 @@ function NWContextProvider({ fxRates }: any) {
   }, [credit, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    const total = priceInsurance(
-      insurance,
-      selectedMembers,
-      selectedCurrency,
-      discountRate,
-      userInfo
-    );
-    setTotalInsurance(total);
-  }, [insurance, discountRate, selectedCurrency, userInfo, selectedMembers]);
-
-  useEffect(() => {
     const {
       total,
       totalOtherProperty,
@@ -824,7 +798,6 @@ function NWContextProvider({ fxRates }: any) {
     crypto,
     pf,
     loans,
-    insurance,
     credit,
     angel,
     others,
@@ -867,7 +840,6 @@ function NWContextProvider({ fxRates }: any) {
         totalAngel,
         totalLendings,
         totalLtdep,
-        totalInsurance,
         totalLoans,
         totalOthers,
         instruments,
@@ -877,8 +849,6 @@ function NWContextProvider({ fxRates }: any) {
         loans,
         ltdep,
         setLoans,
-        insurance,
-        setInsurance,
         vehicles,
         setVehicles,
         pf,

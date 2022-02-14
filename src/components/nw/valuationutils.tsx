@@ -506,31 +506,6 @@ export const pricePM = async (
   return { total, totalPGold };
 };
 
-export const priceInsurance = (
-  holdings: Array<HoldingInput>,
-  selectedMembers: Array<string>,
-  selectedCurrency: string,
-  discountRate: number,
-  userInfo: any
-) => {
-  let total = 0;
-  holdings.forEach((holding: HoldingInput) => {
-    if (
-      holding &&
-      discountRate &&
-      doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-    ) {
-      total += calculateInsurance(
-        holding,
-        discountRate,
-        userInfo?.le,
-        userInfo?.dob
-      );
-    }
-  });
-  return total;
-};
-
 export const priceLoans = (
   holdings: Array<HoldingInput>,
   selectedMembers: Array<string>,
@@ -981,21 +956,9 @@ export const calculateTotalAssets = async (
 export const calculateTotalLiabilities = (
   holdings: CreateUserHoldingsInput,
   selectedMembers: Array<string>,
-  selectedCurrency: string,
-  discountRate: number,
-  userInfo: any
+  selectedCurrency: string
 ) => {
   let totalLiabilities = 0;
-  if (holdings?.ins) {
-    const total = priceInsurance(
-      holdings.ins,
-      selectedMembers,
-      selectedCurrency,
-      discountRate,
-      userInfo
-    );
-    totalLiabilities += total;
-  }
   if (holdings?.loans) {
     const total = priceLoans(holdings.loans, selectedMembers, selectedCurrency);
     totalLiabilities += total;

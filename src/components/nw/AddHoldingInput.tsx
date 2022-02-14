@@ -1,7 +1,6 @@
 import { Row, Col } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { AssetSubType, AssetType, HoldingInput } from "../../api/goals";
-import { AppContext } from "../AppContext";
 import ItemDisplay from "../calc/ItemDisplay";
 import ResultCarousel from "../ResultCarousel";
 import { presentMonth, presentYear } from "../utils";
@@ -33,20 +32,18 @@ interface AddHoldingInputProps {
   categoryOptions: any;
   fields: any;
   defaultRate: number;
-  info: any
+  info: any;
 }
 export default function AddHoldingInput({
   setInput,
   categoryOptions,
   fields,
   defaultRate,
-  info
+  info,
 }: AddHoldingInputProps) {
   const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any =
     useContext(NWContext);
-  const { userInfo, discountRate }: any = useContext(AppContext);
-  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER, P2P, LTDEP } =
-    TAB;
+  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, OTHER, P2P, LTDEP } = TAB;
   const [category, setCategory] = useState<string>(
     categoryOptions ? categoryOptions.length && categoryOptions[0].value : ""
   );
@@ -82,15 +79,6 @@ export default function AddHoldingInput({
       curr: selectedCurrency,
     };
     switch (childTab) {
-      case INS:
-        newRec.chg = category !== "L" ? rate : 0;
-        newRec.chgF = Number(subCat);
-        newRec.subt = category;
-        newRec.sm = presentMonth;
-        newRec.sy = presentYear;
-        newRec.em = category !== "H" ? sm : 0;
-        newRec.ey = category !== "H" ? sy : 0;
-        break;
       case LOAN:
         newRec.chg = rate;
         newRec.chgF = 12;
@@ -186,8 +174,6 @@ export default function AddHoldingInput({
     calculateValuation(
       childTab,
       getNewRec(),
-      userInfo,
-      discountRate,
       selectedCurrency,
       npsData,
       fxRates
@@ -206,8 +192,6 @@ export default function AddHoldingInput({
     rate,
     subCat,
     childTab,
-    userInfo,
-    discountRate,
     selectedCurrency,
     npsData,
     qty,
@@ -258,7 +242,8 @@ export default function AddHoldingInput({
           gutter={[
             { xs: 0, sm: 0, md: 35 },
             { xs: 15, sm: 15, md: 15 },
-          ]}>
+          ]}
+        >
           {categoryOptions && (
             <Col xs={24} md={12}>
               <Category
@@ -299,7 +284,7 @@ export default function AddHoldingInput({
               />
             </Col>
           )}
-          {hasDate(childTab, category) && (
+          {hasDate(childTab) && (
             <Col xs={24} md={12}>
               <DateColumn
                 changeData={setInput}
@@ -317,7 +302,7 @@ export default function AddHoldingInput({
               />
             </Col>
           )}
-          {(hasRate(childTab) || (category !== "L" && childTab === INS)) && (
+          {hasRate(childTab) && (
             <Col xs={24} md={12}>
               <Rate
                 changeData={setInput}

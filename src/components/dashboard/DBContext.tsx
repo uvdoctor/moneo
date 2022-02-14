@@ -16,7 +16,7 @@ import DBView from "./DBView";
 const DBContext = createContext({});
 
 function DBContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner, discountRate, userInfo }: any =
+  const { defaultCurrency, owner }: any =
     useContext(AppContext);
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
@@ -42,8 +42,6 @@ function DBContextProvider({ fxRates }: any) {
           allHoldings,
           [ALL_FAMILY],
           defaultCurrency,
-          discountRate,
-          userInfo
         );
         setTotalLiabilities(liabilities);
       }

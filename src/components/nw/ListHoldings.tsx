@@ -18,7 +18,6 @@ import DateColumn from "./DateColumn";
 import { toHumanFriendlyCurrency } from "../utils";
 import { DeleteOutlined } from "@ant-design/icons";
 import { calculateCompundingIncome } from "./valuationutils";
-import { AppContext } from "../AppContext";
 import Rate from "./Rate";
 import Contribution from "./Contribution";
 import Comment from "./Comment";
@@ -48,8 +47,7 @@ export default function ListHoldings({
     fxRates,
     familyOptions,
   }: any = useContext(NWContext);
-  const { discountRate, userInfo }: any = useContext(AppContext);
-  const { PM, NPS, CRYPTO, INS, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } =
+  const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } =
     TAB;
   const [dataSource, setDataSource] = useState<Array<any>>([]);
 
@@ -91,9 +89,6 @@ export default function ListHoldings({
   } else if (childTab === LOAN) {
     defaultColumns = ["amount", "val", "del"];
     expandedColumns = ["label", "date", "rate", "fid"];
-  } else if (childTab === INS) {
-    defaultColumns = ["amount", "val", "del"];
-    expandedColumns = ["type", "date", "rate", "fid"];
   }
 
   const changeOwner = (ownerKey: string, i: number) => {
@@ -151,7 +146,7 @@ export default function ListHoldings({
     };
 
     if (
-      hasDate(childTab, holding.subt as string) &&
+      hasDate(childTab) &&
       expandedColumns.includes("date")
     ) {
       dataToRender.date = (
@@ -164,7 +159,7 @@ export default function ListHoldings({
         />
       );
     }
-    if (hasRate(childTab) || (holding.subt !== "L" && childTab === INS)) {
+    if (hasRate(childTab)) {
       dataToRender.rate = (
         <Rate
           changeData={changeData}
@@ -224,7 +219,6 @@ export default function ListHoldings({
   useEffect(() => {
     const getData = async () => {
       let dataSource: Array<any> = [];
-      setDataSource([...[]]);
       for (let index = 0; index < data.length; index++) {
         if (
           data[index] &&
@@ -233,8 +227,6 @@ export default function ListHoldings({
           const valuation = await calculateValuation(
             childTab,
             data[index],
-            userInfo,
-            discountRate,
             selectedCurrency,
             npsData,
             fxRates
@@ -245,7 +237,7 @@ export default function ListHoldings({
       }
     };
     getData();
-  }, [data, selectedMembers, selectedCurrency, discountRate, familyOptions, childTab, npsData]);
+  }, [data, selectedMembers, selectedCurrency, familyOptions, childTab, npsData]);
 
   return dataSource.length ? (
     <Table
