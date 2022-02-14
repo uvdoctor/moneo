@@ -18,6 +18,7 @@ const getAndPushData = (data, tableName) => {
         if (record.eventName === "INSERT" || record.eventName === "MODIFY") {
           const newRecords = record.dynamodb.NewImage.ins.L;
           for (let item of newRecords) {
+            console.log(item);
             const id = item.M.id.S;
             const sid = item.M.sid ? item.M.sid.S : null;
             const exchg = item.M.exchg ? item.M.exchg.S : null;
@@ -34,6 +35,7 @@ const getAndPushData = (data, tableName) => {
                 subt === "S"
               ) {
                 fundamentalData = await getFundamentalData(sid, exchg);
+                console.log(fundamentalData);
               }
               let schema = {
                 id: id,
