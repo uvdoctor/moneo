@@ -1,11 +1,10 @@
 import React, { Fragment, useContext } from "react";
 import HoldingTabView from "./HoldingTabView";
 import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Button, Col, PageHeader, Radio, Row, Skeleton, Spin } from "antd";
+import { Button, Col, Radio, Row, Skeleton } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 
 require("./nw.less");
-import FamilyInput from "./FamilyInput";
 import TotalNetWorth from "./TotalNetWorth";
 import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
@@ -18,8 +17,8 @@ export default function NWView() {
     loadingHoldings,
     totalAssets,
     totalLiabilities,
-    view,
-    setView,
+    nwview,
+    setNwview,
     addSelfMember,
     familyMemberKeys,
     loadingInstruments,
@@ -28,18 +27,6 @@ export default function NWView() {
 
   return (
     <Fragment>
-      <div className="primary-header">
-        <Row>
-          <Col span={24}>
-            <PageHeader title="Financial Health Analysis" />
-          </Col>
-        </Row>
-        <Row justify="center" align="middle" className="secondary-header">
-          <Col>
-            {appContextLoaded && !loadingHoldings ? <FamilyInput /> : <Spin />}
-          </Col>
-        </Row>
-      </div>
       {appContextLoaded && !loadingHoldings ? (
         familyMemberKeys.length ? (
           <div className="nw-container">
@@ -55,13 +42,13 @@ export default function NWView() {
                   md={16}
                   lg={8}>
                   <Radio.Group
-                    value={view}
-                    onChange={(e) => setView(e.target.value)}
+                    value={nwview}
+                    onChange={(e) => setNwview(e.target.value)}
                     size="large">
                     <Row align="middle">
                       <Col span={12}>
                         <Radio.Button value={ASSETS_VIEW}>
-                          <Row align="middle" justify="center" gutter={15}>
+                          <Row align="middle" justify="center" gutter={15} >
                             <Col>
                               <CheckOutlined />
                             </Col>
@@ -99,7 +86,7 @@ export default function NWView() {
                   </Radio.Group>
                 </Col>
               </Row>
-              <HoldingTabView liabilities={view !== ASSETS_VIEW} />
+              <HoldingTabView liabilities={nwview !== ASSETS_VIEW} />
             </Fragment>
           </div>
         ) : (

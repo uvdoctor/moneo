@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 require("./nw.less");
-import NWView from "./NWView";
 import {
   addFamilyMember,
   addHoldings,
@@ -53,6 +52,7 @@ import {
 import { ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
 import { AppContext } from "../AppContext";
+import GetView from "./GetView";
 
 const NWContext = createContext({});
 
@@ -91,6 +91,8 @@ export const TAB = {
 export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
+export const NETWORTH_VIEW = "networth";
+export const RISKCOVER_VIEW = "riskcover";
 
 function NWContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, userInfo, user }: any =
@@ -174,7 +176,8 @@ function NWContextProvider({ fxRates }: any) {
   const [totalP2P, setTotalP2P] = useState<number>(0);
   const [familyMemberKeys, setFamilyMemberKeys] = useState<Array<string>>([]);
   const [totalLtdep, setTotalLtdep] = useState<number>(0);
-  const [view, setView] = useState<string>(ASSETS_VIEW);
+  const [view, setView] = useState<string>(NETWORTH_VIEW);
+  const [nwview, setNwview] = useState<string>(ASSETS_VIEW);
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
   const [familyOptions, setFamilyOptions] = useState<Object>({});
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
@@ -925,9 +928,11 @@ function NWContextProvider({ fxRates }: any) {
         totalStocks,
         loadingInstruments,
         selectedTags,
-        setSelectedTags
+        setSelectedTags,
+        nwview,
+        setNwview
       }}>
-      <NWView />
+      <GetView />
     </NWContext.Provider>
   );
 }
