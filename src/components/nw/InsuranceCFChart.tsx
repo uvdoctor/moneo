@@ -13,7 +13,7 @@ import { useFullScreenBrowser } from "react-browser-hooks";
 import { NWContext } from "./NWContext";
 import { AppContext } from "../AppContext";
 import { calculateInsurance } from "./valuationutils";
-import { getInsuranceType } from "./nwutils";
+import { doesHoldingMatch, getInsuranceType } from "./nwutils";
 
 const ColumnChart = dynamic(() => import("bizcharts/lib/plots/ColumnChart"), {
   ssr: false,
@@ -23,7 +23,7 @@ const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
 });
 
 export default function InsuranceCFChart() {
-  const { selectedCurrency, insurance }: any = useContext(NWContext);
+  const { selectedCurrency, insurance, selectedMembers }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
   const fsb = useFullScreenBrowser();
   const [data, setData] = useState<Array<any>>([]);
@@ -32,26 +32,30 @@ export default function InsuranceCFChart() {
   useEffect(() => {
     let data: Array<any> = [];
     for (let holding of insurance) {
-      const { cashflows, isMonth, subt } = calculateInsurance(
-        holding,
-        userInfo?.le,
-        userInfo?.dob
-      );
-      let year = isMonth
-        ? new Date().getFullYear()
-        : new Date().getFullYear() + 1;
-      for (let ind = 0; ind < cashflows.length; ind++) {
-        data.push({
-          year: year,
-          value: cashflows[ind],
-          // @ts-ignore
-          name: getInsuranceType()[subt as string],
-        });
-        year++;
+      if (
+        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
+      ) {
+        const { cashflows, isMonth, subt } = calculateInsurance(
+          holding,
+          userInfo?.le,
+          userInfo?.dob
+        );
+        let year = isMonth
+          ? new Date().getFullYear()
+          : new Date().getFullYear() + 1;
+        for (let ind = 0; ind < cashflows.length; ind++) {
+          data.push({
+            year: year,
+            value: cashflows[ind],
+            // @ts-ignore
+            name: getInsuranceType()[subt as string],
+          });
+          year++;
+        }
       }
     }
     setData([...data]);
-  }, [insurance, userInfo]);
+  }, [insurance, userInfo, selectedMembers, selectedCurrency]);
 
   const getColumnColor = (name: string) => {
     const { H, L, V, O, P } = getInsuranceType();
