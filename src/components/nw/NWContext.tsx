@@ -91,8 +91,8 @@ export const TAB = {
 export const LIABILITIES_TAB = "Liabilities";
 export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
-export const NETWORTH_VIEW = "networth";
-export const RISKCOVER_VIEW = "riskcover";
+export const NETWORTH_VIEW = "Net Worth";
+export const RISKCOVER_VIEW = "Risk Cover";
 
 function NWContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, userInfo, user }: any =

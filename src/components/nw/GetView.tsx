@@ -1,14 +1,13 @@
 import React, { Fragment, useContext } from "react";
 import { NETWORTH_VIEW, NWContext, RISKCOVER_VIEW } from "./NWContext";
-import { Col, PageHeader, Radio, Row, Spin } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
+import { Col, PageHeader, Row, Spin } from "antd";
 
 require("./nw.less");
 import FamilyInput from "./FamilyInput";
 import { AppContext } from "../AppContext";
 import NWView from "./NWView";
 import RiskView from "./RiskView";
-import { COLORS } from "../../CONSTANTS";
+import RadioInput from "../form/RadioInput";
 
 require("./NWView.less");
 
@@ -24,38 +23,11 @@ export default function GetView() {
             <PageHeader
               title="Financial Health Analysis"
               extra={
-                <Radio.Group
+                <RadioInput
+                  options={[NETWORTH_VIEW, RISKCOVER_VIEW]}
                   value={view}
-                  onChange={(e) => setView(e.target.value)}
-                  size="large"
-                >
-                  <Row align="middle" gutter={[10,10]}>
-                    <Col span={12}>
-                      <Radio.Button
-                        value={NETWORTH_VIEW}
-                        style={{
-                          color: COLORS.GREEN,
-                          background: COLORS.WHITE,
-                        }}
-                      >
-                        {view === NETWORTH_VIEW ? <CheckOutlined /> : null}
-                        Net Worth
-                      </Radio.Button>
-                    </Col>
-                    <Col span={12}>
-                      <Radio.Button
-                        value={RISKCOVER_VIEW}
-                        style={{
-                          color: COLORS.GREEN,
-                          background: COLORS.WHITE,
-                        }}
-                      >
-                        {view === RISKCOVER_VIEW ? <CheckOutlined /> : null}
-                        Risk Cover
-                      </Radio.Button>
-                    </Col>
-                  </Row>
-                </Radio.Group>
+                  changeHandler={(val: string) => setView(val)}
+                />
               }
             />
           </Col>
