@@ -20,15 +20,17 @@ export default function RiskView() {
             <Fragment>
               <Row justify="center" gutter={16}>
                 <Col xs={24} sm={24} md={16} lg={8}>
-                  <ItemDisplay
-                    label="Result"
-                    result={0}
-                    pl
-                    info={"Risk Cover"}
-                  />
+                  <div className="dd-stat">
+                    <ItemDisplay
+                      label="Result"
+                      result={0}
+                      pl
+                      info={"Risk Cover"}
+                    />
+                  </div>
                 </Col>
               </Row>
-              <HoldingTabView risk/>
+              <HoldingTabView risk />
             </Fragment>
           </div>
         ) : (
