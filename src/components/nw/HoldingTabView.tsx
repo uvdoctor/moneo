@@ -26,6 +26,9 @@ import {
 } from "./nwutils";
 import RiskAllocationChart from "./RiskAllocationChart";
 import ListInsurance from "./ListInsurance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartBar } from "@fortawesome/free-solid-svg-icons";
+import InsuranceCFChart from "./InsuranceCFChart";
 
 interface HoldingTabViewProps {
   liabilities?: boolean;
@@ -51,6 +54,7 @@ export default function HoldingTabView({
     totalLiabilities,
     nwview,
     view,
+    insurance,
     npsSubcategory,
   }: any = useContext(NWContext);
 
@@ -131,6 +135,20 @@ export default function HoldingTabView({
             </Tabs>
           </TabPane>
         )}
+        {risk && (
+          <TabPane
+            key={RISK_TAB}
+            tab={
+              <Fragment>
+                <FontAwesomeIcon icon={faChartBar} />
+                &nbsp;&nbsp;Cash Flows
+              </Fragment>
+            }
+            disabled={insurance.length === 0}
+          >
+            <InsuranceCFChart />
+          </TabPane>
+        )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;
           if (!risk && tabName === RISK_TAB) return;
@@ -175,13 +193,15 @@ export default function HoldingTabView({
                 <Fragment>
                   <Row justify="space-between">
                     <Col>
-                      <h2 style={{ color: COLORS.GREEN }}>
-                        &nbsp;&nbsp;
-                        {toHumanFriendlyCurrency(
-                          tabsData[tabName].total,
-                          selectedCurrency
-                        )}
-                      </h2>
+                      {!risk && (
+                        <h2 style={{ color: COLORS.GREEN }}>
+                          &nbsp;&nbsp;
+                          {toHumanFriendlyCurrency(
+                            tabsData[tabName].total,
+                            selectedCurrency
+                          )}
+                        </h2>
+                      )}
                     </Col>
                     <Col>
                       <AddHoldings

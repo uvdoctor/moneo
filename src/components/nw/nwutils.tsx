@@ -372,6 +372,16 @@ export const getFixedCategories = () => {
   };
 };
 
+export const getInsuranceType = () => {
+  return {
+    H: "Health",
+    L: "Life",
+    V: "Vehicle",
+    P: "Property",
+    O: "Other",
+  }
+};
+
 export const getAssetSubTypes = () => {
   return {
     [APIt.AssetSubType.CB]: "Corporate Bond",

@@ -101,7 +101,8 @@ const getCashFlows = (
       isMonth ? 12 : 1
     );
     if (isMonth && monthLeftForCurrentYear > 0) {
-      cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
+      cashflows = Array(Math.round(1)).fill(amt*monthLeftForCurrentYear);
+      // cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
     }
   }
   if (isMonth) {
@@ -113,13 +114,15 @@ const getCashFlows = (
       count++;
       if (count === 12) {
         amt = getCompoundedIncome(rate as number, amt, 1, 12);
-        cashflows = [...cashflows, ...Array(Math.round(12)).fill(amt)];
+        cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt*12)];
+        // cashflows = [...cashflows, ...Array(Math.round(12)).fill(amt)];
         count = 0;
       }
     }
     if (count < 12 && count > 0) {
       amt = getCompoundedIncome(rate as number, amt, count / 12, 12);
-      cashflows = [...cashflows, ...Array(Math.round(count)).fill(amt)];
+      cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt*count)];
+      // cashflows = [...cashflows, ...Array(Math.round(count)).fill(amt)];
     }
   } else {
     for (let index = 0; index <= remainingDuration; index++) {
@@ -164,7 +167,6 @@ export const calculateAddYears = (
 
 export const calculateInsurance = (
   holding: HoldingInput,
-  discountRate: number,
   le: number,
   dob: string
 ) => {
@@ -200,8 +202,8 @@ export const calculateInsurance = (
     );
   }
 
-  if (remainingDuration < 0 || isNaN(remainingDuration)) return 0;
-  if (remainingDuration === 0) return amt as number;
+  if (remainingDuration < 0 || isNaN(remainingDuration)) return { cashflows, isMonth, subt };
+  if (remainingDuration === 0) return { cashflows, isMonth, subt };
   let bygoneDuration = durationFromStartToEnd - remainingDuration;
 
   if (subt && subt !== "L") {
@@ -215,8 +217,9 @@ export const calculateInsurance = (
   } else {
     cashflows = Array(Math.round(remainingDuration)).fill(amt);
   }
-  const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
-  return npv;
+  return { cashflows, isMonth, subt }
+  // const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
+  // return npv;
 };
 
 export const calculateLoan = (holding: HoldingInput) => {
