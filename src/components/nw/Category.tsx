@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import CascaderInput from "../form/CascaderInput";
-import { getRateByCategory, hasOnlyCategory } from "./nwutils";
+import { getRateByCategory, hasOnlyCategory, hasRisktab } from "./nwutils";
 interface CategoryProps {
   category?: string;
   categoryOptions: any;
@@ -35,7 +35,9 @@ export default function Category({
   const isListHolding: boolean = setCategory && category ? false : true;
   const parent =
     isListHolding && record
-      ? childTab === PROP
+      ? hasRisktab(childTab)
+        ? record.chgF
+        : childTab === PROP
         ? record.type
         : childTab === CRYPTO
         ? record.name
@@ -43,6 +45,7 @@ export default function Category({
         ? record.chgF
         : record.subt
       : category;
+
   const child = hasOnlyCategory(childTab)
     ? ""
     : isListHolding
@@ -67,7 +70,7 @@ export default function Category({
     } else {
       childTab === CRYPTO
         ? (record.name = value)
-        : childTab === P2P
+        : childTab === P2P || hasRisktab(childTab)
         ? (record.chgF = Number(value))
         : (record.subt = value);
     }
@@ -76,9 +79,7 @@ export default function Category({
 
   const changeSubCategory = (value: any) => {
     setSubCat && setSubCat(value);
-    childTab === LENT
-      ? (record.chgF = Number(value))
-      : (record.name = value);
+    childTab === LENT ? (record.chgF = Number(value)) : (record.name = value);
     isListHolding && data ? changeData([...data]) : changeData(record);
   };
 

@@ -1,6 +1,13 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Badge, Col, Empty, Row, Skeleton, Tabs, Tooltip } from "antd";
-import { TAB, NWContext, LIABILITIES_TAB, LIABILITIES_VIEW } from "./NWContext";
+import {
+  TAB,
+  NWContext,
+  LIABILITIES_TAB,
+  LIABILITIES_VIEW,
+  RISKCOVER_VIEW,
+  RISK_TAB,
+} from "./NWContext";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
@@ -10,14 +17,25 @@ import ListProperties from "./ListProperties";
 import InfoCircleOutlined from "@ant-design/icons/lib/icons/InfoCircleOutlined";
 import TabInfo from "./TabInfo";
 import CurrentAAChart from "./CurrentAAChart";
-import { getCascaderOptions, getNPSFundManagers, hasRate, hasTags } from "./nwutils";
+import {
+  getCascaderOptions,
+  getNPSFundManagers,
+  hasRate,
+  hasRisktab,
+  hasTags,
+} from "./nwutils";
 import RiskAllocationChart from "./RiskAllocationChart";
+import ListInsurance from "./ListInsurance";
 
 interface HoldingTabViewProps {
   liabilities?: boolean;
+  risk?: boolean;
 }
 
-export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
+export default function HoldingTabView({
+  liabilities,
+  risk,
+}: HoldingTabViewProps) {
   const {
     tabs,
     activeTab,
@@ -32,6 +50,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
     totalAssets,
     totalLiabilities,
     nwview,
+    view,
     npsSubcategory,
   }: any = useContext(NWContext);
 
@@ -42,13 +61,15 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
   useEffect(() => {
     setActiveTab(
-      nwview === LIABILITIES_VIEW
+      view === RISKCOVER_VIEW
+        ? RISK_TAB
+        : nwview === LIABILITIES_VIEW
         ? LIABILITIES_TAB
         : !totalAssets
         ? "Cash"
         : TAB.SUMMARY
     );
-  }, [nwview]);
+  }, [nwview, view]);
 
   useEffect(() => {
     if (childTab === TAB.NPS && !npsData.length) {
@@ -59,6 +80,10 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
   useEffect(() => {
     if (activeTab === LIABILITIES_TAB) {
       setChildTab(TAB.LOAN);
+      return;
+    }
+    if (activeTab === RISK_TAB) {
+      setChildTab(TAB.LIFE_INS);
       return;
     }
     const children = tabs[activeTab]?.children;
@@ -78,7 +103,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
       <Tabs
         defaultActiveKey={defaultActiveKey}
         activeKey={isRoot ? activeTab : childTab ? childTab : defaultActiveKey}
-        type={isRoot || liabilities ? "card" : "line"}
+        type={isRoot || liabilities || risk ? "card" : "line"}
         onChange={(activeKey) => {
           if (isRoot) {
             setActiveTab(activeKey);
@@ -88,13 +113,15 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
         }}
         tabBarExtraContent={
           !isRoot && activeTab === "Financial" ? <UploadHoldings /> : null
-        }>
-        {isRoot && !liabilities && (
+        }
+      >
+        {isRoot && !liabilities && !risk && (
           <TabPane disabled={!totalAssets} key={TAB.SUMMARY} tab={TAB.SUMMARY}>
             <Tabs
               activeKey={chartType}
               type="line"
-              onChange={(activeKey) => setChartType(activeKey)}>
+              onChange={(activeKey) => setChartType(activeKey)}
+            >
               <TabPane key={RISK_CHART} tab={RISK_CHART}>
                 <RiskAllocationChart />
               </TabPane>
@@ -106,6 +133,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
         )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;
+          if (!risk && tabName === RISK_TAB) return;
           const { label, children, info, link, total } = tabsData[tabName];
           const allTotal =
             activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
@@ -117,14 +145,18 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
               tab={
                 <Fragment>
                   {label}
-                  {!children && activeTab === "Financial" && !liabilities && (
-                    <Tooltip
-                      title={<TabInfo info={info} link={link} />}
-                      color={COLORS.DEFAULT}>
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  )}
-                  {allocationPer ? (
+                  {!children &&
+                    activeTab === "Financial" &&
+                    !liabilities &&
+                    !risk && (
+                      <Tooltip
+                        title={<TabInfo info={info} link={link} />}
+                        color={COLORS.DEFAULT}
+                      >
+                        <InfoCircleOutlined />
+                      </Tooltip>
+                    )}
+                  {allocationPer && !risk ? (
                     <>
                       {!info && " "}
                       <Badge
@@ -135,7 +167,8 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                     </>
                   ) : null}
                 </Fragment>
-              }>
+              }
+            >
               {children ? (
                 renderTabs(children, Object.keys(children)[0])
               ) : (
@@ -164,7 +197,11 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                               )
                             : tabsData[tabName].categoryOptions
                         }
-                        filterOption={hasTags(childTab) ? tabsData[tabName].filterOption : ''}
+                        filterOption={
+                          hasTags(childTab)
+                            ? tabsData[tabName].filterOption
+                            : ""
+                        }
                         fields={
                           tabsData[tabName].fieldsAndInfo &&
                           tabsData[tabName].fieldsAndInfo.fields
@@ -185,6 +222,20 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
                         tabsData[tabName].contentComp
                       ) : tabsData[tabName].label === TAB.PROP ? (
                         <ListProperties
+                          data={tabsData[tabName].data}
+                          changeData={tabsData[tabName].setData}
+                          categoryOptions={tabsData[tabName].categoryOptions}
+                          fields={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.fields
+                          }
+                          info={
+                            tabsData[tabName].fieldsAndInfo &&
+                            tabsData[tabName].fieldsAndInfo.info
+                          }
+                        />
+                      ) : hasRisktab(childTab) ? (
+                        <ListInsurance
                           data={tabsData[tabName].data}
                           changeData={tabsData[tabName].setData}
                           categoryOptions={tabsData[tabName].categoryOptions}
@@ -236,8 +287,12 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
   }
 
   return renderTabs(
-    liabilities ? tabs[LIABILITIES_TAB].children : tabs,
-    liabilities ? TAB.LOAN : TAB.SUMMARY,
-    !liabilities
+    risk
+      ? tabs[RISK_TAB].children
+      : liabilities
+      ? tabs[LIABILITIES_TAB].children
+      : tabs,
+    risk ? TAB.LIFE_INS : liabilities ? TAB.LOAN : TAB.SUMMARY,
+    risk ? !risk : !liabilities
   );
 }

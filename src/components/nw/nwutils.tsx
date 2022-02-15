@@ -7,6 +7,7 @@ import {
   NATIONAL_SAVINGS_CERTIFICATE,
   PALLADIUM,
   PLATINUM,
+  RISK_TAB,
   SILVER,
   SUKANYA_SAMRIDDHI_YOJANA,
   TAB,
@@ -604,6 +605,15 @@ export const isBond = (id: string) => id.substring(2, 3) === "0";
 export const isLargeCap = (data: any) =>
   data?.mcapt === APIt.MCap.L || data?.mcap === APIt.MCap.L;
 
+export const hasRisktab = (childTab: string) =>
+  [
+    TAB.HEALTH_INS,
+    TAB.LIFE_INS,
+    TAB.VEHICLE_INS,
+    TAB.OTHERS_INS,
+    TAB.PROPERTY_INS,
+  ].includes(childTab);
+
 export const hasOnlyCategory = (childTab: string) =>
   [
     TAB.OTHER,
@@ -613,20 +623,57 @@ export const hasOnlyCategory = (childTab: string) =>
     TAB.P2P,
     TAB.LTDEP,
     TAB.PROP,
-  ].includes(childTab);
+  ].includes(childTab) || hasRisktab(childTab);
 export const hasRate = (childTab: string) =>
-  [TAB.PF, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
+  [
+    TAB.PF,
+    TAB.LENT,
+    TAB.LOAN,
+    TAB.P2P,
+    TAB.LTDEP,
+    TAB.HEALTH_INS,
+    TAB.PROPERTY_INS,
+    TAB.OTHERS_INS,
+    TAB.VEHICLE_INS,
+  ].includes(childTab);
 export const hasName = (childTab: string) =>
-  ![TAB.PM, TAB.NPS, TAB.CRYPTO, TAB.PF].includes(childTab);
+  ![
+    TAB.PM,
+    TAB.NPS,
+    TAB.CRYPTO,
+    TAB.PF,
+    TAB.LIFE_INS,
+    TAB.HEALTH_INS,
+    TAB.VEHICLE_INS,
+    TAB.PROPERTY_INS,
+    TAB.OTHERS_INS,
+  ].includes(childTab);
 export const hasQtyWithRate = (childTab: string) =>
   [TAB.PM, TAB.NPS, TAB.CRYPTO].includes(childTab);
 export const isRangePicker = (childTab: string, category: string) =>
   [TAB.LENT, TAB.P2P, TAB.LTDEP].includes(childTab) &&
   category !== NATIONAL_SAVINGS_CERTIFICATE;
 export const hasDate = (childTab: string) =>
-  [TAB.VEHICLE, TAB.LENT, TAB.LOAN, TAB.P2P, TAB.LTDEP].includes(childTab);
+  [
+    TAB.VEHICLE,
+    TAB.LENT,
+    TAB.LOAN,
+    TAB.P2P,
+    TAB.LTDEP,
+    TAB.LIFE_INS,
+    TAB.PROPERTY_INS,
+    TAB.OTHERS_INS,
+    TAB.VEHICLE_INS,
+  ].includes(childTab);
 export const hasPF = (childTab: string) => [TAB.PF].includes(childTab);
-export const hasOnlyEnddate = (childTab: string) => [TAB.LOAN].includes(childTab);
+export const hasOnlyEnddate = (childTab: string) =>
+  [
+    TAB.LOAN,
+    TAB.LIFE_INS,
+    TAB.PROPERTY_INS,
+    TAB.OTHERS_INS,
+    TAB.VEHICLE_INS,
+  ].includes(childTab);
 export const hasminimumCol = (childTab: string) =>
   [TAB.ANGEL, TAB.SAV, TAB.CREDIT].includes(childTab);
 export const hasTags = (childTab: string): Boolean =>
@@ -849,6 +896,20 @@ export const getFieldsAndInfo = (tab: string) => {
       fields: { name: "Comment", amount: "Amount" },
       info: { amount: "Amount" },
     },
+    Risk: {
+      fields: {
+        type: "Premium Mode",
+        amount: "Premium Amount",
+        rate: "Premium increases",
+        date: "End date",
+      },
+      info: {
+        type: "Premium Mode",
+        amount: "Premium Amount",
+        rate: "Premium increases",
+        date: "End date",
+      },
+    },
   };
   return fieldsAndInfo[tab];
 };
@@ -946,6 +1007,7 @@ export const getCategoryOptions = (tab: string) => {
       "2": "Accumulates every 6 months",
       "1": "Accumulates every 1 months",
     }),
+    [RISK_TAB]: getCascaderOptions({ 1: "Yearly", 12: "Monthly" }),
   };
   return category[tab];
 };

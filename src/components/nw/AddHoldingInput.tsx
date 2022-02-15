@@ -13,6 +13,7 @@ import {
   LIABILITIES_TAB,
   NATIONAL_SAVINGS_CERTIFICATE,
   NWContext,
+  RISK_TAB,
   TAB,
 } from "./NWContext";
 import {
@@ -43,7 +44,23 @@ export default function AddHoldingInput({
 }: AddHoldingInputProps) {
   const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any =
     useContext(NWContext);
-  const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, OTHER, P2P, LTDEP } = TAB;
+  const {
+    PM,
+    CRYPTO,
+    LENT,
+    NPS,
+    PF,
+    VEHICLE,
+    LOAN,
+    OTHER,
+    P2P,
+    LTDEP,
+    LIFE_INS,
+    HEALTH_INS,
+    VEHICLE_INS,
+    OTHERS_INS,
+    PROPERTY_INS
+  } = TAB;
   const [category, setCategory] = useState<string>(
     categoryOptions ? categoryOptions.length && categoryOptions[0].value : ""
   );
@@ -79,6 +96,19 @@ export default function AddHoldingInput({
       curr: selectedCurrency,
     };
     switch (childTab) {
+      case HEALTH_INS:
+      case LIFE_INS:
+      case VEHICLE_INS:
+      case OTHERS_INS:  
+      case PROPERTY_INS:
+        newRec.chg = childTab !== LIFE_INS ? rate : 0;
+        newRec.chgF = Number(category);
+        newRec.subt = childTab.charAt(0);
+        newRec.sm = presentMonth;
+        newRec.sy = presentYear;
+        newRec.em = childTab !== HEALTH_INS ? sm : 0;
+        newRec.ey = childTab !== HEALTH_INS ? sy : 0;
+        break;
       case LOAN:
         newRec.chg = rate;
         newRec.chgF = 12;
@@ -199,7 +229,7 @@ export default function AddHoldingInput({
 
   return (
     <Row gutter={[0, 10]}>
-      <Col xs={24}>
+      {activeTab !== RISK_TAB ? <Col xs={24}>
         <Row justify="center">
           <Col xs={24} sm={24}>
             <ResultCarousel
@@ -236,7 +266,7 @@ export default function AddHoldingInput({
             />
           </Col>
         </Row>
-      </Col>
+      </Col> : null }
       <Col xs={24}>
         <Row
           gutter={[

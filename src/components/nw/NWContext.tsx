@@ -86,6 +86,11 @@ export const TAB = {
   P2P: "P2P Lending",
   SUMMARY: "Allocation",
   LTDEP: "Long-term Schemes",
+  LIFE_INS: "Life Insurance",
+  HEALTH_INS: "Health Insurance",
+  PROPERTY_INS: "Property Insurance",
+  VEHICLE_INS: "Vehicle Insurance",
+  OTHERS_INS: "Others Insurance",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -93,6 +98,7 @@ export const ASSETS_VIEW = "assets";
 export const LIABILITIES_VIEW = "liabilities";
 export const NETWORTH_VIEW = "Net Worth";
 export const RISKCOVER_VIEW = "Risk Cover";
+export const RISK_TAB = "Risk";
 
 function NWContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, userInfo, user }: any =
@@ -183,6 +189,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
   const [loadingInstruments, setLoadingInstruments] = useState<boolean>(false);
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
+  const [insurance, setInsurance] = useState<Array<HoldingInput>>([]);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -299,7 +306,7 @@ function NWContextProvider({ fxRates }: any) {
           filterOption: {
             main: { mcap: "Capitalization" },
             sub: { mcap: getStockMarketCap() },
-          }
+          },
         },
         [TAB.MF]: {
           label: TAB.MF,
@@ -317,7 +324,7 @@ function NWContextProvider({ fxRates }: any) {
               H: {},
               A: {},
             },
-          }
+          },
         },
         [TAB.BOND]: {
           label: TAB.BOND,
@@ -327,7 +334,9 @@ function NWContextProvider({ fxRates }: any) {
           setData: setInstruments,
           total: totalBonds,
           contentComp: <InstrumentValuation />,
-          filterOption: { main: { CB: "Corporate Bond", GB: "Government Bond" } }
+          filterOption: {
+            main: { CB: "Corporate Bond", GB: "Government Bond" },
+          },
         },
         [TAB.GOLDB]: {
           label: TAB.GOLDB,
@@ -429,6 +438,51 @@ function NWContextProvider({ fxRates }: any) {
         },
       },
     },
+    [RISK_TAB]: {
+      label: [RISK_TAB],
+      children: {
+        [TAB.LIFE_INS]: {
+          label: TAB.LIFE_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: 0,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+        [TAB.HEALTH_INS]: {
+          label: TAB.HEALTH_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: 0,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+        [TAB.VEHICLE_INS]: {
+          label: TAB.VEHICLE_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: 0,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+        [TAB.PROPERTY_INS]: {
+          label: TAB.PROPERTY_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: 0,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+        [TAB.OTHERS_INS]: {
+          label: TAB.OTHERS_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: 0,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+      },
+    },
   };
 
   const initializeFamilyList = async () => {
@@ -500,6 +554,7 @@ function NWContextProvider({ fxRates }: any) {
     setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
     setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
     setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
+    setInsurance([...(allHoldings?.ins ? allHoldings.ins : [])]);
   };
 
   useEffect(() => {
@@ -590,6 +645,7 @@ function NWContextProvider({ fxRates }: any) {
     updatedHoldings.nps = nps;
     updatedHoldings.crypto = crypto;
     updatedHoldings.credit = credit;
+    updatedHoldings.ins = insurance;
     try {
       if (holdings) {
         await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -806,6 +862,7 @@ function NWContextProvider({ fxRates }: any) {
     others,
     nps,
     vehicles,
+    insurance,
     p2p,
   ]);
 
@@ -930,8 +987,11 @@ function NWContextProvider({ fxRates }: any) {
         selectedTags,
         setSelectedTags,
         nwview,
-        setNwview
-      }}>
+        setNwview,
+        insurance,
+        setInsurance
+      }}
+    >
       <GetView />
     </NWContext.Provider>
   );
