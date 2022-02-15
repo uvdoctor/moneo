@@ -31,7 +31,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
     setIsDirty,
     totalAssets,
     totalLiabilities,
-    view,
+    nwview,
     npsSubcategory,
   }: any = useContext(NWContext);
 
@@ -42,13 +42,13 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
   useEffect(() => {
     setActiveTab(
-      view === LIABILITIES_VIEW
+      nwview === LIABILITIES_VIEW
         ? LIABILITIES_TAB
         : !totalAssets
         ? "Cash"
         : TAB.SUMMARY
     );
-  }, [view]);
+  }, [nwview]);
 
   useEffect(() => {
     if (childTab === TAB.NPS && !npsData.length) {
