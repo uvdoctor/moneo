@@ -90,7 +90,7 @@ export const TAB = {
   HEALTH_INS: "Health Insurance",
   PROPERTY_INS: "Property Insurance",
   VEHICLE_INS: "Vehicle Insurance",
-  OTHERS_INS: "Others Insurance",
+  OTHERS_INS: "Other Insurance",
 };
 
 export const LIABILITIES_TAB = "Liabilities";

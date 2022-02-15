@@ -138,20 +138,17 @@ export default function ListInsurance({
   const columns = defaultColumns.map((col: string) => allColumns[col]);
 
   useEffect(() => {
-    const getData = () => {
-      let dataSource: Array<any> = [];
-      for (let index = 0; index < data.length; index++) {
-        if (
-          data[index] &&
-          data[index].subt === childTab.charAt(0) &&
-          doesHoldingMatch(data[index], selectedMembers, selectedCurrency)
-        ) {
-          dataSource.push(getAllData(data[index], index));
-          setDataSource([...dataSource]);
-        }
+    let dataSource: Array<any> = [];
+    for (let index = 0; index < data.length; index++) {
+      if (
+        data[index] &&
+        data[index].subt === childTab.charAt(0) &&
+        doesHoldingMatch(data[index], selectedMembers, selectedCurrency)
+      ) {
+        dataSource.push(getAllData(data[index], index));
       }
-    };
-    getData();
+    }
+    setDataSource([...dataSource]);
   }, [data, selectedMembers, selectedCurrency, familyOptions, childTab]);
 
   return dataSource.length ? (
