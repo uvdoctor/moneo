@@ -37,7 +37,6 @@ export default function InsuranceCFChart() {
         userInfo?.le,
         userInfo?.dob
       );
-      console.log(cashflows);
       let year = isMonth
         ? new Date().getFullYear()
         : new Date().getFullYear() + 1;

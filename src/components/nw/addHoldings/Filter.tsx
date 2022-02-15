@@ -66,7 +66,6 @@ export default function Filter({ options }: FilterProps) {
     <>
       {selectedTags.length
         ? selectedTags.map((item: string, ind: number) => {
-          console.log(selectedTags)
             return <Tag
               closable
               onClose={() => onClose(item)}
