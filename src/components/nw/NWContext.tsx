@@ -86,11 +86,11 @@ export const TAB = {
   P2P: "P2P Lending",
   SUMMARY: "Allocation",
   LTDEP: "Long-term Schemes",
-  LIFE_INS: "Life Insurance",
-  HEALTH_INS: "Health Insurance",
-  PROPERTY_INS: "Property Insurance",
-  VEHICLE_INS: "Vehicle Insurance",
-  OTHERS_INS: "Other Insurance",
+  LIFE_INS: "Life",
+  HEALTH_INS: "Health",
+  PROPERTY_INS: "Property",
+  VEHICLE_INS: "Vehicle",
+  OTHERS_INS: "Other",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -989,9 +989,8 @@ function NWContextProvider({ fxRates }: any) {
         nwview,
         setNwview,
         insurance,
-        setInsurance
-      }}
-    >
+        setInsurance,
+      }}>
       <GetView />
     </NWContext.Provider>
   );

@@ -379,7 +379,7 @@ export const getInsuranceType = () => {
     V: "Vehicle",
     P: "Property",
     O: "Other",
-  }
+  };
 };
 
 export const getAssetSubTypes = () => {
@@ -950,9 +950,9 @@ export const getCategoryOptions = (tab: string) => {
       [SUKANYA_SAMRIDDHI_YOJANA]: "Sukanya Samriddhi Yojana",
     }),
     [PF]: getCascaderOptions({
-      PF: "Pension Fund",
-      EF: "Employee Fund",
-      VF: "Voluntary Fund",
+      PF: "Public (PPF)",
+      EF: "Employee (EPF)",
+      VF: "Voluntary (VPF)",
     }),
     [PROP]: getCascaderOptions({
       [PropertyType.P]: "Plot",
@@ -1015,7 +1015,7 @@ export const getCategoryOptions = (tab: string) => {
       "0": "Paid out",
       "4": "Accumulates every 3 months",
       "2": "Accumulates every 6 months",
-      "1": "Accumulates every 1 months",
+      "1": "Accumulates every 1 month",
     }),
     [RISK_TAB]: getCascaderOptions({ 1: "Yearly", 12: "Monthly" }),
   };
