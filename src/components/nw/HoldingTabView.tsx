@@ -87,7 +87,7 @@ export default function HoldingTabView({
       return;
     }
     if (activeTab === RISK_TAB) {
-      setChildTab(TAB.LIFE_INS);
+      insurance.length ? setChildTab(TAB.CASHFLOW) : setChildTab(TAB.LIFE_INS);
       return;
     }
     const children = tabs[activeTab]?.children;
@@ -137,11 +137,11 @@ export default function HoldingTabView({
         )}
         {risk && (
           <TabPane
-            key={RISK_TAB}
+            key={TAB.CASHFLOW}
             tab={
               <Fragment>
                 <FontAwesomeIcon icon={faChartBar} />
-                &nbsp;&nbsp;Cash Flows
+                &nbsp;&nbsp;{TAB.CASHFLOW}
               </Fragment>
             }
             disabled={insurance.length === 0}

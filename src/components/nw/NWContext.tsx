@@ -91,6 +91,7 @@ export const TAB = {
   PROPERTY_INS: "Property",
   VEHICLE_INS: "Vehicle",
   OTHERS_INS: "Other",
+  CASHFLOW: "Cash Flows"
 };
 
 export const LIABILITIES_TAB = "Liabilities";
