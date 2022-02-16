@@ -27,6 +27,8 @@ export default function GetView() {
                   options={[NETWORTH_VIEW, RISKCOVER_VIEW]}
                   value={view}
                   changeHandler={(val: string) => setView(val)}
+                  style={{ color: 'white', backgroundColor: '#3d4a53' }}
+                  size='large'
                 />
               }
             />
