@@ -776,11 +776,13 @@ function NWContextProvider({ fxRates }: any) {
       selectedCurrency,
       userInfo
     );
-    if (presentYearValue["L"]) setTotalLifeIns(presentYearValue["L"]);
-    if (presentYearValue["H"]) setTotalHealthIns(presentYearValue["H"]);
-    if (presentYearValue["V"]) setTotalVehicleIns(presentYearValue["V"]);
-    if (presentYearValue["O"]) setTotalOthersIns(presentYearValue["O"]);
-    if (presentYearValue["P"]) setTotalPropertyIns(presentYearValue["P"]);
+    const getValue = (type: string) =>
+      presentYearValue[type] ? presentYearValue[type] : 0;
+    setTotalLifeIns(getValue("L"));
+    setTotalHealthIns(getValue("H"));
+    setTotalVehicleIns(getValue("V"));
+    setTotalOthersIns(getValue("O"));
+    setTotalPropertyIns(getValue("P"));
     setTotalYearlyPremium(yearlyCashflow);
   }, [insurance, selectedCurrency, selectedMembers, userInfo]);
 
@@ -1018,7 +1020,7 @@ function NWContextProvider({ fxRates }: any) {
         totalHealthIns,
         totalLifeIns,
         totalVehicleIns,
-        totalYearlyPremium
+        totalYearlyPremium,
       }}
     >
       <GetView />
