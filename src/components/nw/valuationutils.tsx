@@ -85,7 +85,8 @@ const getCashFlows = (
   bygoneDuration: number,
   remainingDuration: number,
   rate: number,
-  isMonth: boolean
+  isMonth: boolean,
+  subt: string
 ) => {
   let cashflows: any = [];
   let count = 0;
@@ -94,39 +95,46 @@ const getCashFlows = (
     ? (monthLeftForCurrentYear + bygoneDuration) / 12
     : bygoneDuration;
   if (bygoneDuration >= 0) {
-    amt = getCompoundedIncome(
-      rate,
-      amt,
-      bygoneTimeToCalculateForCI,
-      isMonth ? 12 : 1
-    );
+    amt =
+      subt === "L"
+        ? amt
+        : getCompoundedIncome(
+            rate,
+            amt,
+            bygoneTimeToCalculateForCI,
+            isMonth ? 12 : 1
+          );
     if (isMonth && monthLeftForCurrentYear > 0) {
-      cashflows = Array(Math.round(1)).fill(amt*monthLeftForCurrentYear);
+      cashflows = Array(Math.round(1)).fill(amt * monthLeftForCurrentYear);
       // cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
     }
   }
   if (isMonth) {
     for (
       let index = 0;
-      index <= remainingDuration - monthLeftForCurrentYear;
+      index < remainingDuration - monthLeftForCurrentYear;
       index++
     ) {
       count++;
       if (count === 12) {
-        amt = getCompoundedIncome(rate as number, amt, 1, 12);
-        cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt*12)];
+        amt =
+          subt === "L" ? amt : getCompoundedIncome(rate as number, amt, 1, 12);
+        cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt * 12)];
         // cashflows = [...cashflows, ...Array(Math.round(12)).fill(amt)];
         count = 0;
       }
     }
     if (count < 12 && count > 0) {
-      amt = getCompoundedIncome(rate as number, amt, count / 12, 12);
-      cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt*count)];
+      amt =
+        subt === "L"
+          ? amt
+          : getCompoundedIncome(rate as number, amt, count / 12, 12);
+      cashflows = [...cashflows, ...Array(Math.round(1)).fill(amt * count)];
       // cashflows = [...cashflows, ...Array(Math.round(count)).fill(amt)];
     }
   } else {
     for (let index = 0; index <= remainingDuration; index++) {
-      amt = getCompoundedIncome(rate as number, amt, 1, 1);
+      amt = subt === "L" ? amt : getCompoundedIncome(rate as number, amt, 1, 1);
       cashflows = cashflows.concat(Array(Math.round(1)).fill(amt));
     }
   }
@@ -202,22 +210,22 @@ export const calculateInsurance = (
     );
   }
 
-  if (remainingDuration < 0 || isNaN(remainingDuration)) return { cashflows, isMonth, subt };
-  if (remainingDuration === 0) return { cashflows, isMonth, subt };
+  if (remainingDuration < 0 || isNaN(remainingDuration)) return { cashflows, subt };
+  if (remainingDuration === 0) return { cashflows, subt };
   let bygoneDuration = durationFromStartToEnd - remainingDuration;
-
-  if (subt && subt !== "L") {
-    cashflows = getCashFlows(
-      amt as number,
-      bygoneDuration,
-      remainingDuration,
-      chg as number,
-      isMonth
-    );
-  } else {
-    cashflows = Array(Math.round(remainingDuration)).fill(amt);
-  }
-  return { cashflows, isMonth, subt }
+  // if (subt && subt !== "L") {
+  cashflows = getCashFlows(
+    amt as number,
+    bygoneDuration,
+    remainingDuration,
+    chg as number,
+    isMonth,
+    subt as string
+  );
+  // } else {
+  // cashflows = Array(Math.round(remainingDuration)).fill(amt);
+  // }
+  return { cashflows, subt };
   // const npv = getNPV(discountRate, cashflows, 0, isMonth ? true : false, true);
   // return npv;
 };

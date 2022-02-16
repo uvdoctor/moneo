@@ -35,14 +35,12 @@ export default function InsuranceCFChart() {
       if (
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
-        const { cashflows, isMonth, subt } = calculateInsurance(
+        const { cashflows, subt } = calculateInsurance(
           holding,
           userInfo?.le,
           userInfo?.dob
         );
-        let year = isMonth
-          ? new Date().getFullYear()
-          : new Date().getFullYear() + 1;
+        let year = new Date().getFullYear();
         for (let ind = 0; ind < cashflows.length; ind++) {
           data.push({
             year: year,
@@ -89,9 +87,9 @@ export default function InsuranceCFChart() {
           isStack={true}
           tooltip={{
             visible: true,
-            formatter: ({ value }: any) => {
+            formatter: ({ value, name }: any) => {
               return {
-                name: "Premium Amount",
+                name: `${name} Premium`,
                 value: toHumanFriendlyCurrency(Math.abs(value), currency),
               };
             },
