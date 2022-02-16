@@ -31,6 +31,7 @@ export default function InsuranceCFChart() {
 
   useEffect(() => {
     let data: Array<any> = [];
+    if(!insurance.length) return;
     for (let holding of insurance) {
       if (
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
