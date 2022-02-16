@@ -56,6 +56,7 @@ export default function HoldingTabView({
     view,
     insurance,
     npsSubcategory,
+    totalYearlyPremium
   }: any = useContext(NWContext);
 
   const { TabPane } = Tabs;
@@ -146,8 +147,9 @@ export default function HoldingTabView({
             }
             disabled={insurance.length === 0}
           >
-            <InsuranceCFChart />
+            {Object.keys(totalYearlyPremium).length ? <InsuranceCFChart /> : <Empty description={<p>No data found.</p>} />}
           </TabPane>
+          
         )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;

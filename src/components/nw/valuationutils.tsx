@@ -105,7 +105,7 @@ const getCashFlows = (
             isMonth ? 12 : 1
           );
     if (isMonth && monthLeftForCurrentYear > 0) {
-      cashflows = Array(Math.round(1)).fill(amt * monthLeftForCurrentYear);
+      cashflows = Array(Math.round(1)).fill(amt * 12);
       // cashflows = Array(Math.round(monthLeftForCurrentYear)).fill(amt);
     }
   }

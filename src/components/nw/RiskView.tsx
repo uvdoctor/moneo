@@ -30,13 +30,13 @@ export default function RiskView() {
                   <div className="dd-stat">
                     <ItemDisplay
                       result={
-                        totalYearlyPremium[
+                        Object.keys(totalYearlyPremium).length ? totalYearlyPremium[
                           Object.keys(totalYearlyPremium)[year]
-                        ]
+                        ] : 0
                       }
                       currency={selectedCurrency}
                       label={
-                        Object.keys(totalYearlyPremium).length > 1 && (
+                        Object.keys(totalYearlyPremium).length > 1 ? (
                           <Fragment>
                             {"Yearly Premium"}
                             &nbsp;
@@ -47,7 +47,7 @@ export default function RiskView() {
                               options={Object.keys(totalYearlyPremium)}
                             />
                           </Fragment>
-                        )
+                        ) : "Result"
                       }
                       pl
                       info={"Yearly premium amount"}
