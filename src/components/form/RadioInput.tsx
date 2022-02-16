@@ -11,9 +11,10 @@ interface RadioInputProps {
 	unit?: string;
 	style?: any;
 	size?: any;
+	onchangeStyle?: any;
 }
 
-export default function RadioInput({ options, from, to, increment, value, changeHandler, unit, style, size }: RadioInputProps) {
+export default function RadioInput({ options, from, to, increment, value, changeHandler, unit, style, size, onchangeStyle }: RadioInputProps) {
 	const buildYearsOptions = () => {
 		if (!from || !to || !increment) return [];
 		let result = [];
@@ -32,7 +33,7 @@ export default function RadioInput({ options, from, to, increment, value, change
 								size={size ? size : 'default'}
             >
                 {radioOptions.map((option: string) => 
-                    <Radio.Button value={option} style={style} key={option}>{option}</Radio.Button>
+                    <Radio.Button value={option} style={value === option ? onchangeStyle : style} key={option}>{option}</Radio.Button>
                 )}
                 
             </Radio.Group>
