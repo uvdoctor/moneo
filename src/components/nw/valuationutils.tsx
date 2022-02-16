@@ -210,7 +210,8 @@ export const calculateInsurance = (
     );
   }
 
-  if (remainingDuration < 0 || isNaN(remainingDuration)) return { cashflows, subt };
+  if (remainingDuration < 0 || isNaN(remainingDuration))
+    return { cashflows, subt };
   if (remainingDuration === 0) return { cashflows, subt };
   let bygoneDuration = durationFromStartToEnd - remainingDuration;
   // if (subt && subt !== "L") {
@@ -688,6 +689,40 @@ export const priceVehicles = (
     }
   });
   return total;
+};
+
+export const priceInsurance = (
+  holdings: Array<HoldingInput>,
+  selectedMembers: Array<string>,
+  selectedCurrency: string,
+  userInfo: any
+) => {
+  let yearlyCashflow: any = {};
+  let presentYearValue: { [key: string]: number } = {};
+  holdings.forEach((holding: HoldingInput) => {
+    if (
+      holding &&
+      doesHoldingMatch(holding, selectedMembers, selectedCurrency)
+    ) {
+      let year = new Date().getFullYear();
+      const { cashflows } = calculateInsurance(
+        holding,
+        userInfo?.le,
+        userInfo?.dob
+      );
+      presentYearValue[holding.subt as string] = cashflows[0];
+      for (let value of cashflows) {
+        if (yearlyCashflow[year]) {
+          const val = yearlyCashflow[year];
+          yearlyCashflow[year] = val + value;
+        } else {
+          yearlyCashflow[year] = value;
+        }
+        year++;
+      }
+    }
+  });
+  return { yearlyCashflow, presentYearValue };
 };
 
 export const priceCrypto = async (

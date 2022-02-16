@@ -1,16 +1,23 @@
 import { Button, Col, Row, Skeleton } from "antd";
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { AppContext } from "../AppContext";
 import ItemDisplay from "../calc/ItemDisplay";
+import SelectInput from "../form/selectinput";
 import HoldingTabView from "./HoldingTabView";
 import { NWContext } from "./NWContext";
 require("./nw.less");
 require("./NWView.less");
 
 export default function RiskView() {
-  const { loadingHoldings, addSelfMember, familyMemberKeys }: any =
-    useContext(NWContext);
+  const {
+    loadingHoldings,
+    addSelfMember,
+    familyMemberKeys,
+    totalYearlyPremium,
+    selectedCurrency,
+  }: any = useContext(NWContext);
   const { appContextLoaded }: any = useContext(AppContext);
+  const [year, setYear] = useState<number>(0);
 
   return (
     <Fragment>
@@ -22,10 +29,28 @@ export default function RiskView() {
                 <Col xs={24} sm={24} md={16} lg={8}>
                   <div className="dd-stat">
                     <ItemDisplay
-                      label="Result"
-                      result={0}
+                      result={
+                        totalYearlyPremium[
+                          Object.keys(totalYearlyPremium)[year]
+                        ]
+                      }
+                      currency={selectedCurrency}
+                      label={
+                        Object.keys(totalYearlyPremium).length > 1 && (
+                          <Fragment>
+                            {"Yearly Premium"}
+                            &nbsp;
+                            <SelectInput
+                              pre=""
+                              value={String(year)}
+                              changeHandler={(val: number) => setYear(val)}
+                              options={Object.keys(totalYearlyPremium)}
+                            />
+                          </Fragment>
+                        )
+                      }
                       pl
-                      info={"Risk Cover"}
+                      info={"Yearly premium amount"}
                     />
                   </div>
                 </Col>

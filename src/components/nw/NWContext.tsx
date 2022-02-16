@@ -48,6 +48,7 @@ import {
   pricePF,
   priceVehicles,
   priceCrypto,
+  priceInsurance,
 } from "./valuationutils";
 import { ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
@@ -91,7 +92,7 @@ export const TAB = {
   PROPERTY_INS: "Property",
   VEHICLE_INS: "Vehicle",
   OTHERS_INS: "Other",
-  CASHFLOW: "Cash Flows"
+  CASHFLOW: "Cash Flows",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -191,6 +192,12 @@ function NWContextProvider({ fxRates }: any) {
   const [loadingInstruments, setLoadingInstruments] = useState<boolean>(false);
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
   const [insurance, setInsurance] = useState<Array<HoldingInput>>([]);
+  const [totalLifeIns, setTotalLifeIns] = useState<number>(0);
+  const [totalHealthIns, setTotalHealthIns] = useState<number>(0);
+  const [totalPropertyIns, setTotalPropertyIns] = useState<number>(0);
+  const [totalOthersIns, setTotalOthersIns] = useState<number>(0);
+  const [totalVehicleIns, setTotalVehicleIns] = useState<number>(0);
+  const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -446,7 +453,7 @@ function NWContextProvider({ fxRates }: any) {
           label: TAB.LIFE_INS,
           data: insurance,
           setData: setInsurance,
-          total: 0,
+          total: totalLifeIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -454,7 +461,7 @@ function NWContextProvider({ fxRates }: any) {
           label: TAB.HEALTH_INS,
           data: insurance,
           setData: setInsurance,
-          total: 0,
+          total: totalHealthIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -462,7 +469,7 @@ function NWContextProvider({ fxRates }: any) {
           label: TAB.VEHICLE_INS,
           data: insurance,
           setData: setInsurance,
-          total: 0,
+          total: totalVehicleIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -470,7 +477,7 @@ function NWContextProvider({ fxRates }: any) {
           label: TAB.PROPERTY_INS,
           data: insurance,
           setData: setInsurance,
-          total: 0,
+          total: totalPropertyIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -478,7 +485,7 @@ function NWContextProvider({ fxRates }: any) {
           label: TAB.OTHERS_INS,
           data: insurance,
           setData: setInsurance,
-          total: 0,
+          total: totalOthersIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -763,6 +770,21 @@ function NWContextProvider({ fxRates }: any) {
   }, [angel, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
+    const { yearlyCashflow, presentYearValue } = priceInsurance(
+      insurance,
+      selectedMembers,
+      selectedCurrency,
+      userInfo
+    );
+    if (presentYearValue["L"]) setTotalLifeIns(presentYearValue["L"]);
+    if (presentYearValue["H"]) setTotalHealthIns(presentYearValue["H"]);
+    if (presentYearValue["V"]) setTotalVehicleIns(presentYearValue["V"]);
+    if (presentYearValue["O"]) setTotalOthersIns(presentYearValue["O"]);
+    if (presentYearValue["P"]) setTotalPropertyIns(presentYearValue["P"]);
+    setTotalYearlyPremium(yearlyCashflow);
+  }, [insurance, selectedCurrency, selectedMembers, userInfo]);
+
+  useEffect(() => {
     const total = priceOthers(others, selectedMembers, selectedCurrency);
     setTotalOthers(total);
   }, [others, selectedCurrency, selectedMembers]);
@@ -991,7 +1013,14 @@ function NWContextProvider({ fxRates }: any) {
         setNwview,
         insurance,
         setInsurance,
-      }}>
+        totalOthersIns,
+        totalPropertyIns,
+        totalHealthIns,
+        totalLifeIns,
+        totalVehicleIns,
+        totalYearlyPremium
+      }}
+    >
       <GetView />
     </NWContext.Provider>
   );

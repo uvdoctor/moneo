@@ -193,15 +193,13 @@ export default function HoldingTabView({
                 <Fragment>
                   <Row justify="space-between">
                     <Col>
-                      {!risk && (
-                        <h2 style={{ color: COLORS.GREEN }}>
-                          &nbsp;&nbsp;
-                          {toHumanFriendlyCurrency(
-                            tabsData[tabName].total,
-                            selectedCurrency
-                          )}
-                        </h2>
-                      )}
+                      <h2 style={{ color: COLORS.GREEN }}>
+                        &nbsp;&nbsp;
+                        {toHumanFriendlyCurrency(
+                          tabsData[tabName].total,
+                          selectedCurrency
+                        )}
+                      </h2>
                     </Col>
                     <Col>
                       <AddHoldings
