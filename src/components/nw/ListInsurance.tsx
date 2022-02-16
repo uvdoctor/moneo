@@ -70,7 +70,7 @@ export default function ListInsurance({
           info={info.type}
         />
       ),
-      qty: <Quantity changeData={changeData} record={holding} pre={fields.qty} info={info.qty}/>,
+      qty: <Quantity changeData={changeData} record={holding} pre={fields.qty} info={info.qty} data={data}/>,
       del: (
         <Button
           type="link"
