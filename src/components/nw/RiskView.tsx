@@ -47,7 +47,7 @@ export default function RiskView() {
                               options={Object.keys(totalYearlyPremium)}
                             />
                           </Fragment>
-                        ) : "Result"
+                        ) : "Total Risk Premium"
                       }
                       pl
                       info={"Yearly premium amount"}
