@@ -235,14 +235,14 @@ export default function UploadHoldings() {
     let uploadedInstruments: Array<InstrumentInput> = [];
     insMap.forEach((value: number, id: string) => {
       uploadedInstruments.push({
-        sid: insData[id].sid ? insData[id].sid : null,
-        exchg: insData[id].exchg ? insData[id].exchg : null,
+        sid: insData[id] ? insData[id].sid : null,
+        exchg: insData[id] && insData[id].exchg ? insData[id].exchg : null,
         id: id,
         qty: value,
         fId: "",
         curr: currency,
-        type: insData[id].type ? insData[id].type : null,
-        subt: insData[id].subt ? insData[id].subt : null
+        type: insData[id] ? insData[id].type : null,
+        subt: insData[id] ? insData[id].subt : null
       });
     });
     setLoading(false);
