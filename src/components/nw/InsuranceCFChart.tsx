@@ -56,7 +56,7 @@ export default function InsuranceCFChart() {
   }, [insurance, userInfo, selectedMembers, selectedCurrency]);
 
   const getColumnColor = (name: string) => {
-    const { H, L, V, O, P } = getInsuranceType();
+    const { H, L, V, O, P, A } = getInsuranceType();
     switch (name) {
       case H:
         return COLORS.BLUE;
@@ -68,6 +68,8 @@ export default function InsuranceCFChart() {
         return "#ffa698";
       case P:
         return "#7cd9fd";
+      case A:
+        return "#e78284";
     }
   };
 

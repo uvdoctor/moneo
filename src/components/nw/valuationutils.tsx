@@ -186,7 +186,7 @@ export const calculateInsurance = (
     ? calculateDifferenceInMonths
     : calculateDifferenceInYears;
 
-  if (subt === "H" && dob && le) {
+  if ((subt === "H" || subt === "A") && dob && le) {
     const birthdate: Date = new Date(dob);
     const { year, month } = calculateAddYears(
       birthdate.getMonth() + 1,

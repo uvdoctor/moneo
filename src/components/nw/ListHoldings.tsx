@@ -19,7 +19,7 @@ import { toHumanFriendlyCurrency } from "../utils";
 import { DeleteOutlined } from "@ant-design/icons";
 import { calculateCompundingIncome } from "./valuationutils";
 import Rate from "./Rate";
-import Contribution from "./Contribution";
+import Quantity from "./Quantity";
 import Comment from "./Comment";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import MemberInput from "./MemberInput";
@@ -126,7 +126,7 @@ export default function ListHoldings({
         />
       ),
       qty: hasPF(childTab) && (
-        <Contribution
+        <Quantity
           changeData={changeData}
           data={data}
           record={holding}

@@ -379,6 +379,7 @@ export const getInsuranceType = () => {
     V: "Vehicle",
     P: "Property",
     O: "Other",
+    A: "Accident"
   };
 };
 
@@ -622,6 +623,7 @@ export const hasRisktab = (childTab: string) =>
     TAB.VEHICLE_INS,
     TAB.OTHERS_INS,
     TAB.PROPERTY_INS,
+    TAB.ACCIDENT_INS
   ].includes(childTab);
 
 export const hasOnlyCategory = (childTab: string) =>
@@ -642,6 +644,7 @@ export const hasRate = (childTab: string) =>
     TAB.P2P,
     TAB.LTDEP,
     TAB.HEALTH_INS,
+    TAB.ACCIDENT_INS,
     TAB.PROPERTY_INS,
     TAB.OTHERS_INS,
     TAB.VEHICLE_INS,
@@ -654,6 +657,7 @@ export const hasName = (childTab: string) =>
     TAB.PF,
     TAB.LIFE_INS,
     TAB.HEALTH_INS,
+    TAB.ACCIDENT_INS,
     TAB.VEHICLE_INS,
     TAB.PROPERTY_INS,
     TAB.OTHERS_INS,
@@ -912,12 +916,14 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
+        qty: "Sum Insured"
       },
       info: {
         type: "Premium Mode",
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
+        qty: "Total coverage amount of the policy"
       },
     },
   };

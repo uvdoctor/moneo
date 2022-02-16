@@ -7,7 +7,7 @@ import { presentMonth, presentYear } from "../utils";
 import Amount from "./Amount";
 import Category from "./Category";
 import Comment from "./Comment";
-import Contribution from "./Contribution";
+import Quantity from "./Quantity";
 import DateColumn from "./DateColumn";
 import {
   LIABILITIES_TAB,
@@ -24,6 +24,7 @@ import {
   hasOnlyCategory,
   calculateValuation,
   hasOnlyEnddate,
+  hasRisktab,
 } from "./nwutils";
 import Rate from "./Rate";
 import { calculateAddYears, calculateCompundingIncome } from "./valuationutils";
@@ -59,7 +60,8 @@ export default function AddHoldingInput({
     HEALTH_INS,
     VEHICLE_INS,
     OTHERS_INS,
-    PROPERTY_INS
+    PROPERTY_INS,
+    ACCIDENT_INS,
   } = TAB;
   const [category, setCategory] = useState<string>(
     categoryOptions ? categoryOptions.length && categoryOptions[0].value : ""
@@ -99,15 +101,18 @@ export default function AddHoldingInput({
       case HEALTH_INS:
       case LIFE_INS:
       case VEHICLE_INS:
-      case OTHERS_INS:  
+      case OTHERS_INS:
       case PROPERTY_INS:
+      case ACCIDENT_INS:
         newRec.chg = childTab !== LIFE_INS ? rate : 0;
         newRec.chgF = Number(category);
         newRec.subt = childTab.charAt(0);
         newRec.sm = presentMonth;
         newRec.sy = presentYear;
-        newRec.em = childTab !== HEALTH_INS ? sm : 0;
-        newRec.ey = childTab !== HEALTH_INS ? sy : 0;
+        newRec.em =
+          childTab !== HEALTH_INS || childTab !== ACCIDENT_INS ? sm : 0;
+        newRec.ey =
+          childTab !== HEALTH_INS || childTab !== ACCIDENT_INS ? sy : 0;
         break;
       case LOAN:
         newRec.chg = rate;
@@ -229,44 +234,48 @@ export default function AddHoldingInput({
 
   return (
     <Row gutter={[0, 10]}>
-      {activeTab !== RISK_TAB ? <Col xs={24}>
-        <Row justify="center">
-          <Col xs={24} sm={24}>
-            <ResultCarousel
-              results={
-                childTab === P2P || childTab === LENT || childTab === LTDEP
-                  ? [
-                      <ItemDisplay
-                        key="valuation"
-                        label="Current Value"
-                        result={valuation}
-                        currency={selectedCurrency}
-                        pl
-                      />,
-                      <ItemDisplay
-                        label="Maturity Amount"
-                        key="maturity"
-                        result={maturityAmt}
-                        currency={selectedCurrency}
-                        pl
-                      />,
-                    ]
-                  : [
-                      <ItemDisplay
-                        key="valuation"
-                        label="Current Value"
-                        result={
-                          activeTab === LIABILITIES_TAB ? -valuation : valuation
-                        }
-                        currency={selectedCurrency}
-                        pl
-                      />,
-                    ]
-              }
-            />
-          </Col>
-        </Row>
-      </Col> : null }
+      {activeTab !== RISK_TAB ? (
+        <Col xs={24}>
+          <Row justify="center">
+            <Col xs={24} sm={24}>
+              <ResultCarousel
+                results={
+                  childTab === P2P || childTab === LENT || childTab === LTDEP
+                    ? [
+                        <ItemDisplay
+                          key="valuation"
+                          label="Current Value"
+                          result={valuation}
+                          currency={selectedCurrency}
+                          pl
+                        />,
+                        <ItemDisplay
+                          label="Maturity Amount"
+                          key="maturity"
+                          result={maturityAmt}
+                          currency={selectedCurrency}
+                          pl
+                        />,
+                      ]
+                    : [
+                        <ItemDisplay
+                          key="valuation"
+                          label="Current Value"
+                          result={
+                            activeTab === LIABILITIES_TAB
+                              ? -valuation
+                              : valuation
+                          }
+                          currency={selectedCurrency}
+                          pl
+                        />,
+                      ]
+                }
+              />
+            </Col>
+          </Row>
+        </Col>
+      ) : null}
       <Col xs={24}>
         <Row
           gutter={[
@@ -302,9 +311,9 @@ export default function AddHoldingInput({
               info={info}
             />
           </Col>
-          {hasPF(childTab) && (
+          {(hasPF(childTab) || hasRisktab(childTab)) && (
             <Col xs={24} md={12}>
-              <Contribution
+              <Quantity
                 changeData={setInput}
                 record={getNewRec()}
                 pre={fields.qty}

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import { presentMonth, presentYear } from '../utils';
+import { NWContext } from './NWContext';
+import { hasPF } from './nwutils';
 
-interface ContributionProps {
+interface QuantityProps {
 	data?: Array<HoldingInput>;
 	qty?: number;
 	changeData: Function;
@@ -13,15 +15,18 @@ interface ContributionProps {
 	info: string;
 }
 
-export default function Contribution({ data, changeData, record, pre, qty, setQty, info }: ContributionProps) {
+export default function Quantity({ data, changeData, record, pre, qty, setQty, info }: QuantityProps) {
+	const { childTab }: any = useContext(NWContext);
 	const isListHolding: boolean = setQty ? false : true;
 	const quantity = isListHolding ? record.qty : qty;
 
 	const changeQty = (val: number) => {
 		setQty && setQty(val);
 		record.qty = val;
-		record.sm = presentMonth;
-		record.sy = presentYear;
+		if(hasPF(childTab)) {
+			record.sm = presentMonth;
+			record.sy = presentYear;
+		}
 		isListHolding && data ? changeData([ ...data ]) : changeData(record);
 	};
 

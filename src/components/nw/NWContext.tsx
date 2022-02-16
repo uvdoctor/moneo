@@ -93,6 +93,7 @@ export const TAB = {
   VEHICLE_INS: "Vehicle",
   OTHERS_INS: "Other",
   CASHFLOW: "Cash Flows",
+  ACCIDENT_INS: "Accident"
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -197,6 +198,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalPropertyIns, setTotalPropertyIns] = useState<number>(0);
   const [totalOthersIns, setTotalOthersIns] = useState<number>(0);
   const [totalVehicleIns, setTotalVehicleIns] = useState<number>(0);
+  const [totalAccidentIns, setTotalAccidentIns] = useState<number>(0);
   const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
 
   const loadNPSSubCategories = async () => {
@@ -462,6 +464,14 @@ function NWContextProvider({ fxRates }: any) {
           data: insurance,
           setData: setInsurance,
           total: totalHealthIns,
+          fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
+          categoryOptions: getCategoryOptions(RISK_TAB),
+        },
+        [TAB.ACCIDENT_INS]: {
+          label: TAB.ACCIDENT_INS,
+          data: insurance,
+          setData: setInsurance,
+          total: totalAccidentIns,
           fieldsAndInfo: getFieldsAndInfo(RISK_TAB),
           categoryOptions: getCategoryOptions(RISK_TAB),
         },
@@ -783,6 +793,7 @@ function NWContextProvider({ fxRates }: any) {
     setTotalVehicleIns(getValue("V"));
     setTotalOthersIns(getValue("O"));
     setTotalPropertyIns(getValue("P"));
+    setTotalAccidentIns(getValue("A"));
     setTotalYearlyPremium(yearlyCashflow);
   }, [insurance, selectedCurrency, selectedMembers, userInfo]);
 
@@ -1021,6 +1032,7 @@ function NWContextProvider({ fxRates }: any) {
         totalLifeIns,
         totalVehicleIns,
         totalYearlyPremium,
+        totalAccidentIns
       }}
     >
       <GetView />

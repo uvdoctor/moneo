@@ -9,6 +9,7 @@ import DateColumn from "./DateColumn";
 import { DeleteOutlined } from "@ant-design/icons";
 import MemberInput from "./MemberInput";
 import Rate from "./Rate";
+import Quantity from "./Quantity";
 require("./ListHoldings.less");
 
 interface ListInsuranceProps {
@@ -38,10 +39,11 @@ export default function ListInsurance({
     },
     rate: { title: fields.rate, dataIndex: "rate", key: "rate" },
     date: { title: fields.date, dataIndex: "date", key: "date" },
+    qty: { title: fields.qty, dataIndex: "qty", key: "qty" },
     del: { title: "", dataIndex: "del", key: "del", align: "left" },
   };
   let defaultColumns: Array<string> = ["amount", "type", "del"];
-  let expandedColumns: Array<string> = ["date", "rate", "fid"];
+  let expandedColumns: Array<string> = ["date", "rate", "qty", "fid"];
 
   const changeOwner = (ownerKey: string, i: number) => {
     data[i].fId = ownerKey;
@@ -68,6 +70,7 @@ export default function ListInsurance({
           info={info.type}
         />
       ),
+      qty: <Quantity changeData={changeData} record={holding} pre={fields.qty} info={info.qty}/>,
       del: (
         <Button
           type="link"
