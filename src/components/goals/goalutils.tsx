@@ -123,7 +123,7 @@ const createFFGoalInput = (currency: string) => {
   return {
     name: "Financial Independence",
     loan: {
-      emi: 6000 * rf,
+      emi: 3000 * rf,
       ry: nowYear,
       per: 3,
       dur: 85,

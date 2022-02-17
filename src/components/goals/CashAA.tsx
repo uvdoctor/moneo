@@ -30,7 +30,7 @@ export default function CashAA({
         <div className="cash active">
           <span className="arrow-right" />
           <LabelWithTooltip
-            label="Total Cash"
+            label="Cash"
             info={`${toReadableNumber(
               emergencyPer + longTermPer,
               decimal ? 2 : 0
