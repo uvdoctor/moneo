@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from "react";
-import { Row, Col, PageHeader } from "antd";
+import { PageHeader } from "antd";
 import StockDetailContext from "./StockDetailContext";
-import SymbolInfo from "./SymbolInfo";
-import CompanyProfile from "./CompanyProfile";
-import TechnicalAnalysis from "./TechnicalAnalysis";
-import FundamentalData from "./FundamentalData";
+// import SymbolInfo from "./SymbolInfo";
+// import CompanyProfile from "./CompanyProfile";
+// import TechnicalAnalysis from "./TechnicalAnalysis";
+// import FundamentalData from "./FundamentalData";
 
 require("./StockDetail.less");
 
 export default function StockDetail() {
 	/* @ts-ignore */
 	const { name } = useContext(StockDetailContext);
-	const [details, setDetails] = useState({});
+	const [details, setDetails] = useState<any>({});
 
-	const getDetails = async (text: string) => {
+	const getDetails = async () => {
 		try {
 			const response = await fetch(`/api/details?name=${name}`);
 			const data = await response.json();
@@ -31,12 +31,14 @@ export default function StockDetail() {
 
 	return (
 		<div className="stock-detail">
-			<PageHeader
-				title={details.General?.Code}
-				subTitle={details.General?.Name}
-			>
-				{details.General?.Description}
-			</PageHeader>
+			{details && (
+				<PageHeader
+					title={details.General?.Code}
+					subTitle={details.General?.Name}
+				>
+					{details.General?.Description}
+				</PageHeader>
+			)}
 			{/*<Row gutter={[15, 15]}>
 				<Col xs={24}>
 					<SymbolInfo />

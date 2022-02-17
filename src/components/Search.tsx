@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Dropdown, Radio, List, Typography, Badge } from "antd";
+import { Input, Dropdown, Radio, List, Badge } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
