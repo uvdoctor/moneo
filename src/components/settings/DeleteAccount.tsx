@@ -70,17 +70,6 @@ export default function DeleteAccount() {
     }
   };
 
-  const deleteInsUserMap = async (user: string) => {
-    try {
-      const data = await API.graphql(
-        graphqlOperation(mutations.deleteInsUserMap, { input: { user: user } })
-      );
-      console.log(data);
-    } catch (e) {
-      console.log(`Error while deleting InsUserMap: `, e);
-    }
-  };
-
   const handleOk = () => {
     setLoading(true);
     if (input === "delete") {
@@ -92,7 +81,6 @@ export default function DeleteAccount() {
           await deleteUserDetails(getFamilysList, "deleteFamily", "FamilyList");
           await deleteHoldings(owner, "deleteUserHoldings", "AllHoldings");
           await deleteHoldings(owner, "deleteUserIns", "Instrument Holdings");
-          await deleteInsUserMap(owner);
           user.attributes.profile
             ? await Storage.remove(user.attributes.profile)
             : null;
