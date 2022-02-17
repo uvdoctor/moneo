@@ -93,7 +93,7 @@ export const TAB = {
   VEHICLE_INS: "Vehicle",
   OTHERS_INS: "Other",
   CASHFLOW: "Cash Flows",
-  ACCIDENT_INS: "Accident"
+  ACCIDENT_INS: "Accident",
 };
 
 export const LIABILITIES_TAB = "Liabilities";
@@ -190,7 +190,7 @@ function NWContextProvider({ fxRates }: any) {
   const [npsSubcategory, setNpsSubcategory] = useState<Object>({});
   const [familyOptions, setFamilyOptions] = useState<Object>({});
   const [totalStLendings, setTotalStLendings] = useState<number>(0);
-  const [loadingInstruments, setLoadingInstruments] = useState<boolean>(false);
+  const [loadingInstruments, setLoadingInstruments] = useState<boolean>(true);
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
   const [insurance, setInsurance] = useState<Array<HoldingInput>>([]);
   const [totalLifeIns, setTotalLifeIns] = useState<number>(0);
@@ -554,9 +554,10 @@ function NWContextProvider({ fxRates }: any) {
     }
     setSelectedCurrency(defaultCurrency);
     if (allHoldings) setHoldings(true);
+    else setLoadingHoldings(false);
     if (insHoldings) {
       setInsholdings(true);
-    }
+    } else setLoadingInstruments(false);
     setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
     setPreciousMetals([...(allHoldings?.pm ? allHoldings.pm : [])]);
     setPF([...(allHoldings?.pf ? allHoldings.pf : [])]);
@@ -1032,9 +1033,8 @@ function NWContextProvider({ fxRates }: any) {
         totalLifeIns,
         totalVehicleIns,
         totalYearlyPremium,
-        totalAccidentIns
-      }}
-    >
+        totalAccidentIns,
+      }}>
       <GetView />
     </NWContext.Provider>
   );
