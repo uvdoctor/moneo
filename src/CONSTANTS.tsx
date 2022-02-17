@@ -16,6 +16,7 @@ export const ROUTES = {
   TC: "/policies/terms-and-conditions",
   SECURITY: "/policies/security",
   PRIVACY: "/policies/privacy",
+  LOOKUP: "/lookup",
 };
 
 export const CALC_NAMES = {
