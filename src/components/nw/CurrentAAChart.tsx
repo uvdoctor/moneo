@@ -1,4 +1,4 @@
-import { Empty } from "antd";
+import { Empty, Skeleton } from "antd";
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useState } from "react";
 import { COLORS } from "../../CONSTANTS";
@@ -52,6 +52,8 @@ export default function CurrentAAChart() {
     totalStLendings,
     totalBonds,
     totalStocks,
+    loadingInstruments,
+    loadingHoldings,
   }: any = useContext(NWContext);
   const [data, setData] = useState<Array<any>>([]);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
@@ -147,7 +149,7 @@ export default function CurrentAAChart() {
   };
 
   useEffect(() => {
-    if (!totalAssets) {
+    if (!totalAssets || loadingHoldings || loadingInstruments) {
       setData([...[]]);
       return;
     }
@@ -229,7 +231,9 @@ export default function CurrentAAChart() {
     return "";
   };
 
-  return totalAssets ? (
+  return loadingHoldings || loadingInstruments ? (
+    <Skeleton active />
+  ) : data.length ? (
     <div className="container chart">
       <h3>
         {`Total allocation of ${toHumanFriendlyCurrency(
