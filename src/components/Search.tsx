@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Dropdown, Radio, List } from "antd";
+import { Input, Dropdown, Radio, List, Typography, Badge } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
@@ -45,12 +45,12 @@ export default function Search({ inline }: SearchProps) {
 	const Comp = inline ? InlineList : Dropdown;
 	let searchTimeout: any;
 	const onSearch = ({ target: { value } }: any) => {
+		if (value.length < 3) return;
 		if (searchTimeout) clearTimeout(searchTimeout);
 
 		searchTimeout = setTimeout(() => {
-			console.log(value);
 			getSearchData(value);
-		}, 500);
+		}, 200);
 	};
 	const getSearchData = async (text: string) => {
 		try {
@@ -79,10 +79,12 @@ export default function Search({ inline }: SearchProps) {
 						}
 						bordered
 						dataSource={searchResults}
-						renderItem={({ Code, Name }) => (
+						renderItem={({ Code, Name, Exchange }) => (
 							<List.Item>
-								<Link href={`/stockDetail/${Code}`}>
-									<a>{Name}</a>
+								<Link href={`/stockDetail/${Code}.${Exchange}`}>
+									<a>
+										{Name} <Badge count={Exchange} />
+									</a>
 								</Link>
 							</List.Item>
 						)}

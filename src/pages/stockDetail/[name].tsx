@@ -10,11 +10,11 @@ Amplify.configure({ ...awsexports, ssr: true });
 
 export default function StockDetailPage() {
 	const router = useRouter();
-	const { stock } = router.query;
+	const { name } = router.query;
 
 	return (
-		<BasicPage title={`Moneo - Stock Detail | ${stock}`} secure>
-			<StockDetailContextProvider stock={stock}>
+		<BasicPage title={`Moneo - Stock Detail | ${name}`} secure>
+			<StockDetailContextProvider name={name}>
 				<StockDetail />
 			</StockDetailContextProvider>
 		</BasicPage>

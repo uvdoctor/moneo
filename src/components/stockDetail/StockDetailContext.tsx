@@ -2,11 +2,11 @@ import React, { createContext } from "react";
 
 const StockDetailContext = createContext({});
 
-function StockDetailContextProvider({ stock, children }: any) {
+function StockDetailContextProvider({ name, children }: any) {
 	return (
 		<StockDetailContext.Provider
 			value={{
-				stock,
+				name,
 			}}
 		>
 			{children}
