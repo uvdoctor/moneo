@@ -72,9 +72,10 @@ export default function DeleteAccount() {
 
   const deleteInsUserMap = async (user: string) => {
     try {
-      return await API.graphql(
+      const data = await API.graphql(
         graphqlOperation(mutations.deleteInsUserMap, { input: { user: user } })
       );
+      console.log(data);
     } catch (e) {
       console.log(`Error while deleting InsUserMap: `, e);
     }
