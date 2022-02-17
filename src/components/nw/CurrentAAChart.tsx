@@ -53,7 +53,6 @@ export default function CurrentAAChart() {
     totalBonds,
     totalStocks,
     loadingInstruments,
-    loadingHoldings,
   }: any = useContext(NWContext);
   const [data, setData] = useState<Array<any>>([]);
   const [emergencyInfo, setEmergencyInfo] = useState<any>("");
@@ -149,7 +148,7 @@ export default function CurrentAAChart() {
   };
 
   useEffect(() => {
-    if (!totalAssets || loadingHoldings || loadingInstruments) {
+    if (!totalAssets || loadingInstruments) {
       setData([...[]]);
       return;
     }
@@ -231,7 +230,7 @@ export default function CurrentAAChart() {
     return "";
   };
 
-  return loadingHoldings || loadingInstruments ? (
+  return loadingInstruments ? (
     <Skeleton active />
   ) : data.length ? (
     <div className="container chart">
