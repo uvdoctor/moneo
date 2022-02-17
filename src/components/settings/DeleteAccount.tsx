@@ -81,6 +81,7 @@ export default function DeleteAccount() {
           await deleteUserDetails(getFamilysList, "deleteFamily", "FamilyList");
           await deleteHoldings(owner, "deleteUserHoldings", "AllHoldings");
           await deleteHoldings(owner, "deleteUserIns", "Instrument Holdings");
+          await deleteHoldings(owner, 'deleteInsUserMap', 'User Instrument Map');
           user.attributes.profile
             ? await Storage.remove(user.attributes.profile)
             : null;
