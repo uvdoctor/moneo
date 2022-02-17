@@ -1,4 +1,4 @@
-import { Button, Col, Empty, Row, Table } from "antd";
+import { Col, Empty, Row, Table } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { HoldingInput } from "../../api/goals";
 import { NWContext, TAB } from "./NWContext";
@@ -16,13 +16,13 @@ import Category from "./Category";
 import Amount from "./Amount";
 import DateColumn from "./DateColumn";
 import { toHumanFriendlyCurrency } from "../utils";
-import { DeleteOutlined } from "@ant-design/icons";
 import { calculateCompundingIncome } from "./valuationutils";
 import Rate from "./Rate";
 import Quantity from "./Quantity";
 import Comment from "./Comment";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import MemberInput from "./MemberInput";
+import DeleteButton from "./DeleteButton";
 require("./ListHoldings.less");
 
 interface ListHoldingsProps {
@@ -47,8 +47,7 @@ export default function ListHoldings({
     fxRates,
     familyOptions,
   }: any = useContext(NWContext);
-  const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } =
-    TAB;
+  const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
   const [dataSource, setDataSource] = useState<Array<any>>([]);
 
   const allColumns: any = {
@@ -63,41 +62,35 @@ export default function ListHoldings({
     date: { title: fields.date, dataIndex: "date", key: "date" },
     label: { title: fields.name, dataIndex: "label", key: "label" },
     qty: { title: fields.qty, dataIndex: "qty", key: "qty" },
-    del: { title: "", dataIndex: "del", key: "del", align: "left" },
     mat: { title: "Maturity Amount", key: "mat", dataIndex: "mat" },
   };
   let defaultColumns: Array<string> = [];
   let expandedColumns: Array<string> = [];
   if (hasminimumCol(childTab)) {
-    defaultColumns = ["amount", "label", "del"];
+    defaultColumns = ["amount", "label"];
     expandedColumns = Object.keys(familyOptions).length > 1 ? ["fid"] : [];
   } else if (childTab === OTHER) {
-    defaultColumns = ["amount", "type", "del"];
+    defaultColumns = ["amount", "type"];
     expandedColumns = ["label", "fid"];
   } else if (childTab === PM || childTab === CRYPTO || childTab === NPS) {
-    defaultColumns = ["amount", "val", "del"];
+    defaultColumns = ["amount", "val"];
     expandedColumns = ["type", "fid"];
   } else if (childTab === VEHICLE) {
-    defaultColumns = ["amount", "val", "del"];
+    defaultColumns = ["amount", "val"];
     expandedColumns = ["label", "type", "date", "fid"];
   } else if (childTab === LENT || childTab === LTDEP || childTab === P2P) {
-    defaultColumns = ["amount", "val", "del"];
+    defaultColumns = ["amount", "val"];
     expandedColumns = ["label", "type", "date", "rate", "mat", "fid"];
   } else if (childTab === PF) {
-    defaultColumns = ["amount", "val", "del"];
+    defaultColumns = ["amount", "val"];
     expandedColumns = ["type", "rate", "qty", "fid"];
   } else if (childTab === LOAN) {
-    defaultColumns = ["amount", "val", "del"];
+    defaultColumns = ["amount", "val"];
     expandedColumns = ["label", "date", "rate", "fid"];
   }
 
   const changeOwner = (ownerKey: string, i: number) => {
     data[i].fId = ownerKey;
-    changeData([...data]);
-  };
-
-  const removeHolding = (i: number) => {
-    data.splice(i, 1);
     changeData([...data]);
   };
 
@@ -112,18 +105,22 @@ export default function ListHoldings({
           record={holding}
           changeData={changeData}
           data={data}
-          pre={childTab === OTHER ? '' :fields.type}
+          pre={childTab === OTHER ? "" : fields.type}
           info={info.type}
+          post={
+            defaultColumns[1] === "type" ? (
+              <DeleteButton data={data} changeData={changeData} index={i} />
+            ) : null
+          }
         />
       ),
-      val: valuation && toHumanFriendlyCurrency(valuation, selectedCurrency),
-      del: (
-        <Button
-          type="link"
-          onClick={() => removeHolding(i)}
-          danger
-          icon={<DeleteOutlined />}
-        />
+      val: valuation && (
+        <>
+          {toHumanFriendlyCurrency(valuation, selectedCurrency)}
+          {defaultColumns[1] === "val" ? (
+            <DeleteButton data={data} changeData={changeData} index={i} />
+          ) : null}
+        </>
       ),
       qty: hasPF(childTab) && (
         <Quantity
@@ -145,10 +142,7 @@ export default function ListHoldings({
       ),
     };
 
-    if (
-      hasDate(childTab) &&
-      expandedColumns.includes("date")
-    ) {
+    if (hasDate(childTab) && expandedColumns.includes("date")) {
       dataToRender.date = (
         <DateColumn
           data={data}
@@ -181,12 +175,21 @@ export default function ListHoldings({
     }
     if (hasName(childTab)) {
       dataToRender.label = (
-        <Comment
-          changeData={changeData}
-          data={data}
-          record={holding}
-          pre={expandedColumns.includes("label") ? fields.name : ""}
-        />
+        <Row>
+          <Col span={18}>
+            <Comment
+              changeData={changeData}
+              data={data}
+              record={holding}
+              pre={expandedColumns.includes("label") ? fields.name : ""}
+            />
+          </Col>
+          <Col>
+            {defaultColumns[1] === "label" ? (
+              <DeleteButton data={data} changeData={changeData} index={i} />
+            ) : null}
+          </Col>
+        </Row>
       );
     }
     return dataToRender;
@@ -200,7 +203,8 @@ export default function ListHoldings({
         gutter={[
           { xs: 0, sm: 10, md: 30 },
           { xs: 20, sm: 10, md: 20 },
-        ]}>
+        ]}
+      >
         {expandedColumns.map((item: any) => {
           return (
             dataSource[item] && (
@@ -237,7 +241,14 @@ export default function ListHoldings({
       }
     };
     getData();
-  }, [data, selectedMembers, selectedCurrency, familyOptions, childTab, npsData]);
+  }, [
+    data,
+    selectedMembers,
+    selectedCurrency,
+    familyOptions,
+    childTab,
+    npsData,
+  ]);
 
   return dataSource.length ? (
     <Table

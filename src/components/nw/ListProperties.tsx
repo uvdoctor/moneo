@@ -3,7 +3,7 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { PropertyInput, PropertyType } from "../../api/goals";
 import { NWContext } from "./NWContext";
 import { doesPropertyMatch } from "./nwutils";
-import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { presentMonth, presentYear, toHumanFriendlyCurrency } from "../utils";
 import { getCompoundedIncome } from "../calc/finance";
 import {
@@ -21,6 +21,7 @@ import MarketValue from "./MarketValue";
 import Address from "./Address";
 import Residential from "./Residential";
 import { ALL_FAMILY } from "./FamilyInput";
+import DeleteButton from "./DeleteButton";
 require("./ListProperties.less");
 
 interface ListPropertiesProps {
@@ -46,10 +47,6 @@ export default function ListProperties({
     Array<{ index: number; mode: boolean }>
   >([]);
   const today = new Date();
-  const removeHolding = (i: number) => {
-    data.splice(i, 1);
-    changeData([...data]);
-  };
 
   useEffect(() => {
     if (indexForMv !== null) {
@@ -223,63 +220,52 @@ export default function ListProperties({
           />
         ),
         val: (
-          <Row justify="space-between" align="middle">
+          <Row align={isEditMode ? "top" : "middle"}>
             <Col>
-              <Row align={isEditMode ? "top" : "middle"}>
-                <Col>
-                  {isEditMode.length && isEditMode[0].index === i ? (
-                    <MarketValue
-                      changeData={changeData}
-                      record={data[i]}
-                      pre={""}
-                      data={data}
-                    />
+              {isEditMode.length && isEditMode[0].index === i ? (
+                <MarketValue
+                  changeData={changeData}
+                  record={data[i]}
+                  pre={""}
+                  data={data}
+                />
+              ) : (
+                toHumanFriendlyCurrency(Number(data[i].mv), data[i].curr)
+              )}
+            </Col>
+            <Col>
+              <Button
+                type="link"
+                icon={
+                  isEditMode.length && isEditMode[0].index === i ? (
+                    <SaveOutlined />
                   ) : (
-                    toHumanFriendlyCurrency(Number(data[i].mv), data[i].curr)
-                  )}
-                </Col>
-                <Col>
-                  <Button
-                    type="link"
-                    icon={
-                      isEditMode.length && isEditMode[0].index === i ? (
-                        <SaveOutlined />
-                      ) : (
-                        <EditOutlined />
-                      )
-                    }
-                    onClick={() =>
-                      isEditMode.length
-                        ? setIsEditMode([...[]])
-                        : setIsEditMode([...[{ index: i, mode: true }]])
-                    }
-                  />
-                </Col>
-                {!selectedMembers.includes(ALL_FAMILY) && (
-                  <Col xs={24}>
-                    {valuationByMembers.map(
-                      (item: { fid: string; value: number }, index) => (
-                        <label key={`fid-${index}`}>
-                          {`${
-                            familyOptions[item.fid]
-                          } - ${toHumanFriendlyCurrency(
-                            Number(item.value),
-                            data[i].curr
-                          )}`}
-                          <br />
-                        </label>
-                      )
-                    )}
-                  </Col>
+                    <EditOutlined />
+                  )
+                }
+                onClick={() =>
+                  isEditMode.length
+                    ? setIsEditMode([...[]])
+                    : setIsEditMode([...[{ index: i, mode: true }]])
+                }
+              />
+              <DeleteButton data={data} changeData={changeData} index={i}/>
+            </Col>
+            {!selectedMembers.includes(ALL_FAMILY) && (
+              <Col xs={24}>
+                {valuationByMembers.map(
+                  (item: { fid: string; value: number }, index) => (
+                    <label key={`fid-${index}`}>
+                      {`${familyOptions[item.fid]} - ${toHumanFriendlyCurrency(
+                        Number(item.value),
+                        data[i].curr
+                      )}`}
+                      <br />
+                    </label>
+                  )
                 )}
-              </Row>
-            </Col>
-
-            <Col>
-              <Button type="link" onClick={() => removeHolding(i)} danger>
-                <DeleteOutlined />
-              </Button>
-            </Col>
+              </Col>
+            )}
           </Row>
         ),
       });

@@ -1,4 +1,4 @@
-import { Button, Col, Empty, Row, Table } from "antd";
+import { Col, Empty, Row, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { HoldingInput } from "../../api/goals";
 import { NWContext } from "./NWContext";
@@ -6,10 +6,10 @@ import { doesHoldingMatch, hasDate, hasRate } from "./nwutils";
 import Category from "./Category";
 import Amount from "./Amount";
 import DateColumn from "./DateColumn";
-import { DeleteOutlined } from "@ant-design/icons";
 import MemberInput from "./MemberInput";
 import Rate from "./Rate";
 import Quantity from "./Quantity";
+import DeleteButton from "./DeleteButton";
 require("./ListHoldings.less");
 
 interface ListInsuranceProps {
@@ -40,18 +40,12 @@ export default function ListInsurance({
     rate: { title: fields.rate, dataIndex: "rate", key: "rate" },
     date: { title: fields.date, dataIndex: "date", key: "date" },
     qty: { title: fields.qty, dataIndex: "qty", key: "qty" },
-    del: { title: "", dataIndex: "del", key: "del", align: "left" },
   };
-  let defaultColumns: Array<string> = ["amount", "type", "del"];
+  let defaultColumns: Array<string> = ["amount", "type"];
   let expandedColumns: Array<string> = ["date", "rate", "qty", "fid"];
 
   const changeOwner = (ownerKey: string, i: number) => {
     data[i].fId = ownerKey;
-    changeData([...data]);
-  };
-
-  const removeHolding = (i: number) => {
-    data.splice(i, 1);
     changeData([...data]);
   };
 
@@ -68,17 +62,10 @@ export default function ListInsurance({
           data={data}
           pre={""}
           info={info.type}
+          post={<DeleteButton data={data} changeData={changeData} index={i}/>}
         />
       ),
       qty: <Quantity changeData={changeData} record={holding} pre={fields.qty} info={info.qty} data={data}/>,
-      del: (
-        <Button
-          type="link"
-          onClick={() => removeHolding(i)}
-          danger
-          icon={<DeleteOutlined />}
-        />
-      ),
     };
 
     if (hasDate(childTab) && expandedColumns.includes("date")) {

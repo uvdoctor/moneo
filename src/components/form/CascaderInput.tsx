@@ -13,6 +13,7 @@ interface CascaderInputProps {
 	childChangeHandler?: any;
 	childValue?: string | number;
 	width?: number
+	post?: any
 }
 
 export default function CascaderInput({
@@ -23,7 +24,8 @@ export default function CascaderInput({
 	options,
 	childChangeHandler,
 	parentChangeHandler,
-	width
+	width,
+	post
 }: CascaderInputProps) {
 	const fsb = useFullScreenBrowser();
 	const defaultValue: any = childChangeHandler ? [ parentValue, childValue ] : [ parentValue ];
@@ -45,12 +47,13 @@ export default function CascaderInput({
 			<LabelWithTooltip label={pre} info={info} />
 			<Cascader
 				allowClear={false}
-				style={{ width: isMobileDevice(fsb) ? 120 : width ? width : 200 }}
+				style={{ width: isMobileDevice(fsb) ? 100 : width ? width : 200 }}
 				defaultValue={defaultValue}
 				options={options}
 				onChange={onChange}
 				showSearch={{ filter }}
 			/>
+			{post ? post : null}
 		</Fragment>
 	);
 }
