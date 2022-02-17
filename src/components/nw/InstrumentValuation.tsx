@@ -188,20 +188,16 @@ export default function InstrumentValuation() {
           const { CB, GBO, I, HB, GB, L } = AssetSubType;
           const { subt, mftype, type, mcap } = data;
           return (
-            (selectedTags.includes(AssetType.H) && type === AssetType.H) ||
-            (selectedTags.includes(AssetType.A) && type === AssetType.A) ||
+            selectedTags.includes(type) ||
             (type === AssetType.E &&
-              ((selectedTags.includes(MCap.L) && mcap === MCap.L) ||
-                (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
+              (selectedTags.includes(mcap) ||
                 (selectedTags.includes("HC") && mcap === MCap.H) ||
                 (selectedTags.includes(MCap.S) &&
                   (mcap === MCap.S || !mcap)))) ||
             (type === AssetType.F &&
               ((selectedTags.includes("CB") &&
                 (subt === CB || mftype === MFSchemeType.O)) ||
-                (selectedTags.includes("I") &&
-                  type === AssetType.F &&
-                  subt === I) ||
+                (selectedTags.includes("I") && subt === I) ||
                 (selectedTags.includes("GovB") &&
                   (subt === GB || subt === GBO)) ||
                 (selectedTags.includes("IF") &&
@@ -214,17 +210,13 @@ export default function InstrumentValuation() {
           );
         }
         if (childTab === STOCK && data && selectedTags.length) {
-          return (
-            (selectedTags.includes(MCap.L) && data.mcapt === MCap.L) ||
-            (selectedTags.includes(MCap.M) && data.mcapt === MCap.M) ||
-            (selectedTags.includes(MCap.S) && data.mcapt === MCap.S)
-          );
+          return selectedTags.includes(data.mcapt);
         } else if (childTab === BOND && data && selectedTags.length) {
           const { subt } = data;
-          const { GB, CB, GBO } = AssetSubType;
+          const { GB, GBO } = AssetSubType;
           return (
             (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
-            (selectedTags.includes(CB) && subt === CB)
+            selectedTags.includes(subt)
           );
         }
       }
