@@ -64,6 +64,7 @@ export default function GoalDetails() {
   };
 
   useEffect(() => {
+    if (goal.type != GoalType.B) return;
     const isProp = buyType === BuyType.P;
     setAssetChgRate(isProp ? 5 : buyType === BuyType.O ? -20 : -15);
     setSellAfter(isProp ? 20 : 5);

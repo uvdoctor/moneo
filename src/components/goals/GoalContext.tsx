@@ -187,15 +187,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
     goal?.rachg
   );
-  const [buyType, setBuyType] = useState<BuyType>(
-    goal?.bt ? goal.bt : BuyType.P
-  );
-  const [runningCost, setRunningCost] = useState<number>(
-    goal?.rc ? goal.rc : 0
-  );
-  const [runningCostChg, setRunningCostChg] = useState<number>(
-    goal?.rcchg ? goal.rcchg : 0
-  );
+  const [buyType, setBuyType] = useState<BuyType>(goal?.bt);
+  const [runningCost, setRunningCost] = useState<number>(goal?.rc);
+  const [runningCostChg, setRunningCostChg] = useState<number>(goal?.rcchg);
   const [brAns, setBRAns] = useState<any>("");
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
