@@ -65,11 +65,11 @@ export default function Filter({ options }: FilterProps) {
   return (
     <>
       {selectedTags.length
-        ? selectedTags.map((item: string, ind: number) => {
+        ? selectedTags.map((item: string) => {
             return <Tag
               closable
               onClose={() => onClose(item)}
-              key={`tag-${ind}`}
+              key={item}
               color="blue"
             >
               {getTagLabel(item)}
