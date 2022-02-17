@@ -8,15 +8,15 @@ import StockDetail from "../../components/stockDetail/StockDetail";
 
 Amplify.configure({ ...awsexports, ssr: true });
 
-export default function StockDetailPage() {
-	const router = useRouter();
-	const { name } = router.query;
+export default function LookupPage() {
+  const router = useRouter();
+  const { name } = router.query;
 
-	return (
-		<BasicPage title={`Moneo - Stock Detail | ${name}`} secure>
-			<StockDetailContextProvider name={name}>
-				<StockDetail />
-			</StockDetailContextProvider>
-		</BasicPage>
-	);
+  return (
+    <BasicPage title={`Moneo - ${name}`} secure>
+      <StockDetailContextProvider name={name}>
+        <StockDetail />
+      </StockDetailContextProvider>
+    </BasicPage>
+  );
 }
