@@ -576,6 +576,8 @@ export const onCreateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -606,6 +608,8 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -636,6 +640,8 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -680,34 +686,40 @@ export const onDeleteInsBhs = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInsUni = /* GraphQL */ `
-  subscription OnCreateInsUni {
-    onCreateInsUni {
+export const onCreateInsUserMap = /* GraphQL */ `
+  subscription OnCreateInsUserMap {
+    onCreateInsUserMap {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateInsUni = /* GraphQL */ `
-  subscription OnUpdateInsUni {
-    onUpdateInsUni {
+export const onUpdateInsUserMap = /* GraphQL */ `
+  subscription OnUpdateInsUserMap {
+    onUpdateInsUserMap {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteInsUni = /* GraphQL */ `
-  subscription OnDeleteInsUni {
-    onDeleteInsUni {
+export const onDeleteInsUserMap = /* GraphQL */ `
+  subscription OnDeleteInsUserMap {
+    onDeleteInsUserMap {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }

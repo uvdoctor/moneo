@@ -1599,6 +1599,8 @@ export const createInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -1632,6 +1634,8 @@ export const updateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -1665,6 +1669,8 @@ export const deleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -1718,43 +1724,49 @@ export const deleteInsBhs = /* GraphQL */ `
     }
   }
 `;
-export const createInsUni = /* GraphQL */ `
-  mutation CreateInsUni(
-    $input: CreateInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const createInsUserMap = /* GraphQL */ `
+  mutation CreateInsUserMap(
+    $input: CreateInsUserMapInput!
+    $condition: ModelInsUserMapConditionInput
   ) {
-    createInsUni(input: $input, condition: $condition) {
+    createInsUserMap(input: $input, condition: $condition) {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const updateInsUni = /* GraphQL */ `
-  mutation UpdateInsUni(
-    $input: UpdateInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const updateInsUserMap = /* GraphQL */ `
+  mutation UpdateInsUserMap(
+    $input: UpdateInsUserMapInput!
+    $condition: ModelInsUserMapConditionInput
   ) {
-    updateInsUni(input: $input, condition: $condition) {
+    updateInsUserMap(input: $input, condition: $condition) {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteInsUni = /* GraphQL */ `
-  mutation DeleteInsUni(
-    $input: DeleteInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const deleteInsUserMap = /* GraphQL */ `
+  mutation DeleteInsUserMap(
+    $input: DeleteInsUserMapInput!
+    $condition: ModelInsUserMapConditionInput
   ) {
-    deleteInsUni(input: $input, condition: $condition) {
+    deleteInsUserMap(input: $input, condition: $condition) {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }

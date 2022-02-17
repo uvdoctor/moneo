@@ -369,6 +369,8 @@ type INExchgPrice
   beta: Float
   mcap: Float
   mcapt: MCap
+  ana: AWSJSON
+  risk: RiskProfile
 }
 
 enum Recommendation {
@@ -397,10 +399,10 @@ type InsBHS
   ca: AWSJSON
 }
 
-type InsUni
+type InsUserMap
   @model
   @aws_iam
-  @key(fields: ["id"])
+  @key(fields: ["id", "user"])
   @auth(
     rules: [
       {
@@ -408,12 +410,13 @@ type InsUni
         provider: iam
         operations: [create, read, update, delete]
       }
-      { allow: private, operations: [read] }
     ]
   ) {
   id: String!
-  ana: AWSJSON
-  risk: RiskProfile
+  sid: String
+  type: AssetType
+  subt: AssetSubType
+  user: String!
 }
 
 type AllIndices

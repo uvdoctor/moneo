@@ -272,7 +272,7 @@
               "Action": [
                 "dynamodb:*"
               ],
-              "Resource": "arn:aws:dynamodb:*:*:table/InsUni-*"
+              "Resource": "arn:aws:dynamodb:*:*:table/InsUserMap-*"
             }
           ]
         }

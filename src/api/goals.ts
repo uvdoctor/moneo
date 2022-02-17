@@ -1044,6 +1044,8 @@ export type CreateINExchgPriceInput = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
+  ana?: string | null,
+  risk?: RiskProfile | null,
 };
 
 export enum InsType {
@@ -1083,6 +1085,8 @@ export type ModelINExchgPriceConditionInput = {
   beta?: ModelFloatInput | null,
   mcap?: ModelFloatInput | null,
   mcapt?: ModelMCapInput | null,
+  ana?: ModelStringInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINExchgPriceConditionInput | null > | null,
   or?: Array< ModelINExchgPriceConditionInput | null > | null,
   not?: ModelINExchgPriceConditionInput | null,
@@ -1132,6 +1136,8 @@ export type INExchgPrice = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
+  ana?: string | null,
+  risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1159,6 +1165,8 @@ export type UpdateINExchgPriceInput = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
+  ana?: string | null,
+  risk?: RiskProfile | null,
 };
 
 export type DeleteINExchgPriceInput = {
@@ -1218,37 +1226,45 @@ export type DeleteInsBHSInput = {
   id: string,
 };
 
-export type CreateInsUniInput = {
+export type CreateInsUserMapInput = {
   id: string,
-  ana?: string | null,
-  risk?: RiskProfile | null,
+  sid?: string | null,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
+  user: string,
 };
 
-export type ModelInsUniConditionInput = {
-  ana?: ModelStringInput | null,
-  risk?: ModelRiskProfileInput | null,
-  and?: Array< ModelInsUniConditionInput | null > | null,
-  or?: Array< ModelInsUniConditionInput | null > | null,
-  not?: ModelInsUniConditionInput | null,
+export type ModelInsUserMapConditionInput = {
+  sid?: ModelStringInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  and?: Array< ModelInsUserMapConditionInput | null > | null,
+  or?: Array< ModelInsUserMapConditionInput | null > | null,
+  not?: ModelInsUserMapConditionInput | null,
 };
 
-export type InsUni = {
-  __typename: "InsUni",
+export type InsUserMap = {
+  __typename: "InsUserMap",
   id?: string,
-  ana?: string | null,
-  risk?: RiskProfile | null,
+  sid?: string | null,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
+  user?: string,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateInsUniInput = {
+export type UpdateInsUserMapInput = {
   id: string,
-  ana?: string | null,
-  risk?: RiskProfile | null,
+  sid?: string | null,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
+  user: string,
 };
 
-export type DeleteInsUniInput = {
+export type DeleteInsUserMapInput = {
   id: string,
+  user: string,
 };
 
 export type CreateAllIndicesInput = {
@@ -1818,6 +1834,8 @@ export type ModelINExchgPriceFilterInput = {
   beta?: ModelFloatInput | null,
   mcap?: ModelFloatInput | null,
   mcapt?: ModelMCapInput | null,
+  ana?: ModelStringInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINExchgPriceFilterInput | null > | null,
   or?: Array< ModelINExchgPriceFilterInput | null > | null,
   not?: ModelINExchgPriceFilterInput | null,
@@ -1846,18 +1864,30 @@ export type ModelInsBHSConnection = {
   nextToken?: string | null,
 };
 
-export type ModelInsUniFilterInput = {
-  id?: ModelStringInput | null,
-  ana?: ModelStringInput | null,
-  risk?: ModelRiskProfileInput | null,
-  and?: Array< ModelInsUniFilterInput | null > | null,
-  or?: Array< ModelInsUniFilterInput | null > | null,
-  not?: ModelInsUniFilterInput | null,
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
-export type ModelInsUniConnection = {
-  __typename: "ModelInsUniConnection",
-  items?:  Array<InsUni | null >,
+export type ModelInsUserMapFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  user?: ModelStringInput | null,
+  and?: Array< ModelInsUserMapFilterInput | null > | null,
+  or?: Array< ModelInsUserMapFilterInput | null > | null,
+  not?: ModelInsUserMapFilterInput | null,
+};
+
+export type ModelInsUserMapConnection = {
+  __typename: "ModelInsUserMapConnection",
+  items?:  Array<InsUserMap | null >,
   nextToken?: string | null,
 };
 
@@ -3748,6 +3778,8 @@ export type CreateInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3783,6 +3815,8 @@ export type UpdateInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3818,6 +3852,8 @@ export type DeleteInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3877,49 +3913,55 @@ export type DeleteInsBhsMutation = {
   } | null,
 };
 
-export type CreateInsUniMutationVariables = {
-  input?: CreateInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type CreateInsUserMapMutationVariables = {
+  input?: CreateInsUserMapInput,
+  condition?: ModelInsUserMapConditionInput | null,
 };
 
-export type CreateInsUniMutation = {
-  createInsUni?:  {
-    __typename: "InsUni",
+export type CreateInsUserMapMutation = {
+  createInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateInsUniMutationVariables = {
-  input?: UpdateInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type UpdateInsUserMapMutationVariables = {
+  input?: UpdateInsUserMapInput,
+  condition?: ModelInsUserMapConditionInput | null,
 };
 
-export type UpdateInsUniMutation = {
-  updateInsUni?:  {
-    __typename: "InsUni",
+export type UpdateInsUserMapMutation = {
+  updateInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteInsUniMutationVariables = {
-  input?: DeleteInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type DeleteInsUserMapMutationVariables = {
+  input?: DeleteInsUserMapInput,
+  condition?: ModelInsUserMapConditionInput | null,
 };
 
-export type DeleteInsUniMutation = {
-  deleteInsUni?:  {
-    __typename: "InsUni",
+export type DeleteInsUserMapMutation = {
+  deleteInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4857,6 +4899,8 @@ export type GetInExchgPriceQuery = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4897,6 +4941,8 @@ export type ListInExchgPricesQuery = {
       beta?: number | null,
       mcap?: number | null,
       mcapt?: MCap | null,
+      ana?: string | null,
+      risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4946,37 +4992,43 @@ export type ListInsBhSsQuery = {
   } | null,
 };
 
-export type GetInsUniQueryVariables = {
+export type GetInsUserMapQueryVariables = {
   id?: string,
+  user?: string,
 };
 
-export type GetInsUniQuery = {
-  getInsUni?:  {
-    __typename: "InsUni",
+export type GetInsUserMapQuery = {
+  getInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListInsUnisQueryVariables = {
+export type ListInsUserMapsQueryVariables = {
   id?: string | null,
-  filter?: ModelInsUniFilterInput | null,
+  user?: ModelStringKeyConditionInput | null,
+  filter?: ModelInsUserMapFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInsUnisQuery = {
-  listInsUnis?:  {
-    __typename: "ModelInsUniConnection",
+export type ListInsUserMapsQuery = {
+  listInsUserMaps?:  {
+    __typename: "ModelInsUserMapConnection",
     items:  Array< {
-      __typename: "InsUni",
+      __typename: "InsUserMap",
       id: string,
-      ana?: string | null,
-      risk?: RiskProfile | null,
+      sid?: string | null,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
+      user: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6523,6 +6575,8 @@ export type OnCreateInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6553,6 +6607,8 @@ export type OnUpdateInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6583,6 +6639,8 @@ export type OnDeleteInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
+    ana?: string | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6627,34 +6685,40 @@ export type OnDeleteInsBhsSubscription = {
   } | null,
 };
 
-export type OnCreateInsUniSubscription = {
-  onCreateInsUni?:  {
-    __typename: "InsUni",
+export type OnCreateInsUserMapSubscription = {
+  onCreateInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateInsUniSubscription = {
-  onUpdateInsUni?:  {
-    __typename: "InsUni",
+export type OnUpdateInsUserMapSubscription = {
+  onUpdateInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteInsUniSubscription = {
-  onDeleteInsUni?:  {
-    __typename: "InsUni",
+export type OnDeleteInsUserMapSubscription = {
+  onDeleteInsUserMap?:  {
+    __typename: "InsUserMap",
     id: string,
-    ana?: string | null,
-    risk?: RiskProfile | null,
+    sid?: string | null,
+    type?: AssetType | null,
+    subt?: AssetSubType | null,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,

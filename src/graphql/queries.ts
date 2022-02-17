@@ -594,6 +594,8 @@ export const getInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
+      ana
+      risk
       createdAt
       updatedAt
     }
@@ -637,6 +639,8 @@ export const listInExchgPrices = /* GraphQL */ `
         beta
         mcap
         mcapt
+        ana
+        risk
         createdAt
         updatedAt
       }
@@ -685,27 +689,31 @@ export const listInsBhSs = /* GraphQL */ `
     }
   }
 `;
-export const getInsUni = /* GraphQL */ `
-  query GetInsUni($id: String!) {
-    getInsUni(id: $id) {
+export const getInsUserMap = /* GraphQL */ `
+  query GetInsUserMap($id: String!, $user: String!) {
+    getInsUserMap(id: $id, user: $user) {
       id
-      ana
-      risk
+      sid
+      type
+      subt
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const listInsUnis = /* GraphQL */ `
-  query ListInsUnis(
+export const listInsUserMaps = /* GraphQL */ `
+  query ListInsUserMaps(
     $id: String
-    $filter: ModelInsUniFilterInput
+    $user: ModelStringKeyConditionInput
+    $filter: ModelInsUserMapFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listInsUnis(
+    listInsUserMaps(
       id: $id
+      user: $user
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -713,8 +721,10 @@ export const listInsUnis = /* GraphQL */ `
     ) {
       items {
         id
-        ana
-        risk
+        sid
+        type
+        subt
+        user
         createdAt
         updatedAt
       }
