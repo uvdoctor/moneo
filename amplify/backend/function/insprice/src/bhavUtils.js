@@ -180,7 +180,16 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         Item.div = dividend.dividend;
       }
       if (eod) {
-        const { code, name, MarketCapitalization, adjusted_close, hi_250d, lo_250d, close, Beta } = eod;
+        const {
+          code,
+          name,
+          MarketCapitalization,
+          adjusted_close,
+          hi_250d,
+          lo_250d,
+          close,
+          Beta,
+        } = eod;
         Item.sid = code;
         Item.name = name;
         Item.price = adjusted_close;
@@ -190,7 +199,12 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
       }
-      Item.risk = calculateRisk(Item.beta ? Item.beta : "", Item.mcapt);
+      Item.risk = calculateRisk(
+        Item.beta ? Item.beta : "",
+        Item.mcapt,
+        Item.subt,
+        Item.itype
+      );
     });
   });
   return exchgData;

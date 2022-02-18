@@ -88,10 +88,19 @@ const calc = {
   },
 };
 
-const calculateRisk = (beta, mcapt) => {
-  if (mcapt === "L") return beta > 1 ? "A" : "M";
-  if (mcapt === "M") return beta > 1 ? "VA" : "A";
-  return "VA";
+const calculateRisk = (beta, mcapt, subt, itype) => {
+  if (itype === "ETF") {
+    if (subt === "GB" || subt === "GBO") return "VC";
+    if (subt === "I") return "M";
+    if (mcapt === "L" && subt === "S") return "M";
+    if (mcapt !== "L" && subt === "S") return "A";
+    return "C";
+  }
+  if (subt === "S") {
+    if (mcapt === "L") return beta && beta > 1 ? "A" : "M";
+    if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
+    return "VA";
+  }
 };
 
 const calcSchema = (
