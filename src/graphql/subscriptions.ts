@@ -551,6 +551,45 @@ export const onDeleteFeeds = /* GraphQL */ `
     }
   }
 `;
+export const onCreateInExchgFun = /* GraphQL */ `
+  subscription OnCreateInExchgFun {
+    onCreateINExchgFun {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInExchgFun = /* GraphQL */ `
+  subscription OnUpdateInExchgFun {
+    onUpdateINExchgFun {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInExchgFun = /* GraphQL */ `
+  subscription OnDeleteInExchgFun {
+    onDeleteINExchgFun {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateInExchgPrice = /* GraphQL */ `
   subscription OnCreateInExchgPrice {
     onCreateINExchgPrice {
@@ -576,7 +615,8 @@ export const onCreateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -608,7 +648,8 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -640,7 +681,8 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -809,6 +851,7 @@ export const onCreateInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -835,6 +878,7 @@ export const onUpdateInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -861,6 +905,7 @@ export const onDeleteInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -880,6 +925,7 @@ export const onCreateInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -899,6 +945,7 @@ export const onUpdateInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -918,6 +965,7 @@ export const onDeleteInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -933,6 +981,7 @@ export const onCreateNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }
@@ -948,6 +997,7 @@ export const onUpdateNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }
@@ -963,6 +1013,7 @@ export const onDeleteNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }

@@ -333,6 +333,27 @@ type Feeds
   count: Int!
 }
 
+type INExchgFun
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  sid: String!
+  exchg: Exchange!
+  ana: AWSJSON
+  risk: RiskProfile
+}
+
 type INExchgPrice
   @model
   @aws_iam
@@ -369,7 +390,8 @@ type INExchgPrice
   beta: Float
   mcap: Float
   mcapt: MCap
-  ana: AWSJSON
+  sector: String
+  ind: String
   risk: RiskProfile
 }
 
@@ -480,6 +502,7 @@ type INBondPrice
   cr: CreditRating
   crstr: String
   ytm: Float
+  risk: RiskProfile
 }
 
 type INMFPrice
@@ -507,6 +530,7 @@ type INMFPrice
   mftype: MFSchemeType!
   mcap: MCap
   tf: Boolean
+  risk: RiskProfile
 }
 
 enum NPSPFM {
@@ -550,6 +574,7 @@ type NPSPrice
   type: AssetType!
   subt: AssetSubType!
   price: Float!
+  risk: RiskProfile
 }
 
 type Family @model @auth(rules: [{ allow: owner }]) {

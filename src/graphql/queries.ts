@@ -569,6 +569,47 @@ export const listFeedss = /* GraphQL */ `
     }
   }
 `;
+export const getInExchgFun = /* GraphQL */ `
+  query GetInExchgFun($id: String!) {
+    getINExchgFun(id: $id) {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInExchgFuns = /* GraphQL */ `
+  query ListInExchgFuns(
+    $id: String
+    $filter: ModelINExchgFunFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchgFuns(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        exchg
+        ana
+        risk
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getInExchgPrice = /* GraphQL */ `
   query GetInExchgPrice($id: String!) {
     getINExchgPrice(id: $id) {
@@ -594,7 +635,8 @@ export const getInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -639,7 +681,8 @@ export const listInExchgPrices = /* GraphQL */ `
         beta
         mcap
         mcapt
-        ana
+        sector
+        ind
         risk
         createdAt
         updatedAt
@@ -810,6 +853,7 @@ export const getInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -849,6 +893,7 @@ export const listInBondPrices = /* GraphQL */ `
         cr
         crstr
         ytm
+        risk
         createdAt
         updatedAt
       }
@@ -870,6 +915,7 @@ export const getInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -902,6 +948,7 @@ export const listInmfPrices = /* GraphQL */ `
         mftype
         mcap
         tf
+        risk
         createdAt
         updatedAt
       }
@@ -919,6 +966,7 @@ export const getNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }
@@ -947,6 +995,7 @@ export const listNpsPrices = /* GraphQL */ `
         type
         subt
         price
+        risk
         createdAt
         updatedAt
       }

@@ -1571,6 +1571,54 @@ export const deleteFeeds = /* GraphQL */ `
     }
   }
 `;
+export const createInExchgFun = /* GraphQL */ `
+  mutation CreateInExchgFun(
+    $input: CreateINExchgFunInput!
+    $condition: ModelINExchgFunConditionInput
+  ) {
+    createINExchgFun(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInExchgFun = /* GraphQL */ `
+  mutation UpdateInExchgFun(
+    $input: UpdateINExchgFunInput!
+    $condition: ModelINExchgFunConditionInput
+  ) {
+    updateINExchgFun(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInExchgFun = /* GraphQL */ `
+  mutation DeleteInExchgFun(
+    $input: DeleteINExchgFunInput!
+    $condition: ModelINExchgFunConditionInput
+  ) {
+    deleteINExchgFun(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
+      ana
+      risk
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInExchgPrice = /* GraphQL */ `
   mutation CreateInExchgPrice(
     $input: CreateINExchgPriceInput!
@@ -1599,7 +1647,8 @@ export const createInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -1634,7 +1683,8 @@ export const updateInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -1669,7 +1719,8 @@ export const deleteInExchgPrice = /* GraphQL */ `
       beta
       mcap
       mcapt
-      ana
+      sector
+      ind
       risk
       createdAt
       updatedAt
@@ -1868,6 +1919,7 @@ export const createInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -1897,6 +1949,7 @@ export const updateInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -1926,6 +1979,7 @@ export const deleteInBondPrice = /* GraphQL */ `
       cr
       crstr
       ytm
+      risk
       createdAt
       updatedAt
     }
@@ -1948,6 +2002,7 @@ export const createInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -1970,6 +2025,7 @@ export const updateInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -1992,6 +2048,7 @@ export const deleteInmfPrice = /* GraphQL */ `
       mftype
       mcap
       tf
+      risk
       createdAt
       updatedAt
     }
@@ -2010,6 +2067,7 @@ export const createNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }
@@ -2028,6 +2086,7 @@ export const updateNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }
@@ -2046,6 +2105,7 @@ export const deleteNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      risk
       createdAt
       updatedAt
     }

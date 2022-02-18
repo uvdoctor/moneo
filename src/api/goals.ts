@@ -1021,6 +1021,47 @@ export type DeleteFeedsInput = {
   id: string,
 };
 
+export type CreateINExchgFunInput = {
+  id: string,
+  sid: string,
+  exchg: Exchange,
+  ana?: string | null,
+  risk?: RiskProfile | null,
+};
+
+export type ModelINExchgFunConditionInput = {
+  sid?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  ana?: ModelStringInput | null,
+  risk?: ModelRiskProfileInput | null,
+  and?: Array< ModelINExchgFunConditionInput | null > | null,
+  or?: Array< ModelINExchgFunConditionInput | null > | null,
+  not?: ModelINExchgFunConditionInput | null,
+};
+
+export type INExchgFun = {
+  __typename: "INExchgFun",
+  id?: string,
+  sid?: string,
+  exchg?: Exchange,
+  ana?: string | null,
+  risk?: RiskProfile | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateINExchgFunInput = {
+  id: string,
+  sid?: string | null,
+  exchg?: Exchange | null,
+  ana?: string | null,
+  risk?: RiskProfile | null,
+};
+
+export type DeleteINExchgFunInput = {
+  id: string,
+};
+
 export type CreateINExchgPriceInput = {
   id: string,
   sid: string,
@@ -1044,7 +1085,8 @@ export type CreateINExchgPriceInput = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
-  ana?: string | null,
+  sector?: string | null,
+  ind?: string | null,
   risk?: RiskProfile | null,
 };
 
@@ -1085,7 +1127,8 @@ export type ModelINExchgPriceConditionInput = {
   beta?: ModelFloatInput | null,
   mcap?: ModelFloatInput | null,
   mcapt?: ModelMCapInput | null,
-  ana?: ModelStringInput | null,
+  sector?: ModelStringInput | null,
+  ind?: ModelStringInput | null,
   risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINExchgPriceConditionInput | null > | null,
   or?: Array< ModelINExchgPriceConditionInput | null > | null,
@@ -1136,7 +1179,8 @@ export type INExchgPrice = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
-  ana?: string | null,
+  sector?: string | null,
+  ind?: string | null,
   risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
@@ -1165,7 +1209,8 @@ export type UpdateINExchgPriceInput = {
   beta?: number | null,
   mcap?: number | null,
   mcapt?: MCap | null,
-  ana?: string | null,
+  sector?: string | null,
+  ind?: string | null,
   risk?: RiskProfile | null,
 };
 
@@ -1394,6 +1439,7 @@ export type CreateINBondPriceInput = {
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
+  risk?: RiskProfile | null,
 };
 
 export enum CreditRating {
@@ -1423,6 +1469,7 @@ export type ModelINBondPriceConditionInput = {
   cr?: ModelCreditRatingInput | null,
   crstr?: ModelStringInput | null,
   ytm?: ModelFloatInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINBondPriceConditionInput | null > | null,
   or?: Array< ModelINBondPriceConditionInput | null > | null,
   not?: ModelINBondPriceConditionInput | null,
@@ -1453,6 +1500,7 @@ export type INBondPrice = {
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
+  risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1476,6 +1524,7 @@ export type UpdateINBondPriceInput = {
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
+  risk?: RiskProfile | null,
 };
 
 export type DeleteINBondPriceInput = {
@@ -1494,6 +1543,7 @@ export type CreateINMFPriceInput = {
   mftype: MFSchemeType,
   mcap?: MCap | null,
   tf?: boolean | null,
+  risk?: RiskProfile | null,
 };
 
 export enum MFSchemeType {
@@ -1514,6 +1564,7 @@ export type ModelINMFPriceConditionInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelBooleanInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINMFPriceConditionInput | null > | null,
   or?: Array< ModelINMFPriceConditionInput | null > | null,
   not?: ModelINMFPriceConditionInput | null,
@@ -1537,6 +1588,7 @@ export type INMFPrice = {
   mftype?: MFSchemeType,
   mcap?: MCap | null,
   tf?: boolean | null,
+  risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1553,6 +1605,7 @@ export type UpdateINMFPriceInput = {
   mftype?: MFSchemeType | null,
   mcap?: MCap | null,
   tf?: boolean | null,
+  risk?: RiskProfile | null,
 };
 
 export type DeleteINMFPriceInput = {
@@ -1567,6 +1620,7 @@ export type CreateNPSPriceInput = {
   type: AssetType,
   subt: AssetSubType,
   price: number,
+  risk?: RiskProfile | null,
 };
 
 export enum NPSPFM {
@@ -1598,6 +1652,7 @@ export type ModelNPSPriceConditionInput = {
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelNPSPriceConditionInput | null > | null,
   or?: Array< ModelNPSPriceConditionInput | null > | null,
   not?: ModelNPSPriceConditionInput | null,
@@ -1622,6 +1677,7 @@ export type NPSPrice = {
   type?: AssetType,
   subt?: AssetSubType,
   price?: number,
+  risk?: RiskProfile | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1634,6 +1690,7 @@ export type UpdateNPSPriceInput = {
   type?: AssetType | null,
   subt?: AssetSubType | null,
   price?: number | null,
+  risk?: RiskProfile | null,
 };
 
 export type DeleteNPSPriceInput = {
@@ -1811,6 +1868,23 @@ export type ModelFeedsConnection = {
   nextToken?: string | null,
 };
 
+export type ModelINExchgFunFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  ana?: ModelStringInput | null,
+  risk?: ModelRiskProfileInput | null,
+  and?: Array< ModelINExchgFunFilterInput | null > | null,
+  or?: Array< ModelINExchgFunFilterInput | null > | null,
+  not?: ModelINExchgFunFilterInput | null,
+};
+
+export type ModelINExchgFunConnection = {
+  __typename: "ModelINExchgFunConnection",
+  items?:  Array<INExchgFun | null >,
+  nextToken?: string | null,
+};
+
 export type ModelINExchgPriceFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
@@ -1834,7 +1908,8 @@ export type ModelINExchgPriceFilterInput = {
   beta?: ModelFloatInput | null,
   mcap?: ModelFloatInput | null,
   mcapt?: ModelMCapInput | null,
-  ana?: ModelStringInput | null,
+  sector?: ModelStringInput | null,
+  ind?: ModelStringInput | null,
   risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINExchgPriceFilterInput | null > | null,
   or?: Array< ModelINExchgPriceFilterInput | null > | null,
@@ -1935,6 +2010,7 @@ export type ModelINBondPriceFilterInput = {
   cr?: ModelCreditRatingInput | null,
   crstr?: ModelStringInput | null,
   ytm?: ModelFloatInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINBondPriceFilterInput | null > | null,
   or?: Array< ModelINBondPriceFilterInput | null > | null,
   not?: ModelINBondPriceFilterInput | null,
@@ -1958,6 +2034,7 @@ export type ModelINMFPriceFilterInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelBooleanInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelINMFPriceFilterInput | null > | null,
   or?: Array< ModelINMFPriceFilterInput | null > | null,
   not?: ModelINMFPriceFilterInput | null,
@@ -1977,6 +2054,7 @@ export type ModelNPSPriceFilterInput = {
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
+  risk?: ModelRiskProfileInput | null,
   and?: Array< ModelNPSPriceFilterInput | null > | null,
   or?: Array< ModelNPSPriceFilterInput | null > | null,
   not?: ModelNPSPriceFilterInput | null,
@@ -3748,6 +3826,60 @@ export type DeleteFeedsMutation = {
   } | null,
 };
 
+export type CreateInExchgFunMutationVariables = {
+  input?: CreateINExchgFunInput,
+  condition?: ModelINExchgFunConditionInput | null,
+};
+
+export type CreateInExchgFunMutation = {
+  createINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInExchgFunMutationVariables = {
+  input?: UpdateINExchgFunInput,
+  condition?: ModelINExchgFunConditionInput | null,
+};
+
+export type UpdateInExchgFunMutation = {
+  updateINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInExchgFunMutationVariables = {
+  input?: DeleteINExchgFunInput,
+  condition?: ModelINExchgFunConditionInput | null,
+};
+
+export type DeleteInExchgFunMutation = {
+  deleteINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateInExchgPriceMutationVariables = {
   input?: CreateINExchgPriceInput,
   condition?: ModelINExchgPriceConditionInput | null,
@@ -3778,7 +3910,8 @@ export type CreateInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -3815,7 +3948,8 @@ export type UpdateInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -3852,7 +3986,8 @@ export type DeleteInExchgPriceMutation = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -4071,6 +4206,7 @@ export type CreateInBondPriceMutation = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4102,6 +4238,7 @@ export type UpdateInBondPriceMutation = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4133,6 +4270,7 @@ export type DeleteInBondPriceMutation = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4157,6 +4295,7 @@ export type CreateInmfPriceMutation = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4181,6 +4320,7 @@ export type UpdateInmfPriceMutation = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4205,6 +4345,7 @@ export type DeleteInmfPriceMutation = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4225,6 +4366,7 @@ export type CreateNpsPriceMutation = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4245,6 +4387,7 @@ export type UpdateNpsPriceMutation = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4265,6 +4408,7 @@ export type DeleteNpsPriceMutation = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4870,6 +5014,48 @@ export type ListFeedssQuery = {
   } | null,
 };
 
+export type GetInExchgFunQueryVariables = {
+  id?: string,
+};
+
+export type GetInExchgFunQuery = {
+  getINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInExchgFunsQueryVariables = {
+  id?: string | null,
+  filter?: ModelINExchgFunFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInExchgFunsQuery = {
+  listINExchgFuns?:  {
+    __typename: "ModelINExchgFunConnection",
+    items:  Array< {
+      __typename: "INExchgFun",
+      id: string,
+      sid: string,
+      exchg: Exchange,
+      ana?: string | null,
+      risk?: RiskProfile | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetInExchgPriceQueryVariables = {
   id?: string,
 };
@@ -4899,7 +5085,8 @@ export type GetInExchgPriceQuery = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -4941,7 +5128,8 @@ export type ListInExchgPricesQuery = {
       beta?: number | null,
       mcap?: number | null,
       mcapt?: MCap | null,
-      ana?: string | null,
+      sector?: string | null,
+      ind?: string | null,
       risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
@@ -5119,6 +5307,7 @@ export type GetInBondPriceQuery = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5155,6 +5344,7 @@ export type ListInBondPricesQuery = {
       cr?: CreditRating | null,
       crstr?: string | null,
       ytm?: number | null,
+      risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5180,6 +5370,7 @@ export type GetInmfPriceQuery = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5209,6 +5400,7 @@ export type ListInmfPricesQuery = {
       mftype: MFSchemeType,
       mcap?: MCap | null,
       tf?: boolean | null,
+      risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5230,6 +5422,7 @@ export type GetNpsPriceQuery = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5255,6 +5448,7 @@ export type ListNpsPricesQuery = {
       type: AssetType,
       subt: AssetSubType,
       price: number,
+      risk?: RiskProfile | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6550,6 +6744,45 @@ export type OnDeleteFeedsSubscription = {
   } | null,
 };
 
+export type OnCreateInExchgFunSubscription = {
+  onCreateINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInExchgFunSubscription = {
+  onUpdateINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInExchgFunSubscription = {
+  onDeleteINExchgFun?:  {
+    __typename: "INExchgFun",
+    id: string,
+    sid: string,
+    exchg: Exchange,
+    ana?: string | null,
+    risk?: RiskProfile | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateInExchgPriceSubscription = {
   onCreateINExchgPrice?:  {
     __typename: "INExchgPrice",
@@ -6575,7 +6808,8 @@ export type OnCreateInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -6607,7 +6841,8 @@ export type OnUpdateInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -6639,7 +6874,8 @@ export type OnDeleteInExchgPriceSubscription = {
     beta?: number | null,
     mcap?: number | null,
     mcapt?: MCap | null,
-    ana?: string | null,
+    sector?: string | null,
+    ind?: string | null,
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
@@ -6808,6 +7044,7 @@ export type OnCreateInBondPriceSubscription = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6834,6 +7071,7 @@ export type OnUpdateInBondPriceSubscription = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6860,6 +7098,7 @@ export type OnDeleteInBondPriceSubscription = {
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6879,6 +7118,7 @@ export type OnCreateInmfPriceSubscription = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6898,6 +7138,7 @@ export type OnUpdateInmfPriceSubscription = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6917,6 +7158,7 @@ export type OnDeleteInmfPriceSubscription = {
     mftype: MFSchemeType,
     mcap?: MCap | null,
     tf?: boolean | null,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6932,6 +7174,7 @@ export type OnCreateNpsPriceSubscription = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6947,6 +7190,7 @@ export type OnUpdateNpsPriceSubscription = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6962,6 +7206,7 @@ export type OnDeleteNpsPriceSubscription = {
     type: AssetType,
     subt: AssetSubType,
     price: number,
+    risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
   } | null,
