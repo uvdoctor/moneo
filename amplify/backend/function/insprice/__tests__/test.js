@@ -287,4 +287,8 @@ describe("Test Risk Profile", () => {
     const data = calculateRisk("", "", "CB", "ETF");
     expect(data).toEqual("C");
   });
+  test("Others", () => {
+    const data = calculateRisk("", "", "R", "REIT");
+    expect(data).toEqual("M");
+  });
 });
