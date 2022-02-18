@@ -36,6 +36,11 @@ const calc = {
 		if (name.includes(' E ')) return 'S';
 		if (name.includes('APY') || name.includes(' A ') || name.includes('TAX') || name.includes('LITE')) return 'HB';
 		if (name.includes(' C ') || name.includes('CORPORATE-CG')) return 'CB';
+	},
+	calcRisk: (subt) => {
+		if(subt === "GB" || subt === "GBO") return "VC";
+		if(subt === "S") return "M";
+		return "C";
 	}
 };
 

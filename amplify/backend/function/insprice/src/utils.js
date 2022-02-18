@@ -19,6 +19,7 @@ const constructedApiArray = (diff) => {
         itype: "",
         price: 0,
         prev: 0,
+        risk: "M"
       },
       codes: {
         sid: "SYMBOL",
@@ -43,6 +44,7 @@ const constructedApiArray = (diff) => {
         itype: "",
         price: 0,
         prev: 0,
+        risk: "M"
       },
       codes: {
         sid: "SC_CODE",

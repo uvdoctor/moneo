@@ -59,8 +59,8 @@ const mfType = (data) => {
 };
 
 const mCap = (element) => {
-  const type = element["Scheme Type"].toLowerCase();
-  const name = element["Scheme Name"].toLowerCase();
+  const type = element["Scheme Type"] ? element["Scheme Type"].toLowerCase() : '';
+  const name = element["Scheme Name"] ? element["Scheme Name"].toLowerCase() : '';
   if (type.includes("equity") && type.includes("large")) return "L";
   if (type.includes("equity") && type.includes("mid")) return "M";
   if (type.includes("equity") && type.includes("small")) return "S";
@@ -91,10 +91,18 @@ const getName = (element) => {
   return name;
 };
 
+const calculateRisk = (subt, mcap) => {
+  if(subt === "S" && mcap === "L") return "M";
+  if(subt === "S") return "A";
+  if(subt === "GBO" || subt === "GB") return "VC";
+  return "C";  
+}
+
 module.exports = {
   getType,
   getSubType,
   mfType,
   mCap,
   getName,
+  calculateRisk
 };

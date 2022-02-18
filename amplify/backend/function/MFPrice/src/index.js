@@ -15,7 +15,7 @@ const {
 	appendGenericFields
 } = require('/opt/nodejs/insertIntoDB');
 const { directISIN, getDirISIN } = require('./data');
-const { getType, getSubType, mfType, mCap, getName } = require('./calculate');
+const { getType, getSubType, mfType, mCap, getName, calculateRisk } = require('./calculate');
 const table = 'INMFPrice';
 
 const getData = () => {
@@ -51,6 +51,7 @@ const getData = () => {
 				mcap: mCap(element),
 				tf: element['Scheme Name'].includes('Tax') ? true : false
 			};
+			dataToPush.risk = calculateRisk(dataToPush.subt, dataToPush.mcap);
 			dataToPush = appendGenericFields(dataToPush, table);
 			batches.push({ PutRequest: { Item: dataToPush } });
 			isinMap[id] = id;

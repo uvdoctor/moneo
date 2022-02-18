@@ -119,3 +119,18 @@ describe("Test Asset Subtype", () => {
     expect(data).toEqual("S");
   });
 });
+
+describe("Risk", () => {
+  test("Government Bond", () => {
+    const data = calc.calcRisk("GBO");
+    expect(data).toEqual("VC");
+  });
+  test("Equity", () => {
+    const data = calc.calcRisk("S");
+    expect(data).toEqual("M");
+  });
+  test("Other", () => {
+    const data = calc.calcRisk("HB");
+    expect(data).toEqual("C");
+  });
+});

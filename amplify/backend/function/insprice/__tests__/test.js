@@ -1,4 +1,4 @@
-const { calc, calcSchema } = require("../src/calculate");
+const { calc, calcSchema, calculateRisk } = require("../src/calculate");
 
 describe("CalcSchema - Incase of Exchange Data", () => {
   const { updateSchema, isBond } = calcSchema(
@@ -243,5 +243,52 @@ describe("Test Asset InsType", () => {
   test("InvIT - NSE", () => {
     const data = calc["NSE"].calcInsType("IV", "", "IRBINVIT");
     expect(data).toEqual("InvIT");
+  });
+});
+
+describe("Test Risk Profile", () => {
+  test("Large cap with beta greater than 1", () => {
+    const data = calculateRisk(1.78, "L", "S", "");
+    expect(data).toEqual("A");
+  });
+  test("Large cap with beta less than 1", () => {
+    const data = calculateRisk(0.9, "L", "S", "");
+    expect(data).toEqual("M");
+  });
+  test("Mid cap with beta greater than 1", () => {
+    const data = calculateRisk(1.78, "M", "S", "");
+    expect(data).toEqual("VA");
+  });
+  test("Mid cap with beta less than 1", () => {
+    const data = calculateRisk('', "M", "S", "");
+    expect(data).toEqual("A");
+  });
+  test("Small Cap", () => {
+    const data = calculateRisk(1.78, "S", "S", "");
+    expect(data).toEqual("VA");
+  });
+  test("ETF with large Cap", () => {
+    const data = calculateRisk('', "L", "S", "ETF");
+    expect(data).toEqual("M");
+  });
+  test("ETF with other than large Cap", () => {
+    const data = calculateRisk('', "S", "S", "ETF");
+    expect(data).toEqual("A");
+  });
+  test("ETF - Index Fund", () => {
+    const data = calculateRisk(1.78, "", "I", "ETF");
+    expect(data).toEqual("M");
+  });
+  test("ETF - Gov bond", () => {
+    const data = calculateRisk("", "", "GB", "ETF");
+    expect(data).toEqual("VC");
+  });
+  test("ETF - others", () => {
+    const data = calculateRisk("", "", "CB", "ETF");
+    expect(data).toEqual("C");
+  });
+  test("Others", () => {
+    const data = calculateRisk("", "", "R", "REIT");
+    expect(data).toEqual("M");
   });
 });

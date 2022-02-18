@@ -95,6 +95,16 @@ const getRate = (record, codes) => {
   return rate;
 };
 
+const calculateRisk = (creditRating, subt) => {
+  if (creditRating === "E") return "VC";
+  if (creditRating === "H") return "C";
+  if (creditRating === "M") return "M";
+  if (creditRating === "L") return "A";
+  if (creditRating === "J") return "VA";
+  if(!creditRating && subt === "GB" || subt === "GBO") return "VC";
+  return "C";
+};
+
 const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   if (!record[codes.id] || record[codes.subt] === "MC") return;
   schema.id = record[codes.id];
@@ -129,8 +139,9 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
     100,
     schema.price
   );
+  schema.risk = calculateRisk(schema.cr, schema.subt);
   appendGenericFields(schema, table);
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
-module.exports = { calcSchema, calc, getMonthYearByDate, calculateYTM, getRate };
+module.exports = { calcSchema, calc, getMonthYearByDate, calculateYTM, getRate, calculateRisk };
