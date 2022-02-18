@@ -4,6 +4,7 @@ const {
   mfType,
   mCap,
   getName,
+  calculateRisk
 } = require("../src/calculate");
 
 describe("Test Asset Type", () => {
@@ -106,23 +107,6 @@ describe("Test Mutual Fund Type", () => {
   });
 });
 
-describe("Test Mutual Cap Size", () => {
-  test("Large Cap", () => {
-    const data = mCap(
-      "Open Ended Schemes(Equity Scheme - Large & Mid Cap Fund)"
-    );
-    expect(data).toEqual("L");
-  });
-  test("Mid Cap", () => {
-    const data = mCap("Open Ended Schemes(Equity Scheme - Mid Cap Fund)");
-    expect(data).toEqual("M");
-  });
-  test("Small Cap", () => {
-    const data = mCap("Open Ended Schemes(Equity Scheme - Small Cap Fund)");
-    expect(data).toEqual("S");
-  });
-});
-
 describe("Test Name", () => {
   test("Hybrid Data", () => {
     const data = getName({
@@ -140,5 +124,24 @@ describe("Test Name", () => {
       "Scheme Type": "Open Ended Schemes(Debt Scheme - Banking and PSU Fund)",
     });
     expect(data).toEqual("DSP Banking & PSU Debt Fund - Direct Plan - IDCW");
+  });
+});
+
+describe("Risk", () => {
+  test("Stocks with large cap", () => {
+    const data = calculateRisk("S", "L")
+    expect(data).toEqual("M");
+  });
+  test("Stocks other than large cap", () => {
+    const data = calculateRisk("S", "S")
+    expect(data).toEqual("A");
+  });
+  test("Government bonds", () => {
+    const data = calculateRisk("GB", "M")
+    expect(data).toEqual("VC");
+  });
+  test("Others", () => {
+    const data = calculateRisk("HB", "M")
+    expect(data).toEqual("C");
   });
 });
