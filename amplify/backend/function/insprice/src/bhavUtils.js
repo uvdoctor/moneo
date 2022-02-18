@@ -191,7 +191,6 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         Item.mcap = MarketCapitalization;
       }
       Item.risk = calculateRisk(Item.beta ? Item.beta : "", Item.mcapt);
-      console.log(Item);
     });
   });
   return exchgData;
