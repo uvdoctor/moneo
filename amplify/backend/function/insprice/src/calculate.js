@@ -21,8 +21,7 @@ const calc = {
       if (type === "Q" && subt === "F") return "GBO";
       if ((type === "B" && subt === "G") || (type === "Q" && subt === "E"))
         return "GoldB";
-      if ((subt === "F" && (type === "B" || type === "D")))
-        return "CB";
+      if (subt === "F" && (type === "B" || type === "D")) return "CB";
       if (subt === "IF") return "R";
       return "S";
     },
@@ -89,6 +88,12 @@ const calc = {
   },
 };
 
+const calculateRisk = (beta, mcapt) => {
+  if (mcapt === "L") return beta > 1 ? "A" : "M";
+  if (mcapt === "M") return beta > 1 ? "VA" : "A";
+  return "VA";
+};
+
 const calcSchema = (
   record,
   codes,
@@ -100,7 +105,7 @@ const calcSchema = (
 ) => {
   let updateSchema = {};
   const type = record[codes.type].trim();
-  const subt = record[codes.subt] ? record[codes.subt].trim() : '';
+  const subt = record[codes.subt] ? record[codes.subt].trim() : "";
   const name = record[codes.name].trim();
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   const subtType = calc[exchg].calcSubType(type, subt, name);
@@ -122,14 +127,14 @@ const calcSchema = (
   updateSchema.price = parse(record[codes.price]);
   if (isBond) {
     updateSchema.sm = 0;
-    updateSchema.sy =  0;
-    updateSchema.mm =  0;
-    updateSchema.my =  0;
+    updateSchema.sy = 0;
+    updateSchema.mm = 0;
+    updateSchema.my = 0;
     updateSchema.fr = false;
     updateSchema.tf = false;
     updateSchema.cr = null;
     updateSchema.rate = -1;
-    updateSchema.fv =  100;
+    updateSchema.fv = 100;
     updateSchema.ytm = 0;
     delete updateSchema.itype;
     delete updateSchema.prev;
@@ -145,4 +150,4 @@ const calcSchema = (
   isinMap[record[codes.id]] = record[codes.id];
   return { updateSchema, isBond };
 };
-module.exports = { calc, calcSchema };
+module.exports = { calc, calcSchema, calculateRisk };

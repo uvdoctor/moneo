@@ -1,4 +1,4 @@
-const { calc, calcSchema } = require("../src/calculate");
+const { calc, calcSchema, calculateRisk } = require("../src/calculate");
 
 describe("CalcSchema - Incase of Exchange Data", () => {
   const { updateSchema, isBond } = calcSchema(
@@ -243,5 +243,28 @@ describe("Test Asset InsType", () => {
   test("InvIT - NSE", () => {
     const data = calc["NSE"].calcInsType("IV", "", "IRBINVIT");
     expect(data).toEqual("InvIT");
+  });
+});
+
+describe("Test Risk Profile", () => {
+  test("Large cap with beta greater than 1", () => {
+    const data = calculateRisk(1.78, "L");
+    expect(data).toEqual("A");
+  });
+  test("Large cap with beta less than 1", () => {
+    const data = calculateRisk(0.9, "L");
+    expect(data).toEqual("M");
+  });
+  test("Mid cap with beta greater than 1", () => {
+    const data = calculateRisk(1.78, "M");
+    expect(data).toEqual("VA");
+  });
+  test("Mid cap with beta less than 1", () => {
+    const data = calculateRisk(0.68, "M");
+    expect(data).toEqual("A");
+  });
+  test("Small Cap", () => {
+    const data = calculateRisk(1.78, "S");
+    expect(data).toEqual("VA");
   });
 });

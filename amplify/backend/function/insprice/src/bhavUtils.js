@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
 const { tempDir } = require("/opt/nodejs/utility");
-const { calcSchema } = require("./calculate");
+const { calcSchema, calculateRisk } = require("./calculate");
 
 const extractDataFromCSV = async (
   fileName,
@@ -161,51 +161,37 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
   if (!(eodData || splitData || dividendData)) return exchgData;
   exchgData.map((element) => {
     element.map((item) => {
+      const Item = item.PutRequest.Item;
       const getData = (data) =>
-        data.find(
-          (re) =>
-            re.code.includes(item.PutRequest.Item.sid) ||
-            item.PutRequest.Item.sid === re.code
-        );
+        data.find((re) => re.code.includes(Item.sid) || Item.sid === re.code);
       const eod = eodData && getData(eodData);
       const split = splitData && getData(splitData);
       const dividend = dividendData && getData(dividendData);
       if (split) {
-        item.PutRequest.Item.splitd = split.date;
+        Item.splitd = split.date;
         let value = split.split.replace(/\//g, "");
         value = value.replace(/\\/g, ":");
-        item.PutRequest.Item.split = value;
+        Item.split = value;
       }
       if (dividend) {
-        item.PutRequest.Item.divdd = dividend.date;
-        item.PutRequest.Item.divrd = dividend.recordDate;
-        item.PutRequest.Item.divpd = dividend.paymentDate;
-        item.PutRequest.Item.div = dividend.dividend;
+        Item.divdd = dividend.date;
+        Item.divrd = dividend.recordDate;
+        Item.divpd = dividend.paymentDate;
+        Item.div = dividend.dividend;
       }
       if (eod) {
-        const {
-          code,
-          name,
-          MarketCapitalization,
-          adjusted_close,
-          hi_250d,
-          lo_250d,
-          close,
-          Beta,
-        } = eod;
-        item.PutRequest.Item.sid = code;
-        item.PutRequest.Item.name = name;
-        item.PutRequest.Item.price = adjusted_close;
-        item.PutRequest.Item.prev = close;
-        item.PutRequest.Item.yhigh = item.PutRequest.Item.yhigh
-          ? item.PutRequest.Item.yhigh
-          : hi_250d;
-        item.PutRequest.Item.ylow = item.PutRequest.Item.ylow
-          ? item.PutRequest.Item.ylow
-          : lo_250d;
-        item.PutRequest.Item.beta = Beta;
-        item.PutRequest.Item.mcap = MarketCapitalization;
+        const { code, name, MarketCapitalization, adjusted_close, hi_250d, lo_250d, close, Beta } = eod;
+        Item.sid = code;
+        Item.name = name;
+        Item.price = adjusted_close;
+        Item.prev = close;
+        Item.yhigh = Item.yhigh ? Item.yhigh : hi_250d;
+        Item.ylow = Item.ylow ? Item.ylow : lo_250d;
+        Item.beta = Beta;
+        Item.mcap = MarketCapitalization;
       }
+      Item.risk = calculateRisk(Item.beta ? Item.beta : "", Item.mcapt);
+      console.log(Item);
     });
   });
   return exchgData;
