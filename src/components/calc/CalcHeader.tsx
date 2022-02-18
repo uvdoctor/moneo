@@ -88,7 +88,7 @@ export default function CalcHeader() {
                     icon={<SaveOutlined />}
                     loading={btnClicked}
                     disabled={disableSubmit || !allInputDone}
-                    onClick={() => handleSubmit()}
+                    onClick={async () => await handleSubmit()}
                     size="large"
                     className="steps-start-btn"
                     key="submitbtn">
