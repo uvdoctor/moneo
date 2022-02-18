@@ -1,5 +1,122 @@
 const { calc, calcSchema } = require("../src/calculate");
 
+describe("CalcSchema - Incase of Exchange Data", () => {
+  const { updateSchema, isBond } = calcSchema(
+    {
+      SYMBOL: "20MICRONS",
+      ISIN: "INE144J01027",
+      LAST: "85.5",
+      PREVCLOSE: "88.15",
+      SERIES: "EQ",
+    },
+    {
+      sid: "SYMBOL",
+      id: "ISIN",
+      name: "SYMBOL",
+      price: "LAST",
+      prev: "PREVCLOSE",
+      type: "SERIES",
+      subt: "",
+    },
+    {
+      id: "",
+      sid: "",
+      name: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+    },
+    "NSE",
+    {},
+    "Table",
+    "BondTable"
+  );
+  test("Schema", () => {
+    expect(updateSchema).toEqual({
+      id: "INE144J01027",
+      sid: "20MICRONS",
+      name: "20MICRONS",
+      type: "E",
+      subt: "S",
+      itype: undefined,
+      price: 85.5,
+      prev: 88.15,
+      mcapt: "S",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __typename: "Table",
+      exchg: "NSE",
+    });
+  });
+  test("isBond", () => {
+    expect(isBond).toEqual(false);
+  });
+});
+
+describe("CalcSchema - Incase of Bond Data", () => {
+  const { updateSchema, isBond } = calcSchema(
+    {
+      SYMBOL: "BRITANNIA",
+      ISIN: "INE216A07052",
+      LAST: "31.2",
+      PREVCLOSE: "31.2",
+      SERIES: "N2",
+    },
+    {
+      sid: "SYMBOL",
+      id: "ISIN",
+      name: "SYMBOL",
+      price: "LAST",
+      prev: "PREVCLOSE",
+      type: "SERIES",
+      subt: "",
+    },
+    {
+      id: "",
+      sid: "",
+      name: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+    },
+    "NSE",
+    {},
+    "Table",
+    "BondTable"
+  );
+  test("Schema", () => {
+    expect(updateSchema).toEqual({
+      id: "INE216A07052",
+      sid: "BRITANNIA",
+      name: "BRITANNIA",
+      type: "F",
+      subt: "CB",
+      price: 31.2,
+      sm: 0,
+      sy: 0,
+      mm: 0,
+      my: 0,
+      fr: false,
+      tf: false,
+      cr: null,
+      rate: -1,
+      fv: 100,
+      ytm: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __typename: "BondTable",
+      exchg: "NSE",
+    });
+  });
+  test("isBond", () => {
+    expect(isBond).toEqual(true);
+  });
+});
+
 describe("Test Asset Type", () => {
   test("Fixed in Case of ETF - BSE", () => {
     const data = calc["BSE"].calcType("Q", "B", "NETFNIF100");

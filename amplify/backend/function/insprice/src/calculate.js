@@ -100,7 +100,7 @@ const calcSchema = (
 ) => {
   let updateSchema = {};
   const type = record[codes.type].trim();
-  const subt = record[codes.subt].trim();
+  const subt = record[codes.subt] ? record[codes.subt].trim() : '';
   const name = record[codes.name].trim();
   const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   const subtType = calc[exchg].calcSubType(type, subt, name);
