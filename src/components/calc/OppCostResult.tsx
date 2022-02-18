@@ -22,12 +22,12 @@ export default function OppCostResult({
 }: OppCostResultProps) {
   const drOptions = initOptions(1, 14);
   const { dr, setDR, isPublicCalc }: any = useContext(PlanContext);
-  const { goal, startYear }: any = useContext(CalcContext);
+  const { goal, startYear, currency, summary }: any = useContext(CalcContext);
 
   return (
     <ItemDisplay
       result={oppCost}
-      currency={goal.ccy}
+      currency={summary ? goal.ccy : currency}
       label={
         <Fragment>
           {`${goal.type === GoalType.B ? "Buy" : "Spend"} v/s Invest`}
@@ -64,7 +64,7 @@ export default function OppCostResult({
         oppCost < 0 ? "Lose" : "Gain"
       } about ${toHumanFriendlyCurrency(
         Math.abs(oppCost),
-        goal.ccy
+        summary ? goal.ccy : currency
       )} in ${numOfYears} Years
     by ${goal.type === GoalType.B ? "Buying" : "Spending"} instead of Investing.
 	${

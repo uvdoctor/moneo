@@ -481,7 +481,6 @@ function PlanContextProvider({
         setPlanError,
         ffYear,
         oppCostCache,
-        setOppCostCache,
       }}>
       {children}
     </PlanContext.Provider>

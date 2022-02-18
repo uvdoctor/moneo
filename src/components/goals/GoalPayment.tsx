@@ -83,6 +83,7 @@ export default function GoalPayment() {
       title="Payment"
       toggle={
         !isLoanMandatory &&
+        goal.type === GoalType.B &&
         buyType === BuyType.P && (
           <HSwitch
             rightText="Multi-year custom plan"
