@@ -284,7 +284,7 @@ function CalcContextProvider({
     } else existingCFs = allCFs[wipGoal.id];
     if (!existingCFs?.length) return false;
     if (cfs.length !== existingCFs.length) return true;
-    if (wipGoal.img !== goal.img) return true;
+    //if (wipGoal.img !== goal.img) return true;
     if (
       wipGoal.name !== goal.name ||
       wipGoal.imp !== goal.imp ||
