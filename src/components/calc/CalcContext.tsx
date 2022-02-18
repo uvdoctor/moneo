@@ -79,7 +79,6 @@ function CalcContextProvider({
     allCFs,
     ffResult,
     oppCostCache,
-    setOppCostCache,
   }: any = useContext(PlanContext);
   let { goal, allGoals }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
@@ -285,7 +284,7 @@ function CalcContextProvider({
     } else existingCFs = allCFs[wipGoal.id];
     if (!existingCFs?.length) return false;
     if (cfs.length !== existingCFs.length) return true;
-    if (wipGoal.img !== goal.img) return true;
+    //if (wipGoal.img !== goal.img) return true;
     if (
       wipGoal.name !== goal.name ||
       wipGoal.imp !== goal.imp ||
@@ -337,7 +336,6 @@ function CalcContextProvider({
         await updateGoal(wipGoal as UpdateGoalInput, cfs);
         if (goal.type !== GoalType.FF) {
           oppCostCache[goal.id] = oppCost;
-          setOppCostCache(oppCostCache);
         }
       } else await addGoal(wipGoal, cfs);
       handleViewReset(false);
