@@ -56,7 +56,8 @@ export default function HoldingTabView({
     view,
     insurance,
     npsSubcategory,
-    totalYearlyPremium
+    totalYearlyPremium,
+    instrumentsLoading,
   }: any = useContext(NWContext);
 
   const { TabPane } = Tabs;
@@ -118,15 +119,16 @@ export default function HoldingTabView({
         }}
         tabBarExtraContent={
           !isRoot && activeTab === "Financial" ? <UploadHoldings /> : null
-        }
-      >
+        }>
         {isRoot && !liabilities && !risk && (
-          <TabPane disabled={!totalAssets} key={TAB.SUMMARY} tab={TAB.SUMMARY}>
+          <TabPane
+            disabled={!totalAssets || instrumentsLoading}
+            key={TAB.SUMMARY}
+            tab={TAB.SUMMARY}>
             <Tabs
               activeKey={chartType}
               type="line"
-              onChange={(activeKey) => setChartType(activeKey)}
-            >
+              onChange={(activeKey) => setChartType(activeKey)}>
               <TabPane key={RISK_CHART} tab={RISK_CHART}>
                 <RiskAllocationChart />
               </TabPane>
@@ -145,11 +147,13 @@ export default function HoldingTabView({
                 &nbsp;&nbsp;{TAB.CASHFLOW}
               </Fragment>
             }
-            disabled={insurance.length === 0}
-          >
-            {Object.keys(totalYearlyPremium).length ? <InsuranceCFChart /> : <Empty description={<p>No data found.</p>} />}
+            disabled={insurance.length === 0}>
+            {Object.keys(totalYearlyPremium).length ? (
+              <InsuranceCFChart />
+            ) : (
+              <Empty description={<p>No data found.</p>} />
+            )}
           </TabPane>
-          
         )}
         {Object.keys(tabsData).map((tabName) => {
           if (!liabilities && tabName === LIABILITIES_TAB) return;
@@ -171,8 +175,7 @@ export default function HoldingTabView({
                     !risk && (
                       <Tooltip
                         title={<TabInfo info={info} link={link} />}
-                        color={COLORS.DEFAULT}
-                      >
+                        color={COLORS.DEFAULT}>
                         <InfoCircleOutlined />
                       </Tooltip>
                     )}
@@ -187,8 +190,7 @@ export default function HoldingTabView({
                     </>
                   ) : null}
                 </Fragment>
-              }
-            >
+              }>
               {children ? (
                 renderTabs(children, Object.keys(children)[0])
               ) : (
