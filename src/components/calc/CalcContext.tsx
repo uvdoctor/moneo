@@ -79,7 +79,6 @@ function CalcContextProvider({
     allCFs,
     ffResult,
     oppCostCache,
-    setOppCostCache,
   }: any = useContext(PlanContext);
   let { goal, allGoals }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
@@ -337,7 +336,6 @@ function CalcContextProvider({
         await updateGoal(wipGoal as UpdateGoalInput, cfs);
         if (goal.type !== GoalType.FF) {
           oppCostCache[goal.id] = oppCost;
-          setOppCostCache(oppCostCache);
         }
       } else await addGoal(wipGoal, cfs);
       handleViewReset(false);

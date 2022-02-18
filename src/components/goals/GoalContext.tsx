@@ -276,6 +276,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       g.achg = loanGracePeriod;
       g.tbr = eduCostSemester;
     }
+    console.log("Updated Goal: ", g);
     return g as CreateGoalInput;
   };
 
@@ -662,6 +663,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     rr,
     runningCost,
     runningCostChg,
+    currency,
   ]);
 
   useEffect(() => {
@@ -684,11 +686,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       cfs,
       goal.id,
       impLevel,
-      goal.ccy
+      currency
     );
     setFFImpactYears(result.impactYears);
     if (wipGoal.id) setDiscountRates([...result.rr]);
-  }, [cfs, impLevel]);
+  }, [cfs, impLevel, currency]);
 
   useEffect(() => {
     wipGoal.name = name;
