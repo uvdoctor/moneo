@@ -103,6 +103,13 @@ const getAndPushData = (diff) => {
           await pushData(bondData[batch], bondTableName);
         }
         dataToPushInFeeds.push({
+          table: bondTable,
+          dataCount: bondData,
+          identifier: exchg,
+          url,
+          exchg,
+        });
+        dataToPushInFeeds.push({
           table: exchgTable,
           dataCount: data,
           identifier: exchg,
