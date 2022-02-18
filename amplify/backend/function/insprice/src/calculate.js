@@ -109,7 +109,6 @@ const calcSchema = (
   );
   const isBond = calculateIsbond(exchg, subt, itype);
   if (
-    subt === "L" ||
     (exchg === "BSE" && subt === "CB") ||
     (exchg === "NSE" && subt === "MF")
   )
