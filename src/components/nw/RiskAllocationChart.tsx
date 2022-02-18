@@ -173,7 +173,7 @@ export default function RiskAllocationChart() {
       return;
     }
     initChartData();
-  }, [totalAssets]);
+  }, [totalAssets, loadingInstruments]);
 
   useEffect(() => {
     if (!userInfo || !data.length) {

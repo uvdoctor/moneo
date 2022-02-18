@@ -27,7 +27,7 @@ export default function NWView() {
 
   return (
     <Fragment>
-      {appContextLoaded && !loadingHoldings ? (
+      {appContextLoaded && !loadingHoldings && !loadingInstruments ? (
         familyMemberKeys.length ? (
           <div className="nw-container">
             <Fragment>
@@ -48,7 +48,7 @@ export default function NWView() {
                     <Row align="middle">
                       <Col span={12}>
                         <Radio.Button value={ASSETS_VIEW}>
-                          <Row align="middle" justify="center" gutter={15} >
+                          <Row align="middle" justify="center" gutter={15}>
                             <Col>
                               <CheckOutlined />
                             </Col>

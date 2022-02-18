@@ -59,7 +59,8 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       gutter={[5, 5]}>
       <Col span={24}>
         <Row justify="space-between">
-          {insData[holding.id] &&
+          {insData &&
+            insData[holding.id] &&
             allFamily[holding.fId] &&
             insData[holding.id].type !== AssetType.H && (
               <Col>
@@ -104,7 +105,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       <Col span={24}>
         <Row justify="space-between">
           <Col>
-            {insData[holding.id] ? (
+            {insData && insData[holding.id] ? (
               insData[holding.id].name
             ) : (
               <h4 style={{ color: COLORS.RED }}>Not listed</h4>
@@ -127,7 +128,9 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           style={{
             color: COLORS.WHITE,
             backgroundColor: getColourForAssetType(
-              insData[holding.id] ? insData[holding.id].type : ("" as AssetType)
+              insData && insData[holding.id]
+                ? insData[holding.id].type
+                : ("" as AssetType)
             ),
           }}
         />
@@ -156,7 +159,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
             </span>
           </Col>
           <Col>
-            {insData[holding.id] && (
+            {insData && insData[holding.id] && (
               <Button
                 type="link"
                 icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
