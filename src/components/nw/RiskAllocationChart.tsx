@@ -50,7 +50,6 @@ export default function RiskAllocationChart() {
     totalPPF,
     totalEPF,
     totalVPF,
-    loadingHoldings,
     loadingInstruments,
   }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
@@ -169,7 +168,7 @@ export default function RiskAllocationChart() {
   };
 
   useEffect(() => {
-    if (!totalAssets) {
+    if (!totalAssets || loadingInstruments) {
       setData([...[]]);
       return;
     }
@@ -177,16 +176,16 @@ export default function RiskAllocationChart() {
   }, [totalAssets]);
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!userInfo || !data.length) {
       setExcessRiskPercent(0);
       return;
     }
     calculateRiskAppetite();
   }, [data, userInfo]);
 
-  return loadingHoldings || loadingInstruments ? (
+  return loadingInstruments ? (
     <Skeleton active />
-  ) : totalAssets ? (
+  ) : data.length ? (
     <Row align="middle" className="container chart">
       <Col xs={24} md={12}>
         <Row justify="center">

@@ -559,6 +559,15 @@ type Family @model @auth(rules: [{ allow: owner }]) {
   tax: TaxLiability!
 }
 
+enum InsuranceType {
+  P
+  A
+  V
+  H
+  L
+  O
+}
+
 type Holding {
   id: String!
   qty: Float!

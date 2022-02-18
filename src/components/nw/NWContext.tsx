@@ -700,53 +700,31 @@ function NWContextProvider({ fxRates }: any) {
     setTotalFixed(totalFFixed + totalNPSFixed + totalP2P);
   }, [totalFFixed, totalNPSFixed, totalP2P]);
 
+  const priceAllInstruments = async () =>
+    await priceInstruments(instruments, selectedMembers, selectedCurrency);
+
   useEffect(() => {
-    const getValue = async () => {
-      setLoadingInstruments(true);
-      const {
-        total,
-        totalFGold,
-        totalFEquity,
-        totalFRE,
-        totalFFixed,
-        totalInv,
-        totalStocks,
-        totalBonds,
-        totalETFs,
-        totalMFs,
-        largeCapStocks,
-        largeCapFunds,
-        largeCapETFs,
-        multiCap,
-        indexFunds,
-        fmp,
-        intervalFunds,
-        liquidFunds,
-      } = await priceInstruments(
-        instruments,
-        selectedMembers,
-        selectedCurrency
-      );
-      setTotalInstruments(total);
-      setTotalFGold(totalFGold);
-      setTotalFEquity(totalFEquity);
-      setTotalFFixed(totalFFixed);
-      setTotalFRE(totalFRE);
-      setTotalFInv(totalInv);
-      setTotalStocks(totalStocks);
-      setTotalBonds(totalBonds);
-      setTotalETFs(totalETFs);
-      setTotalMFs(totalMFs);
-      setTotalLargeCapStocks(largeCapStocks);
-      setTotalLargeCapFunds(largeCapFunds);
-      setTotalLargeCapETF(largeCapETFs);
-      setTotalMultiCap(multiCap);
-      setTotalIndexFunds(indexFunds);
-      setTotalFMP(fmp);
-      setTotalIntervalFunds(intervalFunds);
-      setTotalLiquidFunds(liquidFunds);
-    };
-    getValue().then(() => setLoadingInstruments(false));
+    priceAllInstruments().then((totals) => {
+      setTotalInstruments(totals.total);
+      setTotalFGold(totals.totalFGold);
+      setTotalFEquity(totals.totalFEquity);
+      setTotalFFixed(totals.totalFFixed);
+      setTotalFRE(totals.totalFRE);
+      setTotalFInv(totals.totalInv);
+      setTotalStocks(totals.totalStocks);
+      setTotalBonds(totals.totalBonds);
+      setTotalETFs(totals.totalETFs);
+      setTotalMFs(totals.totalMFs);
+      setTotalLargeCapStocks(totals.largeCapStocks);
+      setTotalLargeCapFunds(totals.largeCapFunds);
+      setTotalLargeCapETF(totals.largeCapETFs);
+      setTotalMultiCap(totals.multiCap);
+      setTotalIndexFunds(totals.indexFunds);
+      setTotalFMP(totals.fmp);
+      setTotalIntervalFunds(totals.intervalFunds);
+      setTotalLiquidFunds(totals.liquidFunds);
+      setLoadingInstruments(false);
+    });
   }, [instruments, selectedMembers, selectedCurrency]);
 
   useEffect(() => {
@@ -763,22 +741,17 @@ function NWContextProvider({ fxRates }: any) {
     getValue();
   }, [preciousMetals, selectedMembers, selectedCurrency]);
 
-  useEffect(() => {
-    const getValue = async () => {
-      const total = await priceCrypto(
-        crypto,
-        selectedMembers,
-        selectedCurrency
-      );
-      setTotalCrypto(total);
-    };
-    getValue();
-  }, [crypto, preciousMetals, selectedCurrency, selectedMembers]);
+  const priceAllCrypto = async () =>
+    await priceCrypto(crypto, selectedMembers, selectedCurrency);
 
   useEffect(() => {
-    const total = priceAngel(angel, selectedMembers, selectedCurrency);
-    setTotalAngel(total);
-  }, [angel, selectedCurrency, selectedMembers]);
+    priceAllCrypto().then((total) => setTotalCrypto(total));
+  }, [crypto, selectedCurrency, selectedMembers]);
+
+  useEffect(
+    () => setTotalAngel(priceAngel(angel, selectedMembers, selectedCurrency)),
+    [angel, selectedCurrency, selectedMembers]
+  );
 
   useEffect(() => {
     const { yearlyCashflow, presentYearValue } = priceInsurance(
@@ -798,89 +771,80 @@ function NWContextProvider({ fxRates }: any) {
     setTotalYearlyPremium(yearlyCashflow);
   }, [insurance, selectedCurrency, selectedMembers, userInfo]);
 
-  useEffect(() => {
-    const total = priceOthers(others, selectedMembers, selectedCurrency);
-    setTotalOthers(total);
-  }, [others, selectedCurrency, selectedMembers]);
+  useEffect(
+    () =>
+      setTotalOthers(priceOthers(others, selectedMembers, selectedCurrency)),
+    [others, selectedCurrency, selectedMembers]
+  );
 
   useEffect(() => {
-    const { total, totalPPF, totalVPF, totalEPF } = pricePF(
-      pf,
-      selectedMembers,
-      selectedCurrency
-    );
-    setTotalPF(total);
-    setTotalEPF(totalEPF);
-    setTotalVPF(totalVPF);
-    setTotalPPF(totalPPF);
+    const totals = pricePF(pf, selectedMembers, selectedCurrency);
+    setTotalPF(totals.total);
+    setTotalEPF(totals.totalEPF);
+    setTotalVPF(totals.totalVPF);
+    setTotalPPF(totals.totalPPF);
   }, [pf, selectedCurrency, selectedMembers]);
 
   useEffect(() => {
-    const { total, totalNPSEquity, totalNPSFixed } = priceNPS(
-      nps,
-      selectedMembers,
-      selectedCurrency,
-      npsData
-    );
-    setTotalNPS(total);
-    setTotalNPSEquity(totalNPSEquity);
-    setTotalNPSFixed(totalNPSFixed);
+    const totals = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
+    setTotalNPS(totals.total);
+    setTotalNPSEquity(totals.totalNPSEquity);
+    setTotalNPSFixed(totals.totalNPSFixed);
   }, [nps, selectedCurrency, selectedMembers, npsData]);
 
-  useEffect(() => {
-    const total = priceLoans(loans, selectedMembers, selectedCurrency);
-    setTotalLoans(total);
-  }, [loans, selectedMembers, selectedCurrency]);
+  useEffect(
+    () => setTotalLoans(priceLoans(loans, selectedMembers, selectedCurrency)),
+    [loans, selectedMembers, selectedCurrency]
+  );
+
+  useEffect(
+    () =>
+      setTotalCredit(priceCredit(credit, selectedMembers, selectedCurrency)),
+    [credit, selectedCurrency, selectedMembers]
+  );
 
   useEffect(() => {
-    const total = priceCredit(credit, selectedMembers, selectedCurrency);
-    setTotalCredit(total);
-  }, [credit, selectedCurrency, selectedMembers]);
-
-  useEffect(() => {
-    const {
-      total,
-      totalOtherProperty,
-      totalCommercial,
-      totalResidential,
-      totalPlot,
-    } = priceProperties(properties, selectedMembers, selectedCurrency);
-    setTotalProperties(total);
-    setTotalOtherProperty(totalOtherProperty);
-    setTotalCommercial(totalCommercial);
-    setTotalResidential(totalResidential);
-    setTotalPolt(totalPlot);
-  }, [properties, selectedCurrency, selectedMembers]);
-
-  useEffect(() => {
-    const total = priceVehicles(vehicles, selectedMembers, selectedCurrency);
-    setTotalVehicles(total);
-  }, [selectedCurrency, selectedMembers, vehicles]);
-
-  useEffect(() => {
-    const { total, totalShortTerm } = priceLendings(
-      lendings,
+    const totals = priceProperties(
+      properties,
       selectedMembers,
       selectedCurrency
     );
-    setTotalLendings(total);
-    setTotalStLendings(totalShortTerm);
+    setTotalProperties(totals.total);
+    setTotalOtherProperty(totals.totalOtherProperty);
+    setTotalCommercial(totals.totalCommercial);
+    setTotalResidential(totals.totalResidential);
+    setTotalPolt(totals.totalPlot);
+  }, [properties, selectedCurrency, selectedMembers]);
+
+  useEffect(
+    () =>
+      setTotalVehicles(
+        priceVehicles(vehicles, selectedMembers, selectedCurrency)
+      ),
+    [selectedCurrency, selectedMembers, vehicles]
+  );
+
+  useEffect(() => {
+    const totals = priceLendings(lendings, selectedMembers, selectedCurrency);
+    setTotalLendings(totals.total);
+    setTotalStLendings(totals.totalShortTerm);
   }, [lendings, selectedCurrency, selectedMembers]);
 
-  useEffect(() => {
-    const total = priceLtdep(ltdep, selectedMembers, selectedCurrency);
-    setTotalLtdep(total);
-  }, [ltdep, selectedCurrency, selectedMembers]);
+  useEffect(
+    () => setTotalLtdep(priceLtdep(ltdep, selectedMembers, selectedCurrency)),
+    [ltdep, selectedCurrency, selectedMembers]
+  );
 
-  useEffect(() => {
-    const total = priceP2P(p2p, selectedMembers, selectedCurrency);
-    setTotalP2P(total);
-  }, [p2p, selectedCurrency, selectedMembers]);
+  useEffect(
+    () => setTotalP2P(priceP2P(p2p, selectedMembers, selectedCurrency)),
+    [p2p, selectedCurrency, selectedMembers]
+  );
 
-  useEffect(() => {
-    const total = priceSavings(savings, selectedMembers, selectedCurrency);
-    setTotalSavings(total);
-  }, [savings, selectedCurrency, selectedMembers]);
+  useEffect(
+    () =>
+      setTotalSavings(priceSavings(savings, selectedMembers, selectedCurrency)),
+    [savings, selectedCurrency, selectedMembers]
+  );
 
   useEffect(() => {
     setIsDirty(true);
