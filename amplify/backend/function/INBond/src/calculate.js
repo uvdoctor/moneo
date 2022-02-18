@@ -140,9 +140,6 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
     schema.price
   );
   schema.risk = calculateRisk(schema.cr, schema.subt);
-  if(!schema.cr) {
-    console.log(schema);
-  }
   appendGenericFields(schema, table);
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
