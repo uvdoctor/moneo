@@ -3,8 +3,9 @@ const split = require("split");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
 const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
+const calc = require('./calculate');
 
-const getDataFromTxtFile = async (fileName, calc, table) => {
+const getDataFromTxtFile = async (fileName, table) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
@@ -26,6 +27,7 @@ const getDataFromTxtFile = async (fileName, calc, table) => {
           subt: calc.calcSubType(name),
           price: nav,
         };
+        schema.risk = calc.calcRisk(schema.subt);
         schema = appendGenericFields(schema, table)
         batches.push({ PutRequest: { Item: schema } });
         count++;

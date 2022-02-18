@@ -12,7 +12,6 @@ const fsPromise = require('fs/promises');
 const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { downloadZip, unzipDownloads, cleanDirectory } = require('/opt/nodejs/bhavUtils');
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
-const calc = require('./calculate');
 const getDataFromTxtFile = require('./bhavUtils');
 const constructedApiArray = require('./utils');
 const { mkdir } = fsPromise;
@@ -31,7 +30,7 @@ const getAndPushData = (diff) => {
 			await mkdir(tempDir);
 			await downloadZip(url, tempDir, zipFile);
 			await unzipDownloads(zipFile, tempDir);
-			const data = await getDataFromTxtFile(fileName, calc, table);
+			const data = await getDataFromTxtFile(fileName, table);
 			for (let batch in data) {
 				await pushData(data[batch], tableName);
 			}
