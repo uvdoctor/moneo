@@ -1,89 +1,60 @@
 const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
 const calc = {
   BSE: {
-    calcType: (type, subt, name) => {
-      if (subt === "IF") return "A";
-      if (subt === "W") return "H";
-      if (
-        (name.includes("ETF") && type === "Q" && subt === "B") ||
-        (type === "Q" && (subt === "F" || subt === "E")) ||
-        type === "B" ||
-        type === "D"
-      )
-        return "F";
-      return "E";
-    },
-
-    calcSubType: (type, subt, name) => {
-      if (name.includes("LIQUID")) return "L";
-      if (subt === "W") return "War";
-      if (name.includes("ETF") && type === "Q" && subt === "B") return "I";
-      if (type === "Q" && subt === "F") return "GBO";
-      if ((type === "B" && subt === "G") || (type === "Q" && subt === "E"))
-        return "GoldB";
-      if (subt === "F" && (type === "B" || type === "D")) return "CB";
-      if (subt === "IF") return "R";
-      return "S";
-    },
-
-    calcInsType: (type, subt, name) => {
-      if (type === "Q" && subt === "E") return "ETF";
-      if (subt === "IF" && (name.includes("INVIT") || name.includes("GRID")))
-        return "InvIT";
-      if (subt === "IF") return "REIT";
+    calcTypeAndSubtype: (type, name, id, subt) => {
+      if (subt === "W") return { type: "H", subt: "War" };
+      if (type === "Q" && id.startsWith("INF")) {
+        if (subt === "A" || subt === "B")
+          return { type: "E", subt: "S", itype: "ETF" };
+        if (subt === "F") {
+          return {
+            type: "F",
+            subt: name.includes("LIQ") ? "L" : "CB",
+            itype: "ETF",
+          };
+        }
+        if (subt === "E") return { type: "A", subt: "Gold", itype: "ETF" };
+      }
+      if (type === "Q" && subt === "F") return { type: "F", subt: "GBO" };
+      if (type === "B" && subt === "G") return { type: "F", subt: "GoldB" };
+      if (subt === "F" && (type === "B" || type === "D"))
+        return { type: "F", subt: "CB" };
+      if (subt === "IF") {
+        if (name.includes("INVIT") || name.includes("GRID"))
+          return { type: "A", subt: "R", itype: "InvIT" };
+        else return { type: "A", subt: "R", itype: "REIT" };
+      }
+      return { type: "E", subt: "S" };
     },
   },
 
   NSE: {
-    calcType: (type, subt, name) => {
-      const fixed = ["GB", "GS", "N", "Y", "Z"];
-      if (type === "IV" || type === "RR") return "A";
-      if (type.startsWith("W")) return "H";
-      if (
-        (name.includes("ETF") &&
-          (name.includes("GOLD") ||
-            name.includes("GILT") ||
-            name.includes("BBETF") ||
-            name.includes("LIQUID"))) ||
-        name.includes("NIF") ||
-        name.includes("50") ||
-        name.includes("100") ||
-        name.includes("SEN") ||
-        fixed.some((item) => item === type || type.startsWith(item))
-      )
-        return "F";
-      return "E";
-    },
-
-    calcSubType: (type, subt, name) => {
-      if (name.includes("LIQUID")) return "L";
-      if (type === "RR" || type === "IV") return "R";
-      if (name.includes("ETF") && name.includes("GOLD")) return "Gold";
-      if (type.startsWith("W")) return "War";
-      if (
-        (name.includes("ETF") && name.includes("GILT")) ||
-        type === "GC" ||
-        type === "GS"
-      )
-        return "GB";
-      if (name.includes("ETF") && name.includes("BBETF")) return "GBO";
-      if (
-        name.includes("NIF") ||
-        name.includes("50") ||
-        name.includes("100") ||
-        name.includes("SEN")
-      )
-        return "I";
+    calcTypeAndSubtype: (type, name, id, subt) => {
+      if (type === "RR") return { type: "A", subt: "R", itype: "REIT" };
+      if (type === "IV") return { type: "A", subt: "R", itype: "InvIT" };
+      if (type.startsWith("W")) return { type: "H", subt: "War" };
+      if (type === "GC" || type === "GS") return { type: "F", subt: "GB" };
+      if (id.startsWith("INF")) {
+        if (
+          name.includes("NIF") ||
+          name.includes("50") ||
+          name.includes("100") ||
+          name.includes("SEN")
+        )
+          return { type: "E", subt: "S", itype: "ETF" };
+        if (name.includes("BBETF"))
+          return { type: "F", subt: "GBO", itype: "ETF" };
+        if (name.includes("GOLD"))
+          return { type: "A", subt: "Gold", itype: "ETF" };
+        if (name.includes("GILT"))
+          return { type: "F", subt: "GB", itype: "ETF" };
+        if (name.includes("LIQ")) return { type: "F", subt: "L", itype: "ETF" };
+        if (type === "EQ") return { type: "E", subt: "S", itype: "ETF" };
+      }
       if (type.includes("N") || type.includes("Y") || type.includes("Z"))
-        return "CB";
-      if (type === "GB") return "GoldB";
-      return "S";
-    },
-
-    calcInsType: (type, subt, name) => {
-      if (name.includes("ETF")) return "ETF";
-      if (type === "IV") return "InvIT";
-      if (type === "RR") return "REIT";
+        return { type: "F", subt: "CB" };
+      if (type === "GB") return { type: "F", subt: "GoldB" };
+      return { type: "E", subt: "S" };
     },
   },
 };
@@ -104,6 +75,20 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
   return "M";
 };
 
+const calculateIsbond = (exchg, subtType, itype) => {
+  if (itype) return false;
+  if (
+    (exchg === "BSE" && (subtType === "GBO" || subtType === "GB")) ||
+    (exchg === "NSE" &&
+      (subtType === "CB" || subtType === "GBO" || subtType === "GB"))
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
+
 const calcSchema = (
   record,
   codes,
@@ -114,26 +99,29 @@ const calcSchema = (
   bondTable
 ) => {
   let updateSchema = {};
-  const type = record[codes.type].trim();
-  const subt = record[codes.subt] ? record[codes.subt].trim() : "";
+  const typename = record[codes.type].trim();
+  const subtname = record[codes.subt] ? record[codes.subt].trim() : "";
   const name = record[codes.name].trim();
-  const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
-  const subtType = calc[exchg].calcSubType(type, subt, name);
-  const assetType = calc[exchg].calcType(type, subt, name);
-  const isBond =
-    (exchg === "BSE" && subtType === "GBO") ||
-    (exchg === "NSE" &&
-      assetType === "F" &&
-      (subtType === "CB" || subtType === "GBO"))
-      ? true
-      : false;
-  if (subtType === "L") return { updateSchema, isBond };
+  const id = record[codes.id];
+  const { type, subt, itype } = calc[exchg].calcTypeAndSubtype(
+    typename,
+    name,
+    id,
+    subtname
+  );
+  const isBond = calculateIsbond(exchg, subt, itype);
+  if (
+    subt === "L" ||
+    (exchg === "BSE" && subt === "CB") ||
+    (exchg === "NSE" && subt === "MF")
+  )
+    return { updateSchema, isBond };
   updateSchema = JSON.parse(JSON.stringify(schema));
-  updateSchema.id = record[codes.id];
+  updateSchema.id = id;
   updateSchema.sid = record[codes.sid].trim();
   updateSchema.name = name;
-  updateSchema.type = assetType;
-  updateSchema.subt = subtType;
+  updateSchema.type = type;
+  updateSchema.subt = subt;
   updateSchema.price = parse(record[codes.price]);
   if (isBond) {
     updateSchema.sm = 0;
@@ -150,10 +138,9 @@ const calcSchema = (
     delete updateSchema.prev;
     appendGenericFields(updateSchema, bondTable);
   } else {
-    updateSchema.mcapt = "S";
-    updateSchema.itype = calc[exchg].calcInsType(type, subt, name);
+    updateSchema.mcapt = type === "E" ? "S" : null;
+    updateSchema.itype = itype ? itype : null;
     updateSchema.prev = parse(record[codes.prev]);
-    if (updateSchema.id.startsWith("INF")) updateSchema.itype = "ETF";
     appendGenericFields(updateSchema, table);
   }
   updateSchema.exchg = exchg;

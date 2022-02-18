@@ -162,8 +162,13 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
   exchgData.map((element) => {
     element.map((item) => {
       const Item = item.PutRequest.Item;
-      const getData = (data) =>
-        data.find((re) => re.code.includes(Item.sid) || Item.sid === re.code);
+      const getData = (data) => {
+        let result = data.find((re) => re.code.includes(Item.sid) || Item.sid === re.code);
+        if(!result) {
+          result = data.find((re) => re.code.includes(Item.name) || Item.name === re.code);
+        }
+        return result;
+      }
       const eod = eodData && getData(eodData);
       const split = splitData && getData(splitData);
       const dividend = dividendData && getData(dividendData);
