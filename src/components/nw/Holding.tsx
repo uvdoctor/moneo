@@ -128,7 +128,9 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           style={{
             color: COLORS.WHITE,
             backgroundColor: getColourForAssetType(
-              insData[holding.id] ? insData[holding.id].type : ("" as AssetType)
+              insData && insData[holding.id]
+                ? insData[holding.id].type
+                : ("" as AssetType)
             ),
           }}
         />
