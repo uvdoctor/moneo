@@ -73,7 +73,7 @@ const getMonthYearByDate = (date) => {
     "Dec",
   ];
   const parts = date.split("-");
-  return { month: monthsArray.indexOf(parts[1]) + 1, year: parts[2] };
+  return { month: monthsArray.indexOf(parts[1]) + 1, year: parseInt(parts[2]) };
 };
 
 const calculateYTM = (rate, sm, sy, mm, my, fv, mprice) => {
@@ -81,7 +81,7 @@ const calculateYTM = (rate, sm, sy, mm, my, fv, mprice) => {
   const couponAmt = (fv * Number(rate)) / 100;
   const ytm = (couponAmt + (fv - mprice) / numOfYear) / ((fv + mprice) / 2);
   const ytmFinal = Math.round(ytm * 1000) / 1000;
-  if (ytmFinal < 0 || isNaN(ytmFinal) || ytmFinal === Infinity) return 0;
+  if (ytmFinal < 0 || isNaN(ytmFinal) || ytmFinal === Infinity || ytmFinal === -0) return 0;
   return ytmFinal;
 };
 
@@ -133,4 +133,4 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
-module.exports = { calcSchema, calc };
+module.exports = { calcSchema, calc, getMonthYearByDate, calculateYTM, getRate };

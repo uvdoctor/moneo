@@ -1,59 +1,85 @@
-const { calcSchema, calc, calcYTM } = require('../src/calculate');
+const {
+  calcSchema,
+  calc,
+  getMonthYearByDate,
+  calculateYTM,
+} = require("../src/calculate");
 
-// describe('CalcSchema', () => {
-// 	test('Schema', () => {
-// 		const data = calcSchema(
-// 			{
-// 				Security_cd: 'S12324',
-// 				'ISIN No.': 'IN09239434',
-// 				sc_name: '0security',
-// 				'Close Price': 124,
-// 				'COUP0N (%)': '',
-// 				'COUP0N (%)': '',
-// 				'FACE VALUE': 10
-// 			},
-// 			{
-// 				sid: 'Security_cd',
-// 				id: 'ISIN No.',
-// 				name: 'sc_name',
-// 				price: 'Close Price',
-// 				subt: '',
-// 				rate: 'COUP0N (%)',
-// 				frate: 'COUP0N (%)',
-// 				fv: 'FACE VALUE',
-// 				sDate: '',
-// 				mDate: '',
-// 				crstr: ''
-// 			},
-// 			{
-// 				id: '',
-// 				sid: '',
-// 				name: '',
-// 				subt: '',
-// 				price: 0,
-// 				exchg: '',
-// 				sm: 0,
-// 				sy: 0,
-// 				mm: 0,
-// 				my: 0,
-// 				rate: 0,
-// 				fr: '',
-// 				tf: '',
-// 				fv: 0,
-// 				cr: null,
-// 				crstr: null,
-// 				ytm: 0,
-// 				createdAt: '',
-// 				updatedAt: ''
-// 			},
-// 			'BSE',
-// 			{},
-// 			'Table'
-// 		);
-// 		console.log(data);
-// 		expect(data).toEqual('GBO');
-// 	});
-// });
+describe("CalcSchema", () => {
+  test("Schema", () => {
+    const data = calcSchema(
+      {
+        SECURITY: "ABFL24",
+        "ISIN NO.": "INE860H07GT8",
+        ISSUE_DESC: "Aditya Birla Fin 8.65% 24 S C1",
+        "Last Traded Price (in Rs.)": 0,
+        SECTYPE: "DB",
+        ISSUE_NAME: "8.65%",
+        MAT_DATE: "12-Jun-2024",
+        ISSUE_DATE: "12-Jun-2019",
+      },
+      {
+        sid: "SECURITY",
+        id: "ISIN NO.",
+        name: "ISSUE_DESC",
+        price: "Last Traded Price (in Rs.)",
+        subt: "SECTYPE",
+        frate: "ISSUE_NAME",
+        sDate: "ISSUE_DATE",
+        mDate: "MAT_DATE",
+        rate: "ISSUE_NAME",
+        crstr: "",
+      },
+      {
+        id: "",
+        sid: "",
+        name: "",
+        subt: "",
+        price: 0,
+        exchg: "",
+        sm: 0,
+        sy: 0,
+        mm: 0,
+        my: 0,
+        rate: 0,
+        fr: "",
+        tf: "",
+        fv: 0,
+        cr: null,
+        crstr: null,
+        ytm: 0,
+        createdAt: "",
+        updatedAt: "",
+      },
+      "NSE",
+      {},
+      "Table"
+    );
+    expect(data).toEqual({
+      id: "INE860H07GT8",
+      sid: "ABFL24",
+      name: "Aditya Birla Fin 8.65% 24 S C1",
+      subt: "CB",
+      price: 100,
+      exchg: "NSE",
+      sm: 6,
+      sy: 2019,
+      mm: 6,
+      my: 2024,
+      rate: 8.65,
+      fr: false,
+      tf: false,
+      fv: 100,
+      cr: null,
+      crstr: null,
+      ytm: 0.087,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      type: "F",
+      __typename: "Table",
+    });
+  });
+});
 
 describe("Test Asset Subtype", () => {
   test("Other Gov. Bond", () => {
@@ -75,46 +101,34 @@ describe("Test Asset Subtype", () => {
 });
 
 describe("Calculate Issue Period", () => {
-  test("Start Month", () => {
-    const data = calc.calcSM("09-Mar-20");
-    expect(data).toEqual(3);
+  const { month, year } = getMonthYearByDate("09-Mar-2024");
+  test("Month", () => {
+    expect(month).toEqual(3);
   });
-  test("Start Year", () => {
-    const data = calc.calcSY("06-May-21");
-    expect(data).toEqual(21);
-  });
-});
-
-describe("Calculate Maturity Period", () => {
-  test("Maturity Month", () => {
-    const data = calc.calcMM("06-May-28");
-    expect(data).toEqual(5);
-  });
-  test("Maturity Year", () => {
-    const data = calc.calcMY("06-May-24");
-    expect(data).toEqual(24);
+  test("Year", () => {
+    expect(year).toEqual(2024);
   });
 });
 
 describe("Check Floating Rate", () => {
   test("With Floating", () => {
     const data = calc.calcFR("RESET");
-    expect(data).toEqual("Y");
+    expect(data).toEqual(true);
   });
   test("Without Floating", () => {
     const data = calc.calcFR("7.45%");
-    expect(data).toEqual("N");
+    expect(data).toEqual(false);
   });
 });
 
 describe("Tax Free", () => {
   test("Tax Free Bond", () => {
     const data = calc.calcTF("IF");
-    expect(data).toEqual("Y");
+    expect(data).toEqual(true);
   });
   test("Tax Bond", () => {
     const data = calc.calcTF("AT");
-    expect(data).toEqual("N");
+    expect(data).toEqual(false);
   });
 });
 
@@ -158,39 +172,11 @@ describe("Calculate Price", () => {
 
 describe("Calculate Yield To Maturity", () => {
   test("Incase of Floating Rate", () => {
-    const data = calcYTM(
-      {
-        ISSUE_NAME: "RESET",
-        ISSUE_DATE: "25-Feb-2014",
-        MAT_DATE: "25-Feb-2024",
-        "Last Traded Price (in Rs.)": "100.14",
-      },
-      {
-        price: "Last Traded Price (in Rs.)",
-        frate: "ISSUE_NAME",
-        sDate: "ISSUE_DATE",
-        mDate: "MAT_DATE",
-        rate: "ISSUE_NAME",
-      }
-    );
+    const data = calculateYTM(0, 2, 2014, 2, 2024, 100, 100.14);
     expect(data).toEqual(0);
   });
   test("Without Floating Rate", () => {
-    const data = calcYTM(
-      {
-        ISSUE_NAME: "9.11%",
-        ISSUE_DATE: "28-May-2014",
-        MAT_DATE: "28-May-2024",
-        "Last Traded Price (in Rs.)": "109.9989",
-      },
-      {
-        price: "Last Traded Price (in Rs.)",
-        frate: "ISSUE_NAME",
-        sDate: "ISSUE_DATE",
-        mDate: "MAT_DATE",
-        rate: "ISSUE_NAME",
-      }
-    );
+    const data = calculateYTM(9.11, 5, 2014, 5, 2024, 100, 109.9989);
     expect(data).toEqual(0.077);
   });
 });
