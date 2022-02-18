@@ -71,7 +71,7 @@ export default function RiskAllocationChart() {
     };
   };
 
-  const initChartData = () => {
+  useEffect(() => {
     let data: Array<any> = [];
     const vcVal = totalCash + totalProperties + totalPGold + totalFGold;
     const cVal =
@@ -89,7 +89,26 @@ export default function RiskAllocationChart() {
     if (hVal) data.push(buildDataItem(RiskProfile.A, hVal));
     if (vhVal) data.push(buildDataItem(RiskProfile.VA, vhVal));
     setData([...data]);
-  };
+  }, [
+    totalFEquity,
+    totalMultiCap,
+    totalNPSEquity,
+    totalNPSFixed,
+    totalAngel,
+    totalCrypto,
+    totalFInv,
+    totalCrypto,
+    totalP2P,
+    totalOthers,
+    totalCash,
+    totalProperties,
+    totalPGold,
+    totalFGold,
+    totalPM,
+    totalLiquidFunds,
+    totalFRE,
+    totalFFixed,
+  ]);
 
   const calculateRiskAppetite = () => {
     let total = 0;
@@ -166,14 +185,6 @@ export default function RiskAllocationChart() {
       );
     return "";
   };
-
-  useEffect(() => {
-    if (!totalAssets || loadingInstruments) {
-      setData([...[]]);
-      return;
-    }
-    initChartData();
-  }, [totalAssets, loadingInstruments]);
 
   useEffect(() => {
     if (!userInfo || !data.length) {
