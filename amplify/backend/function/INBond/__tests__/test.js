@@ -3,6 +3,7 @@ const {
   calc,
   getMonthYearByDate,
   calculateYTM,
+  calculateRisk
 } = require("../src/calculate");
 
 describe("CalcSchema", () => {
@@ -178,5 +179,36 @@ describe("Calculate Yield To Maturity", () => {
   test("Without Floating Rate", () => {
     const data = calculateYTM(9.11, 5, 2014, 5, 2024, 100, 109.9989);
     expect(data).toEqual(0.077);
+  });
+});
+
+describe("Calculate Risk", () => {
+  test("Excellent", () => {
+    const data = calculateRisk("E", "CB");
+    expect(data).toEqual("VC");
+  });
+  test("High", () => {
+    const data = calculateRisk("H", "CB");
+    expect(data).toEqual("C");
+  });
+  test("Medium", () => {
+    const data = calculateRisk("M", "CB");
+    expect(data).toEqual("M");
+  });
+  test("Low", () => {
+    const data = calculateRisk("L", "CB");
+    expect(data).toEqual("A");
+  });
+  test("Junk", () => {
+    const data = calculateRisk("J", "CB");
+    expect(data).toEqual("VA");
+  });
+  test("No Credit rating in case of government bond", () => {
+    const data = calculateRisk("", "GBO");
+    expect(data).toEqual("C");
+  });
+  test("No Credit rating in case of corporate bond", () => {
+    const data = calculateRisk("", "CB");
+    expect(data).toEqual("M");
   });
 });
