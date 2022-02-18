@@ -101,6 +101,7 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
     if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
     return "VA";
   }
+  return "M";
 };
 
 const calcSchema = (
