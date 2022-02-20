@@ -51,7 +51,7 @@ const calc = {
         if (name.includes("LIQ")) return { type: "F", subt: "L", itype: "ETF" };
         if (type === "EQ") return { type: "E", subt: "S", itype: "ETF" };
       }
-      if (type.includes("N") || type.includes("Y") || type.includes("Z"))
+      if (type.startsWith("N") || type.startsWith("Y") || type.startsWith("Z"))
         return { type: "F", subt: "CB" };
       if (type === "GB") return { type: "F", subt: "GoldB" };
       return { type: "E", subt: "S" };
@@ -135,7 +135,7 @@ const calcSchema = (
     delete updateSchema.prev;
     appendGenericFields(updateSchema, bondTable);
   } else {
-    updateSchema.mcapt = itype ? null : "S";
+    updateSchema.mcapt = itype && itype === "ETF" ? null : "S";
     updateSchema.itype = itype ? itype : null;
     updateSchema.prev = parse(record[codes.prev]);
     appendGenericFields(updateSchema, table);
