@@ -11,7 +11,11 @@ import {
 } from "@ant-design/icons";
 
 require("./Holding.less");
-import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
+import {
+  toCurrency,
+  toHumanFriendlyCurrency,
+  toReadableNumber,
+} from "../utils";
 import { AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
 import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
@@ -96,6 +100,24 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                   {insData[holding.id].mcapt ? (
                     <Tooltip title="Market capitalization">
                       {getMarketCapLabel(insData[holding.id].mcapt)}
+                    </Tooltip>
+                  ) : null}
+                  {insData[holding.id].div ? (
+                    <Tooltip title="Recent dividend amount">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faCoins} />
+                      {` ${toCurrency(
+                        insData[holding.id].div,
+                        holding.curr,
+                        true
+                      )}`}
+                    </Tooltip>
+                  ) : null}
+                  {insData[holding.id].split ? (
+                    <Tooltip title="Recent stock split">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faCoins} />
+                      {` ${insData[holding.id].split}`}
                     </Tooltip>
                   ) : null}
                 </Space>
