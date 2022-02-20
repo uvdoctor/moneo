@@ -7,7 +7,7 @@ import {
 } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
-import { getRiskAttributesByProfile, getTooltipDesc } from "./nwutils";
+import { doesExceedRisk, getRiskAttributes, getTooltipDesc } from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
@@ -53,33 +53,7 @@ export default function RiskAllocationChart() {
     loadingInstruments,
   }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
-  const riskAttributes: any = {
-    [RiskProfile.VC]: {
-      label: getRiskAttributesByProfile(RiskProfile.VC).label,
-      color: getRiskAttributesByProfile(RiskProfile.VC).color,
-      rating: 1,
-    },
-    [RiskProfile.C]: {
-      label: getRiskAttributesByProfile(RiskProfile.C).label,
-      color: getRiskAttributesByProfile(RiskProfile.C).color,
-      rating: 2,
-    },
-    [RiskProfile.M]: {
-      label: getRiskAttributesByProfile(RiskProfile.M).label,
-      color: getRiskAttributesByProfile(RiskProfile.M).color,
-      rating: 3,
-    },
-    [RiskProfile.A]: {
-      label: getRiskAttributesByProfile(RiskProfile.A).label,
-      color: getRiskAttributesByProfile(RiskProfile.A).color,
-      rating: 4,
-    },
-    [RiskProfile.VA]: {
-      label: getRiskAttributesByProfile(RiskProfile.VA).label,
-      color: getRiskAttributesByProfile(RiskProfile.VA).color,
-      rating: 5,
-    },
-  };
+  const riskAttributes: any = getRiskAttributes();
   const [data, setData] = useState<Array<any>>([]);
   const [excessRiskPercent, setExcessRiskPercent] = useState<number>(0);
   const riskProfileOptions: any = getRiskProfileOptions();
@@ -132,15 +106,13 @@ export default function RiskAllocationChart() {
 
   const calculateRiskAppetite = () => {
     let total = 0;
-    data.map((item: { risk: string; value: number }) => {
-      const riskProfile = riskAttributes[userInfo?.rp].rating;
-      const allocation = riskAttributes[item.risk].rating;
-      if (allocation > riskProfile) total += item.value;
+    data.map((item: { risk: RiskProfile; value: number }) => {
+      if (doesExceedRisk(item.risk, userInfo.rp)) total += item.value;
     });
     setExcessRiskPercent(total);
   };
 
-  const breakdownRiskInfo = (risk: string) => {
+  const breakdownRiskInfo = (risk: RiskProfile) => {
     if (risk === RiskProfile.VC)
       return getTooltipDesc(
         {

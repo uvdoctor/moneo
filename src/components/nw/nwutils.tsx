@@ -394,16 +394,18 @@ export const getRiskProfileType = () => {
   };
 };
 
-export const getRiskAttributesByProfile = (risk: APIt.RiskProfile) => {
-  const riskLabels = {
+export const getRiskAttributes = () => {
+  return {
     [APIt.RiskProfile.VC]: { label: "No loss", color: COLORS.GREEN },
     [APIt.RiskProfile.C]: { label: "Up to 10% loss", color: "#ffc107" },
     [APIt.RiskProfile.M]: { label: "Up to 20% loss", color: "#ffa698" },
     [APIt.RiskProfile.A]: { label: "Up to 30% loss", color: COLORS.ORANGE },
     [APIt.RiskProfile.VA]: { label: "Up to 50% loss", color: COLORS.RED },
   };
-  return riskLabels[risk];
 };
+
+export const getRiskAttributesByProfile = (risk: APIt.RiskProfile) =>
+  getRiskAttributes()[risk];
 
 export const getMarketCapLabel = (mCap: APIt.MCap) => {
   const mCapLabels: any = {
