@@ -25,8 +25,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
 import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
-import { getMarketCapLabel } from "./nwutils";
+import {
+  doesExceedRisk,
+  getMarketCapLabel,
+  getRiskAttributesByProfile,
+} from "./nwutils";
 import InsPrice from "./InsPrice";
+import { AppContext } from "../AppContext";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -35,8 +40,11 @@ interface HoldingProp {
 }
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
+  const { userInfo }: any = useContext(AppContext);
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  const price = insData && insData[holding.id] ? insData[holding.id].price : 0;
+  const instrument =
+    insData && insData[holding.id] ? insData[holding.id] : null;
+  const price = instrument ? instrument.price : 0;
   const { allFamily, setInstruments, instruments }: any = useContext(NWContext);
   const [total, setTotal] = useState<number>(holding.qty * price);
   const [isEditMode, setEditMode] = useState(false);
@@ -64,77 +72,83 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
         <Col span={24}>
           <Row justify="space-between">
             <Col>
-              {insData &&
-              insData[holding.id] &&
-              insData[holding.id].type !== AssetType.H ? (
+              {instrument && instrument.type !== AssetType.H ? (
                 <Space>
-                  {insData[holding.id].rate &&
-                  insData[holding.id].rate !== -1 ? (
+                  {instrument.risk &&
+                  doesExceedRisk(instrument.risk, userInfo.rp) ? (
+                    <Tooltip
+                      title={`This holding may lead to ${
+                        getRiskAttributesByProfile(instrument.risk).label
+                      }, which exceeds your acceptable risk level - ${
+                        getRiskAttributesByProfile(userInfo.rp).label
+                      }`}>
+                      &#128681;
+                    </Tooltip>
+                  ) : null}
+                  {instrument.rate && instrument.rate !== -1 ? (
                     <Tooltip title="Interest rate">
                       &nbsp;&nbsp;
                       <FontAwesomeIcon icon={faCoins} />
-                      {` ${insData[holding.id].rate}%`}
+                      {` ${instrument.rate}%`}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].my ? (
+                  {instrument.my ? (
                     <Tooltip title="Maturity Year">
                       &nbsp;&nbsp;
                       <HourglassOutlined />
-                      {insData[holding.id].my}
+                      {instrument.my}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].ytm ? (
+                  {instrument.ytm ? (
                     <Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
                       &nbsp;&nbsp;
                       <FontAwesomeIcon icon={faHandHoldingUsd} />
-                      {` ${insData[holding.id].ytm * 100}%`}
+                      {` ${instrument.ytm * 100}%`}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].cr ? (
+                  {instrument.cr ? (
                     <Tooltip title="Credit rating">
                       &nbsp;&nbsp;
                       <Rate value={4} />
-                      {insData[holding.id].crstr}
+                      {instrument.crstr}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].mcapt ? (
+                  {instrument.mcapt ? (
                     <Tooltip title="Market capitalization">
-                      {getMarketCapLabel(insData[holding.id].mcapt)}
+                      {getMarketCapLabel(instrument.mcapt)}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].div ? (
+                  {instrument.div ? (
                     <Tooltip title="Recent dividend amount">
                       &nbsp;&nbsp;
                       <FontAwesomeIcon icon={faCoins} />
-                      {` ${toCurrency(
-                        insData[holding.id].div,
-                        holding.curr,
-                        true
-                      )}`}
+                      {` ${toCurrency(instrument.div, holding.curr, true)}`}
                     </Tooltip>
                   ) : null}
-                  {insData[holding.id].split ? (
+                  {instrument.split ? (
                     <Tooltip title="Recent stock split">
                       &nbsp;&nbsp;
                       <FontAwesomeIcon icon={faCoins} />
-                      {` ${insData[holding.id].split}`}
+                      {` ${instrument.split}`}
                     </Tooltip>
                   ) : null}
                 </Space>
               ) : null}
             </Col>
-            <Col>
-              <UserOutlined />
-              &nbsp;{allFamily[holding.fId].name}
-            </Col>
+            {holding.fId ? (
+              <Col>
+                <UserOutlined />
+                &nbsp;{allFamily[holding.fId].name}
+              </Col>
+            ) : null}
           </Row>
         </Col>
       ) : null}
       <Col span={24}>
         <Row justify="space-between">
           <Col>
-            {price ? (
-              insData[holding.id].name
+            {instrument ? (
+              instrument.name
             ) : (
               <h4 style={{ color: COLORS.RED }}>Not listed</h4>
             )}
@@ -149,50 +163,38 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                 ""
               )}
             </Col>
-          ) : (
+          ) : holding.fId ? (
             <Col>
               <UserOutlined />
               &nbsp;{allFamily[holding.fId].name}
             </Col>
-          )}
+          ) : null}
         </Row>
       </Col>
       <Col span={24}>
         <Row justify="space-between">
           <Col span={8}>
             <IdWithRisk
-              id={
-                insData && insData[holding.id] && insData[holding.id].sid
-                  ? insData[holding.id].sid
-                  : holding.id
-              }
-              risk={
-                insData && insData[holding.id] && insData[holding.id].risk
-                  ? insData[holding.id].risk
-                  : null
-              }
+              id={instrument && instrument.sid ? instrument.sid : holding.id}
+              risk={instrument && instrument.risk ? instrument.risk : null}
             />
           </Col>
 
           <Col className="quantity" span={8}>
-            {price ? (
-              insData[holding.id].yhigh && insData[holding.id].ylow ? (
+            {instrument && price ? (
+              instrument.yhigh && instrument.ylow ? (
                 <YearlyLowHigh
-                  instrument={insData[holding.id]}
+                  instrument={instrument}
                   price={price}
                   currency={holding.curr}
-                  previousPrice={
-                    insData[holding.id].prev ? insData[holding.id].prev : null
-                  }
+                  previousPrice={instrument.prev ? instrument.prev : null}
                 />
               ) : (
                 <Row justify="center">
                   <InsPrice
                     price={price}
                     currency={holding.curr}
-                    previousPrice={
-                      insData[holding.id].prev ? insData[holding.id].prev : null
-                    }
+                    previousPrice={instrument.prev ? instrument.prev : null}
                   />
                 </Row>
               )

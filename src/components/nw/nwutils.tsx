@@ -1086,20 +1086,29 @@ export const getFamilyMemberOptions = (
   return opts;
 };
 
+export const doesExceedRisk = (
+  risk: APIt.RiskProfile,
+  riskProfile: APIt.RiskProfile
+) => {
+  const riskProfiles = Object.keys(APIt.RiskProfile);
+  const higherRiskValues = riskProfiles.slice(
+    riskProfiles.indexOf(riskProfile) + 1
+  );
+  return higherRiskValues.includes(risk);
+};
+
 export const filterRisk = (
   selectedTags: string[],
-  risk: string,
-  riskProfile: string
+  risk: APIt.RiskProfile,
+  riskProfile: APIt.RiskProfile
 ) => {
-  const riskInput = Object.keys(APIt.RiskProfile);
-  const exceedsRisk = riskInput.slice(riskInput.indexOf(riskProfile) + 1);
   return (
     (selectedTags.includes("Vlow") && risk === APIt.RiskProfile.VC) ||
     (selectedTags.includes("Low") && risk === APIt.RiskProfile.C) ||
     (selectedTags.includes("Medium") && risk === APIt.RiskProfile.M) ||
     (selectedTags.includes("High") && risk === APIt.RiskProfile.A) ||
     (selectedTags.includes("VHigh") && risk === APIt.RiskProfile.VA) ||
-    (selectedTags.includes("Exceeds") && exceedsRisk.includes(risk))
+    (selectedTags.includes("Exceeds") && doesExceedRisk(risk, riskProfile))
   );
 };
 
