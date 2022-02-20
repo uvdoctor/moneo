@@ -385,13 +385,33 @@ export const getInsuranceType = () => {
 
 export const getRiskProfileType = () => {
   return {
-    VLow: "Very Low",
-    Low: "Low",
-    Medium: "Medium",
-    High: "High",
-    VHigh: "Very High",
+    VLow: "No loss",
+    Low: "Up to 10% loss",
+    Medium: "Up to 20% loss",
+    High: "Up to 30% loss",
+    VHigh: "Up to 50% loss",
     Exceeds: "Exceeds Risk Profile",
   };
+};
+
+export const getRiskAttributesByProfile = (risk: APIt.RiskProfile) => {
+  const riskLabels = {
+    [APIt.RiskProfile.VC]: { label: "No loss", color: COLORS.GREEN },
+    [APIt.RiskProfile.C]: { label: "Up to 10% loss", color: "#ffc107" },
+    [APIt.RiskProfile.M]: { label: "Up to 20% loss", color: "#ffa698" },
+    [APIt.RiskProfile.A]: { label: "Up to 30% loss", color: COLORS.ORANGE },
+    [APIt.RiskProfile.VA]: { label: "Up to 50% loss", color: COLORS.RED },
+  };
+  return riskLabels[risk];
+};
+
+export const getMarketCapLabel = (mCap: APIt.MCap) => {
+  const mCapLabels: any = {
+    [APIt.MCap.S]: "Small-cap",
+    [APIt.MCap.M]: "Medium-cap",
+    [APIt.MCap.L]: "Large-cap",
+  };
+  return mCapLabels[mCap];
 };
 
 export const getAssetSubTypes = () => {
@@ -1072,7 +1092,7 @@ export const filterRisk = (
   riskProfile: string
 ) => {
   const riskInput = Object.keys(APIt.RiskProfile);
-  const exceedsRisk = riskInput.slice(riskInput.indexOf(riskProfile)+1);
+  const exceedsRisk = riskInput.slice(riskInput.indexOf(riskProfile) + 1);
   return (
     (selectedTags.includes("Vlow") && risk === APIt.RiskProfile.VC) ||
     (selectedTags.includes("Low") && risk === APIt.RiskProfile.C) ||

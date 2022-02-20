@@ -124,7 +124,8 @@ function NWContextProvider({ fxRates }: any) {
   const [credit, setCredit] = useState<Array<HoldingInput>>([]);
   const [p2p, setP2P] = useState<Array<HoldingInput>>([]);
   const [selectedMembers, setSelectedMembers] = useState<Array<string>>([]);
-  const [selectedCurrency, setSelectedCurrency] = useState<string>("");
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<string>(defaultCurrency);
   const [nw, setNW] = useState<number>(0);
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [totalInstruments, setTotalInstruments] = useState<number>(0);
@@ -1004,8 +1005,7 @@ function NWContextProvider({ fxRates }: any) {
         totalVehicleIns,
         totalYearlyPremium,
         totalAccidentIns,
-      }}
-    >
+      }}>
       <GetView />
     </NWContext.Provider>
   );

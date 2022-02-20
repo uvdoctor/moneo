@@ -7,7 +7,7 @@ import {
 } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
-import { getTooltipDesc } from "./nwutils";
+import { getRiskAttributesByProfile, getTooltipDesc } from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
@@ -54,11 +54,31 @@ export default function RiskAllocationChart() {
   }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
   const riskAttributes: any = {
-    [RiskProfile.VC]: { label: "Very low", color: COLORS.GREEN, rating: 1 },
-    [RiskProfile.C]: { label: "Low", color: "#ffc107", rating: 2 },
-    [RiskProfile.M]: { label: "Medium", color: "#ffa698", rating: 3 },
-    [RiskProfile.A]: { label: "High", color: COLORS.ORANGE, rating: 4 },
-    [RiskProfile.VA]: { label: "Very high", color: COLORS.RED, rating: 5 },
+    [RiskProfile.VC]: {
+      label: getRiskAttributesByProfile(RiskProfile.VC).label,
+      color: getRiskAttributesByProfile(RiskProfile.VC).color,
+      rating: 1,
+    },
+    [RiskProfile.C]: {
+      label: getRiskAttributesByProfile(RiskProfile.C).label,
+      color: getRiskAttributesByProfile(RiskProfile.C).color,
+      rating: 2,
+    },
+    [RiskProfile.M]: {
+      label: getRiskAttributesByProfile(RiskProfile.M).label,
+      color: getRiskAttributesByProfile(RiskProfile.M).color,
+      rating: 3,
+    },
+    [RiskProfile.A]: {
+      label: getRiskAttributesByProfile(RiskProfile.A).label,
+      color: getRiskAttributesByProfile(RiskProfile.A).color,
+      rating: 4,
+    },
+    [RiskProfile.VA]: {
+      label: getRiskAttributesByProfile(RiskProfile.VA).label,
+      color: getRiskAttributesByProfile(RiskProfile.VA).color,
+      rating: 5,
+    },
   };
   const [data, setData] = useState<Array<any>>([]);
   const [excessRiskPercent, setExcessRiskPercent] = useState<number>(0);
