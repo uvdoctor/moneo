@@ -23,7 +23,6 @@ const getAndPushData = () => {
           );
           console.log("data", data, url);
           const batches = calculateSchema(data, isinMap, exchg);
-          console.log(batches);
           for (let batch in batches) {
             const result = await pushData(batches[batch], tableName);
             console.log(result);
