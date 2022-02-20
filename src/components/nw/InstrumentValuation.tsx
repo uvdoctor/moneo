@@ -196,11 +196,14 @@ export default function InstrumentValuation() {
           const { subt, mftype, type, mcap, risk } = data;
           return (
             selectedTags.includes(type) ||
-            (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
-            (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
-            (selectedTags.includes("HC") && mcap === MCap.H) ||
-            (selectedTags.includes(MCap.S) && (mcap === MCap.S || !mcap)) ||
-            filterFixCategory(selectedTags, subt, mftype) ||
+            (type === AssetType.E &&
+              ((selectedTags.includes(MCap.L) && mcap === MCap.L) ||
+                (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
+                (selectedTags.includes("HC") && mcap === MCap.H) ||
+                (selectedTags.includes(MCap.S) &&
+                  (mcap === MCap.S || !mcap)))) ||
+            (type === AssetType.F &&
+              filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp)
           );
         }
