@@ -1,4 +1,5 @@
-const calculateSchema = (data, isinMap, exchg) => {
+const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
+const calculateSchema = (data, isinMap, exchg, table) => {
   let count = 0;
   let batches = [];
   let batchRecords = [];
@@ -9,12 +10,13 @@ const calculateSchema = (data, isinMap, exchg) => {
       if (isinMap[id]) return;
       const sid = exchgData.General.Code;
       isinMap[id] = id;
-      const schema = {
+      let schema = {
         id: id,
         sid: sid,
         exchg: exchg,
         ana: data[index],
       };
+      appendGenericFields(schema, table);
       batches.push({ PutRequest: { Item: schema } });
       count++;
       if (count === 25) {
