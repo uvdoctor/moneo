@@ -36,6 +36,7 @@ import {
   calculateVehicle,
 } from "./valuationutils";
 import { AssetSubType, PropertyType } from "../../api/goals";
+import { number2color } from "@antv/util";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -1061,21 +1062,62 @@ export const getCategoryOptions = (tab: string) => {
   return category[tab];
 };
 
+const getRiskTotalLabel = (type: string) => {
+  switch (type) {
+    case "stocks":
+      return "Stocks";
+    case "bonds":
+      return "Bonds";
+    case "mfs":
+      return "Mutual funds";
+    case "etfs":
+      return "ETFs";
+    default:
+      return "Others";
+  }
+};
+
+const getTooltipDescItem = (
+  label: string,
+  value: number,
+  totalAssets: number,
+  currency: string,
+  isRiskItem?: boolean
+) => {
+  const amount = toHumanFriendlyCurrency(value, currency);
+  const percentage = toReadableNumber((value / totalAssets) * 100, 2);
+  return `${amount} (${percentage}%) of ${
+    isRiskItem ? getRiskTotalLabel(label) : label
+  }<br/><br/>`;
+};
+
 export const getTooltipDesc = (
   records: any,
   selectedCurrency: string,
-  totalAssets: number
+  totalAssets: number,
+  riskTotals?: any
 ) => {
   let data: any = "";
   Object.keys(records).map((value) => {
     if (!records[value]) return;
-    const amount = toHumanFriendlyCurrency(records[value], selectedCurrency);
-    const percentage = toReadableNumber(
-      (records[value] / totalAssets) * 100,
-      2
+    data += getTooltipDescItem(
+      value,
+      records[value],
+      totalAssets,
+      selectedCurrency
     );
-    data += `${amount} (${percentage}%) of ${value}<br/><br/>`;
   });
+  if (riskTotals)
+    Object.keys(riskTotals).map((rt) => {
+      if (!riskTotals[rt]) return;
+      data += getTooltipDescItem(
+        rt,
+        riskTotals[rt],
+        totalAssets,
+        selectedCurrency,
+        true
+      );
+    });
   return data ? `<br/><br/>Includes<br/><br/>${data}` : "";
 };
 

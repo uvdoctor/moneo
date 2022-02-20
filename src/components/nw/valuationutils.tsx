@@ -19,6 +19,7 @@ import {
   MFSchemeType,
   PropertyInput,
   PropertyType,
+  RiskProfile,
 } from "../../api/goals";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
@@ -393,6 +394,17 @@ export const calculateNPS = (
   return { value, fixed, equity };
 };
 
+const initRiskAttribs = () => {
+  return {
+    stocks: 0,
+    bonds: 0,
+    mfs: 0,
+    etfs: 0,
+    reit: 0,
+    others: 0,
+  };
+};
+
 export const priceInstruments = async (
   instruments: Array<InstrumentInput>,
   selectedMembers: Array<string>,
@@ -416,6 +428,13 @@ export const priceInstruments = async (
   let intervalFunds = 0;
   let indexFunds = 0;
   let liquidFunds = 0;
+  let riskTotals: any = {
+    [RiskProfile.VC]: initRiskAttribs(),
+    [RiskProfile.C]: initRiskAttribs(),
+    [RiskProfile.M]: initRiskAttribs(),
+    [RiskProfile.A]: initRiskAttribs(),
+    [RiskProfile.VA]: initRiskAttribs(),
+  };
   let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!cachedData) {
     cachedData = await initializeInsData(instruments);
@@ -429,12 +448,21 @@ export const priceInstruments = async (
     ) {
       let value = instrument.qty * data.price;
       total += value;
-      if (data.itype === InsType.ETF) totalETFs += value;
-      else if (isFund(instrument.id)) totalMFs += value;
+      if (data.itype === InsType.ETF) {
+        totalETFs += value;
+        if (data.risk) riskTotals[data.risk].etfs += value;
+      } else if (isFund(instrument.id)) {
+        totalMFs += value;
+        if (data.risk) riskTotals[data.risk].mfs += value;
+      }
       if (data.subt === AssetSubType.GoldB) totalFGold += value;
-      else if (data.itype && data.itype === InsType.REIT) totalFRE += value;
-      else if (data.itype && data.itype === InsType.InvIT) totalInv += value;
-      else if (data.type === AssetType.E) {
+      else if (data.itype && data.itype === InsType.REIT) {
+        totalFRE += value;
+        if (data.risk) riskTotals[data.risk].reit += value;
+      } else if (data.itype && data.itype === InsType.InvIT) {
+        totalInv += value;
+        if (data.risk) riskTotals[data.risk].others += value;
+      } else if (data.type === AssetType.E) {
         totalFEquity += value;
         if (isLargeCap(data)) {
           if (data.itype === InsType.ETF) largeCapETFs += value;
@@ -443,7 +471,10 @@ export const priceInstruments = async (
               ? (largeCapFunds += value)
               : (largeCapStocks += value);
         } else multiCap += value;
-        if (!isFund(id) && !data.itype) totalStocks += value;
+        if (!isFund(id) && !data.itype) {
+          totalStocks += value;
+          if (data.risk) riskTotals[data.risk].stocks += value;
+        }
       } else if (data.type === AssetType.F) {
         totalFFixed += value;
         if (data.subt === AssetSubType.I) indexFunds += value;
@@ -451,7 +482,10 @@ export const priceInstruments = async (
         else if (data.mftype && data.subt === AssetSubType.HB) {
           if (data.mftype === MFSchemeType.I) intervalFunds += value;
           if (data.mftype === MFSchemeType.C) fmp += value;
-        } else totalBonds += value;
+        } else {
+          totalBonds += value;
+          if (data.risk) riskTotals[data.risk].bonds += value;
+        }
       } else if (data.type === AssetType.H) {
         if (includesAny(data.name as string, ["conservative"])) {
           totalFFixed += 0.7 * value;
@@ -497,6 +531,7 @@ export const priceInstruments = async (
     fmp,
     intervalFunds,
     liquidFunds,
+    riskTotals,
   };
 };
 

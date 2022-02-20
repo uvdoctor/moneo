@@ -202,6 +202,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalVehicleIns, setTotalVehicleIns] = useState<number>(0);
   const [totalAccidentIns, setTotalAccidentIns] = useState<number>(0);
   const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
+  const [riskTotals, setRiskTotals] = useState<any>({});
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -730,6 +731,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalFMP(totals.fmp);
       setTotalIntervalFunds(totals.intervalFunds);
       setTotalLiquidFunds(totals.liquidFunds);
+      setRiskTotals(totals.riskTotals);
       setLoadingInstruments(false);
     });
   }, [instruments, selectedMembers, selectedCurrency]);
@@ -1005,6 +1007,7 @@ function NWContextProvider({ fxRates }: any) {
         totalVehicleIns,
         totalYearlyPremium,
         totalAccidentIns,
+        riskTotals,
       }}>
       <GetView />
     </NWContext.Provider>
