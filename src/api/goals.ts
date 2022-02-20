@@ -1110,6 +1110,7 @@ export enum MCap {
   S = "S",
   M = "M",
   L = "L",
+  H = "H",
 }
 
 
