@@ -1727,54 +1727,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const createInsBhs = /* GraphQL */ `
-  mutation CreateInsBhs(
-    $input: CreateInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    createInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsBhs = /* GraphQL */ `
-  mutation UpdateInsBhs(
-    $input: UpdateInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    updateInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsBhs = /* GraphQL */ `
-  mutation DeleteInsBhs(
-    $input: DeleteInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    deleteInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createInsUserMap = /* GraphQL */ `
   mutation CreateInsUserMap(
     $input: CreateInsUserMapInput!
@@ -1913,13 +1865,12 @@ export const createInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -1943,13 +1894,12 @@ export const updateInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -1973,13 +1923,12 @@ export const deleteInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }

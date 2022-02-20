@@ -691,47 +691,6 @@ export const listInExchgPrices = /* GraphQL */ `
     }
   }
 `;
-export const getInsBhs = /* GraphQL */ `
-  query GetInsBhs($id: String!) {
-    getInsBHS(id: $id) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsBhSs = /* GraphQL */ `
-  query ListInsBhSs(
-    $id: String
-    $filter: ModelInsBHSFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsBHSs(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        rec
-        fun
-        tech
-        ca
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getInsUserMap = /* GraphQL */ `
   query GetInsUserMap($id: String!, $user: String!) {
     getInsUserMap(id: $id, user: $user) {
@@ -847,13 +806,12 @@ export const getInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -887,13 +845,12 @@ export const listInBondPrices = /* GraphQL */ `
         mm
         my
         rate
-        fr
-        tf
         fv
         cr
         crstr
         ytm
         risk
+        itype
         createdAt
         updatedAt
       }

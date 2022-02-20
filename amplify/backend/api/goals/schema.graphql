@@ -291,6 +291,14 @@ enum InsType {
   ETF
   REIT
   InvIT
+  DEB
+  CP
+  TB
+  CD
+  PB
+  IB
+  TFB
+  FRB
 }
 
 enum MCap {
@@ -400,27 +408,6 @@ enum Recommendation {
   H
   S
 }
-type InsBHS
-  @model
-  @aws_iam
-  @key(fields: ["id"])
-  @auth(
-    rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [read] }
-    ]
-  ) {
-  id: String!
-  rec: Recommendation
-  fun: AWSJSON
-  tech: AWSJSON
-  ca: AWSJSON
-}
-
 type InsUserMap
   @model
   @aws_iam
@@ -496,13 +483,12 @@ type INBondPrice
   mm: Int
   my: Int
   rate: Float!
-  fr: Boolean!
-  tf: Boolean!
   fv: Int
   cr: CreditRating
   crstr: String
   ytm: Float
   risk: RiskProfile
+  itype: InsType
 }
 
 type INMFPrice

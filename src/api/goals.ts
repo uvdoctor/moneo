@@ -1094,6 +1094,14 @@ export enum InsType {
   ETF = "ETF",
   REIT = "REIT",
   InvIT = "InvIT",
+  DEB = "DEB",
+  CP = "CP",
+  TB = "TB",
+  CD = "CD",
+  PB = "PB",
+  IB = "IB",
+  TFB = "TFB",
+  FRB = "FRB",
 }
 
 
@@ -1215,59 +1223,6 @@ export type UpdateINExchgPriceInput = {
 };
 
 export type DeleteINExchgPriceInput = {
-  id: string,
-};
-
-export type CreateInsBHSInput = {
-  id: string,
-  rec?: Recommendation | null,
-  fun?: string | null,
-  tech?: string | null,
-  ca?: string | null,
-};
-
-export enum Recommendation {
-  B = "B",
-  H = "H",
-  S = "S",
-}
-
-
-export type ModelInsBHSConditionInput = {
-  rec?: ModelRecommendationInput | null,
-  fun?: ModelStringInput | null,
-  tech?: ModelStringInput | null,
-  ca?: ModelStringInput | null,
-  and?: Array< ModelInsBHSConditionInput | null > | null,
-  or?: Array< ModelInsBHSConditionInput | null > | null,
-  not?: ModelInsBHSConditionInput | null,
-};
-
-export type ModelRecommendationInput = {
-  eq?: Recommendation | null,
-  ne?: Recommendation | null,
-};
-
-export type InsBHS = {
-  __typename: "InsBHS",
-  id?: string,
-  rec?: Recommendation | null,
-  fun?: string | null,
-  tech?: string | null,
-  ca?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateInsBHSInput = {
-  id: string,
-  rec?: Recommendation | null,
-  fun?: string | null,
-  tech?: string | null,
-  ca?: string | null,
-};
-
-export type DeleteInsBHSInput = {
   id: string,
 };
 
@@ -1433,13 +1388,12 @@ export type CreateINBondPriceInput = {
   mm?: number | null,
   my?: number | null,
   rate: number,
-  fr: boolean,
-  tf: boolean,
   fv?: number | null,
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
   risk?: RiskProfile | null,
+  itype?: InsType | null,
 };
 
 export enum CreditRating {
@@ -1463,13 +1417,12 @@ export type ModelINBondPriceConditionInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
-  fr?: ModelBooleanInput | null,
-  tf?: ModelBooleanInput | null,
   fv?: ModelIntInput | null,
   cr?: ModelCreditRatingInput | null,
   crstr?: ModelStringInput | null,
   ytm?: ModelFloatInput | null,
   risk?: ModelRiskProfileInput | null,
+  itype?: ModelInsTypeInput | null,
   and?: Array< ModelINBondPriceConditionInput | null > | null,
   or?: Array< ModelINBondPriceConditionInput | null > | null,
   not?: ModelINBondPriceConditionInput | null,
@@ -1494,13 +1447,12 @@ export type INBondPrice = {
   mm?: number | null,
   my?: number | null,
   rate?: number,
-  fr?: boolean,
-  tf?: boolean,
   fv?: number | null,
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
   risk?: RiskProfile | null,
+  itype?: InsType | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1518,13 +1470,12 @@ export type UpdateINBondPriceInput = {
   mm?: number | null,
   my?: number | null,
   rate?: number | null,
-  fr?: boolean | null,
-  tf?: boolean | null,
   fv?: number | null,
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
   risk?: RiskProfile | null,
+  itype?: InsType | null,
 };
 
 export type DeleteINBondPriceInput = {
@@ -1922,23 +1873,6 @@ export type ModelINExchgPriceConnection = {
   nextToken?: string | null,
 };
 
-export type ModelInsBHSFilterInput = {
-  id?: ModelStringInput | null,
-  rec?: ModelRecommendationInput | null,
-  fun?: ModelStringInput | null,
-  tech?: ModelStringInput | null,
-  ca?: ModelStringInput | null,
-  and?: Array< ModelInsBHSFilterInput | null > | null,
-  or?: Array< ModelInsBHSFilterInput | null > | null,
-  not?: ModelInsBHSFilterInput | null,
-};
-
-export type ModelInsBHSConnection = {
-  __typename: "ModelInsBHSConnection",
-  items?:  Array<InsBHS | null >,
-  nextToken?: string | null,
-};
-
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -2004,13 +1938,12 @@ export type ModelINBondPriceFilterInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
-  fr?: ModelBooleanInput | null,
-  tf?: ModelBooleanInput | null,
   fv?: ModelIntInput | null,
   cr?: ModelCreditRatingInput | null,
   crstr?: ModelStringInput | null,
   ytm?: ModelFloatInput | null,
   risk?: ModelRiskProfileInput | null,
+  itype?: ModelInsTypeInput | null,
   and?: Array< ModelINBondPriceFilterInput | null > | null,
   or?: Array< ModelINBondPriceFilterInput | null > | null,
   not?: ModelINBondPriceFilterInput | null,
@@ -3994,60 +3927,6 @@ export type DeleteInExchgPriceMutation = {
   } | null,
 };
 
-export type CreateInsBhsMutationVariables = {
-  input?: CreateInsBHSInput,
-  condition?: ModelInsBHSConditionInput | null,
-};
-
-export type CreateInsBhsMutation = {
-  createInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInsBhsMutationVariables = {
-  input?: UpdateInsBHSInput,
-  condition?: ModelInsBHSConditionInput | null,
-};
-
-export type UpdateInsBhsMutation = {
-  updateInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInsBhsMutationVariables = {
-  input?: DeleteInsBHSInput,
-  condition?: ModelInsBHSConditionInput | null,
-};
-
-export type DeleteInsBhsMutation = {
-  deleteInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateInsUserMapMutationVariables = {
   input?: CreateInsUserMapInput,
   condition?: ModelInsUserMapConditionInput | null,
@@ -4200,13 +4079,12 @@ export type CreateInBondPriceMutation = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4232,13 +4110,12 @@ export type UpdateInBondPriceMutation = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4264,13 +4141,12 @@ export type DeleteInBondPriceMutation = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5138,48 +5014,6 @@ export type ListInExchgPricesQuery = {
   } | null,
 };
 
-export type GetInsBhsQueryVariables = {
-  id?: string,
-};
-
-export type GetInsBhsQuery = {
-  getInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInsBhSsQueryVariables = {
-  id?: string | null,
-  filter?: ModelInsBHSFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInsBhSsQuery = {
-  listInsBHSs?:  {
-    __typename: "ModelInsBHSConnection",
-    items:  Array< {
-      __typename: "InsBHS",
-      id: string,
-      rec?: Recommendation | null,
-      fun?: string | null,
-      tech?: string | null,
-      ca?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetInsUserMapQueryVariables = {
   id?: string,
   user?: string,
@@ -5301,13 +5135,12 @@ export type GetInBondPriceQuery = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5338,13 +5171,12 @@ export type ListInBondPricesQuery = {
       mm?: number | null,
       my?: number | null,
       rate: number,
-      fr: boolean,
-      tf: boolean,
       fv?: number | null,
       cr?: CreditRating | null,
       crstr?: string | null,
       ytm?: number | null,
       risk?: RiskProfile | null,
+      itype?: InsType | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6882,45 +6714,6 @@ export type OnDeleteInExchgPriceSubscription = {
   } | null,
 };
 
-export type OnCreateInsBhsSubscription = {
-  onCreateInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInsBhsSubscription = {
-  onUpdateInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInsBhsSubscription = {
-  onDeleteInsBHS?:  {
-    __typename: "InsBHS",
-    id: string,
-    rec?: Recommendation | null,
-    fun?: string | null,
-    tech?: string | null,
-    ca?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateInsUserMapSubscription = {
   onCreateInsUserMap?:  {
     __typename: "InsUserMap",
@@ -7038,13 +6831,12 @@ export type OnCreateInBondPriceSubscription = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7065,13 +6857,12 @@ export type OnUpdateInBondPriceSubscription = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7092,13 +6883,12 @@ export type OnDeleteInBondPriceSubscription = {
     mm?: number | null,
     my?: number | null,
     rate: number,
-    fr: boolean,
-    tf: boolean,
     fv?: number | null,
     cr?: CreditRating | null,
     crstr?: string | null,
     ytm?: number | null,
     risk?: RiskProfile | null,
+    itype?: InsType | null,
     createdAt: string,
     updatedAt: string,
   } | null,

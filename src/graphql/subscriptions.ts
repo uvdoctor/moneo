@@ -689,45 +689,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInsBhs = /* GraphQL */ `
-  subscription OnCreateInsBhs {
-    onCreateInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInsBhs = /* GraphQL */ `
-  subscription OnUpdateInsBhs {
-    onUpdateInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInsBhs = /* GraphQL */ `
-  subscription OnDeleteInsBhs {
-    onDeleteInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateInsUserMap = /* GraphQL */ `
   subscription OnCreateInsUserMap {
     onCreateInsUserMap {
@@ -845,13 +806,12 @@ export const onCreateInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -872,13 +832,12 @@ export const onUpdateInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -899,13 +858,12 @@ export const onDeleteInBondPrice = /* GraphQL */ `
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
