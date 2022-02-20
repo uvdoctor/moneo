@@ -263,15 +263,12 @@ function PlanContextProvider({
       description: `Success! Goal ${savedGoal.name} has been Updated.`,
     });
     if (allGoals && allGoals.length) {
-      let existingGoalIndex = -1;
       for (let i = 0; i < allGoals.length; i++) {
         if (allGoals[i].id === savedGoal.id) {
-          existingGoalIndex = i;
+          allGoals[i] = savedGoal as CreateGoalInput;
           break;
         }
       }
-      if (existingGoalIndex >= 0)
-        allGoals[existingGoalIndex] = savedGoal as CreateGoalInput;
     }
     allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
