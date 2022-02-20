@@ -218,7 +218,8 @@
           ]
         }
       }
-    },"LambdaDynamoDbPolicy": {
+    },
+    "LambdaDynamoDbPolicy": {
       "DependsOn": [
         "LambdaExecutionRole"
       ],
