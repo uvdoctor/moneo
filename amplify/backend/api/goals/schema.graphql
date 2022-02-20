@@ -299,6 +299,7 @@ enum InsType {
   IB
   TFB
   FRB
+  CB
 }
 
 enum MCap {

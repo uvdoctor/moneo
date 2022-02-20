@@ -1102,6 +1102,7 @@ export enum InsType {
   IB = "IB",
   TFB = "TFB",
   FRB = "FRB",
+  CB = "CB",
 }
 
 
