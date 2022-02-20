@@ -390,7 +390,7 @@ export const getRiskProfileType = () => {
     Medium: "Medium",
     High: "High",
     VHigh: "Very High",
-    // "Exceeds": "Exceeds Risk Profile"
+    Exceeds: "Exceeds Risk Profile",
   };
 };
 
@@ -1066,13 +1066,20 @@ export const getFamilyMemberOptions = (
   return opts;
 };
 
-export const filterRisk = (selectedTags: string[], risk: string) => {
+export const filterRisk = (
+  selectedTags: string[],
+  risk: string,
+  riskProfile: string
+) => {
+  const riskInput = Object.keys(APIt.RiskProfile);
+  const exceedsRisk = riskInput.slice(riskInput.indexOf(riskProfile)+1);
   return (
-    (selectedTags.includes("Vlow") && risk === "VC") ||
-    (selectedTags.includes("Low") && risk === "C") ||
-    (selectedTags.includes("Medium") && risk === "M") ||
-    (selectedTags.includes("High") && risk === "A") ||
-    (selectedTags.includes("VHigh") && risk === "VA")
+    (selectedTags.includes("Vlow") && risk === APIt.RiskProfile.VC) ||
+    (selectedTags.includes("Low") && risk === APIt.RiskProfile.C) ||
+    (selectedTags.includes("Medium") && risk === APIt.RiskProfile.M) ||
+    (selectedTags.includes("High") && risk === APIt.RiskProfile.A) ||
+    (selectedTags.includes("VHigh") && risk === APIt.RiskProfile.VA) ||
+    (selectedTags.includes("Exceeds") && exceedsRisk.includes(risk))
   );
 };
 

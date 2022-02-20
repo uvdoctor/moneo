@@ -20,8 +20,10 @@ import {
   filterRisk,
   filterFixCategory,
 } from "./nwutils";
+import { AppContext } from "../AppContext";
 
 export default function InstrumentValuation() {
+  const { userInfo }: any = useContext(AppContext);
   const {
     instruments,
     setInstruments,
@@ -199,14 +201,14 @@ export default function InstrumentValuation() {
             (selectedTags.includes("HC") && mcap === MCap.H) ||
             (selectedTags.includes(MCap.S) && (mcap === MCap.S || !mcap)) ||
             filterFixCategory(selectedTags, subt, mftype) ||
-            filterRisk(selectedTags, risk)
+            filterRisk(selectedTags, risk, userInfo?.rp)
           );
         }
         if (childTab === STOCK) {
           const { mcapt, risk } = data;
           return (
             selectedTags.includes(mcapt) ||
-            filterRisk(selectedTags, risk)
+            filterRisk(selectedTags, risk, userInfo?.rp)
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;
@@ -214,7 +216,7 @@ export default function InstrumentValuation() {
           return (
             (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
             selectedTags.includes(subt) ||
-            filterRisk(selectedTags, risk)
+            filterRisk(selectedTags, risk, userInfo?.rp)
           );
         }
       }
