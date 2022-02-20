@@ -27,7 +27,6 @@ import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
 import { getMarketCapLabel } from "./nwutils";
 import InsPrice from "./InsPrice";
-import { AppContext } from "../AppContext";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -36,7 +35,6 @@ interface HoldingProp {
 }
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
-  const { userInfo }: any = useContext(AppContext);
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   const instrument =
     insData && insData[holding.id] ? insData[holding.id] : null;
