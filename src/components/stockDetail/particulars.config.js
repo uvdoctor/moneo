@@ -19,10 +19,34 @@ export const incomeStatementParticulars = {
 			"It is the revenue earned by the bank from its core lending activity over a financial year."
 		),
 	},
+	totalOperatingExpenses: {
+		particulars: labelWithTooltip(
+			"Total Expenditure",
+			"It includes companys core cost from operating and non-operating activities."
+		),
+	},
+	operatingIncome: {
+		particulars: labelWithTooltip(
+			"Operating Profit",
+			"The amount of profit earned from the core-operations, excluding any financing or tax-related expenses."
+		),
+	},
+	interestExpense: {
+		particulars: labelWithTooltip(
+			"Interest",
+			"It is the expense incurred by an entity for borrowed funds."
+		),
+	},
 	incomeBeforeTax: {
 		particulars: labelWithTooltip(
 			"Profit Before Tax",
 			"It is the total profit after accounting for operating and non-operating expenses but before paying corporate tax."
+		),
+	},
+	taxProvision: {
+		particulars: labelWithTooltip(
+			"Tax",
+			"The amount of income taxes paid or payable on the net earnings of the business."
 		),
 	},
 	netIncome: {
