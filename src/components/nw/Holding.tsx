@@ -25,11 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
 import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
-import {
-  doesExceedRisk,
-  getMarketCapLabel,
-  getRiskAttributesByProfile,
-} from "./nwutils";
+import { getMarketCapLabel } from "./nwutils";
 import InsPrice from "./InsPrice";
 import { AppContext } from "../AppContext";
 
@@ -74,17 +70,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
             <Col>
               {instrument && instrument.type !== AssetType.H ? (
                 <Space>
-                  {instrument.risk &&
-                  doesExceedRisk(instrument.risk, userInfo.rp) ? (
-                    <Tooltip
-                      title={`This holding may lead to ${
-                        getRiskAttributesByProfile(instrument.risk).label
-                      }, which exceeds your acceptable risk level - ${
-                        getRiskAttributesByProfile(userInfo.rp).label
-                      }`}>
-                      &#128681;
-                    </Tooltip>
-                  ) : null}
                   {instrument.rate && instrument.rate !== -1 ? (
                     <Tooltip title="Interest rate">
                       &nbsp;&nbsp;
