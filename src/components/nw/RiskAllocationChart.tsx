@@ -1,10 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  getRiskProfileOptions,
-  toHumanFriendlyCurrency,
-  toReadableNumber,
-} from "../utils";
+import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 import {
@@ -52,7 +48,6 @@ export default function RiskAllocationChart() {
   const riskAttributes: any = getRiskAttributes();
   const [data, setData] = useState<Array<any>>([]);
   const [excessRiskPercent, setExcessRiskPercent] = useState<number>(0);
-  const riskProfileOptions: any = getRiskProfileOptions();
 
   const buildDataItem = (risk: string, val: number) => {
     return {
