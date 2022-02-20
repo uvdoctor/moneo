@@ -379,7 +379,18 @@ export const getInsuranceType = () => {
     V: "Vehicle",
     P: "Property",
     O: "Other",
-    A: "Accident"
+    A: "Accident",
+  };
+};
+
+export const getRiskProfileType = () => {
+  return {
+    VLow: "Very Low",
+    Low: "Low",
+    Medium: "Medium",
+    High: "High",
+    VHigh: "Very High",
+    // "Exceeds": "Exceeds Risk Profile"
   };
 };
 
@@ -623,7 +634,7 @@ export const hasRisktab = (childTab: string) =>
     TAB.VEHICLE_INS,
     TAB.OTHERS_INS,
     TAB.PROPERTY_INS,
-    TAB.ACCIDENT_INS
+    TAB.ACCIDENT_INS,
   ].includes(childTab);
 
 export const hasOnlyCategory = (childTab: string) =>
@@ -916,14 +927,14 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
-        qty: "Sum Insured"
+        qty: "Sum Insured",
       },
       info: {
         type: "Premium Mode",
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
-        qty: "Total coverage amount of the policy"
+        qty: "Total coverage amount of the policy",
       },
     },
   };
@@ -1053,4 +1064,35 @@ export const getFamilyMemberOptions = (
   let opts: any = {};
   familyMemberKeys.forEach((key: string) => (opts[key] = allFamily[key].name));
   return opts;
+};
+
+export const filterRisk = (selectedTags: string[], risk: string) => {
+  return (
+    (selectedTags.includes("Vlow") && risk === "VC") ||
+    (selectedTags.includes("Low") && risk === "C") ||
+    (selectedTags.includes("Medium") && risk === "M") ||
+    (selectedTags.includes("High") && risk === "A") ||
+    (selectedTags.includes("VHigh") && risk === "VA")
+  );
+};
+
+export const filterFixCategory = (
+  selectedTags: string[],
+  subt: string,
+  mftype: string
+) => {
+  return (
+    (selectedTags.includes(AssetSubType.CB) &&
+      (subt === AssetSubType.CB || mftype === APIt.MFSchemeType.O)) ||
+    (selectedTags.includes(AssetSubType.I) && subt === AssetSubType.I) ||
+    (selectedTags.includes("GovB") &&
+      (subt === AssetSubType.GB || subt === AssetSubType.GBO)) ||
+    (selectedTags.includes("IF") &&
+      subt === AssetSubType.HB &&
+      mftype === APIt.MFSchemeType.I) ||
+    (selectedTags.includes("FMP") &&
+      subt === AssetSubType.HB &&
+      mftype === APIt.MFSchemeType.C) ||
+    (selectedTags.includes("LF") && subt === AssetSubType.L)
+  );
 };

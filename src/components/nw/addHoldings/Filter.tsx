@@ -17,18 +17,17 @@ export default function Filter({ options }: FilterProps) {
   };
 
   const handleClick = (e: any) => {
-    const [subKey, main] = e.keyPath;
-    const mainKey = main && !selectedTags.includes(main) ? main : "";
-    mainKey && setSelectedTags([...selectedTags, mainKey, subKey]);
-    selectedTags.includes(subKey)
-      ? selectedTags.splice(selectedTags.indexOf(subKey), 1)
-      : selectedTags.push(subKey);
-    setSelectedTags([...selectedTags]);
+    const [subKey] = e.keyPath;
+    const tags = selectedTags;
+    tags.includes(subKey)
+      ? tags.splice(tags.indexOf(subKey), 1)
+      : tags.push(subKey);
+    setSelectedTags([...tags]);
   };
 
   const getTagLabel = (key: string) => {
     const tagOptions: any = {};
-    if(!options) return '';
+    if (!options) return "";
     Object.keys(options.main).map((key) => {
       if (options.sub) {
         Object.keys(options.sub[key]).map(
@@ -42,19 +41,21 @@ export default function Filter({ options }: FilterProps) {
 
   const menu = (
     <Menu multiple onClick={handleClick} selectedKeys={selectedTags}>
-      {options && Object.keys(options.main).length && Object.keys(options.main).map((key) => {
-        if (options.sub && Object.keys(options.sub[key]).length) {
-          return (
-            <SubMenu key={key} title={options.main[key]}>
-              {Object.keys(options.sub[key]).map((subkey) => (
-                <Menu.Item key={subkey}>{options.sub[key][subkey]}</Menu.Item>
-              ))}
-            </SubMenu>
-          );
-        } else {
-          return <Menu.Item key={key}>{options.main[key]}</Menu.Item>;
-        }
-      })}
+      {options &&
+        Object.keys(options.main).length &&
+        Object.keys(options.main).map((key) => {
+          if (options.sub && Object.keys(options.sub[key]).length) {
+            return (
+              <SubMenu key={key} title={options.main[key]}>
+                {Object.keys(options.sub[key]).map((subkey) => (
+                  <Menu.Item key={subkey}>{options.sub[key][subkey]}</Menu.Item>
+                ))}
+              </SubMenu>
+            );
+          } else {
+            return <Menu.Item key={key}>{options.main[key]}</Menu.Item>;
+          }
+        })}
     </Menu>
   );
 
@@ -66,15 +67,17 @@ export default function Filter({ options }: FilterProps) {
     <>
       {selectedTags.length
         ? selectedTags.map((item: string) => {
-            return <Tag
-              closable
-              onClose={() => onClose(item)}
-              key={item}
-              color="blue"
-            >
-              {getTagLabel(item)}
-            </Tag>
-        })
+            return (
+              <Tag
+                closable
+                onClose={() => onClose(item)}
+                key={item}
+                color="blue"
+              >
+                {getTagLabel(item)}
+              </Tag>
+            );
+          })
         : null}
       <Dropdown overlay={menu}>
         <Button type="link">

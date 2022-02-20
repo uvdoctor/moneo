@@ -11,10 +11,15 @@ import {
   InstrumentInput,
   InsType,
   MCap,
-  MFSchemeType,
 } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import { doesHoldingMatch, isFund, isBond } from "./nwutils";
+import {
+  doesHoldingMatch,
+  isFund,
+  isBond,
+  filterRisk,
+  filterFixCategory,
+} from "./nwutils";
 
 export default function InstrumentValuation() {
   const {
@@ -184,39 +189,32 @@ export default function InstrumentValuation() {
         ];
         if (!cachedData) return;
         const data = cachedData[id];
-        if (childTab === MF && data && selectedTags.length) {
-          const { CB, GBO, I, HB, GB, L } = AssetSubType;
-          const { subt, mftype, type, mcap } = data;
+        if (!data) return;
+        if (childTab === MF) {
+          const { subt, mftype, type, mcap, risk } = data;
           return (
             selectedTags.includes(type) ||
-            (type === AssetType.E &&
-              (selectedTags.includes(mcap) ||
-                (selectedTags.includes("HC") && mcap === MCap.H) ||
-                (selectedTags.includes(MCap.S) &&
-                  (mcap === MCap.S || !mcap)))) ||
-            (type === AssetType.F &&
-              ((selectedTags.includes("CB") &&
-                (subt === CB || mftype === MFSchemeType.O)) ||
-                (selectedTags.includes("I") && subt === I) ||
-                (selectedTags.includes("GovB") &&
-                  (subt === GB || subt === GBO)) ||
-                (selectedTags.includes("IF") &&
-                  subt === HB &&
-                  mftype === MFSchemeType.I) ||
-                (selectedTags.includes("FMP") &&
-                  subt === HB &&
-                  mftype === MFSchemeType.C) ||
-                (selectedTags.includes("LF") && subt === L)))
+            (selectedTags.includes(MCap.L) && mcap === MCap.L) ||
+            (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
+            (selectedTags.includes("HC") && mcap === MCap.H) ||
+            (selectedTags.includes(MCap.S) && (mcap === MCap.S || !mcap)) ||
+            filterFixCategory(selectedTags, subt, mftype) ||
+            filterRisk(selectedTags, risk)
           );
         }
-        if (childTab === STOCK && data && selectedTags.length) {
-          return selectedTags.includes(data.mcapt);
-        } else if (childTab === BOND && data && selectedTags.length) {
-          const { subt } = data;
+        if (childTab === STOCK) {
+          const { mcapt, risk } = data;
+          return (
+            selectedTags.includes(mcapt) ||
+            filterRisk(selectedTags, risk)
+          );
+        } else if (childTab === BOND) {
+          const { subt, risk } = data;
           const { GB, GBO } = AssetSubType;
           return (
             (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
-            selectedTags.includes(subt)
+            selectedTags.includes(subt) ||
+            filterRisk(selectedTags, risk)
           );
         }
       }

@@ -19,6 +19,7 @@ import {
   getAssetTypes,
   getMutualFundMarketCap,
   getFixedCategories,
+  getRiskProfileType,
 } from "./nwutils";
 import { notification } from "antd";
 import {
@@ -314,8 +315,8 @@ function NWContextProvider({ fxRates }: any) {
           total: totalStocks,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { mcap: "Capitalization" },
-            sub: { mcap: getStockMarketCap() },
+            main: { mcap: "Capitalization", risk: "Risk" },
+            sub: { mcap: getStockMarketCap(), risk: getRiskProfileType() },
           },
         },
         [TAB.MF]: {
@@ -327,12 +328,13 @@ function NWContextProvider({ fxRates }: any) {
           total: totalMFs,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: getAssetTypes(),
+            main: { ...getAssetTypes(), risk: "Risk" },
             sub: {
               E: getMutualFundMarketCap(),
               F: getFixedCategories(),
               H: {},
               A: {},
+              risk: getRiskProfileType(),
             },
           },
         },
@@ -345,7 +347,11 @@ function NWContextProvider({ fxRates }: any) {
           total: totalBonds,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { CB: "Corporate Bond", GB: "Government Bond" },
+            main: { type: "Type", risk: "Risk" },
+            sub: {
+              type: { CB: "Corporate Bond", GB: "Government Bond" },
+              risk: getRiskProfileType(),
+            },
           },
         },
         [TAB.GOLDB]: {
@@ -998,7 +1004,8 @@ function NWContextProvider({ fxRates }: any) {
         totalVehicleIns,
         totalYearlyPremium,
         totalAccidentIns,
-      }}>
+      }}
+    >
       <GetView />
     </NWContext.Provider>
   );
