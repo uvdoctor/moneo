@@ -7,7 +7,12 @@ import {
 } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
-import { doesExceedRisk, getRiskAttributes, getTooltipDesc } from "./nwutils";
+import {
+  doesExceedRisk,
+  getRiskAttributes,
+  getRiskAttributesByProfile,
+  getTooltipDesc,
+} from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
@@ -198,11 +203,8 @@ export default function RiskAllocationChart() {
                 )}% of assets have higher risk `}
                 // @ts-ignore
                 info={`Given that you can tolerate ${
-                  riskProfileOptions[userInfo?.rp]
-                } loss, your risk profile is 
-				${
-          riskAttributes[userInfo?.rp].label
-        }. Current allocation includes ${toReadableNumber(
+                  getRiskAttributesByProfile(userInfo?.rp).label
+                }, current allocation includes ${toReadableNumber(
                   excessRiskPercent,
                   2
                 )}% of assets with higher risk.`}
