@@ -36,7 +36,6 @@ import {
   calculateVehicle,
 } from "./valuationutils";
 import { AssetSubType, PropertyType } from "../../api/goals";
-import { number2color } from "@antv/util";
 
 interface OptionTableMap {
   [Stock: string]: string;
