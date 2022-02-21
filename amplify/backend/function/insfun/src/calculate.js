@@ -8,8 +8,9 @@ const calculateSchema = (data, isinMap, exchg, table) => {
     if (exchgData) {
       const id = exchgData.General.ISIN;
       const sid = exchgData.General.Code;
-      if (isinMap[sid]) continue;
+      if (isinMap[sid] || isinMap[id]) continue;
       isinMap[sid] = sid;
+      isinMap[id] = id;
       let schema = {
         id: sid,
         isin: id,
