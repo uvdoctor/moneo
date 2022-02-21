@@ -1023,14 +1023,14 @@ export type DeleteFeedsInput = {
 
 export type CreateINExchgFunInput = {
   id: string,
-  sid: string,
+  isin?: string | null,
   exchg: Exchange,
   ana?: string | null,
   risk?: RiskProfile | null,
 };
 
 export type ModelINExchgFunConditionInput = {
-  sid?: ModelStringInput | null,
+  isin?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
   ana?: ModelStringInput | null,
   risk?: ModelRiskProfileInput | null,
@@ -1042,7 +1042,7 @@ export type ModelINExchgFunConditionInput = {
 export type INExchgFun = {
   __typename: "INExchgFun",
   id?: string,
-  sid?: string,
+  isin?: string | null,
   exchg?: Exchange,
   ana?: string | null,
   risk?: RiskProfile | null,
@@ -1052,7 +1052,7 @@ export type INExchgFun = {
 
 export type UpdateINExchgFunInput = {
   id: string,
-  sid?: string | null,
+  isin?: string | null,
   exchg?: Exchange | null,
   ana?: string | null,
   risk?: RiskProfile | null,
@@ -1826,7 +1826,7 @@ export type ModelFeedsConnection = {
 
 export type ModelINExchgFunFilterInput = {
   id?: ModelStringInput | null,
-  sid?: ModelStringInput | null,
+  isin?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
   ana?: ModelStringInput | null,
   risk?: ModelRiskProfileInput | null,
@@ -3774,7 +3774,7 @@ export type CreateInExchgFunMutation = {
   createINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -3792,7 +3792,7 @@ export type UpdateInExchgFunMutation = {
   updateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -3810,7 +3810,7 @@ export type DeleteInExchgFunMutation = {
   deleteINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -4907,7 +4907,7 @@ export type GetInExchgFunQuery = {
   getINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -4930,7 +4930,7 @@ export type ListInExchgFunsQuery = {
     items:  Array< {
       __typename: "INExchgFun",
       id: string,
-      sid: string,
+      isin?: string | null,
       exchg: Exchange,
       ana?: string | null,
       risk?: RiskProfile | null,
@@ -6591,7 +6591,7 @@ export type OnCreateInExchgFunSubscription = {
   onCreateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -6604,7 +6604,7 @@ export type OnUpdateInExchgFunSubscription = {
   onUpdateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,
@@ -6617,7 +6617,7 @@ export type OnDeleteInExchgFunSubscription = {
   onDeleteINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
-    sid: string,
+    isin?: string | null,
     exchg: Exchange,
     ana?: string | null,
     risk?: RiskProfile | null,

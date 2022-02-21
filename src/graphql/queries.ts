@@ -573,7 +573,7 @@ export const getInExchgFun = /* GraphQL */ `
   query GetInExchgFun($id: String!) {
     getINExchgFun(id: $id) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -599,7 +599,7 @@ export const listInExchgFuns = /* GraphQL */ `
     ) {
       items {
         id
-        sid
+        isin
         exchg
         ana
         risk

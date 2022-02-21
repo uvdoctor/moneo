@@ -555,7 +555,7 @@ export const onCreateInExchgFun = /* GraphQL */ `
   subscription OnCreateInExchgFun {
     onCreateINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -568,7 +568,7 @@ export const onUpdateInExchgFun = /* GraphQL */ `
   subscription OnUpdateInExchgFun {
     onUpdateINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -581,7 +581,7 @@ export const onDeleteInExchgFun = /* GraphQL */ `
   subscription OnDeleteInExchgFun {
     onDeleteINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk

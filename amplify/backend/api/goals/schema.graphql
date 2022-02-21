@@ -357,7 +357,7 @@ type INExchgFun
     ]
   ) {
   id: String!
-  sid: String!
+  isin: String
   exchg: Exchange!
   ana: AWSJSON
   risk: RiskProfile

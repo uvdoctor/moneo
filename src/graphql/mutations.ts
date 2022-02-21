@@ -1578,7 +1578,7 @@ export const createInExchgFun = /* GraphQL */ `
   ) {
     createINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -1594,7 +1594,7 @@ export const updateInExchgFun = /* GraphQL */ `
   ) {
     updateINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -1610,7 +1610,7 @@ export const deleteInExchgFun = /* GraphQL */ `
   ) {
     deleteINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
