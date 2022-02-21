@@ -182,7 +182,7 @@ const mergeEodAndExchgData = (
       const eod = eodData && getData(eodData);
       const split = splitData && getData(splitData);
       const dividend = dividendData && getData(dividendData);
-      const fun = fundata && fundata.Items.find((re) => re.id === Item.id);
+      const fun = fundata && fundata.Items.find((re) => re.id === Item.sid || re.isin === Item.id || re.id.includes(Item.sid)); 
       if (split) {
         Item.splitd = split.date;
         let value = split.split.replace(/\//g, "");
