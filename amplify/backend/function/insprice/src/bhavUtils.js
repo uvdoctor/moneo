@@ -203,26 +203,20 @@ const mergeEodAndExchgData = (
           adjusted_close,
           hi_250d,
           lo_250d,
-          close,
           Beta,
         } = eod;
         Item.sid = code;
         Item.name = name;
         Item.price = adjusted_close;
-        Item.prev = close;
         Item.yhigh = Item.yhigh ? Item.yhigh : hi_250d;
         Item.ylow = Item.ylow ? Item.ylow : lo_250d;
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
       }
       if (fun) {
-        const { General, Technicals } = fun.ana;
+        const { General } = fun.ana;
         Item.sector = General.Sector;
         Item.ind = General.Industry;
-        if(Technicals) {
-        Item.yhigh = Technicals["52WeekHigh"];
-        Item.ylow = Technicals["52WeekLow"];
-        }
       }
       Item.risk = calculateRisk(
         Item.beta ? Item.beta : "",

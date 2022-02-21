@@ -7,9 +7,10 @@ const calculateSchema = (data, isinMap, exchg, table) => {
     const exchgData = data[index];
     if (exchgData) {
       const id = exchgData.General.ISIN;
-      if (isinMap[id]) return;
       const sid = exchgData.General.Code;
+      if (isinMap[id] || isinMap[sid]) continue;
       isinMap[id] = id;
+      isinMap[sid] = sid;
       let schema = {
         id: id,
         sid: sid,
@@ -17,7 +18,6 @@ const calculateSchema = (data, isinMap, exchg, table) => {
         ana: data[index]
       };
       appendGenericFields(schema, table);
-      console.log(schema);
       batches.push({ PutRequest: { Item: schema } });
       count++;
       if (count === 25) {

@@ -95,7 +95,7 @@
             "Ref": "functionmoneoutilslayerArn"
           }
         ],
-        "Timeout": 25
+        "Timeout": 900
       }
     },
     "LambdaExecutionRole": {
