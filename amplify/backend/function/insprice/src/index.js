@@ -18,6 +18,7 @@ const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
+  getDataFromTable
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
