@@ -21,15 +21,12 @@ export default function InsPrice({
     <Tooltip title="Today's valuation">
       <strong>{toCurrency(price, currency, true)}</strong>
       {previousPrice && previousPrice !== price ? (
-        <>
+        <span
+          style={{ color: price > previousPrice ? COLORS.GREEN : COLORS.RED }}>
           &nbsp;
-          {price > previousPrice ? (
-            <ArrowUpOutlined style={{ color: COLORS.GREEN }} />
-          ) : (
-            <ArrowDownOutlined style={{ color: COLORS.RED }} />
-          )}
+          {price > previousPrice ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
           {`${getChangeRatio()}%`}
-        </>
+        </span>
       ) : null}
     </Tooltip>
   );
