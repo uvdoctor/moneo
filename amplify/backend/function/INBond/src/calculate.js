@@ -137,7 +137,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   schema.price = calc.calcPrice(record[codes.price]);
   schema.type = "F";
   schema.subt =
-    exchg === "BSE"
+  typeExchg === "BSE"
       ? record[codes.name].includes("BANK")
         ? "GBO"
         : "CB"
@@ -149,7 +149,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   const maturityDate = getMonthYearByDate(
     codes.sDate ? record[codes.mDate].trim() : ""
   );
-  schema.itype = exchg === "BSE" ? null : calc.calcInsType(record[codes.subt]);
+  schema.itype = typeExchg === "BSE" ? null : calc.calcInsType(record[codes.subt]);
   schema.sm = startDate.month;
   schema.sy = startDate.year;
   schema.mm = maturityDate.month;

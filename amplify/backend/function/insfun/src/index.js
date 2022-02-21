@@ -12,7 +12,7 @@ const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
     const tableName = await getTableNameFromInitialWord(table);
     console.log("Table name fetched: ", tableName);
-    const exchgList = ["BSE", "NSE"];
+    const exchgList = ["NSE", "BSE"];
     const offset = [0, 500, 1000, 1500];
     try {
       for (let exchg of exchgList) {
