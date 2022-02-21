@@ -27,7 +27,7 @@ const getAndPushData = () => {
             const result = await pushData(batches[batch], tableName);
             console.log(result);
           }
-          await pushDataForFeed(table, batches, exchg, url, exchg);
+          await pushDataForFeed(table, batches, `${exchg}-${i}`, url, exchg);
         }
       }
     } catch (err) {

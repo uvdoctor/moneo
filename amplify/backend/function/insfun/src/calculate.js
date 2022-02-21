@@ -6,11 +6,14 @@ const calculateSchema = (data, isinMap, exchg, table) => {
   for (let index = 0; index < 500; index++) {
     const exchgData = data[index];
     if (exchgData) {
+      const id = exchgData.General.ISIN;
       const sid = exchgData.General.Code;
-      if (isinMap[sid]) continue;
+      if (isinMap[sid] || isinMap[id]) continue;
       isinMap[sid] = sid;
+      isinMap[id] = id;
       let schema = {
         id: sid,
+        isin: id,
         exchg: exchg,
         ana: data[index]
       };
