@@ -136,7 +136,8 @@ function NWContextProvider({ fxRates }: any) {
   const [totalFEquity, setTotalFEquity] = useState<number>(0);
   const [totalNPSEquity, setTotalNPSEquity] = useState<number>(0);
   const [totalFFixed, setTotalFFixed] = useState<number>(0);
-  const [totalNPSFixed, setTotalNPSFixed] = useState<number>(0);
+  const [totalNPSGFixed, setTotalNPSGFixed] = useState<number>(0);
+  const [totalNPSCFixed, setTotalNPSCFixed] = useState<number>(0);
   const [totalVehicles, setTotalVehicles] = useState<number>(0);
   const [totalCrypto, setTotalCrypto] = useState<number>(0);
   const [totalSavings, setTotalSavings] = useState<number>(0);
@@ -705,8 +706,8 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalAngel, totalFEquity, totalNPSEquity]);
 
   useEffect(() => {
-    setTotalFixed(totalFFixed + totalNPSFixed + totalP2P);
-  }, [totalFFixed, totalNPSFixed, totalP2P]);
+    setTotalFixed(totalFFixed + totalNPSGFixed + totalNPSCFixed + totalP2P);
+  }, [totalFFixed, totalNPSGFixed, totalNPSCFixed, totalP2P]);
 
   const priceAllInstruments = async () =>
     await priceInstruments(instruments, selectedMembers, selectedCurrency);
@@ -798,7 +799,8 @@ function NWContextProvider({ fxRates }: any) {
     const totals = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
     setTotalNPS(totals.total);
     setTotalNPSEquity(totals.totalNPSEquity);
-    setTotalNPSFixed(totals.totalNPSFixed);
+    setTotalNPSGFixed(totals.totalNPSGFixed);
+    setTotalNPSCFixed(totals.totalNPSCFixed);
   }, [nps, selectedCurrency, selectedMembers, npsData]);
 
   useEffect(
@@ -980,7 +982,8 @@ function NWContextProvider({ fxRates }: any) {
         totalFMP,
         totalBonds,
         totalNPSEquity,
-        totalNPSFixed,
+        totalNPSGFixed,
+        totalNPSCFixed,
         familyMemberKeys,
         setFamilyMemberKeys,
         fxRates,

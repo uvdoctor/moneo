@@ -802,7 +802,8 @@ export const priceNPS = (
   npsData: any
 ) => {
   let total = 0;
-  let totalNPSFixed = 0;
+  let totalNPSGFixed = 0;
+  let totalNPSCFixed = 0;
   let totalNPSEquity = 0;
   holdings.forEach((holding: HoldingInput) => {
     if (
@@ -811,11 +812,13 @@ export const priceNPS = (
     ) {
       const { value, fixed, equity } = calculateNPS(holding, npsData);
       total += value;
-      totalNPSFixed += fixed;
+      holding.subt === AssetSubType.CB
+        ? (totalNPSCFixed += fixed)
+        : (totalNPSGFixed += fixed);
       totalNPSEquity += equity;
     }
   });
-  return { total, totalNPSFixed, totalNPSEquity };
+  return { total, totalNPSGFixed, totalNPSCFixed, totalNPSEquity };
 };
 
 export const calculateTotalAssets = async (
@@ -845,7 +848,8 @@ export const calculateTotalAssets = async (
   let totalVPF = 0;
   let totalPPF = 0;
   let totalNPSEquity = 0;
-  let totalNPSFixed = 0;
+  let totalNPSGFixed = 0;
+  let totalNPSCFixed = 0;
   let totalCrypto = 0;
   let totalP2P = 0;
   let totalLtdep = 0;
@@ -921,7 +925,8 @@ export const calculateTotalAssets = async (
     );
     totalNPS += value.total;
     totalNPSEquity += value.totalNPSEquity;
-    totalNPSFixed += value.totalNPSFixed;
+    totalNPSGFixed += value.totalNPSGFixed;
+    totalNPSCFixed += value.totalNPSCFixed;
   }
   if (holdings?.vehicles) {
     const total = priceVehicles(
@@ -1014,7 +1019,8 @@ export const calculateTotalAssets = async (
     totalVPF,
     totalPPF,
     totalNPSEquity,
-    totalNPSFixed,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalCrypto,
     totalP2P,
     totalLtdep,

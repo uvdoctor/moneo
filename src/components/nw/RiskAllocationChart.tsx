@@ -26,7 +26,8 @@ export default function RiskAllocationChart() {
     totalAssets,
     totalFGold,
     totalPM,
-    totalNPSFixed,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalVehicles,
     totalOthers,
     totalPGold,
@@ -73,9 +74,10 @@ export default function RiskAllocationChart() {
       totalProperties +
       totalPGold +
       totalFGold +
+      totalNPSGFixed +
       getRiskTotal(RiskProfile.VC);
     const cVal =
-      totalPM - totalPGold + totalNPSFixed + getRiskTotal(RiskProfile.C);
+      totalPM - totalPGold + totalNPSCFixed + getRiskTotal(RiskProfile.C);
     const mVal = getRiskTotal(RiskProfile.M);
     const hVal = totalOthers + totalP2P + getRiskTotal(RiskProfile.A);
     const vhVal = totalAngel + totalCrypto + getRiskTotal(RiskProfile.VA);
@@ -87,7 +89,8 @@ export default function RiskAllocationChart() {
     setData([...data]);
   }, [
     totalNPSEquity,
-    totalNPSFixed,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalAngel,
     totalCrypto,
     totalP2P,
@@ -122,6 +125,7 @@ export default function RiskAllocationChart() {
           PPF: totalPPF,
           "Employee PF": totalEPF,
           "Voluntary PF": totalVPF,
+          "NPS Government Bond Schemes": totalNPSGFixed,
         },
         selectedCurrency,
         totalAssets,
@@ -131,7 +135,7 @@ export default function RiskAllocationChart() {
       return getTooltipDesc(
         {
           "Precious Metals": totalPM - totalPGold,
-          "NPS Bond Schemes": totalNPSFixed,
+          "NPS Corporate Bond Schemes": totalNPSCFixed,
         },
         selectedCurrency,
         totalAssets,
