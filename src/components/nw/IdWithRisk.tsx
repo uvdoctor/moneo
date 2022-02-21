@@ -29,6 +29,7 @@ export default function IdWithRisk({ id, risk }: IdWithRiskProps) {
       }>
       <Badge
         count={id}
+        overflowCount={100000000}
         style={{
           color: COLORS.WHITE,
           backgroundColor: risk
