@@ -14,9 +14,10 @@ const calculateSchema = (data, isinMap, exchg, table) => {
         id: id,
         sid: sid,
         exchg: exchg,
-        ana: data[index],
+        ana: data[index]
       };
       appendGenericFields(schema, table);
+      console.log(schema);
       batches.push({ PutRequest: { Item: schema } });
       count++;
       if (count === 25) {
