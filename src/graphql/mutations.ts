@@ -1859,6 +1859,7 @@ export const createInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
@@ -1888,6 +1889,7 @@ export const updateInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
@@ -1917,6 +1919,7 @@ export const deleteInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy

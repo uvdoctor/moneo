@@ -800,6 +800,7 @@ export const getInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
@@ -839,6 +840,7 @@ export const listInBondPrices = /* GraphQL */ `
         type
         subt
         price
+        prev
         exchg
         sm
         sy

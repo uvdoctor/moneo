@@ -478,6 +478,7 @@ type INBondPrice
   type: AssetType!
   subt: AssetSubType!
   price: Float!
+  prev: Float
   exchg: Exchange!
   sm: Int
   sy: Int
