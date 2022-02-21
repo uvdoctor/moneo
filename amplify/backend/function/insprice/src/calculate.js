@@ -120,6 +120,7 @@ const calcSchema = (
   updateSchema.type = type;
   updateSchema.subt = subt;
   updateSchema.price = parse(record[codes.price]);
+  updateSchema.prev = parse(record[codes.prev]);
   if (isBond) {
     updateSchema.sm = 0;
     updateSchema.sy = 0;
@@ -131,13 +132,11 @@ const calcSchema = (
     updateSchema.rate = -1;
     updateSchema.fv = 100;
     updateSchema.ytm = 0;
-    delete updateSchema.itype;
-    delete updateSchema.prev;
+    updateSchema.itype = null;
     appendGenericFields(updateSchema, bondTable);
   } else {
     updateSchema.mcapt = subt === "S" ? "S" : null;
     updateSchema.itype = itype ? itype : null;
-    updateSchema.prev = parse(record[codes.prev]);
     appendGenericFields(updateSchema, table);
   }
   updateSchema.exchg = exchg;
