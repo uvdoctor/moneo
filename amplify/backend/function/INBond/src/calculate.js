@@ -124,7 +124,7 @@ const calculateRisk = (creditRating, subt) => {
   if (creditRating === "M") return "M";
   if (creditRating === "L") return "A";
   if (creditRating === "J") return "VA";
-  if ((!creditRating && subt === "GB") || subt === "GBO") return "VC";
+  if (!creditRating && (subt === "GB" || subt === "GBO")) return "VC";
   return "C";
 };
 

@@ -61,7 +61,6 @@ const calc = {
 
 const calculateRisk = (beta, mcapt, subt, itype) => {
   if (itype === "ETF") {
-    if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
     if (subt === "I" || subt === "S") return "M";
     return "C";
   }
@@ -70,6 +69,7 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
     if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
     return "VA";
   }
+  if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
   return "M";
 };
 
