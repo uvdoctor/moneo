@@ -61,7 +61,7 @@ const calc = {
 
 const calculateRisk = (beta, mcapt, subt, itype) => {
   if (itype === "ETF") {
-    if (subt === "GB" || subt === "GBO") return "VC";
+    if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
     if (subt === "I" || subt === "S") return "M";
     return "C";
   }
@@ -135,7 +135,7 @@ const calcSchema = (
     delete updateSchema.prev;
     appendGenericFields(updateSchema, bondTable);
   } else {
-    updateSchema.mcapt = itype && itype === "ETF" ? null : "S";
+    updateSchema.mcapt = subt === "S" ? "S" : null;
     updateSchema.itype = itype ? itype : null;
     updateSchema.prev = parse(record[codes.prev]);
     appendGenericFields(updateSchema, table);
