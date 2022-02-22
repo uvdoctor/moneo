@@ -53,7 +53,7 @@ const calc = {
     if (["FF", "IF", "PF", "LF", "SF"].includes(subt)) return "TFB";
     if (subt === "CD") return "CD";
     if (["IP", "BP", "DP"].includes(subt)) return "PB";
-    if (["FR", "GF", "PR", "FB", "BF", "CF"]) return "FR";
+    if (["FR", "GF", "PR", "FB", "BF", "CF"]) return "FRB";
     return null;
   },
 
