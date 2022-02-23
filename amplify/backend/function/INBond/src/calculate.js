@@ -50,6 +50,7 @@ const calc = {
     if (subt === "PE") return "CB";
     if (subt === "TB") return "TB";
     if (subt === "GI") return "IB";
+    if (subt === "DB") return "DEB";
     if (["FF", "IF", "PF", "LF", "SF"].includes(subt)) return "TFB";
     if (subt === "CD") return "CD";
     if (["IP", "BP", "DP"].includes(subt)) return "PB";
