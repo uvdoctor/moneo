@@ -88,16 +88,14 @@ const getAndPushData = (diff) => {
         let eodData;
         let splitData;
         let dividendData;
-        let fundata;
         try {
           eodData = await getEODdata(exchg);
           splitData = await getSplitInfo(exchg);
           dividendData = await getDividendInfo(exchg);
-          fundata = await getDataFromTable("INExchgFun")
         } catch (error) {
           console.log(error);
         }
-        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData, fundata);
+        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
         console.log(data.length);
         for (let batch in data) {
           await pushData(data[batch], exchgTableName);
