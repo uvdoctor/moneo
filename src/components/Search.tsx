@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Dropdown, Radio, List } from "antd";
+import { Input, Dropdown, Radio, List, Badge } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { ROUTES } from "../CONSTANTS";
@@ -70,10 +70,12 @@ export default function Search({ inline }: SearchProps) {
 						}
 						bordered
 						dataSource={searchResults}
-						renderItem={({ Code, Name, Exchange }) => (
+						renderItem={({ Code, Name, Exchange, Type }) => (
 							<List.Item>
 								<Link href={`${ROUTES.LOOKUP}/${Code}.${Exchange}`}>
-									<a>{Name}</a>
+									<a>
+										{Name} <Badge count={Type} />
+									</a>
 								</Link>
 							</List.Item>
 						)}
