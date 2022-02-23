@@ -35,7 +35,8 @@ export default function CurrentAAChart() {
     totalVPF,
     totalPPF,
     totalNPSEquity,
-    totalNPSFixed,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalCrypto,
     totalP2P,
     totalLtdep,
@@ -72,7 +73,7 @@ export default function CurrentAAChart() {
     },
     "Bonds & Fixed Income Funds": {
       color: COLORS.BLUE,
-      total: totalFFixed - totalLiquidFunds + totalNPSFixed,
+      total: totalFFixed - totalLiquidFunds + totalNPSGFixed + totalNPSCFixed,
     },
     "Real-estate": { color: "#7cd9fd", total: totalProperties },
     REITs: { color: "#ffc107", total: totalFRE },
@@ -211,7 +212,7 @@ export default function CurrentAAChart() {
     if (asset === "Bonds & Fixed Income Funds")
       return getTooltipDesc(
         {
-          "NPS Bond Schemes": totalNPSFixed,
+          "NPS Bond Schemes": totalNPSGFixed + totalNPSCFixed,
           Bonds: totalBonds,
           "Fixed Maturity Plan": totalFMP,
           "Interval Funds": totalIntervalFunds,

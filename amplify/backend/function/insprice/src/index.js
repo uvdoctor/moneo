@@ -18,6 +18,7 @@ const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
+  getDataFromTable
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
@@ -87,14 +88,16 @@ const getAndPushData = (diff) => {
         let eodData;
         let splitData;
         let dividendData;
+        let fundata;
         try {
           eodData = await getEODdata(exchg);
           splitData = await getSplitInfo(exchg);
           dividendData = await getDividendInfo(exchg);
+          fundata = await getDataFromTable("INExchgFun")
         } catch (error) {
           console.log(error);
         }
-        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
+        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData, fundata);
         console.log(data.length);
         for (let batch in data) {
           await pushData(data[batch], exchgTableName);

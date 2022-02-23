@@ -1578,7 +1578,7 @@ export const createInExchgFun = /* GraphQL */ `
   ) {
     createINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -1594,7 +1594,7 @@ export const updateInExchgFun = /* GraphQL */ `
   ) {
     updateINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -1610,7 +1610,7 @@ export const deleteInExchgFun = /* GraphQL */ `
   ) {
     deleteINExchgFun(input: $input, condition: $condition) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -1722,54 +1722,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createInsBhs = /* GraphQL */ `
-  mutation CreateInsBhs(
-    $input: CreateInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    createInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsBhs = /* GraphQL */ `
-  mutation UpdateInsBhs(
-    $input: UpdateInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    updateInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsBhs = /* GraphQL */ `
-  mutation DeleteInsBhs(
-    $input: DeleteInsBHSInput!
-    $condition: ModelInsBHSConditionInput
-  ) {
-    deleteInsBHS(input: $input, condition: $condition) {
-      id
-      rec
-      fun
-      tech
-      ca
       createdAt
       updatedAt
     }
@@ -1907,19 +1859,19 @@ export const createInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -1937,19 +1889,19 @@ export const updateInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -1967,19 +1919,19 @@ export const deleteInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }

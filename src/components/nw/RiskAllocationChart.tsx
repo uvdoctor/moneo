@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  getRiskProfileOptions,
-  toHumanFriendlyCurrency,
-  toReadableNumber,
-} from "../utils";
+import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
-import { getTooltipDesc } from "./nwutils";
+import {
+  doesExceedRisk,
+  getRiskAttributes,
+  getRiskAttributesByProfile,
+  getTooltipDesc,
+} from "./nwutils";
 import { RiskProfile } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import LabelWithTooltip from "../form/LabelWithTooltip";
@@ -25,44 +26,29 @@ export default function RiskAllocationChart() {
     totalAssets,
     totalFGold,
     totalPM,
-    totalNPSFixed,
-    totalFRE,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalVehicles,
     totalOthers,
     totalPGold,
     totalAngel,
-    totalFEquity,
     totalP2P,
     totalNPSEquity,
     selectedCurrency,
-    totalFFixed,
-    totalMultiCap,
-    totalFInv,
     totalSavings,
     totalLendings,
     totalLiquidFunds,
     totalLtdep,
-    totalBonds,
-    totalLargeCapFunds,
-    totalLargeCapStocks,
-    totalStocks,
-    totalETFs,
     totalPPF,
     totalEPF,
     totalVPF,
     loadingInstruments,
+    riskTotals,
   }: any = useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
-  const riskAttributes: any = {
-    [RiskProfile.VC]: { label: "Very low", color: COLORS.GREEN, rating: 1 },
-    [RiskProfile.C]: { label: "Low", color: "#ffc107", rating: 2 },
-    [RiskProfile.M]: { label: "Medium", color: "#ffa698", rating: 3 },
-    [RiskProfile.A]: { label: "High", color: COLORS.ORANGE, rating: 4 },
-    [RiskProfile.VA]: { label: "Very high", color: COLORS.RED, rating: 5 },
-  };
+  const riskAttributes: any = getRiskAttributes();
   const [data, setData] = useState<Array<any>>([]);
   const [excessRiskPercent, setExcessRiskPercent] = useState<number>(0);
-  const riskProfileOptions: any = getRiskProfileOptions();
 
   const buildDataItem = (risk: string, val: number) => {
     return {
@@ -71,18 +57,30 @@ export default function RiskAllocationChart() {
     };
   };
 
+  const getRiskTotal = (risk: RiskProfile) => {
+    let total = 0;
+    let totals = Object.keys(riskTotals[risk]);
+    totals.forEach((rt: string) => {
+      if (riskTotals[risk][rt]) total += riskTotals[risk][rt];
+    });
+    return total;
+  };
+
   useEffect(() => {
     let data: Array<any> = [];
-    const vcVal = totalCash + totalProperties + totalPGold + totalFGold;
-    const cVal =
-      totalPM -
+    const vcVal =
+      totalCash -
+      totalLiquidFunds +
+      totalProperties +
       totalPGold +
-      (totalFFixed - totalLiquidFunds) +
-      totalNPSFixed +
-      totalFRE;
-    const mVal = totalFEquity - totalMultiCap + totalNPSEquity;
-    const hVal = totalOthers + totalP2P + totalFInv + totalMultiCap;
-    const vhVal = totalAngel + totalCrypto;
+      totalFGold +
+      totalNPSGFixed +
+      getRiskTotal(RiskProfile.VC);
+    const cVal =
+      totalPM - totalPGold + totalNPSCFixed + getRiskTotal(RiskProfile.C);
+    const mVal = getRiskTotal(RiskProfile.M);
+    const hVal = totalOthers + totalP2P + getRiskTotal(RiskProfile.A);
+    const vhVal = totalAngel + totalCrypto + getRiskTotal(RiskProfile.VA);
     if (vcVal) data.push(buildDataItem(RiskProfile.VC, vcVal));
     if (cVal) data.push(buildDataItem(RiskProfile.C, cVal));
     if (mVal) data.push(buildDataItem(RiskProfile.M, mVal));
@@ -90,13 +88,10 @@ export default function RiskAllocationChart() {
     if (vhVal) data.push(buildDataItem(RiskProfile.VA, vhVal));
     setData([...data]);
   }, [
-    totalFEquity,
-    totalMultiCap,
     totalNPSEquity,
-    totalNPSFixed,
+    totalNPSGFixed,
+    totalNPSCFixed,
     totalAngel,
-    totalCrypto,
-    totalFInv,
     totalCrypto,
     totalP2P,
     totalOthers,
@@ -106,73 +101,64 @@ export default function RiskAllocationChart() {
     totalFGold,
     totalPM,
     totalLiquidFunds,
-    totalFRE,
-    totalFFixed,
+    riskTotals,
   ]);
 
   const calculateRiskAppetite = () => {
     let total = 0;
-    data.map((item: { risk: string; value: number }) => {
-      const riskProfile = riskAttributes[userInfo?.rp].rating;
-      const allocation = riskAttributes[item.risk].rating;
-      if (allocation > riskProfile) total += item.value;
+    data.map((item: { risk: RiskProfile; value: number }) => {
+      if (doesExceedRisk(item.risk, userInfo.rp)) total += item.value;
     });
     setExcessRiskPercent(total);
   };
 
-  const breakdownRiskInfo = (risk: string) => {
+  const breakdownRiskInfo = (risk: RiskProfile) => {
     if (risk === RiskProfile.VC)
       return getTooltipDesc(
         {
           Savings: totalSavings,
           Deposits: totalLendings,
           "Long-term Schemes": totalLtdep,
-          "Liquid Funds": totalLiquidFunds,
           Properties: totalProperties,
           "Physical Gold": totalPGold,
           "Gold Bonds": totalFGold,
           PPF: totalPPF,
           "Employee PF": totalEPF,
           "Voluntary PF": totalVPF,
+          "NPS Government Bond Schemes": totalNPSGFixed,
         },
         selectedCurrency,
-        totalAssets
+        totalAssets,
+        riskTotals[RiskProfile.VC]
       );
     if (risk === RiskProfile.C)
       return getTooltipDesc(
         {
           "Precious Metals": totalPM - totalPGold,
-          Bonds: totalBonds,
-          "Fixed Income Funds": totalFFixed - totalBonds - totalLiquidFunds,
-          "NPS Bond Schemes": totalNPSFixed,
-          REITs: totalFRE,
+          "NPS Corporate Bond Schemes": totalNPSCFixed,
         },
         selectedCurrency,
-        totalAssets
+        totalAssets,
+        riskTotals[RiskProfile.C]
       );
     if (risk === RiskProfile.M)
       return getTooltipDesc(
         {
-          "Large-cap Stocks": totalLargeCapStocks,
-          "Large-cap Mutual Funds": totalLargeCapFunds,
-          ETFs: totalETFs,
           "NPS Equity Schemes": totalNPSEquity,
         },
         selectedCurrency,
-        totalAssets
+        totalAssets,
+        riskTotals[RiskProfile.M]
       );
     if (risk === RiskProfile.A)
       return getTooltipDesc(
         {
-          "Multi-cap Stocks": totalStocks - totalLargeCapStocks,
-          "Multi-cap Mutual Funds":
-            totalMultiCap - (totalStocks - totalLargeCapStocks),
           "Memberships & Collections": totalOthers,
           "P2P Lending": totalP2P,
-          "Other Investment Trusts": totalFInv,
         },
         selectedCurrency,
-        totalAssets
+        totalAssets,
+        riskTotals[RiskProfile.A]
       );
     if (risk === RiskProfile.VA)
       return getTooltipDesc(
@@ -181,7 +167,8 @@ export default function RiskAllocationChart() {
           Crypto: totalCrypto,
         },
         selectedCurrency,
-        totalAssets
+        totalAssets,
+        riskTotals[RiskProfile.VA]
       );
     return "";
   };
@@ -215,11 +202,8 @@ export default function RiskAllocationChart() {
                 )}% of assets have higher risk `}
                 // @ts-ignore
                 info={`Given that you can tolerate ${
-                  riskProfileOptions[userInfo?.rp]
-                } loss, your risk profile is 
-				${
-          riskAttributes[userInfo?.rp].label
-        }. Current allocation includes ${toReadableNumber(
+                  getRiskAttributesByProfile(userInfo?.rp).label
+                }, current allocation includes ${toReadableNumber(
                   excessRiskPercent,
                   2
                 )}% of assets with higher risk.`}

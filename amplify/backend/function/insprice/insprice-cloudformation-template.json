@@ -325,6 +325,14 @@
                 "dynamodb:*"
               ],
               "Resource": "arn:aws:dynamodb:*:*:table/INBondPrice-*"
+            },
+            {
+              "Sid": "ReadInsfunTable",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:*"
+              ],
+              "Resource": "arn:aws:dynamodb:*:*:table/INExchgFun-*"
             }
           ]
         }

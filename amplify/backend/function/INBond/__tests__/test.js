@@ -43,8 +43,7 @@ describe("CalcSchema", () => {
         mm: 0,
         my: 0,
         rate: 0,
-        fr: "",
-        tf: "",
+       
         fv: 0,
         cr: null,
         crstr: null,
@@ -67,9 +66,9 @@ describe("CalcSchema", () => {
       sy: 2019,
       mm: 6,
       my: 2024,
+      risk: "C",
+      itype: "FR",
       rate: 8.65,
-      fr: false,
-      tf: false,
       fv: 100,
       cr: null,
       crstr: null,
@@ -88,7 +87,7 @@ describe("Test Asset Subtype", () => {
     expect(data).toEqual("GBO");
   });
   test("Government Bond", () => {
-    const data = calc.calcSubType("GS");
+    const data = calc.calcSubType("GZ");
     expect(data).toEqual("GB");
   });
   test("With no subtype", () => {
@@ -101,6 +100,41 @@ describe("Test Asset Subtype", () => {
   });
 });
 
+describe("Test Asset Instype", () => {
+  test("Commercial Paper", () => {
+    const data = calc.calcInsType("CP");
+    expect(data).toEqual("CP");
+  });
+  test("Treasury Bill", () => {
+    const data = calc.calcInsType("TB");
+    expect(data).toEqual("TB");
+  });
+  test("Perpetual Bond", () => {
+    const data = calc.calcInsType("BP");
+    expect(data).toEqual("PB");
+  });
+  test("Tax Free Bond", () => {
+    const data = calc.calcInsType("PF");
+    expect(data).toEqual("TFB");
+  });
+  test("Floating Bond", () => {
+    const data = calc.calcInsType("GF");
+    expect(data).toEqual("FR");
+  });
+  test("Index Bond", () => {
+    const data = calc.calcInsType("GI");
+    expect(data).toEqual("IB");
+  });
+  test("Cumulative Bond", () => {
+    const data = calc.calcInsType("PE");
+    expect(data).toEqual("CB");
+  });
+  test("Certificate of Deposit", () => {
+    const data = calc.calcInsType("CD");
+    expect(data).toEqual("CD");
+  });
+});
+
 describe("Calculate Issue Period", () => {
   const { month, year } = getMonthYearByDate("09-Mar-2024");
   test("Month", () => {
@@ -108,28 +142,6 @@ describe("Calculate Issue Period", () => {
   });
   test("Year", () => {
     expect(year).toEqual(2024);
-  });
-});
-
-describe("Check Floating Rate", () => {
-  test("With Floating", () => {
-    const data = calc.calcFR("RESET");
-    expect(data).toEqual(true);
-  });
-  test("Without Floating", () => {
-    const data = calc.calcFR("7.45%");
-    expect(data).toEqual(false);
-  });
-});
-
-describe("Tax Free", () => {
-  test("Tax Free Bond", () => {
-    const data = calc.calcTF("IF");
-    expect(data).toEqual(true);
-  });
-  test("Tax Bond", () => {
-    const data = calc.calcTF("AT");
-    expect(data).toEqual(false);
   });
 });
 
@@ -205,10 +217,10 @@ describe("Calculate Risk", () => {
   });
   test("No Credit rating in case of government bond", () => {
     const data = calculateRisk("", "GBO");
-    expect(data).toEqual("C");
+    expect(data).toEqual("VC");
   });
   test("No Credit rating in case of corporate bond", () => {
     const data = calculateRisk("", "CB");
-    expect(data).toEqual("M");
+    expect(data).toEqual("C");
   });
 });

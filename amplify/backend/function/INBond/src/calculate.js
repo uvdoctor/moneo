@@ -2,42 +2,59 @@ const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
 
 const calc = {
   calcSubType: (subt) => {
-    const gbo = [
-      "AT",
-      "CP",
-      "FT",
-      "ID",
-      "IF",
-      "IP",
-      "MT",
-      "PF",
-      "PG",
-      "PI",
-      "PR",
-      "PT",
-      "PZ",
-      "SG",
-      "TS",
-    ];
-    const gb = ["GF", "GI", "GS", "TB"];
-    switch (true) {
-      case gbo.indexOf(subt) > -1:
-        return "GBO";
-      case gb.indexOf(subt) > -1:
-        return "GB";
-      default:
-        return "CB";
-    }
+    if (
+      [
+        "AT",
+        "FT",
+        "ID",
+        "IF",
+        "IP",
+        "MT",
+        "PF",
+        "PG",
+        "PI",
+        "PR",
+        "PT",
+        "PZ",
+        "SG",
+        "TS",
+        "BB",
+        "BP",
+        "BZ",
+        "LF",
+        "SF",
+        "MZ",
+        "PD",
+        "PE",
+        "FB",
+        "IB",
+        "IZ",
+        "DI",
+        "FP",
+        "FF",
+        "FZ",
+        "FD",
+        "FR",
+        "CD",
+        "BF",
+      ].includes(subt)
+    )
+      return "GBO";
+    if (["GF", "GI", "GS", "TB", "GZ", "GD", "GC", "GP"].includes(subt))
+      return "GB";
+    return "CB";
   },
 
-  calcFR: (frate) => {
-    if (frate === "RESET") return true;
-    return false;
-  },
-
-  calcTF: (subt) => {
-    if (subt === "IF" || subt === "PF") return true;
-    return false;
+  calcInsType: (subt) => {
+    if (subt === "CP") return "CP";
+    if (subt === "PE") return "CB";
+    if (subt === "TB") return "TB";
+    if (subt === "GI") return "IB";
+    if (["FF", "IF", "PF", "LF", "SF"].includes(subt)) return "TFB";
+    if (subt === "CD") return "CD";
+    if (["IP", "BP", "DP"].includes(subt)) return "PB";
+    if (["FR", "GF", "PR", "FB", "BF", "CF"]) return "FRB";
+    return null;
   },
 
   calcCR: (crstr) => {
@@ -81,7 +98,13 @@ const calculateYTM = (rate, sm, sy, mm, my, fv, mprice) => {
   const couponAmt = (fv * Number(rate)) / 100;
   const ytm = (couponAmt + (fv - mprice) / numOfYear) / ((fv + mprice) / 2);
   const ytmFinal = Math.round(ytm * 1000) / 1000;
-  if (ytmFinal < 0 || isNaN(ytmFinal) || ytmFinal === Infinity || ytmFinal === -0) return 0;
+  if (
+    ytmFinal < 0 ||
+    isNaN(ytmFinal) ||
+    ytmFinal === Infinity ||
+    ytmFinal === -0
+  )
+    return 0;
   return ytmFinal;
 };
 
@@ -101,18 +124,24 @@ const calculateRisk = (creditRating, subt) => {
   if (creditRating === "M") return "M";
   if (creditRating === "L") return "A";
   if (creditRating === "J") return "VA";
-  if(!creditRating && subt === "GB" || subt === "GBO") return "VC";
+  if (!creditRating && (subt === "GB" || subt === "GBO")) return "VC";
   return "C";
 };
 
 const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
-  if (!record[codes.id] || record[codes.subt] === "MC") return;
+  if (!record[codes.id] || ["MC", "MF", "US"].includes(record[codes.subt]))
+    return;
   schema.id = record[codes.id];
   if (!schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
   schema.price = calc.calcPrice(record[codes.price]);
   schema.type = "F";
-  schema.subt = calc.calcSubType(record[codes.subt]);
+  schema.subt =
+  typeExchg === "BSE"
+      ? record[codes.name].includes("BANK")
+        ? "GBO"
+        : "CB"
+      : calc.calcSubType(record[codes.subt]);
   schema.exchg = typeExchg;
   const startDate = getMonthYearByDate(
     codes.sDate ? record[codes.sDate].trim() : ""
@@ -120,13 +149,14 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   const maturityDate = getMonthYearByDate(
     codes.sDate ? record[codes.mDate].trim() : ""
   );
+  schema.itype = typeExchg === "BSE" ? null : calc.calcInsType(record[codes.subt]);
   schema.sm = startDate.month;
   schema.sy = startDate.year;
   schema.mm = maturityDate.month;
   schema.my = maturityDate.year;
-  schema.name = record[codes.name] ? record[codes.name].trim() : record[codes.sid].trim();
-  schema.fr = calc.calcFR(record[codes.frate]);
-  schema.tf = calc.calcTF(record[codes.subt]);
+  schema.name = record[codes.name]
+    ? record[codes.name].trim()
+    : record[codes.sid].trim();
   schema.cr = calc.calcCR(record[codes.crstr]);
   schema.rate = getRate(record, codes);
   schema.fv = 100;
@@ -144,4 +174,11 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
-module.exports = { calcSchema, calc, getMonthYearByDate, calculateYTM, getRate, calculateRisk };
+module.exports = {
+  calcSchema,
+  calc,
+  getMonthYearByDate,
+  calculateYTM,
+  getRate,
+  calculateRisk,
+};

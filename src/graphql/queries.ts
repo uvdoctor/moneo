@@ -573,7 +573,7 @@ export const getInExchgFun = /* GraphQL */ `
   query GetInExchgFun($id: String!) {
     getINExchgFun(id: $id) {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -599,7 +599,7 @@ export const listInExchgFuns = /* GraphQL */ `
     ) {
       items {
         id
-        sid
+        isin
         exchg
         ana
         risk
@@ -684,47 +684,6 @@ export const listInExchgPrices = /* GraphQL */ `
         sector
         ind
         risk
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInsBhs = /* GraphQL */ `
-  query GetInsBhs($id: String!) {
-    getInsBHS(id: $id) {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsBhSs = /* GraphQL */ `
-  query ListInsBhSs(
-    $id: String
-    $filter: ModelInsBHSFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsBHSs(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        rec
-        fun
-        tech
-        ca
         createdAt
         updatedAt
       }
@@ -841,19 +800,19 @@ export const getInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -881,19 +840,19 @@ export const listInBondPrices = /* GraphQL */ `
         type
         subt
         price
+        prev
         exchg
         sm
         sy
         mm
         my
         rate
-        fr
-        tf
         fv
         cr
         crstr
         ytm
         risk
+        itype
         createdAt
         updatedAt
       }

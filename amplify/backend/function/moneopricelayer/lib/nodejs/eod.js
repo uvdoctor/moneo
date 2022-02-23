@@ -33,6 +33,12 @@ const getFundamentalData = async (symbol, exchg) => {
   return data;
 };
 
+const getFundamentalDataByLimit = async (exchg, offset) => {
+  const url = `https://eodhistoricaldata.com/api/bulk-fundamentals/${exchg}?api_token=${token}&offset=${offset}&limit=500&fmt=json`;
+  const data = await getData(url);
+  return { data, url };
+};
+
 const getSplitInfo = async (exchg) => {
   const url = `https://eodhistoricaldata.com/api/eod-bulk-last-day/${exchg}?api_token=${token}&type=splits&fmt=json`;
   return await getData(url);
@@ -48,4 +54,5 @@ module.exports = {
   getFundamentalData,
   getSplitInfo,
   getDividendInfo,
+  getFundamentalDataByLimit
 };

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Row, Col, Button, Badge, InputNumber, Tooltip, Rate } from "antd";
+import { Row, Col, Button, InputNumber, Tooltip, Rate, Space } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -18,12 +18,15 @@ import {
 } from "../utils";
 import { AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
-import { getColourForAssetType } from "./nwutils";
 import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 import { faCoins, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
+import YearlyLowHigh from "./YearlyLowHigh";
+import IdWithRisk from "./IdWithRisk";
+import { getMarketCapLabel } from "./nwutils";
+import InsPrice from "./InsPrice";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -33,7 +36,9 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  const price = insData && insData[holding.id] ? insData[holding.id].price : 0;
+  const instrument =
+    insData && insData[holding.id] ? insData[holding.id] : null;
+  const price = instrument ? instrument.price : 0;
   const { allFamily, setInstruments, instruments }: any = useContext(NWContext);
   const [total, setTotal] = useState<number>(holding.qty * price);
   const [isEditMode, setEditMode] = useState(false);
@@ -57,121 +62,169 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       align="middle"
       justify="space-between"
       gutter={[5, 5]}>
-      <Col span={24}>
-        <Row justify="space-between">
-          {insData &&
-            insData[holding.id] &&
-            allFamily[holding.fId] &&
-            insData[holding.id].type !== AssetType.H && (
-              <Col>
-                {insData[holding.id].rate && insData[holding.id].rate !== -1 && (
-                  <Tooltip title="Interest rate">
-                    &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faCoins} />
-                    {` ${insData[holding.id].rate}%`}
-                  </Tooltip>
-                )}
-                {insData[holding.id].my && (
-                  <Tooltip title="Maturity Year">
-                    &nbsp;&nbsp;
-                    <HourglassOutlined />
-                    {insData[holding.id].my}
-                  </Tooltip>
-                )}
-                {insData[holding.id].ytm && (
-                  <Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
-                    &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faHandHoldingUsd} />
-                    {` ${insData[holding.id].ytm * 100}%`}
-                  </Tooltip>
-                )}
-                {insData[holding.id].cr && (
-                  <Tooltip title="Credit rating">
-                    &nbsp;&nbsp;
-                    <Rate value={4} />
-                    {insData[holding.id].crstr}
-                  </Tooltip>
-                )}
-              </Col>
-            )}
-          {allFamily[holding.fId] && (
+      {price ? (
+        <Col span={24}>
+          <Row justify="space-between">
             <Col>
-              <UserOutlined />
-              &nbsp;{allFamily[holding.fId].name}
+              {instrument && instrument.type !== AssetType.H ? (
+                <Space>
+                  {instrument.rate && instrument.rate !== -1 ? (
+                    <Tooltip title="Interest rate">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faCoins} />
+                      {` ${instrument.rate}%`}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.my ? (
+                    <Tooltip title="Maturity Year">
+                      &nbsp;&nbsp;
+                      <HourglassOutlined />
+                      {instrument.my}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.ytm ? (
+                    <Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faHandHoldingUsd} />
+                      {` ${instrument.ytm * 100}%`}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.cr ? (
+                    <Tooltip title="Credit rating">
+                      &nbsp;&nbsp;
+                      <Rate value={4} />
+                      {instrument.crstr}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.mcapt ? (
+                    <Tooltip title="Market capitalization">
+                      {getMarketCapLabel(instrument.mcapt)}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.div ? (
+                    <Tooltip title="Recent dividend amount">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faCoins} />
+                      {` ${toCurrency(instrument.div, holding.curr, true)}`}
+                    </Tooltip>
+                  ) : null}
+                  {instrument.split ? (
+                    <Tooltip title="Recent stock split">
+                      &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faCoins} />
+                      {` ${instrument.split}`}
+                    </Tooltip>
+                  ) : null}
+                </Space>
+              ) : null}
             </Col>
-          )}
-        </Row>
-      </Col>
+            {holding.fId ? (
+              <Col>
+                <UserOutlined />
+                &nbsp;{allFamily[holding.fId].name}
+              </Col>
+            ) : null}
+          </Row>
+        </Col>
+      ) : null}
       <Col span={24}>
         <Row justify="space-between">
           <Col>
-            {insData && insData[holding.id] ? (
-              insData[holding.id].name
+            {instrument ? (
+              instrument.name
             ) : (
               <h4 style={{ color: COLORS.RED }}>Not listed</h4>
             )}
           </Col>
-          <Col className="quantity">
-            {total ? (
-              <strong>
-                {toHumanFriendlyCurrency(total, holding.curr as string)}
-              </strong>
+          {price ? (
+            <Col className="quantity">
+              {total ? (
+                <strong>
+                  {toHumanFriendlyCurrency(total, holding.curr as string)}
+                </strong>
+              ) : (
+                ""
+              )}
+            </Col>
+          ) : holding.fId ? (
+            <Col>
+              <UserOutlined />
+              &nbsp;{allFamily[holding.fId].name}
+            </Col>
+          ) : null}
+        </Row>
+      </Col>
+      <Col span={24}>
+        <Row justify="space-between">
+          <Col span={8}>
+            <IdWithRisk
+              id={instrument && instrument.sid ? instrument.sid : holding.id}
+              risk={instrument && instrument.risk ? instrument.risk : null}
+            />
+          </Col>
+
+          <Col className="quantity" span={8}>
+            {instrument && price ? (
+              instrument.yhigh && instrument.ylow ? (
+                <YearlyLowHigh
+                  instrument={instrument}
+                  price={price}
+                  currency={holding.curr}
+                  previousPrice={instrument.prev ? instrument.prev : null}
+                />
+              ) : (
+                <Row justify="center">
+                  <InsPrice
+                    price={price}
+                    currency={holding.curr}
+                    previousPrice={instrument.prev ? instrument.prev : null}
+                  />
+                </Row>
+              )
             ) : (
               ""
             )}
           </Col>
-        </Row>
-      </Col>
-      <Col>
-        <Badge
-          count={holding.id}
-          style={{
-            color: COLORS.WHITE,
-            backgroundColor: getColourForAssetType(
-              insData && insData[holding.id]
-                ? insData[holding.id].type
-                : ("" as AssetType)
-            ),
-          }}
-        />
-      </Col>
-      <Col>
-        <Row align="middle">
-          <Col>
-            <span className="quantity">
-              {price ? toCurrency(price, holding.curr as string, true) : ""}
-              <ShoppingCartOutlined />{" "}
-              {price && isEditMode ? (
-                <InputNumber
-                  value={holding.qty}
-                  size="small"
-                  onChange={(val) => {
-                    holding.qty = val as number;
-                    if (onChange) onChange(holding);
-                  }}
+          <Col span={8}>
+            <Row align="middle" justify="end">
+              <Col>
+                <span className="quantity">
+                  <ShoppingCartOutlined />{" "}
+                  {price && isEditMode ? (
+                    <InputNumber
+                      value={holding.qty}
+                      size="small"
+                      onChange={(val) => {
+                        holding.qty = val as number;
+                        if (onChange) onChange(holding);
+                      }}
+                    />
+                  ) : (
+                    toReadableNumber(
+                      holding.qty,
+                      ("" + holding.qty).includes(".") ? 3 : 0
+                    )
+                  )}
+                </span>
+              </Col>
+              <Col>
+                {price ? (
+                  <Button
+                    type="link"
+                    icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                    onClick={isEditMode ? onCancel : onEdit}
+                  />
+                ) : null}
+                <Button
+                  type="link"
+                  icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}
+                  onClick={() =>
+                    isEditMode ? onCancel() : onDelete(holding.id)
+                  }
+                  danger
                 />
-              ) : (
-                toReadableNumber(
-                  holding.qty,
-                  ("" + holding.qty).includes(".") ? 3 : 0
-                )
-              )}
-            </span>
-          </Col>
-          <Col>
-            {insData && insData[holding.id] && (
-              <Button
-                type="link"
-                icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
-                onClick={isEditMode ? onCancel : onEdit}
-              />
-            )}
-            <Button
-              type="link"
-              icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}
-              onClick={() => (isEditMode ? onCancel() : onDelete(holding.id))}
-              danger
-            />
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Col>

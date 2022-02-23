@@ -19,6 +19,7 @@ import {
   getAssetTypes,
   getMutualFundMarketCap,
   getFixedCategories,
+  getRiskProfileType,
 } from "./nwutils";
 import { notification } from "antd";
 import {
@@ -123,7 +124,8 @@ function NWContextProvider({ fxRates }: any) {
   const [credit, setCredit] = useState<Array<HoldingInput>>([]);
   const [p2p, setP2P] = useState<Array<HoldingInput>>([]);
   const [selectedMembers, setSelectedMembers] = useState<Array<string>>([]);
-  const [selectedCurrency, setSelectedCurrency] = useState<string>("");
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<string>(defaultCurrency);
   const [nw, setNW] = useState<number>(0);
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [totalInstruments, setTotalInstruments] = useState<number>(0);
@@ -134,7 +136,8 @@ function NWContextProvider({ fxRates }: any) {
   const [totalFEquity, setTotalFEquity] = useState<number>(0);
   const [totalNPSEquity, setTotalNPSEquity] = useState<number>(0);
   const [totalFFixed, setTotalFFixed] = useState<number>(0);
-  const [totalNPSFixed, setTotalNPSFixed] = useState<number>(0);
+  const [totalNPSGFixed, setTotalNPSGFixed] = useState<number>(0);
+  const [totalNPSCFixed, setTotalNPSCFixed] = useState<number>(0);
   const [totalVehicles, setTotalVehicles] = useState<number>(0);
   const [totalCrypto, setTotalCrypto] = useState<number>(0);
   const [totalSavings, setTotalSavings] = useState<number>(0);
@@ -200,6 +203,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalVehicleIns, setTotalVehicleIns] = useState<number>(0);
   const [totalAccidentIns, setTotalAccidentIns] = useState<number>(0);
   const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
+  const [riskTotals, setRiskTotals] = useState<any>({});
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -314,8 +318,8 @@ function NWContextProvider({ fxRates }: any) {
           total: totalStocks,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { mcap: "Capitalization" },
-            sub: { mcap: getStockMarketCap() },
+            main: { mcap: "Capitalization", risk: "Risk" },
+            sub: { mcap: getStockMarketCap(), risk: getRiskProfileType() },
           },
         },
         [TAB.MF]: {
@@ -327,12 +331,13 @@ function NWContextProvider({ fxRates }: any) {
           total: totalMFs,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: getAssetTypes(),
+            main: { ...getAssetTypes(), risk: "Risk" },
             sub: {
               E: getMutualFundMarketCap(),
               F: getFixedCategories(),
               H: {},
               A: {},
+              risk: getRiskProfileType(),
             },
           },
         },
@@ -345,7 +350,11 @@ function NWContextProvider({ fxRates }: any) {
           total: totalBonds,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { CB: "Corporate Bond", GB: "Government Bond" },
+            main: { type: "Type", risk: "Risk" },
+            sub: {
+              type: { CB: "Corporate Bond", GB: "Government Bond" },
+              risk: getRiskProfileType(),
+            },
           },
         },
         [TAB.GOLDB]: {
@@ -697,8 +706,8 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalAngel, totalFEquity, totalNPSEquity]);
 
   useEffect(() => {
-    setTotalFixed(totalFFixed + totalNPSFixed + totalP2P);
-  }, [totalFFixed, totalNPSFixed, totalP2P]);
+    setTotalFixed(totalFFixed + totalNPSGFixed + totalNPSCFixed + totalP2P);
+  }, [totalFFixed, totalNPSGFixed, totalNPSCFixed, totalP2P]);
 
   const priceAllInstruments = async () =>
     await priceInstruments(instruments, selectedMembers, selectedCurrency);
@@ -723,6 +732,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalFMP(totals.fmp);
       setTotalIntervalFunds(totals.intervalFunds);
       setTotalLiquidFunds(totals.liquidFunds);
+      setRiskTotals(totals.riskTotals);
       setLoadingInstruments(false);
     });
   }, [instruments, selectedMembers, selectedCurrency]);
@@ -789,7 +799,8 @@ function NWContextProvider({ fxRates }: any) {
     const totals = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
     setTotalNPS(totals.total);
     setTotalNPSEquity(totals.totalNPSEquity);
-    setTotalNPSFixed(totals.totalNPSFixed);
+    setTotalNPSGFixed(totals.totalNPSGFixed);
+    setTotalNPSCFixed(totals.totalNPSCFixed);
   }, [nps, selectedCurrency, selectedMembers, npsData]);
 
   useEffect(
@@ -971,7 +982,8 @@ function NWContextProvider({ fxRates }: any) {
         totalFMP,
         totalBonds,
         totalNPSEquity,
-        totalNPSFixed,
+        totalNPSGFixed,
+        totalNPSCFixed,
         familyMemberKeys,
         setFamilyMemberKeys,
         fxRates,
@@ -998,6 +1010,7 @@ function NWContextProvider({ fxRates }: any) {
         totalVehicleIns,
         totalYearlyPremium,
         totalAccidentIns,
+        riskTotals,
       }}>
       <GetView />
     </NWContext.Provider>

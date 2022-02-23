@@ -555,7 +555,7 @@ export const onCreateInExchgFun = /* GraphQL */ `
   subscription OnCreateInExchgFun {
     onCreateINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -568,7 +568,7 @@ export const onUpdateInExchgFun = /* GraphQL */ `
   subscription OnUpdateInExchgFun {
     onUpdateINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -581,7 +581,7 @@ export const onDeleteInExchgFun = /* GraphQL */ `
   subscription OnDeleteInExchgFun {
     onDeleteINExchgFun {
       id
-      sid
+      isin
       exchg
       ana
       risk
@@ -684,45 +684,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateInsBhs = /* GraphQL */ `
-  subscription OnCreateInsBhs {
-    onCreateInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInsBhs = /* GraphQL */ `
-  subscription OnUpdateInsBhs {
-    onUpdateInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInsBhs = /* GraphQL */ `
-  subscription OnDeleteInsBhs {
-    onDeleteInsBHS {
-      id
-      rec
-      fun
-      tech
-      ca
       createdAt
       updatedAt
     }
@@ -839,19 +800,19 @@ export const onCreateInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -866,19 +827,19 @@ export const onUpdateInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }
@@ -893,19 +854,19 @@ export const onDeleteInBondPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       exchg
       sm
       sy
       mm
       my
       rate
-      fr
-      tf
       fv
       cr
       crstr
       ytm
       risk
+      itype
       createdAt
       updatedAt
     }

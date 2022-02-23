@@ -51,7 +51,7 @@ const calc = {
         if (name.includes("LIQ")) return { type: "F", subt: "L", itype: "ETF" };
         if (type === "EQ") return { type: "E", subt: "S", itype: "ETF" };
       }
-      if (type.includes("N") || type.includes("Y") || type.includes("Z"))
+      if (type.startsWith("N") || type.startsWith("Y") || type.startsWith("Z"))
         return { type: "F", subt: "CB" };
       if (type === "GB") return { type: "F", subt: "GoldB" };
       return { type: "E", subt: "S" };
@@ -61,7 +61,6 @@ const calc = {
 
 const calculateRisk = (beta, mcapt, subt, itype) => {
   if (itype === "ETF") {
-    if (subt === "GB" || subt === "GBO") return "VC";
     if (subt === "I" || subt === "S") return "M";
     return "C";
   }
@@ -70,6 +69,7 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
     if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
     return "VA";
   }
+  if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
   return "M";
 };
 
@@ -120,6 +120,7 @@ const calcSchema = (
   updateSchema.type = type;
   updateSchema.subt = subt;
   updateSchema.price = parse(record[codes.price]);
+  updateSchema.prev = parse(record[codes.prev]);
   if (isBond) {
     updateSchema.sm = 0;
     updateSchema.sy = 0;
@@ -131,13 +132,11 @@ const calcSchema = (
     updateSchema.rate = -1;
     updateSchema.fv = 100;
     updateSchema.ytm = 0;
-    delete updateSchema.itype;
-    delete updateSchema.prev;
+    updateSchema.itype = null;
     appendGenericFields(updateSchema, bondTable);
   } else {
-    updateSchema.mcapt = itype ? null : "S";
+    updateSchema.mcapt = subt === "S" ? "S" : null;
     updateSchema.itype = itype ? itype : null;
-    updateSchema.prev = parse(record[codes.prev]);
     appendGenericFields(updateSchema, table);
   }
   updateSchema.exchg = exchg;

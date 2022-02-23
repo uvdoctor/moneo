@@ -379,8 +379,41 @@ export const getInsuranceType = () => {
     V: "Vehicle",
     P: "Property",
     O: "Other",
-    A: "Accident"
+    A: "Accident",
   };
+};
+
+export const getRiskProfileType = () => {
+  return {
+    VLow: "No loss",
+    Low: "Up to 10% loss",
+    Medium: "Up to 20% loss",
+    High: "Up to 30% loss",
+    VHigh: "Up to 50% loss",
+    Exceeds: "Exceeds Risk Profile",
+  };
+};
+
+export const getRiskAttributes = () => {
+  return {
+    [APIt.RiskProfile.VC]: { label: "No loss", color: COLORS.GREEN },
+    [APIt.RiskProfile.C]: { label: "Up to 10% loss", color: "#ffc107" },
+    [APIt.RiskProfile.M]: { label: "Up to 20% loss", color: "#ffa698" },
+    [APIt.RiskProfile.A]: { label: "Up to 30% loss", color: COLORS.ORANGE },
+    [APIt.RiskProfile.VA]: { label: "Up to 50% loss", color: COLORS.RED },
+  };
+};
+
+export const getRiskAttributesByProfile = (risk: APIt.RiskProfile) =>
+  getRiskAttributes()[risk];
+
+export const getMarketCapLabel = (mCap: APIt.MCap) => {
+  const mCapLabels: any = {
+    [APIt.MCap.S]: "Small-cap",
+    [APIt.MCap.M]: "Medium-cap",
+    [APIt.MCap.L]: "Large-cap",
+  };
+  return mCapLabels[mCap];
 };
 
 export const getAssetSubTypes = () => {
@@ -623,7 +656,7 @@ export const hasRisktab = (childTab: string) =>
     TAB.VEHICLE_INS,
     TAB.OTHERS_INS,
     TAB.PROPERTY_INS,
-    TAB.ACCIDENT_INS
+    TAB.ACCIDENT_INS,
   ].includes(childTab);
 
 export const hasOnlyCategory = (childTab: string) =>
@@ -916,14 +949,14 @@ export const getFieldsAndInfo = (tab: string) => {
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
-        qty: "Sum Insured"
+        qty: "Sum Insured",
       },
       info: {
         type: "Premium Mode",
         amount: "Premium Amount",
         rate: "Premium increases",
         date: "End date",
-        qty: "Total coverage amount of the policy"
+        qty: "Total coverage amount of the policy",
       },
     },
   };
@@ -1028,21 +1061,62 @@ export const getCategoryOptions = (tab: string) => {
   return category[tab];
 };
 
+const getRiskTotalLabel = (type: string) => {
+  switch (type) {
+    case "stocks":
+      return "Stocks";
+    case "bonds":
+      return "Bonds";
+    case "mfs":
+      return "Mutual funds";
+    case "etfs":
+      return "ETFs";
+    default:
+      return "Others";
+  }
+};
+
+const getTooltipDescItem = (
+  label: string,
+  value: number,
+  totalAssets: number,
+  currency: string,
+  isRiskItem?: boolean
+) => {
+  const amount = toHumanFriendlyCurrency(value, currency);
+  const percentage = toReadableNumber((value / totalAssets) * 100, 2);
+  return `${amount} (${percentage}%) of ${
+    isRiskItem ? getRiskTotalLabel(label) : label
+  }<br/><br/>`;
+};
+
 export const getTooltipDesc = (
   records: any,
   selectedCurrency: string,
-  totalAssets: number
+  totalAssets: number,
+  riskTotals?: any
 ) => {
   let data: any = "";
   Object.keys(records).map((value) => {
     if (!records[value]) return;
-    const amount = toHumanFriendlyCurrency(records[value], selectedCurrency);
-    const percentage = toReadableNumber(
-      (records[value] / totalAssets) * 100,
-      2
+    data += getTooltipDescItem(
+      value,
+      records[value],
+      totalAssets,
+      selectedCurrency
     );
-    data += `${amount} (${percentage}%) of ${value}<br/><br/>`;
   });
+  if (riskTotals)
+    Object.keys(riskTotals).map((rt) => {
+      if (!riskTotals[rt]) return;
+      data += getTooltipDescItem(
+        rt,
+        riskTotals[rt],
+        totalAssets,
+        selectedCurrency,
+        true
+      );
+    });
   return data ? `<br/><br/>Includes<br/><br/>${data}` : "";
 };
 
@@ -1053,4 +1127,51 @@ export const getFamilyMemberOptions = (
   let opts: any = {};
   familyMemberKeys.forEach((key: string) => (opts[key] = allFamily[key].name));
   return opts;
+};
+
+export const doesExceedRisk = (
+  risk: APIt.RiskProfile,
+  riskProfile: APIt.RiskProfile
+) => {
+  const riskProfiles = Object.keys(APIt.RiskProfile);
+  const higherRiskValues = riskProfiles.slice(
+    riskProfiles.indexOf(riskProfile) + 1
+  );
+  return higherRiskValues.includes(risk);
+};
+
+export const filterRisk = (
+  selectedTags: string[],
+  risk: APIt.RiskProfile,
+  riskProfile: APIt.RiskProfile
+) => {
+  return (
+    (selectedTags.includes("Vlow") && risk === APIt.RiskProfile.VC) ||
+    (selectedTags.includes("Low") && risk === APIt.RiskProfile.C) ||
+    (selectedTags.includes("Medium") && risk === APIt.RiskProfile.M) ||
+    (selectedTags.includes("High") && risk === APIt.RiskProfile.A) ||
+    (selectedTags.includes("VHigh") && risk === APIt.RiskProfile.VA) ||
+    (selectedTags.includes("Exceeds") && doesExceedRisk(risk, riskProfile))
+  );
+};
+
+export const filterFixCategory = (
+  selectedTags: string[],
+  subt: string,
+  mftype: string
+) => {
+  return (
+    (selectedTags.includes(AssetSubType.CB) &&
+      (subt === AssetSubType.CB || mftype === APIt.MFSchemeType.O)) ||
+    (selectedTags.includes(AssetSubType.I) && subt === AssetSubType.I) ||
+    (selectedTags.includes("GovB") &&
+      (subt === AssetSubType.GB || subt === AssetSubType.GBO)) ||
+    (selectedTags.includes("IF") &&
+      subt === AssetSubType.HB &&
+      mftype === APIt.MFSchemeType.I) ||
+    (selectedTags.includes("FMP") &&
+      subt === AssetSubType.HB &&
+      mftype === APIt.MFSchemeType.C) ||
+    (selectedTags.includes("LF") && subt === AssetSubType.L)
+  );
 };
