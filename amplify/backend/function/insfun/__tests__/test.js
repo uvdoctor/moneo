@@ -216,7 +216,8 @@ describe("CalcSchema", () => {
         },
       },
       {},
-      "NSE"
+      "NSE",
+      "Insfun"
     );
     console.log(data);
     expect(data).toEqual([
@@ -225,8 +226,11 @@ describe("CalcSchema", () => {
           PutRequest: {
             Item: {
               exchg: "NSE",
-              id: "INE253B01015",
-              sid: "21STCENMGM",
+              id: "21STCENMGM",
+              isin: "INE253B01015",
+              __typename: "Insfun",
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
               ana: {
                 General: {
                   Code: "21STCENMGM",
@@ -339,8 +343,11 @@ describe("CalcSchema", () => {
           PutRequest: {
             Item: {
               exchg: "NSE",
-              id: "INE748C01038",
-              sid: "3IINFOLTD",
+              id: "3IINFOLTD",
+              isin: "INE748C01038",
+              __typename: "Insfun",
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
               ana: {
                 General: {
                   Code: "3IINFOLTD",
