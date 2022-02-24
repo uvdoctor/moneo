@@ -67,7 +67,7 @@ describe("CalcSchema", () => {
       mm: 6,
       my: 2024,
       risk: "C",
-      itype: "FR",
+      itype: "DEB",
       rate: 8.65,
       fv: 100,
       cr: null,
