@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PageHeader, Skeleton, Alert } from "antd";
+import { Skeleton, Alert } from "antd";
 import StockDetailContext from "./StockDetailContext";
 import RenderDetails from "./RenderDetails";
 
