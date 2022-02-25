@@ -96,9 +96,9 @@ export default function Filter({ options }: FilterProps) {
         })}
     </Menu>
   ) : (
-    <>
+    <Menu >
       <Spin tip="Loading" />
-    </>
+      </Menu>
   );
 
   useEffect(() => {
