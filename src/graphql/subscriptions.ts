@@ -558,6 +558,10 @@ export const onCreateInExchgFun = /* GraphQL */ `
       isin
       exchg
       ana
+      sector
+      ind
+      tech
+      val
       risk
       createdAt
       updatedAt
@@ -571,6 +575,10 @@ export const onUpdateInExchgFun = /* GraphQL */ `
       isin
       exchg
       ana
+      sector
+      ind
+      tech
+      val
       risk
       createdAt
       updatedAt
@@ -584,6 +592,10 @@ export const onDeleteInExchgFun = /* GraphQL */ `
       isin
       exchg
       ana
+      sector
+      ind
+      tech
+      val
       risk
       createdAt
       updatedAt

@@ -576,6 +576,10 @@ export const getInExchgFun = /* GraphQL */ `
       isin
       exchg
       ana
+      sector
+      ind
+      tech
+      val
       risk
       createdAt
       updatedAt
@@ -602,6 +606,10 @@ export const listInExchgFuns = /* GraphQL */ `
         isin
         exchg
         ana
+        sector
+        ind
+        tech
+        val
         risk
         createdAt
         updatedAt
