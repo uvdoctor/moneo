@@ -40,7 +40,7 @@ describe("CalcSchema - Incase of Exchange Data", () => {
       name: "20MICRONS",
       type: "E",
       subt: "S",
-      itype: undefined,
+      itype: null,
       price: 85.5,
       prev: 88.15,
       mcapt: "S",
@@ -110,6 +110,8 @@ describe("CalcSchema - Incase of Bond Data", () => {
       updatedAt: new Date().toISOString(),
       __typename: "BondTable",
       exchg: "NSE",
+      itype: null,
+      prev: 31.2,
     });
   });
   test("isBond", () => {
@@ -118,131 +120,201 @@ describe("CalcSchema - Incase of Bond Data", () => {
 });
 
 describe("Test Asset Type", () => {
-  test("Fixed in Case of ETF - BSE", () => {
-    const data = calc["BSE"].calcType("Q", "B", "NETFNIF100");
-    expect(data).toEqual("F");
+  test("Warrant - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "B",
+      "MOLDTKWARR",
+      "INE893J13016",
+      "W"
+    );
+    expect(data).toEqual({ type: "H", subt: "War" });
   });
-  test("Fixed in Case of Gold - BSE", () => {
-    const data = calc["BSE"].calcType("Q", "E", "AXISGOLD");
-    expect(data).toEqual("F");
+  test("Stock ETF - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "NETFNIF100",
+      "INF204K014N5",
+      "B"
+    );
+    expect(data).toEqual({ type: "E", subt: "S", itype: "ETF" });
   });
-  test("Alternative - BSE", () => {
-    const data = calc["BSE"].calcType("Q", "IF", "INDIGRID");
-    expect(data).toEqual("A");
+  test("Fixed ETF - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "ICICILIQ",
+      "INF109KC1KT9",
+      "F"
+    );
+    expect(data).toEqual({ type: "F", subt: "L", itype: "ETF" });
   });
-  test("Equity - BSE", () => {
-    const data = calc["BSE"].calcType("Q", "A", "KOTAK MAH.BK");
-    expect(data).toEqual("E");
+  test("Fixed(Liquid) ETF - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "ABCRSPRG",
+      "INF209KB1P65",
+      "F"
+    );
+    expect(data).toEqual({ type: "F", subt: "CB", itype: "ETF" });
   });
-  test("Fixed in Case of Gold - NSE", () => {
-    const data = calc["NSE"].calcType("EQ", "", "BSLGOLDETF");
-    expect(data).toEqual("F");
+  test("Gold - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "ICICIGOLD",
+      "INF109KC1NT3",
+      "E"
+    );
+    expect(data).toEqual({ type: "A", subt: "Gold", itype: "ETF" });
   });
-  test("Fixed in Case of Series - NSE", () => {
-    const data = calc["NSE"].calcType("NN", "", "IRFC");
-    expect(data).toEqual("F");
-  });
-  test("Alternative - NSE", () => {
-    const data = calc["NSE"].calcType("RR", "", "EMBASSY");
-    expect(data).toEqual("A");
-  });
-  test("Equity - NSE", () => {
-    const data = calc["NSE"].calcType("EQ", "", "CADILAHC");
-    expect(data).toEqual("E");
-  });
-});
-
-describe("Test Asset Subtype", () => {
-  test("Liquid - BSE", () => {
-    const data = calc["BSE"].calcSubType("Q", "F", "LIQUIDBEES");
-    expect(data).toEqual("L");
-  });
-  test("Index - BSE", () => {
-    const data = calc["BSE"].calcSubType("Q", "B", "LICNETFSEN");
-    expect(data).toEqual("I");
-  });
-  test("Other Gov. Bond - BSE", () => {
-    const data = calc["BSE"].calcSubType("Q", "F", "ABDBSPDG");
-    expect(data).toEqual("GBO");
+  test("Other Government Bond - BSE", () => {
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "EBBETF0430",
+      "INF754K01KO2",
+      "F"
+    );
+    expect(data).toEqual({ type: "F", subt: "GBO", itype: "ETF"  });
   });
   test("Gold Bond - BSE", () => {
-    const data = calc["BSE"].calcSubType("B", "G", "SGBFEB27");
-    expect(data).toEqual("GoldB");
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "B",
+      "SGBAPR28",
+      "IN0020200062",
+      "G"
+    );
+    expect(data).toEqual({ type: "F", subt: "GoldB" });
   });
   test("Corporate Bond - BSE", () => {
-    const data = calc["BSE"].calcSubType("B", "F", "793REC22");
-    expect(data).toEqual("CB");
-  });
-  test("Real Estate - BSE", () => {
-    const data = calc["BSE"].calcSubType("Q", "IF", "MINDSPACE");
-    expect(data).toEqual("R");
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "B",
+      "740IIFCL33",
+      "INE787H07156",
+      "F"
+    );
+    expect(data).toEqual({ type: "F", subt: "CB" });
   });
   test("Stock - BSE", () => {
-    const data = calc["BSE"].calcSubType("P", "F", "ZEE NCPS");
-    expect(data).toEqual("S");
-  });
-  test("Liquid - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "LIQUIDETF");
-    expect(data).toEqual("L");
-  });
-  test("Index - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "ICICINIFTY");
-    expect(data).toEqual("I");
-  });
-  test("Other Gov. Bond - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "EBBETF0430");
-    expect(data).toEqual("GBO");
-  });
-  test("Gold Bond - NSE", () => {
-    const data = calc["NSE"].calcSubType("GB", "", "SGBDEC2513");
-    expect(data).toEqual("GoldB");
-  });
-  test("Corporate Bond - NSE", () => {
-    const data = calc["NSE"].calcSubType("Z4", "", "SRTRANSFIN");
-    expect(data).toEqual("CB");
-  });
-  test("Real Estate - NSE", () => {
-    const data = calc["NSE"].calcSubType("IV", "", "PGINVIT");
-    expect(data).toEqual("R");
-  });
-  test("Stock - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "AARTIIND");
-    expect(data).toEqual("S");
-  });
-  test("Gov Bond - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "SETF10GILT");
-    expect(data).toEqual("GB");
-  });
-  test("Gold - NSE", () => {
-    const data = calc["NSE"].calcSubType("EQ", "", "SETFGOLD");
-    expect(data).toEqual("Gold");
-  });
-});
-
-describe("Test Asset InsType", () => {
-  test("ETF - BSE", () => {
-    const data = calc["BSE"].calcInsType("Q", "E", "IDBIGOLD");
-    expect(data).toEqual("ETF");
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "P",
+      "ZEE NCPS",
+      "INE256A04022",
+      "F"
+    );
+    expect(data).toEqual({ subt: "S", type: "E" });
   });
   test("REIT - BSE", () => {
-    const data = calc["BSE"].calcInsType("Q", "IF", "MINDSPACE");
-    expect(data).toEqual("REIT");
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "MINDSPACE",
+      "INE041025011",
+      "IF"
+    );
+    expect(data).toEqual({ type: "A", subt: "R", itype: "REIT" });
   });
   test("InvIT - BSE", () => {
-    const data = calc["BSE"].calcInsType("Q", "IF", "INDIGRID");
-    expect(data).toEqual("InvIT");
-  });
-  test("ETF - NSE", () => {
-    const data = calc["NSE"].calcInsType("EQ", "", "AXISTECETF");
-    expect(data).toEqual("ETF");
+    const data = calc["BSE"].calcTypeAndSubtype(
+      "Q",
+      "INDIGRID",
+      "INE219X23014",
+      "IF"
+    );
+    expect(data).toEqual({ type: "A", subt: "R", itype: "InvIT" });
   });
   test("REIT - NSE", () => {
-    const data = calc["NSE"].calcInsType("RR", "", "BIRET");
-    expect(data).toEqual("REIT");
+    const data = calc["NSE"].calcTypeAndSubtype("RR", "BIRET", "INE0FDU25010");
+    expect(data).toEqual({ type: "A", subt: "R", itype: "REIT" });
   });
   test("InvIT - NSE", () => {
-    const data = calc["NSE"].calcInsType("IV", "", "IRBINVIT");
-    expect(data).toEqual("InvIT");
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "IV",
+      "IRBINVIT",
+      "INE183W23014"
+    );
+    expect(data).toEqual({ type: "A", subt: "R", itype: "InvIT" });
+  });
+  test("Warrant - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype("W3", "HDFC", "INE001A13049");
+    expect(data).toEqual({ type: "H", subt: "War" });
+  });
+  test("Government Bond - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "GS",
+      "719GS2060",
+      "IN0020200039"
+    );
+    expect(data).toEqual({ type: "F", subt: "GB" });
+  });
+  test("Index - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "BSLNIFTY",
+      "INF209KB19D1"
+    );
+    expect(data).toEqual({ type: "E", subt: "S", itype: "ETF" });
+  });
+  test("Bharat Bond - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "EBBETF0430",
+      "INF754K01KO2"
+    );
+    expect(data).toEqual({ type: "F", subt: "GBO", itype: "ETF" });
+  });
+  test("Gold ETF - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "GOLDBEES",
+      "INF204KB17I5"
+    );
+    expect(data).toEqual({ type: "A", subt: "Gold", itype: "ETF" });
+  });
+  test("Government ETF - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "SETF10GILT",
+      "INF200KA1JT1"
+    );
+    expect(data).toEqual({ type: "F", subt: "GB", itype: "ETF" });
+  });
+  test("Liquid - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "LIQUIDBEES",
+      "INF732E01037"
+    );
+    expect(data).toEqual({ type: "F", subt: "L", itype: "ETF" });
+  });
+  test("Stock ETF - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "EQ",
+      "ABSLBANETF",
+      "INF209KB17D5"
+    );
+    expect(data).toEqual({ type: "E", subt: "S", itype: "ETF" });
+  });
+
+  test("Corporate Bond - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "N8",
+      "DHANILOANS",
+      "INE614X07092"
+    );
+    expect(data).toEqual({ type: "F", subt: "CB" });
+  });
+  test("Gold Bond - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "GB",
+      "SGBDC27VII",
+      "IN0020190461"
+    );
+    expect(data).toEqual({ type: "F", subt: "GoldB" });
+  });
+  test("Stock - NSE", () => {
+    const data = calc["NSE"].calcTypeAndSubtype(
+      "BE",
+      "BLUECOAST",
+      "INE472B01011"
+    );
+    expect(data).toEqual({ type: "E", subt: "S" });
   });
 });
 
@@ -260,20 +332,12 @@ describe("Test Risk Profile", () => {
     expect(data).toEqual("VA");
   });
   test("Mid cap with beta less than 1", () => {
-    const data = calculateRisk('', "M", "S", "");
+    const data = calculateRisk("", "M", "S", "");
     expect(data).toEqual("A");
   });
   test("Small Cap", () => {
     const data = calculateRisk(1.78, "S", "S", "");
     expect(data).toEqual("VA");
-  });
-  test("ETF with large Cap", () => {
-    const data = calculateRisk('', "L", "S", "ETF");
-    expect(data).toEqual("M");
-  });
-  test("ETF with other than large Cap", () => {
-    const data = calculateRisk('', "S", "S", "ETF");
-    expect(data).toEqual("A");
   });
   test("ETF - Index Fund", () => {
     const data = calculateRisk(1.78, "", "I", "ETF");

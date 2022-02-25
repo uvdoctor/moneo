@@ -9,7 +9,11 @@ const calc = {
         if (subt === "F") {
           return {
             type: "F",
-            subt: name.includes("LIQ") ? "L" : "CB",
+            subt: name.includes("LIQ")
+              ? "L"
+              : name.includes("BBETF")
+              ? "GBO"
+              : "CB",
             itype: "ETF",
           };
         }
@@ -60,6 +64,7 @@ const calc = {
 };
 
 const calculateRisk = (beta, mcapt, subt, itype) => {
+  if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
   if (itype === "ETF") {
     if (subt === "I" || subt === "S") return "M";
     return "C";
@@ -69,7 +74,6 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
     if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
     return "VA";
   }
-  if (subt === "GB" || subt === "GBO" || subt === "GoldB") return "VC";
   return "M";
 };
 
@@ -108,10 +112,7 @@ const calcSchema = (
     subtname
   );
   const isBond = calculateIsbond(exchg, subt, itype);
-  if (
-    (exchg === "BSE" && subt === "CB") ||
-    (exchg === "NSE" && subt === "MF")
-  )
+  if ((exchg === "BSE" && subt === "CB") || (exchg === "NSE" && subt === "MF"))
     return { updateSchema, isBond };
   updateSchema = JSON.parse(JSON.stringify(schema));
   updateSchema.id = id;

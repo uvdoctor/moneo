@@ -360,6 +360,10 @@ type INExchgFun
   isin: String
   exchg: Exchange!
   ana: AWSJSON
+  sector: String
+  ind: String
+  tech: AWSJSON
+  val: AWSJSON
   risk: RiskProfile
 }
 

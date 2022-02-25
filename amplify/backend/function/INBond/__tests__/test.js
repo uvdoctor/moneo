@@ -67,7 +67,7 @@ describe("CalcSchema", () => {
       mm: 6,
       my: 2024,
       risk: "C",
-      itype: "FR",
+      itype: "DEB",
       rate: 8.65,
       fv: 100,
       cr: null,
@@ -119,7 +119,11 @@ describe("Test Asset Instype", () => {
   });
   test("Floating Bond", () => {
     const data = calc.calcInsType("GF");
-    expect(data).toEqual("FR");
+    expect(data).toEqual("FRB");
+  });
+  test("Debenture Bond", () => {
+    const data = calc.calcInsType("DB");
+    expect(data).toEqual("DEB");
   });
   test("Index Bond", () => {
     const data = calc.calcInsType("GI");

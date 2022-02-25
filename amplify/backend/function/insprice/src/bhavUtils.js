@@ -157,14 +157,8 @@ const extractPartOfData = async (
   return await end;
 };
 
-const mergeEodAndExchgData = (
-  exchgData,
-  eodData,
-  splitData,
-  dividendData,
-  fundata
-) => {
-  if (!(eodData || splitData || dividendData || fundata)) return exchgData;
+const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
+  if (!(eodData || splitData || dividendData)) return exchgData;
   exchgData.map((element) => {
     element.map((item) => {
       const Item = item.PutRequest.Item;
@@ -182,7 +176,6 @@ const mergeEodAndExchgData = (
       const eod = eodData && getData(eodData);
       const split = splitData && getData(splitData);
       const dividend = dividendData && getData(dividendData);
-      const fun = fundata && fundata.Items.find((re) => re.id === Item.sid || re.isin === Item.id || re.id.includes(Item.sid)); 
       if (split) {
         Item.splitd = split.date;
         let value = split.split.replace(/\//g, "");
@@ -212,11 +205,6 @@ const mergeEodAndExchgData = (
         Item.ylow = Item.ylow ? Item.ylow : lo_250d;
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
-      }
-      if (fun) {
-        const { General } = fun.ana;
-        Item.sector = General.Sector;
-        Item.ind = General.Industry;
       }
       Item.risk = calculateRisk(
         Item.beta ? Item.beta : "",
