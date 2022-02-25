@@ -3,13 +3,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { text },
+    query: { text, type },
   } = req;
   const eodKey = "61ff9bf3d40797.93512142";
 
   try {
     const response = await fetch(
-      `https://eodhistoricaldata.com/api/search/${text}?api_token=${eodKey}`
+      `https://eodhistoricaldata.com/api/search/${text}?api_token=${eodKey}&type=${type}`
     );
     const data = await response.json();
 

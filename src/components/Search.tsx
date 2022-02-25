@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Dropdown, Radio, List, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -9,6 +9,8 @@ interface SearchProps {
 }
 
 export default function Search({ inline }: SearchProps) {
+	const [searchText, setSearchText] = useState("");
+	const [searchType, setSearchType] = useState("stock");
 	const [searchResults, setSearchResults] = useState([
 		{
 			Code: "SBIN",
@@ -35,16 +37,13 @@ export default function Search({ inline }: SearchProps) {
 	const Comp = inline ? InlineList : Dropdown;
 	let searchTimeout: any;
 	const onSearch = ({ target: { value } }: any) => {
-		if (value.length < 3) return;
-		if (searchTimeout) clearTimeout(searchTimeout);
-
-		searchTimeout = setTimeout(() => {
-			getSearchData(value);
-		}, 200);
+		setSearchText(value);
 	};
-	const getSearchData = async (text: string) => {
+	const getSearchData = async () => {
 		try {
-			const response = await fetch(`/api/search?text=${text}`);
+			const response = await fetch(
+				`/api/search?text=${searchText}&type=${searchType}`
+			);
 			const data = await response.json();
 
 			setSearchResults(data);
@@ -52,6 +51,23 @@ export default function Search({ inline }: SearchProps) {
 			console.log(err);
 		}
 	};
+	const onSearchTypeChange = ({ target: { value } }: any) => {
+		setSearchType(value);
+	};
+
+	useEffect(() => {
+		if (searchText.length < 3) return;
+		if (searchTimeout) clearTimeout(searchTimeout);
+
+		searchTimeout = setTimeout(() => {
+			getSearchData();
+		}, 200);
+	}, [searchText]);
+
+	useEffect(() => {
+		if (searchText.length < 3) return;
+		getSearchData();
+	}, [searchType]);
 
 	return (
 		<Comp
@@ -61,11 +77,11 @@ export default function Search({ inline }: SearchProps) {
 					<List
 						size="small"
 						header={
-							<Radio.Group value="stocks" onChange={() => {}}>
-								<Radio.Button value="stocks">Stocks</Radio.Button>
-								<Radio.Button value="etfs">ETFs</Radio.Button>
-								<Radio.Button value="bonds">Bonds</Radio.Button>
-								<Radio.Button value="mfs">Mutual Funds</Radio.Button>
+							<Radio.Group value={searchType} onChange={onSearchTypeChange}>
+								<Radio.Button value="stock">Stocks</Radio.Button>
+								<Radio.Button value="etf">ETFs</Radio.Button>
+								<Radio.Button value="bond">Bonds</Radio.Button>
+								<Radio.Button value="fund">Mutual Funds</Radio.Button>
 							</Radio.Group>
 						}
 						bordered
@@ -85,6 +101,7 @@ export default function Search({ inline }: SearchProps) {
 			arrow
 		>
 			<Input
+				value={searchText}
 				size="large"
 				placeholder="Search stocks, bonds and MF's"
 				prefix={<SearchOutlined />}
