@@ -14,6 +14,10 @@ const calculateSchema = (data, isinMap, exchg, table) => {
       let schema = {
         id: sid,
         isin: id,
+        ind: exchgData.General.Industry,
+        sector: exchgData.General.Sector,
+        val: exchgData.Valuation,
+        tech: exchgData.Technicals,
         exchg: exchg,
         ana: data[index]
       };
