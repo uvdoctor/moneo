@@ -19,7 +19,7 @@ const calculateSchema = (data, isinMap, exchg, table) => {
         val: exchgData.Valuation,
         tech: exchgData.Technicals,
         exchg: exchg,
-        ana: data[index]
+        // ana: data[index]
       };
       appendGenericFields(schema, table);
       batches.push({ PutRequest: { Item: schema } });
