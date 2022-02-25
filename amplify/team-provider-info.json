@@ -59,7 +59,7 @@
         },
         "insfun": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insfun-4e2b66434e3679717548-build.zip"
+          "s3Key": "amplify-builds/insfun-304a4266417050764554-build.zip"
         }
       },
       "auth": {

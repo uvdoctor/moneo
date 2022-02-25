@@ -575,7 +575,6 @@ export const getInExchgFun = /* GraphQL */ `
       id
       isin
       exchg
-      ana
       sector
       ind
       tech
@@ -605,7 +604,6 @@ export const listInExchgFuns = /* GraphQL */ `
         id
         isin
         exchg
-        ana
         sector
         ind
         tech

@@ -359,7 +359,6 @@ type INExchgFun
   id: String!
   isin: String
   exchg: Exchange!
-  ana: AWSJSON
   sector: String
   ind: String
   tech: AWSJSON

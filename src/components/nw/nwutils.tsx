@@ -1202,21 +1202,21 @@ export const listInExchgFunsWithoutAna = /* GraphQL */ `
         tech
         val
         risk
-        createdAt
-        updatedAt
       }
       nextToken
     }
   }
 `;
 
-export const loadMatchingINExchgFun = async (isins: Array<string>) => {
-  if (!isins.length) return null;
+export const loadMatchingINExchgFun = async (sids: Array<string>) => {
+  if (!sids.length) return null;
   let idList: Array<APIt.ModelINExchgFunFilterInput> = [];
   let returnList: Array<APIt.INExchgFun> = [];
   let nextToken = null;
+  console.log("Instruments size: ", sids.length);
+  console.log("Gonig to get data...", new Date().toISOString());
   do {
-    let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
+    let variables: any = { limit: 10000, filter: getORIdList(idList, sids) };
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINExchgFuns },
@@ -1230,29 +1230,34 @@ export const loadMatchingINExchgFun = async (isins: Array<string>) => {
       returnList.push(...(listINExchgFuns.items as Array<APIt.INExchgFun>));
     nextToken = listINExchgFuns?.nextToken;
   } while (nextToken);
+  console.log("Data stored...", new Date().toISOString());
   return returnList.length ? returnList : null;
 };
 
-export const isStock = (type: string, id: string) =>
-  type === APIt.AssetType.E && !isFund(id) && !isBond(id);
+export const isStock = (subType: string, id: string) =>
+  subType === APIt.AssetSubType.S && !isFund(id);
 
 export const initializeFundata = async (
   instruments: Array<InstrumentInput>
 ) => {
-  let isinIds: Set<string> = new Set();
+  const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  console.log("Insdata length: ", Object.keys(insData).length);
+  if (!insData) return null;
+  let sids: Set<string> = new Set();
   let initFromDB = false;
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
-    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    const data = insData && insData[ins.id];
-    if (data && isStock(data.type, ins.id)) isinIds.add(ins.sid as string);
-    if (!initFromDB && (!funData || !funData[ins.sid as string]))
+    if (!insData[ins.id] || !isStock(ins.subt as string, ins.id)) return;
+    sids.add(ins.sid as string);
+    if (!initFromDB && (!funData || !funData[ins.sid as string])) {
       initFromDB = true;
+    }
   });
+  console.log("Secondary ids to be added: ", sids);
   if (!initFromDB) return funData;
   let funCache: any = {};
   let funids: Array<APIt.INExchgFun> | null = null;
-  if (isinIds.size) funids = await loadMatchingINExchgFun(Array.from(isinIds));
+  if (sids.size) funids = await loadMatchingINExchgFun(Array.from(sids));
   if (funids)
     funids.forEach((fun: APIt.INExchgFun) => {
       funCache[fun.id as string] = fun;

@@ -1580,7 +1580,6 @@ export const createInExchgFun = /* GraphQL */ `
       id
       isin
       exchg
-      ana
       sector
       ind
       tech
@@ -1600,7 +1599,6 @@ export const updateInExchgFun = /* GraphQL */ `
       id
       isin
       exchg
-      ana
       sector
       ind
       tech
@@ -1620,7 +1618,6 @@ export const deleteInExchgFun = /* GraphQL */ `
       id
       isin
       exchg
-      ana
       sector
       ind
       tech

@@ -3,7 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
 import { toHumanFriendlyCurrency } from "../utils";
-import { COLORS, LOCAL_FUN_DATA_KEY, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import {
+  COLORS,
+  LOCAL_FUN_DATA_KEY,
+  LOCAL_INS_DATA_KEY,
+} from "../../CONSTANTS";
 import { FilterTwoTone } from "@ant-design/icons";
 import {
   AssetSubType,
@@ -173,8 +177,7 @@ export default function InstrumentValuation() {
               !data.itype &&
               data.subt !== AssetSubType.GoldB
             );
-          if (childTab === STOCK)
-            return isStock(data.type, id)
+          if (childTab === STOCK) return isStock(data.subt, id);
         }
       }
     );
@@ -213,9 +216,14 @@ export default function InstrumentValuation() {
           const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
           return (
             selectedTags.includes(mcapt) ||
-            filterRisk(selectedTags, risk, userInfo?.rp) || (funData &&
-            selectedTags.includes(funData[sid as string] && funData[sid as string].ind) ||
-            selectedTags.includes(funData[sid as string] && funData[sid as string].sector))
+            filterRisk(selectedTags, risk, userInfo?.rp) ||
+            (funData &&
+              selectedTags.includes(
+                funData[sid as string] && funData[sid as string].ind
+              )) ||
+            selectedTags.includes(
+              funData[sid as string] && funData[sid as string].sector
+            )
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;
