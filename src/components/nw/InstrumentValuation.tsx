@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
 import { toHumanFriendlyCurrency } from "../utils";
-import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import { COLORS, LOCAL_FUN_DATA_KEY, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { FilterTwoTone } from "@ant-design/icons";
 import {
   AssetSubType,
@@ -16,9 +16,9 @@ import simpleStorage from "simplestorage.js";
 import {
   doesHoldingMatch,
   isFund,
-  isBond,
   filterRisk,
   filterFixCategory,
+  isStock,
 } from "./nwutils";
 import { AppContext } from "../AppContext";
 
@@ -140,7 +140,7 @@ export default function InstrumentValuation() {
 
   const filterInstrumentsByTabs = () => {
     if (!instruments.length) return;
-    const { E, F } = AssetType;
+    const { F } = AssetType;
     const { REIT, InvIT, ETF } = InsType;
     let filteredData: Array<InstrumentInput> = instruments.filter(
       (instrument: InstrumentInput) => {
@@ -174,7 +174,7 @@ export default function InstrumentValuation() {
               data.subt !== AssetSubType.GoldB
             );
           if (childTab === STOCK)
-            return data.type === E && !isFund(id) && !isBond(id);
+            return isStock(data.type, id)
         }
       }
     );
@@ -185,8 +185,9 @@ export default function InstrumentValuation() {
     if (!selectedTags.length) return;
     let filterDataByTag = filteredInstruments.filter(
       (instrument: InstrumentInput) => {
-        let [id, cachedData] = [
+        let [id, sid, cachedData] = [
           instrument.id,
+          instrument.sid,
           simpleStorage.get(LOCAL_INS_DATA_KEY),
         ];
         if (!cachedData) return;
@@ -209,9 +210,12 @@ export default function InstrumentValuation() {
         }
         if (childTab === STOCK) {
           const { mcapt, risk } = data;
+          const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
           return (
             selectedTags.includes(mcapt) ||
-            filterRisk(selectedTags, risk, userInfo?.rp)
+            filterRisk(selectedTags, risk, userInfo?.rp) || (funData &&
+            selectedTags.includes(funData[sid as string] && funData[sid as string].ind) ||
+            selectedTags.includes(funData[sid as string] && funData[sid as string].sector))
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;
