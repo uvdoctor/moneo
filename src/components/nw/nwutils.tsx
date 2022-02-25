@@ -23,7 +23,9 @@ import {
 import {
   COLORS,
   LOCAL_DATA_TTL,
+  LOCAL_FUN_DATA_KEY,
   LOCAL_INSTRUMENT_RAW_DATA_KEY,
+  LOCAL_INS_DATA_KEY,
 } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import {
@@ -35,7 +37,7 @@ import {
   calculateProvidentFund,
   calculateVehicle,
 } from "./valuationutils";
-import { AssetSubType, PropertyType } from "../../api/goals";
+import { AssetSubType, InstrumentInput, PropertyType } from "../../api/goals";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -1174,4 +1176,87 @@ export const filterFixCategory = (
       mftype === APIt.MFSchemeType.C) ||
     (selectedTags.includes("LF") && subt === AssetSubType.L)
   );
+};
+
+export const listInExchgFunsWithoutAna = /* GraphQL */ `
+  query ListInExchgFuns(
+    $id: String
+    $filter: ModelINExchgFunFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchgFuns(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        isin
+        exchg
+        sector
+        ind
+        tech
+        val
+        risk
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const loadMatchingINExchgFun = async (isins: Array<string>) => {
+  if (!isins.length) return null;
+  let idList: Array<APIt.ModelINExchgFunFilterInput> = [];
+  let returnList: Array<APIt.INExchgFun> = [];
+  let nextToken = null;
+  do {
+    let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
+    if (nextToken) variables.nextToken = nextToken;
+    const {
+      data: { listINExchgFuns },
+    } = (await API.graphql(
+      graphqlOperation(listInExchgFunsWithoutAna, variables)
+    )) as {
+      data: APIt.ListInExchgFunsQuery;
+    };
+    idList = [];
+    if (listINExchgFuns?.items?.length)
+      returnList.push(...(listINExchgFuns.items as Array<APIt.INExchgFun>));
+    nextToken = listINExchgFuns?.nextToken;
+  } while (nextToken);
+  return returnList.length ? returnList : null;
+};
+
+export const isStock = (type: string, id: string) =>
+  type === APIt.AssetType.E && !isFund(id) && !isBond(id);
+
+export const initializeFundata = async (
+  instruments: Array<InstrumentInput>
+) => {
+  let isinIds: Set<string> = new Set();
+  let initFromDB = false;
+  const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
+  instruments.forEach((ins: InstrumentInput) => {
+    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    const data = insData && insData[ins.id];
+    if (data && isStock(data.type, ins.id)) isinIds.add(ins.sid as string);
+    if (!initFromDB && (!funData || !funData[ins.sid as string]))
+      initFromDB = true;
+  });
+  if (!initFromDB) return funData;
+  let funCache: any = {};
+  let funids: Array<APIt.INExchgFun> | null = null;
+  if (isinIds.size) funids = await loadMatchingINExchgFun(Array.from(isinIds));
+  if (funids)
+    funids.forEach((fun: APIt.INExchgFun) => {
+      funCache[fun.id as string] = fun;
+    });
+  simpleStorage.set(LOCAL_FUN_DATA_KEY, funCache, LOCAL_DATA_TTL);
+  return funCache;
 };

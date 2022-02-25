@@ -1,16 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { Button, Dropdown, Menu, Tag } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Dropdown, Menu, Spin, Tag } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { NWContext } from "../NWContext";
+import { NWContext, TAB } from "../NWContext";
+import { initializeFundata } from "../nwutils";
+import { InstrumentInput } from "../../../api/goals";
+import simpleStorage from "simplestorage.js";
+import { LOCAL_FUN_DATA_KEY } from "../../../CONSTANTS";
 
 interface FilterProps {
   options: any;
 }
 
 export default function Filter({ options }: FilterProps) {
-  const { childTab, selectedTags, setSelectedTags }: any =
-    useContext(NWContext);
+  const {
+    childTab,
+    selectedTags,
+    setSelectedTags,
+    instruments,
+    setIndustryAndSector,
+  }: any = useContext(NWContext);
   const { SubMenu } = Menu;
+  const [loadingIndustry, setLoadingIndustry] = useState<boolean>(false);
 
   const onClose = (item: string) => {
     setSelectedTags([...selectedTags.filter((tag: string) => tag !== item)]);
@@ -23,6 +33,30 @@ export default function Filter({ options }: FilterProps) {
       ? tags.splice(tags.indexOf(subKey), 1)
       : tags.push(subKey);
     setSelectedTags([...tags]);
+  };
+
+  const updateIndustryAndSector = async () => {
+    let industry: { [key: string]: string } = {};
+    let sector: { [key: string]: string } = {};
+    let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
+    if (!fundata) {
+      fundata = await initializeFundata(instruments);
+    }
+    instruments.forEach((ins: InstrumentInput) => {
+      const data = fundata[ins.sid as string];
+      if (data) {
+        industry[data.ind] = data.ind;
+        sector[data.sector] = data.sector;
+      }
+    });
+    const industryAndSector = { industry: industry, sector: sector };
+    setIndustryAndSector(industryAndSector);
+    setLoadingIndustry(false);
+  };
+
+  const onButtonClick = () => {
+    if (childTab === TAB.STOCK && instruments.length) setLoadingIndustry(true);
+    else setLoadingIndustry(false);
   };
 
   const getTagLabel = (key: string) => {
@@ -39,7 +73,7 @@ export default function Filter({ options }: FilterProps) {
     return tagOptions[key];
   };
 
-  const menu = (
+  const menu = !loadingIndustry ? (
     <Menu multiple onClick={handleClick} selectedKeys={selectedTags}>
       {options &&
         Object.keys(options.main).length &&
@@ -47,9 +81,13 @@ export default function Filter({ options }: FilterProps) {
           if (options.sub && Object.keys(options.sub[key]).length) {
             return (
               <SubMenu key={key} title={options.main[key]}>
-                {Object.keys(options.sub[key]).map((subkey) => (
-                  <Menu.Item key={subkey}>{options.sub[key][subkey]}</Menu.Item>
-                ))}
+                {Object.keys(options.sub[key]).map((subkey) => {
+                  return (
+                    <Menu.Item key={subkey}>
+                      {options.sub[key][subkey]}
+                    </Menu.Item>
+                  );
+                })}
               </SubMenu>
             );
           } else {
@@ -57,11 +95,23 @@ export default function Filter({ options }: FilterProps) {
           }
         })}
     </Menu>
+  ) : (
+    <Menu >
+      <Spin tip="Loading" />
+      </Menu>
   );
 
   useEffect(() => {
     setSelectedTags([...[]]);
   }, [childTab]);
+
+  useEffect(() => {
+    if (childTab === TAB.STOCK && instruments.length && loadingIndustry) {
+      updateIndustryAndSector().then(() => {
+        setLoadingIndustry(false);
+      });
+    }
+  }, [loadingIndustry]);
 
   return (
     <>
@@ -79,8 +129,8 @@ export default function Filter({ options }: FilterProps) {
             );
           })
         : null}
-      <Dropdown overlay={menu}>
-        <Button type="link">
+      <Dropdown overlay={menu} trigger={["click"]}>
+        <Button type="link" onClick={() => onButtonClick()}>
           Filters
           <DownOutlined />
         </Button>

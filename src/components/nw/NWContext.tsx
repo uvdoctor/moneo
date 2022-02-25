@@ -204,6 +204,10 @@ function NWContextProvider({ fxRates }: any) {
   const [totalAccidentIns, setTotalAccidentIns] = useState<number>(0);
   const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
   const [riskTotals, setRiskTotals] = useState<any>({});
+  const [industryAndSector, setIndustryAndSector] = useState<{
+    industry: {};
+    sector: {};
+  }>({ industry: {}, sector: {} });
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
@@ -318,8 +322,18 @@ function NWContextProvider({ fxRates }: any) {
           total: totalStocks,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { mcap: "Capitalization", risk: "Risk" },
-            sub: { mcap: getStockMarketCap(), risk: getRiskProfileType() },
+            main: {
+              mcap: "Capitalization",
+              risk: "Risk",
+              sector: "Sector",
+              industry: "Industry",
+            },
+            sub: {
+              mcap: getStockMarketCap(),
+              risk: getRiskProfileType(),
+              sector: industryAndSector.sector,
+              industry: industryAndSector.industry,
+            },
           },
         },
         [TAB.MF]: {
@@ -1011,7 +1025,10 @@ function NWContextProvider({ fxRates }: any) {
         totalYearlyPremium,
         totalAccidentIns,
         riskTotals,
-      }}>
+        industryAndSector,
+        setIndustryAndSector,
+      }}
+    >
       <GetView />
     </NWContext.Provider>
   );
