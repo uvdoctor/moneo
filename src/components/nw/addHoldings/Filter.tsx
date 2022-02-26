@@ -67,31 +67,37 @@ export default function Filter({ options }: FilterProps) {
     return tagOptions[key];
   };
 
-  const menu = !loadingIndustry ? (
+  const menu = (
     <Menu multiple onClick={handleClick} selectedKeys={selectedTags}>
       {options &&
         Object.keys(options.main).length &&
         Object.keys(options.main).map((key) => {
-          if (options.sub && Object.keys(options.sub[key]).length) {
+          if (
+            (options.sub && Object.keys(options.sub[key]).length) ||
+            key === "industry" ||
+            key === "sector"
+          ) {
             return (
               <SubMenu key={key} title={options.main[key]}>
-                {Object.keys(options.sub[key]).map((subkey) => {
-                  return (
-                    <Menu.Item key={subkey}>
-                      {options.sub[key][subkey]}
-                    </Menu.Item>
-                  );
-                })}
+                {((key === "industry" || key === "sector") && loadingIndustry) ? (
+                  <Menu.Item key="load">
+                    <Spin tip="Loading" />
+                  </Menu.Item>
+                ) : (
+                  Object.keys(options.sub[key]).map((subkey) => {
+                    return (
+                      <Menu.Item key={subkey}>
+                        {options.sub[key][subkey]}
+                      </Menu.Item>
+                    );
+                  })
+                )}
               </SubMenu>
             );
           } else {
             return <Menu.Item key={key}>{options.main[key]}</Menu.Item>;
           }
         })}
-    </Menu>
-  ) : (
-    <Menu>
-      <Spin tip="Loading" />
     </Menu>
   );
 
