@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Dropdown, Menu, Spin, Tag } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { NWContext, TAB } from "../NWContext";
-import { initializeFundata } from "../nwutils";
-import { InstrumentInput } from "../../../api/goals";
+import { initializeFundata, isStock } from "../nwutils";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_FUN_DATA_KEY } from "../../../CONSTANTS";
 
@@ -39,16 +38,20 @@ export default function Filter({ options }: FilterProps) {
     let industry: { [key: string]: string } = {};
     let sector: { [key: string]: string } = {};
     let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
-    if (!fundata) {
+    if (!Object.keys(fundata).length) {
       fundata = await initializeFundata(instruments);
     }
-    instruments.forEach((ins: InstrumentInput) => {
-      const data = fundata[ins.sid as string];
+    for (let ins of instruments) {
+      let data = fundata[ins.sid as string];
+      if (!data && isStock(ins.subt as string, ins.id)) {
+        fundata = await initializeFundata(instruments);
+        data = fundata[ins.sid as string];
+      }
       if (data) {
         industry[data.ind] = data.ind;
         sector[data.sector] = data.sector;
       }
-    });
+    }
     const industryAndSector = { industry: industry, sector: sector };
     setIndustryAndSector(industryAndSector);
     setLoadingIndustry(false);
@@ -96,9 +99,9 @@ export default function Filter({ options }: FilterProps) {
         })}
     </Menu>
   ) : (
-    <Menu >
+    <Menu>
       <Spin tip="Loading" />
-      </Menu>
+    </Menu>
   );
 
   useEffect(() => {

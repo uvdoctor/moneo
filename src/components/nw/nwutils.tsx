@@ -1247,7 +1247,10 @@ export const initializeFundata = async (
   let initFromDB = false;
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
-    if (!insData[ins.id] || !isStock(ins.subt as string, ins.id)) return;
+    if (!insData[ins.id] || !isStock(insData && insData[ins.id].subt, ins.id)) {
+      console.log(insData[ins.id])
+      return;
+    };
     sids.add(ins.sid as string);
     if (!initFromDB && (!funData || !funData[ins.sid as string])) {
       initFromDB = true;
