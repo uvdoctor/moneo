@@ -10,6 +10,7 @@ const getAndPushData = (data, tableName) => {
     let batches = [];
     let batchRecords = [];
     let count = 0;
+    const isinMap = {};
     for (let record of data) {
       try {
         if (record.eventName === "INSERT" || record.eventName === "MODIFY") {
@@ -17,9 +18,10 @@ const getAndPushData = (data, tableName) => {
           const newRecords = record.dynamodb.NewImage.ins.L;
           for (let item of newRecords) {
             const id = item.M.id.S;
-            const sid = item.M.sid ? item.M.sid.S : null;
-            const type = item.M.type ? item.M.type.S : null;
-            const subt = item.M.subt ? item.M.subt.S : null;
+            if(isinMap[id]) continue;
+            const sid = item.M.sid && item.M.sid.S ? item.M.sid.S : null;
+            const type = item.M.type && item.M.type.S ? item.M.type.S : null;
+            const subt = item.M.subt && item.M.subt.S ? item.M.subt.S : null;
             let schema = {
               id: id,
               sid: sid,
@@ -27,6 +29,7 @@ const getAndPushData = (data, tableName) => {
               subt: subt,
               user: uname,
             };
+            isinMap[id] = id;
             schema = appendGenericFields(schema, table);
             console.log(schema);
             batches.push({ PutRequest: { Item: schema } });
