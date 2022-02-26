@@ -1213,8 +1213,6 @@ export const loadMatchingINExchgFun = async (sids: Array<string>) => {
   let idList: Array<APIt.ModelINExchgFunFilterInput> = [];
   let returnList: Array<APIt.INExchgFun> = [];
   let nextToken = null;
-  console.log("Instruments size: ", sids.length);
-  console.log("Gonig to get data...", new Date().toISOString());
   do {
     let variables: any = { limit: 10000, filter: getORIdList(idList, sids) };
     if (nextToken) variables.nextToken = nextToken;
@@ -1230,7 +1228,6 @@ export const loadMatchingINExchgFun = async (sids: Array<string>) => {
       returnList.push(...(listINExchgFuns.items as Array<APIt.INExchgFun>));
     nextToken = listINExchgFuns?.nextToken;
   } while (nextToken);
-  console.log("Data stored...", new Date().toISOString());
   return returnList.length ? returnList : null;
 };
 
@@ -1241,23 +1238,20 @@ export const initializeFundata = async (
   instruments: Array<InstrumentInput>
 ) => {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  console.log("Insdata length: ", Object.keys(insData).length);
   if (!insData) return null;
   let sids: Set<string> = new Set();
   let initFromDB = false;
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
-    const item = insData[ins.id]
-    if (!item || !isStock(item?.subt, ins.id) || !item?.yhigh ) {
-      console.log(item)
+    const item = insData[ins.id];
+    if (!item || !isStock(item?.subt, ins.id) || !item?.yhigh || !item.sid) {
       return;
-    };
-    sids.add(ins.sid as string);
+    }
+    sids.add(item.sid as string);
     if (!initFromDB && (!funData || !funData[ins.sid as string])) {
       initFromDB = true;
     }
   });
-  console.log("Secondary ids to be added: ", sids);
   if (!initFromDB) return funData;
   let funCache: any = {};
   let funids: Array<APIt.INExchgFun> | null = null;
