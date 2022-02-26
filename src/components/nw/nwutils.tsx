@@ -1249,6 +1249,7 @@ export const initializeFundata = async (
   instruments.forEach((ins: InstrumentInput) => {
     const item = insData[ins.id]
     if (!item || !isStock(item?.subt, ins.id) || !item?.yhigh ) {
+      console.log(item)
       return;
     };
     sids.add(ins.sid as string);
