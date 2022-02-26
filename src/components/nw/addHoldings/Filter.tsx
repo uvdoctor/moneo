@@ -38,7 +38,7 @@ export default function Filter({ options }: FilterProps) {
     let industry: { [key: string]: string } = {};
     let sector: { [key: string]: string } = {};
     let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
-    if (!Object.keys(fundata).length) {
+    if (!fundata || !Object.keys(fundata).length) {
       fundata = await initializeFundata(instruments);
     }
     for (let ins of instruments) {
