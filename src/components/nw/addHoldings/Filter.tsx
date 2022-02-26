@@ -3,8 +3,6 @@ import { Button, Dropdown, Menu, Spin, Tag } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { NWContext, TAB } from "../NWContext";
 import { initializeFundata } from "../nwutils";
-import simpleStorage from "simplestorage.js";
-import { LOCAL_FUN_DATA_KEY } from "../../../CONSTANTS";
 
 interface FilterProps {
   options: any;
@@ -37,10 +35,7 @@ export default function Filter({ options }: FilterProps) {
   const updateIndustryAndSector = async () => {
     let industry: { [key: string]: string } = {};
     let sector: { [key: string]: string } = {};
-    let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY)
-    if(!fundata) {
-      fundata = await initializeFundata(instruments);
-    }
+    const fundata = await initializeFundata(instruments);
     for (let ins of instruments) {
       let data = fundata[ins.sid as string];
       if (data) {
