@@ -37,16 +37,9 @@ export default function Filter({ options }: FilterProps) {
   const updateIndustryAndSector = async () => {
     let industry: { [key: string]: string } = {};
     let sector: { [key: string]: string } = {};
-    let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
-    if (!fundata || !Object.keys(fundata).length) {
-      fundata = await initializeFundata(instruments);
-    }
+    const fundata = await initializeFundata(instruments);
     for (let ins of instruments) {
       let data = fundata[ins.sid as string];
-      if (!data && isStock(ins.subt as string, ins.id)) {
-        fundata = await initializeFundata(instruments);
-        data = fundata[ins.sid as string];
-      }
       if (data) {
         industry[data.ind] = data.ind;
         sector[data.sector] = data.sector;
