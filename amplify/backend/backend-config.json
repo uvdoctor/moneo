@@ -260,5 +260,6 @@
       "dependsOn": []
     }
   },
-  "interactions": {}
+  "interactions": {},
+  "custom": {}
 }
