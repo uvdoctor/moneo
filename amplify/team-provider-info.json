@@ -43,11 +43,11 @@
         },
         "InsUni": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/InsUni-6f5a6654477544745134-build.zip"
+          "s3Key": "amplify-builds/InsUni-567655567a35724a3841-build.zip"
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/alerts-50474c48494d53383947-build.zip"
+          "s3Key": "amplify-builds/alerts-6a5958504b6644493767-build.zip"
         },
         "moneoutilslayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
