@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Dropdown, Radio, List, Tag } from "antd";
+import { Input, Dropdown, Radio, List, Tag, Select } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { ROUTES } from "../CONSTANTS";
@@ -9,6 +9,7 @@ interface SearchProps {
 }
 
 export default function Search({ inline }: SearchProps) {
+	const { Option } = Select;
 	const [searchText, setSearchText] = useState("");
 	const [searchType, setSearchType] = useState("stock");
 	const [searchResults, setSearchResults] = useState([
@@ -24,6 +25,14 @@ export default function Search({ inline }: SearchProps) {
 			previousCloseDate: "2022-02-11",
 		},
 	]);
+	const [exchange, setExchange] = useState("NSE");
+	const exchangeComp = (
+		<Select value={exchange} onChange={setExchange}>
+			<Option value="NSE">NSE</Option>
+			<Option value="BSE">BSE</Option>
+			<Option value="US">US</Option>
+		</Select>
+	);
 	interface InlineListProps {
 		style?: any;
 		children?: any;
@@ -42,7 +51,7 @@ export default function Search({ inline }: SearchProps) {
 	const getSearchData = async () => {
 		try {
 			const response = await fetch(
-				`/api/search?text=${searchText}&type=${searchType}`
+				`/api/search?text=${searchText}&type=${searchType}&exchange=${exchange}`
 			);
 			const data = await response.json();
 
@@ -67,7 +76,7 @@ export default function Search({ inline }: SearchProps) {
 	useEffect(() => {
 		if (searchText.length < 3) return;
 		getSearchData();
-	}, [searchType]);
+	}, [searchType, exchange]);
 
 	return (
 		<Comp
@@ -104,6 +113,7 @@ export default function Search({ inline }: SearchProps) {
 				value={searchText}
 				size="large"
 				placeholder="Search stocks, bonds and MF's"
+				addonAfter={exchangeComp}
 				prefix={<SearchOutlined />}
 				onChange={onSearch}
 			/>
