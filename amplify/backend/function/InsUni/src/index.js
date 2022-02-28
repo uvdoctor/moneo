@@ -23,8 +23,8 @@ const getAndPushData = (data, tableName) => {
             const type = item.M.type && item.M.type.S ? item.M.type.S : null;
             const subt = item.M.subt && item.M.subt.S ? item.M.subt.S : null;
             let schema = {
-              id: sid,
-              sid: id,
+              id: id,
+              sid: sid,
               type: type,
               subt: subt,
               user: uname,
@@ -45,9 +45,9 @@ const getAndPushData = (data, tableName) => {
           const uname = record.dynamodb.Keys.uname.S;
           const oldRecords = record.dynamodb.OldImage.ins.L;
           for (let item of oldRecords) {
-            const sid = item.M.sid && item.M.sid.S ? item.M.sid.S : null;
+            const id = item.M.id.S;
             const schema = {
-              id: sid,
+              id: id,
               user: uname,
             };
             batches.push({ DeleteRequest: { Key: schema } });
