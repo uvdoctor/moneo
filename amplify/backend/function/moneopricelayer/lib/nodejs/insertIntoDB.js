@@ -29,7 +29,26 @@ const batchReadItem = async (tableName, keys) => {
     return results.Responses[tableName];
   } catch (err) {
     console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
-    return `Error in dynamoDB: ${JSON.stringify(err)}`;
+  }
+};
+
+const getDataByFilter = async (tableName, data, key) => {
+  try {
+    const keys = {};
+    data.forEach((item, i) => {
+      keys[`:${key}${i}`] = item;
+    });
+    const keyex = Object.keys(keys).toString();
+    const params = {
+      FilterExpression: `${key} IN (${keyex})`,
+      ExpressionAttributeValues: { ...keys },
+      TableName: tableName,
+    };
+    const result = await docClient.send(new ScanCommand(params));
+    console.log(result);
+    return result.Items;
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -113,16 +132,6 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
   console.log(results, "Data Pushed into Feeds Table");
 };
 
-const deleteData = async (data, table) => {
-  const params = { RequestItems: { [table]: data } };
-  try {
-    const data = await docClient.send(new BatchWriteCommand(params));
-    return data;
-  } catch (error) {
-    console.log("Error in dynamoDB:", err);
-  }
-};
-
 module.exports = {
   getDataFromTable,
   pushData,
@@ -130,7 +139,7 @@ module.exports = {
   pushDataSingly,
   appendGenericFields,
   getTableNameFromInitialWord,
-  deleteData,
   updateItem,
   batchReadItem,
+  getDataByFilter,
 };
