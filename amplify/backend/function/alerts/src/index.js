@@ -48,7 +48,9 @@ const processData = (diff) => {
       let userMap = {};
       results.forEach((item) => {
         if (userMap[item.user]) {
-          userMap[item.user] = { ...userMap[item.user], ...item.sid };
+          let sidlist = userMap[item.user];
+          sidlist.push(item.sid);
+          userMap[item.user] = sidlist;
         } else {
           userMap[item.user] = [item.sid];
         }
