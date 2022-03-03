@@ -1,18 +1,19 @@
-const EmailSender = require("./EmailSender");
+const { send } = require("./EmailSender");
 
-const sender = new EmailSender("noreply <no-reply@moneo.money>");
+const yhigh = ["JETAIRWAYS", "HDFC", "ICICI", "JPOWER"];
+const ylow = ["JETAIRWAYS", "HDFC", "ICICI", "JPOWER"];
 
-sender
-  .send({
-    templateName: "weekHL",
-    email: "mehzabeen1526@gmail.com",
-    values: {
-      name: "",
-      url: "https://moneo.in/get",
-      count: 1,
-      data: [ { sid:"JETAIRWAYS", ylow: 12 }, { sid:"HDFC", yhigh: 12 }  ]
-    },
-  })
-  .then((data) => {
-    console.log("sdhbfhdbsjf", data);
-  });
+send({
+  templateName: "weekHL",
+  email: ["mehzabeen1526@gmail.com"],
+  values: {
+    name: "Mehzabeen",
+    url: "https://moneo.in/get",
+    yhighCount: yhigh.length,
+    ylowCount: ylow.length,
+    yhigh: yhigh,
+    ylow: ylow,
+  },
+}).then((data) => {
+  console.log("Compeleted", data);
+});
