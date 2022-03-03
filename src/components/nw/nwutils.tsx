@@ -1244,7 +1244,7 @@ export const initializeFundata = async (
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
     const item = insData[ins.id];
-    if (!item || !isStock(item?.subt, ins.id) || !item?.yhigh || !item.sid) {
+    if (!item || !isStock(item?.subt, ins.id) || !item.sid || !item.hasOwnProperty('beta') || !item?.yhigh) {
       return;
     }
     sids.add(item.sid as string);
@@ -1253,6 +1253,7 @@ export const initializeFundata = async (
     }
   });
   if (!initFromDB) return funData;
+  console.log(sids);
   let funCache: any = {};
   let funids: Array<APIt.INExchgFun> | null = null;
   if (sids.size) funids = await loadMatchingINExchgFun(Array.from(sids));
