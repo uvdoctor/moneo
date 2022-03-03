@@ -5,7 +5,7 @@ const {
   batchReadItem,
   getTableNameFromInitialWord,
 } = require("/opt/nodejs/insertIntoDB");
-const { sendMail } = require("/opt/nodejs/mailUtils");
+const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
 const constructedApiArray = require("./utils");
@@ -21,7 +21,9 @@ const { mkdir } = fsPromise;
 //   cleanDirectory,
 //   downloadZip,
 // } = require("../../moneopricelayer/lib/nodejs/bhavUtils");
-// const { sendMail } = require("../../moneoutilslayer/lib/nodejs/mailUtils");
+// const {
+//   sendEmail,
+// } = require("../../moneoutilslayer/lib/nodejs/sendMail/EmailSender");
 
 const sidMap = {};
 const processData = (diff) => {
@@ -82,32 +84,27 @@ const processData = (diff) => {
       for (let user of users) {
         const userInfo = userdata.find((re) => re.uname === user);
         console.log(userInfo);
-        let content = "";
+        let yhigh = [];
+        let ylow = [];
         userMap[user].forEach((item) => {
           const data = sidMap[item];
           if (!data) return;
-          content += `<p>${item} ${data.yhigh ? "- Week High -" : ""} ${
-            data.yhigh ? data.yhigh : ""
-          } ${data.ylow ? "- Week Low -" : ""} ${
-            data.ylow ? data.ylow : ""
-          } </p></br>`;
+          if (data.yhigh) yhigh.push(item);
+          if (data.ylow) ylow.push(item);
         });
-        if (!content) continue;
+        if(!yhigh.length && !ylow.length) continue;
         try {
-          const template = `<html>
-              <body>
-                  <div>
-                      ${content}
-                  </div>
-              </body>
-              </html>`;
-          console.log(template);
-          const message = await sendMail(
-            template,
-            "Moneo - Week High Low Digest",
-            ["emailumangdoctor@gmail.com", "mehzabeen1526@gmail.com"],
-            "no-reply@moneo.money"
-          );
+          const message = await sendEmail({
+            templateName: "weekHL",
+            email: [userInfo?.email, "emailumangdoctor@gmail.com"],
+            values: {
+              url: "https://moneo.in/get",
+              yhighCount: yhigh.length,
+              ylowCount: ylow.length,
+              yhigh: yhigh,
+              ylow: ylow,
+            },
+          });
           console.log(message);
         } catch (err) {
           reject(err);

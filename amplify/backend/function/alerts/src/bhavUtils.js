@@ -23,7 +23,6 @@ const calculateSchema = (record, codes, sidMap) => {
     return (
       date.getMonth() === today.getMonth() &&
       date.getDate()  === today.getDate() &&
-      // date.getDate() > 24 &&
       value
     );
   };

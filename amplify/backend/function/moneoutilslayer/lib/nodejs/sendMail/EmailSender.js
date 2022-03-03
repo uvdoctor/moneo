@@ -5,12 +5,10 @@ const path = require("path");
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
 
+const resolved = (fileName) => path.resolve(__dirname, fileName)
 const senderAddress = "noreply <no-reply@moneo.money>";
-const juiceOptions = {
-  extraCss: fs.readFileSync("./email.css").toString(),
-};
 let preCompiledTemplates = {};
-const partialsPath = "./partials";
+const partialsPath = resolved("./partials");
 
 const registerPartials = (partialsPath) => {
   for (let template of fs.readdirSync(partialsPath)) {
@@ -38,17 +36,20 @@ const performSend = async (request) => {
 };
 
 const renderTemplate = async (templateName, partName, values) => {
-  const path = `./templates/${templateName}/${partName}.hbs`;
+  const path = resolved(`./templates/${templateName}/${partName}.hbs`);
   if (!preCompiledTemplates[path]) {
     const template = await fs.promises.readFile(
-      `./templates/${templateName}/${partName}.hbs`
+      resolved(`./templates/${templateName}/${partName}.hbs`)
     );
     preCompiledTemplates[path] = handlebars.compile(template.toString());
   }
   return preCompiledTemplates[path](values);
 };
 
-const send = async ({ templateName, email, values }) => {
+const sendEmail = async ({ templateName, email, values }) => {
+  
+  console.log(path.resolve("./email.css"));
+  console.log(path.resolve("./partials"));
   registerPartials(partialsPath);
   console.log(templateName, email, values);
   const [html, text, subject] = await Promise.all([
@@ -56,6 +57,10 @@ const send = async ({ templateName, email, values }) => {
     renderTemplate(templateName, "text", values),
     renderTemplate(templateName, "subject", values),
   ]);
+
+  const juiceOptions = {
+    extraCss: fs.readFileSync(resolved("./email.css")).toString(),
+  };
 
   const request = {
     Source: senderAddress,
@@ -83,4 +88,4 @@ const send = async ({ templateName, email, values }) => {
   await performSend(request);
 };
 
-module.exports = { send };
+module.exports = { sendEmail };
