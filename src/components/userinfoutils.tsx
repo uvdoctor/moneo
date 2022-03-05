@@ -30,7 +30,7 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
   }
 };
 
-export const doesMobExist = async (mob: Number) => {
+export const doesMobExist = async (mob: Number, authMode?: string) => {
   let nextToken = null;
   try {
     do {
@@ -41,6 +41,10 @@ export const doesMobExist = async (mob: Number) => {
       } = (await API.graphql({
         query: queries.regByMob,
         variables: variables,
+        authMode:
+          authMode === "AWS_IAM"
+            ? GRAPHQL_AUTH_MODE.AWS_IAM
+            : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
       })) as { data: RegByMobQuery };
       if (regByMob?.items?.length) return true;
       nextToken = regByMob?.nextToken;

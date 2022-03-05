@@ -14,7 +14,7 @@ interface TextInputProps {
   maxLength?: number;
   setError?: Function;
   fieldName?: string;
-  pattern?: string;
+  pattern?: any;
   size?: SizeType;
   password?: boolean;
   disabled?: boolean;
