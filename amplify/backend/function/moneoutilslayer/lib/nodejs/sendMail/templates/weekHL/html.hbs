@@ -11,23 +11,34 @@
     <span class="preheader">Week High Low Digest</span>
 
     {{#> layout }}
-    {{!-- <img src="{{post.image}}" --}}
-                    {{!-- class="card-img-top" alt="..."/> --}}
-    <p>Hi {{name}}</p>
-    <p>{{count}} Stock in your portfolio broke 52 weeks levels</p>
-    <p>
-        {{#each data}}
-        <div>
-            <h5 class="card-title">{{this.sid}}</h5>
-            {{#if this.yhigh}} 
-            <p>Week High - {{this.yhigh}}</p>
-            {{/if}}
-            {{#if this.ylow}}
-            <p>Week Low - {{this.ylow}}</p>
-            {{/if}}
+    <p>Hi,</p>
+    <p>52 Week High/Low</p>
+    {{#if yhigh}}
+    <div class="box-container-high">
+        <p>52 Week High</p>
+        <p>{{yhighCount}} Stock in your portfolio touched 52 weeks high levels in today's market session</p>
+        {{#each yhigh}}
+        <div class="data-container">
+            <a href="https://moneo.in/get">{{this}}</a>
         </div>
         {{/each}}
-    </p>
+    </div>
+    {{/if}}
+
+    {{#if ylow}}
+    <div class='box-container-low'>
+        <p>52 Week Low</p>
+        <p>{{ylowCount}} Stock in your portfolio touched 52 weeks low levels in today's market session</p>
+        {{#each ylow}}
+        <div class="data-container">
+            <a href="https://moneo.in/get">{{this}}</a>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+
+
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
         <tbody>
             <tr>

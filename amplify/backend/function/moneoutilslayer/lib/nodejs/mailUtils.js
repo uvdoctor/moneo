@@ -4,7 +4,6 @@ const client = new SESClient({ apiVersion: '2010-12-01' });
 const sendMail = async (body, subject, toAddresses, source) => {
 	const params = {
 		Destination: {
-			// toAddresses - Array
 			ToAddresses: toAddresses
 		},
 		Source: source,

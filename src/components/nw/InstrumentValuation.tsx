@@ -144,15 +144,12 @@ export default function InstrumentValuation() {
 
   const filterInstrumentsByTabs = () => {
     if (!instruments.length) return;
-    const { F } = AssetType;
     const { REIT, InvIT, ETF } = InsType;
     let filteredData: Array<InstrumentInput> = instruments.filter(
       (instrument: InstrumentInput) => {
-        let [id, cachedData] = [
-          instrument.id,
-          simpleStorage.get(LOCAL_INS_DATA_KEY),
-        ];
+        const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData) return;
+        const id = instrument.id;
         const data = cachedData[id];
         if (
           !data &&
@@ -172,7 +169,7 @@ export default function InstrumentValuation() {
           if (childTab === GOLDB) return data.subt === AssetSubType.GoldB;
           if (childTab === BOND)
             return (
-              data.type === F &&
+              data.type === AssetType.F &&
               !isFund(id) &&
               !data.itype &&
               data.subt !== AssetSubType.GoldB
