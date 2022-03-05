@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { PageHeader, Tag } from "antd";
 import StockDetailContext from "./StockDetailContext";
 import Results from "./Results";
+
 import {
 	incomeStatementParticulars,
 	balanceSheetParticulars,
@@ -22,7 +23,9 @@ export default function CommonStock() {
 				title="Quarterly Result"
 				resultsData={state.data.Financials.Income_Statement.quarterly}
 				particulars={incomeStatementParticulars}
+				chartOptions={["totalRevenue", "netIncome"]}
 			/>
+
 			<Results
 				title="Profit & Loss"
 				resultsData={state.data.Financials.Income_Statement.yearly}

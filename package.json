@@ -14,6 +14,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/plots": "^1.0.9",
     "@aws-amplify/ui-react": "^1.2.22",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
