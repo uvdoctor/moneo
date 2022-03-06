@@ -104,7 +104,7 @@
             "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apigoalsGraphQLAPIEndpointOutput"
             },
-            "PRICE_ALERTS_QUEUE": {
+            "PRICE_ALERTS_QUEUE_NAME": {
               "Ref": "queuepricealertsName"
             }
           }
