@@ -59,14 +59,6 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "goals",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
           "category": "function",
           "resourceName": "moneopricelayer",
           "attributes": [
@@ -74,7 +66,14 @@
           ]
         },
         {
-          "category": "queue",
+          "category": "function",
+          "resourceName": "moneoutilslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "custom",
           "resourceName": "pricealerts",
           "attributes": [
             "Name",

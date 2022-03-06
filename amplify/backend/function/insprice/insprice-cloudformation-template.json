@@ -20,29 +20,21 @@
       "Type": "String",
       "Default": "functionmoneoutilsArn"
     },
-    "functionmoneopriceutilsArn": {
-      "Type": "String",
-      "Default": "functionmoneopriceutilsArn"
-    },
     "functionmoneopricelayerArn": {
       "Type": "String",
       "Default": "functionmoneopricelayerArn"
     },
-    "apigoalsGraphQLAPIIdOutput": {
+    "custompricealertsName": {
       "Type": "String",
-      "Default": "apigoalsGraphQLAPIIdOutput"
+      "Default": "custompricealertsName"
     },
-    "apigoalsGraphQLAPIEndpointOutput": {
+    "custompricealertsArn": {
       "Type": "String",
-      "Default": "apigoalsGraphQLAPIEndpointOutput"
+      "Default": "custompricealertsArn"
     },
-    "queuepricealertsName": {
+    "functionmoneoutilslayerArn": {
       "Type": "String",
-      "Default": "queuepricealertsName"
-    },
-    "queuepricealertsArn": {
-      "Type": "String",
-      "Default": "queuepricealertsArn"
+      "Default": "functionmoneoutilslayerArn"
     }
   },
   "Conditions": {
@@ -98,14 +90,8 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_GOALS_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIIdOutput"
-            },
-            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIEndpointOutput"
-            },
-            "PRICE_ALERTS_QUEUE_ENDPOINT": {
-              "Ref": "queuepricealertsName"
+            "PRICE_ALERTS_QUEUE": {
+              "Ref": "custompricealertsName"
             }
           }
         },
@@ -119,6 +105,9 @@
         "Layers": [
           {
             "Ref": "functionmoneopricelayerArn"
+          },
+          {
+            "Ref": "functionmoneoutilslayerArn"
           }
         ],
         "Timeout": "900"
@@ -249,53 +238,6 @@
           "Fn::GetAtt": [
             "CloudWatchEvent",
             "Arn"
-          ]
-        }
-      }
-    },
-    "AmplifyResourcesPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "appsync:Get*",
-                "appsync:List*"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apigoalsGraphQLAPIIdOutput"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
           ]
         }
       }

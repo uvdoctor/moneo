@@ -6,13 +6,13 @@
       "env": "dev",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true
+    },
+    {
+      "type": "ProjectLayer",
+      "resourceName": "moneoutilslayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
     }
-  ],
-  "permissions": {
-    "api": {
-      "goals": [
-        "read"
-      ]
-    }
-  }
+  ]
 }
