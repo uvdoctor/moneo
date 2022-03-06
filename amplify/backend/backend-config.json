@@ -208,6 +208,14 @@
           "attributes": [
             "Arn"
           ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "pricealerts",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
         }
       ]
     },

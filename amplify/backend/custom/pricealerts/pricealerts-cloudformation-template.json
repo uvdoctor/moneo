@@ -4,6 +4,10 @@
   "Parameters": {
     "env": {
       "Type": "String"
+    },
+    "VisibilityTimeout" : {
+      "Type": "Number",
+      "Default": 900
     }
   },
   "Conditions": {
@@ -37,6 +41,9 @@
               ]
             }
           ]
+        },
+        "VisibilityTimeout": {
+          "Ref": "VisibilityTimeout"
         }
       }
     }
