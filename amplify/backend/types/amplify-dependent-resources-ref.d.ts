@@ -91,5 +91,12 @@ export type AmplifyDependentResourcesAttributes = {
             "BucketName": "string",
             "Region": "string"
         }
+    },
+    "custom": {
+        "pricealerts": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string"
+        }
     }
 }

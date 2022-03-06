@@ -72,6 +72,14 @@
           "attributes": [
             "Arn"
           ]
+        },
+        {
+          "category": "queue",
+          "resourceName": "YOUR-QUEUE-NAME",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
         }
       ]
     },
@@ -261,5 +269,11 @@
     }
   },
   "interactions": {},
-  "custom": {}
+  "custom": {
+    "pricealerts": {
+      "service": "customCloudformation",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
+  }
 }

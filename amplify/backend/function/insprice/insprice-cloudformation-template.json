@@ -35,6 +35,14 @@
     "apigoalsGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apigoalsGraphQLAPIEndpointOutput"
+    },
+    "queuepricealertsName": {
+      "Type": "String",
+      "Default": "queuepricealertsName"
+    },
+    "queuepricealertsArn": {
+      "Type": "String",
+      "Default": "queuepricealertsArn"
     }
   },
   "Conditions": {
@@ -95,6 +103,9 @@
             },
             "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apigoalsGraphQLAPIEndpointOutput"
+            },
+            "PRICE_ALERTS_QUEUE": {
+              "Ref": "queuepricealertsName"
             }
           }
         },
@@ -190,6 +201,14 @@
                   }
                 ]
               }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:SendMessage",
+                "sqs:GetQueueAttributes"
+              ],
+              "Resource": "*"
             }
           ]
         }
