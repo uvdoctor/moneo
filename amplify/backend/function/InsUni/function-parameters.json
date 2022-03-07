@@ -2,7 +2,7 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "moneopricelayer",
+      "resourceName": "moneoutilslayer",
       "env": "dev",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true

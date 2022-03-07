@@ -89,7 +89,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "moneoutilslayer",
           "attributes": [
             "Arn"
           ]
@@ -111,7 +111,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "moneoutilslayer",
           "attributes": [
             "Arn"
           ]
@@ -133,7 +133,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "moneoutilslayer",
           "attributes": [
             "Arn"
           ]
@@ -155,7 +155,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "moneoutilslayer",
           "attributes": [
             "Arn"
           ]
@@ -182,7 +182,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "moneoutilslayer",
           "attributes": [
             "Arn"
           ]
