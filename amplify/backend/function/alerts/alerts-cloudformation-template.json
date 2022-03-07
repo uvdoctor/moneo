@@ -85,6 +85,9 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "PRICE_ALERTS_QUEUE": {
+              "Ref": "custompricealertsName"
             }
           }
         },
