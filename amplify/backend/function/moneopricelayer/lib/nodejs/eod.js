@@ -31,7 +31,6 @@ const getDividendInfo = async (exchg) => {
 
 module.exports = {
   getEODdata,
-  getFundamentalData,
   getSplitInfo,
   getDividendInfo,
   getFundamentalDataByLimit
