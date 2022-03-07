@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "latest",
+    "@aws-sdk/client-sqs": "^3.53.0",
     "@aws-sdk/lib-dynamodb": "latest",
     "axios": "latest",
     "extract-zip": "latest"

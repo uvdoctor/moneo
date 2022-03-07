@@ -3,8 +3,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.49.0",
-    "@aws-sdk/client-sqs": "^3.53.0",
+    "@aws-sdk/client-ses": "^3.53.0",
     "handlebars": "^4.7.7",
     "juice": "^8.0.0"
   }
