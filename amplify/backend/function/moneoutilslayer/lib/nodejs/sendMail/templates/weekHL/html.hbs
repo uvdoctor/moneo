@@ -8,15 +8,40 @@
 </head>
 
 <body class="">
-    <span class="preheader">Week High Low Digest</span>
+    <span class="preheader">Daily Digest</span>
 
     {{#> layout }}
     <p>Hi,</p>
-    <p>52 Week High/Low</p>
+    <p>Your Daily Reports</p>
+
+    {{#if gainers}}
+    <div class="box-container-high">
+        <p>Gainers</p>
+        <p>{{gainers.length}} Stock in your portfolio are the gainers in today's market session</p>
+        {{#each gainers}}
+        <div class="data-container">
+            <a href="https://moneo.in/get">{{this}}</a>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if losers}}
+    <div class='box-container-low'>
+        <p>Losers</p>
+        <p>{{losers.length}} Stock in your portfolio are the losers in today's market session</p>
+        {{#each losers}}
+        <div class="data-container">
+            <a href="https://moneo.in/get">{{this}}</a>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
     {{#if yhigh}}
     <div class="box-container-high">
         <p>52 Week High</p>
-        <p>{{yhighCount}} Stock in your portfolio touched 52 weeks high levels in today's market session</p>
+        <p>{{yhigh.length}} Stock in your portfolio touched 52 weeks high levels in today's market session</p>
         {{#each yhigh}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this}}</a>
@@ -28,7 +53,7 @@
     {{#if ylow}}
     <div class='box-container-low'>
         <p>52 Week Low</p>
-        <p>{{ylowCount}} Stock in your portfolio touched 52 weeks low levels in today's market session</p>
+        <p>{{ylow.length}} Stock in your portfolio touched 52 weeks low levels in today's market session</p>
         {{#each ylow}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this}}</a>

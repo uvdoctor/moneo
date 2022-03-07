@@ -122,11 +122,7 @@ const processData = (records, diff) => {
             email: [userInfo?.email, "emailumangdoctor@gmail.com"],
             values: {
               url: "https://moneo.in/get",
-              yhighCount: yhigh.length,
-              ylowCount: ylow.length,
               gainers: gainers,
-              gainersCount: gainers.length,
-              losersCount: losers.length,
               losers: losers,
               yhigh: yhigh,
               ylow: ylow,
