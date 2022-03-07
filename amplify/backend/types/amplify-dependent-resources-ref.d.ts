@@ -67,7 +67,7 @@ export type AmplifyDependentResourcesAttributes = {
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string",
-            "CloudWatchEventRule": "string"
+            "lambdaexecutionpolicy": "string"
         },
         "moneoutilslayer": {
             "Arn": "string"
@@ -89,6 +89,13 @@ export type AmplifyDependentResourcesAttributes = {
     "storage": {
         "userimages": {
             "BucketName": "string",
+            "Region": "string"
+        }
+    },
+    "custom": {
+        "pricealerts": {
+            "Name": "string",
+            "Arn": "string",
             "Region": "string"
         }
     }

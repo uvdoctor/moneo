@@ -1,11 +1,5 @@
 /* Amplify Params - DO NOT EDIT
-	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
-	API_GOALS_GRAPHQLAPIIDOUTPUT
 	ENV
-	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
-	ENV
-	FUNCTION_INSMETA_NAME
 	REGION
 Amplify Params - DO NOT EDIT */ const fs = require("fs");
 const fsPromise = require("fs/promises");

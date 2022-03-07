@@ -15,7 +15,7 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insprice-74584142524139613133-build.zip"
+          "s3Key": "amplify-builds/insprice-366b6574675568387658-build.zip"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",

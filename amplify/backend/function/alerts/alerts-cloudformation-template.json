@@ -23,6 +23,14 @@
     "functionmoneoutilslayerArn": {
       "Type": "String",
       "Default": "functionmoneoutilslayerArn"
+    },
+    "custompricealertsName": {
+      "Type": "String",
+      "Default": "custompricealertsName"
+    },
+    "custompricealertsArn": {
+      "Type": "String",
+      "Default": "custompricealertsArn"
     }
   },
   "Conditions": {
@@ -134,6 +142,20 @@
         }
       }
     },
+    "LambdaFunctionEventSourceMapping": {
+      "DependsOn": [
+        "lambdaexecutionpolicy"
+      ],
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "Properties": {
+        "EventSourceArn": {
+          "Ref": "custompricealertsArn"
+        },
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        }
+      }
+    },
     "lambdaexecutionpolicy": {
       "DependsOn": [
         "LambdaExecutionRole"
@@ -180,46 +202,16 @@
                 "ses:SendRawEmail"
               ],
               "Resource": "*"
-            }
-          ]
-        }
-      }
-    },
-    "CloudWatchEvent": {
-      "Type": "AWS::Events::Rule",
-      "Properties": {
-        "Description": "Schedule rule for Lambda",
-        "ScheduleExpression": {
-          "Ref": "CloudWatchRule"
-        },
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Fn::GetAtt": [
-                "LambdaFunction",
-                "Arn"
-              ]
             },
-            "Id": {
-              "Ref": "LambdaFunction"
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes"
+              ],
+              "Resource": "*"
             }
-          }
-        ]
-      }
-    },
-    "PermissionForEventsToInvokeLambda": {
-      "Type": "AWS::Lambda::Permission",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "LambdaFunction"
-        },
-        "Action": "lambda:InvokeFunction",
-        "Principal": "events.amazonaws.com",
-        "SourceArn": {
-          "Fn::GetAtt": [
-            "CloudWatchEvent",
-            "Arn"
           ]
         }
       }
@@ -294,9 +286,9 @@
         "Ref": "LambdaExecutionRole"
       }
     },
-    "CloudWatchEventRule": {
+    "lambdaexecutionpolicy": {
       "Value": {
-        "Ref": "CloudWatchEvent"
+        "Ref": "lambdaexecutionpolicy"
       }
     }
   }
