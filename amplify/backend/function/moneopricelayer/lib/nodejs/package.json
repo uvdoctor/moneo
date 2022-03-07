@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "",
-  "main": "insertIntoDB.js",
+  "main": "index.js",
   "devDependencies": {
     "jest": "^27.2.1"
   },
@@ -9,10 +9,6 @@
     "test": "jest --config ../../jest.config.json"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "latest",
-    "@aws-sdk/client-sqs": "^3.53.0",
-    "@aws-sdk/lib-dynamodb": "latest",
-    "axios": "latest",
-    "extract-zip": "latest"
+    "axios": "latest"
   }
 }

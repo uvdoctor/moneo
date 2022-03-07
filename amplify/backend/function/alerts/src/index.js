@@ -4,10 +4,10 @@ const {
   getDataByFilter,
   batchReadItem,
   getTableNameFromInitialWord,
-} = require("/opt/nodejs/insertIntoDB");
+} = require("/opt/nodejs/databaseUtils");
 const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
 const { tempDir } = require("/opt/nodejs/utility");
-const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
+const { cleanDirectory, downloadZip } = require("/opt/nodejs/downloadUtils");
 const constructedApiArray = require("./utils");
 const extractDataFromCSV = require("./bhavUtils");
 const { deleteMessage } = require("/opt/nodejs/sqsUtils");

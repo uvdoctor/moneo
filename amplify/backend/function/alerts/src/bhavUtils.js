@@ -1,11 +1,7 @@
 const fs = require("fs");
 const csv = require("csv-parser");
-const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { tempDir } = require("/opt/nodejs/utility");
-// const {
-//   cleanDirectory,
-// } = require("../../moneopricelayer/lib/nodejs/bhavUtils");
-// const { tempDir } = require("../../moneopricelayer/lib/nodejs/utility");
 
 const calculateSchema = (record, codes, sidMap) => {
   const today = new Date();

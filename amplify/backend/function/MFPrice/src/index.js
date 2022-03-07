@@ -13,7 +13,7 @@ const {
 	pushDataForFeed,
 	getTableNameFromInitialWord,
 	appendGenericFields
-} = require('/opt/nodejs/insertIntoDB');
+} = require("/opt/nodejs/databaseUtils");
 const { directISIN, getDirISIN } = require('./data');
 const { getType, getSubType, mfType, mCap, getName, calculateRisk } = require('./calculate');
 const table = 'INMFPrice';

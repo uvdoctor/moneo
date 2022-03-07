@@ -1,7 +1,7 @@
 const fs = require("fs");
 const csv = require("csv-parser");
 const { tempDir } = require("/opt/nodejs/utility");
-const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { calcSchema } = require("./calculate");
 
 const extractDataFromCSV = async (

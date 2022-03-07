@@ -2,7 +2,7 @@ const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
-} = require("/opt/nodejs/insertIntoDB");
+} = require("/opt/nodejs/databaseUtils");
 const { getFundamentalDataByLimit } = require("/opt/nodejs/eod");
 const { calculateSchema } = require("./calculate");
 const table = "INExchgFun";

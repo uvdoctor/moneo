@@ -2,7 +2,7 @@ const {
   pushData,
   getTableNameFromInitialWord,
   appendGenericFields,
-} = require("/opt/nodejs/insertIntoDB");
+} = require("/opt/nodejs/databaseUtils");
 const table = "InsUserMap";
 
 const getAndPushData = (data, tableName) => {

@@ -1,4 +1,4 @@
-const { appendGenericFields } = require("/opt/nodejs/insertIntoDB");
+const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 const calculateSchema = (data, isinMap, exchg, table) => {
   let count = 0;
   let batches = [];

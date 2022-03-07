@@ -9,8 +9,8 @@ Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
 	REGION
 Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
-const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
-const { cleanDirectory, downloadZip } = require('/opt/nodejs/bhavUtils');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require("/opt/nodejs/databaseUtils");
+const { cleanDirectory, downloadZip } = require("/opt/nodejs/downloadUtils");
 const { tempDir } = require('/opt/nodejs/utility');
 const constructedApiArray = require('./utils');
 const getData = require('./getData');

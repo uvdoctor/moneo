@@ -4,13 +4,13 @@ const {
   cleanDirectory,
   downloadZip,
   unzipDownloads,
-} = require("/opt/nodejs/bhavUtils");
+} = require("/opt/nodejs/downloadUtils");
 const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
   getDataFromTable
-} = require("/opt/nodejs/insertIntoDB");
+} = require("/opt/nodejs/databaseUtils");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");

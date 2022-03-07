@@ -1,6 +1,6 @@
 const csv = require("csv-parser");
 const fs = require("fs");
-const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { tempDir } = require("/opt/nodejs/utility");
 
 const extractDataFromCSV = async (fileName) => {

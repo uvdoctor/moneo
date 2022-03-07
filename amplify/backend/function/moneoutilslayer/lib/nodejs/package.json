@@ -3,8 +3,12 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.53.0",
-    "handlebars": "^4.7.7",
-    "juice": "^8.0.0"
+    "@aws-sdk/client-dynamodb": "latest",
+    "@aws-sdk/client-ses": "latest",
+    "@aws-sdk/client-sqs": "latest",
+    "@aws-sdk/lib-dynamodb": "latest",
+    "extract-zip": "latest",
+    "handlebars": "latest",
+    "juice": "latest"
   }
 }

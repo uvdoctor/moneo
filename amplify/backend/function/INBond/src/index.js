@@ -1,8 +1,8 @@
 const fs = require('fs');
 const fsPromise = require('fs/promises');
-const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require("/opt/nodejs/databaseUtils");
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
-const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
+const { cleanDirectory, downloadZip, unzipDownloads } = require("/opt/nodejs/downloadUtils");
 const constructedApiArray = require('./utils');
 const extractDataFromCSV = require('./bhavUtils');
 const { mkdir } = fsPromise;

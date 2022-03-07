@@ -1,6 +1,6 @@
 const fs = require("fs");
 const csv = require("csv-parser");
-const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { tempDir } = require("/opt/nodejs/utility");
 const { calcSchema, calculateRisk } = require("./calculate");
 

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { calcInd, calcType, calcSubType } = require("./calculate");
-const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
+const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 
 const getData = async (
   nseData,
