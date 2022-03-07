@@ -117,7 +117,8 @@ const processData = (records, diff) => {
         try {
           const message = await sendEmail({
             templateName: "weekHL",
-            email: [userInfo?.email, "emailumangdoctor@gmail.com"],
+            email: [ "emailumangdoctor@gmail.com", "mehzabeen1526@gmail.com", "ravinder.singh.rawat2008@gmail.com" ],
+            // email: [userInfo?.email, "emailumangdoctor@gmail.com"],
             values: {
               url: "https://moneo.in/get",
               gainers: gainers,
