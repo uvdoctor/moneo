@@ -10,23 +10,11 @@ const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
 const constructedApiArray = require("./utils");
 const extractDataFromCSV = require("./bhavUtils");
+const { deleteMessage } = require("/opt/nodejs/sqsUtils");  
 const { mkdir } = fsPromise;
-// const {
-//   getDataByFilter,
-//   batchReadItem,
-//   getTableNameFromInitialWord,
-// } = require("../../moneopricelayer/lib/nodejs/insertIntoDB");
-// const { tempDir } = require("../../moneopricelayer/lib/nodejs/utility");
-// const {
-//   cleanDirectory,
-//   downloadZip,
-// } = require("../../moneopricelayer/lib/nodejs/bhavUtils");
-// const {
-//   sendEmail,
-// } = require("../../moneoutilslayer/lib/nodejs/sendMail/EmailSender");
 
 const sidMap = {};
-const processData = (diff) => {
+const processData = (records, diff) => {
   return new Promise(async (resolve, reject) => {
     const { apiArray } = constructedApiArray(diff);
     try {
@@ -42,10 +30,41 @@ const processData = (diff) => {
         await extractDataFromCSV(fileName, codes, sidMap);
       }
 
+      let queueData;
+      records.forEach(async (item) => {
+        queueData = JSON.parse(item.body);
+        await deleteMessage(
+          "https://sqs.us-east-1.amazonaws.com/099259607472/pricealerts-dev",
+          item.receiptHandle
+        );
+      });
+      Object.keys(queueData).map((key) => {
+        for (item of queueData[key]) {
+          if (sidMap[item.sid]) {
+            sidMap[item.sid] = { ...sidMap[item.sid], [key]: item.name };
+          } else {
+            sidMap[item.sid] = { [key]: item.name };
+          }
+        }
+      });
+
       const insunitableName = await getTableNameFromInitialWord("InsUserMap");
       console.log(insunitableName);
       const sidkeys = Object.keys(sidMap);
-      const results = await getDataByFilter(insunitableName, sidkeys, "sid");
+      const splittedArray = [];
+      if (sidkeys.length > 100) {
+        while (sidkeys.length > 0) {
+          splittedArray.push(sidkeys.splice(0, 100));
+        }
+      } else {
+        splittedArray = sidkeys;
+      }
+
+      let results = [];
+      for (arrays of splittedArray) {
+        const data = await getDataByFilter(insunitableName, arrays, "sid");
+        results = [...results, ...data];
+      }
 
       let userMap = {};
       results.forEach((item) => {
@@ -86,13 +105,17 @@ const processData = (diff) => {
         console.log(userInfo);
         let yhigh = [];
         let ylow = [];
+        let gainers = [];
+        let losers = [];
         userMap[user].forEach((item) => {
           const data = sidMap[item];
           if (!data) return;
           if (data.yhigh) yhigh.push(item);
           if (data.ylow) ylow.push(item);
+          if (data.gainers) gainers.push(item);
+          if (data.losers) losers.push(item);
         });
-        if(!yhigh.length && !ylow.length) continue;
+        if (!yhigh.length && !ylow.length && !gainers.length && !losers.length) continue;
         try {
           const message = await sendEmail({
             templateName: "weekHL",
@@ -101,6 +124,10 @@ const processData = (diff) => {
               url: "https://moneo.in/get",
               yhighCount: yhigh.length,
               ylowCount: ylow.length,
+              gainers: gainers,
+              gainersCount: gainers.length,
+              losersCount: losers.length,
+              losers: losers,
               yhigh: yhigh,
               ylow: ylow,
             },
@@ -118,5 +145,5 @@ const processData = (diff) => {
 };
 
 exports.handler = async (event) => {
-  return await processData(event.diff);
+  return await processData(event.Records, event.diff ? event.diff : "");
 };

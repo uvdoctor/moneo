@@ -14,7 +14,8 @@ const extractDataFromCSV = async (
   nameMap,
   weekHLMap,
   mcaptMap,
-  bondTable
+  bondTable,
+  gainLoss
 ) => {
   const end = new Promise((resolve, reject) => {
     let [exchgBatches, exchgBatchRecords, exchgCount] = [[], [], 0];
@@ -30,7 +31,8 @@ const extractDataFromCSV = async (
           exchg,
           isinMap,
           exchgTable,
-          bondTable
+          bondTable,
+          gainLoss
         );
         if (Object.keys(updateSchema).length === 0) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));

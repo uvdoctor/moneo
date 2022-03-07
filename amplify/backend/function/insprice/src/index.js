@@ -1,7 +1,4 @@
-/* Amplify Params - DO NOT EDIT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */ const fs = require("fs");
+const fs = require("fs");
 const fsPromise = require("fs/promises");
 const {
   cleanDirectory,
@@ -16,6 +13,7 @@ const {
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
+const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
@@ -27,6 +25,7 @@ const exchgTable = "INExchgPrice";
 const bondTable = "INBondPrice";
 const isinMap = {};
 const dataToPushInFeeds = [];
+const gainLoss = { gainers: [], losers: []};
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -77,7 +76,8 @@ const getAndPushData = (diff) => {
           nameMap,
           weekHLMap,
           mcaptMap,
-          bondTable
+          bondTable,
+          gainLoss
         );
         let eodData;
         let splitData;
@@ -121,6 +121,7 @@ const getAndPushData = (diff) => {
           item.exchg
         );
       }
+      await sendMessage(gainLoss, process.env.PRICE_ALERTS_QUEUE);
     } catch (err) {
       reject(err);
     }

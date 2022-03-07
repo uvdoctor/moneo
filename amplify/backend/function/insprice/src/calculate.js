@@ -89,6 +89,8 @@ const calculateIsbond = (exchg, subtType, itype) => {
   return false;
 };
 
+const calculateDiffPercent = (curr, prev) => (100 * (curr - prev)) / prev;
+
 const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
 
 const calcSchema = (
@@ -98,7 +100,8 @@ const calcSchema = (
   exchg,
   isinMap,
   table,
-  bondTable
+  bondTable,
+  gainLoss
 ) => {
   let updateSchema = {};
   const typename = record[codes.type].trim();
@@ -139,6 +142,15 @@ const calcSchema = (
     updateSchema.mcapt = subt === "S" ? "S" : null;
     updateSchema.itype = itype ? itype : null;
     appendGenericFields(updateSchema, table);
+    const diff = calculateDiffPercent(updateSchema.price, updateSchema.prev);
+    if (Math.abs(diff) > 3) {
+      const schema = { sid: updateSchema.sid, name: updateSchema.name };
+      if (Math.sign(diff) > 0) {
+        gainLoss.gainers.push(schema);
+      } else {
+        gainLoss.losers.push(schema);
+      }
+    }
   }
   updateSchema.exchg = exchg;
   isinMap[record[codes.id]] = record[codes.id];
