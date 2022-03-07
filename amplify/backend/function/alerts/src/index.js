@@ -10,7 +10,7 @@ const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
 const constructedApiArray = require("./utils");
 const extractDataFromCSV = require("./bhavUtils");
-const { deleteMessage } = require("/opt/nodejs/sqsUtils");  
+const { deleteMessage } = require("/opt/nodejs/sqsUtils");
 const { mkdir } = fsPromise;
 
 const sidMap = {};
@@ -33,10 +33,7 @@ const processData = (records, diff) => {
       let queueData;
       records.forEach(async (item) => {
         queueData = JSON.parse(item.body);
-        await deleteMessage(
-          "https://sqs.us-east-1.amazonaws.com/099259607472/pricealerts-dev",
-          item.receiptHandle
-        );
+        await deleteMessage(process.env.PRICE_ALERTS_QUEUE, item.receiptHandle);
       });
       Object.keys(queueData).map((key) => {
         for (item of queueData[key]) {
@@ -115,7 +112,8 @@ const processData = (records, diff) => {
           if (data.gainers) gainers.push(item);
           if (data.losers) losers.push(item);
         });
-        if (!yhigh.length && !ylow.length && !gainers.length && !losers.length) continue;
+        if (!yhigh.length && !ylow.length && !gainers.length && !losers.length)
+          continue;
         try {
           const message = await sendEmail({
             templateName: "weekHL",
