@@ -2,7 +2,7 @@ const fs = require("fs");
 const split = require("split");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-const { appendGenericFields } = require('"/opt/nodejs/databaseUtils"');
+const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 const calc = require('./calculate');
 
 const getDataFromTxtFile = async (fileName, table) => {

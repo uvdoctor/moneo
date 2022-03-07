@@ -1,6 +1,7 @@
 img {
   border: none;
   -ms-interpolation-mode: bicubic;
+  padding: 10px;
   max-width: 100%;
 }
 
@@ -101,12 +102,12 @@ table td {
 .main-header {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  text-align: right;
+  text-align: left;
 }
 
 .wrapper {
   box-sizing: border-box;
-  padding: 20px;
+  padding: 10px;
 }
 
 .content-block {
