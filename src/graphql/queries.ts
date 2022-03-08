@@ -877,6 +877,7 @@ export const getInmfPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       mftype
       mcap
       tf
@@ -910,6 +911,7 @@ export const listInmfPrices = /* GraphQL */ `
         type
         subt
         price
+        prev
         mftype
         mcap
         tf
@@ -931,6 +933,7 @@ export const getNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       risk
       createdAt
       updatedAt
@@ -960,6 +963,7 @@ export const listNpsPrices = /* GraphQL */ `
         type
         subt
         price
+        prev
         risk
         createdAt
         updatedAt

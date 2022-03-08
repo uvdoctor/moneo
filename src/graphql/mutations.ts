@@ -1960,6 +1960,7 @@ export const createInmfPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       mftype
       mcap
       tf
@@ -1983,6 +1984,7 @@ export const updateInmfPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       mftype
       mcap
       tf
@@ -2006,6 +2008,7 @@ export const deleteInmfPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       mftype
       mcap
       tf
@@ -2028,6 +2031,7 @@ export const createNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       risk
       createdAt
       updatedAt
@@ -2047,6 +2051,7 @@ export const updateNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       risk
       createdAt
       updatedAt
@@ -2066,6 +2071,7 @@ export const deleteNpsPrice = /* GraphQL */ `
       type
       subt
       price
+      prev
       risk
       createdAt
       updatedAt

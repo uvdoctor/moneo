@@ -518,6 +518,7 @@ type INMFPrice
   type: AssetType!
   subt: AssetSubType!
   price: Float!
+  prev: Float
   mftype: MFSchemeType!
   mcap: MCap
   tf: Boolean
@@ -565,6 +566,7 @@ type NPSPrice
   type: AssetType!
   subt: AssetSubType!
   price: Float!
+  prev: Float
   risk: RiskProfile
 }
 
