@@ -5,7 +5,7 @@ const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 const calc = require('./calculate');
 
-const getDataFromTxtFile = async (fileName, table) => {
+const getDataFromTxtFile = async (fileName, table, prevMap, isPrevFile) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
@@ -18,6 +18,10 @@ const getDataFromTxtFile = async (fileName, table) => {
         const name = data[4];
         const nav = data[5];
         if (!id) return;
+        if(isPrevFile) {
+          prevMap[id] = nav
+          return;
+        }
         let schema = {
           id: id,
           pfm: calc.calcPFM(name),
@@ -26,6 +30,7 @@ const getDataFromTxtFile = async (fileName, table) => {
           type: calc.calcType(name),
           subt: calc.calcSubType(name),
           price: nav,
+          prev: prevMap[id]
         };
         schema.risk = calc.calcRisk(schema.subt);
         schema = appendGenericFields(schema, table)
