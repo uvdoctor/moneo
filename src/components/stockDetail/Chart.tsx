@@ -1,66 +1,61 @@
 import { useState, useEffect } from "react";
-import { Column } from "@ant-design/plots";
-import { Row, Col, Button } from "antd";
+import { DualAxes } from "@ant-design/plots";
 
-export default function Chart({ options = [], data, particulars }: any) {
-  const [selectedOption, setOption] = useState(options[0]);
-  const [chartData, setChartData] = useState([]);
-  const paletteSemanticRed = "#F4664A";
-  const brandColor = "#5B8FF9";
-  const config = {
-    /* @ts-ignore */
+export default function Chart({ options = {}, data, particulars }: any) {
+  const [chartData, setChartData] = useState<any>([]);
+  const generateChartData = () => {
+    const linesData: any = [];
+    const barsData: any = [];
+
+    options.bars.map((key: string) => {
+      for (const dataKey in data[key]) {
+        if (dataKey !== "particulars")
+          barsData.push({
+            date: dataKey,
+            value: data[key][dataKey],
+            type: key,
+          });
+      }
+    });
+
+    options.lines.map((key: string) => {
+      for (const dataKey in data[key]) {
+        if (dataKey !== "particulars")
+          linesData.push({
+            date: dataKey,
+            count: data[key][dataKey],
+            name: key,
+          });
+      }
+    });
+
+    setChartData([barsData, linesData]);
+  };
+
+  useEffect(generateChartData, [data]);
+
+  const dualConfig = {
     data: chartData,
     xField: "date",
-    yField: "value",
-    seriesField: "",
-    color: ({ date }: any) => {
-      if (date == "Sept 2021" || date == "Sept 2020") {
-        return paletteSemanticRed;
-      }
-
-      return brandColor;
-    },
-    legend: false,
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
+    yField: ["value", "count"],
+    legend: {
+      itemName: {
+        formatter: (text: string) => particulars[text].particulars.label,
       },
     },
-  };
-  const generateChartData = () => {
-    let tempData = {
-      ...data[selectedOption],
-    };
-
-    delete tempData.particulars;
-
-    tempData = Object.keys(tempData).map((key) => ({
-      date: key,
-      value: tempData[key],
-    }));
-
-    setChartData(tempData);
+    geometryOptions: [
+      {
+        geometry: "column",
+        isGroup: true,
+        seriesField: "type",
+        columnWidthRatio: 0.4,
+      },
+      {
+        geometry: "line",
+        seriesField: "name",
+      },
+    ],
   };
 
-  useEffect(generateChartData, [selectedOption, data]);
-
-  return chartData.length ? (
-    <>
-      <Row gutter={[10, 0]}>
-        {options.map((option: string) => (
-          <Col key={option}>
-            <Button
-              type={option === selectedOption ? "primary" : "default"}
-              shape="round"
-              onClick={() => setOption(option)}
-            >
-              {particulars[option].particulars}
-            </Button>
-          </Col>
-        ))}
-      </Row>
-      <Column {...config} />
-    </>
-  ) : null;
+  return chartData.length ? <DualAxes {...dualConfig} /> : null;
 }

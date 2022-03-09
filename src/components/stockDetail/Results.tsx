@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { Typography, Row, Col } from "antd";
+import { Typography, Row, Col, Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import DataSwitcher from "../DataSwitcher";
 import ResultsList from "./ResultsList";
 import { default as TransactionsChart } from "./Chart";
+
+require("./Results.less");
 
 interface ResultsProps {
 	title: string;
@@ -10,6 +13,17 @@ interface ResultsProps {
 	particulars: any;
 	chartOptions?: any;
 }
+
+const labelWithTooltip = (label: string, tooltipText: string) => (
+	<Row gutter={[10, 0]}>
+		<Col>{label}</Col>
+		<Col>
+			<Tooltip title={tooltipText}>
+				<InfoCircleOutlined />
+			</Tooltip>
+		</Col>
+	</Row>
+);
 
 export default function Results({
 	title,
@@ -20,11 +34,13 @@ export default function Results({
 	const { Chart, List } = DataSwitcher;
 	const { Text } = Typography;
 	const [data, setData] = useState([]);
-	const [columns, setColumns] = useState([
+	const [columns, setColumns] = useState<any>([
 		{
 			title: "Particulars",
 			dataIndex: "particulars",
 			key: "particulars",
+			render: ({ label, tooltip }: any) =>
+				tooltip ? labelWithTooltip(label, tooltip) : label,
 		},
 	]);
 	const getDateToStr = (date: any) => {
@@ -56,7 +72,7 @@ export default function Results({
 
 	useEffect(() => {
 		const newColumns = [];
-		const newData = { ...particulars };
+		const newData = JSON.parse(JSON.stringify(particulars));
 		const particularsKeys = Object.keys(newData);
 		let count = 0;
 
@@ -84,11 +100,10 @@ export default function Results({
 
 		setColumns([...columns, ...newColumns]);
 		setData(newData);
-		console.log("data => ", newData, Object.values(newData));
 	}, []);
 
 	return (
-		<div style={{ paddingBottom: "30px" }}>
+		<div className="results-container">
 			<DataSwitcher
 				title={
 					<Row gutter={[10, 0]}>
@@ -102,11 +117,13 @@ export default function Results({
 				}
 			>
 				<Chart>
-					<TransactionsChart
-						options={chartOptions}
-						data={data}
-						particulars={particulars}
-					/>
+					<div className="transactions-chart">
+						<TransactionsChart
+							options={chartOptions}
+							data={data}
+							particulars={particulars}
+						/>
+					</div>
 				</Chart>
 				<List>
 					<ResultsList data={Object.values(data)} columns={columns} />
