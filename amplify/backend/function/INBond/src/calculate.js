@@ -129,16 +129,14 @@ const calculateRisk = (creditRating, subt) => {
   return "C";
 };
 
-const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
-  if (!record[codes.id] || ["MC", "MF", "US"].includes(record[codes.subt]))
-    return;
+const calcSchema = (record, codes, schema, typeExchg, isinMap, table, prevMap) => {
   schema.id = record[codes.id];
-  if (!schema.id.startsWith("IN")) return;
+  if (!schema.id || ["MC", "MF", "US"].includes(record[codes.subt]) || !schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
   schema.price = calc.calcPrice(record[codes.price]);
+  schema.prev = prevMap[schema.id] ? prevMap[schema.id] : 0;
   schema.type = "F";
-  schema.subt =
-  typeExchg === "BSE"
+  schema.subt = typeExchg === "BSE"
       ? record[codes.name].includes("BANK")
         ? "GBO"
         : "CB"

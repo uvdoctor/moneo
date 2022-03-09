@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-const { calcSchema } = require("./calculate");
+const { calcSchema, calc } = require("./calculate");
 
 const extractDataFromCSV = async (
   fileName,
@@ -10,7 +10,9 @@ const extractDataFromCSV = async (
   codes,
   schema,
   isinMap,
-  table
+  table,
+  prevMap,
+  isPrevFile
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -19,6 +21,10 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
+        if(isPrevFile) {
+          prevMap[record[codes.id]] = calc.calcPrice(record[codes.price]);
+          return
+        }
         if (isinMap[record[codes.id]]) return;
         const updateSchema = calcSchema(
           record,
@@ -26,7 +32,8 @@ const extractDataFromCSV = async (
           schema,
           typeExchg,
           isinMap,
-          table
+          table,
+          prevMap
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
@@ -47,7 +54,6 @@ const extractDataFromCSV = async (
           tempDir,
           `${fileName} of ${typeExchg} results extracted successfully and directory is cleaned`
         );
-        console.log(batchRecords.length);
         resolve(batchRecords);
       })
       .on("error", (err) => {
