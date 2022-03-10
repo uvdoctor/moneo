@@ -890,40 +890,6 @@ export type DeleteUserInsInput = {
   uname: string,
 };
 
-export type CreateAAInput = {
-  uname: string,
-  curr?: string | null,
-  tgt: string,
-};
-
-export type ModelAAConditionInput = {
-  curr?: ModelStringInput | null,
-  tgt?: ModelStringInput | null,
-  and?: Array< ModelAAConditionInput | null > | null,
-  or?: Array< ModelAAConditionInput | null > | null,
-  not?: ModelAAConditionInput | null,
-};
-
-export type AA = {
-  __typename: "AA",
-  uname?: string,
-  curr?: string | null,
-  tgt?: string,
-  createdAt?: string,
-  updatedAt?: string,
-  owner?: string | null,
-};
-
-export type UpdateAAInput = {
-  uname: string,
-  curr?: string | null,
-  tgt?: string | null,
-};
-
-export type DeleteAAInput = {
-  uname: string,
-};
-
 export type CreateFeedbackInput = {
   id?: string | null,
   type: FeedbackType,
@@ -2053,21 +2019,6 @@ export type ModelUserInsFilterInput = {
 export type ModelUserInsConnection = {
   __typename: "ModelUserInsConnection",
   items?:  Array<UserIns | null >,
-  nextToken?: string | null,
-};
-
-export type ModelAAFilterInput = {
-  uname?: ModelStringInput | null,
-  curr?: ModelStringInput | null,
-  tgt?: ModelStringInput | null,
-  and?: Array< ModelAAFilterInput | null > | null,
-  or?: Array< ModelAAFilterInput | null > | null,
-  not?: ModelAAFilterInput | null,
-};
-
-export type ModelAAConnection = {
-  __typename: "ModelAAConnection",
-  items?:  Array<AA | null >,
   nextToken?: string | null,
 };
 
@@ -3594,57 +3545,6 @@ export type DeleteUserInsMutation = {
       type?: AssetType | null,
       subt?: AssetSubType | null,
     } >,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type CreateAaMutationVariables = {
-  input?: CreateAAInput,
-  condition?: ModelAAConditionInput | null,
-};
-
-export type CreateAaMutation = {
-  createAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdateAaMutationVariables = {
-  input?: UpdateAAInput,
-  condition?: ModelAAConditionInput | null,
-};
-
-export type UpdateAaMutation = {
-  updateAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeleteAaMutationVariables = {
-  input?: DeleteAAInput,
-  condition?: ModelAAConditionInput | null,
-};
-
-export type DeleteAaMutation = {
-  deleteAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6000,46 +5900,6 @@ export type ListUserInssQuery = {
   } | null,
 };
 
-export type GetAaQueryVariables = {
-  uname?: string,
-};
-
-export type GetAaQuery = {
-  getAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type ListAAsQueryVariables = {
-  uname?: string | null,
-  filter?: ModelAAFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListAAsQuery = {
-  listAAs?:  {
-    __typename: "ModelAAConnection",
-    items:  Array< {
-      __typename: "AA",
-      uname: string,
-      curr?: string | null,
-      tgt: string,
-      createdAt: string,
-      updatedAt: string,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type OnCreateFeedbackSubscription = {
   onCreateFeedback?:  {
     __typename: "Feedback",
@@ -8059,54 +7919,6 @@ export type OnDeleteUserInsSubscription = {
       type?: AssetType | null,
       subt?: AssetSubType | null,
     } >,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnCreateAaSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnCreateAaSubscription = {
-  onCreateAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdateAaSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnUpdateAaSubscription = {
-  onUpdateAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeleteAaSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnDeleteAaSubscription = {
-  onDeleteAA?:  {
-    __typename: "AA",
-    uname: string,
-    curr?: string | null,
-    tgt: string,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

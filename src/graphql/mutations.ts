@@ -1413,42 +1413,6 @@ export const deleteUserIns = /* GraphQL */ `
     }
   }
 `;
-export const createAa = /* GraphQL */ `
-  mutation CreateAa($input: CreateAAInput!, $condition: ModelAAConditionInput) {
-    createAA(input: $input, condition: $condition) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateAa = /* GraphQL */ `
-  mutation UpdateAa($input: UpdateAAInput!, $condition: ModelAAConditionInput) {
-    updateAA(input: $input, condition: $condition) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteAa = /* GraphQL */ `
-  mutation DeleteAa($input: DeleteAAInput!, $condition: ModelAAConditionInput) {
-    deleteAA(input: $input, condition: $condition) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback(
     $input: CreateFeedbackInput!

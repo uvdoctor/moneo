@@ -266,6 +266,11 @@
           ]
         }
       ]
+    },
+    "moneovaluationlayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {

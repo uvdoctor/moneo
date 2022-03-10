@@ -1898,39 +1898,3 @@ export const onDeleteUserIns = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAa = /* GraphQL */ `
-  subscription OnCreateAa($owner: String) {
-    onCreateAA(owner: $owner) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateAa = /* GraphQL */ `
-  subscription OnUpdateAa($owner: String) {
-    onUpdateAA(owner: $owner) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteAa = /* GraphQL */ `
-  subscription OnDeleteAa($owner: String) {
-    onDeleteAA(owner: $owner) {
-      uname
-      curr
-      tgt
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;

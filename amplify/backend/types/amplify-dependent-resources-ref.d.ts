@@ -84,6 +84,9 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string",
             "CloudWatchEventRule": "string"
+        },
+        "moneovaluationlayer": {
+            "Arn": "string"
         }
     },
     "storage": {
