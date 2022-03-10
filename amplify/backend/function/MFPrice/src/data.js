@@ -4,8 +4,8 @@ const directISIN = (mfInfoArray) => {
   mfInfoArray.map((item) => {
     let name = item["Scheme Name"].toLowerCase().replace(/\s/g, "");
     const ISIN =
-      item["ISIN Div Payout/ ISIN Growth"] != "-"
-        ? item["ISIN Div Payout/ ISIN Growth"]
+      item["ISIN Div Payout/ISIN Growth"] != "-"
+        ? item["ISIN Div Payout/ISIN Growth"]
         : item["ISIN Div Reinvestment"];
     if (name.includes("regular")) {
       regularData.push(name);
