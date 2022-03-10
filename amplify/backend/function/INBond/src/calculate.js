@@ -133,11 +133,6 @@ const calcSchema = (
   prevMap,
   prevBatch
 ) => {
-  if (
-    !record[codes.id] ||
-    ["MC", "MF", "US"].includes(record[codes.subt]) ||
-    !record[codes.price]
-  ) return;
   schema.id = record[codes.id];
   if(!schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
