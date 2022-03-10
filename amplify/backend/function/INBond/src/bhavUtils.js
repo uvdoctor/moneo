@@ -13,7 +13,7 @@ const extractDataFromCSV = async (
   table,
   prevMap,
   isPrevFile,
-  prevBatch    
+  prevBatch
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -22,11 +22,14 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if(isPrevFile) {
-          prevMap[record[codes.id]] = record[codes.price];
-          return
+        const price = parseFloat(record[codes.price]);
+        const id = record[codes.id];
+        if (!id || ["MC", "MF", "US"].includes(record[codes.subt]) || !price) return;
+        if (isPrevFile) {
+          prevMap[record[codes.id]] = price;
+          return;
         }
-        if (isinMap[record[codes.id]]) return;
+        if (isinMap[id]) return;
         const updateSchema = calcSchema(
           record,
           codes,
