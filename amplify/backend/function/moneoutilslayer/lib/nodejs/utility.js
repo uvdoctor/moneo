@@ -29,4 +29,17 @@ const utility = (num) => {
     return { date, month, monthChar, year, yearFull };
   };
 
-  module.exports = { utility, tempDir, zipFile };
+  const divideArrayBySize = (array, size) => {
+    let splittedArray = [];
+    const mainArray = array;
+    if (mainArray.length > size) {
+      while (mainArray.length > 0) {
+        splittedArray.push(mainArray.splice(0, size));
+      }
+    } else {
+      splittedArray = mainArray;
+    }
+    return splittedArray;
+  }
+
+  module.exports = { utility, tempDir, zipFile, divideArrayBySize };

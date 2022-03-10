@@ -66,12 +66,6 @@ const calc = {
     if (crstr.includes("BB") && !crstr.includes("+")) return "L";
     return "J";
   },
-
-  calcPrice: (price) => {
-    const value = Number(price);
-    if (!value) return 100;
-    return Number(value);
-  },
 };
 
 const getMonthYearByDate = (date) => {
@@ -129,19 +123,34 @@ const calculateRisk = (creditRating, subt) => {
   return "C";
 };
 
-const calcSchema = (record, codes, schema, typeExchg, isinMap, table, prevMap) => {
+const calcSchema = (
+  record,
+  codes,
+  schema,
+  typeExchg,
+  isinMap,
+  table,
+  prevMap,
+  prevBatch
+) => {
+  if (
+    !record[codes.id] ||
+    ["MC", "MF", "US"].includes(record[codes.subt]) ||
+    !record[codes.price]
+  ) return;
   schema.id = record[codes.id];
-  if (!schema.id || ["MC", "MF", "US"].includes(record[codes.subt]) || !schema.id.startsWith("IN")) return;
+  if(!schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
-  schema.price = calc.calcPrice(record[codes.price]);
-  schema.prev = prevMap[schema.id] ? prevMap[schema.id] : 0;
+  schema.price = parseFloat(record[codes.price]);
+  schema.prev = prevMap[schema.id];
+  schema.exchg = typeExchg;
   schema.type = "F";
-  schema.subt = typeExchg === "BSE"
+  schema.subt =
+    typeExchg === "BSE"
       ? record[codes.name].includes("BANK")
         ? "GBO"
         : "CB"
       : calc.calcSubType(record[codes.subt]);
-  schema.exchg = typeExchg;
   const startDate = getMonthYearByDate(
     codes.sDate ? record[codes.sDate].trim() : ""
   );
@@ -171,6 +180,10 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table, prevMap) =
   schema.risk = calculateRisk(schema.cr, schema.subt);
   appendGenericFields(schema, table);
   isinMap[record[codes.id]] = record[codes.id];
+  if (!schema.prev) {
+    prevBatch[schema.id] = JSON.parse(JSON.stringify(schema));
+    return;
+  }
   return schema;
 };
 module.exports = {

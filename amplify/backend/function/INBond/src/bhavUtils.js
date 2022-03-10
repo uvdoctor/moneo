@@ -12,7 +12,8 @@ const extractDataFromCSV = async (
   isinMap,
   table,
   prevMap,
-  isPrevFile
+  isPrevFile,
+  prevBatch    
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -22,7 +23,7 @@ const extractDataFromCSV = async (
       .pipe(csv())
       .on("data", (record) => {
         if(isPrevFile) {
-          prevMap[record[codes.id]] = calc.calcPrice(record[codes.price]);
+          prevMap[record[codes.id]] = record[codes.price];
           return
         }
         if (isinMap[record[codes.id]]) return;
@@ -33,7 +34,8 @@ const extractDataFromCSV = async (
           typeExchg,
           isinMap,
           table,
-          prevMap
+          prevMap,
+          prevBatch
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
