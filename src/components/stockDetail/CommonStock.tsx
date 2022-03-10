@@ -23,26 +23,37 @@ export default function CommonStock() {
 				title="Quarterly Result"
 				resultsData={state.data.Financials.Income_Statement.quarterly}
 				particulars={incomeStatementParticulars}
-				chartOptions={["totalRevenue", "netIncome"]}
+				chartOptions={{
+					bars: ["totalRevenue", "netIncome"],
+					lines: ["incomeBeforeTax"],
+				}}
 			/>
-
 			<Results
 				title="Profit & Loss"
 				resultsData={state.data.Financials.Income_Statement.yearly}
 				particulars={incomeStatementParticulars}
-				chartOptions={["totalRevenue", "netIncome"]}
+				chartOptions={{
+					bars: ["totalRevenue"],
+					lines: ["netIncome"],
+				}}
 			/>
 			<Results
 				title="Balance Sheet"
 				resultsData={state.data.Financials.Balance_Sheet.yearly}
 				particulars={balanceSheetParticulars}
-				chartOptions={["cash", "inventory"]}
+				chartOptions={{
+					bars: ["cash"],
+					lines: ["inventory"],
+				}}
 			/>
 			<Results
 				title="Cash Flow"
 				resultsData={state.data.Financials.Cash_Flow.yearly}
 				particulars={cashFlowParticulars}
-				chartOptions={["changeInCash", "depreciation"]}
+				chartOptions={{
+					bars: ["changeInCash"],
+					lines: ["depreciation"],
+				}}
 			/>
 			{state.data.General?.Description}
 		</PageHeader>

@@ -30,6 +30,6 @@ export default function ResultsList({ data, columns }: any) {
 			))}
 		</Card>
 	) : (
-		<Table dataSource={data} columns={columns} pagination={false} />
+		<Table columns={columns} dataSource={data} pagination={false} />
 	);
 }
