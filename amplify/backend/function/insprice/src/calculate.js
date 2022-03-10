@@ -104,7 +104,9 @@ const calcSchema = (
   gainLoss
 ) => {
   let updateSchema = {};
-  const typename = record[codes.type].trim();
+  let isBond = false;
+  if(!Object.keys(record).length) return { updateSchema, isBond }; 
+  const typename = record[codes.type] ? record[codes.type].trim() : "";
   const subtname = record[codes.subt] ? record[codes.subt].trim() : "";
   const name = record[codes.name].trim();
   const id = record[codes.id];
@@ -114,7 +116,7 @@ const calcSchema = (
     id,
     subtname
   );
-  const isBond = calculateIsbond(exchg, subt, itype);
+  isBond = calculateIsbond(exchg, subt, itype);
   if ((exchg === "BSE" && subt === "CB") || (exchg === "NSE" && subt === "MF"))
     return { updateSchema, isBond };
   updateSchema = JSON.parse(JSON.stringify(schema));
