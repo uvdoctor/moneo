@@ -64,6 +64,10 @@
         "moneovaluationlayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/moneovaluationlayer-LambdaLayerVersionb9adde24-build.zip"
+        },
+        "sendalert": {
+          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
+          "s3Key": "amplify-builds/sendalert-42796e304c546e504831-build.zip"
         }
       },
       "auth": {

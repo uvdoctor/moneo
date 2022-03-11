@@ -87,6 +87,12 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "moneovaluationlayer": {
             "Arn": "string"
+        },
+        "sendalert": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "storage": {
