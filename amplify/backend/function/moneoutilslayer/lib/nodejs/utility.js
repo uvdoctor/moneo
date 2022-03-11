@@ -31,15 +31,24 @@ const utility = (num) => {
 
   const divideArrayBySize = (array, size) => {
     let splittedArray = [];
-    const mainArray = array;
+    const mainArray = JSON.parse(JSON.stringify(array));
     if (mainArray.length > size) {
       while (mainArray.length > 0) {
         splittedArray.push(mainArray.splice(0, size));
       }
     } else {
-      splittedArray = mainArray;
+      splittedArray = [ mainArray ];
     }
     return splittedArray;
   }
 
-  module.exports = { utility, tempDir, zipFile, divideArrayBySize };
+  const awsdate = (dateStr) => {
+    if(!dateStr) return;
+    const today = new Date(dateStr);
+    const date = today.getDate();
+    const month = today.getMonth()+1;
+    const year = today.getFullYear();
+    return (`${year}-${getStr(month)}-${getStr(date)}`);
+  }
+
+  module.exports = { utility, tempDir, zipFile, divideArrayBySize, awsdate };

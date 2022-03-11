@@ -22,9 +22,10 @@ const getTableNameFromInitialWord = (tableInitial) => {
   });
 };
 
-const batchReadItem = async (tableName, keys) => {
+const batchReadItem = async (tableName, keys, projectExp) => {
   try {
-    const params = { RequestItems: { [tableName]: { Keys: keys } } };
+    let params = { RequestItems: { [tableName]: { Keys: keys } } };
+    if(projectExp) params = { ...params, ProjectionExpression: projectExp };
     const results = await docClient.send(new BatchGetCommand(params));
     return results.Responses[tableName];
   } catch (err) {
@@ -73,11 +74,12 @@ const updateItem = async (table, id, fields) => {
   }
 };
 
-const getDataFromTable = async (table) => {
-  const params = { TableName: table };
+const getDataFromTable = async (table, projectExp) => {
+  let params = { TableName: table };
+  if(projectExp) params = { ...params, ProjectionExpression: projectExp };
   try {
     const data = await docClient.send(new ScanCommand(params));
-    return data;
+    return data.Items;
   } catch (err) {
     console.log("Error in dynamoDB:", err);
   }

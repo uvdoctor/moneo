@@ -1,7 +1,7 @@
 const fs = require("fs");
 const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-const { tempDir } = require("/opt/nodejs/utility");
+const { tempDir, awsdate } = require("/opt/nodejs/utility");
 const { calcSchema, calculateRisk } = require("./calculate");
 
 const extractDataFromCSV = async (
@@ -58,8 +58,8 @@ const extractDataFromCSV = async (
           if (weekHLMap[sid]) {
             dataToPush.yhigh = weekHLMap[sid].yhigh;
             dataToPush.ylow = weekHLMap[sid].ylow;
-            dataToPush.yhighd = weekHLMap[sid].yhighd;
-            dataToPush.ylowd = weekHLMap[sid].ylowd;
+            dataToPush.yhighd = awsdate(weekHLMap[sid].yhighd);
+            dataToPush.ylowd = awsdate(weekHLMap[sid].ylowd);
           }
           exchgBatches.push({ PutRequest: { Item: dataToPush } });
           exchgCount++;
@@ -113,6 +113,7 @@ const extractPartOfData = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csvFormat)
       .on("data", (record) => {
+        if(!Object.keys(record).length) return;
         const parse = (data) => (parseFloat(data) ? parseFloat(data) : null);
         if (
           fileName === "ind_nifty100list.csv" ||
@@ -123,11 +124,12 @@ const extractPartOfData = async (
           };
         }
         if (fileName.includes("CM_52_wk_High_low")) {
+          if(record[codes.sid].length > 20) return;
           weekHLMap[record[codes.sid]] = {
             yhigh: parse(record[codes.yhigh]),
             ylow: parse(record[codes.ylow]),
-            yhighd: record[codes.yhighd],
-            ylowd: record[codes.ylowd]
+            yhighd: record[codes.yhighd] ? record[codes.yhighd] : '',
+            ylowd: record[codes.ylowd] ? record[codes.yhighd] : ''
           };
         } else {
           nameMap[record[codes.id]] = {
