@@ -84,24 +84,14 @@ const constructedApiArray = (diff) => {
     {
       exchg: "NSE",
       id: "NSE_PARTOF",
-      fileName: "eq_etfseclist.csv",
-      url: "https://www1.nseindia.com/content/equities/eq_etfseclist.csv",
-      codes: {
-        id: "ISIN Number",
-        name: "Security Name",
-        fv: " Face Value",
-        under: "Underlying",
-      },
-    },
-    {
-      exchg: "NSE",
-      id: "NSE_PARTOF",
       fileName: weekHLFileName,
       url: `https://archives.nseindia.com/content/${weekHLFileName}`,
       codes: {
         sid: "_0",
         yhigh: "_2",
+        yhighd: "_3",
         ylow: "_4",
+        ylowd: "_5",
       },
     },
     {

@@ -15,7 +15,6 @@ const extractDataFromCSV = async (
   weekHLMap,
   mcaptMap,
   bondTable,
-  gainLoss
 ) => {
   const end = new Promise((resolve, reject) => {
     let [exchgBatches, exchgBatchRecords, exchgCount] = [[], [], 0];
@@ -32,7 +31,6 @@ const extractDataFromCSV = async (
           isinMap,
           exchgTable,
           bondTable,
-          gainLoss
         );
         if (Object.keys(updateSchema).length === 0) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
@@ -60,6 +58,8 @@ const extractDataFromCSV = async (
           if (weekHLMap[sid]) {
             dataToPush.yhigh = weekHLMap[sid].yhigh;
             dataToPush.ylow = weekHLMap[sid].ylow;
+            dataToPush.yhighd = weekHLMap[sid].yhighd;
+            dataToPush.ylowd = weekHLMap[sid].ylowd;
           }
           exchgBatches.push({ PutRequest: { Item: dataToPush } });
           exchgCount++;
@@ -90,7 +90,7 @@ const extractDataFromCSV = async (
       .on("error", (err) => {
         cleanDirectory(
           tempDir,
-          `Unable to read ${type} csv file, ${err.message}`
+          `Unable to read ${fileName} csv file, ${err.message}`
         );
         throw new Error(err.message);
       });
@@ -126,12 +126,8 @@ const extractPartOfData = async (
           weekHLMap[record[codes.sid]] = {
             yhigh: parse(record[codes.yhigh]),
             ylow: parse(record[codes.ylow]),
-          };
-        } else if (fileName === "eq_etfseclist.csv") {
-          nameMap[record[codes.id]] = {
-            fv: parse(record[codes.fv]),
-            name: record[codes.name],
-            under: record[codes.under],
+            yhighd: record[codes.yhighd],
+            ylowd: record[codes.ylowd]
           };
         } else {
           nameMap[record[codes.id]] = {
