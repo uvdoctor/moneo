@@ -213,11 +213,8 @@ export default function InstrumentValuation() {
           return (
             selectedTags.includes(type) ||
             (type === AssetType.E &&
-              ((selectedTags.includes(MCap.L) && mcap === MCap.L) ||
-                (selectedTags.includes(MCap.M) && mcap === MCap.M) ||
-                (selectedTags.includes("HC") && mcap === MCap.H) ||
-                (selectedTags.includes(MCap.S) &&
-                  (mcap === MCap.S || !mcap)))) ||
+              (selectedTags.includes(mcap) ||
+                (selectedTags.includes(MCap.S) && !mcap))) ||
             (type === AssetType.F &&
               filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp)
@@ -230,13 +227,11 @@ export default function InstrumentValuation() {
             selectedTags.includes(mcapt) ||
             filterRisk(selectedTags, risk, userInfo?.rp) ||
             (funData &&
-              selectedTags.includes(
-                funData[sid as string] && funData[sid as string].ind
-              )) ||
+              funData[sid as string] &&
+              selectedTags.includes(funData[sid as string].ind)) ||
             (funData &&
-              selectedTags.includes(
-                funData[sid as string] && funData[sid as string].sector
-              ))
+              funData[sid as string] &&
+              selectedTags.includes(funData[sid as string].sector))
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;

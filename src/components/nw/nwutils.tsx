@@ -347,20 +347,16 @@ export const getAssetTypes = () => {
 
 export const getStockMarketCap = () => {
   return {
-    [APIt.MCap.L]: "Large Cap",
-    [APIt.MCap.M]: "Mid Cap",
-    [APIt.MCap.S]: "Small Cap",
+    [APIt.MCap.L]: "Large-cap",
+    [APIt.MCap.M]: "Mid-cap",
+    [APIt.MCap.S]: "Small-cap",
   };
 };
 
 export const getMutualFundMarketCap = () => {
-  return {
-    [APIt.MCap.L]: "Large Cap",
-    [APIt.MCap.M]: "Mid Cap",
-    [APIt.MCap.S]: "Small Cap",
-    HC: "Hybrid Cap",
-    // [APIt.MCap.H]: "Hybrid Cap",
-  };
+  let mCap: any = getStockMarketCap();
+  mCap[APIt.MCap.H] = "Multi-cap";
+  return mCap;
 };
 
 export const getFixedCategories = () => {
@@ -387,12 +383,12 @@ export const getInsuranceType = () => {
 
 export const getRiskProfileType = () => {
   return {
-    VLow: "No loss",
-    Low: "Up to 10% loss",
-    Medium: "Up to 20% loss",
-    High: "Up to 30% loss",
-    VHigh: "Up to 50% loss",
-    Exceeds: "Exceeds Risk Profile",
+    [APIt.RiskProfile.VC]: "No loss",
+    [APIt.RiskProfile.C]: "Up to 10% loss",
+    [APIt.RiskProfile.M]: "Up to 20% loss",
+    [APIt.RiskProfile.A]: "Up to 30% loss",
+    [APIt.RiskProfile.VA]: "Up to 50% loss",
+    Exceeds: "Exceeds risk profile",
   };
 };
 
@@ -410,12 +406,8 @@ export const getRiskAttributesByProfile = (risk: APIt.RiskProfile) =>
   getRiskAttributes()[risk];
 
 export const getMarketCapLabel = (mCap: APIt.MCap) => {
-  const mCapLabels: any = {
-    [APIt.MCap.S]: "Small-cap",
-    [APIt.MCap.M]: "Medium-cap",
-    [APIt.MCap.L]: "Large-cap",
-  };
-  return mCapLabels[mCap];
+  let marketCapMap: any = getStockMarketCap();
+  return marketCapMap[mCap];
 };
 
 export const getAssetSubTypes = () => {
@@ -504,38 +496,6 @@ export const getCryptoRate = (id: string, currency: string) => {
     .catch(() => 0);
 };
 
-export const getIndustry = (at: APIt.Industry) => {
-  const indData: any = {
-    A: "AUTOMOBILE",
-    IM: "INDUSTRIAL MANUFACTURING",
-    F: "FINANCIAL SERVICES",
-    CG: "CONSUMER GOODS",
-    CC: "CEMENT & CEMENT PRODUCTS",
-    CH: "CHEMICALS",
-    CS: "CONSUMER SERVICES",
-    FP: "FERTILISERS & PESTICIDES",
-    C: "CONSTRUCTION",
-    H: "HEALTHCARE SERVICES",
-    PH: "PHARMA",
-    IT: "IT",
-    MED: "MEDIA ENTERTAINMENT & PUBLICATION",
-    MET: "METALS",
-    OG: "OIL & GAS",
-    POW: "POWER",
-    S: "SERVICES",
-    TC: "TELECOM",
-    TEX: "TEXTILES",
-    CAPG: "CAPITAL GOODS",
-    TECH: "TECHNOLOGY",
-    CD: "CONSUMER DURABLES",
-    E: "ENERGY",
-    CDGS: "CONSUMER DISCRETIONARY GOODS AND SERVICES",
-    BASM: "BASIC MATERIALS",
-    U: "UTILITIES",
-  };
-  return indData[at];
-};
-
 export const getNPSFundManagers = () => {
   return {
     L: "LIC",
@@ -574,14 +534,6 @@ export const getCascaderOptions = (
   });
   return options;
 };
-
-export const financialAssetTypes = [
-  "Stock",
-  "Gold Bond",
-  "ETF",
-  "Bond",
-  "Mutual Fund",
-];
 
 export const getNPSData = async () => {
   const {
@@ -1148,11 +1100,7 @@ export const filterRisk = (
   riskProfile: APIt.RiskProfile
 ) => {
   return (
-    (selectedTags.includes("Vlow") && risk === APIt.RiskProfile.VC) ||
-    (selectedTags.includes("Low") && risk === APIt.RiskProfile.C) ||
-    (selectedTags.includes("Medium") && risk === APIt.RiskProfile.M) ||
-    (selectedTags.includes("High") && risk === APIt.RiskProfile.A) ||
-    (selectedTags.includes("VHigh") && risk === APIt.RiskProfile.VA) ||
+    selectedTags.includes(risk) ||
     (selectedTags.includes("Exceeds") && doesExceedRisk(risk, riskProfile))
   );
 };
@@ -1244,7 +1192,13 @@ export const initializeFundata = async (
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
     const item = insData[ins.id];
-    if (!item || !isStock(item?.subt, ins.id) || !item.sid || !item.hasOwnProperty('beta') || !item?.yhigh) {
+    if (
+      !item ||
+      !isStock(item?.subt, ins.id) ||
+      !item.sid ||
+      !item.hasOwnProperty("beta") ||
+      !item?.yhigh
+    ) {
       return;
     }
     sids.add(item.sid as string);

@@ -1027,8 +1027,7 @@ function NWContextProvider({ fxRates }: any) {
         riskTotals,
         industryAndSector,
         setIndustryAndSector,
-      }}
-    >
+      }}>
       <GetView />
     </NWContext.Provider>
   );
