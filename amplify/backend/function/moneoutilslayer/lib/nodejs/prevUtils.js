@@ -39,8 +39,11 @@ const updatePrevByGetItem = async (prevBatch, tableName) => {
 			let batch = []
 			for (id of arrays) {
 				const data = prevData.find((item) => item.id === id);
-				if (!data) return;
-				prevBatch[id].prev = data.price;
+				if (!data) {
+          prevBatch[id].prev = prevBatch[id].price;
+        } else {
+				  prevBatch[id].prev = data.price;
+        }
 				batch.push({ PutRequest: { Item: prevBatch[id] }});
 			}
 		  const data = await pushData(batch, tableName);
