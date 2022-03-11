@@ -2,7 +2,6 @@ import { Empty, Skeleton, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
-import { toHumanFriendlyCurrency } from "../utils";
 import {
   COLORS,
   LOCAL_FUN_DATA_KEY,
@@ -25,6 +24,7 @@ import {
   isStock,
 } from "./nwutils";
 import { AppContext } from "../AppContext";
+import InsPrice from "./InsPrice";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -44,6 +44,7 @@ export default function InstrumentValuation() {
   const [nameFilterValues, setNameFilterValues] = useState<Array<Object>>([{}]);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
+  const [totalPrevAmt, setTotalPrevAmt] = useState<number>(0);
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
   const delRecord = (id: string) =>
@@ -54,9 +55,17 @@ export default function InstrumentValuation() {
   const columns = [
     {
       title: (
-        <strong style={{ color: COLORS.GREEN }}>
-          Total ~ {toHumanFriendlyCurrency(totalFilterAmt, selectedCurrency)}
-        </strong>
+        <>
+          Total ~{" "}
+          {
+            <InsPrice
+              price={totalFilterAmt}
+              previousPrice={totalPrevAmt}
+              currency={selectedCurrency}
+              noDecimal
+            />
+          }
+        </>
       ),
       key: childTab,
       filterIcon: (
@@ -75,7 +84,7 @@ export default function InstrumentValuation() {
             key={`id-${record.id}`}
             holding={record as InstrumentInput}
             onDelete={delRecord}
-            onChange={setTotal}
+            onChange={calculateTotal}
           />
         );
       },
@@ -85,27 +94,33 @@ export default function InstrumentValuation() {
   const handleChange = (_pagination: any, filters: any, _sorters: any) =>
     setFilteredInfo({ id: filters[childTab] });
 
-  const setTotal = () => {
-    let [total, filterAmt, cachedData] = [
+  const calculateTotal = () => {
+    let [total, totalPrev, cachedData] = [
       0,
       0,
       simpleStorage.get(LOCAL_INS_DATA_KEY),
     ];
+    if (!cachedData) return;
     const dataToFilter = selectedTags.length
       ? filterByTag
       : filteredInstruments;
     dataToFilter.map((instrument: InstrumentInput) => {
       const id = instrument.id;
-      const price =
-        instrument.qty *
-        (cachedData && cachedData[id] ? cachedData[id].price : 0);
+      if (!cachedData[id] || !cachedData[id].price) return;
+      const price = instrument.qty * cachedData[id].price;
+      const prevPrice = instrument.qty * cachedData[id].prev;
       if (filteredInfo.id) {
-        if (filteredInfo.id.some((item: string) => item === id))
-          filterAmt += price;
+        if (filteredInfo.id.some((item: string) => item === id)) {
+          total += price;
+          totalPrev += prevPrice;
+        }
+      } else {
+        total += price;
+        totalPrev += prevPrice;
       }
-      total += price;
     });
-    filteredInfo.id ? setTotalFilterAmt(filterAmt) : setTotalFilterAmt(total);
+    setTotalFilterAmt(total);
+    setTotalPrevAmt(totalPrev);
   };
 
   useEffect(() => {
@@ -125,7 +140,7 @@ export default function InstrumentValuation() {
   }, [filteredInstruments]);
 
   useEffect(() => {
-    setTotal();
+    calculateTotal();
   }, [
     filteredInstruments,
     filteredInfo,
@@ -218,9 +233,10 @@ export default function InstrumentValuation() {
               selectedTags.includes(
                 funData[sid as string] && funData[sid as string].ind
               )) ||
-            selectedTags.includes(
-              funData[sid as string] && funData[sid as string].sector
-            )
+            (funData &&
+              selectedTags.includes(
+                funData[sid as string] && funData[sid as string].sector
+              ))
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;
