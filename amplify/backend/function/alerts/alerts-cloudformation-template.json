@@ -31,6 +31,10 @@
     "custompricealertsArn": {
       "Type": "String",
       "Default": "custompricealertsArn"
+    },
+    "functionmoneovaluationlayerArn": {
+      "Type": "String",
+      "Default": "functionmoneovaluationlayerArn"
     }
   },
   "Conditions": {
@@ -101,6 +105,9 @@
         "Layers": [
           {
             "Ref": "functionmoneoutilslayerArn"
+          },
+          {
+            "Ref": "functionmoneovaluationlayerArn"
           }
         ],
         "Timeout": 900
@@ -142,20 +149,6 @@
               ]
             }
           ]
-        }
-      }
-    },
-    "LambdaFunctionEventSourceMapping": {
-      "DependsOn": [
-        "lambdaexecutionpolicy"
-      ],
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "Properties": {
-        "EventSourceArn": {
-          "Ref": "custompricealertsArn"
-        },
-        "FunctionName": {
-          "Ref": "LambdaFunction"
         }
       }
     },
@@ -201,16 +194,7 @@
             {
               "Effect": "Allow",
               "Action": [
-                "ses:SendEmail",
-                "ses:SendRawEmail"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "sqs:ReceiveMessage",
-                "sqs:DeleteMessage",
+                "sqs:SendMessage",
                 "sqs:GetQueueAttributes"
               ],
               "Resource": "*"
@@ -239,18 +223,6 @@
               "Effect": "Allow",
               "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/INExchgFun-*"
-            },
-            {
-              "Sid": "ReadInsUserMapTable",
-              "Effect": "Allow",
-              "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/InsUserMap-*"
-            },
-            {
-              "Sid": "ReadUserInfoTable",
-              "Effect": "Allow",
-              "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/UserInfo-*"
             },
             {
               "Sid": "ListTables",
@@ -287,11 +259,6 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
-      }
-    },
-    "lambdaexecutionpolicy": {
-      "Value": {
-        "Ref": "lambdaexecutionpolicy"
       }
     }
   }

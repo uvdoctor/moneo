@@ -19,6 +19,14 @@
     "functionmoneoutilslayerArn": {
       "Type": "String",
       "Default": "functionmoneoutilslayerArn"
+    },
+    "custompricealertsName": {
+      "Type": "String",
+      "Default": "custompricealertsName"
+    },
+    "custompricealertsArn": {
+      "Type": "String",
+      "Default": "custompricealertsArn"
     }
   },
   "Conditions": {
@@ -73,6 +81,9 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "PRICE_ALERTS_QUEUE": {
+              "Ref": "custompricealertsName"
             }
           }
         },
@@ -130,6 +141,20 @@
         }
       }
     },
+    "LambdaFunctionEventSourceMapping": {
+      "DependsOn": [
+        "lambdaexecutionpolicy"
+      ],
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "Properties": {
+        "EventSourceArn": {
+          "Ref": "custompricealertsArn"
+        },
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        }
+      }
+    },
     "lambdaexecutionpolicy": {
       "DependsOn": [
         "LambdaExecutionRole"
@@ -168,6 +193,23 @@
                   }
                 ]
               }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes"
+              ],
+              "Resource": "*"
             }
           ]
         }
@@ -196,6 +238,11 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
+      }
+    },
+    "lambdaexecutionpolicy": {
+      "Value": {
+        "Ref": "lambdaexecutionpolicy"
       }
     }
   }

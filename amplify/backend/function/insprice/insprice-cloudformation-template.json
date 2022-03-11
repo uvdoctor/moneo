@@ -24,14 +24,6 @@
       "Type": "String",
       "Default": "functionmoneopricelayerArn"
     },
-    "custompricealertsName": {
-      "Type": "String",
-      "Default": "custompricealertsName"
-    },
-    "custompricealertsArn": {
-      "Type": "String",
-      "Default": "custompricealertsArn"
-    },
     "functionmoneoutilslayerArn": {
       "Type": "String",
       "Default": "functionmoneoutilslayerArn"
@@ -89,9 +81,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "PRICE_ALERTS_QUEUE": {
-              "Ref": "custompricealertsName"
             }
           }
         },
@@ -190,14 +179,6 @@
                   }
                 ]
               }
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "sqs:SendMessage",
-                "sqs:GetQueueAttributes"
-              ],
-              "Resource": "*"
             }
           ]
         }

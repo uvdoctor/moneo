@@ -66,8 +66,7 @@ export type AmplifyDependentResourcesAttributes = {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
-            "LambdaExecutionRole": "string",
-            "lambdaexecutionpolicy": "string"
+            "LambdaExecutionRole": "string"
         },
         "moneoutilslayer": {
             "Arn": "string"
@@ -92,7 +91,8 @@ export type AmplifyDependentResourcesAttributes = {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
-            "LambdaExecutionRole": "string"
+            "LambdaExecutionRole": "string",
+            "lambdaexecutionpolicy": "string"
         }
     },
     "storage": {

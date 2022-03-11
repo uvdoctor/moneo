@@ -71,14 +71,6 @@
           "attributes": [
             "Arn"
           ]
-        },
-        {
-          "category": "custom",
-          "resourceName": "pricealerts",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
         }
       ]
     },
@@ -210,6 +202,13 @@
           ]
         },
         {
+          "category": "function",
+          "resourceName": "moneovaluationlayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "custom",
           "resourceName": "pricealerts",
           "attributes": [
@@ -281,6 +280,14 @@
           "category": "function",
           "resourceName": "moneoutilslayer",
           "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "pricealerts",
+          "attributes": [
+            "Name",
             "Arn"
           ]
         }
