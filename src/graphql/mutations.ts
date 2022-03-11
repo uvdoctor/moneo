@@ -1610,7 +1610,9 @@ export const createInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd
@@ -1646,7 +1648,9 @@ export const updateInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd
@@ -1682,7 +1686,9 @@ export const deleteInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd

@@ -631,7 +631,9 @@ export const getInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd
@@ -677,7 +679,9 @@ export const listInExchgPrices = /* GraphQL */ `
         fv
         under
         yhigh
+        yhighd
         ylow
+        ylowd
         split
         div
         splitd

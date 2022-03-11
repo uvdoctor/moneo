@@ -614,7 +614,9 @@ export const onCreateInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd
@@ -647,7 +649,9 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd
@@ -680,7 +684,9 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       fv
       under
       yhigh
+      yhighd
       ylow
+      ylowd
       split
       div
       splitd

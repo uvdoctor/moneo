@@ -392,7 +392,9 @@ type INExchgPrice
   fv: Int
   under: String
   yhigh: Float
+  yhighd: AWSDate
   ylow: Float
+  ylowd: AWSDate
   split: String
   div: Float
   splitd: AWSDate
