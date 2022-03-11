@@ -8,6 +8,10 @@
     "VisibilityTimeout" : {
       "Type": "Number",
       "Default": 900
+    },
+    "MessageRetentionPeriod" : {
+      "Type": "Number",
+      "Default": 14400
     }
   },
   "Conditions": {
@@ -44,6 +48,9 @@
         },
         "VisibilityTimeout": {
           "Ref": "VisibilityTimeout"
+        },
+        "MessageRetentionPeriod": {
+          "Ref": "MessageRetentionPeriod"
         }
       }
     }
