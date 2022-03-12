@@ -274,7 +274,7 @@ export type PPInput = {
 export enum RiskProfile {
   VC = "VC",
   C = "C",
-  M = "M",
+  Mod = "Mod",
   A = "A",
   VA = "VA",
 }
@@ -1087,10 +1087,10 @@ export enum InsType {
 
 
 export enum MCap {
-  S = "S",
-  M = "M",
-  L = "L",
-  H = "H",
+  Small = "Small",
+  Mid = "Mid",
+  Large = "Large",
+  Hybrid = "Hybrid",
 }
 
 

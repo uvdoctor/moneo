@@ -172,7 +172,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 enum RiskProfile {
   VC
   C
-  M
+  Mod
   A
   VA
 }
@@ -303,10 +303,10 @@ enum InsType {
 }
 
 enum MCap {
-  S
-  M
-  L
-  H
+  Small
+  Mid
+  Large
+  Hybrid
 }
 
 enum CreditRating {
