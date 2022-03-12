@@ -32,20 +32,20 @@ const batchReadItem = async (tableName, keys) => {
   }
 };
 
-const getDataByFilter = async (tableName, data, key) => {
+const filterTableByList = async (tableName, data, key,projectExp) => {
   try {
     const keys = {};
     data.forEach((item, i) => {
       keys[`:${key}${i}`] = item;
     });
     const keyex = Object.keys(keys).toString();
-    const params = {
+    let params = {
       FilterExpression: `${key} IN (${keyex})`,
       ExpressionAttributeValues: { ...keys },
       TableName: tableName,
     };
+    if(projectExp) params = { ...params, ProjectionExpression: projectExp };
     const result = await docClient.send(new ScanCommand(params));
-    console.log(result);
     return result.Items;
   } catch (error) {
     console.error(error);
@@ -73,8 +73,11 @@ const updateItem = async (table, id, fields) => {
   }
 };
 
-const getDataFromTable = async (table, projectExp) => {
+const getTabledata = async (table, projectExp, filterExp, ExpAttrValues) => {
   let params = { TableName: table };
+  if(filterExp) {
+    params = { ...params, ExpressionAttributeValues: ExpAttrValues, FilterExpression: filterExp };
+  }
   if(projectExp) params = { ...params, ProjectionExpression: projectExp };
   try {
     const data = await docClient.send(new ScanCommand(params));
@@ -134,7 +137,7 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 };
 
 module.exports = {
-  getDataFromTable,
+  getTabledata,
   pushData,
   pushDataForFeed,
   pushDataSingly,
@@ -142,5 +145,5 @@ module.exports = {
   getTableNameFromInitialWord,
   updateItem,
   batchReadItem,
-  getDataByFilter,
+  filterTableByList,
 };

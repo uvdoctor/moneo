@@ -1,7 +1,8 @@
 const {
-  getDataFromTable,
+  getTabledata,
   batchReadItem,
   getTableNameFromInitialWord,
+  filterTableByList
 } = require("/opt/nodejs/databaseUtils");
 const { divideArrayBySize } = require("/opt/nodejs/utility");
 const { getInstrumentsValuation } = require("/opt/nodejs/alertsVal");
@@ -26,25 +27,37 @@ const getInstrumentsData = async (ids, table, infoMap) => {
 const processData = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const usermap = {};
+      const usersinsMap = {};
       const infoMap = {};
+
+      const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
+      const userinfodata = await getTabledata(
+        userInfoTableName,
+        "uname, email",
+        `notify = :notify`,
+        { ":notify": true }
+      );
+
+      const usersMap = {};
+      userinfodata.map((item) => (usersMap[item.uname] = item.email));
 
       // UserIns data
       let mfIds = new Set();
       let otherIds = new Set();
       const userinsTableName = await getTableNameFromInitialWord("UserIns");
-      const userinsdata = await getDataFromTable(
+      const userinsdata = await filterTableByList(
         userinsTableName,
+        Object.keys(usersMap),
+        "uname",
         "uname, ins"
       );
       for (let item of userinsdata) {
-        usermap[item.uname] = item.ins;
+        usersinsMap[item.uname] = item.ins;
         for (let ins of item.ins) {
           if (ins.id.startsWith("INF")) mfIds.add(ins.id);
           else otherIds.add(ins.id);
         }
       }
-      const users = Object.keys(usermap);
 
       // Mutual Fund data
       if (mfIds.size) {
@@ -63,40 +76,30 @@ const processData = () => {
       }
       const valuationMap = getInstrumentsValuation(infoMap);
 
-      // user email
-      const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
-      let userKeys = [];
-      let userdata = [];
-      users.map((uname) => userKeys.push({ uname: uname }));
-      const userBatchKeys = divideArrayBySize(userKeys, 100);
-      for (let batch of userBatchKeys) {
-        const results = await batchReadItem(userInfoTableName, batch);
-        userdata = [...results, ...userdata];
-      }
-
       let sendUserInfo = {};
-      for (let user of users) {
-        const userInfo = userdata.find((re) => re.uname === user);
-        sendUserInfo[userInfo.email] = {
+      for (let user of Object.keys(usersinsMap)) {
+        const email = usersMap[user];
+        sendUserInfo[email] = {
           yhigh: [],
           ylow: [],
           gainers: [],
           losers: [],
         };
-        usermap[user].forEach((item) => {
+        usersinsMap[user].forEach((item) => {
           const data = valuationMap[item.id];
           if (!data) return;
           const { name } = data;
-          const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
+          const { yhigh, ylow, gainers, losers } = sendUserInfo[email];
           if (data["yhigh"]) yhigh.push({ name: name, val: data.yhigh });
           if (data["ylow"]) ylow.push({ name: name, val: data.ylow });
           if (data["gainers"]) gainers.push({ name: name, val: data.gainers });
           if (data["losers"]) losers.push({ name: name, val: data.losers });
         });
-        const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
+        const { yhigh, ylow, gainers, losers } = sendUserInfo[email];
         if (!yhigh.length && !ylow.length && !gainers.length && !losers.length)
-          delete sendUserInfo[userInfo.email];
+          delete sendUserInfo[email];
       }
+      console.log(sendUserInfo);
       await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
     } catch (err) {
       reject(err);
