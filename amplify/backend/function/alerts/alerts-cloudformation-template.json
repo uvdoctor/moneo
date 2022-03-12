@@ -219,10 +219,10 @@
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Sid": "ReadFunTable",
+              "Sid": "ReadUserInsTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/INExchgFun-*"
+              "Resource": "arn:aws:dynamodb:*:*:table/UserIns-*"
             },
             {
               "Sid": "ListTables",
@@ -231,6 +231,24 @@
                 "dynamodb:ListTables"
               ],
               "Resource": "arn:aws:dynamodb:*:*:*"
+            },
+            {
+              "Sid": "ReadINMFPriceTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/INMFPrice-*"
+            },
+            {
+              "Sid": "ReadINExchgPriceTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice-*"
+            },
+            {
+              "Sid": "ReadUserInfoTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/UserInfo-*"
             }
           ]
         }
