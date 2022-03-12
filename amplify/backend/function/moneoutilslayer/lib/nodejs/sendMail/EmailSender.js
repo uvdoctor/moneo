@@ -6,7 +6,7 @@ const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
 
 const resolved = (fileName) => path.resolve(__dirname, fileName)
-const senderAddress = "noreply <no-reply@moneo.money>";
+const senderAddress = "noreply <no-reply@comms.moneo.in>";
 let preCompiledTemplates = {};
 const partialsPath = resolved("./partials");
 
