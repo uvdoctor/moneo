@@ -1,7 +1,7 @@
 import { InputNumber } from "antd";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import LabelWithTooltip from "../form/LabelWithTooltip";
-import { toCurrency } from "../utils";
+import InsPrice from "./InsPrice";
 import { TAB, NWContext } from "./NWContext";
 import { getCommodityRate, getCryptoRate, initializeNPSData } from "./nwutils";
 
@@ -23,19 +23,23 @@ export default function QuantityWithRate({
 }: QuantityWithRateProps) {
   const { selectedCurrency, childTab, fxRates }: any = useContext(NWContext);
   const [rate, setRate] = useState<number>(0);
+  const [prevRate, setPrevRate] = useState<number>(0);
 
   const getRate = async (subtype: string, name: string) => {
     if (childTab === TAB.NPS) {
       const npsData = await initializeNPSData();
       if (npsData) {
         const record = npsData.find((item: any) => item.id === name);
-        if (record) return record.price;
-      } else return 0;
+        if (record) return { price: record.price, prev: record.prev };
+      } else return { price: 0, prev: 0 };
     }
     if (childTab === TAB.CRYPTO) {
-      return await getCryptoRate(name, selectedCurrency);
+      return { price: await getCryptoRate(name, selectedCurrency), prev: 0 };
     }
-    return await getCommodityRate(subtype, name, selectedCurrency, fxRates);
+    return {
+      price: await getCommodityRate(subtype, name, selectedCurrency, fxRates),
+      prev: 0,
+    };
   };
 
   useEffect(() => {
@@ -44,7 +48,10 @@ export default function QuantityWithRate({
       return;
     }
     getRate(subtype, name)
-      .then((rate) => setRate(rate))
+      .then((prices: any) => {
+        setRate(prices.price);
+        setPrevRate(prices.prev);
+      })
       .catch(() => 0);
   }, [name, subtype]);
 
@@ -59,10 +66,12 @@ export default function QuantityWithRate({
         step={0.1}
         size="middle"
       />
-      {` ${childTab === TAB.PM ? ` grams` : ""} x ${toCurrency(
-        rate,
-        selectedCurrency
-      )} `}
+      {` ${childTab === TAB.PM ? ` grams` : ""} x `}
+      <InsPrice
+        price={rate}
+        previousPrice={prevRate}
+        currency={selectedCurrency}
+      />
     </Fragment>
   );
 }
