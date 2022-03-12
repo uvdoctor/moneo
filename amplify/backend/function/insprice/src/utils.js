@@ -101,7 +101,7 @@ const constructedApiArray = (diff) => {
       exchg: "NSE",
       codes: {
         id: "ISIN Code",
-        mcap: "L",
+        mcap: "Large",
       },
     },
     {
@@ -111,7 +111,7 @@ const constructedApiArray = (diff) => {
       exchg: "NSE",
       codes: {
         id: "ISIN Code",
-        mcap: "M",
+        mcap: "Mid",
       },
     },
   ];
