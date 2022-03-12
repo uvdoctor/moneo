@@ -58,28 +58,28 @@ const mfType = (data) => {
   if (data.includes("Interval")) return "I";
 };
 
-const mCap = (element) => {
+const mcap = (element) => {
   const type = element["Scheme Type"] ? element["Scheme Type"].toLowerCase() : '';
   const name = element["Scheme Name"] ? element["Scheme Name"].toLowerCase() : '';
-  if (type.includes("equity") && type.includes("large")) return "L";
-  if (type.includes("equity") && type.includes("mid")) return "M";
-  if (type.includes("equity") && type.includes("small")) return "S";
-  if (type.includes("equity")) return "H";
+  if (type.includes("equity") && type.includes("large")) return "Large";
+  if (type.includes("equity") && type.includes("mid")) return "Mid";
+  if (type.includes("equity") && type.includes("small")) return "Small";
+  if (type.includes("equity")) return "Hybrid";
   if (name.includes('index')) {
-    if (name.includes('next 50')) return 'L';
-    if (name.includes('sensex')) return 'L';
-    if (name.includes('nifty 500')) return 'H';
-    if (name.includes('nifty')) return 'L';
-    if (name.includes('next')) return 'L';
-    if (name.includes('mid')) return 'M';
-    if (name.includes('small')) return 'S';
-    else return 'L';
+    if (name.includes('next 50')) return 'Large';
+    if (name.includes('sensex')) return 'Large';
+    if (name.includes('nifty 500')) return 'Hybrid';
+    if (name.includes('nifty')) return 'Large';
+    if (name.includes('next')) return 'Large';
+    if (name.includes('mid')) return 'Mid';
+    if (name.includes('small')) return 'Small';
+    else return 'Large';
   };
-  if (name.includes('micro')) return 'S';
-  if (name.includes('small')) return 'S';
-  if (name.includes('multicap')) return 'H';
-  if (name.includes('mid')) return 'M';
-  if (name.includes('large')) return 'L';
+  if (name.includes('micro')) return 'Small';
+  if (name.includes('small')) return 'Small';
+  if (name.includes('multicap')) return 'Hybrid';
+  if (name.includes('mid')) return 'Mid';
+  if (name.includes('large')) return 'Large';
   return null;
 };
 
@@ -92,7 +92,7 @@ const getName = (element) => {
 };
 
 const calculateRisk = (subt, mcap) => {
-  if(subt === "S" && mcap === "L") return "M";
+  if(subt === "S" && mcap === "Large") return "M";
   if(subt === "S") return "A";
   if(subt === "GBO" || subt === "GB") return "VC";
   return "C";  
@@ -102,7 +102,7 @@ module.exports = {
   getType,
   getSubType,
   mfType,
-  mCap,
+  mcap,
   getName,
   calculateRisk
 };

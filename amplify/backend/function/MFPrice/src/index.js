@@ -11,7 +11,7 @@ const {
   getType,
   getSubType,
   mfType,
-  mCap,
+  mcap,
   getName,
   calculateRisk,
 } = require("./calculate");
@@ -83,11 +83,11 @@ const getData = () => {
         subt: getSubType(element),
         price: price,
         mftype: mfType(element["Scheme Type"]),
-        mcap: mCap(element),
+        mcapt: mcap(element),
         tf: element["Scheme Name"].includes("Tax") ? true : false,
         prev: prevInfoMap[id],
       };
-      dataToPush.risk = calculateRisk(dataToPush.subt, dataToPush.mcap);
+      dataToPush.risk = calculateRisk(dataToPush.subt, dataToPush.mcapt);
       dataToPush = appendGenericFields(dataToPush, table);
       batches.push({ PutRequest: { Item: dataToPush } });
       isinMap[id] = id;

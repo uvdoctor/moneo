@@ -2,7 +2,7 @@ const {
   getType,
   getSubType,
   mfType,
-  mCap,
+  mcap,
   getName,
   calculateRisk
 } = require("../src/calculate");
@@ -129,19 +129,19 @@ describe("Test Name", () => {
 
 describe("Risk", () => {
   test("Stocks with large cap", () => {
-    const data = calculateRisk("S", "L")
+    const data = calculateRisk("S", "Large")
     expect(data).toEqual("M");
   });
   test("Stocks other than large cap", () => {
-    const data = calculateRisk("S", "S")
+    const data = calculateRisk("S", "Small")
     expect(data).toEqual("A");
   });
   test("Government bonds", () => {
-    const data = calculateRisk("GB", "M")
+    const data = calculateRisk("GB", "Mid")
     expect(data).toEqual("VC");
   });
   test("Others", () => {
-    const data = calculateRisk("HB", "M")
+    const data = calculateRisk("HB", "Mid")
     expect(data).toEqual("C");
   });
 });
