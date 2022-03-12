@@ -274,7 +274,7 @@ export type PPInput = {
 export enum RiskProfile {
   VC = "VC",
   C = "C",
-  Mod = "Mod",
+  M = "M",
   A = "A",
   VA = "VA",
 }

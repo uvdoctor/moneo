@@ -172,7 +172,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 enum RiskProfile {
   VC
   C
-  Mod
+  M
   A
   VA
 }
