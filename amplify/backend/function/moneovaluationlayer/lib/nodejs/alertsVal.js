@@ -16,9 +16,7 @@ const getInstrumentsValuation = (infoMap) => {
     if (Math.abs(diff) > 3) {
       Math.sign(diff) > 0 ? (info["gainers"] = diff) : (info["losers"] = diff);
     }
-    if (Object.keys(info).length) {
-      valuationMap[id] = { name: name, ...info };
-    }
+    valuationMap[id] = { name: name, ...info , chg: diff};
   });
   return valuationMap;
 };

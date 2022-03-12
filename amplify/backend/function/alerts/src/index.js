@@ -94,20 +94,21 @@ const processData = () => {
           ylow: [],
           gainers: [],
           losers: [],
+          change: 0
         };
+        let change = 0;
         usersinsMap[user].forEach((item) => {
           const data = valuationMap[item.id];
           if (!data) return;
+          change += data.chg;
           const { name } = data;
           const { yhigh, ylow, gainers, losers } = sendUserInfo[email];
           if (data["yhigh"]) yhigh.push({ name: name, val: data.yhigh });
           if (data["ylow"]) ylow.push({ name: name, val: data.ylow });
           if (data["gainers"]) gainers.push({ name: name, val: data.gainers });
           if (data["losers"]) losers.push({ name: name, val: data.losers });
+          sendUserInfo[email].change = change;
         });
-        const { yhigh, ylow, gainers, losers } = sendUserInfo[email];
-        if (!yhigh.length && !ylow.length && !gainers.length && !losers.length)
-          delete sendUserInfo[email];
       }
       console.log(sendUserInfo);
       await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
