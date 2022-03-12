@@ -1,13 +1,9 @@
 import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  CreateNPSPriceInput,
-  CreateUserHoldingsInput,
-  CreateUserInsInput,
-} from "../../api/goals";
+import { CreateUserHoldingsInput, CreateUserInsInput } from "../../api/goals";
 import { AppContext } from "../AppContext";
 import { ALL_FAMILY } from "../nw/FamilyInput";
-import { getNPSData, loadAllHoldings, loadInsHoldings } from "../nw/nwutils";
+import { loadAllHoldings, loadInsHoldings } from "../nw/nwutils";
 import {
   calculateTotalAssets,
   calculateTotalLiabilities,
@@ -16,8 +12,7 @@ import DBView from "./DBView";
 const DBContext = createContext({});
 
 function DBContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner }: any =
-    useContext(AppContext);
+  const { defaultCurrency, owner }: any = useContext(AppContext);
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
 
@@ -27,21 +22,19 @@ function DBContextProvider({ fxRates }: any) {
         owner
       );
       let insHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
-      let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
       const { totalAssets } = await calculateTotalAssets(
         allHoldings,
         insHoldings,
         [ALL_FAMILY],
         defaultCurrency,
-        fxRates,
-        npsData
+        fxRates
       );
       setTotalAssets(totalAssets);
       if (allHoldings) {
         const liabilities = calculateTotalLiabilities(
           allHoldings,
           [ALL_FAMILY],
-          defaultCurrency,
+          defaultCurrency
         );
         setTotalLiabilities(liabilities);
       }
@@ -54,7 +47,7 @@ function DBContextProvider({ fxRates }: any) {
   };
 
   useEffect(() => {
-    if(!owner ) return;
+    if (!owner) return;
     const initializeData = async () => {
       await initializeHoldings();
     };
@@ -67,8 +60,7 @@ function DBContextProvider({ fxRates }: any) {
         fxRates,
         totalLiabilities,
         totalAssets,
-      }}
-    >
+      }}>
       <DBView />
     </DBContext.Provider>
   );

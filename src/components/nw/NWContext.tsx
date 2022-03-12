@@ -6,7 +6,7 @@ import {
   addInsHoldings,
   getCascaderOptions,
   getFamilysList,
-  getNPSData,
+  initializeNPSData,
   getNPSFundManagers,
   loadAllFamilyMembers,
   loadAllHoldings,
@@ -176,7 +176,6 @@ function NWContextProvider({ fxRates }: any) {
   const [holdings, setHoldings] = useState<boolean>(false);
   const [insHoldings, setInsholdings] = useState<boolean>(false);
   const [childTab, setChildTab] = useState<string>("");
-  const [npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [totalOtherProperty, setTotalOtherProperty] = useState<number>(0);
   const [totalResidential, setTotalResidential] = useState<number>(0);
@@ -210,9 +209,8 @@ function NWContextProvider({ fxRates }: any) {
   }>({ industry: {}, sector: {} });
 
   const loadNPSSubCategories = async () => {
-    let npsData: Array<CreateNPSPriceInput> | null = await getNPSData();
+    let npsData: Array<CreateNPSPriceInput> | null = await initializeNPSData();
     if (npsData) {
-      setNPSData([...npsData]);
       let subCategories: any = getNPSFundManagers();
       Object.keys(subCategories).forEach(
         (key: string) => (subCategories[key] = {})
@@ -810,7 +808,7 @@ function NWContextProvider({ fxRates }: any) {
   }, [pf, selectedCurrency, selectedMembers]);
 
   const priceAllNPS = async () =>
-    await priceNPS(nps, selectedMembers, selectedCurrency, npsData);
+    await priceNPS(nps, selectedMembers, selectedCurrency);
 
   useEffect(() => {
     priceAllNPS().then((totals) => {
@@ -819,7 +817,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalNPSGFixed(totals.totalNPSGFixed);
       setTotalNPSCFixed(totals.totalNPSCFixed);
     });
-  }, [nps, selectedCurrency, selectedMembers, npsData]);
+  }, [nps, selectedCurrency, selectedMembers]);
 
   useEffect(
     () => setTotalLoans(priceLoans(loans, selectedMembers, selectedCurrency)),
@@ -970,8 +968,6 @@ function NWContextProvider({ fxRates }: any) {
         saveHoldings,
         childTab,
         setChildTab,
-        npsData,
-        setNPSData,
         loadNPSSubCategories,
         credit,
         setCredit,

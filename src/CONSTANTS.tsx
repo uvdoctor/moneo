@@ -36,6 +36,7 @@ export const ASSET_CATEGORIES = {
 };
 
 export const LOCAL_INS_DATA_KEY = "insData";
+export const LOCAL_NPS_DATA_KEY = "npsData";
 export const LOCAL_FUN_DATA_KEY = "funData";
 export const LOCAL_INSTRUMENT_RAW_DATA_KEY = "instrumentData";
 export const LOCAL_DATA_TTL = { TTL: 86400000 }; //1 day

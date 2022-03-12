@@ -31,6 +31,7 @@ import {
   doesPropertyMatch,
   getCommodityRate,
   getCryptoRate,
+  initializeNPSData,
   isFund,
   isLargeCap,
   loadMatchingINBond,
@@ -795,29 +796,31 @@ export const pricePF = (
   return { total, totalPPF, totalVPF, totalEPF };
 };
 
-export const priceNPS = (
+export const priceNPS = async (
   holdings: Array<HoldingInput>,
   selectedMembers: Array<string>,
-  selectedCurrency: string,
-  npsData: any
+  selectedCurrency: string
 ) => {
   let total = 0;
   let totalNPSGFixed = 0;
   let totalNPSCFixed = 0;
   let totalNPSEquity = 0;
-  holdings.forEach((holding: HoldingInput) => {
-    if (
-      holding &&
-      doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-    ) {
-      const { value, fixed, equity } = calculateNPS(holding, npsData);
-      total += value;
-      holding.subt === AssetSubType.CB
-        ? (totalNPSCFixed += fixed)
-        : (totalNPSGFixed += fixed);
-      totalNPSEquity += equity;
-    }
-  });
+  const npsData = await initializeNPSData();
+  if (npsData) {
+    holdings.forEach((holding: HoldingInput) => {
+      if (
+        holding &&
+        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
+      ) {
+        const { value, fixed, equity } = calculateNPS(holding, npsData);
+        total += value;
+        holding.subt === AssetSubType.CB
+          ? (totalNPSCFixed += fixed)
+          : (totalNPSGFixed += fixed);
+        totalNPSEquity += equity;
+      }
+    });
+  }
   return { total, totalNPSGFixed, totalNPSCFixed, totalNPSEquity };
 };
 
@@ -826,8 +829,7 @@ export const calculateTotalAssets = async (
   insHoldings: CreateUserInsInput | null,
   selectedMembers: Array<string>,
   selectedCurrency: string,
-  fxRates: any,
-  npsData: any
+  fxRates: any
 ) => {
   let totalSavings = 0;
   let totalLendings = 0;
@@ -917,11 +919,10 @@ export const calculateTotalAssets = async (
     totalPPF += value.totalPPF;
   }
   if (holdings?.nps) {
-    const value = priceNPS(
+    const value = await priceNPS(
       holdings.nps,
       selectedMembers,
-      selectedCurrency,
-      npsData
+      selectedCurrency
     );
     totalNPS += value.total;
     totalNPSEquity += value.totalNPSEquity;

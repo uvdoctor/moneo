@@ -26,6 +26,7 @@ import {
   LOCAL_FUN_DATA_KEY,
   LOCAL_INSTRUMENT_RAW_DATA_KEY,
   LOCAL_INS_DATA_KEY,
+  LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import {
@@ -535,16 +536,19 @@ export const getCascaderOptions = (
   return options;
 };
 
-export const getNPSData = async () => {
+export const initializeNPSData = async () => {
+  let npsData: Array<APIt.CreateNPSPriceInput> | null =
+    simpleStorage.get(LOCAL_NPS_DATA_KEY);
+  if (npsData) return npsData;
   const {
     data: { listNPSPrices },
   } = (await API.graphql(graphqlOperation(queries.listNpsPrices))) as {
     data: APIt.ListNpsPricesQuery;
   };
-  let npsData: Array<APIt.CreateNPSPriceInput> | null = listNPSPrices?.items
-    ?.length
+  npsData = listNPSPrices?.items?.length
     ? (listNPSPrices.items as Array<APIt.CreateNPSPriceInput>)
     : null;
+  if (npsData) simpleStorage.set(LOCAL_NPS_DATA_KEY, npsData, LOCAL_DATA_TTL);
   return npsData;
 };
 
