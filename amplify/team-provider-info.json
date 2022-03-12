@@ -15,11 +15,11 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insprice-31484a5564414b54426f-build.zip"
+          "s3Key": "amplify-builds/insprice-78426b49315664433976-build.zip"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/MFPrice-636869443836746e4e4c-build.zip"
+          "s3Key": "amplify-builds/MFPrice-42366363594b53494350-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
