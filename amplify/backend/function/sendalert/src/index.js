@@ -11,7 +11,7 @@ const processData = (records) => {
 
     const users = Object.keys(queueData);
     for (let user of users) {
-      const { yhigh, ylow, losers, gainers } = queueData[user];
+      const { yhigh, ylow, losers, gainers, change } = queueData[user];
       try {
         const message = await sendEmail({
           templateName: "alerts",
@@ -23,6 +23,7 @@ const processData = (records) => {
             losers: losers,
             yhigh: yhigh,
             ylow: ylow,
+            chg: Math.round(change * 100) / 100
           },
         });
         console.log(message);
