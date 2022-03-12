@@ -192,9 +192,10 @@ export default function RiskAllocationChart() {
             selectedCurrency
           )} by risk`}</h3>
         </Row>
-        {excessRiskPercent ? (
-          <Row justify="center">
-            <h3 style={{ color: COLORS.RED }}>
+
+        <Row justify="center">
+          <h3 style={{ color: excessRiskPercent ? COLORS.RED : COLORS.GREEN }}>
+            {excessRiskPercent ? (
               <LabelWithTooltip
                 label={`${toReadableNumber(
                   excessRiskPercent,
@@ -208,9 +209,11 @@ export default function RiskAllocationChart() {
                   2
                 )}% of assets with higher risk.`}
               />
-            </h3>
-          </Row>
-        ) : null}
+            ) : (
+              `All assets have acceptable risk.`
+            )}
+          </h3>
+        </Row>
       </Col>
       <Col style={{ minWidth: 400 }}>
         <PieChart
