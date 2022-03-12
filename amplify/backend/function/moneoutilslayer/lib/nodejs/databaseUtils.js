@@ -28,7 +28,7 @@ const batchReadItem = async (tableName, keys) => {
     const results = await docClient.send(new BatchGetCommand(params));
     return results.Responses[tableName];
   } catch (err) {
-    console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
+    console.log(`Error in dynamoDB: ${err}`);
   }
 };
 
