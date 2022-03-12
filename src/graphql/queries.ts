@@ -883,7 +883,7 @@ export const getInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt
@@ -917,7 +917,7 @@ export const listInmfPrices = /* GraphQL */ `
         price
         prev
         mftype
-        mcap
+        mcapt
         tf
         risk
         createdAt

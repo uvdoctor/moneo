@@ -347,15 +347,15 @@ export const getAssetTypes = () => {
 
 export const getStockMarketCap = () => {
   return {
-    [APIt.MCap.L]: "Large-cap",
-    [APIt.MCap.M]: "Mid-cap",
-    [APIt.MCap.S]: "Small-cap",
+    [APIt.MCap.Large]: "Large-cap",
+    [APIt.MCap.Mid]: "Mid-cap",
+    [APIt.MCap.Small]: "Small-cap",
   };
 };
 
 export const getMutualFundMarketCap = () => {
   let mCap: any = getStockMarketCap();
-  mCap[APIt.MCap.H] = "Multi-cap";
+  mCap[APIt.MCap.Hybrid] = "Multi-cap";
   return mCap;
 };
 
@@ -455,11 +455,11 @@ export const getColourForAssetType = (at: string) => {
       return COLORS.BLUE;
     case APIt.AssetType.A:
       return "#f6e05e";
-    case APIt.MCap.L:
+    case APIt.MCap.Large:
       return "#fdd0cb";
-    case APIt.MCap.M:
+    case APIt.MCap.Mid:
       return "#e78284";
-    case APIt.MCap.S:
+    case APIt.MCap.Small:
       return "#cf544e";
     // case APIt.AssetSubType.CB:
     // return COLORS.WHITE;
@@ -600,8 +600,7 @@ export const isFund = (id: string) => id.substring(2, 3) === "F";
 
 export const isBond = (id: string) => id.substring(2, 3) === "0";
 
-export const isLargeCap = (data: any) =>
-  data?.mcapt === APIt.MCap.L || data?.mcap === APIt.MCap.L;
+export const isLargeCap = (data: any) => data?.mcapt === APIt.MCap.Large;
 
 export const hasRisktab = (childTab: string) =>
   [

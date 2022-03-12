@@ -1932,7 +1932,7 @@ export const createInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt
@@ -1956,7 +1956,7 @@ export const updateInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt
@@ -1980,7 +1980,7 @@ export const deleteInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt

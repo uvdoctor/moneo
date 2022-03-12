@@ -900,7 +900,7 @@ export const onCreateInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt
@@ -921,7 +921,7 @@ export const onUpdateInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt
@@ -942,7 +942,7 @@ export const onDeleteInmfPrice = /* GraphQL */ `
       price
       prev
       mftype
-      mcap
+      mcapt
       tf
       risk
       createdAt

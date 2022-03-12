@@ -522,7 +522,7 @@ type INMFPrice
   price: Float!
   prev: Float
   mftype: MFSchemeType!
-  mcap: MCap
+  mcapt: MCap
   tf: Boolean
   risk: RiskProfile
 }
