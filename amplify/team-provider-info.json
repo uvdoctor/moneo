@@ -51,7 +51,7 @@
         },
         "moneoutilslayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion0eba4415-build.zip"
+          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion2929414c-build.zip"
         },
         "feedback": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
