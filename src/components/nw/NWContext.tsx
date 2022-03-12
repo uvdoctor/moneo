@@ -809,12 +809,16 @@ function NWContextProvider({ fxRates }: any) {
     setTotalPPF(totals.totalPPF);
   }, [pf, selectedCurrency, selectedMembers]);
 
+  const priceAllNPS = async () =>
+    await priceNPS(nps, selectedMembers, selectedCurrency, npsData);
+
   useEffect(() => {
-    const totals = priceNPS(nps, selectedMembers, selectedCurrency, npsData);
-    setTotalNPS(totals.total);
-    setTotalNPSEquity(totals.totalNPSEquity);
-    setTotalNPSGFixed(totals.totalNPSGFixed);
-    setTotalNPSCFixed(totals.totalNPSCFixed);
+    priceAllNPS().then((totals) => {
+      setTotalNPS(totals.total);
+      setTotalNPSEquity(totals.totalNPSEquity);
+      setTotalNPSGFixed(totals.totalNPSGFixed);
+      setTotalNPSCFixed(totals.totalNPSCFixed);
+    });
   }, [nps, selectedCurrency, selectedMembers, npsData]);
 
   useEffect(
