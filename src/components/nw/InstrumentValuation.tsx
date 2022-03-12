@@ -214,7 +214,7 @@ export default function InstrumentValuation() {
             selectedTags.includes(type) ||
             (type === AssetType.E &&
               (selectedTags.includes(mcap) ||
-                (selectedTags.includes(MCap.S) && !mcap))) ||
+                (selectedTags.includes(MCap.Small) && !mcap))) ||
             (type === AssetType.F &&
               filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp)
