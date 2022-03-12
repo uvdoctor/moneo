@@ -18,7 +18,7 @@
         <p>{{gainers.length}} Stock in your portfolio are the gainers in today's market session</p>
         {{#each gainers}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this}}</a>
+            <a href="https://moneo.in/get">{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -30,7 +30,7 @@
         <p>{{losers.length}} Stock in your portfolio are the losers in today's market session</p>
         {{#each losers}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this}}</a>
+            <a href="https://moneo.in/get">{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -42,7 +42,7 @@
         <p>{{yhigh.length}} Stock in your portfolio touched 52 weeks high levels in today's market session</p>
         {{#each yhigh}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this}}</a>
+            <a href="https://moneo.in/get">{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -54,7 +54,7 @@
         <p>{{ylow.length}} Stock in your portfolio touched 52 weeks low levels in today's market session</p>
         {{#each ylow}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this}}</a>
+            <a href="https://moneo.in/get">{{this.name}}</a>
         </div>
         {{/each}}
     </div>

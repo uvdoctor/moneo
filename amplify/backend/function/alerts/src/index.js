@@ -1,22 +1,11 @@
-// const {
-//   getDataByFilter,
-//   batchReadItem,
-//   getTableNameFromInitialWord,
-// } = require("/opt/nodejs/databaseUtils");
-// const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
-// const { deleteMessage } = require("/opt/nodejs/sqsUtils");
 const {
   getDataFromTable,
   batchReadItem,
   getTableNameFromInitialWord,
-} = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const {
-  divideArrayBySize,
-} = require("../../moneoutilslayer/lib/nodejs/utility");
-const {
-  getInstrumentsValuation,
-} = require("../../moneovaluationlayer/lib/nodejs/alertsVal");
-const { sendMessage } = require("../../moneoutilslayer/lib/nodejs/sqsUtils");
+} = require("/opt/nodejs/databaseUtils");
+const { divideArrayBySize } = require("/opt/nodejs/utility");
+const { getInstrumentsValuation } = require("/opt/nodejs/alertsVal");
+const { sendMessage } = require("/opt/nodejs/sqsUtils");
 
 const getInstrumentsData = async (ids, table, infoMap) => {
   let results = [];
@@ -99,16 +88,16 @@ const processData = () => {
           if (!data) return;
           const { name } = data;
           const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
-          if (data["yhigh"]) yhigh.push({ [name]: data.yhigh });
-          if (data["ylow"]) ylow.push({ [name]: data.ylow });
-          if (data["gainers"]) gainers.push({ [name]: data.gainers });
-          if (data["losers"]) losers.push({ [name]: data.losers });
+          if (data["yhigh"]) yhigh.push({ name: name, val: data.yhigh });
+          if (data["ylow"]) ylow.push({ name: name, val: data.ylow });
+          if (data["gainers"]) gainers.push({ name: name, val: data.gainers });
+          if (data["losers"]) losers.push({ name: name, val: data.losers });
         });
         const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
         if (!yhigh.length && !ylow.length && !gainers.length && !losers.length)
           delete sendUserInfo[userInfo.email];
       }
-      await sendMessage(sendUserInfo, PRICE_ALERTS_QUEUE);
+      await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
     } catch (err) {
       reject(err);
     }
