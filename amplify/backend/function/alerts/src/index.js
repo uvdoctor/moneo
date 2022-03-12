@@ -2,7 +2,7 @@ const {
   getTabledata,
   batchReadItem,
   getTableNameFromInitialWord,
-  filterTableByList
+  filterTableByList,
 } = require("/opt/nodejs/databaseUtils");
 const { divideArrayBySize } = require("/opt/nodejs/utility");
 const { getInstrumentsValuation } = require("/opt/nodejs/alertsVal");
@@ -31,12 +31,22 @@ const processData = () => {
       const infoMap = {};
 
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
-      const userinfodata = await getTabledata(
+      const userinfodata = await filterTableByList(
         userInfoTableName,
-        "uname, email",
-        `notify = :notify`,
-        { ":notify": true }
+        [
+          "investments.doctor@gmail.com",
+          "emailumangdoctor@gmail.com",
+          "mehzabeen1526@gmail.com",
+          "ravinder.singh.rawat2008@gmail.com",
+        ],
+        "email",
+        "uname, email"
       );
+      // const userinfodata = await getTabledata(
+      //   userInfoTableName,
+      //   "uname, email",
+      //   `notify = :notify`,
+      //   { ":notify": true }
 
       const usersMap = {};
       userinfodata.map((item) => (usersMap[item.uname] = item.email));

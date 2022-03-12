@@ -15,12 +15,7 @@ const processData = (records) => {
       try {
         const message = await sendEmail({
           templateName: "alerts",
-          email: [
-            "emailumangdoctor@gmail.com",
-            "mehzabeen1526@gmail.com",
-            "ravinder.singh.rawat2008@gmail.com",
-            "rahul.smile@gmail.com",
-          ],
+          email: user,
           // email: [user],
           values: {
             url: "https://moneo.in/get",
