@@ -47,7 +47,6 @@ export default function HoldingTabView({
     selectedCurrency,
     childTab,
     setChildTab,
-    npsData,
     loadNPSSubCategories,
     setIsDirty,
     totalAssets,
@@ -78,7 +77,7 @@ export default function HoldingTabView({
   }, [nwview, view]);
 
   useEffect(() => {
-    if (childTab === TAB.NPS && !npsData.length) {
+    if (childTab === TAB.NPS) {
       (async () => await loadNPSSubCategories())();
     }
   }, [childTab]);

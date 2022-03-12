@@ -43,7 +43,7 @@ export default function AddHoldingInput({
   defaultRate,
   info,
 }: AddHoldingInputProps) {
-  const { childTab, selectedCurrency, npsData, activeTab, fxRates }: any =
+  const { childTab, selectedCurrency, activeTab, fxRates }: any =
     useContext(NWContext);
   const {
     PM,
@@ -206,13 +206,7 @@ export default function AddHoldingInput({
   };
 
   useEffect(() => {
-    calculateValuation(
-      childTab,
-      getNewRec(),
-      selectedCurrency,
-      npsData,
-      fxRates
-    )
+    calculateValuation(childTab, getNewRec(), selectedCurrency, fxRates)
       .then((valuation) => setValuation(valuation))
       .catch(() => setValuation(0));
     const maturityAmt = calculateCompundingIncome(getNewRec()).maturityAmt;
@@ -228,7 +222,6 @@ export default function AddHoldingInput({
     subCat,
     childTab,
     selectedCurrency,
-    npsData,
     qty,
   ]);
 
@@ -281,8 +274,7 @@ export default function AddHoldingInput({
           gutter={[
             { xs: 0, sm: 0, md: 35 },
             { xs: 15, sm: 15, md: 15 },
-          ]}
-        >
+          ]}>
           {categoryOptions && (
             <Col xs={24} md={12}>
               <Category

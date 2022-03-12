@@ -43,7 +43,6 @@ export default function ListHoldings({
     selectedMembers,
     selectedCurrency,
     childTab,
-    npsData,
     fxRates,
     familyOptions,
   }: any = useContext(NWContext);
@@ -203,8 +202,7 @@ export default function ListHoldings({
         gutter={[
           { xs: 0, sm: 10, md: 30 },
           { xs: 20, sm: 10, md: 20 },
-        ]}
-      >
+        ]}>
         {expandedColumns.map((item: any) => {
           return (
             dataSource[item] && (
@@ -232,7 +230,6 @@ export default function ListHoldings({
             childTab,
             data[index],
             selectedCurrency,
-            npsData,
             fxRates
           );
           dataSource.push(getAllData(data[index], index, valuation));
@@ -241,14 +238,7 @@ export default function ListHoldings({
       }
     };
     getData();
-  }, [
-    data,
-    selectedMembers,
-    selectedCurrency,
-    familyOptions,
-    childTab,
-    npsData,
-  ]);
+  }, [data, selectedMembers, selectedCurrency, familyOptions, childTab]);
 
   return dataSource.length ? (
     <Table

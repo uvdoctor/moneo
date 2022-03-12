@@ -687,7 +687,6 @@ export const calculateValuation = async (
   childTab: string,
   record: APIt.HoldingInput,
   selectedCurrency: string,
-  npsData: any,
   fxRates: any
 ) => {
   const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, P2P, LTDEP } = TAB;
@@ -708,7 +707,7 @@ export const calculateValuation = async (
       value = calculateCompundingIncome(record).valuation;
       break;
     case NPS:
-      const result = calculateNPS(record, npsData);
+      const result = await calculateNPS(record);
       value = result.value;
       break;
     case VEHICLE:

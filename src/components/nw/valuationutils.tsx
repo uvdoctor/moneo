@@ -7,7 +7,6 @@ import simpleStorage from "simplestorage.js";
 import {
   AssetSubType,
   AssetType,
-  CreateNPSPriceInput,
   CreateUserHoldingsInput,
   CreateUserInsInput,
   HoldingInput,
@@ -376,21 +375,21 @@ export const calculateProvidentFund = (holding: HoldingInput) => {
   return value;
 };
 
-export const calculateNPS = (
-  holding: HoldingInput,
-  npsData: Array<CreateNPSPriceInput>
-) => {
+export const calculateNPS = async (holding: HoldingInput) => {
   let fixed = 0;
   let equity = 0;
   let value = 0;
-  const data = npsData.find((item) => item.id === holding.name);
-  if (!data) return { value, fixed, equity };
-  value = holding.qty * data.price;
-  if (data.type === AssetType.E) equity += value;
-  else if (data.type === AssetType.F) fixed += value;
-  else if (data.type === AssetType.H) {
-    fixed += 0.8 * value;
-    equity += 0.2 * value;
+  const npsData = await initializeNPSData();
+  if (npsData) {
+    const data = npsData.find((item) => item.id === holding.name);
+    if (!data) return { value, fixed, equity };
+    value = holding.qty * data.price;
+    if (data.type === AssetType.E) equity += value;
+    else if (data.type === AssetType.F) fixed += value;
+    else if (data.type === AssetType.H) {
+      fixed += 0.8 * value;
+      equity += 0.2 * value;
+    }
   }
   return { value, fixed, equity };
 };
@@ -807,12 +806,12 @@ export const priceNPS = async (
   let totalNPSEquity = 0;
   const npsData = await initializeNPSData();
   if (npsData) {
-    holdings.forEach((holding: HoldingInput) => {
+    holdings.forEach(async (holding: HoldingInput) => {
       if (
         holding &&
         doesHoldingMatch(holding, selectedMembers, selectedCurrency)
       ) {
-        const { value, fixed, equity } = calculateNPS(holding, npsData);
+        const { value, fixed, equity } = await calculateNPS(holding);
         total += value;
         holding.subt === AssetSubType.CB
           ? (totalNPSCFixed += fixed)
