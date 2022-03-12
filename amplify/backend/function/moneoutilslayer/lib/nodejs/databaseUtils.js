@@ -22,10 +22,9 @@ const getTableNameFromInitialWord = (tableInitial) => {
   });
 };
 
-const batchReadItem = async (tableName, keys, projectExp) => {
+const batchReadItem = async (tableName, keys) => {
   try {
     let params = { RequestItems: { [tableName]: { Keys: keys } } };
-    if(projectExp) params = { ...params, ProjectionExpression: projectExp };
     const results = await docClient.send(new BatchGetCommand(params));
     return results.Responses[tableName];
   } catch (err) {

@@ -1,137 +1,114 @@
-const fs = require("fs");
-const fsPromise = require("fs/promises");
+// const {
+//   getDataByFilter,
+//   batchReadItem,
+//   getTableNameFromInitialWord,
+// } = require("/opt/nodejs/databaseUtils");
+// const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
+// const { deleteMessage } = require("/opt/nodejs/sqsUtils");
 const {
-  getDataByFilter,
+  getDataFromTable,
   batchReadItem,
   getTableNameFromInitialWord,
-} = require("/opt/nodejs/databaseUtils");
-const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
-const { tempDir } = require("/opt/nodejs/utility");
-const { cleanDirectory, downloadZip } = require("/opt/nodejs/downloadUtils");
-const constructedApiArray = require("./utils");
-const extractDataFromCSV = require("./bhavUtils");
-const { deleteMessage } = require("/opt/nodejs/sqsUtils");
-const { mkdir } = fsPromise;
+} = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+const {
+  divideArrayBySize,
+} = require("../../moneoutilslayer/lib/nodejs/utility");
+const {
+  getInstrumentsValuation,
+} = require("../../moneovaluationlayer/lib/nodejs/alertsVal");
+const { sendMessage } = require("../../moneoutilslayer/lib/nodejs/sqsUtils");
 
-const sidMap = {};
-const processData = (records, diff) => {
+const getInstrumentsData = async (ids, table, infoMap) => {
+  let results = [];
+  const splittedArray = divideArrayBySize([...ids], 100);
+  const tableName = await getTableNameFromInitialWord(table);
+  for (arrays of splittedArray) {
+    let keys = [];
+    arrays.map((id) => keys.push({ id: id }));
+    const data = await batchReadItem(tableName, keys);
+    results = [...results, ...data];
+  }
+  results.forEach((item) => {
+    infoMap[item.id] = item;
+    ids.delete(item.id);
+  });
+};
+
+const processData = () => {
   return new Promise(async (resolve, reject) => {
-    const { apiArray } = constructedApiArray(diff);
     try {
-      if (fs.existsSync(tempDir)) {
-        await cleanDirectory(tempDir, "Initial cleaning completed");
-      }
-      for (let i = 0; i < apiArray.length; i++) {
-        const { fileName, url, codes } = apiArray[i];
-        console.log(url);
-        const csvFile = `${tempDir}/${fileName}`;
-        await mkdir(tempDir);
-        await downloadZip(url, tempDir, csvFile);
-        await extractDataFromCSV(fileName, codes, sidMap);
-      }
+      const usermap = {};
+      const infoMap = {};
 
-      let queueData;
-      records.forEach(async (item) => {
-        queueData = JSON.parse(item.body);
-        await deleteMessage(process.env.PRICE_ALERTS_QUEUE, item.receiptHandle);
-      });
-      Object.keys(queueData).map((key) => {
-        for (item of queueData[key]) {
-          if (sidMap[item.sid]) {
-            sidMap[item.sid] = { ...sidMap[item.sid], [key]: item.name };
-          } else {
-            sidMap[item.sid] = { [key]: item.name };
-          }
+      // UserIns data
+      let mfIds = new Set();
+      let otherIds = new Set();
+      const userinsTableName = await getTableNameFromInitialWord("UserIns");
+      const userinsdata = await getDataFromTable(
+        userinsTableName,
+        "uname, ins"
+      );
+      for (let item of userinsdata) {
+        usermap[item.uname] = item.ins;
+        for (let ins of item.ins) {
+          if (ins.id.startsWith("INF")) mfIds.add(ins.id);
+          else otherIds.add(ins.id);
         }
-      });
+      }
+      const users = Object.keys(usermap);
 
-      const insunitableName = await getTableNameFromInitialWord("InsUserMap");
-      console.log(insunitableName);
-      const sidkeys = Object.keys(sidMap);
-      const splittedArray = [];
-      if (sidkeys.length > 100) {
-        while (sidkeys.length > 0) {
-          splittedArray.push(sidkeys.splice(0, 100));
-        }
-      } else {
-        splittedArray = sidkeys;
+      // Mutual Fund data
+      if (mfIds.size) {
+        await getInstrumentsData(mfIds, "INMFPrice", infoMap);
+      }
+      mfIds.forEach((id) => otherIds.add(id));
+
+      // Exchg data
+      if (otherIds.size) {
+        await getInstrumentsData(otherIds, "INExchgPrice", infoMap);
       }
 
-      let results = [];
-      for (arrays of splittedArray) {
-        const data = await getDataByFilter(insunitableName, arrays, "sid");
-        results = [...results, ...data];
+      // Bond data
+      if (otherIds.size) {
+        await getInstrumentsData(otherIds, "INBondPrice", infoMap);
       }
+      const valuationMap = getInstrumentsValuation(infoMap);
 
-      let userMap = {};
-      results.forEach((item) => {
-        if (userMap[item.user]) {
-          let sidlist = userMap[item.user];
-          sidlist.push(item.sid);
-          userMap[item.user] = sidlist;
-        } else {
-          userMap[item.user] = [item.sid];
-        }
-      });
-
-      let userBatchKeys = [];
-      let userBatchCount = 0;
-      let userkeys = [];
-      Object.keys(userMap).forEach((key) => {
-        userkeys.push({ uname: key });
-        userBatchCount++;
-        if (userBatchCount === 100) {
-          userBatchKeys.push(userkeys);
-          userkeys = [];
-          userBatchCount = 0;
-        }
-      });
-      if (userBatchCount > 0 && userBatchCount < 100) {
-        userBatchKeys.push(userkeys);
-      }
+      // user email
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
+      let userKeys = [];
       let userdata = [];
+      users.map((uname) => userKeys.push({ uname: uname }));
+      const userBatchKeys = divideArrayBySize(userKeys, 100);
       for (let batch of userBatchKeys) {
         const results = await batchReadItem(userInfoTableName, batch);
         userdata = [...results, ...userdata];
       }
 
-      const users = Object.keys(userMap);
+      let sendUserInfo = {};
       for (let user of users) {
         const userInfo = userdata.find((re) => re.uname === user);
-        console.log(userInfo);
-        let yhigh = [];
-        let ylow = [];
-        let gainers = [];
-        let losers = [];
-        userMap[user].forEach((item) => {
-          const data = sidMap[item];
+        sendUserInfo[userInfo.email] = {
+          yhigh: [],
+          ylow: [],
+          gainers: [],
+          losers: [],
+        };
+        usermap[user].forEach((item) => {
+          const data = valuationMap[item.id];
           if (!data) return;
-          if (data.yhigh) yhigh.push(item);
-          if (data.ylow) ylow.push(item);
-          if (data.gainers) gainers.push(item);
-          if (data.losers) losers.push(item);
+          const { name } = data;
+          const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
+          if (data["yhigh"]) yhigh.push({ [name]: data.yhigh });
+          if (data["ylow"]) ylow.push({ [name]: data.ylow });
+          if (data["gainers"]) gainers.push({ [name]: data.gainers });
+          if (data["losers"]) losers.push({ [name]: data.losers });
         });
+        const { yhigh, ylow, gainers, losers } = sendUserInfo[userInfo.email];
         if (!yhigh.length && !ylow.length && !gainers.length && !losers.length)
-          continue;
-        try {
-          const message = await sendEmail({
-            templateName: "weekHL",
-            email: [ "emailumangdoctor@gmail.com", "mehzabeen1526@gmail.com", "ravinder.singh.rawat2008@gmail.com" ],
-            // email: [userInfo?.email, "emailumangdoctor@gmail.com"],
-            values: {
-              url: "https://moneo.in/get",
-              gainers: gainers,
-              losers: losers,
-              yhigh: yhigh,
-              ylow: ylow,
-            },
-          });
-          console.log(message);
-        } catch (err) {
-          reject(err);
-        }
+          delete sendUserInfo[userInfo.email];
       }
+      await sendMessage(sendUserInfo, PRICE_ALERTS_QUEUE);
     } catch (err) {
       reject(err);
     }
@@ -140,5 +117,5 @@ const processData = (records, diff) => {
 };
 
 exports.handler = async (event) => {
-  return await processData(event.Records, event.diff ? event.diff : "");
+  return await processData();
 };
