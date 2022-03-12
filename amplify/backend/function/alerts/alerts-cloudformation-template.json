@@ -245,6 +245,12 @@
               "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice-*"
             },
             {
+              "Sid": "ReadINBondPriceTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/INBondPrice-*"
+            },
+            {
               "Sid": "ReadUserInfoTable",
               "Effect": "Allow",
               "Action": "*",
