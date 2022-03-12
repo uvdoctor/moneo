@@ -7,10 +7,11 @@
     <title>Moneo</title>
 </head>
 
-<body class="">
+<body>
     {{#> layout }}
     <p>Hi,</p>
-    <p>Your Daily Reports</p>
+    <p>Your Daily Portfolio Report</p>
+    <p>Your investment {{ chgImpact }} by {{ chg }}% since yesterday</p>
 
     {{#if gainers}}
     <div class="box-container-high">
@@ -59,8 +60,6 @@
         {{/each}}
     </div>
     {{/if}}
-
-
 
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
         <tbody>

@@ -23,7 +23,8 @@ const processData = (records) => {
             losers: losers,
             yhigh: yhigh,
             ylow: ylow,
-            chg: Math.round(change * 100) / 100
+            chg: Math.round(change * 100) / 100,
+            chgImpact: Math.sign(change) > 0 ? 'up' : 'down',
           },
         });
         console.log(message);

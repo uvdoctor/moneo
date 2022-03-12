@@ -1,19 +1,22 @@
 const { sendEmail } = require("./EmailSender");
 
-const yhigh = ["JETAIRWAYS", "HDFC", "ICICI", "JPOWER"];
-const ylow = [];
-const gainers = ["JETAIRWAYS", "HDFC", "ICICI", "JPOWER"];
-const losers = [];
+const yhigh = [ { name: "HDFC" }]
+const ylow = [ {name: "ICICI"} ]
+const gainers = [ { name: "SAIL" } ]
+const losers = [{ name: "COAL" }]
+const change = 3.32;
 
 sendEmail({
-  templateName: "weekHL",
-  email: ["mehzabeen1526@gmail.com"],
+  templateName: "alerts",
+  email: 'mehzabeen1526@gmail.com',
   values: {
     url: "https://moneo.in/get",
     gainers: gainers,
     losers: losers,
     yhigh: yhigh,
     ylow: ylow,
+    chg: change,
+    chgImpact: "up"
   },
 }).then((data) => {
   console.log("Compeleted", data);
