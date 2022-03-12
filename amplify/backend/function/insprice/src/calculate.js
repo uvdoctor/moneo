@@ -70,8 +70,8 @@ const calculateRisk = (beta, mcapt, subt, itype) => {
     return "C";
   }
   if (subt === "S") {
-    if (mcapt === "L") return beta && beta > 1 ? "A" : "M";
-    if (mcapt === "M") return beta && beta > 1 ? "VA" : "A";
+    if (mcapt === "Large") return beta && beta > 1 ? "A" : "M";
+    if (mcapt === "Mid") return beta && beta > 1 ? "VA" : "A";
     return "VA";
   }
   return "M";
@@ -138,7 +138,7 @@ const calcSchema = (
     updateSchema.itype = null;
     appendGenericFields(updateSchema, bondTable);
   } else {
-    updateSchema.mcapt = subt === "S" ? "S" : null;
+    updateSchema.mcapt = subt === "S" ? "Small" : null;
     updateSchema.itype = itype ? itype : null;
     appendGenericFields(updateSchema, table);
   }

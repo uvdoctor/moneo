@@ -43,7 +43,7 @@ describe("CalcSchema - Incase of Exchange Data", () => {
       itype: null,
       price: 85.5,
       prev: 88.15,
-      mcapt: "S",
+      mcapt: "Small",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       __typename: "Table",
@@ -320,23 +320,23 @@ describe("Test Asset Type", () => {
 
 describe("Test Risk Profile", () => {
   test("Large cap with beta greater than 1", () => {
-    const data = calculateRisk(1.78, "L", "S", "");
+    const data = calculateRisk(1.78, "Large", "S", "");
     expect(data).toEqual("A");
   });
   test("Large cap with beta less than 1", () => {
-    const data = calculateRisk(0.9, "L", "S", "");
+    const data = calculateRisk(0.9, "Large", "S", "");
     expect(data).toEqual("M");
   });
   test("Mid cap with beta greater than 1", () => {
-    const data = calculateRisk(1.78, "M", "S", "");
+    const data = calculateRisk(1.78, "Mid", "S", "");
     expect(data).toEqual("VA");
   });
   test("Mid cap with beta less than 1", () => {
-    const data = calculateRisk("", "M", "S", "");
+    const data = calculateRisk("", "Mid", "S", "");
     expect(data).toEqual("A");
   });
   test("Small Cap", () => {
-    const data = calculateRisk(1.78, "S", "S", "");
+    const data = calculateRisk(1.78, "Small", "S", "");
     expect(data).toEqual("VA");
   });
   test("ETF - Index Fund", () => {
