@@ -16,26 +16,6 @@ export default function CommonStock() {
 	const { Title, Text } = Typography;
 	const { Panel } = Collapse;
 
-	// Address: "Maker Chambers IV, Mumbai, India, 400021"
-	// CountryISO: "IN"
-	// CountryName: "India"
-	// CurrencyCode: "INR"
-	// CurrencyName: "Indian Rupee"
-	// Description: "Reliance Industries Limited engages in hydrocarbon exploration and production, petroleum refining and marketing, petrochemicals, textile, retail, digital, and financial services businesses worldwide. The company produces and markets petroleum products, such as liquefied petroleum gas, propylene, naphtha, gasoline, jet/aviation turbine fuel, kerosene oil, diesel, Sulphur, and petroleum coke. It also provides petrochemicals, including high-density and low-density polyethylene (PE), linear low density PE, polyester fibers and yarns, polypropylene, polyvinyl chloride, polyester yarn, purified terephthalic acid, ethylene glycols and oxide, paraxylene, ortho xylene, benzene, linear alkyl benzene and paraffin, poly butadiene rubber, styrene butadiene rubber, butyl rubber, and polyethylene terephthalate. In addition, the company manufactures and markets yarns, fabrics, apparel, and auto furnishings; explores, develops, and produces crude oil and natural gas; and operates various stores comprising neighborhood, supermarket, hypermarket, wholesale cash and carry, specialty, online, pharmacy, and grocery stores, as well as stores that offer apparel, beauty and cosmetics, accessories, footwear, consumer electronics, connectivity products, and others. As of March 31, 2021, it operated 12,711 retail stores. Further, it provides range of digital services under the Jio brand name; and non-banking financial and insurance broking services. Further, it operates news and entertainment platforms, finance portals, fashion and lifestyle portals, and online ticket booking platforms, as well as Network18 and television channels; publishes magazines; and offers highway hospitality and fleet management services. The company was incorporated in 1973 and is based in Mumbai, India."
-	// Exchange: "NSE"
-	// FiscalYearEnd: "March"
-	// FullTimeEmployees: 236334
-	// IPODate: null
-	// ISIN: "INE002A01018"
-	// Industry: "Oil & Gas Refining & Marketing"
-	// LogoURL: "/img/logos/NSE/RELIANCE.png"
-	// Name: "Reliance Industries Limited"
-	// Phone: "91 22 3555 5000"
-	// Sector: "Energy"
-	// Type: "Common Stock"
-	// UpdatedAt: "2022-03-14"
-	// WebURL: "https://www.ril.com"
-
 	return (
 		<>
 			<Row align="middle" gutter={[10, 0]} style={{ marginBottom: "15px" }}>
