@@ -12,7 +12,7 @@ export default function Chart({ options = {}, data, particulars }: any) {
         if (dataKey !== "particulars")
           barsData.unshift({
             date: dataKey,
-            value: data[key][dataKey],
+            value: parseFloat(data[key][dataKey]),
             type: key,
           });
       }
@@ -23,7 +23,7 @@ export default function Chart({ options = {}, data, particulars }: any) {
         if (dataKey !== "particulars")
           linesData.unshift({
             date: dataKey,
-            count: data[key][dataKey],
+            count: parseFloat(data[key][dataKey]),
             name: key,
           });
       }
