@@ -35,6 +35,10 @@
     "functionmoneovaluationlayerArn": {
       "Type": "String",
       "Default": "functionmoneovaluationlayerArn"
+    },
+    "functionmoneopricelayerArn": {
+      "Type": "String",
+      "Default": "functionmoneopricelayerArn"
     }
   },
   "Conditions": {
@@ -108,6 +112,9 @@
           },
           {
             "Ref": "functionmoneovaluationlayerArn"
+          },
+          {
+            "Ref": "functionmoneopricelayerArn"
           }
         ],
         "Timeout": 900
