@@ -29,9 +29,32 @@ const getDividendInfo = async (exchg) => {
   return await getData(url);
 };
 
+const getCryptoPrice = async (symbol, date) => {
+  let url = !date
+    ? `https://eodhistoricaldata.com/api/eod/${symbol}.CC?api_token=${token}&fmt=json&filter=last_close`
+    : `https://eodhistoricaldata.com/api/eod/${symbol}.CC?api_token=${token}&fmt=json&from=${date}&filter=close`;
+  return await getData(url);
+};
+
+const getCommodityPrice = async (symbol, date) => {
+  let url = !date
+    ? `https://eodhistoricaldata.com/api/eod/${symbol}.COMM?api_token=${token}&fmt=json&filter=last_close`
+    : `https://eodhistoricaldata.com/api/eod/${symbol}.COMM?api_token=${token}&fmt=json&from=${date}&filter=close`;
+  return await getData(url);
+};
+
+const getFXRate = async (curr) => {
+  let url = `https://eodhistoricaldata.com/api/real-time/${curr}.FOREX?api_token=${token}&fmt=json`;
+  const response = await getData(url);
+  return await response.close;
+}
+
 module.exports = {
   getEODdata,
   getSplitInfo,
   getDividendInfo,
-  getFundamentalDataByLimit
+  getFundamentalDataByLimit,
+  getCryptoPrice,
+  getCommodityPrice,
+  getFXRate
 };
