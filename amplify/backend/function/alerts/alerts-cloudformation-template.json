@@ -255,6 +255,18 @@
               "Effect": "Allow",
               "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/UserInfo-*"
+            },
+            {
+              "Sid": "ReadUserHoldingsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/UserHoldings-*"
+            },
+            {
+              "Sid": "ReadNPSPriceTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/NPSPrice-*"
             }
           ]
         }
