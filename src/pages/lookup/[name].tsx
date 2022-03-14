@@ -13,7 +13,7 @@ export default function LookupPage() {
   const { name } = router.query;
 
   return (
-    <BasicPage title={`Moneo - ${name}`} secure>
+    <BasicPage title={`Moneo - ${name}`}>
       <StockDetailContextProvider name={name}>
         <StockDetail />
       </StockDetailContextProvider>

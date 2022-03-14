@@ -40,9 +40,16 @@ export const incomeStatementParticulars = {
 				"The amount of income taxes paid or payable on the net earnings of the business.",
 		},
 	},
+	taxProvision: {
+		particulars: {
+			label: "Profit After Tax",
+			tooltip:
+				"The amount of income taxes paid or payable on the net earnings of the business.",
+		},
+	},
 	netIncome: {
 		particulars: {
-			label: "Net Profit",
+			label: "Consolidated Net Profit",
 			tooltip:
 				"It is the final profit left over after subtracting all operating and non operating items from net revenue.",
 		},
@@ -63,9 +70,11 @@ export const balanceSheetParticulars = {
 };
 
 export const cashFlowParticulars = {
-	changeInCash: {
+	netIncome: {
 		particulars: {
-			label: "Change In Cash",
+			label: "Profit from operations",
+			tooltip:
+				"It is the total profit after accounting for operating and non-operating expenses (Financing expenses) but before paying corporate tax.It is not same as the operating profit of the company.",
 		},
 	},
 	depreciation: {

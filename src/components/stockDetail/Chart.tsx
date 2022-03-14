@@ -10,7 +10,7 @@ export default function Chart({ options = {}, data, particulars }: any) {
     options.bars.map((key: string) => {
       for (const dataKey in data[key]) {
         if (dataKey !== "particulars")
-          barsData.push({
+          barsData.unshift({
             date: dataKey,
             value: data[key][dataKey],
             type: key,
@@ -21,7 +21,7 @@ export default function Chart({ options = {}, data, particulars }: any) {
     options.lines.map((key: string) => {
       for (const dataKey in data[key]) {
         if (dataKey !== "particulars")
-          linesData.push({
+          linesData.unshift({
             date: dataKey,
             count: data[key][dataKey],
             name: key,
@@ -48,7 +48,7 @@ export default function Chart({ options = {}, data, particulars }: any) {
         geometry: "column",
         isGroup: true,
         seriesField: "type",
-        columnWidthRatio: 0.4,
+        columnWidthRatio: 0.2,
       },
       {
         geometry: "line",
