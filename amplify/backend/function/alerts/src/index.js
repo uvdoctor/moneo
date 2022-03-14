@@ -154,8 +154,8 @@ const processData = () => {
         let { totalHoldingsPrev, totalHoldingsPrice } = holdingValuation(infoMap, usersholdingMap[user], pmArray);
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
-        const chgAmount = price - prev;
-        const chg = Math.round(calculateDiffPercent(price, prev) * 100) / 100;
+        const chgAmount = Math.round((price - prev)* 100) / 100;
+        const chg = calculateDiffPercent(price, prev)
         const chgImpact = Math.sign(chg) > 0 ? 'up' : 'down';
         sendUserInfo[email] = { gainers, losers, yhigh: yhighList, ylow: ylowList, chg, chgAmount, chgImpact };
       });
