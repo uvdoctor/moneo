@@ -5,6 +5,7 @@ const ylow = [ {name: "ICICI"} ]
 const gainers = [ { name: "SAIL" } ]
 const losers = [{ name: "COAL" }]
 const change = 3.32;
+const chgAmount = 400000;
 
 sendEmail({
   templateName: "alerts",
@@ -16,6 +17,7 @@ sendEmail({
     yhigh: yhigh,
     ylow: ylow,
     chg: change,
+    chgAmount: chgAmount,
     chgImpact: "up"
   },
 }).then((data) => {

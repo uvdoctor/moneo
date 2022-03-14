@@ -35,6 +35,10 @@
     "functionmoneovaluationlayerArn": {
       "Type": "String",
       "Default": "functionmoneovaluationlayerArn"
+    },
+    "functionmoneopricelayerArn": {
+      "Type": "String",
+      "Default": "functionmoneopricelayerArn"
     }
   },
   "Conditions": {
@@ -108,6 +112,9 @@
           },
           {
             "Ref": "functionmoneovaluationlayerArn"
+          },
+          {
+            "Ref": "functionmoneopricelayerArn"
           }
         ],
         "Timeout": 900
@@ -255,6 +262,18 @@
               "Effect": "Allow",
               "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/UserInfo-*"
+            },
+            {
+              "Sid": "ReadUserHoldingsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/UserHoldings-*"
+            },
+            {
+              "Sid": "ReadNPSPriceTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/NPSPrice-*"
             }
           ]
         }
