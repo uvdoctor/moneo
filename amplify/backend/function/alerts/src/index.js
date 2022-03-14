@@ -6,7 +6,7 @@ const {
 const { divideArrayBySize, utility } = require("/opt/nodejs/utility");
 const { instrumentValuation, holdingValuation, calculateDiffPercent, convertTroyOunceToGram } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
-const { getCommodityPrice, getCryptoPrice, getFXRate } = require("../../moneopricelayer/lib/nodejs/eod");
+const { getCommodityPrice, getCryptoPrice, getFXRate } = require("/opt/nodejs/eod");
 
 const getInstrumentsData = async (ids, table, infoMap) => {
   let results = [];
