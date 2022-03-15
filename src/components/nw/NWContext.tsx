@@ -764,7 +764,7 @@ function NWContextProvider({ fxRates }: any) {
   }, [preciousMetals, selectedMembers, selectedCurrency]);
 
   const priceAllCrypto = async () =>
-    await priceCrypto(crypto, selectedMembers, selectedCurrency);
+    await priceCrypto(crypto, selectedMembers, selectedCurrency, fxRates);
 
   useEffect(() => {
     priceAllCrypto().then((total) => setTotalCrypto(total));

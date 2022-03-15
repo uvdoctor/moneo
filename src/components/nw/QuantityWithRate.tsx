@@ -34,7 +34,7 @@ export default function QuantityWithRate({
       } else return { price: 0, prev: 0 };
     }
     if (childTab === TAB.CRYPTO) {
-      return { price: await getCryptoRate(name, selectedCurrency), prev: 0 };
+      return { price: await getCryptoRate(name, selectedCurrency, fxRates), prev: 0 };
     }
     return {
       price: await getCommodityRate(subtype, name, selectedCurrency, fxRates),

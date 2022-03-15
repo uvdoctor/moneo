@@ -1,8 +1,11 @@
 img {
   border: none;
   -ms-interpolation-mode: bicubic;
-  padding: 10px;
-  max-width: 100%;
+}
+
+.title {
+  margin-top: 50px;
+  margin-right: 40px;
 }
 
 body {
@@ -50,7 +53,7 @@ table td {
 
 .box-container-high {
   margin-bottom: 20px;
-  background: #88B04B;
+  background: #F0FFF4;
   border: 1px solid rgba(74, 74, 74, 0.075);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
@@ -62,7 +65,7 @@ table td {
 
 .box-container-low {
   margin-bottom: 20px;
-  background: #F7CAC9;
+  background: #faeaea;
   border: 1px solid rgba(74, 74, 74, 0.075);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
@@ -80,8 +83,32 @@ table td {
   border-radius: 10px;
   color: #204056;
   font-size: 18px;
-  font-family: sans-serif;
-  padding: 1em;
+  padding: 10px;
+}
+
+.cc-container {
+  display: flex;
+  box-shadow: 30px 40px whitesmoke;
+  border-left: 2px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.column {
+  flex: 33.33%;
+  height: 30px;
+  padding: 2px;
+  margin: 5px;
+  text-align: center;
+}
+
+.main-text {
+  font-weight: bold;
+}
+
+.text-title {
+  font-size: 25px;
+  font-weight: bold;
 }
 
 /* -------------------------------------
@@ -200,9 +227,10 @@ ol li {
 }
 
 a {
-  font-family: sans-serif;
   font-size: 18px;
-  color: #2675d1;
+  color: #15c;
+  font-family: 'Arial';
+  font-weight: 600;
 }
 
 /* -------------------------------------

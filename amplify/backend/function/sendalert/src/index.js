@@ -11,21 +11,22 @@ const processData = (records) => {
 
     const users = Object.keys(queueData);
     for (let user of users) {
-      const { gainers, losers, yhigh, ylow, chg, chgAmount, chgImpact } = queueData[user];
+      const { gainers, losers, yhigh, ylow, chg, chgAmount, chgImpact, metal } =
+        queueData[user];
       try {
         const message = await sendEmail({
           templateName: "alerts",
           email: user,
-          // email: [user],
           values: {
             url: "https://moneo.in/get",
-            gainers: gainers,
-            losers: losers,
-            yhigh: yhigh,
-            ylow: ylow,
-            chg: chg,
-            chgImpact: chgImpact,
-            chgAmount: chgAmount
+            gainers,
+            losers,
+            yhigh,
+            ylow,
+            chg,
+            chgImpact,
+            chgAmount,
+            metal
           },
         });
         console.log(message);

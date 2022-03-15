@@ -27,6 +27,7 @@ export default function Crypto() {
 					const value = state.data.Statistics[key];
 
 					return (
+						// eslint-disable-next-line react/jsx-key
 						<Descriptions.Item label={key.split(/(?=[A-Z])/).join(" ")}>
 							{key === "Explorer" ? (
 								<Button type="link" href={value} target="_blank">
