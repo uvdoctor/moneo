@@ -539,7 +539,7 @@ export const getCascaderOptions = (
   return options;
 };
 
-export const getCascaderOptionsForCrypto = (list: Array<{ Code: string, Name: string }>) => {
+export const getCascaderOptionsForCrypto = (list: Array<any>) => {
   let options: Array<any> = [];
   list.map((item) => {
     options.push({ value: item.Code, label: item.Name });
