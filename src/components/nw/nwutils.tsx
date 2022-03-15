@@ -539,9 +539,9 @@ export const getCascaderOptions = (
   return options;
 };
 
-export const getCascaderOptionsForCrypto = (list: Array<any>) => {
+export const getCascaderOptionsForCrypto = (list: any) => {
   let options: Array<any> = [];
-  list.map((item) => {
+  list.map((item: { Code: string; Name: string }) => {
     options.push({ value: item.Code, label: item.Name });
   });
   return options;
