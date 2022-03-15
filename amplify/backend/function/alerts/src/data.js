@@ -5,7 +5,7 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const { divideArrayBySize, utility } = require("/opt/nodejs/utility");
 const { getCommodityPrice, getCryptoPrice, getFXRate } = require("/opt/nodejs/eod");
-const { convertTroyOunceToGram, calculateDiffPercent } = require("/opt/nodejs/alertsVal");
+const { convertTroyOunceToGram, calculateDiffPercent, toCurrency } = require("/opt/nodejs/alertsVal");
 
 const metals = {
   GC: "Gold",
@@ -109,7 +109,7 @@ const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
       const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
       cryptoAndCommodity.push({
         name: metals[ids],
-        price: convertUSDToINR(data[1]),
+        price: toCurrency(convertUSDToINR(data[1]), "INR", true),
         chg: diff,
         up: Math.sign(diff) > 0 ? true : false,
       });

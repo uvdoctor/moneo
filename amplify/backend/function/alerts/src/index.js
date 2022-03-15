@@ -6,6 +6,7 @@ const {
   instrumentValuation,
   holdingValuation,
   calculateDiffPercent,
+  toCurrency
 } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const { processHoldings, processInstruments } = require("./data");
@@ -62,7 +63,7 @@ const processData = () => {
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
 
-        const chgAmount = Math.round((price - prev) * 100) / 100;
+        const chgAmount = toCurrency((price - prev),"INR", true)
         const chg = calculateDiffPercent(price, prev);
         const chgImpact = Math.sign(chg) > 0 ? "up" : "down";
         sendUserInfo[email] = {
