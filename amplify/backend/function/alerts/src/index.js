@@ -6,10 +6,10 @@ const {
   instrumentValuation,
   holdingValuation,
   calculateDiffPercent,
-  toCurrency
 } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const { processHoldings, processInstruments } = require("./data");
+const { toHumanFriendlyCurrency } = require("/opt/nodejs/utility");
 
 const processData = () => {
   return new Promise(async (resolve, reject) => {
@@ -54,7 +54,6 @@ const processData = () => {
           instrumentValuation(infoMap, usersinsMap[user]);
         prev += totalPrev;
         price += totalPrice;
-
         let { totalHoldingsPrev, totalHoldingsPrice } = holdingValuation(
           infoMap,
           usersholdingMap[user],
@@ -62,10 +61,9 @@ const processData = () => {
         );
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
-
-        const chgAmount = toCurrency((price - prev),"INR", true)
+        const chgAmount = toHumanFriendlyCurrency((price - prev),"INR")
         const chg = calculateDiffPercent(price, prev);
-        const chgImpact = Math.sign(chg) > 0 ? "up" : "down";
+        const chgImpact = Math.sign(chg) > 0 ? true : false;
         sendUserInfo[email] = {
           gainers,
           losers,

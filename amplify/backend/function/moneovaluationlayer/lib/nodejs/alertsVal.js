@@ -10,16 +10,6 @@ const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2));
 const sortDescending = (array, key) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
-const toCurrency = (num, currency, decimal = false) => {
-  const formatter = new Intl.NumberFormat(navigator.language, {
-    style: "currency",
-    currency: currency,
-    minimumFractionDigits: decimal ? 2 : 0,
-    maximumFractionDigits: decimal ? 2 : 0,
-  });
-  return num ? formatter.format(num) : formatter.format(0);
-};
-
 const instrumentValuation = (insMap, userinsmap) => {
   let gainers = [];
   let losers = [];
@@ -82,5 +72,4 @@ module.exports = {
   holdingValuation,
   calculateDiffPercent,
   convertTroyOunceToGram,
-  toCurrency
 };

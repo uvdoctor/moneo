@@ -3,9 +3,20 @@ const {
   getTableNameFromInitialWord,
   filterTableByList,
 } = require("/opt/nodejs/databaseUtils");
-const { divideArrayBySize, utility } = require("/opt/nodejs/utility");
-const { getCommodityPrice, getCryptoPrice, getFXRate } = require("/opt/nodejs/eod");
-const { convertTroyOunceToGram, calculateDiffPercent, toCurrency } = require("/opt/nodejs/alertsVal");
+const {
+  divideArrayBySize,
+  utility,
+  toCurrency,
+} = require("/opt/nodejs/utility");
+const {
+  getCommodityPrice,
+  getCryptoPrice,
+  getFXRate,
+} = require("/opt/nodejs/eod");
+const {
+  convertTroyOunceToGram,
+  calculateDiffPercent,
+} = require("/opt/nodejs/alertsVal");
 
 const metals = {
   GC: "Gold",
@@ -120,11 +131,25 @@ const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
   const cryptoArray = [...cryptoIds];
   if (cryptoIds.size) {
     // for (let ids of cryptoArray) {
-    //   const data = await getCryptoPrice(ids, fromDate);
-    //   infoMap[ids] = { prev: convertUSDToINR(data[0]), price: convertUSDToINR(data[1]) };
+    // let data = [];
+    // try {
+    //   data = await getCryptoPrice(ids, fromDate);
+    //   console.log(data);
+    // } catch {
+    //   console.log(err);
     // }
-    // const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev)
-    // cryptoAndCommodity.push({ name: ids, price, chg: diff, up: Math.sign(diff) > 0 ? true : false })
+    // infoMap[ids] = {
+    //   prev: convertUSDToINR(data[0]),
+    //   price: convertUSDToINR(data[1]),
+    // };
+    // const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
+    // cryptoAndCommodity.push({
+    //   name: ids,
+    //   price: toCurrency(convertUSDToINR(data[1]), "INR", true),
+    //   chg: diff,
+    //   up: Math.sign(diff) > 0 ? true : false,
+    // });
+    // }
   }
 
   return { pmArray, cryptoAndCommodity };
