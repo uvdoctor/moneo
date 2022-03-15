@@ -7,6 +7,9 @@ const checkDateEquality = (date) =>
 
 const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2));
 
+const sortDescending = (array, key) =>
+  array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
+
 const instrumentValuation = (insMap, userinsmap) => {
   let gainers = [];
   let losers = [];
@@ -26,7 +29,7 @@ const instrumentValuation = (insMap, userinsmap) => {
     totalPrev += qty * prev;
 
     if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
-    if (ylow && checkDateEquality(ylowd)) ylowList.push({ name,  ylow });
+    if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
 
     const diff = calculateDiffPercent(price, prev);
     if (Math.abs(diff) > 3) {
@@ -35,25 +38,27 @@ const instrumentValuation = (insMap, userinsmap) => {
         : losers.push({ name, diff });
     }
   });
+  gainers = sortDescending(gainers, "diff").slice(0, 3);
+  losers = sortDescending(losers, "diff").slice(-3);
   return { gainers, losers, yhighList, ylowList, totalPrev, totalPrice };
 };
 
 const holdingValuation = (infoMap, userholdingMap, pmArray) => {
+  const isGold = (subt) => subt === "Gold";
   let totalHoldingsPrev = 0;
   let totalHoldingsPrice = 0;
   userholdingMap.map((item) => {
+    const { subt, name, qty } = item;
     let data = infoMap[item.name];
-    if (!data) data = infoMap[item.subt === "Gold" ? "GC" : item.subt];
+    if (!data) data = infoMap[isGold(subt) ? "GC" : subt];
     if (!data) return;
-    const qty = item.qty;
     const { prev, price } = data;
-    if (pmArray.includes(item.subt === "Gold" ? "GC" : item.subt)) {
-      const purity = Number.parseFloat(item.name);
-      totalHoldingsPrice +=
-        qty * ((purity * price) / (item.subt === "Gold" ? 24 : 100));
-      totalHoldingsPrev +=
-        qty * ((purity * prev) / (item.subt === "Gold" ? 24 : 100));
-
+    if (pmArray.includes(isGold(subt) ? "GC" : subt)) {
+      const purity = Number.parseFloat(name);
+      const calcPrice = (price) =>
+        qty * ((purity * price) / (isGold(subt) ? 24 : 100));
+      totalHoldingsPrice += calcPrice(price);
+      totalHoldingsPrev += calcPrice(prev);
     } else {
       totalHoldingsPrice += qty * price;
       totalHoldingsPrev += qty * prev;
