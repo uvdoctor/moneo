@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import { Tag, Collapse, Image, Row, Col, Typography } from "antd";
+import { Tag, Collapse, Image, Row, Col, Typography, Card } from "antd";
 import StockDetailContext from "./StockDetailContext";
 import Results from "./Results";
 import GridData from "./GridData";
+import Officers from "./Officers";
 
 import {
 	incomeStatementParticulars,
@@ -35,20 +36,14 @@ export default function CommonStock() {
 				defaultActiveKey={["1", "2", "3", "4", "5", "6", "7"]}
 				style={{ marginBottom: "35px" }}
 			>
-				<Panel key="1" header="About">
-					<Row gutter={[10, 0]}>
-						<Col xs={24} sm={6} lg={4}>
-							<Image
-								src={`https://eodhistoricaldata.com/${state.data.General.LogoURL}`}
-							/>
-						</Col>
-						<Col xs={24} sm={18} lg={20}>
-							{state.data.General.Description}
-						</Col>
-					</Row>
-				</Panel>
 				<Panel key="2" header="Highlights">
-					<GridData data={state.data.Highlights} />
+					<GridData
+						data={{
+							Industry: state.data.General.Industry,
+							Sector: state.data.General.Sector,
+							...state.data.Highlights,
+						}}
+					/>
 				</Panel>
 				<Panel key="3" header="Valuation">
 					<GridData data={state.data.Valuation} />
@@ -96,6 +91,50 @@ export default function CommonStock() {
 					lines: ["depreciation"],
 				}}
 			/>
+			<Card title="About">
+				<Row style={{ paddingBottom: "30px" }} gutter={[10, 0]}>
+					<Col xs={24} sm={6} lg={4}>
+						<Image
+							src={`https://eodhistoricaldata.com/${state.data.General.LogoURL}`}
+						/>
+					</Col>
+					<Col xs={24} sm={18} lg={20}>
+						{state.data.General.Description}
+					</Col>
+				</Row>
+				<GridData
+					data={{
+						Address: state.data.General.Address,
+						CountryISO: state.data.General.CountryISO,
+						CurrencyCode: state.data.General.CurrencyCode,
+						CurrencyName: state.data.General.CurrencyName,
+						CurrencySymbol: state.data.General.CurrencySymbol,
+						Exchange: state.data.General.Exchange,
+						FullTimeEmployees: state.data.General.FullTimeEmployees,
+						IPODate: state.data.General.IPODate,
+						ISIN: state.data.General.ISIN,
+						Phone: state.data.General.Phone,
+						UpdatedAt: state.data.General.UpdatedAt,
+						WebURL: state.data.General.WebURL,
+					}}
+				/>
+				<Officers />
+			</Card>
 		</>
 	);
 }
+
+CountryISO: "IN";
+CurrencyCode: "INR";
+CurrencyName: "Indian Rupee";
+CurrencySymbol: "INR";
+Exchange: "NSE";
+FullTimeEmployees: 236334;
+IPODate: null;
+ISIN: "INE002A01018";
+Industry: "Oil & Gas Refining & Marketing";
+Phone: "91 22 3555 5000";
+Sector: "Energy";
+Type: "Common Stock";
+UpdatedAt: "2022-03-14";
+WebURL: "https://www.ril.com";
