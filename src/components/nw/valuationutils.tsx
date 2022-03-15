@@ -335,9 +335,10 @@ export const calculateVehicle = (holding: HoldingInput) => {
 
 export const calculateCrypto = (
   holding: HoldingInput,
-  selectedCurrency: string
+  selectedCurrency: string,
+  fxRates: any
 ) => {
-  return getCryptoRate(holding.name as string, selectedCurrency)
+  return getCryptoRate(holding.name as string, selectedCurrency, fxRates)
     .then((rate) => holding.qty * rate)
     .catch(() => 0);
 };
@@ -764,12 +765,13 @@ export const priceInsurance = (
 export const priceCrypto = async (
   holdings: Array<HoldingInput>,
   selectedMembers: Array<string>,
-  selectedCurrency: string
+  selectedCurrency: string,
+  fxRates: any
 ) => {
   let total = 0;
   for (let holding of holdings) {
     if (doesMemberMatch(holding, selectedMembers)) {
-      total += await calculateCrypto(holding, selectedCurrency);
+      total += await calculateCrypto(holding, selectedCurrency, fxRates);
     }
   }
   return total;
@@ -904,7 +906,8 @@ export const calculateTotalAssets = async (
     const total = await priceCrypto(
       holdings.crypto,
       selectedMembers,
-      selectedCurrency
+      selectedCurrency,
+      fxRates
     );
     totalCrypto += total;
   }

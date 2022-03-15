@@ -491,9 +491,12 @@ export const getCommodityRate = async (
     .catch(() => 0);
 };
 
-export const getCryptoRate = (id: string, currency: string) => {
-  return getPrice(id, "CC", currency)
-    .then((rate) => rate)
+export const getCryptoRate = (id: string, currency: string, fxRates: any) => {
+  return getPrice(id, "CC")
+    .then((rate) => {
+      if (!rate) return 0;
+      return rate * getFXRate(fxRates, currency);
+    })
     .catch(() => 0);
 };
 
@@ -535,6 +538,14 @@ export const getCascaderOptions = (
   });
   return options;
 };
+
+export const getCascaderOptionsForCrypto = (list: Array<{ Code: string, Name: string }>) => {
+  let options: Array<any> = [];
+  list.map((item) => {
+    options.push({ value: item.Code, label: item.Name });
+  });
+  return options;
+}
 
 export const initializeNPSData = async () => {
   let npsData: Array<APIt.CreateNPSPriceInput> | null =
@@ -696,7 +707,7 @@ export const calculateValuation = async (
       value = calculateLoan(record);
       break;
     case CRYPTO:
-      value = await calculateCrypto(record, selectedCurrency);
+      value = await calculateCrypto(record, selectedCurrency, fxRates);
       break;
     case PM:
       value = await calculatePM(record, selectedCurrency, fxRates);
@@ -1005,7 +1016,7 @@ export const getCategoryOptions = (tab: string) => {
       Time: "Time Sharing Membership",
       Other: "Other",
     }),
-    [CRYPTO]: getCascaderOptions(cryptoList),
+    [CRYPTO]: getCascaderOptionsForCrypto(cryptoList),
     "P2P Lending": getCascaderOptions({
       "0": "Paid out",
       "4": "Accumulates every 3 months",
