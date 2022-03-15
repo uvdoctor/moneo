@@ -9,12 +9,13 @@
 
 <body>
     {{#> layout }}
-    <p class='main-text'>Your investment moved {{ chgImpact }} by ₹{{ chgAmount }}({{ chg }}%) since yesterday</p>
+    <p class='main-text'>Your investment moved {{#if chgImpact}}up{{else}}down{{/if}} <strong {{#if chgImpact}}
+            style="color: green" {{else}} style="color: red" {{/if}}>{{ chgAmount }}({{#if
+            chgImpact}}🡱{{else}}🡳{{/if}}{{ chg }}%)</strong> since yesterday</p>
 
     {{#if gainers}}
     <div class="box-container-high">
-        <p class='main-text'>Gainers</p>
-        <p>{{gainers.length}} Stock in your portfolio are the gainers in today's market session</p>
+        <p class='main-text'>Top {{gainers.length}} gainers</p>
         {{#each gainers}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this.name}}</a>
@@ -25,8 +26,7 @@
 
     {{#if losers}}
     <div class='box-container-low'>
-        <p class='main-text'>Losers</p>
-        <p>{{losers.length}} Stock in your portfolio are the losers in today's market session</p>
+        <p class='main-text'>Top {{losers.length}} losers</p>
         {{#each losers}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this.name}}</a>
@@ -37,8 +37,7 @@
 
     {{#if yhigh}}
     <div class="box-container-high">
-        <p class='main-text'>52 Week High</p>
-        <p>{{yhigh.length}} Stock in your portfolio touched 52 weeks high levels in today's market session</p>
+        <p class='main-text'>Stocks that touched 52-week high</p>
         {{#each yhigh}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this.name}}</a>
@@ -49,8 +48,7 @@
 
     {{#if ylow}}
     <div class='box-container-low'>
-        <p class='main-text'>52 Week Low</p>
-        <p>{{ylow.length}} Stock in your portfolio touched 52 weeks low levels in today's market session</p>
+        <p class='main-text'>Stocks that touched 52-week low</p>
         {{#each ylow}}
         <div class="data-container">
             <a href="https://moneo.in/get">{{this.name}}</a>
@@ -84,18 +82,9 @@
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
         <tbody>
             <tr>
-                <td align="left">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <a href="{{url}}" target="_blank">
-                                        View Details
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <td align="center">
+                    <a href="{{url}}" target="_blank">
+                        View Details
                 </td>
             </tr>
         </tbody>

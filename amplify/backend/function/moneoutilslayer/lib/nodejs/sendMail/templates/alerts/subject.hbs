@@ -1,1 +1,1 @@
-Moneo: Your investment moved {{ chgImpact }} by ₹{{ chgAmount }}({{ chg }}%)
+Moneo: Your investment moved {{#if chgImpact}}up{{else}}down{{/if}} by {{ chgAmount }}({{#if chgImpact}}🡱{{else}}🡳{{/if}}{{ chg }}%)

@@ -10,9 +10,9 @@ img {
 
 body {
   background-color: #f6f6f6;
-  font-family: sans-serif;
+  font-family: 'Jost';
   -webkit-font-smoothing: antialiased;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.8;
   margin: 0;
   padding: 0;
@@ -26,8 +26,8 @@ table {
 }
 
 table td {
-  font-family: sans-serif;
-  font-size: 16px;
+  font-family: 'Jost';
+  font-size: 18px;
   vertical-align: top;
 }
 
@@ -58,9 +58,10 @@ table td {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
   color: #204056;
-  font-size: 12px;
+  font-size: 18px;
   font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
   padding: 1em;
+  line-height: 1.4;
 }
 
 .box-container-low {
@@ -70,9 +71,10 @@ table td {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
   color: #204056;
-  font-size: 12px;
-  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+  font-size: 18px;
+  font-family: "Jost";
   padding: 1em;
+  line-height: 1.4;
 }
 
 .data-container {
@@ -104,11 +106,13 @@ table td {
 
 .main-text {
   font-weight: bold;
+  line-height: 1.8;
 }
 
 .text-title {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
+  line-height: 1.8;
 }
 
 /* -------------------------------------
@@ -161,58 +165,11 @@ table td {
 /* -------------------------------------
   TYPOGRAPHY
 ------------------------------------- */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #333333;
-  font-family: sans-serif;
-  font-weight: 400;
-  line-height: 1.4;
-  margin: 0;
-  margin-bottom: 10px;
-}
-
-.main-header h1,
-.main-header h2,
-.main-header h3,
-.main-header h4 {
-  color: #ffffff;
-  text-align: center;
-}
-
-h1 {
-  font-size: 55px;
-  font-weight: 800;
-}
-
-h2 {
-  font-size: 40px;
-  font-weight: 800;
-}
-
-h3 {
-  font-size: 30px;
-  font-weight: 800;
-}
-
-h4 {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-h5 {
-  font-size: 16px;
-  font-weight: 800;
-}
-
 p,
 ul,
 ol {
-  font-family: sans-serif;
-  font-size: 16px;
+  font-family: 'Jost';
+  font-size: 18px;
   font-weight: 400;
   margin: 0;
   margin-bottom: 15px;
@@ -229,7 +186,7 @@ ol li {
 a {
   font-size: 18px;
   color: #15c;
-  font-family: 'Arial';
+  font-family: 'Jost';
   font-weight: 600;
 }
 
@@ -264,7 +221,7 @@ a {
   color: #499824;
   cursor: pointer;
   display: inline-block;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
   padding: 12px 25px;

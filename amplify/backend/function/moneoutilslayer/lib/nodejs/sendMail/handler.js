@@ -19,7 +19,7 @@ sendEmail({
     ylow: ylow,
     chg: change,
     chgAmount: chgAmount,
-    chgImpact: "up",
+    chgImpact: false,
     metal: metal
   },
 }).then((data) => {
