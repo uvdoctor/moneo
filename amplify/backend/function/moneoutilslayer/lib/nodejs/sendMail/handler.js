@@ -4,7 +4,7 @@ const yhigh = [ { name: "HDFC" }]
 const ylow = [ {name: "ICICI"} ]
 const gainers = [ { name: "SAIL" } ]
 const losers = [{ name: "COAL" }]
-const metal = [{ name: "Gold", price: "12672", up: true, chg: "7.3" }, { name: "Silver", price: "12345", down: true, chg: "6.3" }]
+const metal = [{ name: "Gold", price: "12672", up: true, chg: "7.3" }, { name: "Silver", price: "12345", up: false, chg: "6.3" }]
 const change = 3.32;
 const chgAmount = 400000;
 

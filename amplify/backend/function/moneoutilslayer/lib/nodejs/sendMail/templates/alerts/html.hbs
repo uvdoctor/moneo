@@ -62,18 +62,22 @@
     {{#if metal}}
     {{#each metal}}
     <div class="cc-container">
-	   <div class="column">
-		 <p class="main-text">{{ this.name }}</p>
-	   </div>
-	   <div class="column">
-		 <p class="main-text">₹{{ this.price }}</p>
-	   </div>
-	   <div class="column">
-		 <p{{#if this.down}}style="color: red"{{/if}}
-         {{#if this.up}}style="color: green"{{/if}}>
-         {{#if this.up}}▲{{/if}}{{#if this.down}}▼{{/if}}{{ this.chg }}%</p>
-	   </div>
-	</div>
+        <div class="column">
+            <p class="main-text">{{ this.name }}</p>
+        </div>
+        <div class="column">
+            <p class="main-text">₹{{ this.price }}</p>
+        </div>
+        <div class="column">
+            <p {{#if this.up}} style="color: green" {{else}} style="color: red" {{/if}}>
+                {{#if this.up}}
+                ▲
+                {{else}}
+                ▼
+                {{/if}}
+                {{ this.chg }}%</p>
+        </div>
+    </div>
     {{/each}}
     {{/if}}
 
