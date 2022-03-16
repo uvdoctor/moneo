@@ -8,10 +8,20 @@
                         <td>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td><img src="https://moneo.in/images/icons/tlogo128.png" alt="Moneo"/></td>
                                     <td>
-                                        <div class="title">
-                                            <p class="text-title">Daily Portfolio Report</p>
+                                        <div class="title-row">
+                                            <div class="title-column">
+                                                <img src="https://moneo.in/images/icons/tlogo128.png" alt="Moneo" />
+                                            </div>
+                                            <div class="title-column title-column-left">
+                                                <p class="text-title">Investment moved {{#if
+                                                    chgImpact}}up{{else}}down{{/if}}</p>
+                                                <p class="text-title" {{#if chgImpact}} style="color: green" {{else}}
+                                                    style="color: red" {{/if}}>{{#if
+                                                    chgImpact}} ▲
+                                                    {{else}}
+                                                    ▼{{/if}}{{ chgAmount }}</p>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -21,31 +31,31 @@
                 </table>
 
                 <!-- START CENTERED WHITE CONTAINER -->
-                    <table role="presentation" class="main">
-                        <!-- START MAIN CONTENT AREA -->
+                <table role="presentation" class="main">
+                    <!-- START MAIN CONTENT AREA -->
+                    <tr>
+                        <td class="wrapper">
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        {{> @partial-block}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <div class="footer">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td class="wrapper">
-                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td>
-                                            {{> @partial-block}}
-                                        </td>
-                                    </tr>
-                                </table>
+                            <td class="content-block">
+                                <span>Moneo</span>
                             </td>
                         </tr>
                     </table>
-
-
-                    <div class="footer">
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td class="content-block">
-                                    <span>Moneo</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                </div>
 
             </div>
         </td>

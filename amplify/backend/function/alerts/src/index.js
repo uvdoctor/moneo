@@ -61,7 +61,7 @@ const processData = () => {
         );
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
-        const chgAmount = toHumanFriendlyCurrency((price - prev),"INR")
+        const chgAmount = toHumanFriendlyCurrency(Math.abs(price - prev),"INR")
         const chg = calculateDiffPercent(price, prev);
         const chgImpact = Math.sign(chg) > 0 ? true : false;
         sendUserInfo[email] = {

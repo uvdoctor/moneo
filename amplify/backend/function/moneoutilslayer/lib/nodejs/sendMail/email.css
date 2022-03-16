@@ -3,9 +3,19 @@ img {
   -ms-interpolation-mode: bicubic;
 }
 
-.title {
-  margin-top: 50px;
-  margin-right: 40px;
+.title-column {
+  flex: 50%;
+  padding: 2px;
+  text-align: center;
+}
+
+.title-column-left {
+  margin-left: 40px;
+  margin-top: 20px;
+}
+
+.title-row {
+  display: flex;
 }
 
 body {
@@ -107,10 +117,11 @@ table td {
 .main-text {
   font-weight: bold;
   line-height: 1.8;
+  font-size: 20px !important;
 }
 
 .text-title {
-  font-size: 30px;
+  font-size: 25px !important;
   font-weight: bold;
   line-height: 1.8;
 }
@@ -243,7 +254,7 @@ a {
 ------------------------------------- */
 @media only screen and (max-width: 620px) {
   table[class="body"] h1 {
-    font-size: 28px !important;
+    font-size: 16px !important;
     margin-bottom: 10px !important;
   }
 
@@ -253,7 +264,7 @@ a {
   table[class="body"] td,
   table[class="body"] span,
   table[class="body"] a {
-    font-size: 16px !important;
+    font-size: 12px !important;
   }
 
   table[class="body"] .wrapper,
@@ -286,7 +297,23 @@ a {
 
   table[class="body"] .img-responsive {
     height: auto !important;
-    max-width: 100% !important;
     width: auto !important;
+  }
+
+  .main-text {
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .text-title {
+    font-size: 16px !important;
+  }
+
+  .title-column-left {
+    margin-top: 10px !important;
+    margin-left: 0px !important;
+    margin-right: 25px !important;
+    /* padding: 0px !important; */
+    text-align: center;
   }
 }

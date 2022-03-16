@@ -9,10 +9,7 @@
 
 <body>
     {{#> layout }}
-    <p class='main-text'>Your investment moved {{#if chgImpact}}up{{else}}down{{/if}} <strong {{#if chgImpact}}
-            style="color: green" {{else}} style="color: red" {{/if}}>{{ chgAmount }}({{#if
-            chgImpact}}🡱{{else}}🡳{{/if}}{{ chg }}%)</strong> since yesterday</p>
-
+    <p></p>
     {{#if gainers}}
     <div class="box-container-high">
         <p class='main-text'>Top {{gainers.length}} gainers</p>
