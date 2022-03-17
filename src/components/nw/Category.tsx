@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import CascaderInput from "../form/CascaderInput";
 import { getRateByCategory, hasOnlyCategory, hasRisktab } from "./nwutils";
+import CryptoTypeahead from "./CryptoTypeAhead";
 interface CategoryProps {
   category?: string;
   categoryOptions: any;
@@ -14,7 +15,7 @@ interface CategoryProps {
   setSubCat?: Function;
   pre?: string;
   info?: string;
-  post?: any
+  post?: any;
 }
 
 export default function Category({
@@ -29,7 +30,7 @@ export default function Category({
   setSubCat,
   pre,
   info,
-  post
+  post,
 }: CategoryProps) {
   const { childTab }: any = useContext(NWContext);
   const { CRYPTO, LTDEP, PF, P2P, LENT, PROP } = TAB;
@@ -40,8 +41,6 @@ export default function Category({
         ? record.chgF
         : childTab === PROP
         ? record.type
-        : childTab === CRYPTO
-        ? record.name
         : childTab === P2P
         ? record.chgF
         : record.subt
@@ -69,12 +68,16 @@ export default function Category({
     if (childTab === PROP) {
       record.type = value;
     } else {
-      childTab === CRYPTO
-        ? (record.name = value)
-        : childTab === P2P || hasRisktab(childTab)
+      childTab === P2P || hasRisktab(childTab)
         ? (record.chgF = Number(value))
         : (record.subt = value);
     }
+    isListHolding && data ? changeData([...data]) : changeData(record);
+  };
+
+  const changeCryptoCategory = (value: any) => {
+    setCategory && setCategory(value);
+    record.name = value;
     isListHolding && data ? changeData([...data]) : changeData(record);
   };
 
@@ -95,7 +98,14 @@ export default function Category({
     }
   }, [type]);
 
-  return (
+  return childTab === CRYPTO ? (
+    <CryptoTypeahead
+      info={info as string}
+      label={pre as string}
+      changehandler={changeCryptoCategory}
+      codeValue={isListHolding ? record.name : ''}
+    />
+  ) : (
     <CascaderInput
       parentValue={String(parentValue)}
       childValue={hasOnlyCategory(childTab) ? "" : String(childValue)}

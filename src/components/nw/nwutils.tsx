@@ -13,7 +13,6 @@ import {
   TAB,
 } from "./NWContext";
 import {
-  cryptoList,
   getFXRate,
   getPrice,
   initOptions,
@@ -539,14 +538,6 @@ export const getCascaderOptions = (
   return options;
 };
 
-export const getCascaderOptionsForCrypto = (list: any) => {
-  let options: Array<any> = [];
-  list.map((item: { Code: string; Name: string }) => {
-    options.push({ value: item.Code, label: item.Name });
-  });
-  return options;
-}
-
 export const initializeNPSData = async () => {
   let npsData: Array<APIt.CreateNPSPriceInput> | null =
     simpleStorage.get(LOCAL_NPS_DATA_KEY);
@@ -1016,7 +1007,7 @@ export const getCategoryOptions = (tab: string) => {
       Time: "Time Sharing Membership",
       Other: "Other",
     }),
-    [CRYPTO]: getCascaderOptionsForCrypto(cryptoList),
+    [CRYPTO]: {},
     "P2P Lending": getCascaderOptions({
       "0": "Paid out",
       "4": "Accumulates every 3 months",
