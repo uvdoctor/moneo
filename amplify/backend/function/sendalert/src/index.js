@@ -11,7 +11,7 @@ const processData = (records) => {
 
     const users = Object.keys(queueData);
     for (let user of users) {
-      const { gainers, losers, yhigh, ylow, chg, chgAmount, chgImpact, metal } =
+      const { gainers, losers, yhigh, ylow, chgAmount, chgImpact, metal } =
         queueData[user];
       try {
         const message = await sendEmail({
@@ -23,7 +23,6 @@ const processData = (records) => {
             losers,
             yhigh,
             ylow,
-            chg,
             chgImpact,
             chgAmount,
             metal
