@@ -32,11 +32,9 @@ const instrumentValuation = (insMap, userinsmap) => {
     if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
 
     const diff = calculateDiffPercent(price, prev);
-    if (Math.abs(diff) > 3) {
-      Math.sign(diff) > 0
-        ? gainers.push({ name, diff })
-        : losers.push({ name, diff });
-    }
+    Math.sign(diff) > 0
+      ? gainers.push({ name, diff })
+      : losers.push({ name, diff });
   });
   gainers = sortDescending(gainers, "diff").slice(0, 3);
   losers = sortDescending(losers, "diff").slice(-3);

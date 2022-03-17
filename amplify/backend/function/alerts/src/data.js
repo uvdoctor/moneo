@@ -73,7 +73,12 @@ const processInstruments = async (infoMap, usersMap, usersinsMap) => {
   }
 };
 
-const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
+const processHoldings = async (
+  infoMap,
+  usersMap,
+  usersholdingMap,
+  usersinsMap
+) => {
   let cryptoAndCommodity = [];
   const userholdingsTableName = await getTableNameFromInitialWord(
     "UserHoldings"
@@ -88,7 +93,8 @@ const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
   let pmIds = new Set();
   let cryptoIds = new Set();
   for (let item of userholdingsdata) {
-    usersholdingMap[item.uname] = [...item.nps, ...item.pm, ...item.crypto];
+    usersholdingMap[item.uname] = [...item.pm, ...item.crypto];
+    usersinsMap[item.uname] = [...usersinsMap[item.uname], ...item.nps];
     for (let holding of item.nps) {
       npsIds.add(holding.name);
     }
@@ -121,7 +127,7 @@ const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
       cryptoAndCommodity.push({
         name: metals[ids],
         price: toCurrency(convertUSDToINR(data[1]), "INR", true),
-        chg: diff,
+        chg: Math.abs(diff),
         up: Math.sign(diff) > 0 ? true : false,
       });
     }
@@ -130,26 +136,28 @@ const processHoldings = async (infoMap, usersMap, usersholdingMap) => {
   // Crytpo
   const cryptoArray = [...cryptoIds];
   if (cryptoIds.size) {
-    // for (let ids of cryptoArray) {
-    // let data = [];
-    // try {
-    //   data = await getCryptoPrice(ids, fromDate);
-    //   console.log(data);
-    // } catch {
-    //   console.log(err);
-    // }
-    // infoMap[ids] = {
-    //   prev: convertUSDToINR(data[0]),
-    //   price: convertUSDToINR(data[1]),
-    // };
-    // const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
-    // cryptoAndCommodity.push({
-    //   name: ids,
-    //   price: toCurrency(convertUSDToINR(data[1]), "INR", true),
-    //   chg: diff,
-    //   up: Math.sign(diff) > 0 ? true : false,
-    // });
-    // }
+    for (let ids of cryptoArray) {
+    let prev = 0;
+    let price = 0; 
+    try {
+      prev = await getCryptoPrice(ids, fromDate);
+      price = await getCryptoPrice(ids)
+    } catch(err) {
+      console.log(err);
+    }
+    if(typeof prev !== 'number' && typeof price !== 'number') continue;
+    infoMap[ids] = {
+      prev: convertUSDToINR(prev),
+      price: convertUSDToINR(price),
+    };
+    const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
+    cryptoAndCommodity.push({
+      name: ids,
+      price: toCurrency(convertUSDToINR(price), "INR", true),
+      chg: Math.abs(diff),
+      up: Math.sign(diff) > 0 ? true : false,
+    });
+    }
   }
 
   return { pmArray, cryptoAndCommodity };

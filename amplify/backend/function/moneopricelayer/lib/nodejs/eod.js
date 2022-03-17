@@ -31,7 +31,7 @@ const getDividendInfo = async (exchg) => {
 
 const getCryptoPrice = async (symbol, date) => {
   let url = !date
-    ? `https://eodhistoricaldata.com/api/eod/${symbol}.CC?api_token=${token}&fmt=json&filter=last_close`
+    ? `https://eodhistoricaldata.com/api/real-time/${symbol}.CC?api_token=${token}&fmt=json&filter=close`
     : `https://eodhistoricaldata.com/api/eod/${symbol}.CC?api_token=${token}&fmt=json&from=${date}&filter=close`;
   return await getData(url);
 };

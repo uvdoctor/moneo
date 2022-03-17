@@ -5,11 +5,10 @@ const {
 const {
   instrumentValuation,
   holdingValuation,
-  calculateDiffPercent,
 } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
-const { processHoldings, processInstruments } = require("./data");
 const { toHumanFriendlyCurrency } = require("/opt/nodejs/utility");
+const { processHoldings, processInstruments } = require("./data");
 
 const processData = () => {
   return new Promise(async (resolve, reject) => {
@@ -40,10 +39,11 @@ const processData = () => {
 
       userinfodata.map((item) => (usersMap[item.uname] = item.email));
       await processInstruments(infoMap, usersMap, usersinsMap);
-      const { pmArray, cryptoAndCommodity } = await processHoldings(
+        const { pmArray, cryptoAndCommodity } = await processHoldings(
         infoMap,
         usersMap,
-        usersholdingMap
+        usersholdingMap,
+        usersinsMap
       );
 
       Object.keys(usersMap).map((user) => {
@@ -62,14 +62,12 @@ const processData = () => {
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
         const chgAmount = toHumanFriendlyCurrency(Math.abs(price - prev),"INR")
-        const chg = calculateDiffPercent(price, prev);
-        const chgImpact = Math.sign(chg) > 0 ? true : false;
+        const chgImpact = Math.sign(price - prev) > 0 ? true : false;
         sendUserInfo[email] = {
           gainers,
           losers,
           yhigh: yhighList,
           ylow: ylowList,
-          chg,
           chgAmount,
           chgImpact,
           metal: cryptoAndCommodity,
