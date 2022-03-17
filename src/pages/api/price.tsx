@@ -15,7 +15,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const getRate = (id: string, type: string) => {
     const time = type === "CC" ? 'real-time' : 'eod';
-    fetch(`https://eodhistoricaldata.com/api/${time}/${id}.${type}?api_token=${eodKey}&fmt=json&filter=last_close`)
+    fetch(`https://eodhistoricaldata.com/api/${time}/${id}.${type}?api_token=${eodKey}&fmt=json&filter=${time === 'real-time' ? 'close' : 'last_close'}`)
       .then((data) => data.json())
       .then((rate) => res.status(200).json({ rate: rate }))
       .catch((err) => {
