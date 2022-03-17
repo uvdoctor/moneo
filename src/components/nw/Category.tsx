@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import CascaderInput from "../form/CascaderInput";
 import { getRateByCategory, hasOnlyCategory, hasRisktab } from "./nwutils";
-import CryptoTypeahead from "./CryptoTypeAhead";
+import CryptoTypeahead from "./CryptoTypeahead";
 interface CategoryProps {
   category?: string;
   categoryOptions: any;
