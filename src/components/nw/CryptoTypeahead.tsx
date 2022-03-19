@@ -30,7 +30,7 @@ export default function CryptoTypeahead({
       if (!val) return;
       setValue(val.name);
     }
-  }, [codeValue, data, value]);
+  }, [codeValue, data]);
 
   useEffect(() => {
     getList().then((response) => {

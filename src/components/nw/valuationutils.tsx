@@ -20,7 +20,11 @@ import {
   PropertyType,
   RiskProfile,
 } from "../../api/goals";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import {
+  LOCAL_DATA_TTL,
+  LOCAL_INS_DATA_KEY,
+  LOCAL_NPS_DATA_KEY,
+} from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
@@ -1060,4 +1064,61 @@ export const calculateTotalLiabilities = (
     totalLiabilities += total;
   }
   return totalLiabilities;
+};
+
+const calculateDiffPercent = (curr: number, prev: number) => {
+  const diff = (100 * (curr - prev)) / prev;
+  return Math.round(diff * 100) / 100;
+};
+
+const sortDescending = (array: any[], key: string) =>
+  array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
+
+const checkDateEquality = (date: any) =>
+  new Date().toDateString() === new Date(date).toDateString();
+
+export const calculateAlerts = async (
+  holdings: CreateUserHoldingsInput | null,
+  insHoldings: CreateUserInsInput | null
+) => {
+  let yhighList: any[] = [];
+  let ylowList: any[] = [];
+  let gainers: any[] = [];
+  let losers: any[] = [];
+  if (insHoldings?.ins?.length) {
+    let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    if (!cachedData) {
+      cachedData = await initializeInsData(insHoldings?.ins);
+    }
+    insHoldings.ins.forEach((instrument: InstrumentInput) => {
+      const id = instrument.id;
+      const data = cachedData[id];
+      if (!data) return;
+      const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
+      if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
+      if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
+      const diff = calculateDiffPercent(price, prev);
+      Math.sign(diff) > 0
+        ? gainers.push({ name, diff: Math.abs(diff) })
+        : losers.push({ name, diff: Math.abs(diff) });
+    });
+  }
+  if (holdings?.nps?.length) {
+    let cachedData = simpleStorage.get(LOCAL_NPS_DATA_KEY);
+    if (!cachedData) {
+      cachedData = await initializeNPSData();
+    }
+    holdings?.nps.forEach((holding: HoldingInput) => {
+      const { prev, price, name } = cachedData.find(
+        (item: { id: any }) => item.id === holding.name
+      );
+      const diff = calculateDiffPercent(price, prev);
+      Math.sign(diff) > 0
+        ? gainers.push({ name, diff: Math.abs(diff) })
+        : losers.push({ name, diff: Math.abs(diff) });
+    });
+  }
+  gainers = sortDescending(gainers, "diff").slice(0, 3);
+  losers = sortDescending(losers, "diff").slice(-3);
+  return { gainers, losers, yhighList, ylowList };
 };
