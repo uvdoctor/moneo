@@ -2,7 +2,7 @@ import { Menu } from "antd";
 import Link from "next/link";
 import simpleStorage from "simplestorage.js";
 import { RiskProfile, TaxLiability } from "../api/goals";
-import { ASSET_CATEGORIES, COLORS, LOCAL_DATA_TTL } from "../CONSTANTS";
+import { ASSET_CATEGORIES, COLORS, LOCAL_CRYPTOLIST_DATA_KEY, LOCAL_DATA_TTL } from "../CONSTANTS";
 
 export function getCurrencyList() {
   return {
@@ -838,6 +838,8 @@ export const getPrice = async (id: string, type: string) => {
 };
 
 export const getCryptoList = async () => {
+  let cachedlist = simpleStorage.get(LOCAL_CRYPTOLIST_DATA_KEY);
+  if (cachedlist) return cachedlist;
   return await fetch("/api/price", {
     method: "POST",
     headers: {
@@ -845,7 +847,11 @@ export const getCryptoList = async () => {
     },
     body: JSON.stringify({ id: '', type: ''}),
   })
-    .then(async (res: any) => await res.json())
+    .then(async (res: any) => {
+      const re = await res.json();
+      simpleStorage.set(LOCAL_CRYPTOLIST_DATA_KEY, re, LOCAL_DATA_TTL);
+      return re.rate;
+    })
     .catch(() => []);
 };
 
