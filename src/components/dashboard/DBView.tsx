@@ -7,6 +7,7 @@ import { ROUTES } from "../../CONSTANTS";
 import EconomicCalendar from "./EconomicCalendar";
 import StockMarket from "./StockMarket";
 import MarketOverview from "./MarketOverview";
+import InvestmentAlerts from "./InvestmentAlerts";
 
 require("./DBView.less");
 
@@ -74,6 +75,9 @@ export default function DBView() {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <MarketOverview />
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <InvestmentAlerts />
                 </Col>
               </Row>
             </Col>
