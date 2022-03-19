@@ -113,15 +113,15 @@ const processHoldings = async (
   const { date, month, yearFull } = utility(1);
   const fromDate = `${yearFull}-${month}-${date}`;
   const fxRate = await getFXRate("INR");
-  const convertUSDToINR = (amt) => fxRate * convertTroyOunceToGram(amt);
+  const convertUSDToINR = (amt) => fxRate * amt;
 
   const pmArray = [...pmIds];
   if (pmIds.size) {
     for (let ids of pmArray) {
       const data = await getCommodityPrice(ids, fromDate);
       infoMap[ids] = {
-        prev: convertUSDToINR(data[0]),
-        price: convertUSDToINR(data[1]),
+        prev: convertUSDToINR(convertTroyOunceToGram(data[0])),
+        price: convertUSDToINR(convertTroyOunceToGram(data[1])),
       };
       const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
       cryptoAndCommodity.push({
@@ -137,26 +137,26 @@ const processHoldings = async (
   const cryptoArray = [...cryptoIds];
   if (cryptoIds.size) {
     for (let ids of cryptoArray) {
-    let prev = 0;
-    let price = 0; 
-    try {
-      prev = await getCryptoPrice(ids, fromDate);
-      price = await getCryptoPrice(ids)
-    } catch(err) {
-      console.log(err);
-    }
-    if(typeof prev !== 'number' && typeof price !== 'number') continue;
-    infoMap[ids] = {
-      prev: convertUSDToINR(prev),
-      price: convertUSDToINR(price),
-    };
-    const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
-    cryptoAndCommodity.push({
-      name: ids,
-      price: toCurrency(convertUSDToINR(price), "INR", true),
-      chg: Math.abs(diff),
-      up: Math.sign(diff) > 0 ? true : false,
-    });
+      let prev = 0;
+      let price = 0;
+      try {
+        prev = await getCryptoPrice(ids, fromDate);
+        price = await getCryptoPrice(ids);
+      } catch (err) {
+        console.log(err);
+      }
+      if (typeof prev !== "number" && typeof price !== "number") continue;
+      infoMap[ids] = {
+        prev: convertUSDToINR(prev),
+        price: convertUSDToINR(price),
+      };
+      const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
+      cryptoAndCommodity.push({
+        name: ids,
+        price: toCurrency(convertUSDToINR(price), "INR", true),
+        chg: Math.abs(diff),
+        up: Math.sign(diff) > 0 ? true : false,
+      });
     }
   }
 
