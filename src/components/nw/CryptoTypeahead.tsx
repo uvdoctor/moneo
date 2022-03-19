@@ -7,40 +7,35 @@ interface CryptoTypeaheadProps {
   label: string;
   changehandler: Function;
   codeValue: string;
-  info: string
+  info: string;
 }
 
 export default function CryptoTypeahead({
   label,
   changehandler,
   codeValue,
-  info
+  info,
 }: CryptoTypeaheadProps) {
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<string>("");
 
   const getList = async () => {
     return await getCryptoList();
   };
 
-  useEffect(()=>{
-    if(!value && codeValue && data) {
+  useEffect(() => {
+    if (codeValue && data) {
       const val = data.find((item) => item.code === codeValue);
-      if(!val) return;
-      setValue(val.name)
+      if (!val) return;
+      setValue(val.name);
     }
-  },[value])
+  }, [codeValue, data, value]);
 
   useEffect(() => {
     getList().then((response) => {
       setData([...response]);
       setSuggestions([...response]);
-      if(codeValue) {
-        const val = response.find((item: { code: string; })=> item.code === codeValue);
-        if(!val) return
-        setValue(val.name)
-      }
     });
   }, []);
 

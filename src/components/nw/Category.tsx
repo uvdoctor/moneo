@@ -103,7 +103,7 @@ export default function Category({
       info={info as string}
       label={pre as string}
       changehandler={changeCryptoCategory}
-      codeValue={isListHolding ? record.name : ''}
+      codeValue={isListHolding && record ? record.name : ''}
     />
   ) : (
     <CascaderInput
