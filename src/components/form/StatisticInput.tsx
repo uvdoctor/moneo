@@ -18,7 +18,7 @@ export default function StatisticInput({
       title={<strong style={{ fontSize: "20px" }}>{title}</strong>}
       value={value}
       valueStyle={{
-        color: negative ? "#3f8600" : "#cf1322",
+        color: negative ? "#cf1322" : "#3f8600",
         fontWeight: "bold",
         fontSize: "20px",
       }}
