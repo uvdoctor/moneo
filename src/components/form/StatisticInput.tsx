@@ -15,12 +15,12 @@ export default function StatisticInput({
 }: StatisticInputProps) {
   return (
     <Statistic
-      title={<strong style={{ fontSize: "20px" }}>{title}</strong>}
+      title={<strong style={{ fontSize: "16px" }}>{title}</strong>}
       value={value}
       valueStyle={{
         color: negative ? "#cf1322" : "#3f8600",
         fontWeight: "bold",
-        fontSize: "20px",
+        fontSize: "16px",
       }}
       prefix={negative ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
       suffix="%"
