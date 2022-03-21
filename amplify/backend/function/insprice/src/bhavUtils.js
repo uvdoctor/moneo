@@ -14,7 +14,7 @@ const extractDataFromCSV = async (
   nameMap,
   weekHLMap,
   mcaptMap,
-  bondTable,
+  bondTable
 ) => {
   const end = new Promise((resolve, reject) => {
     let [exchgBatches, exchgBatchRecords, exchgCount] = [[], [], 0];
@@ -30,7 +30,7 @@ const extractDataFromCSV = async (
           exchg,
           isinMap,
           exchgTable,
-          bondTable,
+          bondTable
         );
         if (Object.keys(updateSchema).length === 0) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
@@ -113,7 +113,7 @@ const extractPartOfData = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csvFormat)
       .on("data", (record) => {
-        if(!Object.keys(record).length) return;
+        if (!Object.keys(record).length) return;
         const parse = (data) => (parseFloat(data) ? parseFloat(data) : null);
         if (
           fileName === "ind_nifty100list.csv" ||
@@ -124,12 +124,12 @@ const extractPartOfData = async (
           };
         }
         if (fileName.includes("CM_52_wk_High_low")) {
-          if(record[codes.sid].length > 20) return;
+          if (record[codes.sid].length > 20) return;
           weekHLMap[record[codes.sid]] = {
             yhigh: parse(record[codes.yhigh]),
             ylow: parse(record[codes.ylow]),
-            yhighd: record[codes.yhighd] ? record[codes.yhighd] : '',
-            ylowd: record[codes.ylowd] ? record[codes.yhighd] : ''
+            yhighd: record[codes.yhighd] ? record[codes.yhighd] : "",
+            ylowd: record[codes.ylowd] ? record[codes.yhighd] : "",
           };
         } else {
           nameMap[record[codes.id]] = {
@@ -163,14 +163,9 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
     element.map((item) => {
       const Item = item.PutRequest.Item;
       const getData = (data) => {
-        let result = data.find(
-          (re) => re.code.startsWith(Item.sid) || Item.sid === re.code
-        );
-        if (!result) {
-          result = data.find(
-            (re) => re.code.startsWith(Item.name) || Item.name === re.code
-          );
-        }
+        let result = data.find((re) => Item.sid === re.code);
+        if (!result) result = data.find((re) => re.code.startsWith(Item.sid));
+        if (!result) result = data.find((re) => Item.name === re.code);
         return result;
       };
       const eod = eodData && getData(eodData);
