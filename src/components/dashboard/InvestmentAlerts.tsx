@@ -83,6 +83,7 @@ export default function InvestmentAlerts() {
 
   return (
     <Card
+      id="alerts"
       style={{ width: "100%" }}
       title={
         <strong style={{ fontSize: "20px" }}>

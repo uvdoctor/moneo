@@ -8,6 +8,7 @@ import EconomicCalendar from "./EconomicCalendar";
 import StockMarket from "./StockMarket";
 import MarketOverview from "./MarketOverview";
 import InvestmentAlerts from "./InvestmentAlerts";
+import Link from "next/link";
 
 require("./DBView.less");
 
@@ -77,7 +78,11 @@ export default function DBView() {
                   <MarketOverview />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
-                  <InvestmentAlerts />
+                  <Link href="#alerts" scroll={false}>
+                    <a>
+                      <InvestmentAlerts />
+                    </a>
+                  </Link>
                 </Col>
               </Row>
             </Col>
