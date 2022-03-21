@@ -1077,6 +1077,31 @@ const sortDescending = (array: any[], key: string) =>
 const checkDateEquality = (date: any) =>
   new Date().toDateString() === new Date(date).toDateString();
 
+export const calculatePrice = (
+  instruments: Array<InstrumentInput>,
+  gainers: any[],
+  losers: any[],
+  yhighList: any[],
+  ylowList: any[]
+) => {
+  const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  const isin: { [key: string]: string } = {};
+  instruments.forEach((instrument: InstrumentInput) => {
+    const id = instrument.id;
+    const data = cachedData[id];
+    if(isin[id] || !data) return;
+    isin[id] = id;
+    const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
+    if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
+    if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
+    const diff = calculateDiffPercent(price, prev);
+    Math.sign(diff) > 0
+      ? gainers.push({ name, diff: Math.abs(diff) })
+      : losers.push({ name, diff: Math.abs(diff) });
+  });
+  return { gainers, losers, yhighList, ylowList };
+};
+
 export const calculateAlerts = async (
   holdings: CreateUserHoldingsInput | null,
   insHoldings: CreateUserInsInput | null
@@ -1090,27 +1115,20 @@ export const calculateAlerts = async (
     if (!cachedData) {
       cachedData = await initializeInsData(insHoldings?.ins);
     }
-    insHoldings.ins.forEach((instrument: InstrumentInput) => {
-      const id = instrument.id;
-      const data = cachedData[id];
-      if (!data) return;
-      const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
-      if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
-      if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
-      const diff = calculateDiffPercent(price, prev);
-      Math.sign(diff) > 0
-        ? gainers.push({ name, diff: Math.abs(diff) })
-        : losers.push({ name, diff: Math.abs(diff) });
-    });
+    calculatePrice(insHoldings.ins ,gainers, losers, yhighList, ylowList);
   }
   if (holdings?.nps?.length) {
     let cachedData = simpleStorage.get(LOCAL_NPS_DATA_KEY);
     if (!cachedData) {
       cachedData = await initializeNPSData();
     }
+    let npsMap: { [key:string]: string } = {};
     holdings?.nps.forEach((holding: HoldingInput) => {
+      const id = holding.name as string;
+      if(npsMap[id])return;
+      npsMap[id] = id;
       const { prev, price, name } = cachedData.find(
-        (item: { id: any }) => item.id === holding.name
+        (item: { id: any }) => item.id === id
       );
       const diff = calculateDiffPercent(price, prev);
       Math.sign(diff) > 0

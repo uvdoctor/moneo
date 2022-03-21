@@ -353,6 +353,15 @@ export const getStockMarketCap = () => {
   };
 };
 
+export const getPriceCategory = () => {
+  return {
+    gainers: "Gainers",
+    losers: "Losers",
+    yhigh: "52 Week High",
+    ylow: "52 Week Low"
+  };
+};
+
 export const getMutualFundMarketCap = () => {
   let mCap: any = getStockMarketCap();
   mCap[APIt.MCap.Hybrid] = "Multi-cap";
