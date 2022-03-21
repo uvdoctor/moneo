@@ -164,11 +164,11 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
       const Item = item.PutRequest.Item;
       const getData = (data) => {
         let result = data.find(
-          (re) => re.code.includes(Item.sid) || Item.sid === re.code
+          (re) => re.code.startsWith(Item.sid) || Item.sid === re.code
         );
         if (!result) {
           result = data.find(
-            (re) => re.code.includes(Item.name) || Item.name === re.code
+            (re) => re.code.startsWith(Item.name) || Item.name === re.code
           );
         }
         return result;
