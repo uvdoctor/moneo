@@ -1,1 +1,1 @@
-const version = 23;
+const version = 24;
