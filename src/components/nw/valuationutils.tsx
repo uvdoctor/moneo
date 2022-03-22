@@ -1137,6 +1137,6 @@ export const calculateAlerts = async (
     });
   }
   gainers = sortDescending(gainers, "diff").slice(0, 3);
-  losers = sortDescending(losers, "diff").slice(-3);
+  losers = sortDescending(losers, "diff").slice(0, 3);
   return { gainers, losers, yhighList, ylowList };
 };
