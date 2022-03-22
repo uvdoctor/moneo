@@ -1209,32 +1209,32 @@ export const initializeFundata = async (
 
 export const filterLosersGainers = (
   selectedTags: string[],
-  name: string,
+  id: string,
   gainers: any[],
   losers: any[]
 ) => {
   return (
     (losers.length &&
       selectedTags.includes("losers") &&
-      losers.some((item: any) => item.name === name)) ||
+      losers.some((item: any) => item.id === id)) ||
     (gainers.length &&
       selectedTags.includes("gainers") &&
-      gainers.some((item: any) => item.name === name))
+      gainers.some((item: any) => item.id === id))
   );
 };
 
 export const filterYearHighLow = (
   selectedTags: string[],
-  name: string,
+  id: string,
   yhigh: any[],
   ylow: any[]
 ) => {
   return (
     (yhigh.length &&
       selectedTags.includes("yhigh") &&
-      yhigh.some((item: any) => item.name === name)) ||
+      yhigh.some((item: any) => item.id === id)) ||
     (ylow.length &&
       selectedTags.includes("ylow") &&
-      ylow.some((item: any) => item.name === name))
+      ylow.some((item: any) => item.id === id))
   );
 };

@@ -216,7 +216,7 @@ export default function InstrumentValuation() {
         const data = cachedData[id];
         if (!data) return;
         if (childTab === MF) {
-          const { subt, mftype, type, mcap, risk, name } = data;
+          const { subt, mftype, type, mcap, risk } = data;
           return (
             selectedTags.includes(type) ||
             (type === AssetType.E &&
@@ -225,11 +225,11 @@ export default function InstrumentValuation() {
             (type === AssetType.F &&
               filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp) ||
-            filterLosersGainers(selectedTags, name, gainers, losers)
+            filterLosersGainers(selectedTags, id, gainers, losers)
           );
         }
         if (childTab === STOCK) {
-          const { mcapt, risk, name } = data;
+          const { mcapt, risk } = data;
           const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
           return (
             selectedTags.includes(mcapt) ||
@@ -240,17 +240,17 @@ export default function InstrumentValuation() {
             (funData &&
               funData[sid as string] &&
               selectedTags.includes(funData[sid as string].sector)) ||
-            filterYearHighLow(selectedTags, name, yhigh, ylow) ||
-            filterLosersGainers(selectedTags, name, gainers, losers)
+            filterYearHighLow(selectedTags, id, yhigh, ylow) ||
+            filterLosersGainers(selectedTags, id, gainers, losers)
           );
         } else if (childTab === BOND) {
-          const { subt, risk, name } = data;
+          const { subt, risk } = data;
           const { GB, GBO } = AssetSubType;
           return (
             (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
             selectedTags.includes(subt) ||
             filterRisk(selectedTags, risk, userInfo?.rp) ||
-            filterLosersGainers(selectedTags, name, gainers, losers)
+            filterLosersGainers(selectedTags, id, gainers, losers)
           );
         }
       }

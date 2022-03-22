@@ -1095,12 +1095,12 @@ export const calculatePrice = (
     if(isin[id] || !data) return;
     isin[id] = id;
     const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
-    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh });
-    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow });
+    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh, id });
+    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id });
     const diff = calculateDiffPercent(price, prev);
     Math.sign(diff) > 0
-      ? gainers.push({ name, diff: Math.abs(diff) })
-      : losers.push({ name, diff: Math.abs(diff) });
+      ? gainers.push({ name, diff: Math.abs(diff), id })
+      : losers.push({ name, diff: Math.abs(diff), id });
   });
   return { gainers, losers, yhighList, ylowList };
 };
