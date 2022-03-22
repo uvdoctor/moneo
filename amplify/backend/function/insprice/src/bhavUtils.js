@@ -22,7 +22,7 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if (isinMap[record[codes.id]]) return;
+        if (isinMap[record[codes.id]] || record[codes.type] === "BL" ) return;
         const { updateSchema, isBond } = calcSchema(
           record,
           codes,
