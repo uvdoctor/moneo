@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Card } from "antd";
+import React, {  useState } from "react";
+import { Button, Card } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useContext } from "react";
 import { DBContext } from "./DBContext";
 import { List } from "antd";
 import StatisticInput from "../form/StatisticInput";
+import { useRouter } from "next/router";
+import { MoreOutlined } from "@ant-design/icons";
 require("./InvestmentAlerts.less");
 
 const tabList = [
@@ -29,6 +31,7 @@ const tabList = [
 export default function InvestmentAlerts() {
   const { gainers, losers, yhigh, ylow }: any = useContext(DBContext);
   const [activeTabkey, setActiveTabkey] = useState("yhigh");
+  const router = useRouter();
 
   const contentList: { [key: string]: any } = {
     yhigh: (
@@ -90,14 +93,28 @@ export default function InvestmentAlerts() {
           End of the day Investment Details
         </strong>
       }
-      extra={<a href={ROUTES.GET}>More Details</a>}
       tabList={tabList}
       activeTabKey={activeTabkey}
       onTabChange={(key) => {
         onTabChange(key);
       }}
+      tabProps={{ type: "card" }}
     >
       {contentList[activeTabkey]}
+      <Button
+        style={{ float: "right" }}
+        key="more"
+        type="primary"
+        href={ROUTES.GET}
+        icon={<MoreOutlined />}
+        onClick={(e: any) => {
+          e.preventDefault();
+          router.push(ROUTES.GET);
+        }}
+        className="steps-start-btn"
+      >
+        More Details
+      </Button>
     </Card>
   );
 }
