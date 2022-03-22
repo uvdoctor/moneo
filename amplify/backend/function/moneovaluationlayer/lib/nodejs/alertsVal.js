@@ -2,8 +2,32 @@ const calculateDiffPercent = (curr, prev) => {
   const diff = (100 * (curr - prev)) / prev;
   return Math.round(diff * 100) / 100;
 };
-const checkDateEquality = (date) =>
-  new Date().toDateString() === new Date(date).toDateString();
+
+const getNumberOfDays = (start, end) => {
+  const date1 = new Date(start);
+  const date2 = new Date(end);
+  const oneDay = 1000 * 60 * 60 * 24;
+  const diffInTime = date2.getTime() - date1.getTime();
+  const diffInDays = Math.round(diffInTime / oneDay);
+  return diffInDays;
+};
+
+const getStr = (num) => (num < 10 ? `0${num}` : '' + num);
+
+const awsdate = (dateStr) => {
+  if (!dateStr) return;
+  const today = new Date(dateStr);
+  const date = today.getDate();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  return `${year}-${getStr(month)}-${getStr(date)}`;
+};
+
+const checkDate = (date) => {
+  const todayDate = awsdate(today);
+  const days = getNumberOfDays(date, todayDate);
+  return days <= 3;
+}
 
 const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2));
 
@@ -28,8 +52,8 @@ const instrumentValuation = (insMap, userinsmap) => {
     totalPrice += qty * price;
     totalPrev += qty * prev;
 
-    if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
-    if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
+    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh });
+    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow });
 
     const diff = calculateDiffPercent(price, prev);
     Math.sign(diff) > 0
