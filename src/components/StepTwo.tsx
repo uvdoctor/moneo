@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DateInput from './form/DateInput';
 import { Col, Row } from 'antd';
 import LifeExpectancy from './LifeExpectancy';
+import { getStr } from './utils';
 
 interface StepTwoProps {
 	setDOB: Function;
@@ -16,7 +17,6 @@ export default function StepTwo({ setDOB, lifeExpectancy, setLifeExpectancy }: S
 
 	useEffect(
 		() => {
-			const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
 			setDOB(`${year}-${getStr(month)}-${getStr(date)}`);
 		},
 		[ date, month, year ]

@@ -26,7 +26,7 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { includesAny } from "../utils";
+import { awsdate, getNumberOfDays, includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   doesHoldingMatch,
@@ -1074,8 +1074,11 @@ const calculateDiffPercent = (curr: number, prev: number) => {
 export const sortDescending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
-const checkDateEquality = (date: any) =>
-  new Date().toDateString() === new Date(date).toDateString();
+const checkDate = (date: any) => {
+  const todayDate = awsdate(today)
+  const days = getNumberOfDays(date, todayDate as string);
+  return days <= 3;
+}
 
 export const calculatePrice = (
   instruments: Array<InstrumentInput>,
@@ -1092,8 +1095,8 @@ export const calculatePrice = (
     if(isin[id] || !data) return;
     isin[id] = id;
     const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
-    if (yhigh && checkDateEquality(yhighd)) yhighList.push({ name, yhigh });
-    if (ylow && checkDateEquality(ylowd)) ylowList.push({ name, ylow });
+    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh });
+    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow });
     const diff = calculateDiffPercent(price, prev);
     Math.sign(diff) > 0
       ? gainers.push({ name, diff: Math.abs(diff) })

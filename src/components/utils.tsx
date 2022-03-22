@@ -871,3 +871,23 @@ export const defaultPrices: { [key: string]: number } = {
   SI: 0.76,
   PA: 74.66,
 };
+
+export const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
+
+export const awsdate = (dateStr: any) => {
+  if (!dateStr) return;
+  const today = new Date(dateStr);
+  const date = today.getDate();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  return `${year}-${getStr(month)}-${getStr(date)}`;
+};
+
+export const getNumberOfDays = (start: string, end: string) => {
+  const date1 = new Date(start);
+  const date2 = new Date(end);
+  const oneDay = 1000 * 60 * 60 * 24;
+  const diffInTime = date2.getTime() - date1.getTime();
+  const diffInDays = Math.round(diffInTime / oneDay);
+  return diffInDays;
+}
