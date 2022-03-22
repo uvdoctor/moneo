@@ -20,6 +20,7 @@ import {
   getMutualFundMarketCap,
   getFixedCategories,
   getRiskProfileType,
+  getPriceCategory,
 } from "./nwutils";
 import { notification } from "antd";
 import {
@@ -325,12 +326,14 @@ function NWContextProvider({ fxRates }: any) {
               risk: "Risk",
               sector: "Sector",
               industry: "Industry",
+              price: "Price"
             },
             sub: {
               mcap: getStockMarketCap(),
               risk: getRiskProfileType(),
               sector: industryAndSector.sector,
               industry: industryAndSector.industry,
+              price: getPriceCategory(true)
             },
           },
         },
@@ -343,13 +346,14 @@ function NWContextProvider({ fxRates }: any) {
           total: totalMFs,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { ...getAssetTypes(), risk: "Risk" },
+            main: { ...getAssetTypes(), risk: "Risk", price: "Price" },
             sub: {
               E: getMutualFundMarketCap(),
               F: getFixedCategories(),
               H: {},
               A: {},
               risk: getRiskProfileType(),
+              price: getPriceCategory()
             },
           },
         },
@@ -362,10 +366,11 @@ function NWContextProvider({ fxRates }: any) {
           total: totalBonds,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { type: "Type", risk: "Risk" },
+            main: { type: "Type", risk: "Risk", price: "Price" },
             sub: {
               type: { CB: "Corporate Bond", GB: "Government Bond" },
               risk: getRiskProfileType(),
+              price: getPriceCategory()
             },
           },
         },

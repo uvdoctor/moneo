@@ -22,9 +22,12 @@ import {
   filterRisk,
   filterFixCategory,
   isStock,
+  filterYearHighLow,
+  filterLosersGainers,
 } from "./nwutils";
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
+import { calculatePrice, sortDescending } from "./valuationutils";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -198,6 +201,10 @@ export default function InstrumentValuation() {
 
   const filterInstrumentsByTags = () => {
     if (!selectedTags.length) return;
+    let [gainers, losers, yhigh, ylow]: any = [[], [], [], []];
+    calculatePrice(filteredInstruments, gainers, losers, yhigh, ylow);
+    gainers = sortDescending(gainers, "diff").slice(0, 3);
+    losers = sortDescending(losers, "diff").slice(0, 3);
     let filterDataByTag = filteredInstruments.filter(
       (instrument: InstrumentInput) => {
         let [id, sid, cachedData] = [
@@ -209,7 +216,7 @@ export default function InstrumentValuation() {
         const data = cachedData[id];
         if (!data) return;
         if (childTab === MF) {
-          const { subt, mftype, type, mcap, risk } = data;
+          const { subt, mftype, type, mcap, risk, name } = data;
           return (
             selectedTags.includes(type) ||
             (type === AssetType.E &&
@@ -217,11 +224,12 @@ export default function InstrumentValuation() {
                 (selectedTags.includes(MCap.Small) && !mcap))) ||
             (type === AssetType.F &&
               filterFixCategory(selectedTags, subt, mftype)) ||
-            filterRisk(selectedTags, risk, userInfo?.rp)
+            filterRisk(selectedTags, risk, userInfo?.rp) ||
+            filterLosersGainers(selectedTags, name, gainers, losers)
           );
         }
         if (childTab === STOCK) {
-          const { mcapt, risk } = data;
+          const { mcapt, risk, name } = data;
           const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
           return (
             selectedTags.includes(mcapt) ||
@@ -231,15 +239,18 @@ export default function InstrumentValuation() {
               selectedTags.includes(funData[sid as string].ind)) ||
             (funData &&
               funData[sid as string] &&
-              selectedTags.includes(funData[sid as string].sector))
+              selectedTags.includes(funData[sid as string].sector)) ||
+            filterYearHighLow(selectedTags, name, yhigh, ylow) ||
+            filterLosersGainers(selectedTags, name, gainers, losers)
           );
         } else if (childTab === BOND) {
-          const { subt, risk } = data;
+          const { subt, risk, name } = data;
           const { GB, GBO } = AssetSubType;
           return (
             (selectedTags.includes(GB) && (subt === GB || subt === GBO)) ||
             selectedTags.includes(subt) ||
-            filterRisk(selectedTags, risk, userInfo?.rp)
+            filterRisk(selectedTags, risk, userInfo?.rp) ||
+            filterLosersGainers(selectedTags, name, gainers, losers)
           );
         }
       }

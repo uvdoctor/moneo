@@ -1071,7 +1071,7 @@ const calculateDiffPercent = (curr: number, prev: number) => {
   return Math.round(diff * 100) / 100;
 };
 
-const sortDescending = (array: any[], key: string) =>
+export const sortDescending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
 const checkDateEquality = (date: any) =>

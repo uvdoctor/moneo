@@ -353,13 +353,18 @@ export const getStockMarketCap = () => {
   };
 };
 
-export const getPriceCategory = () => {
-  return {
-    gainers: "Gainers",
-    losers: "Losers",
-    yhigh: "52 Week High",
-    ylow: "52 Week Low"
-  };
+export const getPriceCategory = (isStockTab?: boolean) => {
+  return isStockTab
+    ? {
+        gainers: "Gainers",
+        losers: "Losers",
+        yhigh: "52 Week High",
+        ylow: "52 Week Low",
+      }
+    : {
+        gainers: "Gainers",
+        losers: "Losers",
+      };
 };
 
 export const getMutualFundMarketCap = () => {
@@ -1139,36 +1144,6 @@ export const filterFixCategory = (
   );
 };
 
-export const listInExchgFunsWithoutAna = /* GraphQL */ `
-  query ListInExchgFuns(
-    $id: String
-    $filter: ModelINExchgFunFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listINExchgFuns(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        isin
-        exchg
-        sector
-        ind
-        tech
-        val
-        risk
-      }
-      nextToken
-    }
-  }
-`;
-
 export const loadMatchingINExchgFun = async (sids: Array<string>) => {
   if (!sids.length) return null;
   let idList: Array<APIt.ModelINExchgFunFilterInput> = [];
@@ -1180,7 +1155,7 @@ export const loadMatchingINExchgFun = async (sids: Array<string>) => {
     const {
       data: { listINExchgFuns },
     } = (await API.graphql(
-      graphqlOperation(listInExchgFunsWithoutAna, variables)
+      graphqlOperation(queries.listInExchgFuns, variables)
     )) as {
       data: APIt.ListInExchgFunsQuery;
     };
@@ -1230,4 +1205,36 @@ export const initializeFundata = async (
     });
   simpleStorage.set(LOCAL_FUN_DATA_KEY, funCache, LOCAL_DATA_TTL);
   return funCache;
+};
+
+export const filterLosersGainers = (
+  selectedTags: string[],
+  name: string,
+  gainers: any[],
+  losers: any[]
+) => {
+  return (
+    (losers.length &&
+      selectedTags.includes("losers") &&
+      losers.some((item: any) => item.name === name)) ||
+    (gainers.length &&
+      selectedTags.includes("gainers") &&
+      gainers.some((item: any) => item.name === name))
+  );
+};
+
+export const filterYearHighLow = (
+  selectedTags: string[],
+  name: string,
+  yhigh: any[],
+  ylow: any[]
+) => {
+  return (
+    (yhigh.length &&
+      selectedTags.includes("yhigh") &&
+      yhigh.some((item: any) => item.name === name)) ||
+    (ylow.length &&
+      selectedTags.includes("ylow") &&
+      ylow.some((item: any) => item.name === name))
+  );
 };
