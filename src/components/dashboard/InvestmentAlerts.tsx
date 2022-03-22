@@ -11,14 +11,6 @@ require("./InvestmentAlerts.less");
 
 const tabList = [
   {
-    key: "yhigh",
-    tab: "Week High",
-  },
-  {
-    key: "ylow",
-    tab: "Week Low",
-  },
-  {
     key: "gainers",
     tab: "Gainers",
   },
@@ -26,6 +18,14 @@ const tabList = [
     key: "losers",
     tab: "Losers",
   },
+  {
+    key: "yhigh",
+    tab: "Recent 52 Week High",
+  },
+  {
+    key: "ylow",
+    tab: "Recent 52 Week Low",
+  }
 ];
 
 export default function InvestmentAlerts() {
@@ -90,7 +90,7 @@ export default function InvestmentAlerts() {
       style={{ width: "100%" }}
       title={
         <strong style={{ fontSize: "20px" }}>
-          End of the day Investment Details
+          Recent Investment Updates
         </strong>
       }
       tabList={tabList}

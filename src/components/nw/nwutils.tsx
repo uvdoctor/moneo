@@ -358,8 +358,8 @@ export const getPriceCategory = (isStockTab?: boolean) => {
     ? {
         gainers: "Gainers",
         losers: "Losers",
-        yhigh: "52 Week High",
-        ylow: "52 Week Low",
+        yhigh: "Recent 52 Week High",
+        ylow: "Recent 52 Week Low",
       }
     : {
         gainers: "Gainers",
