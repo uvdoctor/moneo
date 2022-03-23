@@ -3,28 +3,22 @@
         <td>&nbsp;</td>
         <td class="container">
             <div class="content">
-                <table role="presentation" class="main main-header">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
                     <tr>
                         <td>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <div class="title-row">
-                                            <div class="title-column">
-                                                <img src="https://moneo.in/images/icons/tlogo128.png" alt="Moneo" />
-                                            </div>
-                                            <div class="title-column title-column-left">
-                                                <p class="text-title">Investment changed </p>
-                                                <p class="text-title" {{#if chgImpact}} style="color: green" {{else}}
-                                                    style="color: red" {{/if}}>{{#if
-                                                    chgImpact}} ▲
-                                                    {{else}}
-                                                    ▼{{/if}} {{ chgAmount }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="title-row">
+                                <div class="title-column">
+                                    <img src="https://moneo.in/images/icons/tlogo128.png" alt="Moneo" />
+                                </div>
+                                <div class="title-column title-column-left">
+                                    <p class="text-title">Investment changed </p>
+                                    <p class="text-title" {{#if chgImpact}} style="color: green" {{else}}
+                                        style="color: red" {{/if}}>{{#if
+                                        chgImpact}} ▲
+                                        {{else}}
+                                        ▼{{/if}} {{ chgAmount }}</p>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -44,17 +38,6 @@
                         </td>
                     </tr>
                 </table>
-
-
-                <div class="footer">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <span>Moneo</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
 
             </div>
         </td>

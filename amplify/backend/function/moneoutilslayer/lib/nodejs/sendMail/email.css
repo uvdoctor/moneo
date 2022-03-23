@@ -23,7 +23,6 @@ body {
   font-family: 'Jost';
   -webkit-font-smoothing: antialiased;
   font-size: 18px;
-  line-height: 1.8;
   margin: 0;
   padding: 0;
   -ms-text-size-adjust: 100%;
@@ -51,12 +50,12 @@ table td {
   margin: 0 auto !important;
   max-width: 580px;
   padding: 10px;
-  width: 580px;
 }
 
 .content {
   box-sizing: border-box;
   display: block;
+  background: white;
   margin: 0 auto;
   max-width: 580px;
 }
@@ -102,7 +101,7 @@ table td {
   display: flex;
   box-shadow: 30px 40px whitesmoke;
   border-left: 2px solid black;
-  padding: 10px;
+  padding: 2px;
   margin-bottom: 10px;
 }
 
@@ -133,7 +132,6 @@ table td {
   background: #ffffff;
   border-radius: 3px;
   width: 100%;
-  padding: 10px;
 }
 
 .main.has-header {
@@ -253,27 +251,12 @@ a {
   RESPONSIVE AND MOBILE FRIENDLY STYLES
 ------------------------------------- */
 @media only screen and (max-width: 620px) {
-  table[class="body"] h1 {
-    font-size: 16px !important;
-    margin-bottom: 10px !important;
-  }
-
-  table[class="body"] a {
-    font-size: 12px !important;
-  }
-
-  table[class="body"] .wrapper,
-  table[class="body"] .article {
-    padding: 10px !important;
-  }
-
   table[class="body"] .content {
     padding: 0 !important;
   }
 
   table[class="body"] .container {
-    padding: 0 !important;
-    width: 100% !important;
+    display: none !important;
   }
 
   table[class="body"] .main {
@@ -284,6 +267,7 @@ a {
 
   table[class="body"] .btn table {
     width: 100% !important;
+    margin: auto;
   }
 
   table[class="body"] .btn a {
@@ -297,17 +281,35 @@ a {
 
   .main-text {
     font-weight: bold;
-    font-size: 18px !important;
+    font-size: 14px !important;
   }
 
   .text-title {
-    font-size: 20px !important;
+    font-size: 16px !important;
   }
 
   .title-column-left {
-    margin-top: 10px !important;
+    margin-top: 30px !important;
     margin-left: 0px !important;
     margin-right: 30px !important;
     text-align: center;
+  }
+
+  .box-container-high {
+    margin: auto !important;
+    margin-top: 10px !important;
+  }
+
+  .box-container-low {
+    margin: auto !important;
+    margin-top: 10px !important;
+  }
+
+  a {
+    font-size: 14px !important;
+  }
+
+  .cc-container {
+    margin-top: 10px !important;
   }
 }

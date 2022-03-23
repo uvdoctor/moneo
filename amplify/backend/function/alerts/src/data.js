@@ -79,7 +79,7 @@ const processHoldings = async (
   usersholdingMap,
   usersinsMap
 ) => {
-  let cryptoAndCommodity = [];
+  let commodityList = [];
   const userholdingsTableName = await getTableNameFromInitialWord(
     "UserHoldings"
   );
@@ -93,8 +93,8 @@ const processHoldings = async (
   let pmIds = new Set();
   let cryptoIds = new Set();
   for (let item of userholdingsdata) {
-    usersholdingMap[item.uname] = [...item.pm, ...item.crypto];
-    usersinsMap[item.uname] = [...usersinsMap[item.uname], ...item.nps];
+    usersholdingMap[item.uname] = [ ...item.pm ];
+    usersinsMap[item.uname] = [...usersinsMap[item.uname], ...item.nps, ...item.crypto];
     for (let holding of item.nps) {
       npsIds.add(holding.name);
     }
@@ -124,7 +124,7 @@ const processHoldings = async (
         price: convertUSDToINR(convertTroyOunceToGram(data[1])),
       };
       const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
-      cryptoAndCommodity.push({
+      commodityList.push({
         name: metals[ids],
         price: toCurrency(convertUSDToINR(data[1]), "INR", true),
         chg: Math.abs(diff),
@@ -147,20 +147,14 @@ const processHoldings = async (
       }
       if (typeof prev !== "number" && typeof price !== "number") continue;
       infoMap[ids] = {
+        name: ids,
         prev: convertUSDToINR(prev),
         price: convertUSDToINR(price),
       };
-      const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
-      cryptoAndCommodity.push({
-        name: ids,
-        price: toCurrency(convertUSDToINR(price), "INR", true),
-        chg: Math.abs(diff),
-        up: Math.sign(diff) > 0 ? true : false,
-      });
     }
   }
 
-  return { pmArray, cryptoAndCommodity };
+  return { commodityList };
 };
 
 module.exports = { getInstrumentsData, processInstruments, processHoldings };

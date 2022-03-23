@@ -18,7 +18,6 @@ const processData = (records) => {
           templateName: "alerts",
           email: user,
           values: {
-            url: "https://moneo.in/get",
             gainers,
             losers,
             yhigh,

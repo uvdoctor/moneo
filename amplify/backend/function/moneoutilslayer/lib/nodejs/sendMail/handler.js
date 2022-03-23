@@ -11,7 +11,6 @@ sendEmail({
   templateName: "alerts",
   email: 'mehzabeen1526@gmail.com',
   values: {
-    url: "https://moneo.in/get",
     gainers: gainers,
     losers: losers,
     yhigh: yhigh,

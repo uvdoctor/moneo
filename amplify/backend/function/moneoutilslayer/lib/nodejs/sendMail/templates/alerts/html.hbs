@@ -9,13 +9,12 @@
 
 <body>
     {{#> layout }}
-    <p></p>
     {{#if gainers}}
     <div class="box-container-high">
         <p class='main-text'>Top {{gainers.length}} gainers</p>
         {{#each gainers}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this.name}}</a>
+            <a>{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -26,7 +25,7 @@
         <p class='main-text'>Top {{losers.length}} losers</p>
         {{#each losers}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this.name}}</a>
+            <a>{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -37,7 +36,7 @@
         <p class='main-text'>Recent 52-week high</p>
         {{#each yhigh}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this.name}}</a>
+            <a>{{this.name}}</a>
         </div>
         {{/each}}
     </div>
@@ -48,7 +47,7 @@
         <p class='main-text'>Recent 52-week low</p>
         {{#each ylow}}
         <div class="data-container">
-            <a href="https://moneo.in/get">{{this.name}}</a>
+            <a>{{this.name}}</a>
         </div>
         {{/each}}
     </div>

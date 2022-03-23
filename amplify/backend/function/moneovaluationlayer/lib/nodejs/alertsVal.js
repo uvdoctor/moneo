@@ -12,7 +12,7 @@ const getNumberOfDays = (start, end) => {
   return diffInDays;
 };
 
-const getStr = (num) => (num < 10 ? `0${num}` : '' + num);
+const getStr = (num) => (num < 10 ? `0${num}` : "" + num);
 
 const awsdate = (dateStr) => {
   if (!dateStr) return;
@@ -24,10 +24,10 @@ const awsdate = (dateStr) => {
 };
 
 const checkDate = (date) => {
-  const todayDate = awsdate(today);
+  const todayDate = awsdate(new Date());
   const days = getNumberOfDays(date, todayDate);
   return days <= 3;
-}
+};
 
 const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2));
 
@@ -42,10 +42,11 @@ const instrumentValuation = (insMap, userinsmap) => {
   let totalPrev = 0;
   let totalPrice = 0;
   const isinMap = {};
-  userinsmap.map((item) => {
+  userinsmap.forEach((item) => {
     if (isinMap[item.id]) return;
-    const data = insMap[item.id];
-    if (!data) return;
+    let data = insMap[item.id];
+    if (!data) data = insMap[item.name];
+    if(!data) return;
     isinMap[item.id] = item.id;
     const qty = item.qty;
     const { yhigh, ylow, yhighd, ylowd, prev, price, name } = data;
@@ -61,11 +62,11 @@ const instrumentValuation = (insMap, userinsmap) => {
       : losers.push({ name, diff });
   });
   gainers = sortDescending(gainers, "diff").slice(0, 3);
-  losers = sortDescending(losers, "diff").slice(0,3);
+  losers = sortDescending(losers, "diff").slice(0, 3);
   return { gainers, losers, yhighList, ylowList, totalPrev, totalPrice };
 };
 
-const holdingValuation = (infoMap, userholdingMap, pmArray) => {
+const holdingValuation = (infoMap, userholdingMap) => {
   const isGold = (subt) => subt === "Gold";
   let totalHoldingsPrev = 0;
   let totalHoldingsPrice = 0;
@@ -75,16 +76,11 @@ const holdingValuation = (infoMap, userholdingMap, pmArray) => {
     if (!data) data = infoMap[isGold(subt) ? "GC" : subt];
     if (!data) return;
     const { prev, price } = data;
-    if (pmArray.includes(isGold(subt) ? "GC" : subt)) {
-      const purity = Number.parseFloat(name);
-      const calcPrice = (price) =>
-        qty * ((purity * price) / (isGold(subt) ? 24 : 100));
-      totalHoldingsPrice += calcPrice(price);
-      totalHoldingsPrev += calcPrice(prev);
-    } else {
-      totalHoldingsPrice += qty * price;
-      totalHoldingsPrev += qty * prev;
-    }
+    const purity = Number.parseFloat(name);
+    const calcPrice = (price) =>
+      qty * ((purity * price) / (isGold(subt) ? 24 : 100));
+    totalHoldingsPrice += calcPrice(price);
+    totalHoldingsPrev += calcPrice(prev);
   });
   return { totalHoldingsPrev, totalHoldingsPrice };
 };

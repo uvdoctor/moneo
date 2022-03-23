@@ -39,7 +39,7 @@ const processData = () => {
 
       userinfodata.map((item) => (usersMap[item.uname] = item.email));
       await processInstruments(infoMap, usersMap, usersinsMap);
-        const { pmArray, cryptoAndCommodity } = await processHoldings(
+        const { commodityList } = await processHoldings(
         infoMap,
         usersMap,
         usersholdingMap,
@@ -57,7 +57,6 @@ const processData = () => {
         let { totalHoldingsPrev, totalHoldingsPrice } = holdingValuation(
           infoMap,
           usersholdingMap[user],
-          pmArray
         );
         prev += totalHoldingsPrev;
         price += totalHoldingsPrice;
@@ -70,7 +69,7 @@ const processData = () => {
           ylow: ylowList,
           chgAmount,
           chgImpact,
-          metal: cryptoAndCommodity,
+          metal: commodityList,
         };
       });
       await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
