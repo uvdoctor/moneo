@@ -646,6 +646,8 @@ export const getInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
+      vol
+      prevol
       createdAt
       updatedAt
     }
@@ -694,6 +696,8 @@ export const listInExchgPrices = /* GraphQL */ `
         sector
         ind
         risk
+        vol
+        prevol
         createdAt
         updatedAt
       }
