@@ -4,7 +4,6 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const {
   instrumentValuation,
-  holdingValuation,
 } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const { toHumanFriendlyCurrency } = require("/opt/nodejs/utility");
@@ -54,12 +53,6 @@ const processData = () => {
           instrumentValuation(infoMap, usersinsMap[user]);
         prev += totalPrev;
         price += totalPrice;
-        let { totalHoldingsPrev, totalHoldingsPrice } = holdingValuation(
-          infoMap,
-          usersholdingMap[user],
-        );
-        prev += totalHoldingsPrev;
-        price += totalHoldingsPrice;
         const chgAmount = toHumanFriendlyCurrency(Math.abs(price - prev),"INR")
         const chgImpact = Math.sign(price - prev) > 0 ? true : false;
         sendUserInfo[email] = {

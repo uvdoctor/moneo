@@ -58,36 +58,16 @@ const instrumentValuation = (insMap, userinsmap) => {
 
     const diff = calculateDiffPercent(price, prev);
     Math.sign(diff) > 0
-      ? gainers.push({ name, diff })
-      : losers.push({ name, diff });
+      ? gainers.push({ name, diff: Math.abs(diff)})
+      : losers.push({ name, diff: Math.abs(diff) });
   });
   gainers = sortDescending(gainers, "diff").slice(0, 3);
   losers = sortDescending(losers, "diff").slice(0, 3);
   return { gainers, losers, yhighList, ylowList, totalPrev, totalPrice };
 };
 
-const holdingValuation = (infoMap, userholdingMap) => {
-  const isGold = (subt) => subt === "Gold";
-  let totalHoldingsPrev = 0;
-  let totalHoldingsPrice = 0;
-  userholdingMap.map((item) => {
-    const { subt, name, qty } = item;
-    let data = infoMap[item.name];
-    if (!data) data = infoMap[isGold(subt) ? "GC" : subt];
-    if (!data) return;
-    const { prev, price } = data;
-    const purity = Number.parseFloat(name);
-    const calcPrice = (price) =>
-      qty * ((purity * price) / (isGold(subt) ? 24 : 100));
-    totalHoldingsPrice += calcPrice(price);
-    totalHoldingsPrev += calcPrice(prev);
-  });
-  return { totalHoldingsPrev, totalHoldingsPrice };
-};
-
 module.exports = {
   instrumentValuation,
-  holdingValuation,
   calculateDiffPercent,
   convertTroyOunceToGram,
 };

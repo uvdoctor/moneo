@@ -126,7 +126,7 @@ const processHoldings = async (
       const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
       commodityList.push({
         name: metals[ids],
-        price: toCurrency(convertUSDToINR(data[1]), "INR", true),
+        price: toCurrency(infoMap[ids].price, "INR", true),
         chg: Math.abs(diff),
         up: Math.sign(diff) > 0 ? true : false,
       });
