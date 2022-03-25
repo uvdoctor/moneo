@@ -629,6 +629,8 @@ export const onCreateInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
+      vol
+      prevol
       createdAt
       updatedAt
     }
@@ -664,6 +666,8 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
+      vol
+      prevol
       createdAt
       updatedAt
     }
@@ -699,6 +703,8 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       sector
       ind
       risk
+      vol
+      prevol
       createdAt
       updatedAt
     }
