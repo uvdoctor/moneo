@@ -2,22 +2,22 @@ const {
   getTableNameFromInitialWord,
   filterTableByList,
 } = require("/opt/nodejs/databaseUtils");
-const {
-  instrumentValuation,
-} = require("/opt/nodejs/alertsVal");
+const { instrumentValuation } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const { toHumanFriendlyCurrency } = require("/opt/nodejs/utility");
-const { processHoldings, processInstruments } = require("./data");
+const {
+  processHoldings,
+  processInstruments,
+  getCommodityList,
+} = require("./data");
 
 const processData = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const usersinsMap = {};
-      const usersholdingMap = {};
       const infoMap = {};
       let sendUserInfo = {};
       const usersMap = {};
-
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
       const userinfodata = await filterTableByList(
         userInfoTableName,
@@ -38,12 +38,8 @@ const processData = () => {
 
       userinfodata.map((item) => (usersMap[item.uname] = item.email));
       await processInstruments(infoMap, usersMap, usersinsMap);
-        const { commodityList } = await processHoldings(
-        infoMap,
-        usersMap,
-        usersholdingMap,
-        usersinsMap
-      );
+      await processHoldings(infoMap, usersMap, usersinsMap);
+      const commodityList = await getCommodityList();
 
       Object.keys(usersMap).map((user) => {
         let prev = 0;
@@ -53,7 +49,10 @@ const processData = () => {
           instrumentValuation(infoMap, usersinsMap[user]);
         prev += totalPrev;
         price += totalPrice;
-        const chgAmount = toHumanFriendlyCurrency(Math.abs(price - prev),"INR")
+        const chgAmount = toHumanFriendlyCurrency(
+          Math.abs(price - prev),
+          "INR"
+        );
         const chgImpact = Math.sign(price - prev) > 0 ? true : false;
         sendUserInfo[email] = {
           gainers,

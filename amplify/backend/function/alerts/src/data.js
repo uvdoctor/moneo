@@ -18,13 +18,6 @@ const {
   calculateDiffPercent,
 } = require("/opt/nodejs/alertsVal");
 
-const metals = {
-  GC: "Gold",
-  SI: "Silver",
-  PL: "Platinum",
-  PA: "Palladium",
-};
-
 const getInstrumentsData = async (ids, table, infoMap) => {
   let results = [];
   const splittedArray = divideArrayBySize([...ids], 100);
@@ -58,28 +51,19 @@ const processInstruments = async (infoMap, usersMap, usersinsMap) => {
       else otherIds.add(ins.id);
     }
   }
-
   if (mfIds.size) {
     await getInstrumentsData(mfIds, "INMFPrice", infoMap);
   }
   mfIds.forEach((id) => otherIds.add(id));
-
   if (otherIds.size) {
     await getInstrumentsData(otherIds, "INExchgPrice", infoMap);
   }
-
   if (otherIds.size) {
     await getInstrumentsData(otherIds, "INBondPrice", infoMap);
   }
 };
 
-const processHoldings = async (
-  infoMap,
-  usersMap,
-  usersholdingMap,
-  usersinsMap
-) => {
-  let commodityList = [];
+const processHoldings = async (infoMap, usersMap, usersinsMap) => {
   const userholdingsTableName = await getTableNameFromInitialWord(
     "UserHoldings"
   );
@@ -87,19 +71,18 @@ const processHoldings = async (
     userholdingsTableName,
     Object.keys(usersMap),
     "uname",
-    "uname, crypto, nps, pm"
+    "uname, crypto, nps"
   );
   let npsIds = new Set();
-  let pmIds = new Set();
   let cryptoIds = new Set();
   for (let item of userholdingsdata) {
-    usersholdingMap[item.uname] = [ ...item.pm ];
-    usersinsMap[item.uname] = [...usersinsMap[item.uname], ...item.nps, ...item.crypto];
+    usersinsMap[item.uname] = [
+      ...usersinsMap[item.uname],
+      ...item.nps,
+      ...item.crypto,
+    ];
     for (let holding of item.nps) {
       npsIds.add(holding.name);
-    }
-    for (let holding of item.pm) {
-      pmIds.add(holding.subt === "Gold" ? "GC" : holding.subt);
     }
     for (let holding of item.crypto) {
       cryptoIds.add(holding.name);
@@ -110,32 +93,13 @@ const processHoldings = async (
     await getInstrumentsData(npsIds, "NPSPrice", infoMap);
   }
 
-  const { date, month, yearFull } = utility(1);
-  const fromDate = `${yearFull}-${month}-${date}`;
-  const fxRate = await getFXRate("INR");
-  const convertUSDToINR = (amt) => fxRate * amt;
-
-  const pmArray = [...pmIds];
-  if (pmIds.size) {
-    for (let ids of pmArray) {
-      const data = await getCommodityPrice(ids, fromDate);
-      infoMap[ids] = {
-        prev: convertUSDToINR(convertTroyOunceToGram(data[0])),
-        price: convertUSDToINR(convertTroyOunceToGram(data[1])),
-      };
-      const diff = calculateDiffPercent(infoMap[ids].price, infoMap[ids].prev);
-      commodityList.push({
-        name: metals[ids],
-        price: toCurrency(infoMap[ids].price, "INR", true),
-        chg: Math.abs(diff),
-        up: Math.sign(diff) > 0 ? true : false,
-      });
-    }
-  }
-
   // Crytpo
   const cryptoArray = [...cryptoIds];
   if (cryptoIds.size) {
+    const { date, month, yearFull } = utility(1);
+    const fromDate = `${yearFull}-${month}-${date}`;
+    const fxRate = await getFXRate("INR");
+    const convertUSDToINR = (amt) => fxRate * amt;
     for (let ids of cryptoArray) {
       let prev = 0;
       let price = 0;
@@ -153,8 +117,33 @@ const processHoldings = async (
       };
     }
   }
-
-  return { commodityList };
 };
 
-module.exports = { getInstrumentsData, processInstruments, processHoldings };
+const getCommodityList = async () => {
+  const commodityList = [];
+  const { date, month, yearFull } = utility(1);
+  const fromDate = `${yearFull}-${month}-${date}`;
+  const fxRate = await getFXRate("INR");
+  const convertUSDToINR = (amt) => fxRate * amt;
+  const metals = ["GC", "SI"];
+  for (let ids of metals) {
+    const data = await getCommodityPrice(ids, fromDate);
+    const prev = convertUSDToINR(convertTroyOunceToGram(data[0])) * 10;
+    const price = convertUSDToINR(convertTroyOunceToGram(data[1])) * 10;
+    const diff = calculateDiffPercent(price, prev);
+    commodityList.push({
+      name: `10 grams of ${ids === "SI" ? "99.99% Silver" : "24k Gold"}:`,
+      price: toCurrency(price, "INR", true),
+      chg: Math.abs(diff),
+      up: Math.sign(diff) > 0 ? true : false,
+    });
+  }
+  return commodityList;
+};
+
+module.exports = {
+  getInstrumentsData,
+  processInstruments,
+  processHoldings,
+  getCommodityList,
+};
