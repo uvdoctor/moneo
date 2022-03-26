@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-const { calcSchema, calc } = require("./calculate");
+const { calcSchema, calculatePrice } = require("./calculate");
 
 const extractDataFromCSV = async (
   fileName,
@@ -22,7 +22,7 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const price = parseFloat(record[codes.price]);
+        const price = calculatePrice(record[codes.price], record[codes.fv]);
         const id = record[codes.id];
         if (!id || ["MC", "MF", "US"].includes(record[codes.subt]) || !price) return;
         if (isPrevFile) {
@@ -38,7 +38,7 @@ const extractDataFromCSV = async (
           isinMap,
           table,
           prevMap,
-          prevBatch
+          prevBatch,
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));

@@ -123,6 +123,13 @@ const calculateRisk = (creditRating, subt) => {
   return "C";
 };
 
+const calculatePrice = (price, fv) => {
+  if (fv && fv >= 1000 && price < 200) {
+    return parseFloat((price * fv) / 100);
+  }
+  return parseFloat(price);
+};
+
 const calcSchema = (
   record,
   codes,
@@ -134,9 +141,9 @@ const calcSchema = (
   prevBatch
 ) => {
   schema.id = record[codes.id];
-  if(!schema.id.startsWith("IN")) return;
+  if (!schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
-  schema.price = parseFloat(record[codes.price]);
+  schema.price = calculatePrice(record[codes.price], record[codes.fv]);
   schema.prev = prevMap[schema.id];
   schema.exchg = typeExchg;
   schema.type = "F";
@@ -152,7 +159,8 @@ const calcSchema = (
   const maturityDate = getMonthYearByDate(
     codes.sDate ? record[codes.mDate].trim() : ""
   );
-  schema.itype = typeExchg === "BSE" ? null : calc.calcInsType(record[codes.subt]);
+  schema.itype =
+    typeExchg === "BSE" ? null : calc.calcInsType(record[codes.subt]);
   schema.sm = startDate.month;
   schema.sy = startDate.year;
   schema.mm = maturityDate.month;
@@ -162,7 +170,7 @@ const calcSchema = (
     : record[codes.sid].trim();
   schema.cr = calc.calcCR(record[codes.crstr]);
   schema.rate = getRate(record, codes);
-  schema.fv = 100;
+  schema.fv = record[codes.fv] ? record[codes.fv] : 100;
   schema.ytm = calculateYTM(
     schema.rate,
     startDate.month,
@@ -188,4 +196,5 @@ module.exports = {
   calculateYTM,
   getRate,
   calculateRisk,
+  calculatePrice
 };

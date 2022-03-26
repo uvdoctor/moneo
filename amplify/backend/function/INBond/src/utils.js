@@ -39,7 +39,8 @@ const constructedApiArray = (diff) => {
 				sDate: 'ISSUE_DATE',
 				mDate: 'MAT_DATE',
 				rate: 'ISSUE_NAME',
-				crstr: ''
+				crstr: '',
+				fv: ''
 			}
 		},
 		{
@@ -111,7 +112,7 @@ const constructedApiArray = (diff) => {
 				rate: 'Coupon (%)',
 				mDate: 'Maturity Date',
 				frate: 'Coupon (%)',
-				fv: 'FACE VALUE',
+				fv: 'Face Value',
 				sDate: '',
 				crstr: '',
 				createdAt: '',

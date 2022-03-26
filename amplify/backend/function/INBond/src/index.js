@@ -73,7 +73,7 @@ const getAndPushData = (diff) => {
     }
     console.log("Prev Batch", Object.keys(prevBatch).length);
     if(!diff) {
-		  await updatePrevByGetItem(prevBatch, tableName);
+      await updatePrevByGetItem(prevBatch, tableName);
     }
     resolve();
   });
