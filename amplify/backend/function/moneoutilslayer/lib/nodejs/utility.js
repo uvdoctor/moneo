@@ -31,7 +31,7 @@ const utility = (num) => {
   const year =
     customDate.getYear().toString().charAt(1) +
     customDate.getYear().toString().charAt(2);
-  return { date, month, monthChar, year, yearFull };
+  return { date, month, monthChar, year, yearFull, customDate };
 };
 
 const divideArrayBySize = (array, size) => {

@@ -11,7 +11,7 @@ const {
   getTableNameFromInitialWord,
 } = require("/opt/nodejs/databaseUtils");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
-const { getEODdata, getSplitInfo, getDividendInfo } = require("/opt/nodejs/eod");
+const { getEODdata, getSplitInfo, getDividendInfo, getEODdataByDate } = require("/opt/nodejs/eod");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
@@ -78,14 +78,16 @@ const getAndPushData = (diff) => {
         let eodData;
         let splitData;
         let dividendData;
+        let prevEodData;
         try {
+          prevEodData = await getPrevOfEOD(diff, exchg, getEODdataByDate);
           eodData = await getEODdata(exchg);
           splitData = await getSplitInfo(exchg);
           dividendData = await getDividendInfo(exchg);
         } catch (error) {
           console.log(error);
         }
-        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData);
+        const data = mergeEodAndExchgData(exchgData, eodData, splitData, dividendData, prevEodData);
         console.log(data.length);
         for (let batch in data) {
           await pushData(data[batch], exchgTableName);

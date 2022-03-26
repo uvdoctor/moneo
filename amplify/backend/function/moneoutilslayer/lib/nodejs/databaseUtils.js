@@ -7,8 +7,12 @@ const {
   ScanCommand,
   UpdateCommand,
 } = require("@aws-sdk/lib-dynamodb");
+const marshallOptions = {
+  removeUndefinedValues: true,
+};
+const translateConfig = { marshallOptions };
 const dynamodb = new DynamoDB({});
-const docClient = DynamoDBDocumentClient.from(dynamodb);
+const docClient = DynamoDBDocumentClient.from(dynamodb, translateConfig);
 
 const getTableNameFromInitialWord = (tableInitial) => {
   return new Promise((resolve, reject) => {
@@ -32,7 +36,7 @@ const batchReadItem = async (tableName, keys) => {
   }
 };
 
-const filterTableByList = async (tableName, data, key,projectExp) => {
+const filterTableByList = async (tableName, data, key, projectExp) => {
   try {
     const keys = {};
     data.forEach((item, i) => {
@@ -44,7 +48,7 @@ const filterTableByList = async (tableName, data, key,projectExp) => {
       ExpressionAttributeValues: { ...keys },
       TableName: tableName,
     };
-    if(projectExp) params = { ...params, ProjectionExpression: projectExp };
+    if (projectExp) params = { ...params, ProjectionExpression: projectExp };
     const result = await docClient.send(new ScanCommand(params));
     return result.Items;
   } catch (error) {
@@ -75,10 +79,14 @@ const updateItem = async (table, id, fields) => {
 
 const getTabledata = async (table, projectExp, filterExp, ExpAttrValues) => {
   let params = { TableName: table };
-  if(filterExp) {
-    params = { ...params, ExpressionAttributeValues: ExpAttrValues, FilterExpression: filterExp };
+  if (filterExp) {
+    params = {
+      ...params,
+      ExpressionAttributeValues: ExpAttrValues,
+      FilterExpression: filterExp,
+    };
   }
-  if(projectExp) params = { ...params, ProjectionExpression: projectExp };
+  if (projectExp) params = { ...params, ProjectionExpression: projectExp };
   try {
     const data = await docClient.send(new ScanCommand(params));
     return data.Items;

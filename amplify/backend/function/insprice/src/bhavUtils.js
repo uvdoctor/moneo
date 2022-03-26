@@ -22,7 +22,7 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if (isinMap[record[codes.id]] || record[codes.type] === "BL" ) return;
+        if (isinMap[record[codes.id]] || record[codes.type] === "BL") return;
         const { updateSchema, isBond } = calcSchema(
           record,
           codes,
@@ -81,11 +81,10 @@ const extractDataFromCSV = async (
           tempDir,
           `${fileName} of ${exchg} results extracted successfully and directory is cleaned`
         );
-        const data = {
+        resolve({
           exchgData: exchgBatchRecords,
           bondData: bondBatchRecords,
-        };
-        resolve(data);
+        });
       })
       .on("error", (err) => {
         cleanDirectory(
@@ -125,8 +124,10 @@ const extractPartOfData = async (
         }
         if (fileName.includes("CM_52_wk_High_low")) {
           if (record[codes.sid].length > 20) return;
+          const yhigh = parse(record[codes.yhigh]);
+          if (isNaN(yhigh)) return;
           weekHLMap[record[codes.sid]] = {
-            yhigh: parse(record[codes.yhigh]),
+            yhigh: yhigh,
             ylow: parse(record[codes.ylow]),
             yhighd: record[codes.yhighd] ? record[codes.yhighd] : "",
             ylowd: record[codes.ylowd] ? record[codes.yhighd] : "",
@@ -157,7 +158,7 @@ const extractPartOfData = async (
   return await end;
 };
 
-const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
+const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData, prevEodData) => {
   if (!(eodData || splitData || dividendData)) return exchgData;
   exchgData.map((element) => {
     element.map((item) => {
@@ -171,6 +172,7 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
       const eod = eodData && getData(eodData);
       const split = splitData && getData(splitData);
       const dividend = dividendData && getData(dividendData);
+      const prevEod = prevEodData && getData(prevEodData);
       if (split) {
         Item.splitd = split.date;
         let value = split.split.replace(/\//g, "");
@@ -192,6 +194,7 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
           hi_250d,
           lo_250d,
           Beta,
+          volume,
         } = eod;
         Item.sid = code;
         Item.name = name;
@@ -200,6 +203,8 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData) => {
         Item.ylow = Item.ylow ? Item.ylow : lo_250d;
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
+        Item.vol = volume;
+        if(prevEod && prevEod.volume) Item.prevvol = prevEod.volume;
       }
       Item.risk = calculateRisk(
         Item.beta ? Item.beta : "",

@@ -13,6 +13,11 @@ const getEODdata = async (exchg) => {
   return await getData(url);
 };
 
+const getEODdataByDate = async (exchg, date) => {
+  const url = `https://eodhistoricaldata.com/api/eod-bulk-last-day/${exchg}?api_token=${token}&fmt=json&date=${date}`;
+  return await getData(url);
+};
+
 const getFundamentalDataByLimit = async (exchg, offset) => {
   const url = `https://eodhistoricaldata.com/api/bulk-fundamentals/${exchg}?api_token=${token}&offset=${offset}&limit=500&fmt=json`;
   const data = await getData(url);
@@ -56,5 +61,6 @@ module.exports = {
   getFundamentalDataByLimit,
   getCryptoPrice,
   getCommodityPrice,
-  getFXRate
+  getFXRate,
+  getEODdataByDate
 };
