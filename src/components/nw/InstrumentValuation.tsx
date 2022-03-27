@@ -24,6 +24,7 @@ import {
   isStock,
   filterYearHighLow,
   filterLosersGainers,
+  filterVolumeGL,
 } from "./nwutils";
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
@@ -201,10 +202,12 @@ export default function InstrumentValuation() {
 
   const filterInstrumentsByTags = () => {
     if (!selectedTags.length) return;
-    let [gainers, losers, yhigh, ylow]: any = [[], [], [], []];
-    calculatePrice(filteredInstruments, gainers, losers, yhigh, ylow);
-    gainers = sortDescending(gainers, "diff").slice(0, 3);
-    losers = sortDescending(losers, "diff").slice(0, 3);
+    let [priceGL, yhigh, ylow, volumeGL]: any = [[], [], [], []];
+    calculatePrice(filteredInstruments, priceGL, yhigh, ylow, volumeGL);
+    const gainers = sortDescending(priceGL, "diff").slice(0, 3);
+    const losers = sortDescending(priceGL, "diff").slice(-3);
+    const volGainers = sortDescending(volumeGL, "volDiff").slice(0, 3);
+    const volLosers = sortDescending(volumeGL, "volDiff").slice(-3);
     let filterDataByTag = filteredInstruments.filter(
       (instrument: InstrumentInput) => {
         let [id, sid, cachedData] = [
@@ -241,7 +244,8 @@ export default function InstrumentValuation() {
               funData[sid as string] &&
               selectedTags.includes(funData[sid as string].sector)) ||
             filterYearHighLow(selectedTags, id, yhigh, ylow) ||
-            filterLosersGainers(selectedTags, id, gainers, losers)
+            filterLosersGainers(selectedTags, id, gainers, losers) ||
+            filterVolumeGL(selectedTags, id, volGainers, volLosers)
           );
         } else if (childTab === BOND) {
           const { subt, risk } = data;

@@ -326,14 +326,16 @@ function NWContextProvider({ fxRates }: any) {
               risk: "Risk",
               sector: "Sector",
               industry: "Industry",
-              price: "Price"
+              price: "Price",
+              volume: "Volume"
             },
             sub: {
               mcap: getStockMarketCap(),
               risk: getRiskProfileType(),
               sector: industryAndSector.sector,
               industry: industryAndSector.industry,
-              price: getPriceCategory(true)
+              price: getPriceCategory(true),
+              volume: { volGainers: "Top Volume Gainers", volLosers : "Top Volume Losers" }
             },
           },
         },

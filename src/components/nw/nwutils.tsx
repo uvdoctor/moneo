@@ -1223,6 +1223,22 @@ export const filterLosersGainers = (
   );
 };
 
+export const filterVolumeGL = (
+  selectedTags: string[],
+  id: string,
+  volGainers: any[],
+  volLosers: any[]
+) => {
+  return (
+    (volLosers.length &&
+      selectedTags.includes("volLosers") &&
+      volLosers.some((item: any) => item.id === id)) ||
+    (volGainers.length &&
+      selectedTags.includes("volGainers") &&
+      volGainers.some((item: any) => item.id === id))
+  );
+};
+
 export const filterYearHighLow = (
   selectedTags: string[],
   id: string,

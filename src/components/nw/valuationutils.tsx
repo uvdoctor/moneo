@@ -1102,7 +1102,7 @@ export const calculatePrice = (
     priceGL.push({ name, diff, id });
     if (volDiff) volumeGL.push({ name, volDiff, id, vol });
   });
-  return { gainers: priceGL, yhighList, ylowList, volGainers: volumeGL };
+  return { priceGL, yhighList, ylowList, volumeGL };
 };
 
 export const calculateAlerts = async (
