@@ -204,7 +204,7 @@ const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData, prevE
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
         Item.vol = volume;
-        if(prevEod && prevEod.volume) Item.prevvol = prevEod.volume;
+        if(prevEod && prevEod.volume) Item.prevol = prevEod.volume;
       }
       Item.risk = calculateRisk(
         Item.beta ? Item.beta : "",
