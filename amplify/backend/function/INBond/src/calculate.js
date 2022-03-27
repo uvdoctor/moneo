@@ -130,6 +130,30 @@ const calculatePrice = (price, fv) => {
   return parseFloat(price);
 };
 
+const decimalCount = (num) => (num.split(".")[1] || []).length;
+const numberBeforeDecimal = (num) => num.split(".")[0];
+
+let num = 100;
+let fv = 0;
+const calculateFv = (price) => {
+  const isFloat = (diff) => diff % 1 != 0;
+  const diff = price / num;
+  const decCount = decimalCount(String(diff));
+  const beforeDecimal = numberBeforeDecimal(String(diff));
+  if (
+    String(beforeDecimal).length === 1 &&
+    ((isFloat(diff) && (!beforeDecimal || decCount)) ||
+      (!isFloat(diff) && diff === 1))
+  ) {
+    fv = num;
+  } else {
+    num = num * 10;
+  }
+  if (!fv) calculateFv(price);
+  return fv;
+};
+
+
 const calcSchema = (
   record,
   codes,
@@ -170,7 +194,7 @@ const calcSchema = (
     : record[codes.sid].trim();
   schema.cr = calc.calcCR(record[codes.crstr]);
   schema.rate = getRate(record, codes);
-  schema.fv = record[codes.fv] ? record[codes.fv] : 100;
+  schema.fv = record[codes.fv] ? record[codes.fv] : calculateFv(schema.price);
   schema.ytm = calculateYTM(
     schema.rate,
     startDate.month,
