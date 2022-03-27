@@ -19,6 +19,14 @@ const tabList = [
     tab: "Losers",
   },
   {
+    key: "volume_gainers",
+    tab: "Top Volume Gainers",
+  },
+  {
+    key: "volume_losers",
+    tab: "Top Volume Losers",
+  },
+  {
     key: "yhigh",
     tab: "Recent 52 Week High",
   },
@@ -29,7 +37,7 @@ const tabList = [
 ];
 
 export default function InvestmentAlerts() {
-  const { gainers, losers, yhigh, ylow }: any = useContext(DBContext);
+  const { gainers, losers, yhigh, ylow, volGainers, volLosers }: any = useContext(DBContext);
   const [activeTabkey, setActiveTabkey] = useState("yhigh");
   const router = useRouter();
 
@@ -74,6 +82,28 @@ export default function InvestmentAlerts() {
         renderItem={(item: any) => (
           <List.Item>
             <StatisticInput value={item.diff} title={item.name} negative />
+          </List.Item>
+        )}
+      />
+    ),
+    volume_gainers: (
+      <List
+        itemLayout="horizontal"
+        dataSource={volGainers}
+        renderItem={(item: any) => (
+          <List.Item>
+            <StatisticInput value={item.volDiff} title={item.name} volume={item.vol}/>
+          </List.Item>
+        )}
+      />
+    ),
+    volume_losers: (
+      <List
+        itemLayout="horizontal"
+        dataSource={volLosers}
+        renderItem={(item: any) => (
+          <List.Item>
+            <StatisticInput value={item.volDiff} title={item.name} negative volume={item.vol} />
           </List.Item>
         )}
       />

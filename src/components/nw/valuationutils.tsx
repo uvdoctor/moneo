@@ -1075,71 +1075,68 @@ export const sortDescending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
 const checkDate = (date: any) => {
-  const todayDate = awsdate(today)
+  const todayDate = awsdate(today);
   const days = getNumberOfDays(date, todayDate as string);
   return days <= 3;
-}
+};
 
 export const calculatePrice = (
   instruments: Array<InstrumentInput>,
-  gainers: any[],
-  losers: any[],
+  priceGL: any[],
   yhighList: any[],
-  ylowList: any[]
+  ylowList: any[],
+  volumeGL: any[]
 ) => {
   const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   const isin: { [key: string]: string } = {};
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
-    if(isin[id] || !data) return;
+    if (isin[id] || !data) return;
     isin[id] = id;
-    const { prev, price, name, yhigh, ylow, yhighd, ylowd } = data;
+    const { prev, price, name, yhigh, ylow, yhighd, ylowd, vol, prevol } = data;
     if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh, id });
     if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id });
     const diff = calculateDiffPercent(price, prev);
-    Math.sign(diff) > 0
-      ? gainers.push({ name, diff: Math.abs(diff), id })
-      : losers.push({ name, diff: Math.abs(diff), id });
+    const volDiff = vol && prevol && calculateDiffPercent(vol, prevol);
+    priceGL.push({ name, diff, id });
+    if (volDiff) volumeGL.push({ name, volDiff, id, vol });
   });
-  return { gainers, losers, yhighList, ylowList };
+  return { gainers: priceGL, yhighList, ylowList, volGainers: volumeGL };
 };
 
 export const calculateAlerts = async (
   holdings: CreateUserHoldingsInput | null,
   insHoldings: CreateUserInsInput | null
 ) => {
-  let yhighList: any[] = [];
-  let ylowList: any[] = [];
-  let gainers: any[] = [];
-  let losers: any[] = [];
+  let [yhighList, ylowList, priceGL, volumeGL]: any = [[], [], [], []];
   if (insHoldings?.ins?.length) {
     let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     if (!cachedData) {
       cachedData = await initializeInsData(insHoldings?.ins);
     }
-    calculatePrice(insHoldings.ins ,gainers, losers, yhighList, ylowList);
+    calculatePrice(insHoldings.ins, priceGL, yhighList, ylowList, volumeGL);
   }
   if (holdings?.nps?.length) {
     let cachedData = simpleStorage.get(LOCAL_NPS_DATA_KEY);
     if (!cachedData) {
       cachedData = await initializeNPSData();
     }
-    let npsMap: { [key:string]: string } = {};
+    let npsMap: { [key: string]: string } = {};
     holdings?.nps.forEach((holding: HoldingInput) => {
       const id = holding.name as string;
-      if(npsMap[id])return;
+      if (npsMap[id]) return;
       npsMap[id] = id;
       const { prev, price, name } = cachedData.find(
         (item: { id: any }) => item.id === id
       );
       const diff = calculateDiffPercent(price, prev);
-      Math.sign(diff) > 0
-        ? gainers.push({ name, diff: Math.abs(diff) })
-        : losers.push({ name, diff: Math.abs(diff) });
+      priceGL.push({ name, diff: diff });
     });
   }
-  gainers = sortDescending(gainers, "diff").slice(0, 3);
-  losers = sortDescending(losers, "diff").slice(0, 3);
-  return { gainers, losers, yhighList, ylowList };
+  const gainers = sortDescending(priceGL, "diff").slice(0, 3);
+  const losers = sortDescending(priceGL, "diff").slice(-3);
+  const volGainers = sortDescending(volumeGL, "volDiff").slice(0, 3);
+  const volLosers = sortDescending(volumeGL, "volDiff").slice(-3);
+  return { gainers, losers, yhighList, ylowList, volGainers, volLosers };
 };

@@ -20,6 +20,8 @@ function DBContextProvider({ fxRates }: any) {
   const [losers, setLosers] = useState<Array<any>>([]);
   const [yhigh, setYhigh] = useState<Array<any>>([]);
   const [ylow, setYlow] = useState<Array<any>>([]);
+  const [volGainers, setVolGainers] = useState<Array<any>>([]);
+  const [volLosers, setVolLosers] = useState<Array<any>>([]);
 
   const initializeHoldings = async () => {
     try {
@@ -35,11 +37,13 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       setTotalAssets(totalAssets);
-      const { gainers, losers, yhighList, ylowList } = await calculateAlerts(allHoldings, insHoldings);
-      setGainers(gainers)
-      setLosers(losers);
-      setYhigh(yhighList);
-      setYlow(ylowList)
+      const data = await calculateAlerts(allHoldings, insHoldings);
+      setGainers(data.gainers);
+      setLosers(data.losers);
+      setYhigh(data.yhighList);
+      setYlow(data.ylowList);
+      setVolGainers(data.volGainers);
+      setVolLosers(data.volLosers);
       if (allHoldings) {
         const liabilities = calculateTotalLiabilities(
           allHoldings,
@@ -73,8 +77,11 @@ function DBContextProvider({ fxRates }: any) {
         gainers,
         losers,
         yhigh,
-        ylow
-      }}>
+        ylow,
+        volLosers,
+        volGainers
+      }}
+    >
       <DBView />
     </DBContext.Provider>
   );
