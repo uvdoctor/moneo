@@ -130,7 +130,7 @@ const calculatePrice = (price, fv) => {
   return parseFloat(price);
 };
 
-const decimalCount = (num) => (num.split(".")[1] || []).length;
+/*const decimalCount = (num) => (num.split(".")[1] || []).length;
 const numberBeforeDecimal = (num) => num.split(".")[0];
 
 let num = 100;
@@ -151,7 +151,17 @@ const calculateFv = (price) => {
   }
   if (!fv) calculateFv(price);
   return fv;
-};
+};*/
+
+const calculateFv = (price) => {
+  let fv = 10;
+  let ratio = 0;
+  do {
+    fv *= 10;
+    ratio = price / fv;
+  } while (ratio !== 1 && (String(ratio - Math.floor(ratio))[0] === "0"));
+  return fv;
+}
 
 
 const calcSchema = (
