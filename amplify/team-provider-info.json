@@ -15,7 +15,7 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insprice-504b364854714b545743-build.zip"
+          "s3Key": "amplify-builds/insprice-553033734d6f62424f6f-build.zip"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
@@ -23,7 +23,7 @@
         },
         "INBond": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/INBond-455751356e2f67413165-build.zip"
+          "s3Key": "amplify-builds/INBond-67544c3942433771674d-build.zip"
         },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
@@ -47,11 +47,11 @@
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/alerts-6c376946787459374230-build.zip"
+          "s3Key": "amplify-builds/alerts-356e2b56774278717439-build.zip"
         },
         "moneoutilslayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion3193ff23-build.zip"
+          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion710c9204-build.zip"
         },
         "feedback": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",

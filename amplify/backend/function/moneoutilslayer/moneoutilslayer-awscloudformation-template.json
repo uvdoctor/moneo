@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion3193ff23": {
+    "LambdaLayerVersion710c9204": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,50 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivate3193ff23": {
+    "LambdaLayerPermissionPrivate710c9204": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion3193ff23"
+          "Ref": "LambdaLayerVersion710c9204"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion3193ff23": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion3193ff23-build.zip"
+        },
+        "Description": "Updated layer version 2022-03-26T08:38:10.070Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "moneoutilslayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate3193ff23": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneoutilslayer-dev:24",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -622,7 +659,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion3193ff23"
+        "Ref": "LambdaLayerVersion710c9204"
       }
     }
   }
