@@ -12,6 +12,7 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo, getEODdataByDate } = require("/opt/nodejs/eod");
+const { getPrevOfEOD } = require("/opt/nodejs/prevUtils");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
