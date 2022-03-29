@@ -26,6 +26,7 @@ const processData = () => {
           "emailumangdoctor@gmail.com",
           "mehzabeen1526@gmail.com",
           "ravinder.singh.rawat2008@gmail.com",
+          "nipathakarbank@gmail.com"
         ],
         "email",
         "uname, email"
