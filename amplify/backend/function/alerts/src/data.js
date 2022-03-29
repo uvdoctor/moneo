@@ -96,15 +96,13 @@ const processHoldings = async (infoMap, usersMap, usersinsMap) => {
   // Crytpo
   const cryptoArray = [...cryptoIds];
   if (cryptoIds.size) {
-    const { date, month, yearFull } = utility(1);
-    const fromDate = `${yearFull}-${month}-${date}`;
     const fxRate = await getFXRate("INR");
     const convertUSDToINR = (amt) => fxRate * amt;
     for (let ids of cryptoArray) {
       let prev = 0;
       let price = 0;
       try {
-        prev = await getCryptoPrice(ids, fromDate);
+        prev = await getCryptoPrice(ids, true);
         price = await getCryptoPrice(ids);
       } catch (err) {
         console.log(err);
@@ -121,13 +119,11 @@ const processHoldings = async (infoMap, usersMap, usersinsMap) => {
 
 const getCommodityList = async () => {
   const commodityList = [];
-  const { date, month, yearFull } = utility(1);
-  const fromDate = `${yearFull}-${month}-${date}`;
   const fxRate = await getFXRate("INR");
   const convertUSDToINR = (amt) => fxRate * amt;
   const metals = ["GC", "SI"];
   for (let ids of metals) {
-    const data = await getCommodityPrice(ids, fromDate);
+    const data = await getCommodityPrice(ids, true);
     const prev = convertUSDToINR(convertTroyOunceToGram(data[0])) * 10;
     const price = convertUSDToINR(convertTroyOunceToGram(data[1])) * 10;
     const diff = calculateDiffPercent(price, prev);

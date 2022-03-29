@@ -130,7 +130,7 @@ const calculatePrice = (price, fv) => {
   return parseFloat(price);
 };
 
-/*const decimalCount = (num) => (num.split(".")[1] || []).length;
+const decimalCount = (num) => (num.split(".")[1] || []).length;
 const numberBeforeDecimal = (num) => num.split(".")[0];
 
 let num = 100;
@@ -150,10 +150,10 @@ const calculateFv = (price) => {
     num = num * 10;
   }
   if (!fv) calculateFv(price);
-  return fv;
-};*/
+  return fv < 100 ? 100 : fv;
+};
 
-const calculateFv = (price) => {
+/*const calculateFv = (price) => {
   let fv = 10;
   let ratio = 0;
   do {
@@ -161,8 +161,7 @@ const calculateFv = (price) => {
     ratio = price / fv;
   } while (ratio !== 1 && (String(ratio - Math.floor(ratio))[0] === "0"));
   return fv;
-}
-
+}*/
 
 const calcSchema = (
   record,
@@ -230,5 +229,5 @@ module.exports = {
   calculateYTM,
   getRate,
   calculateRisk,
-  calculatePrice
+  calculatePrice,
 };

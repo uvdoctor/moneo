@@ -12,7 +12,6 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const { getEODdata, getSplitInfo, getDividendInfo, getEODdataByDate } = require("/opt/nodejs/eod");
-const { getPrevOfEOD } = require("/opt/nodejs/prevUtils");
 const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
@@ -81,7 +80,7 @@ const getAndPushData = (diff) => {
         let dividendData;
         let prevEodData;
         try {
-          prevEodData = await getPrevOfEOD(diff, exchg, getEODdataByDate);
+          prevEodData = await getEODdataByDate(exchg, diff);
           eodData = await getEODdata(exchg);
           splitData = await getSplitInfo(exchg);
           dividendData = await getDividendInfo(exchg);
