@@ -69,7 +69,7 @@ const getCryptoPrice = async (symbol, isDate) => {
     prev++;
     data = await getCryptoPrice(symbol, isDate);
   }
-  return data;
+  return Array.isArray(data) ? data[1] : data;
 };
 
 const getCommodityPrice = async (symbol, isDate) => {
