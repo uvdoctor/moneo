@@ -48,12 +48,13 @@ const divideArrayBySize = (array, size) => {
 };
 
 const awsdate = (dateStr) => {
-  if (!dateStr) return;
+  if (!dateStr) return null;
   const today = new Date(dateStr);
   const date = today.getDate();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
-  return `${year}-${getStr(month)}-${getStr(date)}`;
+  const awsdate = `${year}-${getStr(month)}-${getStr(date)}`;
+  return awsdate.includes('NaN') ? null : awsdate;
 };
 
 const toCurrency = (num, currency, decimal = false) => {
