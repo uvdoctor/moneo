@@ -1,5 +1,5 @@
 const { pushDataForFeed, batchReadItem, pushData } = require("./databaseUtils")
-const { divideArrayBySize, utility, awsdate } = require("./utility");
+const { divideArrayBySize } = require("./utility");
 
 let prevMap = {};
 let prevDate = 1;
@@ -19,24 +19,6 @@ const getPrev = async (diff, downloadFile, constructedApiArray, table, index) =>
     await getPrev(diff, downloadFile, constructedApiArray, table, index);
   }
   return prevMap;
-};
-
-const getPrevOfEOD = async (diff, exchg, getEODdataByDate) => {
-  const prevDiff = prevDate === 5 ? diff : !diff ? prevDate : diff + prevDate;
-  const { customDate } = utility(prevDiff);
-  const date = awsdate(customDate);
-  const data = await getEODdataByDate(exchg, date);
-  if(data.length) return data;
-  else {
-    if (prevDate === 4) {
-      await pushDataForFeed("InExchg", 0, "previous_volume", "eod_prev", "");
-    }
-    prevDate++;
-  }
-  if (prevDate <= 5 && !data.length) {
-    await getPrevOfEOD(diff, exchg);
-  }
-  return data;
 };
 
 const updatePrevByGetItem = async (prevBatch, tableName) => {
@@ -72,4 +54,4 @@ const updatePrevByGetItem = async (prevBatch, tableName) => {
   }
 };
 
-module.exports = { getPrev, updatePrevByGetItem, getPrevOfEOD };
+module.exports = { getPrev, updatePrevByGetItem };
