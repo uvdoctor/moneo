@@ -15,12 +15,13 @@ const getNumberOfDays = (start, end) => {
 const getStr = (num) => (num < 10 ? `0${num}` : "" + num);
 
 const awsdate = (dateStr) => {
-  if (!dateStr) return;
+  if (!dateStr) return null;
   const today = new Date(dateStr);
   const date = today.getDate();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
-  return `${year}-${getStr(month)}-${getStr(date)}`;
+  const awsdate = `${year}-${getStr(month)}-${getStr(date)}`;
+  return awsdate.includes('NaN') ? null : awsdate;
 };
 
 const checkDate = (date) => {
@@ -70,4 +71,6 @@ module.exports = {
   instrumentValuation,
   calculateDiffPercent,
   convertTroyOunceToGram,
+  getNumberOfDays,
+  sortDescending
 };
