@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Button, Card } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useContext } from "react";
@@ -9,57 +9,47 @@ import { useRouter } from "next/router";
 import { MoreOutlined } from "@ant-design/icons";
 require("./InvestmentAlerts.less");
 
-const tabList = [
-  {
-    key: "gainers",
-    tab: "Gainers",
-  },
-  {
-    key: "losers",
-    tab: "Losers",
-  },
-  {
-    key: "volume_gainers",
-    tab: "Top Volume Gainers",
-  },
-  {
-    key: "volume_losers",
-    tab: "Top Volume Losers",
-  },
-  {
-    key: "yhigh",
-    tab: "Recent 52 Week High",
-  },
-  {
-    key: "ylow",
-    tab: "Recent 52 Week Low",
-  }
-];
-
 export default function InvestmentAlerts() {
-  const { gainers, losers, yhigh, ylow, volGainers, volLosers }: any = useContext(DBContext);
+  const { gainers, losers, yhigh, ylow, volGainers, volLosers }: any =
+    useContext(DBContext);
   const [activeTabkey, setActiveTabkey] = useState("yhigh");
   const router = useRouter();
+  const yhighlow = [...yhigh, ...ylow];
+  const movers = [...volGainers, ...volLosers];
+
+  const tabList = [
+    {
+      key: "gainers",
+      tab: "Gainers",
+    },
+    {
+      key: "losers",
+      tab: "Losers",
+    },
+    {
+      key: "movers",
+      tab: "Movers",
+    },
+    {
+      key: "yhighlow",
+      tab: "Recent 52 Week High/Low",
+    },
+  ];
 
   const contentList: { [key: string]: any } = {
-    yhigh: (
+    yhighlow: (
       <List
         itemLayout="horizontal"
-        dataSource={yhigh}
+        dataSource={yhighlow}
         renderItem={(item: any) => (
           <List.Item>
-            <StatisticInput value={item.yhigh} title={item.name} />
-          </List.Item>
-        )}
-      />
-    ),
-    ylow: (
-      <List
-        itemLayout="horizontal"
-        dataSource={ylow}
-        renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput value={item.yhigh} title={item.name} negative />
+            <StatisticInput
+              value={item.yhigh ? item.yhigh : item.ylow}
+              title={item.name}
+              price={item.price}
+              isValPercent={false}
+              negative={item.yhigh ? false : item.ylow ? true : false}
+            />
           </List.Item>
         )}
       />
@@ -70,7 +60,13 @@ export default function InvestmentAlerts() {
         dataSource={gainers}
         renderItem={(item: any) => (
           <List.Item>
-            <StatisticInput value={item.diff} title={item.name} />
+            <StatisticInput
+              value={item.diff}
+              title={item.name}
+              price={item.price}
+              negative={false}
+              isValPercent
+            />
           </List.Item>
         )}
       />
@@ -81,29 +77,30 @@ export default function InvestmentAlerts() {
         dataSource={losers}
         renderItem={(item: any) => (
           <List.Item>
-            <StatisticInput value={item.diff} title={item.name} negative />
+            <StatisticInput
+              value={item.diff}
+              title={item.name}
+              price={item.price}
+              isValPercent
+              negative
+            />
           </List.Item>
         )}
       />
     ),
-    volume_gainers: (
+    movers: (
       <List
         itemLayout="horizontal"
-        dataSource={volGainers}
+        dataSource={movers}
         renderItem={(item: any) => (
           <List.Item>
-            <StatisticInput value={item.volDiff} title={item.name} volume={item.vol}/>
-          </List.Item>
-        )}
-      />
-    ),
-    volume_losers: (
-      <List
-        itemLayout="horizontal"
-        dataSource={volLosers}
-        renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput value={item.volDiff} title={item.name} negative volume={item.vol} />
+            <StatisticInput
+              value={item.vol}
+              title={item.name}
+              price={item.price}
+              negative={Math.sign(item.volDiff) > 0 ? false : true}
+              isValPercent={false}
+            />
           </List.Item>
         )}
       />
@@ -119,9 +116,7 @@ export default function InvestmentAlerts() {
       id="alerts"
       style={{ width: "100%" }}
       title={
-        <strong style={{ fontSize: "20px" }}>
-          Recent Investment Updates
-        </strong>
+        <strong style={{ fontSize: "20px" }}>Recent Investment Updates</strong>
       }
       tabList={tabList}
       activeTabKey={activeTabkey}

@@ -1095,12 +1095,12 @@ export const calculatePrice = (
     if (isin[id] || !data) return;
     isin[id] = id;
     const { prev, price, name, yhigh, ylow, yhighd, ylowd, vol, prevol } = data;
-    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh, id });
-    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id });
+    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh, id, price });
+    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id, price });
     const diff = calculateDiffPercent(price, prev);
     const volDiff = vol && prevol && calculateDiffPercent(vol, prevol);
-    priceGL.push({ name, diff, id });
-    if (volDiff) volumeGL.push({ name, volDiff, id, vol });
+    priceGL.push({ name, diff, id, price });
+    if (volDiff) volumeGL.push({ name, volDiff, id, vol, price });
   });
   return { priceGL, yhighList, ylowList, volumeGL };
 };
@@ -1131,7 +1131,7 @@ export const calculateAlerts = async (
         (item: { id: any }) => item.id === id
       );
       const diff = calculateDiffPercent(price, prev);
-      priceGL.push({ name, diff: diff });
+      priceGL.push({ name, diff, price });
     });
   }
   const gainers = sortDescending(priceGL, "diff").slice(0, 3);
