@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersionb4fbc364": {
+    "LambdaLayerVersion59148b54": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,50 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivateb4fbc364": {
+    "LambdaLayerPermissionPrivate59148b54": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersionb4fbc364"
+          "Ref": "LambdaLayerVersion59148b54"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersionb4fbc364": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/moneovaluationlayer-LambdaLayerVersionb4fbc364-build.zip"
+        },
+        "Description": "Updated layer version 2022-03-25T15:28:27.093Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "moneovaluationlayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivateb4fbc364": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneovaluationlayer-dev:10",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -363,7 +400,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersionb4fbc364"
+        "Ref": "LambdaLayerVersion59148b54"
       }
     }
   }
