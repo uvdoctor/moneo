@@ -130,7 +130,7 @@ const extractPartOfData = async (
             yhigh: yhigh,
             ylow: parse(record[codes.ylow]),
             yhighd: record[codes.yhighd] ? record[codes.yhighd] : "",
-            ylowd: record[codes.ylowd] ? record[codes.yhighd] : "",
+            ylowd: record[codes.ylowd] ? record[codes.ylowd] : "",
           };
         } else {
           nameMap[record[codes.id]] = {
