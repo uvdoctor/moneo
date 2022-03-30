@@ -313,12 +313,12 @@ a {
   .cc-container {
     margin-top: 10px !important;
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    grid-auto-rows: minmax(50px, auto) !important;
+    /* grid-template-columns: repeat(2, 1fr) !important; */
+    /* gap: 10px !important; */
+    /* grid-auto-rows: minmax(50px, auto) !important; */
   }
 
-  .cc-label-column {
+  /* .cc-label-column {
     grid-column: 1 !important;
     grid-row: 1 !important;
    
@@ -327,5 +327,5 @@ a {
   .column {
     grid-column: 2 !important;
     grid-row: 2 !important;
-  }
+  } */
 }
