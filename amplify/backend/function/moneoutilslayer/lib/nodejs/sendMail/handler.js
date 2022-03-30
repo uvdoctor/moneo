@@ -4,7 +4,7 @@ const yhigh = [ { name: "HDFC" }]
 const ylow = [ {name: "ICICI"} ]
 const gainers = [ { name: "SAIL" } ]
 const losers = [{ name: "COAL" }]
-const metal = [{ name: "Gold", price: "12672", up: true, chg: "7.3" }, { name: "Silver", price: "12345", up: false, chg: "6.3" }]
+const metal = [{ name: "10 grams of 24k gold:", price: "12672", up: true, chg: "7.3" }, { name: "10 grams of 99.99% Silver", price: "12345", up: false, chg: "6.3" }]
 const chgAmount = 400000;
 
 sendEmail({

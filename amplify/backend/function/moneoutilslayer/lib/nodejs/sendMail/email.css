@@ -105,6 +105,7 @@ table td {
   margin-bottom: 10px;
 }
 
+.cc-label-column,
 .column {
   flex: 33.33%;
   height: 30px;
@@ -311,5 +312,20 @@ a {
 
   .cc-container {
     margin-top: 10px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    grid-auto-rows: minmax(50px, auto) !important;
+  }
+
+  .cc-label-column {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+   
+  }
+
+  .column {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
   }
 }
