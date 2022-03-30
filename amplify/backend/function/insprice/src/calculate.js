@@ -146,4 +146,4 @@ const calcSchema = (
   isinMap[record[codes.id]] = record[codes.id];
   return { updateSchema, isBond };
 };
-module.exports = { calc, calcSchema, calculateRisk };
+module.exports = { calc, calcSchema, calculateRisk, calculateIsbond };

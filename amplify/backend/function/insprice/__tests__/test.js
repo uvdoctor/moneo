@@ -1,4 +1,5 @@
-const { calc, calcSchema, calculateRisk } = require("../src/calculate");
+const { tr } = require("date-fns/locale");
+const { calc, calcSchema, calculateRisk, calculateIsbond } = require("../src/calculate");
 
 describe("CalcSchema - Incase of Exchange Data", () => {
   const { updateSchema, isBond } = calcSchema(
@@ -356,3 +357,27 @@ describe("Test Risk Profile", () => {
     expect(data).toEqual("M");
   });
 });
+
+describe("Test Calculate isBond", () => {
+  test("Itype", () => {
+    expect(calculateIsbond("NSE", "CB", "FRB")).toEqual(false);
+  });
+  test("BSE - Government Bond", () => {
+    expect(calculateIsbond("BSE", "GB", "")).toEqual(true);
+  });
+  test("BSE - Other Government Bond", () => {
+    expect(calculateIsbond("BSE", "GBO", "")).toEqual(true);
+  });
+  test("NSE - Corporate Bond", () => {
+    expect(calculateIsbond("NSE", "CB", "")).toEqual(true);
+  });
+  test("NSE - Other Government Bond", () => {
+    expect(calculateIsbond("NSE", "GBO", "")).toEqual(true);
+  });
+  test("NSE - Government Bond", () => {
+    expect(calculateIsbond("NSE", "GB", "")).toEqual(true);
+  });
+  test("Stock", () => {
+    expect(calculateIsbond("NSE", "S", "")).toEqual(false);
+  });
+})
