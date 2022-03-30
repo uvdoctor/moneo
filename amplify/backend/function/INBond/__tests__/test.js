@@ -3,7 +3,10 @@ const {
   calc,
   getMonthYearByDate,
   calculateYTM,
-  calculateRisk
+  calculateRisk,
+  getRate,
+  calculatePrice,
+  calculateFv,
 } = require("../src/calculate");
 
 describe("CalcSchema", () => {
@@ -43,7 +46,6 @@ describe("CalcSchema", () => {
         mm: 0,
         my: 0,
         rate: 0,
-       
         fv: 0,
         cr: null,
         crstr: null,
@@ -177,13 +179,13 @@ describe("Calculate Credit Rating", () => {
 });
 
 describe("Calculate Price", () => {
-  test("With Price", () => {
-    const data = calc.calcPrice("99.6149");
+  test("Price in range of fv", () => {
+    const data = calculatePrice("99.6149", "100");
     expect(data).toEqual(99.6149);
   });
-  test("Without Price", () => {
-    const data = calc.calcPrice("");
-    expect(data).toEqual(100);
+  test("Price exceeding fv", () => {
+    const data = calculatePrice("122", "1000");
+    expect(data).toEqual(1220);
   });
 });
 
@@ -226,5 +228,66 @@ describe("Calculate Risk", () => {
   test("No Credit rating in case of corporate bond", () => {
     const data = calculateRisk("", "CB");
     expect(data).toEqual("C");
+  });
+});
+
+describe("Get Rate", () => {
+  test("Rate", () => {
+    const data = getRate(
+      {
+        ISSUE_DESC: "Aditya Birla Fin 8.65% 24 S C1",
+        ISSUE_NAME: "8.65%",
+      },
+      {
+        name: "ISSUE_DESC",
+        rate: "ISSUE_NAME",
+      }
+    );
+    expect(data).toEqual(8.65);
+  });
+  test("Incase of reset", () => {
+    const data = getRate(
+      {
+        ISSUE_DESC: "Aditya Birla Fin 8.65% 24 S C1",
+        ISSUE_NAME: "RESET",
+      },
+      {
+        name: "ISSUE_DESC",
+        rate: "ISSUE_NAME",
+      }
+    );
+    expect(data).toEqual(0);
+  });
+  test("Others", () => {
+    const data = getRate(
+      {
+        ISSUE_DESC: "Aditya Birla Fin 8.65% 24 S C1",
+        ISSUE_NAME: "RESET12343322351212",
+      },
+      {
+        name: "ISSUE_DESC",
+        rate: "ISSUE_NAME",
+      }
+    );
+    expect(data).toEqual(0);
+  });
+});
+
+describe("Calculate Face Value", () => {
+  test("Premium", () => {
+    const data = calculateFv(1100);
+    expect(data).toEqual(1000);
+  });
+  test("Discount", () => {
+    const data = calculateFv(800.50);
+    expect(data).toEqual(1000);
+  });
+  test("Same", () => {
+    const data = calculateFv(1000);
+    expect(data).toEqual(1000);
+  });
+  test("price lower then 100", () => {
+    const data = calculateFv(100);
+    expect(data).toEqual(1000);
   });
 });

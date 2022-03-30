@@ -147,7 +147,7 @@ const calculateFv = (price) => {
   ) {
     fv = num;
   } else {
-    num = num * 10;
+    num *= 10;
   }
   if (!fv) calculateFv(price);
   return fv < 100 ? 100 : fv;
@@ -230,4 +230,5 @@ module.exports = {
   getRate,
   calculateRisk,
   calculatePrice,
+  calculateFv
 };
