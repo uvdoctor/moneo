@@ -13,7 +13,16 @@ import Link from "next/link";
 require("./DBView.less");
 
 export default function DBView() {
-  const { totalAssets, totalLiabilities }: any = useContext(DBContext);
+  const {
+    totalAssets,
+    totalLiabilities,
+    gainers,
+    losers,
+    yhigh,
+    ylow,
+    volLosers,
+    volGainers,
+  }: any = useContext(DBContext);
   const { appContextLoaded, defaultCurrency }: any = useContext(AppContext);
 
   return appContextLoaded ? (
@@ -80,7 +89,14 @@ export default function DBView() {
                 <Col xs={24} sm={24} md={12}>
                   <Link href="#alerts" scroll={false}>
                     <a>
-                      <InvestmentAlerts />
+                      <InvestmentAlerts
+                        gainers={gainers}
+                        losers={losers}
+                        yhigh={yhigh}
+                        ylow={ylow}
+                        volGainers={volGainers}
+                        volLosers={volLosers}
+                      />
                     </a>
                   </Link>
                 </Col>

@@ -1,21 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useContext } from "react";
-import { DBContext } from "./DBContext";
 import { List } from "antd";
 import StatisticInput from "../form/StatisticInput";
 import { useRouter } from "next/router";
 import { MoreOutlined } from "@ant-design/icons";
+import { toHumanFriendlyCurrency } from "../utils";
+import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { AppContext } from "../AppContext";
 require("./InvestmentAlerts.less");
+interface InvestmentAlertsProps {
+  gainers: Array<any>;
+  losers: Array<any>;
+  yhigh: Array<any>;
+  ylow: Array<any>;
+  volGainers: Array<any>;
+  volLosers: Array<any>;
+}
 
-export default function InvestmentAlerts() {
-  const { gainers, losers, yhigh, ylow, volGainers, volLosers }: any =
-    useContext(DBContext);
-  const [activeTabkey, setActiveTabkey] = useState("yhigh");
+export default function InvestmentAlerts({
+  gainers,
+  losers,
+  yhigh,
+  ylow,
+  volGainers,
+  volLosers,
+}: InvestmentAlertsProps) {
   const router = useRouter();
+  const { defaultCurrency }: any = useContext(AppContext);
+  const [activeTabkey, setActiveTabkey] = useState("gainers");
+  const [volumeDesc, setVolumeDesc] = useState<boolean>(true);
+  const [movers, setMovers] = useState<any>([...volGainers, ...volLosers]);
   const yhighlow = [...yhigh, ...ylow];
-  const movers = [...volGainers, ...volLosers];
+
+  useEffect(() => {
+    !volumeDesc
+      ? setMovers([...movers].reverse())
+      : setMovers([...volGainers, ...volLosers]);
+  }, [volumeDesc]);
+
+  useEffect(() => {
+    if(movers.length) return;
+    setMovers([...volGainers, ...volLosers]);
+  }, [movers]);
 
   const tabList = [
     {
@@ -47,7 +75,7 @@ export default function InvestmentAlerts() {
               value={item.yhigh ? item.yhigh : item.ylow}
               title={item.name}
               price={item.price}
-              isValPercent={false}
+              isNotPercentage
               negative={item.yhigh ? false : item.ylow ? true : false}
             />
           </List.Item>
@@ -65,7 +93,6 @@ export default function InvestmentAlerts() {
               title={item.name}
               price={item.price}
               negative={false}
-              isValPercent
             />
           </List.Item>
         )}
@@ -81,7 +108,6 @@ export default function InvestmentAlerts() {
               value={item.diff}
               title={item.name}
               price={item.price}
-              isValPercent
               negative
             />
           </List.Item>
@@ -90,17 +116,36 @@ export default function InvestmentAlerts() {
     ),
     movers: (
       <List
+        header={
+          <Button
+            icon={volumeDesc ? <CaretUpOutlined /> : <CaretDownOutlined />}
+            onClick={() =>
+              volumeDesc ? setVolumeDesc(false) : setVolumeDesc(true)
+            }
+          >
+            Volume
+          </Button>
+        }
         itemLayout="horizontal"
         dataSource={movers}
         renderItem={(item: any) => (
           <List.Item>
             <StatisticInput
-              value={item.vol}
+              value={item.volDiff}
               title={item.name}
-              price={item.price}
+              price={item.vol}
               negative={Math.sign(item.volDiff) > 0 ? false : true}
-              isValPercent={false}
+              isVolume
             />
+            <div
+              style={{
+                color: Math.sign(item.volDiff) > 0 ? "#3f8600" : "#cf1322",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              {toHumanFriendlyCurrency(item.price, defaultCurrency)}
+            </div>
           </List.Item>
         )}
       />
