@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Card } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useContext } from "react";
@@ -7,7 +7,6 @@ import StatisticInput from "../form/StatisticInput";
 import { useRouter } from "next/router";
 import { MoreOutlined } from "@ant-design/icons";
 import { toHumanFriendlyCurrency } from "../utils";
-import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
@@ -30,20 +29,8 @@ export default function InvestmentAlerts({
   const router = useRouter();
   const { defaultCurrency }: any = useContext(AppContext);
   const [activeTabkey, setActiveTabkey] = useState("gainers");
-  const [volumeDesc, setVolumeDesc] = useState<boolean>(true);
-  const [movers, setMovers] = useState<any>([...volGainers, ...volLosers]);
+  const movers = [...volGainers, ...volLosers];
   const yhighlow = [...yhigh, ...ylow];
-
-  useEffect(() => {
-    !volumeDesc
-      ? setMovers([...movers].reverse())
-      : setMovers([...volGainers, ...volLosers]);
-  }, [volumeDesc]);
-
-  useEffect(() => {
-    if(movers.length) return;
-    setMovers([...volGainers, ...volLosers]);
-  }, [movers]);
 
   const tabList = [
     {
@@ -116,16 +103,6 @@ export default function InvestmentAlerts({
     ),
     movers: (
       <List
-        header={
-          <Button
-            icon={volumeDesc ? <CaretUpOutlined /> : <CaretDownOutlined />}
-            onClick={() =>
-              volumeDesc ? setVolumeDesc(false) : setVolumeDesc(true)
-            }
-          >
-            Volume
-          </Button>
-        }
         itemLayout="horizontal"
         dataSource={movers}
         renderItem={(item: any) => (
