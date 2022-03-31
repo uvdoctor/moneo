@@ -20,7 +20,7 @@ img {
 
 body {
   background-color: #f6f6f6;
-  font-family: 'Jost';
+  font-family: "Jost";
   -webkit-font-smoothing: antialiased;
   font-size: 18px;
   margin: 0;
@@ -35,7 +35,7 @@ table {
 }
 
 table td {
-  font-family: 'Jost';
+  font-family: "Jost";
   font-size: 18px;
   vertical-align: top;
 }
@@ -62,7 +62,7 @@ table td {
 
 .box-container-high {
   margin-bottom: 20px;
-  background: #F0FFF4;
+  background: #f0fff4;
   border: 1px solid rgba(74, 74, 74, 0.075);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10px;
@@ -97,21 +97,23 @@ table td {
   padding: 10px;
 }
 
-.cc-container {
-  display: flex;
+.metal-container {
+  margin-bottom: 10px;
   box-shadow: 30px 40px whitesmoke;
   border-left: 2px solid black;
   padding: 2px;
-  margin-bottom: 10px;
 }
 
-.cc-label-column,
 .column {
-  flex: 33.33%;
-  height: 30px;
-  padding: 2px;
-  margin: 5px;
+  flex-grow: 1;
   text-align: center;
+  width: 50%;
+}
+
+.row {
+  display: flex;
+  text-align: center;
+  width: 100%;
 }
 
 .main-text {
@@ -178,7 +180,7 @@ table td {
 p,
 ul,
 ol {
-  font-family: 'Jost';
+  font-family: "Jost";
   font-size: 18px;
   font-weight: 400;
   margin: 0;
@@ -196,7 +198,7 @@ ol li {
 a {
   font-size: 18px;
   color: #15c;
-  font-family: 'Jost';
+  font-family: "Jost";
   font-weight: 600;
 }
 
@@ -310,22 +312,7 @@ a {
     font-size: 14px !important;
   }
 
-  .cc-container {
-    margin-top: 10px !important;
-    display: grid !important;
-    /* grid-template-columns: repeat(2, 1fr) !important; */
-    /* gap: 10px !important; */
-    /* grid-auto-rows: minmax(50px, auto) !important; */
+  .metal-container {
+    margin-top: 10px !important ;
   }
-
-  /* .cc-label-column {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-   
-  }
-
-  .column {
-    grid-column: 2 !important;
-    grid-row: 2 !important;
-  } */
 }

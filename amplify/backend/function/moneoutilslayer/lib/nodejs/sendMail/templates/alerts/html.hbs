@@ -55,21 +55,21 @@
 
     {{#if metal}}
     {{#each metal}}
-    <div class="cc-container">
-        <div class="cc-label-column">
-            <p class="main-text">{{ this.name }}</p>
-        </div>
-        <div class="column">
-            <p class="main-text">{{ this.price }}</p>
-        </div>
-        <div class="column">
-            <p class="main-text" {{#if this.up}} style="color: green" {{else}} style="color: red" {{/if}}>
-                {{#if this.up}}
-                ▲
-                {{else}}
-                ▼
-                {{/if}}
-                {{ this.chg }}%</p>
+    <div class="metal-container">
+        <p style="text-align: center;" class="main-text">{{ this.name }}</p>
+        <div class="row">
+            <div class="column">
+                <p class="main-text">{{ this.price }}</p>
+            </div>
+            <div class="column">
+                <p class="main-text" {{#if this.up}} style="color: green" {{else}} style="color: red" {{/if}}>
+                    {{#if this.up}}
+                    ▲
+                    {{else}}
+                    ▼
+                    {{/if}}
+                    {{ this.chg }}%</p>
+            </div>
         </div>
     </div>
     {{/each}}
