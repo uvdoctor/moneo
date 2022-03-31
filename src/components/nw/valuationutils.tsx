@@ -1111,7 +1111,9 @@ export const calculateAlerts = async (
 ) => {
   let [yhighList, ylowList, priceGL, volumeGL]: any = [[], [], [], []];
   if (insHoldings?.ins?.length) {
-    await initializeInsData(insHoldings?.ins);
+    if (!simpleStorage.get(LOCAL_INS_DATA_KEY)) {
+      await initializeInsData(insHoldings?.ins);
+    }
     calculatePrice(insHoldings.ins, priceGL, yhighList, ylowList, volumeGL);
   }
   if (holdings?.nps?.length) {
