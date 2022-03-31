@@ -209,6 +209,7 @@ export default function InstrumentValuation() {
     const volGainers = sortDescending(volumeGL, "volDiff").slice(0, 3);
     const volLosers = sortDescending(volumeGL, "volDiff").slice(-3);
     const movers = [ ...volGainers, ...volLosers ];
+    const yhighlow = [ ...yhigh, ...ylow ];
     let filterDataByTag = filteredInstruments.filter(
       (instrument: InstrumentInput) => {
         let [id, sid, cachedData] = [
@@ -227,7 +228,7 @@ export default function InstrumentValuation() {
               (selectedTags.includes(mcap) ||
                 (selectedTags.includes(MCap.Small) && !mcap))) ||
             (type === AssetType.F &&
-              filterFixCategory(selectedTags, subt, mftype)) ||
+            filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp) ||
             filterLosersGainers(selectedTags, id, gainers, losers)
           );
@@ -244,7 +245,7 @@ export default function InstrumentValuation() {
             (funData &&
               funData[sid as string] &&
               selectedTags.includes(funData[sid as string].sector)) ||
-            filterYearHighLow(selectedTags, id, yhigh, ylow) ||
+            filterYearHighLow(selectedTags, id, yhighlow) ||
             filterLosersGainers(selectedTags, id, gainers, losers) ||
             filterVolumeGL(selectedTags, id, movers)
           );

@@ -359,8 +359,7 @@ export const getMoversCategory = (isStockTab?: boolean) => {
         gainers: "Gainers",
         losers: "Losers",
         movers: "Movers",
-        yhigh: "Recent 52 Week High",
-        ylow: "Recent 52 Week Low",
+        yhighlow: "Recent 52 Week High/Low",
       }
     : {
         gainers: "Gainers",
@@ -1239,15 +1238,11 @@ export const filterVolumeGL = (
 export const filterYearHighLow = (
   selectedTags: string[],
   id: string,
-  yhigh: any[],
-  ylow: any[]
+  yhighlow: any[]
 ) => {
   return (
-    (yhigh.length &&
-      selectedTags.includes("yhigh") &&
-      yhigh.some((item: any) => item.id === id)) ||
-    (ylow.length &&
-      selectedTags.includes("ylow") &&
-      ylow.some((item: any) => item.id === id))
+    yhighlow.length &&
+    selectedTags.includes("yhighlow") &&
+    yhighlow.some((item: any) => item.id === id)
   );
 };
