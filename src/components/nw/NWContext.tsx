@@ -20,7 +20,7 @@ import {
   getMutualFundMarketCap,
   getFixedCategories,
   getRiskProfileType,
-  getPriceCategory,
+  getMoversCategory,
 } from "./nwutils";
 import { notification } from "antd";
 import {
@@ -326,16 +326,14 @@ function NWContextProvider({ fxRates }: any) {
               risk: "Risk",
               sector: "Sector",
               industry: "Industry",
-              price: "Price",
-              volume: "Volume"
+              movers: "Movers",
             },
             sub: {
               mcap: getStockMarketCap(),
               risk: getRiskProfileType(),
               sector: industryAndSector.sector,
               industry: industryAndSector.industry,
-              price: getPriceCategory(true),
-              volume: { volGainers: "Top Volume Gainers", volLosers : "Top Volume Losers" }
+              movers: getMoversCategory(true)
             },
           },
         },
@@ -348,14 +346,14 @@ function NWContextProvider({ fxRates }: any) {
           total: totalMFs,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { ...getAssetTypes(), risk: "Risk", price: "Price" },
+            main: { ...getAssetTypes(), risk: "Risk", movers: "Movers" },
             sub: {
               E: getMutualFundMarketCap(),
               F: getFixedCategories(),
               H: {},
               A: {},
               risk: getRiskProfileType(),
-              price: getPriceCategory()
+              movers: getMoversCategory()
             },
           },
         },
@@ -368,11 +366,11 @@ function NWContextProvider({ fxRates }: any) {
           total: totalBonds,
           contentComp: <InstrumentValuation />,
           filterOption: {
-            main: { type: "Type", risk: "Risk", price: "Price" },
+            main: { type: "Type", risk: "Risk", movers: "Movers" },
             sub: {
               type: { CB: "Corporate Bond", GB: "Government Bond" },
               risk: getRiskProfileType(),
-              price: getPriceCategory()
+              movers: getMoversCategory()
             },
           },
         },

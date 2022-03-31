@@ -353,11 +353,12 @@ export const getStockMarketCap = () => {
   };
 };
 
-export const getPriceCategory = (isStockTab?: boolean) => {
+export const getMoversCategory = (isStockTab?: boolean) => {
   return isStockTab
     ? {
         gainers: "Gainers",
         losers: "Losers",
+        movers: "Movers",
         yhigh: "Recent 52 Week High",
         ylow: "Recent 52 Week Low",
       }
@@ -1226,16 +1227,12 @@ export const filterLosersGainers = (
 export const filterVolumeGL = (
   selectedTags: string[],
   id: string,
-  volGainers: any[],
-  volLosers: any[]
+  movers: any[]
 ) => {
   return (
-    (volLosers.length &&
-      selectedTags.includes("volLosers") &&
-      volLosers.some((item: any) => item.id === id)) ||
-    (volGainers.length &&
-      selectedTags.includes("volGainers") &&
-      volGainers.some((item: any) => item.id === id))
+    movers.length &&
+    selectedTags.includes("movers") &&
+    movers.some((item: any) => item.id === id)
   );
 };
 
