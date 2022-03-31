@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { MoreOutlined } from "@ant-design/icons";
 import { toHumanFriendlyCurrency } from "../utils";
 import { AppContext } from "../AppContext";
+import RadioInput from "../form/RadioInput";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -28,9 +29,9 @@ export default function InvestmentAlerts({
 }: InvestmentAlertsProps) {
   const router = useRouter();
   const { defaultCurrency }: any = useContext(AppContext);
-  const [activeTabkey, setActiveTabkey] = useState("gainers");
-  const movers = [...volGainers, ...volLosers];
-  const yhighlow = [...yhigh, ...ylow];
+  const [activeTabkey, setActiveTabkey] = useState<string>("gainers");
+  const [isGainers, setIsGainers] = useState<boolean>(true);
+  const [isWeekhigh, setIsWeekhigh] = useState<boolean>(true);
 
   const tabList = [
     {
@@ -54,8 +55,21 @@ export default function InvestmentAlerts({
   const contentList: { [key: string]: any } = {
     yhighlow: (
       <List
+        header={
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <RadioInput
+              options={["Week High", "Week Low"]}
+              value={isWeekhigh ? "Week High" : "Week Low"}
+              changeHandler={(value: string) =>
+                value === "Week High"
+                  ? setIsWeekhigh(true)
+                  : setIsWeekhigh(false)
+              }
+            />
+          </div>
+        }
         itemLayout="horizontal"
-        dataSource={yhighlow}
+        dataSource={isWeekhigh ? yhigh : ylow}
         renderItem={(item: any) => (
           <List.Item>
             <StatisticInput
@@ -103,8 +117,21 @@ export default function InvestmentAlerts({
     ),
     movers: (
       <List
+        header={
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <RadioInput
+              options={["Volume Gainers", "Volume Losers"]}
+              value={isGainers ? "Volume Gainers" : "Volume Losers"}
+              changeHandler={(value: string) =>
+                value === "Volume Losers"
+                  ? setIsGainers(false)
+                  : setIsGainers(true)
+              }
+            />
+          </div>
+        }
         itemLayout="horizontal"
-        dataSource={movers}
+        dataSource={isGainers ? volGainers : volLosers}
         renderItem={(item: any) => (
           <List.Item>
             <StatisticInput

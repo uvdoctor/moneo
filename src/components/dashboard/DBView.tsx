@@ -87,8 +87,8 @@ export default function DBView() {
                   <MarketOverview />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
-                  <Link href="#alerts" scroll={false}>
-                    <a>
+                  <Link href="#alerts" passHref={true}  scroll={false}>
+                    {/* <a> */}
                       <InvestmentAlerts
                         gainers={gainers}
                         losers={losers}
@@ -97,7 +97,7 @@ export default function DBView() {
                         volGainers={volGainers}
                         volLosers={volLosers}
                       />
-                    </a>
+                    {/* </a> */}
                   </Link>
                 </Col>
               </Row>
