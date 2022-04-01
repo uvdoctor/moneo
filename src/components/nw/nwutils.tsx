@@ -277,19 +277,23 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 export const loadMatchingINExchange = async (isins: Array<string>) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelINExchgPriceFilterInput> = [];
-  const {
-    data: { listINExchgPrices },
-  } = (await API.graphql(
-    graphqlOperation(queries.listInExchgPrices, {
-      limit: 10000,
-      filter: getORIdList(idList, isins),
-    })
-  )) as {
-    data: APIt.ListInExchgPricesQuery;
-  };
-  return listINExchgPrices?.items?.length
-    ? (listINExchgPrices.items as Array<APIt.INExchgPrice>)
-    : null;
+  let returnList: Array<APIt.INExchgPrice> = [];
+  let nextToken = null;
+  do {
+    let variables: any = { limit: 20000, filter: getORIdList(idList, isins) };
+    if (nextToken) variables.nextToken = nextToken;
+    const {
+      data: { listINExchgPrices },
+    } = (await API.graphql(
+      graphqlOperation(queries.listInExchgPrices, variables)
+    )) as {
+      data: APIt.ListInExchgPricesQuery;
+    };
+    if (listINExchgPrices?.items?.length)
+      returnList.push(...(listINExchgPrices.items as Array<APIt.INExchgPrice>));
+    nextToken = listINExchgPrices?.nextToken;
+  } while (nextToken);
+  return returnList.length ? returnList : null;
 };
 
 export const loadMatchingINMutual = async (isins: Array<string>) => {

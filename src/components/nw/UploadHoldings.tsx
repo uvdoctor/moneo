@@ -148,20 +148,24 @@ export default function UploadHoldings() {
     allInsData: any
   ) => {
     if (!ids.length) return null;
+    let gotodb = false;
     for (let id of ids) {
-      if (allInsData[id]) continue;
-      let matchingList: Array<any> | null = await fun(ids);
-      let unmatched: Array<string> = [];
-      ids.forEach((id: string) => {
-        let matchingEntry: InstrumentInput | null = matchingList?.find(
-          (match) => match?.id === id
-        );
-        if (matchingEntry) allInsData[id] = matchingEntry;
-        else unmatched.push(id);
-      });
-      return unmatched;
+      if (!allInsData[id]) {
+        gotodb = true;
+        break;
+      }
     }
-    return null;
+    if (!gotodb) return null;
+    let matchingList: Array<any> | null = await fun(ids);
+    let unmatched: Array<string> = [];
+    ids.forEach((id: string) => {
+      let matchingEntry: InstrumentInput | null = matchingList?.find(
+        (match) => match?.id === id
+      );
+      if (matchingEntry) allInsData[id] = matchingEntry;
+      else unmatched.push(id);
+    });
+    return unmatched;
   };
 
   useEffect(() => {
