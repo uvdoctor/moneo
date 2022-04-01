@@ -28,7 +28,7 @@ import {
 } from "./nwutils";
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
-import { calculatePrice, sortDescending } from "./valuationutils";
+import { calculatePrice } from "./valuationutils";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -200,16 +200,12 @@ export default function InstrumentValuation() {
     setFilteredInstruments([...filteredData]);
   };
 
-  const filterInstrumentsByTags = () => {
+  const filterInstrumentsByTags = async () => {
     if (!selectedTags.length) return;
-    let [priceGL, yhigh, ylow, volumeGL]: any = [[], [], [], []];
-    calculatePrice(filteredInstruments, priceGL, yhigh, ylow, volumeGL);
-    const gainers = sortDescending(priceGL, "diff").slice(0, 3);
-    const losers = sortDescending(priceGL, "diff").slice(-3);
-    const volGainers = sortDescending(volumeGL, "volDiff").slice(0, 3);
-    const volLosers = sortDescending(volumeGL, "volDiff").slice(-3);
-    const movers = [ ...volGainers, ...volLosers ];
-    const yhighlow = [ ...yhigh, ...ylow ];
+    const { gainers, losers, volGainers, volLosers, yhighList, ylowList } =
+      await calculatePrice(filteredInstruments);
+    const movers = [...volGainers, ...volLosers];
+    const yhighlow = [...yhighList, ...ylowList];
     let filterDataByTag = filteredInstruments.filter(
       (instrument: InstrumentInput) => {
         let [id, sid, cachedData] = [
@@ -228,7 +224,7 @@ export default function InstrumentValuation() {
               (selectedTags.includes(mcap) ||
                 (selectedTags.includes(MCap.Small) && !mcap))) ||
             (type === AssetType.F &&
-            filterFixCategory(selectedTags, subt, mftype)) ||
+              filterFixCategory(selectedTags, subt, mftype)) ||
             filterRisk(selectedTags, risk, userInfo?.rp) ||
             filterLosersGainers(selectedTags, id, gainers, losers)
           );

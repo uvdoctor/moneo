@@ -37,7 +37,7 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       setTotalAssets(totalAssets);
-      const data = await calculateAlerts(allHoldings, insHoldings);
+      const data = await calculateAlerts(allHoldings, insHoldings, fxRates, defaultCurrency);
       setGainers(data.gainers);
       setLosers(data.losers);
       setYhigh(data.yhighList);

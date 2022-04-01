@@ -814,8 +814,8 @@ export const getFXData = async (token: string) => {
   return defaultFXRates;
 };
 
-export const getPrice = async (id: string, type: string) => {
-  let rate = simpleStorage.get(id);
+export const getPrice = async (id: string, type: string, isPrev: boolean = false) => {
+  let rate = simpleStorage.get(isPrev ? `${id}-prev` : id);
   if (rate) return rate;
   return await fetch("/api/price", {
     method: "POST",
@@ -825,11 +825,12 @@ export const getPrice = async (id: string, type: string) => {
     body: JSON.stringify({
       id: id,
       type: type,
+      isPrev: isPrev
     }),
   })
     .then(async (res: any) => {
       const re = await res.json();
-      simpleStorage.set(id, re.rate, LOCAL_DATA_TTL);
+      simpleStorage.set(isPrev ? `${id}-prev` : id, re.rate, LOCAL_DATA_TTL);
       return re.rate;
     })
     .catch(() => {
@@ -891,3 +892,27 @@ export const getNumberOfDays = (start: string, end: string) => {
   const diffInDays = Math.round(diffInTime / oneDay);
   return diffInDays;
 }
+
+export const getCustomDate = (num: any) => {
+  if (!num) num = 0;
+  const today = new Date();
+  const customDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() - parseInt(num)
+  );
+  const date = customDate.getDate();
+  const month = customDate.getMonth() + 1;
+  const year = customDate.getFullYear();
+  const awsdate = `${year}-${getStr(month)}-${getStr(date)}`;
+  return awsdate;
+};
+
+export const getCryptoPrevPrice = (id: string, currency: string, fxRates: any) => {
+  return getPrice(id, "CC", true)
+    .then((rate) => {
+      if (!rate) return 0;
+      return rate * getFXRate(fxRates, currency);
+    })
+    .catch(() => 0);
+};

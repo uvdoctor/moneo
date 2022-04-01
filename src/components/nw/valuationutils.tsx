@@ -26,7 +26,12 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { awsdate, getNumberOfDays, includesAny } from "../utils";
+import {
+  awsdate,
+  getCryptoPrevPrice,
+  getNumberOfDays,
+  includesAny,
+} from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   doesHoldingMatch,
@@ -1080,16 +1085,24 @@ const checkDate = (date: any) => {
   return days <= 3;
 };
 
-export const calculatePrice = (
-  instruments: Array<InstrumentInput>,
-  priceGL: any[],
-  yhighList: any[],
-  ylowList: any[],
-  volumeGL: any[]
+export const calculatePrice = async (
+  insHoldings: Array<InstrumentInput>,
+  crypto?: Array<HoldingInput>,
+  nps?: Array<HoldingInput>,
+  fxRates?: any,
+  currency?: string
 ) => {
-  const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  let [yhighList, ylowList, volGainers, volLosers, gainers, losers]: any = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+  ];
   const isin: { [key: string]: string } = {};
-  instruments.forEach((instrument: InstrumentInput) => {
+  let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  insHoldings.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
     if (isin[id] || !data) return;
@@ -1099,43 +1112,69 @@ export const calculatePrice = (
     if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id, price });
     const diff = calculateDiffPercent(price, prev);
     const volDiff = vol && prevol && calculateDiffPercent(vol, prevol);
-    priceGL.push({ name, diff, id, price });
-    if (volDiff) volumeGL.push({ name, volDiff, id, vol, price });
+    Math.sign(diff) > 0
+      ? gainers.push({ name, diff, id, price })
+      : losers.push({ name, diff, id, price });
+    if (volDiff) {
+      Math.sign(volDiff) > 0
+        ? volGainers.push({ name, volDiff, id, vol, price })
+        : volLosers.push({ name, volDiff, id, vol, price });
+    }
   });
-  return { priceGL, yhighList, ylowList, volumeGL };
-};
-
-export const calculateAlerts = async (
-  holdings: CreateUserHoldingsInput | null,
-  insHoldings: CreateUserInsInput | null
-) => {
-  let [yhighList, ylowList, priceGL, volumeGL]: any = [[], [], [], []];
-  if (insHoldings?.ins?.length) {
-    if (!simpleStorage.get(LOCAL_INS_DATA_KEY)) {
-      await initializeInsData(insHoldings?.ins);
-    }
-    calculatePrice(insHoldings.ins, priceGL, yhighList, ylowList, volumeGL);
-  }
-  if (holdings?.nps?.length) {
+  if (nps?.length) {
     let cachedData = simpleStorage.get(LOCAL_NPS_DATA_KEY);
-    if (!cachedData) {
-      cachedData = await initializeNPSData();
-    }
-    let npsMap: { [key: string]: string } = {};
-    holdings?.nps.forEach((holding: HoldingInput) => {
+    nps.forEach((holding: HoldingInput) => {
       const id = holding.name as string;
-      if (npsMap[id]) return;
-      npsMap[id] = id;
+      if (isin[id]) return;
+      isin[id] = id;
       const { prev, price, name } = cachedData.find(
         (item: { id: any }) => item.id === id
       );
       const diff = calculateDiffPercent(price, prev);
-      priceGL.push({ name, diff, price });
+      Math.sign(diff) > 0
+        ? gainers.push({ name, diff, id, price })
+        : losers.push({ name, diff, id, price });
     });
   }
-  const gainers = sortDescending(priceGL, "diff").slice(0, 3);
-  const losers = sortDescending(priceGL, "diff").slice(-3);
-  const volGainers = sortDescending(volumeGL, "volDiff").slice(0, 3);
-  const volLosers = sortDescending(volumeGL, "volDiff").slice(-3);
+  if (crypto?.length) {
+    for (let hold of crypto) {
+      const id = hold.name as string;
+      if (isin[id]) continue;
+      isin[id] = id;
+      const price = await getCryptoRate(id, currency as string, fxRates);
+      const prev = await getCryptoPrevPrice(id, currency as string, fxRates);
+      if (!prev || !price) continue;
+      const diff = calculateDiffPercent(price, prev);
+      Math.sign(diff) > 0
+        ? gainers.push({ name: id, diff, id, price })
+        : losers.push({ name: id, diff, id, price });
+    }
+  }
+  gainers = sortDescending(gainers, "diff").slice(0, 3);
+  losers = sortDescending(losers, "diff").slice(-3);
+  volGainers = sortDescending(volGainers, "volDiff").slice(0, 3);
+  volLosers = sortDescending(volLosers, "volDiff").slice(-3);
   return { gainers, losers, yhighList, ylowList, volGainers, volLosers };
+};
+
+export const calculateAlerts = async (
+  holdings: CreateUserHoldingsInput | null,
+  insHoldings: CreateUserInsInput | null,
+  fxRates: any,
+  currency: string
+) => {
+  if (insHoldings?.ins?.length) {
+    if (!simpleStorage.get(LOCAL_INS_DATA_KEY))
+      await initializeInsData(insHoldings?.ins);
+  }
+  if (holdings?.nps?.length) {
+    if (!simpleStorage.get(LOCAL_NPS_DATA_KEY)) await initializeNPSData();
+  }
+  return await calculatePrice(
+    insHoldings?.ins as InstrumentInput[],
+    holdings?.crypto as HoldingInput[],
+    holdings?.nps as HoldingInput[],
+    fxRates,
+    currency
+  );
 };
