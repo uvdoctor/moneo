@@ -51,7 +51,7 @@ export default function UploadHoldings() {
     setFamilyMemberKeys,
     selectedCurrency,
     setSelectedMembers,
-    setFamilyOptions
+    setFamilyOptions,
   }: any = useContext(NWContext);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
@@ -164,9 +164,9 @@ export default function UploadHoldings() {
     return null;
   };
 
-  useEffect(()=>{
-    setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily))
-  },[allFamily, familyMemberKeys])
+  useEffect(() => {
+    setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily));
+  }, [allFamily, familyMemberKeys]);
 
   const addInstruments = async () => {
     setProcessing(true);
@@ -242,7 +242,7 @@ export default function UploadHoldings() {
         fId: "",
         curr: currency,
         type: insData[id] ? insData[id].type : null,
-        subt: insData[id] ? insData[id].subt : null
+        subt: insData[id] ? insData[id].subt : null,
       });
     });
     setLoading(false);
@@ -301,6 +301,7 @@ export default function UploadHoldings() {
             "holding",
             "held as on",
             "held as of",
+            "free balance",
           ]);
           if (holdingStarted) console.log("holding started...", value);
           continue;
