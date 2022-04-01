@@ -16,7 +16,7 @@ import {
   toHumanFriendlyCurrency,
   toReadableNumber,
 } from "../utils";
-import { AssetType, InstrumentInput } from "../../api/goals";
+import { AssetSubType, AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
 import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
@@ -25,7 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
 import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
-import { getMarketCapLabel } from "./nwutils";
+import { getMarketCapLabel, isFund } from "./nwutils";
 import InsPrice from "./InsPrice";
 
 interface HoldingProp {
@@ -158,7 +158,14 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
         <Row justify="space-between">
           <Col span={8}>
             <IdWithRisk
-              id={instrument && instrument.sid ? instrument.sid : holding.id}
+              id={
+                instrument &&
+                instrument.sid &&
+                instrument.subt === AssetSubType.S &&
+                !isFund(holding.id)
+                  ? instrument.sid
+                  : holding.id
+              }
               risk={instrument && instrument.risk ? instrument.risk : null}
             />
           </Col>
