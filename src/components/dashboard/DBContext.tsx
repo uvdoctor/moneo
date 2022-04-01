@@ -37,7 +37,12 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       setTotalAssets(totalAssets);
-      const data = await calculateAlerts(allHoldings, insHoldings, fxRates, defaultCurrency);
+      const data = await calculateAlerts(
+        allHoldings,
+        insHoldings,
+        fxRates,
+        defaultCurrency
+      );
       setGainers(data.gainers);
       setLosers(data.losers);
       setYhigh(data.yhighList);
@@ -60,11 +65,10 @@ function DBContextProvider({ fxRates }: any) {
     }
   };
 
+  const initializeData = async () => await initializeHoldings();
+
   useEffect(() => {
     if (!owner) return;
-    const initializeData = async () => {
-      await initializeHoldings();
-    };
     initializeData();
   }, [owner]);
 
@@ -79,9 +83,8 @@ function DBContextProvider({ fxRates }: any) {
         yhigh,
         ylow,
         volLosers,
-        volGainers
-      }}
-    >
+        volGainers,
+      }}>
       <DBView />
     </DBContext.Provider>
   );

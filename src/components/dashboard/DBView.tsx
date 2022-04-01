@@ -81,24 +81,20 @@ export default function DBView() {
                   </div>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
+                  <InvestmentAlerts
+                    gainers={gainers}
+                    losers={losers}
+                    yhigh={yhigh}
+                    ylow={ylow}
+                    volGainers={volGainers}
+                    volLosers={volLosers}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12}>
                   <StockMarket />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <MarketOverview />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Link href="#alerts" passHref={true}  scroll={false}>
-                    {/* <a> */}
-                      <InvestmentAlerts
-                        gainers={gainers}
-                        losers={losers}
-                        yhigh={yhigh}
-                        ylow={ylow}
-                        volGainers={volGainers}
-                        volLosers={volLosers}
-                      />
-                    {/* </a> */}
-                  </Link>
                 </Col>
               </Row>
             </Col>

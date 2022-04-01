@@ -5,10 +5,10 @@ import { useContext } from "react";
 import { List } from "antd";
 import StatisticInput from "../form/StatisticInput";
 import { useRouter } from "next/router";
-import { MoreOutlined } from "@ant-design/icons";
 import { toHumanFriendlyCurrency } from "../utils";
 import { AppContext } from "../AppContext";
 import RadioInput from "../form/RadioInput";
+import { Typography } from "antd";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -27,6 +27,7 @@ export default function InvestmentAlerts({
   volGainers,
   volLosers,
 }: InvestmentAlertsProps) {
+  const { Title } = Typography;
   const router = useRouter();
   const { defaultCurrency }: any = useContext(AppContext);
   const [activeTabkey, setActiveTabkey] = useState<string>("gainers");
@@ -48,7 +49,7 @@ export default function InvestmentAlerts({
     },
     {
       key: "yhighlow",
-      tab: "Recent 52 Week High/Low",
+      tab: "52 Week",
     },
   ];
 
@@ -58,13 +59,9 @@ export default function InvestmentAlerts({
         header={
           <div style={{ display: "flex", justifyContent: "center" }}>
             <RadioInput
-              options={["Week High", "Week Low"]}
-              value={isWeekhigh ? "Week High" : "Week Low"}
-              changeHandler={(value: string) =>
-                value === "Week High"
-                  ? setIsWeekhigh(true)
-                  : setIsWeekhigh(false)
-              }
+              options={["High", "Low"]}
+              value={isWeekhigh ? "High" : "Low"}
+              changeHandler={(value: string) => setIsWeekhigh(value === "High")}
             />
           </div>
         }
@@ -120,13 +117,9 @@ export default function InvestmentAlerts({
         header={
           <div style={{ display: "flex", justifyContent: "center" }}>
             <RadioInput
-              options={["Volume Gainers", "Volume Losers"]}
-              value={isGainers ? "Volume Gainers" : "Volume Losers"}
-              changeHandler={(value: string) =>
-                value === "Volume Losers"
-                  ? setIsGainers(false)
-                  : setIsGainers(true)
-              }
+              options={["High", "Low"]}
+              value={isGainers ? "High" : "Low"}
+              changeHandler={(value: string) => setIsGainers(value === "High")}
             />
           </div>
         }
@@ -146,8 +139,7 @@ export default function InvestmentAlerts({
                 color: Math.sign(item.volDiff) > 0 ? "#3f8600" : "#cf1322",
                 fontWeight: "bold",
                 fontSize: "16px",
-              }}
-            >
+              }}>
               {toHumanFriendlyCurrency(item.price, defaultCurrency)}
             </div>
           </List.Item>
@@ -161,34 +153,30 @@ export default function InvestmentAlerts({
   };
 
   return (
-    <Card
-      id="alerts"
-      style={{ width: "100%" }}
-      title={
-        <strong style={{ fontSize: "20px" }}>Recent Investment Updates</strong>
-      }
-      tabList={tabList}
-      activeTabKey={activeTabkey}
-      onTabChange={(key) => {
-        onTabChange(key);
-      }}
-      tabProps={{ type: "card" }}
-    >
-      {contentList[activeTabkey]}
-      <Button
-        style={{ float: "right" }}
-        key="more"
-        type="primary"
-        href={ROUTES.GET}
-        icon={<MoreOutlined />}
-        onClick={(e: any) => {
-          e.preventDefault();
-          router.push(ROUTES.GET);
-        }}
-        className="steps-start-btn"
-      >
-        More Details
-      </Button>
-    </Card>
+    <>
+      <Title level={5}>Investment Updates</Title>
+      <Card
+        id="alerts"
+        style={{ width: "100%", height: 600 }}
+        tabList={tabList}
+        activeTabKey={activeTabkey}
+        onTabChange={(key) => {
+          onTabChange(key);
+        }}>
+        {contentList[activeTabkey]}
+        <p>
+          <Button
+            key="more"
+            type="primary"
+            href={ROUTES.GET}
+            onClick={(e: any) => {
+              e.preventDefault();
+              router.push(ROUTES.GET);
+            }}>
+            More Details
+          </Button>
+        </p>
+      </Card>
+    </>
   );
 }
