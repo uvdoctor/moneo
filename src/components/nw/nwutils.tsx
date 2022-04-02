@@ -276,23 +276,36 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
   if (!isins.length) return null;
-  let idList: Array<APIt.ModelINExchgPriceFilterInput> = [];
   let returnList: Array<APIt.INExchgPrice> = [];
-  let nextToken = null;
-  do {
-    let variables: any = { limit: 20000, filter: getORIdList(idList, isins) };
-    if (nextToken) variables.nextToken = nextToken;
-    const {
-      data: { listINExchgPrices },
-    } = (await API.graphql(
-      graphqlOperation(queries.listInExchgPrices, variables)
-    )) as {
-      data: APIt.ListInExchgPricesQuery;
-    };
-    if (listINExchgPrices?.items?.length)
-      returnList.push(...(listINExchgPrices.items as Array<APIt.INExchgPrice>));
-    nextToken = listINExchgPrices?.nextToken;
-  } while (nextToken);
+  const maxLimit = 100;
+  const isinChunks: Array<Array<string>> = new Array(
+    Math.ceil(isins.length / maxLimit)
+  )
+    .fill("")
+    .map((_) => isins.splice(0, maxLimit));
+  for (let isinChunk of isinChunks) {
+    let idList: Array<APIt.ModelINExchgPriceFilterInput> = [];
+    let nextToken = null;
+    do {
+      let variables: any = {
+        limit: 10000,
+        filter: getORIdList(idList, isinChunk),
+      };
+      if (nextToken) variables.nextToken = nextToken;
+      const {
+        data: { listINExchgPrices },
+      } = (await API.graphql(
+        graphqlOperation(queries.listInExchgPrices, variables)
+      )) as {
+        data: APIt.ListInExchgPricesQuery;
+      };
+      if (listINExchgPrices?.items?.length)
+        returnList.push(
+          ...(listINExchgPrices.items as Array<APIt.INExchgPrice>)
+        );
+      nextToken = listINExchgPrices?.nextToken;
+    } while (nextToken);
+  }
   return returnList.length ? returnList : null;
 };
 
@@ -302,7 +315,7 @@ export const loadMatchingINMutual = async (isins: Array<string>) => {
   let returnList: Array<APIt.INMFPrice> = [];
   let nextToken = null;
   do {
-    let variables: any = { limit: 20000, filter: getORIdList(idList, isins) };
+    let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINMFPrices },
