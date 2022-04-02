@@ -566,47 +566,62 @@ function NWContextProvider({ fxRates }: any) {
     }
   };
 
-  const initializeHoldings = async () => {
-    let allHoldings: CreateUserHoldingsInput | null = null;
-    let insHoldings: CreateUserInsInput | null = null;
+  const initializeInstruments = async () => {
     try {
-      allHoldings = await loadAllHoldings(owner);
-      insHoldings = await loadInsHoldings(owner);
+      const insHoldings: CreateUserInsInput | null = await loadInsHoldings(
+        owner
+      );
+      if (!insHoldings) return;
+      setInsholdings(true);
+      setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
+    } catch (e) {
+      notification.error({
+        message: "Instruments not loaded",
+        description: "Sorry! Unable to fetch instruments.",
+      });
+    }
+  };
+
+  const initializeHoldings = async () => {
+    try {
+      const allHoldings: CreateUserHoldingsInput | null = await loadAllHoldings(
+        owner
+      );
+      if (!allHoldings) return;
+      setHoldings(true);
+      setPreciousMetals([...(allHoldings?.pm ? allHoldings.pm : [])]);
+      setPF([...(allHoldings?.pf ? allHoldings.pf : [])]);
+      setNPS([...(allHoldings?.nps ? allHoldings.nps : [])]);
+      setCrypto([...(allHoldings?.crypto ? allHoldings.crypto : [])]);
+      setVehicles([...(allHoldings?.vehicles ? allHoldings.vehicles : [])]);
+      setProperties([...(allHoldings?.property ? allHoldings.property : [])]);
+      setLoans([...(allHoldings?.loans ? allHoldings.loans : [])]);
+      setCredit([...(allHoldings?.credit ? allHoldings.credit : [])]);
+      setSavings([...(allHoldings?.savings ? allHoldings.savings : [])]);
+      setLendings([...(allHoldings?.dep ? allHoldings.dep : [])]);
+      setLtdep([...(allHoldings?.ltdep ? allHoldings?.ltdep : [])]);
+      setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
+      setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
+      setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
+      setInsurance([...(allHoldings?.ins ? allHoldings.ins : [])]);
     } catch (err) {
       notification.error({
         message: "Holdings not loaded",
         description: "Sorry! Unable to fetch holdings.",
       });
     }
-    setSelectedCurrency(defaultCurrency);
-    if (allHoldings) setHoldings(true);
-    else setLoadingHoldings(false);
-    if (insHoldings) {
-      setInsholdings(true);
-    } else setLoadingInstruments(false);
-    setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
-    setPreciousMetals([...(allHoldings?.pm ? allHoldings.pm : [])]);
-    setPF([...(allHoldings?.pf ? allHoldings.pf : [])]);
-    setNPS([...(allHoldings?.nps ? allHoldings.nps : [])]);
-    setCrypto([...(allHoldings?.crypto ? allHoldings.crypto : [])]);
-    setVehicles([...(allHoldings?.vehicles ? allHoldings.vehicles : [])]);
-    setProperties([...(allHoldings?.property ? allHoldings.property : [])]);
-    setLoans([...(allHoldings?.loans ? allHoldings.loans : [])]);
-    setCredit([...(allHoldings?.credit ? allHoldings.credit : [])]);
-    setSavings([...(allHoldings?.savings ? allHoldings.savings : [])]);
-    setLendings([...(allHoldings?.dep ? allHoldings.dep : [])]);
-    setLtdep([...(allHoldings?.ltdep ? allHoldings?.ltdep : [])]);
-    setOthers([...(allHoldings?.other ? allHoldings.other : [])]);
-    setAngel([...(allHoldings?.angel ? allHoldings.angel : [])]);
-    setP2P([...(allHoldings?.p2p ? allHoldings.p2p : [])]);
-    setInsurance([...(allHoldings?.ins ? allHoldings.ins : [])]);
   };
 
   useEffect(() => {
     if (!owner || !user) return;
+    setSelectedCurrency(defaultCurrency);
     initializeFamilyList().then((familyLoaded) => {
-      if (familyLoaded)
-        initializeHoldings().then(() => setLoadingHoldings(false));
+      if (familyLoaded) {
+        setLoadingInstruments(true);
+        initializeInstruments();
+        setLoadingHoldings(true);
+        initializeHoldings();
+      }
     });
   }, [owner, user]);
 
@@ -648,6 +663,7 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     setTotalAssets(totalCash + totalPhysical + totalFinancial);
+    setLoadingHoldings(false);
   }, [totalCash, totalPhysical, totalFinancial]);
 
   useEffect(() => {
