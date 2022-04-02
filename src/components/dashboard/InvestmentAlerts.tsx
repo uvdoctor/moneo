@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Card, Divider, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { List } from "antd";
-import StatisticInput from "../form/StatisticInput";
 import { useRouter } from "next/router";
 import RadioInput from "../form/RadioInput";
 import { Typography } from "antd";
 import ItemDisplay from "../calc/ItemDisplay";
-import { toReadableNumber } from "../utils";
+import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
+import { AppContext } from "../AppContext";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -26,6 +26,7 @@ export default function InvestmentAlerts({
   volGainers,
   volLosers,
 }: InvestmentAlertsProps) {
+  const { defaultCurrency }: any = useContext(AppContext);
   const { Title } = Typography;
   const router = useRouter();
   const [activeTabkey, setActiveTabkey] = useState<string>("gainers");
@@ -66,15 +67,15 @@ export default function InvestmentAlerts({
         itemLayout="horizontal"
         dataSource={isWeekhigh ? yhigh : ylow}
         renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput
-              value={item.yhigh ? item.yhigh : item.ylow}
-              title={item.name}
-              price={item.price}
-              isNotPercentage
-              negative={item.yhigh ? false : item.ylow ? true : false}
-            />
-          </List.Item>
+          <>
+          <ItemDisplay
+            label={item.yhigh ? item.yhigh : item.ylow}
+            result={item.diff}
+            pl
+            footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
+          />
+          <Divider />
+        </>
         )}
       />
     ),
@@ -83,14 +84,16 @@ export default function InvestmentAlerts({
         itemLayout="horizontal"
         dataSource={gainers}
         renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput
-              value={item.diff}
-              title={item.name}
-              price={item.price}
-              negative={false}
+          <>
+            <ItemDisplay
+              label={item.name}
+              result={item.diff}
+              pl
+              unit="%"
+              footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
             />
-          </List.Item>
+            <Divider />
+          </>
         )}
       />
     ),
@@ -99,14 +102,16 @@ export default function InvestmentAlerts({
         itemLayout="horizontal"
         dataSource={losers}
         renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput
-              value={item.diff}
-              title={item.name}
-              price={item.price}
-              negative
+          <>
+            <ItemDisplay
+              label={item.name}
+              result={item.diff}
+              pl
+              unit="%"
+              footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
             />
-          </List.Item>
+            <Divider />
+          </>
         )}
       />
     ),
@@ -128,10 +133,9 @@ export default function InvestmentAlerts({
             <ItemDisplay
               label={item.name}
               result={item.volDiff}
-              labelHighlight
               pl
               unit="%"
-              footer={`Volume is ${toReadableNumber(item.vol)}`}
+              footer={`Volume - ${toReadableNumber(item.vol)}`}
             />
             <Divider />
           </>
