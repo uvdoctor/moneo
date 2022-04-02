@@ -69,8 +69,8 @@ export default function InvestmentAlerts({
         renderItem={(item: any) => (
           <>
           <ItemDisplay
-            label={item.yhigh ? item.yhigh : item.ylow}
-            result={item.diff}
+            label={item.name}
+            result={item.yhigh ? item.yhigh : item.ylow}
             pl
             footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
           />
