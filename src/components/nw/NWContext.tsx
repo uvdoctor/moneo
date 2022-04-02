@@ -333,7 +333,7 @@ function NWContextProvider({ fxRates }: any) {
               risk: getRiskProfileType(),
               sector: industryAndSector.sector,
               industry: industryAndSector.industry,
-              movers: getMoversCategory(true)
+              movers: getMoversCategory(true),
             },
           },
         },
@@ -353,7 +353,7 @@ function NWContextProvider({ fxRates }: any) {
               H: {},
               A: {},
               risk: getRiskProfileType(),
-              movers: getMoversCategory()
+              movers: getMoversCategory(),
             },
           },
         },
@@ -370,7 +370,7 @@ function NWContextProvider({ fxRates }: any) {
             sub: {
               type: { CB: "Corporate Bond", GB: "Government Bond" },
               risk: getRiskProfileType(),
-              movers: getMoversCategory()
+              movers: getMoversCategory(),
             },
           },
         },
@@ -532,13 +532,14 @@ function NWContextProvider({ fxRates }: any) {
   const initializeFamilyList = async () => {
     try {
       let allFamilyMembers = await loadAllFamilyMembers();
-      if (!allFamilyMembers) return;
+      if (!allFamilyMembers) return false;
       setAllFamily(allFamilyMembers);
       let allFamilyKeys = Object.keys(allFamilyMembers);
       setSelectedMembers([
         ...[allFamilyKeys.length > 1 ? ALL_FAMILY : allFamilyKeys[0]],
       ]);
       setFamilyMemberKeys([...allFamilyKeys]);
+      return true;
     } catch (err) {
       notification.error({
         message: "Family list not loaded",
@@ -566,7 +567,6 @@ function NWContextProvider({ fxRates }: any) {
   };
 
   const initializeHoldings = async () => {
-    await initializeFamilyList();
     let allHoldings: CreateUserHoldingsInput | null = null;
     let insHoldings: CreateUserInsInput | null = null;
     try {
@@ -604,8 +604,9 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     if (!owner || !user) return;
-    initializeHoldings().then(() => {
-      setLoadingHoldings(false);
+    initializeFamilyList().then((familyLoaded) => {
+      if (familyLoaded)
+        initializeHoldings().then(() => setLoadingHoldings(false));
     });
   }, [owner, user]);
 
