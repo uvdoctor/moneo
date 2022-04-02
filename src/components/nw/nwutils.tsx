@@ -267,6 +267,7 @@ export const updateHoldings = async (
 
 const getORIdList = (list: Array<any>, ids: Array<string>) => {
   ids.forEach((id: string) => {
+    if (!id) return;
     list.push({ id: { eq: id } });
   });
   return {
@@ -277,7 +278,7 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 export const loadMatchingINExchange = async (isins: Array<string>) => {
   if (!isins.length) return null;
   let returnList: Array<APIt.INExchgPrice> = [];
-  const maxLimit = 100;
+  const maxLimit = 50;
   const isinChunks: Array<Array<string>> = new Array(
     Math.ceil(isins.length / maxLimit)
   )
