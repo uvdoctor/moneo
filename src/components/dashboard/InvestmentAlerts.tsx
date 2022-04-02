@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { Button, Card } from "antd";
+import { Button, Card, Col, Divider, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
-import { useContext } from "react";
 import { List } from "antd";
 import StatisticInput from "../form/StatisticInput";
 import { useRouter } from "next/router";
-import { toHumanFriendlyCurrency } from "../utils";
-import { AppContext } from "../AppContext";
 import RadioInput from "../form/RadioInput";
 import { Typography } from "antd";
+import ItemDisplay from "../calc/ItemDisplay";
+import { toReadableNumber } from "../utils";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -29,7 +28,6 @@ export default function InvestmentAlerts({
 }: InvestmentAlertsProps) {
   const { Title } = Typography;
   const router = useRouter();
-  const { defaultCurrency }: any = useContext(AppContext);
   const [activeTabkey, setActiveTabkey] = useState<string>("gainers");
   const [isGainers, setIsGainers] = useState<boolean>(true);
   const [isWeekhigh, setIsWeekhigh] = useState<boolean>(true);
@@ -126,23 +124,17 @@ export default function InvestmentAlerts({
         itemLayout="horizontal"
         dataSource={isGainers ? volGainers : volLosers}
         renderItem={(item: any) => (
-          <List.Item>
-            <StatisticInput
-              value={item.volDiff}
-              title={item.name}
-              price={item.vol}
-              negative={Math.sign(item.volDiff) > 0 ? false : true}
-              isVolume
+          <>
+            <ItemDisplay
+              label={item.name}
+              result={item.volDiff}
+              labelHighlight
+              pl
+              unit="%"
+              footer={`Volume is ${toReadableNumber(item.vol)}`}
             />
-            <div
-              style={{
-                color: Math.sign(item.volDiff) > 0 ? "#3f8600" : "#cf1322",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}>
-              {toHumanFriendlyCurrency(item.price, defaultCurrency)}
-            </div>
-          </List.Item>
+            <Divider />
+          </>
         )}
       />
     ),
@@ -164,7 +156,7 @@ export default function InvestmentAlerts({
           onTabChange(key);
         }}>
         {contentList[activeTabkey]}
-        <p>
+        <Row justify="center">
           <Button
             key="more"
             type="primary"
@@ -175,7 +167,7 @@ export default function InvestmentAlerts({
             }}>
             More Details
           </Button>
-        </p>
+        </Row>
       </Card>
     </>
   );

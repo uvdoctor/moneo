@@ -21,6 +21,7 @@ interface ItemDisplayProps {
   pl?: boolean;
   precise?: boolean;
   loading?: boolean;
+  labelHighlight?: boolean;
 }
 
 export default function ItemDisplay(props: ItemDisplayProps) {
@@ -29,7 +30,11 @@ export default function ItemDisplay(props: ItemDisplayProps) {
       <Statistic
         title={
           <Fragment>
-            {props.label}
+            {props.labelHighlight ? (
+              <strong>{props.label}</strong>
+            ) : (
+              props.label
+            )}
             {(props.imp || props.info) && props.info && (
               <Tooltip
                 title={`${props.info}${
