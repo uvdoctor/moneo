@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Button, Modal, notification, Tooltip } from "antd";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import { COLORS } from "../../CONSTANTS";
@@ -8,25 +8,28 @@ import { Auth } from "aws-amplify";
 import { updateUserDetails } from "../userinfoutils";
 import Countdown from "antd/lib/statistic/Countdown";
 
-interface OtpInputProps {
-  onClickAction: Function;
-  disableButton: boolean;
+interface OtpProps {
   action: string;
   email?: any;
   mob?: any;
-  im?: any;
-  resendOtp?: Function;
+  signupDone?: boolean;
+  title?: string;
+  onClickAction?: Function;
+  disableButton?: boolean;
+  setVerifyPhone?: Function;
 }
 
-export default function OtpDialogue({
-  onClickAction,
-  disableButton,
+export default function Otp({
   action,
   email,
   mob,
-  resendOtp,
-}: OtpInputProps) {
-  const { validateCaptcha, owner }: any = useContext(AppContext);
+  signupDone,
+  title,
+  onClickAction,
+  disableButton,
+  setVerifyPhone
+}: OtpProps) {
+  const { owner, validateCaptcha, setUser }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<any>();
@@ -35,13 +38,18 @@ export default function OtpDialogue({
 
   const confirmOtp = async (attr: string) => {
     Auth.verifyCurrentUserAttributeSubmit(attr, otp)
-      .then(async () => {
+      .then(async (data) => {
+        console.log(data)
+        setUser(await Auth.currentAuthenticatedUser());
         notification.success({ message: "Otp Verified Successfully" });
+        setVerifyPhone && setVerifyPhone(true);
+        if(!signupDone) {
         if (attr === "phone_number") {
           await updateUserDetails({ uname: owner, mob });
         } else {
           await updateUserDetails({ uname: owner, email });
         }
+      }
         setLoading(false);
         setIsModalVisible(false);
       })
@@ -53,7 +61,9 @@ export default function OtpDialogue({
   };
 
   const callResendOtp = async () => {
-    resendOtp && (await resendOtp());
+    console.log("+" + mob, mob);
+    const re = await Auth.resendSignUp("+" + mob);
+    console.log(re);
     setViewResendOtp(false);
   };
 
@@ -72,28 +82,34 @@ export default function OtpDialogue({
     setLoading(true);
     validateCaptcha(action).then(async (success: boolean) => {
       if (!success) return;
-      const data = await onClickAction();
+      const data = onClickAction && (await onClickAction());
       setLoading(false);
       if (!data) return;
       setIsModalVisible(true);
     });
   };
 
+  useEffect(() => {
+    if (signupDone) setIsModalVisible(true);
+  }, [signupDone]);
+
   return (
     <Fragment>
-      <Tooltip title="Save">
-        <Button
-          type="link"
-          style={{ color: COLORS.GREEN }}
-          icon={<SaveOutlined />}
-          disabled={disableButton}
-          onClick={onClick}
-          loading={loading}
-        />
-      </Tooltip>
+      {!signupDone && (
+        <Tooltip title="Save">
+          <Button
+            type="link"
+            style={{ color: COLORS.GREEN }}
+            icon={<SaveOutlined />}
+            disabled={disableButton}
+            onClick={onClick}
+            loading={loading}
+          />
+        </Tooltip>
+      )}
       <Modal
         centered={true}
-        title={"Enter Otp"}
+        title={title ? title : "Enter Otp"}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
@@ -118,10 +134,12 @@ export default function OtpDialogue({
             onClick={() => handleOk(action)}
             icon={<SaveOutlined />}
             disabled={!otp}
-            loading={loading}>
+            loading={loading}
+          >
             Submit
           </Button>,
-        ]}>
+        ]}
+      >
         <TextInput pre="Otp" value={otp} changeHandler={setOtp} inline />
       </Modal>
     </Fragment>

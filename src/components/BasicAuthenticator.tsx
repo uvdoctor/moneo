@@ -13,7 +13,7 @@ import {
 } from "@aws-amplify/ui-components";
 import { Row, Skeleton, Steps } from "antd";
 import Title from "antd/lib/typography/Title";
-import { createUserinfo, doesEmailExist } from "./userinfoutils";
+import { createUserinfo, doesEmailExist, doesMobExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
 import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
@@ -42,8 +42,13 @@ const stepReducer = (state: any, { type }: { type: string }) => {
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  const { validateCaptcha, appContextLoaded }: any = useContext(AppContext);
+  const {
+    validateCaptcha,
+    appContextLoaded,
+    countrycodeWithoutPlusSign,
+  }: any = useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
+  const [phoneError, setPhoneError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -57,6 +62,7 @@ export default function BasicAuthenticator({
   );
   const [uname, setUname] = useState<string>("");
   const [state, dispatch] = useReducer(stepReducer, { step: 0 });
+  const [mobile, setMobile] = useState<string>("");
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
@@ -69,10 +75,14 @@ export default function BasicAuthenticator({
       title: "Step 1",
       content: (
         <StepOne
+          email={email}
           setEmail={setEmail}
           setPassword={setPassword}
           emailError={emailError}
           setDisable={setDisable}
+          mobile={mobile}
+          setMobile={setMobile}
+          phoneError={phoneError}
         />
       ),
     },
@@ -127,6 +137,8 @@ export default function BasicAuthenticator({
       dr: 0,
       tc: new Date().toISOString(),
       le: lifeExpectancy,
+      // @ts-ignore
+      mob: countrycodeWithoutPlusSign + mobile,
     });
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",
@@ -179,10 +191,21 @@ export default function BasicAuthenticator({
     validateCaptcha("registration_step").then(async (success: boolean) => {
       if (!success) return;
       setEmailError("");
-      if (await doesEmailExist(email, "AWS_IAM")) {
-        setEmailError(
-          "Please use another email address as this one is already used by another account."
-        );
+      setPhoneError("");
+      const emailExist = await doesEmailExist(email, "AWS_IAM");
+      // @ts-ignore
+      const phoneExist = await doesMobExist(countrycodeWithoutPlusSign + mobile,
+        "AWS_IAM"
+      );
+      if (emailExist || phoneExist) {
+        emailExist &&
+          setEmailError(
+            "Please use another email address as this one is already used by another account."
+          );
+        phoneExist &&
+          setPhoneError(
+            "Please use another phone number as this one is already used by another account."
+          );
       } else {
         next();
       }
@@ -192,7 +215,12 @@ export default function BasicAuthenticator({
   };
 
   useEffect(() => {
-    return onAuthUIStateChange((nextAuthState) => {
+    if (!mobile || !password || !email) setDisable(true);
+  }, [mobile, email, password]);
+
+  useEffect(() => {
+    return onAuthUIStateChange((nextAuthState, data) => {
+      setCognitoUser(data);
       setAuthState(nextAuthState);
     });
   }, []);
@@ -238,7 +266,8 @@ export default function BasicAuthenticator({
                     type="primary"
                     disabled={state.step === 0 && disable}
                     onClick={state.step === 0 ? verifyEmail : next}
-                    loading={loading}>
+                    loading={loading}
+                  >
                     Next
                   </Button>
                 )}
@@ -246,7 +275,8 @@ export default function BasicAuthenticator({
                   <Button
                     type="primary"
                     disabled={disable}
-                    onClick={handleRegistrationSubmit}>
+                    onClick={handleRegistrationSubmit}
+                  >
                     Done
                   </Button>
                 )}

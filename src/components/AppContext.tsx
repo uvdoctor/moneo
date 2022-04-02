@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { getUserDetails } from "./userinfoutils";
-import { getDiscountRate } from "./utils";
+import { countrylist, getDiscountRate } from "./utils";
 import { Storage } from "aws-amplify";
 
 const AppContext = createContext({});
@@ -61,6 +61,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     if (!user) return;
+    console.log(user);
     if (user.signInUserSession?.accessToken) {
       setOwner(user.signInUserSession.accessToken.payload.username);
       setUserChecked(true);
@@ -83,6 +84,12 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   }, [userInfo]);
 
   const loadUserInfo = async () => setUserInfo(await getUserDetails(owner));
+  const countrycode = () => {
+    const cc = countrylist.find((item) => item.countryCode === defaultCountry);
+    if(!cc) return "+91";
+    return cc.value;
+  }
+  const countrycodeWithoutPlusSign = countrycode().slice(1);
 
   return (
     <AppContext.Provider
@@ -104,7 +111,10 @@ function AppContextProvider({ children }: AppContextProviderProps) {
         setUser,
         userChecked,
         setUserChecked,
-      }}>
+        countrycode,
+        countrycodeWithoutPlusSign
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

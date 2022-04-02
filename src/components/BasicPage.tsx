@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Auth, Hub } from "aws-amplify";
 import Head from "next/head";
 import BasicLayout from "./BasicLayout";
@@ -22,6 +22,7 @@ interface BasicPageProps {
 export default function BasicPage(props: BasicPageProps) {
   const { setAppContextLoaded, user, setUser, setUserChecked }: any =
     useContext(AppContext);
+  const [verifyPhone, setVerifyPhone] = useState<boolean>(false);
 
   const listener = (data: any) => {
     const { payload } = data;
@@ -118,14 +119,17 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <BasicLayout
+        verifyPhone={verifyPhone}
         className={props.className}
+        setVerifyPhone={setVerifyPhone}
         onBack={props.onBack}
         fixedNav={props.fixedNav}
         navScrollable={props.navScrollable}
         noFooter={props.noFooter}
         hideMenu={props.hideMenu}
         title={props.menuTitle}
-        secure={props.secure}>
+        secure={props.secure}
+      >
         {props.children}
       </BasicLayout>
     </Fragment>

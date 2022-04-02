@@ -121,7 +121,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
             {holding.fId ? (
               <Col>
                 <UserOutlined />
-                &nbsp;{allFamily[holding.fId].name}
+                &nbsp;{allFamily[holding.fId]?.name}
               </Col>
             ) : null}
           </Row>

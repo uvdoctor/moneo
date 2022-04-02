@@ -18,13 +18,12 @@ import React, {
 } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { countrylist, getDiscountRate, isMobileDevice } from "../utils";
+import { getDiscountRate, getStr, isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import PasswordTab from "./PasswordTab";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
-import OtpDialogue from "./OtpDialogue";
 import {
   doesEmailExist,
   doesImExist,
@@ -35,6 +34,9 @@ import DeleteAccount from "./DeleteAccount";
 import SaveButton from "./SaveButton";
 import PersonalTab from "./PersonalTab";
 import ProfileTab from "./ProfileTab";
+import Otp from "../form/Otp";
+import MobileInput from "../form/MobileInput";
+import EmailInput from "../form/EmailInput";
 require("./UserSettings.less");
 
 const initialState = {
@@ -82,8 +84,10 @@ export default function UserSettings() {
     userInfo,
     discountRate,
     setDiscountRate,
-    appContextLoaded, 
-    setUserInfo
+    appContextLoaded,
+    setUserInfo,
+    countrycode,
+    countrycodeWithoutPlusSign,
   }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const {
@@ -106,18 +110,8 @@ export default function UserSettings() {
   const [loading, setLoading] = useState<boolean>(false);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
-  const countryCode = countrylist.find(
-    (item) => item.countryCode === defaultCountry
-  );
-  const countryCodeWithoutPlusSign = countryCode
-    ? countryCode.value.slice(1)
-    : "91";
   const success = (message: any) => notification.success({ message });
   const failure = (message: any) => notification.error({ message });
-  const sendOtp = async () =>
-    user?.attributes?.phone_number &&
-    (await Auth.resendSignUp(user?.attributes?.phone_number));
-
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
 
@@ -129,7 +123,7 @@ export default function UserSettings() {
   ) => {
     try {
       const data =
-        attr === "Email" ? input : Number(countryCodeWithoutPlusSign + input);
+        attr === "Email" ? input : Number(countrycodeWithoutPlusSign + input);
       if (await func(data)) {
         failure(`${attr} is already used by another account`);
         return false;
@@ -141,8 +135,11 @@ export default function UserSettings() {
         }`
       );
       if (attr === "Whatsapp Number") {
-        const result = await updateUserDetails({ uname: owner, im: data as number });
-        setUserInfo(result)
+        const result = await updateUserDetails({
+          uname: owner,
+          im: data as number,
+        });
+        setUserInfo(result);
       }
       return true;
     } catch (error) {
@@ -154,7 +151,7 @@ export default function UserSettings() {
     if (user?.attributes?.phone_number) {
       dispatch({ type: "single", data: { field: "whatsapp", val: mobile } });
       await updateAccountTab(mobile, doesImExist, "Whatsapp Number", {
-        nickname: countryCode?.value + mobile,
+        nickname: countrycode() + mobile,
       });
     } else {
       failure("Update your mobile, your mobile number is empty.");
@@ -173,7 +170,6 @@ export default function UserSettings() {
   const updatePersonalTab = async () => {
     setLoading(true);
     try {
-      const getStr = (num: number) => (num < 10 ? `0${num}` : "" + num);
       let input: { [key: string]: string } = {};
       if (user?.attributes.name !== name) input.name = name;
       if (user?.attributes.family_name !== lastName)
@@ -186,7 +182,7 @@ export default function UserSettings() {
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
         le: lifeExpectancy,
       });
-      setUserInfo(result)
+      setUserInfo(result);
       success("Updated Successfully");
     } catch (error) {
       failure(`Unable to update ${error}`);
@@ -204,7 +200,7 @@ export default function UserSettings() {
         rp: riskProfile,
         tax,
       });
-      setUserInfo(results)
+      setUserInfo(results);
       success("Updated Successfully");
     } catch (error) {
       failure("Unable to update");
@@ -222,10 +218,8 @@ export default function UserSettings() {
       email,
       name,
     } = user?.attributes;
-    const mobile = phone_number
-      ? phone_number.replace(countryCode?.value, "")
-      : "";
-    const whatsapp = nickname ? nickname.replace(countryCode?.value, "") : "";
+    const mobile = phone_number ? phone_number.replace(countrycode(), "") : "";
+    const whatsapp = nickname ? nickname.replace(countrycode(), "") : "";
     dispatch({
       type: "userUpdate",
       data: {
@@ -237,10 +231,10 @@ export default function UserSettings() {
         prefuser: preferred_username,
       },
     });
-  }, [countryCode?.value, user]);
+  }, [user]);
 
   useEffect(() => {
-    if(!userInfo) return;
+    if (!userInfo) return;
     const { rp, notify, dr, tax, le, dob } = userInfo;
     const date = new Date(dob);
     dispatch({
@@ -255,7 +249,7 @@ export default function UserSettings() {
         dobMonth: date.getMonth() + 1,
         dobDate: date.getDate(),
       },
-      });
+    });
   }, [userInfo]);
 
   useEffect(() => {
@@ -278,7 +272,8 @@ export default function UserSettings() {
             className="settings-tab-view"
             tabPosition={isMobileDevice(fsb) ? "top" : "left"}
             type={isMobileDevice(fsb) ? "card" : "line"}
-            animated>
+            animated
+          >
             <TabPane className="settings-tabpane-view" tab="Personal" key="1">
               <Row>
                 <Col span={24}>
@@ -305,15 +300,17 @@ export default function UserSettings() {
             </TabPane>
             <TabPane className="settings-tabpane-view" tab="Profile" key="2">
               <Row>
-                {userInfo  && <Col span={24}>
-                  <ProfileTab
-                    dispatch={dispatch}
-                    isDrManual={isDrManual}
-                    notify={notify}
-                    riskProfile={riskProfile}
-                    tax={tax}
-                  />
-                </Col>}
+                {userInfo && (
+                  <Col span={24}>
+                    <ProfileTab
+                      dispatch={dispatch}
+                      isDrManual={isDrManual}
+                      notify={notify}
+                      riskProfile={riskProfile}
+                      tax={tax}
+                    />
+                  </Col>
+                )}
                 <Col xs={24} sm={24} md={16}>
                   <SaveButton
                     loading={loading}
@@ -363,29 +360,19 @@ export default function UserSettings() {
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
-                  <TextInput
-                    pre="Email"
-                    placeholder={"abc@xyz.com"}
-                    value={email}
+                  <EmailInput
+                    size="large"
                     changeHandler={(val: any) =>
                       dispatch({
                         type: "single",
                         data: { field: "email", val },
                       })
                     }
-                    pattern={
-                      "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
-                    }
-                    setError={(val: any) =>
-                      dispatch({
-                        type: "single",
-                        data: { field: "error", val },
-                      })
-                    }
+                    value={email}
+                    label={""}
                     style={{ width: 300 }}
-                    fieldName="email"
                     post={
-                      <OtpDialogue
+                      <Otp
                         disableButton={disableButton(
                           email,
                           user?.attributes?.email
@@ -397,54 +384,40 @@ export default function UserSettings() {
                           })
                         }
                         email={email}
-                        mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
-                        im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
-                        resendOtp={sendOtp}
                       />
                     }
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
-                  <TextInput
-                    pre="Mobile"
-                    prefix={countryCode?.value}
-                    value={mobile}
+                  <MobileInput
                     changeHandler={(val: any) =>
                       dispatch({
                         type: "single",
                         data: { field: "mobile", val },
                       })
                     }
+                    value={mobile}
+                    size="large"
                     style={{ width: 300 }}
-                    fieldName="mobile"
-                    pattern="^[0-9]"
-                    setError={(val: any) =>
-                      dispatch({
-                        type: "single",
-                        data: { field: "error", val },
-                      })
-                    }
-                    minLength={10}
-                    maxLength={10}
+                    label="Phone Number"
                     post={
-                      <OtpDialogue
+                      <Otp
                         disableButton={disableButton(
                           user?.attributes?.phone_number,
-                          countryCode?.value + mobile
+                          countrycode() + mobile
                         )}
                         action={"phone_number"}
-                        mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
+                        mob={parseFloat(countrycodeWithoutPlusSign + mobile)}
                         onClickAction={() =>
                           updateAccountTab(
                             mobile,
                             doesMobExist,
                             "Mobile Number",
                             {
-                              phone_number: countryCode?.value + mobile,
+                              phone_number: countrycode() + mobile,
                             }
                           )
                         }
-                        resendOtp={sendOtp}
                       />
                     }
                   />
@@ -452,41 +425,33 @@ export default function UserSettings() {
                 <Col xs={24} sm={24} md={12}>
                   <Row gutter={[0, 10]}>
                     <Col xs={24} sm={24} md={12}>
-                      <TextInput
-                        pre="Whatsapp"
-                        prefix={countryCode?.value}
-                        value={whatsapp}
+                      <MobileInput
                         changeHandler={(val: any) =>
                           dispatch({
                             type: "single",
                             data: { field: "whatsapp", val },
                           })
                         }
-                        fieldName="whatsapp"
-                        pattern="^[0-9]"
-                        setError={(val: any) =>
-                          dispatch({
-                            type: "single",
-                            data: { field: "error", val },
-                          })
-                        }
-                        minLength={10}
-                        maxLength={10}
+                        value={whatsapp}
+                        size="large"
+                        style={{ width: 300 }}
+                        label="Whatsapp"
+                        fieldName="Whatsapp"
                         post={
-                          <OtpDialogue
+                          <Otp
                             disableButton={disableButton(
                               user?.attributes?.nickname,
-                              countryCode?.value + whatsapp
+                              countrycode() + whatsapp
                             )}
                             action={"whatsapp_number"}
-                            im={parseFloat(countryCodeWithoutPlusSign + mobile)}
+                            // im={parseFloat(countrycodeWithoutPlusSign + mobile)}
                             onClickAction={() =>
                               updateAccountTab(
                                 whatsapp,
                                 doesImExist,
                                 "Whatsapp Number",
                                 {
-                                  nickname: countryCode?.value + whatsapp,
+                                  nickname: countrycode() + whatsapp,
                                 }
                               )
                             }
@@ -499,7 +464,8 @@ export default function UserSettings() {
                         checked={whatsapp === mobile}
                         onChange={(e) =>
                           e.target.checked ? updateImIfSameAsMob() : null
-                        }>
+                        }
+                      >
                         <strong>Whatsapp number same as mobile number</strong>
                       </Checkbox>
                     </Col>

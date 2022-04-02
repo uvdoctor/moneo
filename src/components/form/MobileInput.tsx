@@ -1,57 +1,60 @@
 import { Col, Row } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../AppContext";
 import TextInput from "./textinput";
 
-interface EmailInputProps {
-  label?: string;
+interface MobileInputProps {
   changeHandler: Function;
   value: string;
   post?: any;
   style?: any;
-  emailError?: string;
+  label: string;
+  phoneError?: string;
   setDisable?: Function;
   size?: SizeType;
+  fieldName?: string
 }
 
-export default function EmailInput({ 
+export default function MobileInput({
   changeHandler,
   value,
   post,
   style,
-  emailError,
+  label,
+  phoneError,
   setDisable,
   size,
-  label,
-}: EmailInputProps) {
+  fieldName
+}: MobileInputProps) {
+  const { countrycode }: any = useContext(AppContext);
   const [error, setError] = useState<any>("");
-  useEffect(() => {
-    setDisable && setDisable(error ? true : false);
-  }, [error]);
+
+  useEffect(()=>{
+    setDisable && setDisable(error ? true: false)
+  },[error, value])
 
   return (
     <Row>
       <Col span={24}>
         <TextInput
           size={size ? size : "middle"}
-          pre={label ? label : "Email"}
+          pre={label}
+          prefix={countrycode()}
           value={value}
           changeHandler={(val: any) => changeHandler(val)}
           style={style}
-          fieldName={"Email"}
-          placeholder="abc@xyz.com"
-          pattern={new RegExp(
-            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-					)}
+          fieldName={ fieldName ? fieldName : "Phone number"}
+          pattern="^[0-9]"
           setError={(val: any) => setError(val)}
+          minLength={10}
+          maxLength={10}
           post={post}
         />
       </Col>
       <Col>
         {error ? <label style={{ color: "red" }}>{error}</label> : null}
-        {emailError ? (
-          <label style={{ color: "red" }}>{emailError}</label>
-        ) : null}
+        {phoneError ? <label style={{ color: "red" }}>{phoneError}</label> : null}
       </Col>
     </Row>
   );
