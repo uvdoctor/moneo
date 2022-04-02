@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Divider, Row } from "antd";
+import { Button, Card, Divider, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { List } from "antd";
 import StatisticInput from "../form/StatisticInput";
