@@ -617,10 +617,12 @@ function NWContextProvider({ fxRates }: any) {
     setSelectedCurrency(defaultCurrency);
     initializeFamilyList().then((familyLoaded) => {
       if (familyLoaded) {
-        setLoadingInstruments(true);
-        initializeInstruments();
-        setLoadingHoldings(true);
-        initializeHoldings();
+        initializeInstruments().then(() => {
+          initializeHoldings().then(() => setLoadingHoldings(false));
+        });
+      } else {
+        setLoadingHoldings(false);
+        setLoadingInstruments(false);
       }
     });
   }, [owner, user]);
@@ -663,7 +665,6 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     setTotalAssets(totalCash + totalPhysical + totalFinancial);
-    setLoadingHoldings(false);
   }, [totalCash, totalPhysical, totalFinancial]);
 
   useEffect(() => {
