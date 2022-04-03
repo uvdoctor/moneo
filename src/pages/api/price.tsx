@@ -24,9 +24,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .then((rate) => res.status(200).json({ rate: rate }))
       .catch((err) => {
         console.log(`Error while getting eod price for ${id} due to ${err}`);
-        res
-          .status(200)
-          .json({ rate: defaultPrices[id] ? defaultPrices[id] : 0 });
+        res.status(200).json({ rate: defaultPrices[id] ? defaultPrices[id] : 0 });
       });
   };
 
@@ -60,9 +58,10 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .then((data) => data.json())
       .then((resp) => {
         const list: { code: any; name: any; value: any }[] = [];
-        resp.map((item: any) =>
-          list.push({ code: item.Code, name: item.Name, value: item.Name })
-        );
+        resp.map((item: any) => {
+          const name = `${item.Name} - ${item.Code}`;
+          list.push({ code: item.Code, name, value: name })
+        });
         // @ts-ignore
         res.status(200).json(list);
       })

@@ -64,6 +64,7 @@ export default function CryptoTypeahead({
         value={value}
         onSearch={onSearch}
       />
+      <label>{ data.find((item)=>item.value === value)?.code}</label>
     </Fragment>
   );
 }

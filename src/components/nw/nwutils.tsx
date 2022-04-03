@@ -511,7 +511,7 @@ export const getCommodityRate = async (
     "COMM"
   )
     .then((result) => {
-      if (!result) return 0;
+      if (!result || isNaN(result)) return 0;
       const rate = Number((result / 31.1).toFixed(2));
       return (
         rate *
@@ -525,7 +525,7 @@ export const getCommodityRate = async (
 export const getCryptoRate = (id: string, currency: string, fxRates: any) => {
   return getPrice(id, "CC")
     .then((rate) => {
-      if (!rate) return 0;
+      if (!rate || isNaN(rate)) return 0;
       return rate * getFXRate(fxRates, currency);
     })
     .catch(() => 0);
