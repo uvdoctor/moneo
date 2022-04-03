@@ -34,8 +34,10 @@ export default function CryptoTypeahead({
 
   useEffect(() => {
     getList().then((response) => {
-      setData([...response]);
-      setSuggestions([...response]);
+      if(response) {
+        setData([...response]);
+        setSuggestions([...response]);
+      }
     });
   }, []);
 
@@ -64,7 +66,6 @@ export default function CryptoTypeahead({
         value={value}
         onSearch={onSearch}
       />
-      <label>{ data.find((item)=>item.value === value)?.code}</label>
     </Fragment>
   );
 }
