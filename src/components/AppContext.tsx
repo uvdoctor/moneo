@@ -70,7 +70,6 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   useEffect(() => {
     if (!owner) return;
     Storage.configure({ level: "private" });
-    console.log("Going to load user info....");
     loadUserInfo().then(() => true);
   }, [owner]);
 

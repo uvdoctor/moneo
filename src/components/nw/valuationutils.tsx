@@ -1079,6 +1079,9 @@ const calculateDiffPercent = (curr: number, prev: number) => {
 export const sortDescending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
+export const sortAscending = (array: any[], key: string) =>
+  array.sort((a, b) => parseFloat(a[key]) - parseFloat(b[key]));
+
 const checkDate = (date: any) => {
   const todayDate = awsdate(today);
   const days = getNumberOfDays(date, todayDate as string);
@@ -1108,17 +1111,19 @@ export const calculatePrice = async (
     if (isin[id] || !data) return;
     isin[id] = id;
     const { prev, price, name, yhigh, ylow, yhighd, ylowd, vol, prevol } = data;
-    if (yhigh && checkDate(yhighd)) yhighList.push({ name, yhigh, id, price });
-    if (ylow && checkDate(ylowd)) ylowList.push({ name, ylow, id, price });
+    if (yhigh && checkDate(yhighd))
+      yhighList.push({ name, result: yhigh, id, value: price });
+    if (ylow && checkDate(ylowd))
+      ylowList.push({ name, result: ylow, id, value: price });
     const diff = calculateDiffPercent(price, prev);
     const volDiff = vol && prevol && calculateDiffPercent(vol, prevol);
     Math.sign(diff) > 0
-      ? gainers.push({ name, diff, id, price })
-      : losers.push({ name, diff, id, price });
+      ? gainers.push({ name, result: diff, id, value: price })
+      : losers.push({ name, result: diff, id, value: price });
     if (volDiff) {
       Math.sign(volDiff) > 0
-        ? volGainers.push({ name, volDiff, id, vol, price })
-        : volLosers.push({ name, volDiff, id, vol, price });
+        ? volGainers.push({ name, result: volDiff, id, value: vol })
+        : volLosers.push({ name, result: volDiff, id, value: vol });
     }
   });
   if (nps?.length) {
@@ -1132,8 +1137,8 @@ export const calculatePrice = async (
       );
       const diff = calculateDiffPercent(price, prev);
       Math.sign(diff) > 0
-        ? gainers.push({ name, diff, id, price })
-        : losers.push({ name, diff, id, price });
+        ? gainers.push({ name, result: diff, id, value: price })
+        : losers.push({ name, result: diff, id, value: price });
     });
   }
   if (crypto?.length) {
@@ -1146,14 +1151,14 @@ export const calculatePrice = async (
       if (!prev || !price) continue;
       const diff = calculateDiffPercent(price, prev);
       Math.sign(diff) > 0
-        ? gainers.push({ name: id, diff, id, price })
-        : losers.push({ name: id, diff, id, price });
+        ? gainers.push({ name: id, result: diff, id, value: price })
+        : losers.push({ name: id, result: diff, id, value: price });
     }
   }
-  gainers = sortDescending(gainers, "diff").slice(0, 3);
-  losers = sortDescending(losers, "diff").slice(-3);
-  volGainers = sortDescending(volGainers, "volDiff").slice(0, 3);
-  volLosers = sortDescending(volLosers, "volDiff").slice(-3);
+  gainers = sortDescending(gainers, "result").slice(0, 3);
+  losers = sortDescending(losers, "result").slice(-3);
+  volGainers = sortDescending(volGainers, "result").slice(0, 3);
+  volLosers = sortAscending(volLosers, "result").slice(-3);
   return { gainers, losers, yhighList, ylowList, volGainers, volLosers };
 };
 

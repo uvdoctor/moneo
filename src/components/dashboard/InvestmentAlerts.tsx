@@ -1,13 +1,9 @@
-import React, { useContext, useState } from "react";
-import { Button, Card, Divider, Row } from "antd";
+import React, { useState } from "react";
+import { Button, Card, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
-import { List } from "antd";
 import { useRouter } from "next/router";
-import RadioInput from "../form/RadioInput";
 import { Typography } from "antd";
-import ItemDisplay from "../calc/ItemDisplay";
-import { toHumanFriendlyCurrency, toReadableNumber } from "../utils";
-import { AppContext } from "../AppContext";
+import InvestmentAlertList from "./InvestmentAlertList";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -26,120 +22,52 @@ export default function InvestmentAlerts({
   volGainers,
   volLosers,
 }: InvestmentAlertsProps) {
-  const { defaultCurrency }: any = useContext(AppContext);
   const { Title } = Typography;
   const router = useRouter();
-  const [activeTabkey, setActiveTabkey] = useState<string>("gainers");
-  const [isGainers, setIsGainers] = useState<boolean>(true);
-  const [isWeekhigh, setIsWeekhigh] = useState<boolean>(true);
+  const [activeTabkey, setActiveTabkey] = useState<string>("Price");
 
   const tabList = [
     {
-      key: "gainers",
-      tab: "Gainers",
+      key: "Price",
+      tab: "Price",
     },
     {
-      key: "losers",
-      tab: "Losers",
+      key: "Volume",
+      tab: "Volume",
     },
     {
-      key: "movers",
-      tab: "Movers",
-    },
-    {
-      key: "yhighlow",
-      tab: "52 Week",
+      key: "52-weeks",
+      tab: "52-weeks",
     },
   ];
 
-  const contentList: { [key: string]: any } = {
-    yhighlow: (
-      <List
-        header={
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <RadioInput
-              options={["High", "Low"]}
-              value={isWeekhigh ? "High" : "Low"}
-              changeHandler={(value: string) => setIsWeekhigh(value === "High")}
-            />
-          </div>
-        }
-        itemLayout="horizontal"
-        dataSource={isWeekhigh ? yhigh : ylow}
-        renderItem={(item: any) => (
-          <>
-          <ItemDisplay
-            label={item.name}
-            result={item.yhigh ? item.yhigh : item.ylow}
-            pl
-            footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
-          />
-          <Divider />
-        </>
-        )}
+  const contentList: any = {
+    ["52-weeks"]: (
+      <InvestmentAlertList
+        positiveViewLabel="High"
+        negativeViewLabel="Low"
+        footerLabel="Price"
+        isPrice
+        positives={yhigh}
+        negatives={ylow}
       />
     ),
-    gainers: (
-      <List
-        itemLayout="horizontal"
-        dataSource={gainers}
-        renderItem={(item: any) => (
-          <>
-            <ItemDisplay
-              label={item.name}
-              result={item.diff}
-              pl
-              unit="%"
-              footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
-            />
-            <Divider />
-          </>
-        )}
+    Price: (
+      <InvestmentAlertList
+        positiveViewLabel="Gainers"
+        negativeViewLabel="Losers"
+        footerLabel="Price"
+        positives={gainers}
+        negatives={losers}
       />
     ),
-    losers: (
-      <List
-        itemLayout="horizontal"
-        dataSource={losers}
-        renderItem={(item: any) => (
-          <>
-            <ItemDisplay
-              label={item.name}
-              result={item.diff}
-              pl
-              unit="%"
-              footer={`Price - ${toHumanFriendlyCurrency(item.price, defaultCurrency)}`}
-            />
-            <Divider />
-          </>
-        )}
-      />
-    ),
-    movers: (
-      <List
-        header={
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <RadioInput
-              options={["High", "Low"]}
-              value={isGainers ? "High" : "Low"}
-              changeHandler={(value: string) => setIsGainers(value === "High")}
-            />
-          </div>
-        }
-        itemLayout="horizontal"
-        dataSource={isGainers ? volGainers : volLosers}
-        renderItem={(item: any) => (
-          <>
-            <ItemDisplay
-              label={item.name}
-              result={item.volDiff}
-              pl
-              unit="%"
-              footer={`Volume - ${toReadableNumber(item.vol)}`}
-            />
-            <Divider />
-          </>
-        )}
+    Volume: (
+      <InvestmentAlertList
+        positiveViewLabel="Gainers"
+        negativeViewLabel="Losers"
+        footerLabel="Volume"
+        positives={volGainers}
+        negatives={volLosers}
       />
     ),
   };
@@ -152,13 +80,10 @@ export default function InvestmentAlerts({
     <>
       <Title level={5}>Investment Updates</Title>
       <Card
-        id="alerts"
         style={{ width: "100%", height: 600 }}
         tabList={tabList}
         activeTabKey={activeTabkey}
-        onTabChange={(key) => {
-          onTabChange(key);
-        }}>
+        onTabChange={(key) => onTabChange(key)}>
         {contentList[activeTabkey]}
         <Row justify="center">
           <Button

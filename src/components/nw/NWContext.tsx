@@ -567,6 +567,7 @@ function NWContextProvider({ fxRates }: any) {
   };
 
   const initializeInstruments = async () => {
+    if (!owner) return;
     try {
       const insHoldings: CreateUserInsInput | null = await loadInsHoldings(
         owner
@@ -583,6 +584,7 @@ function NWContextProvider({ fxRates }: any) {
   };
 
   const initializeHoldings = async () => {
+    if (!owner) return;
     try {
       const allHoldings: CreateUserHoldingsInput | null = await loadAllHoldings(
         owner
