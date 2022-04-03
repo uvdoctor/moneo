@@ -164,10 +164,10 @@ export default function InvestmentAlerts({
           <Button
             key="more"
             type="primary"
-            href={ROUTES.GET}
+            href={`${ROUTES.GET}?show=fin`}
             onClick={(e: any) => {
               e.preventDefault();
-              router.push(ROUTES.GET);
+              router.push(`${ROUTES.GET}?show=fin`);
             }}>
             More Details
           </Button>

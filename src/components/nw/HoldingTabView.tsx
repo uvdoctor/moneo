@@ -29,6 +29,7 @@ import ListInsurance from "./ListInsurance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartBar } from "@fortawesome/free-solid-svg-icons";
 import InsuranceCFChart from "./InsuranceCFChart";
+import { useRouter } from "next/router";
 
 interface HoldingTabViewProps {
   liabilities?: boolean;
@@ -58,7 +59,7 @@ export default function HoldingTabView({
     totalYearlyPremium,
     instrumentsLoading,
   }: any = useContext(NWContext);
-
+  const { query } = useRouter();
   const { TabPane } = Tabs;
   const RISK_CHART = "Risk";
   const ASSET_CHART = "Asset";
@@ -70,6 +71,8 @@ export default function HoldingTabView({
         ? RISK_TAB
         : nwview === LIABILITIES_VIEW
         ? LIABILITIES_TAB
+        : query?.show === "fin" 
+        ? "Financial"
         : !totalAssets
         ? "Cash"
         : TAB.SUMMARY
