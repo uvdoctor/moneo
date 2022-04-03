@@ -1156,9 +1156,9 @@ export const calculatePrice = async (
     }
   }
   gainers = sortDescending(gainers, "result").slice(0, 3);
-  losers = sortDescending(losers, "result").slice(-3);
+  losers = sortAscending(losers, "result").slice(0, 3);
   volGainers = sortDescending(volGainers, "result").slice(0, 3);
-  volLosers = sortAscending(volLosers, "result").slice(-3);
+  volLosers = sortAscending(volLosers, "result").slice(0, 3);
   return { gainers, losers, yhighList, ylowList, volGainers, volLosers };
 };
 
