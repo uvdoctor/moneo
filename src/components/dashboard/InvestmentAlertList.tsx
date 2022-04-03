@@ -41,7 +41,13 @@ export default function InvestmentAlertList(props: InvestmentAlertListProps) {
         <>
           <ItemDisplay
             label={item.name}
-            result={item.result}
+            result={
+              item.result > 0 &&
+              props.isPrice &&
+              view === props.negativeViewLabel
+                ? -item.result
+                : item.result
+            }
             pl
             precise
             labelHighlight
