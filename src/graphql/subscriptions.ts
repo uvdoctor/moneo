@@ -1850,6 +1850,14 @@ export const onCreateUserIns = /* GraphQL */ `
         type
         subt
       }
+      watch {
+        id
+        sid
+        hight
+        lowt
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1877,6 +1885,14 @@ export const onUpdateUserIns = /* GraphQL */ `
         type
         subt
       }
+      watch {
+        id
+        sid
+        hight
+        lowt
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1901,6 +1917,14 @@ export const onDeleteUserIns = /* GraphQL */ `
         }
         fId
         curr
+        type
+        subt
+      }
+      watch {
+        id
+        sid
+        hight
+        lowt
         type
         subt
       }

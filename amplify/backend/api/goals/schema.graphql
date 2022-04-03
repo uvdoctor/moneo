@@ -616,8 +616,8 @@ type Instrument {
   pur: [Purchase!]
   fId: String!
   curr: String!
-  type: AssetType
-  subt: AssetSubType
+  type: AssetType!
+  subt: AssetSubType!
 }
 
 enum PropertyType {
@@ -659,6 +659,15 @@ type Property {
 type Ownership {
   fId: String!
   per: Float!
+}
+
+type InsWatch {
+  id: String!
+  sid: String
+  hight: Float
+  lowt: Float
+  type: AssetType!
+  subt: AssetSubType!
 }
 
 type Balance {
@@ -714,4 +723,5 @@ type UserIns
   ) {
   uname: String!
   ins: [Instrument!]!
+  watch: [InsWatch!]
 }

@@ -1553,6 +1553,14 @@ export const getUserIns = /* GraphQL */ `
         type
         subt
       }
+      watch {
+        id
+        sid
+        hight
+        lowt
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1583,6 +1591,14 @@ export const listUserInss = /* GraphQL */ `
           qty
           fId
           curr
+          type
+          subt
+        }
+        watch {
+          id
+          sid
+          hight
+          lowt
           type
           subt
         }
