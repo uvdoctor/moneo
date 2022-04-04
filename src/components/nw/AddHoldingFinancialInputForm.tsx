@@ -3,7 +3,7 @@ import { Row, Col, Button, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getInstrumentDataWithKey } from "./nwutils";
 import { NWContext, TAB } from "./NWContext";
-import { AssetSubType, AssetType, InsType } from "../../api/goals";
+import { AssetSubType, InsType } from "../../api/goals";
 
 interface InstrumentsData {
   listInExchgPrices: [];
@@ -169,10 +169,12 @@ export default function HoldingInput(props: any) {
 
   const updateOptions = async (option: string) => {
     setShowSpinner(true);
-    const data = await getInstrumentDataWithKey(
+    let data = await getInstrumentDataWithKey(
       optionTableMap[option],
       getFilters(option)
     );
+    if (option === STOCK)
+      data = data.filter((item: any) => item.itype === null);
     const fetchedInstrumentData = Object.assign(instrumentData, {
       [optionTableMap[option]]: data,
     });
