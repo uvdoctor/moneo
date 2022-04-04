@@ -74,7 +74,6 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   }, [owner]);
 
   useEffect(() => {
-    console.log("User info loaded....");
     setDiscountRate(
       !userInfo?.dr
         ? getDiscountRate(userInfo?.rp, defaultCountry)

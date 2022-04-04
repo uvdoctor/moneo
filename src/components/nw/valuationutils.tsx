@@ -51,43 +51,46 @@ const presentMonth = today.getMonth() + 1;
 const presentYear = today.getFullYear();
 
 const initializeInsData = async (instruments: Array<InstrumentInput>) => {
+  let ids: Set<string> = new Set();
   let mfIds: Set<string> = new Set();
-  let otherIds: Set<string> = new Set();
   let initFromDB = false;
-  const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  let insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   instruments.forEach((ins: InstrumentInput) => {
-    if (ins.id.startsWith("INF")) mfIds.add(ins.id);
-    else otherIds.add(ins.id);
+    ids.add(ins.id);
     if (!initFromDB && (!insData || !insData[ins.id])) initFromDB = true;
   });
   if (!initFromDB) return insData;
-  let insCache: any = {};
-  let mfs: Array<INMFPrice> | null = null;
-  if (mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
-  if (mfs)
-    mfs.forEach((mf: INMFPrice) => {
-      insCache[mf.id as string] = mf;
-      mfIds.delete(mf.id as string);
-    });
-  if (otherIds.size) {
-    let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(
-      Array.from(otherIds)
-    );
-    exchgEntries?.forEach((entry: INExchgPrice) => {
-      insCache[entry.id as string] = entry;
-      otherIds.delete(entry.id as string);
-    });
+  if (!insData) insData = {};
+  let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(
+    Array.from(ids)
+  );
+  exchgEntries?.forEach((entry: INExchgPrice) => {
+    insData[entry.id as string] = entry;
+    ids.delete(entry.id as string);
+  });
+  if (ids.size) {
+    for (let id of ids) {
+      if (isFund(id)) mfIds.add(id);
+    }
+    let mfs: Array<INMFPrice> | null = null;
+    if (mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
+    if (mfs)
+      mfs.forEach((mf: INMFPrice) => {
+        insData[mf.id as string] = mf;
+        ids.delete(mf.id as string);
+      });
+    if (ids.size) {
+      let bonds: Array<INBondPrice> | null = await loadMatchingINBond(
+        Array.from(ids)
+      );
+      if (bonds)
+        bonds.forEach((bond: INBondPrice) => {
+          insData[bond.id as string] = bond;
+        });
+    }
   }
-  mfIds.forEach((id: string) => otherIds.add(id));
-  let bonds: Array<INBondPrice> | null = null;
-  if (otherIds.size) bonds = await loadMatchingINBond(Array.from(otherIds));
-  if (bonds)
-    bonds.forEach((bond: INBondPrice) => {
-      insCache[bond.id as string] = bond;
-      otherIds.delete(bond.id as string);
-    });
-  simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
-  return insCache;
+  simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
+  return insData;
 };
 
 const getCashFlows = (

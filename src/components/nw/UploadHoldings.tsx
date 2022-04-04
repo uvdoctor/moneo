@@ -223,6 +223,7 @@ export default function UploadHoldings() {
         allInsData
       );
     if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
+    console.log("Going to check exchange table for: ", exchangeIds);
     if (exchangeIds.length)
       await loadInstrumentPrices(
         loadMatchingINExchange,
