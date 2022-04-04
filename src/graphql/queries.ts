@@ -1548,6 +1548,7 @@ export const getUserIns = /* GraphQL */ `
           year
           qty
         }
+        avgp
         fId
         curr
         type
@@ -1589,6 +1590,7 @@ export const listUserInss = /* GraphQL */ `
           sid
           exchg
           qty
+          avgp
           fId
           curr
           type

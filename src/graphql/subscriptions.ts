@@ -1845,6 +1845,7 @@ export const onCreateUserIns = /* GraphQL */ `
           year
           qty
         }
+        avgp
         fId
         curr
         type
@@ -1880,6 +1881,7 @@ export const onUpdateUserIns = /* GraphQL */ `
           year
           qty
         }
+        avgp
         fId
         curr
         type
@@ -1915,6 +1917,7 @@ export const onDeleteUserIns = /* GraphQL */ `
           year
           qty
         }
+        avgp
         fId
         curr
         type

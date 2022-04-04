@@ -614,6 +614,7 @@ type Instrument {
   exchg: String
   qty: Float!
   pur: [Purchase!]
+  avgp: Float
   fId: String!
   curr: String!
   type: AssetType!
