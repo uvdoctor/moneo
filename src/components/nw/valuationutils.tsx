@@ -55,11 +55,12 @@ const loadInstrumentPrices = async (
   if (!ids.length) return null;
   let matchingList: Array<any> | null = await fun(ids);
   if (!matchingList || !matchingList.length) return ids;
-  let unmatched: Array<string> = [];
   matchingList?.forEach(
     (matchingEntry: InstrumentInput) =>
       (allInsData[matchingEntry.id] = matchingEntry)
   );
+  if (matchingList.length === ids.length) return null;
+  let unmatched: Array<string> = [];
   for (let id of ids) {
     if (!allInsData[id]) unmatched.push(id);
   }
