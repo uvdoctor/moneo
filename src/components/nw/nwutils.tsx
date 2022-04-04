@@ -377,7 +377,7 @@ export const getMoversCategory = (isStockTab?: boolean) => {
         gainers: "Gainers",
         losers: "Losers",
         movers: "Movers",
-        yhighlow: "Recent 52 Week High/Low",
+        yhighlow: "52-weeks high & low",
       }
     : {
         gainers: "Gainers",
