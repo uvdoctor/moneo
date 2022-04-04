@@ -21,7 +21,9 @@ export default function InsPrice({
   noDecimal,
 }: InsPriceProps) {
   const getChangeRatio = () =>
-    price && previousPrice ? toReadableNumber(price / previousPrice, 2) : 0;
+    price && previousPrice
+      ? toReadableNumber(Math.abs((price / previousPrice - 1) * 100), 2)
+      : 0;
 
   return (
     <Tooltip title="Today's valuation">
