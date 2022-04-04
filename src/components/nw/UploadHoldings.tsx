@@ -32,14 +32,12 @@ import {
   getFamilyMemberOptions,
   isBond,
   isFund,
-  loadMatchingINBond,
-  loadMatchingINExchange,
-  loadMatchingINMutual,
 } from "./nwutils";
+import { loadInstruments } from "./valuationutils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import HSwitch from "../HSwitch";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import { LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import MemberInput from "./MemberInput";
 
 export default function UploadHoldings() {
@@ -142,32 +140,6 @@ export default function UploadHoldings() {
     allocateInstruments();
   }, [uploadedInstruments]);
 
-  const loadInstrumentPrices = async (
-    fun: Function,
-    ids: Array<string>,
-    allInsData: any
-  ) => {
-    if (!ids.length) return null;
-    let gotodb = false;
-    for (let id of ids) {
-      if (!allInsData[id]) {
-        gotodb = true;
-        break;
-      }
-    }
-    if (!gotodb) return null;
-    let matchingList: Array<any> | null = await fun(ids);
-    let unmatched: Array<string> = [];
-    ids.forEach((id: string) => {
-      let matchingEntry: InstrumentInput | null = matchingList?.find(
-        (match) => match?.id === id
-      );
-      if (matchingEntry) allInsData[id] = matchingEntry;
-      else unmatched.push(id);
-    });
-    return unmatched;
-  };
-
   useEffect(() => {
     setFamilyOptions(getFamilyMemberOptions(familyMemberKeys, allFamily));
   }, [allFamily, familyMemberKeys]);
@@ -197,41 +169,6 @@ export default function UploadHoldings() {
       setSelectedMembers([...[member]]);
     }
     resetState();
-  };
-
-  const loadInstruments = async (ids: Array<string>) => {
-    let mfIds: Array<string> = [];
-    let bondIds: Array<string> = [];
-    let exchangeIds: Array<string> = [];
-    ids.forEach((id: string) => {
-      isFund(id) ? mfIds.push(id) : bondIds.push(id);
-    });
-    let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    if (!allInsData) allInsData = {};
-    let unmatchedIds: Array<string> | null = [];
-    if (mfIds.length)
-      unmatchedIds = await loadInstrumentPrices(
-        loadMatchingINMutual,
-        mfIds,
-        allInsData
-      );
-    if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
-    if (bondIds.length)
-      unmatchedIds = await loadInstrumentPrices(
-        loadMatchingINBond,
-        bondIds,
-        allInsData
-      );
-    if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
-    console.log("Going to check exchange table for: ", exchangeIds);
-    if (exchangeIds.length)
-      await loadInstrumentPrices(
-        loadMatchingINExchange,
-        exchangeIds,
-        allInsData
-      );
-    simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
-    return allInsData;
   };
 
   const loadData = async (insMap: Map<string, number>, currency: string) => {

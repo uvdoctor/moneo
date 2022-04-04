@@ -10,9 +10,6 @@ import {
   CreateUserHoldingsInput,
   CreateUserInsInput,
   HoldingInput,
-  INBondPrice,
-  INExchgPrice,
-  INMFPrice,
   InstrumentInput,
   InsType,
   MFSchemeType,
@@ -50,47 +47,62 @@ const today = new Date();
 const presentMonth = today.getMonth() + 1;
 const presentYear = today.getFullYear();
 
-const initializeInsData = async (instruments: Array<InstrumentInput>) => {
-  let ids: Set<string> = new Set();
-  let mfIds: Set<string> = new Set();
-  let initFromDB = false;
-  let insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  instruments.forEach((ins: InstrumentInput) => {
-    ids.add(ins.id);
-    if (!initFromDB && (!insData || !insData[ins.id])) initFromDB = true;
-  });
-  if (!initFromDB) return insData;
-  if (!insData) insData = {};
-  let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(
-    Array.from(ids)
+const loadInstrumentPrices = async (
+  fun: Function,
+  ids: Array<string>,
+  allInsData: any
+) => {
+  if (!ids.length) return null;
+  let matchingList: Array<any> | null = await fun(ids);
+  if (!matchingList || !matchingList.length) return ids;
+  let unmatched: Array<string> = [];
+  matchingList?.forEach(
+    (matchingEntry: InstrumentInput) =>
+      (allInsData[matchingEntry.id] = matchingEntry)
   );
-  exchgEntries?.forEach((entry: INExchgPrice) => {
-    insData[entry.id as string] = entry;
-    ids.delete(entry.id as string);
-  });
-  if (ids.size) {
-    for (let id of ids) {
-      if (isFund(id)) mfIds.add(id);
-    }
-    let mfs: Array<INMFPrice> | null = null;
-    if (mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
-    if (mfs)
-      mfs.forEach((mf: INMFPrice) => {
-        insData[mf.id as string] = mf;
-        ids.delete(mf.id as string);
-      });
-    if (ids.size) {
-      let bonds: Array<INBondPrice> | null = await loadMatchingINBond(
-        Array.from(ids)
-      );
-      if (bonds)
-        bonds.forEach((bond: INBondPrice) => {
-          insData[bond.id as string] = bond;
-        });
-    }
+  for (let id of ids) {
+    if (!allInsData[id]) unmatched.push(id);
   }
-  simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-  return insData;
+  return unmatched;
+};
+
+export const loadInstruments = async (ids: Array<string>) => {
+  let mfIds: Array<string> = [];
+  let bondIds: Array<string> = [];
+  let exchangeIds: Array<string> = [];
+  let gotodb = false;
+  let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  if (!allInsData) allInsData = {};
+  ids.forEach((id: string) => {
+    isFund(id) ? mfIds.push(id) : exchangeIds.push(id);
+    if (!allInsData[id]) gotodb = true;
+  });
+  if (!gotodb) return allInsData;
+  let unmatchedIds: Array<string> | null = [];
+  if (mfIds.length)
+    unmatchedIds = await loadInstrumentPrices(
+      loadMatchingINMutual,
+      mfIds,
+      allInsData
+    );
+  if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
+  if (exchangeIds.length)
+    unmatchedIds = await loadInstrumentPrices(
+      loadMatchingINExchange,
+      exchangeIds,
+      allInsData
+    );
+  if (unmatchedIds?.length) bondIds.push(...unmatchedIds);
+  if (bondIds.length)
+    await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
+  simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+  return allInsData;
+};
+
+const initializeInsData = async (instruments: Array<InstrumentInput>) => {
+  const ids: Array<string> = [];
+  instruments.forEach((instrument: InstrumentInput) => ids.push(instrument.id));
+  return await loadInstruments(ids);
 };
 
 const getCashFlows = (
