@@ -588,7 +588,7 @@ export const initializeNPSData = async () => {
 
 export const getInstrumentDataWithKey = async (
   key: string,
-  filter: { prop: string; value: string } | null
+  filter: { prop: string; value: string | Array<string> } | null
 ) => {
   const instrumentData = simpleStorage.get("instrumentData") || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
@@ -626,9 +626,10 @@ export const getInstrumentDataWithKey = async (
       return instrumentData[key];
     }
     const { prop, value } = filter;
-    return instrumentData[key].filter(
-      (item: OptionTableMap) => item[prop] === value
-    );
+    return instrumentData[key].filter((item: OptionTableMap) => {
+      if (Array.isArray(value)) return value.includes(item[prop]);
+      else return item[prop] === value;
+    });
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
   }

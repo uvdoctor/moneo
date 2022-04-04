@@ -3,6 +3,7 @@ import { Row, Col, Button, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getInstrumentDataWithKey } from "./nwutils";
 import { NWContext, TAB } from "./NWContext";
+import { AssetSubType, AssetType, InsType } from "../../api/goals";
 
 interface InstrumentsData {
   listInExchgPrices: [];
@@ -41,8 +42,8 @@ const optionTableMap: OptionTableMap = {
   ETFs: "listInExchgPrices",
   Bonds: "listInBondPrices",
   "Mutual Funds": "listInmfPrices",
-  'REITs': "listInExchgPrices",
-  'Other Investments': "listInExchgPrices"
+  REITs: "listInExchgPrices",
+  "Other Investments": "listInExchgPrices",
 } as const;
 
 const holdingReducer = (
@@ -56,13 +57,13 @@ const holdingReducer = (
         ...{
           qty: 0,
           name: "",
-          fId: '',
+          fId: "",
           id: "",
           sid: "",
           curr: "INR",
           subt: "",
           exchg: "",
-          type: ""
+          type: "",
         },
       };
     default:
@@ -106,13 +107,13 @@ export default function HoldingInput(props: any) {
   const [holdingState, dispatch] = useReducer(holdingReducer, {
     qty: 0,
     name: "",
-    fId: '',
+    fId: "",
     id: "",
     sid: "",
     curr: "INR",
     subt: "",
     exchg: "",
-    type: ""
+    type: "",
   });
   const { qty } = holdingState;
   const [dataState, dispatchDataState] = useReducer(dataReducer, {
@@ -127,9 +128,8 @@ export default function HoldingInput(props: any) {
     suggestions: [],
     buttonState: true,
   });
-  const { instrumentData, suggestions, buttonState, assetType } =
-    dataState;
-  
+  const { instrumentData, suggestions, buttonState, assetType } = dataState;
+
   const onSearch = (searchText: any) => {
     const data = instrumentData[optionTableMap[assetType]]
       ? instrumentData[optionTableMap[assetType]].filter(
@@ -148,17 +148,20 @@ export default function HoldingInput(props: any) {
   const getFilters = (option: string) => {
     switch (option) {
       case GOLDB:
-        return { prop: "subt", value: "GoldB" };
+        return { prop: "subt", value: AssetSubType.GoldB };
       case ETF:
-        return { prop: "itype", value: "ETF" };
+        return { prop: "itype", value: InsType.ETF };
       case REIT:
-        return { prop: 'itype', value: 'REIT'};
+        return { prop: "itype", value: InsType.REIT };
       case OIT:
-        return { prop: 'itype', value: 'InvIT'};
+        return { prop: "itype", value: InsType.InvIT };
       case STOCK:
-        return { prop: 'subt', value: 'S'};
+        return { prop: "subt", value: AssetSubType.S };
       case BOND:
-        return { prop: 'type', value:  'F'}
+        return {
+          prop: "subt",
+          value: [AssetSubType.GB, AssetSubType.GBO, AssetSubType.CB],
+        };
       default:
         return null;
     }
@@ -198,7 +201,9 @@ export default function HoldingInput(props: any) {
       data
     );
     const isAllItemFiled = toValidateArr.every((item) => {
-      return toValidateHoldingState[item] && toValidateHoldingState[item].length > 0;
+      return (
+        toValidateHoldingState[item] && toValidateHoldingState[item].length > 0
+      );
     });
     dispatchDataState({
       type: "dataUpdate",
@@ -211,17 +216,18 @@ export default function HoldingInput(props: any) {
     dispatchDataState({ type: "formUpdate", data });
     updateOptions(option);
     updateButtonStatus(data);
-  }; 
+  };
 
   useEffect(() => {
     dispatchDataState({ type: "reset", data: {} });
     changeAssetType(childTab);
-  }, [childTab])
+  }, [childTab]);
 
-  return (
-    !showSpinner ? (<Row gutter={[16, 16]}>
+  return !showSpinner ? (
+    <Row gutter={[16, 16]}>
       <Col flex={8}>
-        <label htmlFor="name">Name</label><br />
+        <label htmlFor="name">Name</label>
+        <br />
         <AutoComplete
           id="name"
           options={suggestions}
@@ -238,7 +244,7 @@ export default function HoldingInput(props: any) {
             const { price, id, type, sid, exchg, subt } = obj;
             dispatch({
               type: "formUpdate",
-              data: { name: option, id, type, subt, sid, exchg, },
+              data: { name: option, id, type, subt, sid, exchg },
             });
             dispatchDataState({ type: "formUpdate", data: { price } });
             setRawDetails({ [id]: obj });
@@ -268,11 +274,16 @@ export default function HoldingInput(props: any) {
 
       <Col flex={2}>
         <label>&nbsp;</label> <br />
-        <Button type="default" onClick={addToHoldings} disabled={buttonState} shape={'circle'} icon={<PlusOutlined />}/>
+        <Button
+          type="default"
+          onClick={addToHoldings}
+          disabled={buttonState}
+          shape={"circle"}
+          icon={<PlusOutlined />}
+        />
       </Col>
-    </Row>) : 
-    ( 
-      <Spin>Loading...</Spin>
-    )
+    </Row>
+  ) : (
+    <Spin>Loading...</Spin>
   );
 }
