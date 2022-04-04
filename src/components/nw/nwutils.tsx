@@ -289,7 +289,7 @@ export const loadMatchingINExchange = async (isins: Array<string>) => {
     let nextToken = null;
     do {
       let variables: any = {
-        limit: 10000,
+        limit: 5000,
         filter: getORIdList(idList, isinChunk),
       };
       if (nextToken) variables.nextToken = nextToken;
@@ -316,7 +316,7 @@ export const loadMatchingINMutual = async (isins: Array<string>) => {
   let returnList: Array<APIt.INMFPrice> = [];
   let nextToken = null;
   do {
-    let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
+    let variables: any = { limit: 5000, filter: getORIdList(idList, isins) };
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINMFPrices },
@@ -338,7 +338,7 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
   let returnList: Array<APIt.INBondPrice> = [];
   let nextToken = null;
   do {
-    let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
+    let variables: any = { limit: 5000, filter: getORIdList(idList, isins) };
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINBondPrices },
