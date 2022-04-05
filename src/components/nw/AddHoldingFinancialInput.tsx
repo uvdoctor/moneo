@@ -3,17 +3,18 @@ import { Row, Col, Button, Divider, Badge } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import { COLORS, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
-import { AssetType } from "../../api/goals";
+import { AssetType, InstrumentInput } from "../../api/goals";
 import HoldingInput from "./AddHoldingFinancialInputForm";
 import {
   toCurrency,
   toHumanFriendlyCurrency,
   toReadableNumber,
 } from "../utils";
-import { getColourForAssetType } from "./nwutils";
+import { getColourForAssetType, onSavePurchase } from "./nwutils";
+import PurchaseButton from "./PurchaseButton";
 
 export default function AddHoldingFinancialInput(props: any) {
-  const [holdings, setHoldings] = useState<{}[]>([]);
+  const [holdings, setHoldings] = useState<InstrumentInput[]>([]);
   const { updateInstruments, disableOk } = props;
 
   useEffect(() => {
@@ -39,11 +40,9 @@ export default function AddHoldingFinancialInput(props: any) {
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
     let price = 0;
-    let type = '';
-    const {
-      holding: { curr, qty, id },
-      key,
-    } = props;
+    let type = "";
+    const { holding, key } = props;
+    const { id, qty, curr } = holding;
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     if (insData[id]) {
       const value = insData[id];
@@ -75,13 +74,25 @@ export default function AddHoldingFinancialInput(props: any) {
 
           <Row justify="space-between">
             <Col>
-              <Badge
-                count={id}
-                style={{
-                  color: COLORS.WHITE,
-                  backgroundColor: getColourForAssetType(type as AssetType),
-                }}
-              />
+              <Row align="middle" gutter={8}>
+                <Col>
+                  <Badge
+                    count={id}
+                    style={{
+                      color: COLORS.WHITE,
+                      backgroundColor: getColourForAssetType(type as AssetType),
+                    }}
+                  />
+                </Col>
+                <Col>
+                  <PurchaseButton
+                    holding={holding}
+                    onSave={(purchase: any[]) =>
+                      onSavePurchase(purchase, holdings, setHoldings, id)
+                    }
+                  />
+                </Col>
+              </Row>
             </Col>
 
             <Col>
@@ -93,7 +104,8 @@ export default function AddHoldingFinancialInput(props: any) {
               <Button
                 type="link"
                 danger
-                onClick={() => deleteFromHoldings(props.key)}>
+                onClick={() => deleteFromHoldings(props.key)}
+              >
                 <DeleteOutlined />
               </Button>
             </Col>
