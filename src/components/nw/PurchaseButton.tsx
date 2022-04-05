@@ -13,6 +13,7 @@ export default function PurchaseButton({
   onSave,
 }: PurchaseButtonProps) {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   return (
     <Fragment>
       <Typography.Link
@@ -26,15 +27,13 @@ export default function PurchaseButton({
           Avg.Price - {toHumanFriendlyCurrency(holding.avgp, holding.curr)}
         </strong>
       )} */}
-      {holding.pur && (
-        <Purchase
-          onSave={(pur: any) => onSave(pur)}
-          open={isModalVisible}
-          setIsOpen={setIsModalVisible}
-          pur={holding?.pur}
-          qty={Number(holding.qty)}
-        />
-      )}
+      <Purchase
+        onSave={(pur: any) => onSave(pur)}
+        open={isModalVisible}
+        setIsOpen={setIsModalVisible}
+        pur={holding.pur ? holding.pur : []}
+        qty={Number(holding.qty)}
+      />
     </Fragment>
   );
 }
