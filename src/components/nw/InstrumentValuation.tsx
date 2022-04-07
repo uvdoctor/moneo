@@ -30,7 +30,7 @@ import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
 import { calculatePrice } from "./valuationutils";
 import RadioInput from "../form/RadioInput";
-import Purchase from "./Purchase";
+import PurchaseView from "./PurchaseView";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -277,33 +277,7 @@ export default function InstrumentValuation() {
         />
         {view === "Purchase" ? (
           <Col xs={24}>
-            <Purchase
-              onSave={(pur: any) => {
-                const index = instruments.findIndex(
-                  (item: any) => item.id === record.id
-                );
-                if (index > -1) {
-                  let purchase: any = [];
-                  if (pur.length) {
-                    pur.map((item: any) => {
-                      const { qty, amt, date } = item;
-                      const newDate = new Date(date);
-                      purchase.push({
-                        qty,
-                        amt,
-                        month: newDate.getMonth() + 1,
-                        year: newDate.getFullYear(),
-                        day: newDate.getDate(),
-                      });
-                    });
-                  }
-                  instruments[index].pur = purchase;
-                  setInstruments([...instruments]);
-                }
-              }}
-              pur={record.pur ? record.pur : []}
-              qty={Number(record.qty)}
-            />
+            <PurchaseView record={record}/>
           </Col>
         ) : (
           <></>
