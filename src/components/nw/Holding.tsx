@@ -25,9 +25,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
 import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
-import { getMarketCapLabel, isFund, onSavePurchase } from "./nwutils";
+import { getMarketCapLabel, isFund } from "./nwutils";
 import InsPrice from "./InsPrice";
-import PurchaseButton from "./PurchaseButton";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -119,19 +118,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                   ) : null}
                 </Space>
               ) : null}
-            </Col>
-            <Col>
-              <PurchaseButton
-                holding={holding}
-                onSave={(purchase: any[]) =>
-                  onSavePurchase(
-                    purchase,
-                    instruments,
-                    setInstruments,
-                    holding.id
-                  )
-                }
-              />
             </Col>
             {holding.fId ? (
               <Col>

@@ -1265,31 +1265,3 @@ export const filterYearHighLow = (
     yhighlow.some((item: any) => item.id === id)
   );
 };
-
-export const onSavePurchase = (
-  purchase: any[],
-  holdings: InstrumentInput[],
-  setHoldings: Function,
-  id: string
-) => {
-  const index = holdings.findIndex((item: any) => item.id === id);
-  if (index > -1) {
-    let pur: any = [];
-    if (purchase.length) {
-      purchase.map((item) => {
-        const { qty, amt, date } = item;
-        const newDate = new Date(date);
-        pur.push({
-          qty,
-          amt,
-          month: newDate.getMonth() + 1,
-          year: newDate.getFullYear(),
-          day: newDate.getDate(),
-        });
-      });
-    }
-    holdings[index].pur = pur;
-    setHoldings([...holdings]);
-    console.log(holdings);
-  }
-};

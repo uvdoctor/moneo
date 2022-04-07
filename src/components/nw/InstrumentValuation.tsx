@@ -1,4 +1,4 @@
-import { Empty, Skeleton, Table } from "antd";
+import { Col, Empty, Row, Skeleton, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
@@ -29,6 +29,8 @@ import {
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
 import { calculatePrice } from "./valuationutils";
+import RadioInput from "../form/RadioInput";
+import Purchase from "./Purchase";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -41,14 +43,15 @@ export default function InstrumentValuation() {
     loadingInstruments,
     selectedTags,
   }: any = useContext(NWContext);
-  const [filteredInstruments, setFilteredInstruments] = useState<
-    Array<InstrumentInput>
-  >([...instruments]);
-  const [filterByTag, setFilterByTag] = useState<Array<InstrumentInput>>([]);
+  const [filteredInstruments, setFilteredInstruments] = useState<Array<any>>([
+    ...instruments,
+  ]);
+  const [filterByTag, setFilterByTag] = useState<Array<any>>([]);
   const [nameFilterValues, setNameFilterValues] = useState<Array<Object>>([{}]);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
   const [totalPrevAmt, setTotalPrevAmt] = useState<number>(0);
+  const [view, setView] = useState<string>("Purchase");
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
   const delRecord = (id: string) =>
@@ -85,7 +88,7 @@ export default function InstrumentValuation() {
       render: (record: InstrumentInput) => {
         return (
           <Holding
-            key={`id-${record.id}`}
+            key={`id-${record.id}-${record.fId}`}
             holding={record as InstrumentInput}
             onDelete={delRecord}
             onChange={calculateTotal}
@@ -164,8 +167,9 @@ export default function InstrumentValuation() {
   const filterInstrumentsByTabs = () => {
     if (!instruments.length) return;
     const { REIT, InvIT, ETF } = InsType;
-    let filteredData: Array<InstrumentInput> = instruments.filter(
-      (instrument: InstrumentInput) => {
+    let filteredData: Array<any> = instruments.filter(
+      (instrument: any, index: number) => {
+        instrument.key = index;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData) return;
         const id = instrument.id;
@@ -207,7 +211,8 @@ export default function InstrumentValuation() {
     const movers = [...volGainers, ...volLosers];
     const yhighlow = [...yhighList, ...ylowList];
     let filterDataByTag = filteredInstruments.filter(
-      (instrument: InstrumentInput) => {
+      (instrument: any, index: number) => {
+        instrument.key = index;
         let [id, sid, cachedData] = [
           instrument.id,
           instrument.sid,
@@ -260,6 +265,53 @@ export default function InstrumentValuation() {
     setFilterByTag([...filterDataByTag]);
   };
 
+  const expandedRow = (record: any) => {
+    const options = ["Purchase", "Analysis", "Others"];
+    return (
+      <Row justify="center" gutter={[0, 8]}>
+        <RadioInput
+          options={options}
+          value={view}
+          changeHandler={(val: string) => setView(val)}
+          size="medium"
+        />
+        {view === "Purchase" ? (
+          <Col xs={24}>
+            <Purchase
+              onSave={(pur: any) => {
+                const index = instruments.findIndex(
+                  (item: any) => item.id === record.id
+                );
+                if (index > -1) {
+                  let purchase: any = [];
+                  if (pur.length) {
+                    pur.map((item: any) => {
+                      const { qty, amt, date } = item;
+                      const newDate = new Date(date);
+                      purchase.push({
+                        qty,
+                        amt,
+                        month: newDate.getMonth() + 1,
+                        year: newDate.getFullYear(),
+                        day: newDate.getDate(),
+                      });
+                    });
+                  }
+                  instruments[index].pur = purchase;
+                  setInstruments([...instruments]);
+                }
+              }}
+              pur={record.pur ? record.pur : []}
+              qty={Number(record.qty)}
+            />
+          </Col>
+        ) : (
+          <></>
+        )}
+      </Row>
+    );
+  };
+
   return !loadingInstruments ? (
     instruments.length ? (
       filteredInstruments.length ? (
@@ -267,6 +319,9 @@ export default function InstrumentValuation() {
           dataSource={selectedTags.length ? filterByTag : filteredInstruments}
           //@ts-ignore
           columns={columns}
+          expandable={{
+            expandedRowRender: (record) => expandedRow(record),
+          }}
           size="small"
           bordered
           onChange={handleChange}

@@ -111,7 +111,6 @@ export default function AddHoldings({
 
   const updateInstruments = (instrumentsToAdd: []) => {
     instrumentsToAdd.map((item: any) => {
-      if(item?.pur?.length) item.avgp = 0;
       if (item.name) delete item.name;
       if (!item.exchg) item.exchg = null
     });

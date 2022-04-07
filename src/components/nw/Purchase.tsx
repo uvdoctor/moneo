@@ -5,7 +5,6 @@ import {
   Col,
   Empty,
   InputNumber,
-  Modal,
   Popconfirm,
   Row,
   Table,
@@ -24,10 +23,8 @@ import {
 const today = new Date();
 
 interface PurchaseProps {
-  open: boolean;
-  setIsOpen: Function;
-  pur: Array<PurchaseInput>;
   qty: number;
+  pur: Array<PurchaseInput>;
   onSave: Function;
 }
 
@@ -67,12 +64,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const inputNode = (inputType: string, key?: string) =>
     inputType === "number" ? (
       <InputNumber
+        style={{ width: "150px" }}
         value={dataIndex === "qty" || key === "qty" ? record.qty : record.amt}
         onChange={(value) => {
-          if (record)
+          if (record) {
             dataIndex === "qty" || key === "qty"
               ? (record.qty = value)
               : (record.amt = value);
+          }
         }}
       />
     ) : (
@@ -101,11 +100,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
         isMobileDevice(fsb) && record ? (
           <Row gutter={[0, 8]}>
             <Col xs={24}>
-              <label>Qty:</label>
+              <label>Qty: </label>
               {inputNode("number", "qty")}
             </Col>
             <Col xs={24}>
-              <label>Amt:</label>
+              <label>Amt: </label>
               {inputNode("number", "amt")}
             </Col>
             <Col xs={24}>{inputNode("date")}</Col>
@@ -135,13 +134,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
-export default function Purchase({
-  open,
-  setIsOpen,
-  pur,
-  qty,
-  onSave,
-}: PurchaseProps) {
+export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
   const [editingKey, setEditingKey] = useState<string>("");
   const fsb = useFullScreenBrowser();
@@ -241,6 +234,10 @@ export default function Purchase({
     },
   ];
 
+  useEffect(()=>{
+    onSave(purchaseDetails);
+  },[purchaseDetails])
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -261,18 +258,19 @@ export default function Purchase({
   useEffect(() => {
     let purchaseDetails: Array<any> = [];
     setPurchaseDetails([...[]]);
+    if (!pur) return;
     for (let i = 0; i < pur.length; ++i) {
       const { day, month, year, qty, amt } = pur[i];
       const date = `${year}-${getStr(month)}-${getStr(day as number)}`;
       purchaseDetails.push({
-        key: `purchase-${i}`,
+        key: i,
         qty: qty,
         amt: amt,
         date: date,
       });
     }
     setPurchaseDetails([...purchaseDetails]);
-  }, [pur]);
+  }, []);
 
   const totalqty = () => {
     let totalqty = 0;
@@ -281,44 +279,30 @@ export default function Purchase({
   };
 
   return (
-    <Modal
-      width={700}
-      title="Purchase History"
-      style={{ top: 20 }}
-      visible={open}
-      okText="Save"
-      okButtonProps={{ disabled: totalqty() > qty || totalqty() < qty }}
-      onOk={() => {
-        setIsOpen(false);
-        onSave(purchaseDetails);
-      }}
-      onCancel={() => setIsOpen(false)}
-    >
-      {
-        <Button
-          style={{ float: "right" }}
-          type="dashed"
-          disabled={totalqty() === qty || totalqty() > qty}
-          onClick={() => {
-            const totalQty = totalqty();
-            if (totalQty < qty) {
-              setPurchaseDetails([
-                ...purchaseDetails,
-                {
-                  day: 1,
-                  month: today.getMonth() - 1,
-                  year: today.getFullYear(),
-                  amt: 100,
-                  qty: qty - totalQty,
-                },
-              ]);
-            }
-          }}
-          icon={<PlusOutlined />}
-        >
-          Add Purchase Details
-        </Button>
-      }
+    <Row justify="center" gutter={[8, 8]}>
+      <Button
+        type="dashed"
+        disabled={totalqty() === qty || totalqty() > qty}
+        onClick={() => {
+          const totalQty = totalqty();
+          if (totalQty < qty) {
+            setPurchaseDetails([
+              ...purchaseDetails,
+              {
+                key: purchaseDetails.length ? purchaseDetails.length : 0,
+                day: 1,
+                month: today.getMonth() - 1,
+                year: today.getFullYear(),
+                amt: 100,
+                qty: qty - totalQty,
+              },
+            ]);
+          }
+        }}
+        icon={<PlusOutlined />}
+      >
+        Add Purchase Details
+      </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (
         (totalqty() > qty || totalqty() < qty) && (
@@ -332,23 +316,25 @@ export default function Purchase({
       ) : (
         <></>
       )}
-      {purchaseDetails.length ? (
-        <Table
-          className="list-holdings"
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          bordered
-          // @ts-ignore
-          columns={mergedColumns}
-          dataSource={purchaseDetails}
-          size="small"
-        />
-      ) : (
-        <Empty description={<p>No data found.</p>} />
-      )}
-    </Modal>
+      <Col xs={24}>
+        {purchaseDetails.length ? (
+          <Table
+            className="list-holdings"
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            // @ts-ignore
+            columns={mergedColumns}
+            dataSource={purchaseDetails}
+            size="small"
+          />
+        ) : (
+          <Empty description={<p>No data found.</p>} />
+        )}
+      </Col>
+    </Row>
   );
 }

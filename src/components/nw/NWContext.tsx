@@ -690,9 +690,13 @@ function NWContextProvider({ fxRates }: any) {
   ]);
 
   const saveHoldings = async () => {
+    const ins = instruments.map((item: any) => {
+      if (item.key || item.key === 0) delete item.key;
+      return item;
+    });
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
-      ins: instruments,
+      ins: JSON.parse(JSON.stringify(ins)),
     };
     let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
     updatedHoldings.savings = savings;
@@ -1050,7 +1054,8 @@ function NWContextProvider({ fxRates }: any) {
         riskTotals,
         industryAndSector,
         setIndustryAndSector,
-      }}>
+      }}
+    >
       <GetView />
     </NWContext.Provider>
   );
