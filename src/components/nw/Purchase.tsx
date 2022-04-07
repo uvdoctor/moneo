@@ -61,14 +61,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const [year, setYear] = useState<number>(date.getFullYear());
   const [day, setDay] = useState<number>(date.getDate());
   const [month, setMonth] = useState<number>(date.getMonth() + 1);
-  const inputNode = (inputType: string, key?: string) =>
+  const inputNode = (inputType: string) =>
     inputType === "number" ? (
       <InputNumber
         style={{ width: "150px" }}
-        value={dataIndex === "qty" || key === "qty" ? record.qty : record.amt}
+        value={dataIndex === "qty" ? record.qty : record.amt}
         onChange={(value) => {
           if (record) {
-            dataIndex === "qty" || key === "qty"
+            dataIndex === "qty"
               ? (record.qty = value)
               : (record.amt = value);
           }
@@ -101,11 +101,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
           <Row gutter={[0, 8]}>
             <Col xs={24}>
               <label>Qty: </label>
-              {inputNode("number", "qty")}
+              {inputNode("number")}
             </Col>
             <Col xs={24}>
               <label>Amt: </label>
-              {inputNode("number", "amt")}
+              {inputNode("number")}
             </Col>
             <Col xs={24}>{inputNode("date")}</Col>
           </Row>
