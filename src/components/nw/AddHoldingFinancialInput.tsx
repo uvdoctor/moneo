@@ -10,8 +10,7 @@ import {
   toHumanFriendlyCurrency,
   toReadableNumber,
 } from "../utils";
-import { getColourForAssetType, onSavePurchase } from "./nwutils";
-import PurchaseButton from "./PurchaseButton";
+import { getColourForAssetType } from "./nwutils";
 
 export default function AddHoldingFinancialInput(props: any) {
   const [holdings, setHoldings] = useState<InstrumentInput[]>([]);
@@ -82,14 +81,6 @@ export default function AddHoldingFinancialInput(props: any) {
                       color: COLORS.WHITE,
                       backgroundColor: getColourForAssetType(type as AssetType),
                     }}
-                  />
-                </Col>
-                <Col>
-                  <PurchaseButton
-                    holding={holding}
-                    onSave={(purchase: any[]) =>
-                      onSavePurchase(purchase, holdings, setHoldings, id)
-                    }
                   />
                 </Col>
               </Row>
