@@ -577,8 +577,10 @@ function NWContextProvider({ fxRates }: any) {
     } catch (e) {
       notification.error({
         message: "Instruments not loaded",
-        description: `Sorry! Unable to fetch instruments due to error: ${e}`,
+        description:
+          "Sorry! Unable to fetch instruments due to unexpected error",
       });
+      console.log("Error while loading the instruments: ", e);
     }
   };
 
