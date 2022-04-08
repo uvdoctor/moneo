@@ -821,8 +821,8 @@ export type InstrumentInput = {
   avgp?: number | null,
   fId: string,
   curr: string,
-  type: AssetType,
-  subt: AssetSubType,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
 };
 
 export enum AssetType {
@@ -890,8 +890,8 @@ export type Instrument = {
   avgp?: number | null,
   fId?: string,
   curr?: string,
-  type?: AssetType,
-  subt?: AssetSubType,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
 };
 
 export type InsWatch = {
@@ -3519,8 +3519,8 @@ export type CreateUserInsMutation = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -3563,8 +3563,8 @@ export type UpdateUserInsMutation = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -3607,8 +3607,8 @@ export type DeleteUserInsMutation = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -5953,8 +5953,8 @@ export type GetUserInsQuery = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -5994,8 +5994,8 @@ export type ListUserInssQuery = {
         avgp?: number | null,
         fId: string,
         curr: string,
-        type: AssetType,
-        subt: AssetSubType,
+        type?: AssetType | null,
+        subt?: AssetSubType | null,
       } >,
       watch?:  Array< {
         __typename: "InsWatch",
@@ -7977,8 +7977,8 @@ export type OnCreateUserInsSubscription = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -8020,8 +8020,8 @@ export type OnUpdateUserInsSubscription = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",
@@ -8063,8 +8063,8 @@ export type OnDeleteUserInsSubscription = {
       avgp?: number | null,
       fId: string,
       curr: string,
-      type: AssetType,
-      subt: AssetSubType,
+      type?: AssetType | null,
+      subt?: AssetSubType | null,
     } >,
     watch?:  Array< {
       __typename: "InsWatch",

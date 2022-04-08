@@ -617,8 +617,8 @@ type Instrument {
   avgp: Float
   fId: String!
   curr: String!
-  type: AssetType!
-  subt: AssetSubType!
+  type: AssetType
+  subt: AssetSubType
 }
 
 enum PropertyType {
