@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Col,
-  Empty,
-  InputNumber,
-  Popconfirm,
-  Row,
-  Table,
-} from "antd";
+import { Alert, Button, Col, Empty, Popconfirm, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
 import { getStr, isMobileDevice } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -20,6 +11,7 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import NumberInput from "../form/numberinput";
 const today = new Date();
 
 interface PurchaseProps {
@@ -61,17 +53,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const [year, setYear] = useState<number>(date.getFullYear());
   const [day, setDay] = useState<number>(date.getDate());
   const [month, setMonth] = useState<number>(date.getMonth() + 1);
-  const inputNode = (inputType: string) =>
-    inputType === "number" ? (
-      <InputNumber
-        style={{ width: "150px" }}
-        value={dataIndex === "qty" ? record.qty : record.amt}
-        onChange={(value) => {
+  const inputNode = (inputType: string, key?: string) => {
+    const type = key ? key : dataIndex;
+    return inputType === "number" ? (
+      <NumberInput
+        value={type === "qty" ? record.qty : record.amt}
+        changeHandler={(value: any) => {
           if (record) {
-            dataIndex === "qty" ? (record.qty = value) : (record.amt = value);
+            type === "qty" ? (record.qty = value) : (record.amt = value);
           }
         }}
-      />
+        pre={""}
+      />  
     ) : (
       <DateInput
         title={""}
@@ -84,6 +77,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         size="middle"
       />
     );
+  };
 
   useEffect(() => {
     const date = `${year}-${getStr(month)}-${getStr(day)}`;
@@ -99,11 +93,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
           <Row gutter={[0, 8]}>
             <Col xs={24}>
               <label>Qty: </label>
-              {inputNode("number")}
+              {inputNode("number", "qty")}
             </Col>
             <Col xs={24}>
-              <label>Amt: </label>
-              {inputNode("number")}
+              <label>Amt: </label>{inputNode("number", "amt")}
             </Col>
             <Col xs={24}>{inputNode("date")}</Col>
           </Row>
@@ -276,11 +269,13 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                 key: purchaseDetails.length ? purchaseDetails.length : 0,
                 amt: 100,
                 qty: qty - totalQty,
-                date: `${today.getFullYear()}-${getStr(today.getMonth() - 1)}-1`
+                date: `${today.getFullYear()}-${getStr(
+                  today.getMonth() - 1
+                )}-1`,
               },
             ];
-            setPurchaseDetails(purchase)
-            onSave(purchase)
+            setPurchaseDetails(purchase);
+            onSave(purchase);
           }
         }}
         icon={<PlusOutlined />}
