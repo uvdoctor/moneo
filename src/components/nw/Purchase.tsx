@@ -58,6 +58,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const type = key ? key : dataIndex;
     return inputType === "number" && record ? (
       <InputNumber
+        style={{ width: '150px' }}
         value={type === "qty" ? qty : amt}
         onChange={(value: any) =>
           type === "qty" ? setQty(value) : setAmt(value)
