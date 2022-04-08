@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Empty, Popconfirm, Row, Table } from "antd";
+import { Alert, Button, Col, Empty, InputNumber, Popconfirm, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
 import { getStr, isMobileDevice } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -11,7 +11,6 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import NumberInput from "../form/numberinput";
 const today = new Date();
 
 interface PurchaseProps {
@@ -53,18 +52,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const [year, setYear] = useState<number>(date.getFullYear());
   const [day, setDay] = useState<number>(date.getDate());
   const [month, setMonth] = useState<number>(date.getMonth() + 1);
+  const [qty, setQty] = useState<number>(record?.qty);
+  const [amt, setAmt] = useState<number>(record?.amt);
   const inputNode = (inputType: string, key?: string) => {
     const type = key ? key : dataIndex;
-    return inputType === "number" ? (
-      <NumberInput
-        value={type === "qty" ? record.qty : record.amt}
-        changeHandler={(value: any) => {
-          if (record) {
-            type === "qty" ? (record.qty = value) : (record.amt = value);
-          }
-        }}
-        pre={""}
-      />  
+    return inputType === "number" && record ? (
+      <InputNumber
+        value={type === "qty" ? qty : amt}
+        onChange={(value: any) =>
+          type === "qty" ? setQty(value) : setAmt(value)
+        }
+      />
     ) : (
       <DateInput
         title={""}
@@ -81,10 +79,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
   useEffect(() => {
     const date = `${year}-${getStr(month)}-${getStr(day)}`;
-    if (record) {
-      record.date = date;
-    }
-  }, [day, month, year]);
+    if (record) record.date = date;
+  }, [day, month, year])
+
+  useEffect(() => {
+    if (record) record.qty = qty;
+  }, [qty]);
+
+  useEffect(() => {
+    if (record) record.amt = amt;
+  }, [amt]);
 
   return (
     <td {...restProps}>
@@ -96,7 +100,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
               {inputNode("number", "qty")}
             </Col>
             <Col xs={24}>
-              <label>Amt: </label>{inputNode("number", "amt")}
+              <label>Amt: </label>
+              {inputNode("number", "amt")}
             </Col>
             <Col xs={24}>{inputNode("date")}</Col>
           </Row>
