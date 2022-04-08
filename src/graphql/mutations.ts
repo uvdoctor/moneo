@@ -515,6 +515,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ltdep {
         id
@@ -532,6 +539,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       p2p {
         id
@@ -549,6 +563,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       loans {
         id
@@ -566,6 +587,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       credit {
         id
@@ -583,6 +611,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       savings {
         id
@@ -600,6 +635,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       property {
         type
@@ -643,6 +685,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pm {
         id
@@ -660,6 +709,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pf {
         id
@@ -677,6 +733,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       nps {
         id
@@ -694,6 +757,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       crypto {
         id
@@ -711,6 +781,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ins {
         id
@@ -728,6 +805,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       other {
         id
@@ -745,6 +829,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       angel {
         id
@@ -762,6 +853,13 @@ export const createUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       createdAt
       updatedAt
@@ -792,6 +890,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ltdep {
         id
@@ -809,6 +914,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       p2p {
         id
@@ -826,6 +938,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       loans {
         id
@@ -843,6 +962,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       credit {
         id
@@ -860,6 +986,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       savings {
         id
@@ -877,6 +1010,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       property {
         type
@@ -920,6 +1060,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pm {
         id
@@ -937,6 +1084,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pf {
         id
@@ -954,6 +1108,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       nps {
         id
@@ -971,6 +1132,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       crypto {
         id
@@ -988,6 +1156,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ins {
         id
@@ -1005,6 +1180,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       other {
         id
@@ -1022,6 +1204,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       angel {
         id
@@ -1039,6 +1228,13 @@ export const updateUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       createdAt
       updatedAt
@@ -1069,6 +1265,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ltdep {
         id
@@ -1086,6 +1289,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       p2p {
         id
@@ -1103,6 +1313,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       loans {
         id
@@ -1120,6 +1337,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       credit {
         id
@@ -1137,6 +1361,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       savings {
         id
@@ -1154,6 +1385,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       property {
         type
@@ -1197,6 +1435,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pm {
         id
@@ -1214,6 +1459,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pf {
         id
@@ -1231,6 +1483,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       nps {
         id
@@ -1248,6 +1507,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       crypto {
         id
@@ -1265,6 +1531,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ins {
         id
@@ -1282,6 +1555,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       other {
         id
@@ -1299,6 +1579,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       angel {
         id
@@ -1316,6 +1603,13 @@ export const deleteUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       createdAt
       updatedAt

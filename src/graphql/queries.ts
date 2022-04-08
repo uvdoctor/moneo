@@ -1000,6 +1000,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ltdep {
         id
@@ -1017,6 +1024,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       p2p {
         id
@@ -1034,6 +1048,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       loans {
         id
@@ -1051,6 +1072,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       credit {
         id
@@ -1068,6 +1096,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       savings {
         id
@@ -1085,6 +1120,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       property {
         type
@@ -1128,6 +1170,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pm {
         id
@@ -1145,6 +1194,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       pf {
         id
@@ -1162,6 +1218,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       nps {
         id
@@ -1179,6 +1242,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       crypto {
         id
@@ -1196,6 +1266,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       ins {
         id
@@ -1213,6 +1290,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       other {
         id
@@ -1230,6 +1314,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       angel {
         id
@@ -1247,6 +1338,13 @@ export const getUserHoldings = /* GraphQL */ `
         em
         ey
         amt
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
       }
       createdAt
       updatedAt

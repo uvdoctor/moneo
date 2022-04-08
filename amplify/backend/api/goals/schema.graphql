@@ -606,6 +606,7 @@ type Holding {
   em: Int
   ey: Int
   amt: Float
+  pur: [Purchase!]
 }
 
 type Instrument {
