@@ -19,7 +19,7 @@ export default function PurchaseView({ record }: PurchaseViewProps) {
     const index = instruments.findIndex((item: any) => item.id === record.id);
     if (index > -1) {
       let purchase: any = [];
-      if (data.length && type === "pur") {
+      if (type === "pur") {
         data.map((item: any) => {
           const { qty, amt, date } = item;
           const newDate = new Date(date);
@@ -32,13 +32,12 @@ export default function PurchaseView({ record }: PurchaseViewProps) {
           });
         });
         instruments[index].pur = purchase;
-        instruments[index].avgp = 0;
+        instruments[index].avgp = purchase.length ? 0 : avgp;
       } else if (type === "avgp") {
         instruments[index].avgp = data;
       }
       setInstruments([...instruments]);
     }
-    console.log(instruments);
   };
 
   useEffect(() => {
@@ -55,8 +54,18 @@ export default function PurchaseView({ record }: PurchaseViewProps) {
       <HSwitch
         value={isPurchase}
         setter={setIsPurchase}
-        leftText="Avg.Price"
-        rightText="Purchase Details"
+        leftText={
+          <LabelWithTooltip
+            label="Avg.Price"
+            info="Average Price will give you approximate results"
+          />
+        }
+        rightText={
+          <LabelWithTooltip
+            label="Purchase"
+            info="Purchase Details will give you accurate results"
+          />
+        }
       />
       <Col xs={24}>
         {isPurchase ? (
@@ -66,14 +75,14 @@ export default function PurchaseView({ record }: PurchaseViewProps) {
             qty={Number(record.qty)}
           />
         ) : (
-          <>
-            <LabelWithTooltip label="Average Price" />
+          <Row justify="center" gutter={[0, 8]}>
+            <LabelWithTooltip label="Average Price"/>
             <InputNumber
               style={{ width: "150px" }}
               value={avgp}
               onChange={(val) => setAvgp(val)}
             />
-          </>
+          </Row>
         )}
       </Col>
     </Row>

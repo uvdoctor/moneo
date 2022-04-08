@@ -68,9 +68,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         value={dataIndex === "qty" ? record.qty : record.amt}
         onChange={(value) => {
           if (record) {
-            dataIndex === "qty"
-              ? (record.qty = value)
-              : (record.amt = value);
+            dataIndex === "qty" ? (record.qty = value) : (record.amt = value);
           }
         }}
       />
@@ -140,31 +138,19 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   const fsb = useFullScreenBrowser();
 
   const save = (record: any) => {
-    const newData = [...purchaseDetails];
-    const index = newData.findIndex((item) => record.key === item.key);
-    if (index > -1) {
-      const item = newData[index];
-      newData.splice(index, 1, {
-        ...item,
-        ...record,
-      });
-      setPurchaseDetails(newData);
-      setEditingKey("");
-    } else {
-      newData.push(record);
-      setPurchaseDetails(newData);
-      setEditingKey("");
-    }
+    const item = purchaseDetails[record.key];
+    purchaseDetails.splice(record.key, 1, {
+      ...item,
+      ...record,
+    });
+    setPurchaseDetails(purchaseDetails);
+    setEditingKey("");
   };
 
   const deleteEntry = (record: any) => {
-    const newData = [...purchaseDetails];
-    const index = newData.findIndex((item) => record.key === item.key);
-    if (index > -1) {
-      newData.splice(index, 1);
-      setPurchaseDetails(newData);
-      setEditingKey("");
-    }
+    purchaseDetails.splice(record.key, 1);
+    setPurchaseDetails([...purchaseDetails]);
+    setEditingKey("");
   };
 
   const isEditing = (record: Item) => record.key === editingKey;
@@ -234,9 +220,9 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     onSave(purchaseDetails);
-  },[purchaseDetails])
+  }, [purchaseDetails]);
 
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
@@ -258,7 +244,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   useEffect(() => {
     let purchaseDetails: Array<any> = [];
     setPurchaseDetails([...[]]);
-    if (!pur) return;
+    if (!pur || !pur.length) return;
     for (let i = 0; i < pur.length; ++i) {
       const { day, month, year, qty, amt } = pur[i];
       const date = `${year}-${getStr(month)}-${getStr(day as number)}`;

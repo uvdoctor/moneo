@@ -2,8 +2,8 @@ import React from 'react';
 import { Switch } from 'antd';
 import { COLORS } from '../CONSTANTS';
 interface HSwitchProps {
-	rightText?: string;
-	leftText?: string;
+	rightText?: any;
+	leftText?: any;
 	value: number;
 	setter: any;
 	disabled?: boolean;
