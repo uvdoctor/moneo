@@ -577,7 +577,7 @@ function NWContextProvider({ fxRates }: any) {
     } catch (e) {
       notification.error({
         message: "Instruments not loaded",
-        description: "Sorry! Unable to fetch instruments.",
+        description: `Sorry! Unable to fetch instruments due to error: ${e}`,
       });
     }
   };
@@ -1054,8 +1054,7 @@ function NWContextProvider({ fxRates }: any) {
         riskTotals,
         industryAndSector,
         setIndustryAndSector,
-      }}
-    >
+      }}>
       <GetView />
     </NWContext.Provider>
   );
