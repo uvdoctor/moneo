@@ -1,18 +1,21 @@
-import { Row, Col, InputNumber } from "antd";
+import { Row, Col } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { InstrumentInput } from "../../api/goals";
-import LabelWithTooltip from "../form/LabelWithTooltip";
-import HSwitch from "../HSwitch";
+import NumberInput from "../form/numberinput";
 import { NWContext } from "./NWContext";
 import Purchase from "./Purchase";
 
 interface PurchaseViewProps {
   record: InstrumentInput;
+  isAvgPriceRecord: boolean;
 }
 
-export default function PurchaseView({ record }: PurchaseViewProps) {
-  const { instruments, setInstruments }: any = useContext(NWContext);
-  const [isPurchase, setIsPurchase] = useState<number>(1);
+export default function PurchaseView({
+  record,
+  isAvgPriceRecord,
+}: PurchaseViewProps) {
+  const { instruments, setInstruments, selectedCurrency }: any =
+    useContext(NWContext);
   const [avgp, setAvgp] = useState<number>(record.avgp ? record.avgp : 0);
 
   const onChange = (type: string, data: any) => {
@@ -51,36 +54,20 @@ export default function PurchaseView({ record }: PurchaseViewProps) {
 
   return (
     <Row justify="center" gutter={[0, 8]}>
-      <HSwitch
-        value={isPurchase}
-        setter={setIsPurchase}
-        leftText={
-          <LabelWithTooltip
-            label="Avg.Price"
-            info="Average Price will give you approximate results"
-          />
-        }
-        rightText={
-          <LabelWithTooltip
-            label="Purchase"
-            info="Purchase Details will give you accurate results"
-          />
-        }
-      />
       <Col xs={24}>
-        {isPurchase ? (
+        {!isAvgPriceRecord ? (
           <Purchase
             onSave={(pur: any) => onChange("pur", pur)}
             pur={record.pur ? record.pur : []}
             qty={Number(record.qty)}
           />
         ) : (
-          <Row justify="center" gutter={[0, 8]}>
-            <LabelWithTooltip label="Average Price"/>
-            <InputNumber
-              style={{ width: "150px" }}
+          <Row justify="center">
+            <NumberInput
+              pre="Average Price"
               value={avgp}
-              onChange={(val) => setAvgp(val)}
+              changeHandler={setAvgp}
+              currency={selectedCurrency}
             />
           </Row>
         )}

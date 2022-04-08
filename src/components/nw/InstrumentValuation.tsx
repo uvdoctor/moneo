@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Skeleton, Table } from "antd";
+import { Empty, Skeleton, Table } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NWContext, TAB } from "./NWContext";
 import Holding from "./Holding";
@@ -29,8 +29,7 @@ import {
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
 import { calculatePrice } from "./valuationutils";
-import RadioInput from "../form/RadioInput";
-import PurchaseView from "./PurchaseView";
+import InstrumentDetailedView from "./InstrumentDetailedView";
 
 export default function InstrumentValuation() {
   const { userInfo }: any = useContext(AppContext);
@@ -51,7 +50,6 @@ export default function InstrumentValuation() {
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
   const [totalPrevAmt, setTotalPrevAmt] = useState<number>(0);
-  const [view, setView] = useState<string>("Purchase");
   const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
 
   const delRecord = (id: string) =>
@@ -266,24 +264,7 @@ export default function InstrumentValuation() {
   };
 
   const expandedRow = (record: any) => {
-    const options = ["Purchase", "Analysis", "Others"];
-    return (
-      <Row justify="center" gutter={[0, 8]}>
-        <RadioInput
-          options={options}
-          value={view}
-          changeHandler={(val: string) => setView(val)}
-          size="medium"
-        />
-        {view === "Purchase" ? (
-          <Col xs={24}>
-            <PurchaseView record={record}/>
-          </Col>
-        ) : (
-          <></>
-        )}
-      </Row>
-    );
+    return <InstrumentDetailedView record={record} />;
   };
 
   return !loadingInstruments ? (
