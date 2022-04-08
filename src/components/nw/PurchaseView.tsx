@@ -53,8 +53,8 @@ export default function PurchaseView({
   }, [avgp]);
 
   return (
-    <Row justify="center" gutter={[0, 8]}>
-      <Col xs={24}>
+    <Row justify="center">
+      <Col span={24}>
         {!isAvgPriceRecord ? (
           <Purchase
             onSave={(pur: any) => onChange("pur", pur)}
@@ -63,12 +63,14 @@ export default function PurchaseView({
           />
         ) : (
           <Row justify="center">
-            <NumberInput
-              pre="Average Price"
-              value={avgp}
-              changeHandler={setAvgp}
-              currency={selectedCurrency}
-            />
+            <Col>
+              <NumberInput
+                pre="Average Price"
+                value={avgp}
+                changeHandler={setAvgp}
+                currency={selectedCurrency}
+              />
+            </Col>
           </Row>
         )}
       </Col>

@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Empty, InputNumber, Popconfirm, Row, Table } from "antd";
+import {
+  Alert,
+  Button,
+  Col,
+  Empty,
+  InputNumber,
+  Popconfirm,
+  Row,
+  Table,
+} from "antd";
 import { PurchaseInput } from "../../api/goals";
 import { getStr, isMobileDevice } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -58,7 +67,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const type = key ? key : dataIndex;
     return inputType === "number" && record ? (
       <InputNumber
-        style={{ width: '150px' }}
+        style={{ width: "150px" }}
         value={type === "qty" ? qty : amt}
         onChange={(value: any) =>
           type === "qty" ? setQty(value) : setAmt(value)
@@ -81,7 +90,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   useEffect(() => {
     const date = `${year}-${getStr(month)}-${getStr(day)}`;
     if (record) record.date = date;
-  }, [day, month, year])
+  }, [day, month, year]);
 
   useEffect(() => {
     if (record) record.qty = qty;
@@ -191,8 +200,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to cancel?"
-              onConfirm={() => setEditingKey("")}
-            >
+              onConfirm={() => setEditingKey("")}>
               <Button type="link" icon={<CloseOutlined />} />
             </Popconfirm>
           </span>
@@ -206,8 +214,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to delete?"
-              onConfirm={() => deleteEntry(record)}
-            >
+              onConfirm={() => deleteEntry(record)}>
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
@@ -284,8 +291,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}
-      >
+        icon={<PlusOutlined />}>
         Add Purchase Details
       </Button>
       <p>&nbsp;</p>

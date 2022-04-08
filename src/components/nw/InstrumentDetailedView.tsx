@@ -14,7 +14,9 @@ export default function InstrumentDetailedView({
   record,
 }: InstrumentDetailedViewProps) {
   const [view, setView] = useState<string>("Purchase");
-  const [purOption, setPurOption] = useState<string>("avg");
+  const [isAvgPriceOption, setIsAvgPriceOption] = useState<boolean>(
+    !record.pur || !record.pur.length
+  );
 
   return (
     <Row justify="center" gutter={[0, 8]}>
@@ -26,13 +28,15 @@ export default function InstrumentDetailedView({
           <Dropdown
             overlay={
               <Menu>
-                <MenuItem key="avg" onClick={() => setPurOption("avg")}>
+                <MenuItem key="avg" onClick={() => setIsAvgPriceOption(true)}>
                   <LabelWithTooltip
                     label="Average price"
                     info="Get a highly approximate performance figure by entering average price of all the purchases done"
                   />
                 </MenuItem>
-                <MenuItem key="details" onClick={() => setPurOption("details")}>
+                <MenuItem
+                  key="details"
+                  onClick={() => setIsAvgPriceOption(false)}>
                   <LabelWithTooltip
                     label="Buy transactions"
                     info="Get a much more accurate performance figure by entering all relevant buy transactions"
@@ -57,10 +61,7 @@ export default function InstrumentDetailedView({
       </Radio.Group>
       {view === "Purchase" ? (
         <Col xs={24}>
-          <PurchaseView
-            record={record}
-            isAvgPriceRecord={purOption === "avg"}
-          />
+          <PurchaseView record={record} isAvgPriceRecord={isAvgPriceOption} />
         </Col>
       ) : (
         <></>
