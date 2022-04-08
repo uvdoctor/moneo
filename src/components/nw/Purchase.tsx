@@ -313,6 +313,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             }}
             bordered
             // @ts-ignore
+            pagination={purchaseDetails.length < 10 ? false : true}
+            // @ts-ignore
             columns={mergedColumns}
             dataSource={purchaseDetails}
             size="small"
