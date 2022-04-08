@@ -144,12 +144,14 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
       ...record,
     });
     setPurchaseDetails(purchaseDetails);
+    onSave(purchaseDetails);
     setEditingKey("");
   };
 
   const deleteEntry = (record: any) => {
     purchaseDetails.splice(record.key, 1);
     setPurchaseDetails([...purchaseDetails]);
+    onSave(purchaseDetails);
     setEditingKey("");
   };
 
@@ -220,10 +222,6 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     },
   ];
 
-  useEffect(() => {
-    onSave(purchaseDetails);
-  }, [purchaseDetails]);
-
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -256,7 +254,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
       });
     }
     setPurchaseDetails([...purchaseDetails]);
-  }, []);
+  }, [pur]);
 
   const totalqty = () => {
     let totalqty = 0;
@@ -272,17 +270,17 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
         onClick={() => {
           const totalQty = totalqty();
           if (totalQty < qty) {
-            setPurchaseDetails([
+            const purchase = [
               ...purchaseDetails,
               {
                 key: purchaseDetails.length ? purchaseDetails.length : 0,
-                day: 1,
-                month: today.getMonth() - 1,
-                year: today.getFullYear(),
                 amt: 100,
                 qty: qty - totalQty,
+                date: `${today.getFullYear()}-${getStr(today.getMonth() - 1)}-1`
               },
-            ]);
+            ];
+            setPurchaseDetails(purchase)
+            onSave(purchase)
           }
         }}
         icon={<PlusOutlined />}
