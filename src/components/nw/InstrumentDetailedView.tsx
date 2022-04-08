@@ -3,6 +3,7 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import React, { useState } from "react";
 import { InstrumentInput } from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
+import LabelWithTooltip from "../form/LabelWithTooltip";
 import PurchaseView from "./PurchaseView";
 
 interface InstrumentDetailedViewProps {
@@ -26,10 +27,16 @@ export default function InstrumentDetailedView({
             overlay={
               <Menu>
                 <MenuItem key="avg" onClick={() => setPurOption("avg")}>
-                  Average Price
+                  <LabelWithTooltip
+                    label="Average price"
+                    info="Get a highly approximate performance figure by entering average price of all the purchases done"
+                  />
                 </MenuItem>
                 <MenuItem key="details" onClick={() => setPurOption("details")}>
-                  Buy Records
+                  <LabelWithTooltip
+                    label="Buy transactions"
+                    info="Get a much more accurate performance figure by entering all relevant buy transactions"
+                  />
                 </MenuItem>
               </Menu>
             }
@@ -40,7 +47,7 @@ export default function InstrumentDetailedView({
                 border: "none",
                 color: view === "Purchase" ? COLORS.WHITE : COLORS.DEFAULT,
               }}>
-              Purchase Details
+              Purchase Input
             </Button>
           </Dropdown>
         </Radio.Button>
