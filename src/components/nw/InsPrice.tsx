@@ -7,39 +7,69 @@ import {
 } from "../utils";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { COLORS } from "../../CONSTANTS";
+import LabelWithTooltip from "../form/LabelWithTooltip";
 
 interface InsPriceProps {
   price: number;
   currency: string;
   previousPrice: number | null;
   noDecimal?: boolean;
+  noPerCalc?: boolean;
+  info?: string;
 }
 export default function InsPrice({
   price,
   currency,
   previousPrice,
   noDecimal,
+  noPerCalc,
+  info,
 }: InsPriceProps) {
   const getChangeRatio = () =>
     price && previousPrice
-      ? toReadableNumber(Math.abs((price / previousPrice - 1) * 100), 2)
+      ? toReadableNumber(
+          noPerCalc
+            ? Math.abs(previousPrice)
+            : Math.abs((price / previousPrice - 1) * 100),
+          2
+        )
       : 0;
 
   return (
-    <Tooltip title="Today's valuation">
-      <strong>
-        {noDecimal
-          ? toHumanFriendlyCurrency(price, currency)
-          : toCurrency(price, currency, true)}
-      </strong>
+    <>
+      <Tooltip title="Today's valuation">
+        <strong>
+          {noDecimal
+            ? toHumanFriendlyCurrency(price, currency)
+            : toCurrency(price, currency, true)}
+        </strong>
+      </Tooltip>
       {previousPrice && previousPrice !== price ? (
         <span
-          style={{ color: price > previousPrice ? COLORS.GREEN : COLORS.RED }}>
-          &nbsp;
-          {price > previousPrice ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-          {`${getChangeRatio()}%`}
+          style={{
+            color:
+              (noPerCalc && previousPrice > 0) ||
+              (!noPerCalc && price > previousPrice)
+                ? COLORS.GREEN
+                : COLORS.RED,
+          }}>
+          <LabelWithTooltip
+            label={
+              <span>
+                &nbsp;
+                {(noPerCalc && previousPrice > 0) ||
+                (!noPerCalc && price > previousPrice) ? (
+                  <ArrowUpOutlined />
+                ) : (
+                  <ArrowDownOutlined />
+                )}
+                {`${getChangeRatio()}%`}
+              </span>
+            }
+            info={info}
+          />
         </span>
       ) : null}
-    </Tooltip>
+    </>
   );
 }
