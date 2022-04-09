@@ -1,14 +1,13 @@
 import { Button, Col, Dropdown, Menu, Radio, Row } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
 import React, { useContext, useState } from "react";
-import { HoldingInput } from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import { NWContext } from "./NWContext";
 import PurchaseView from "./PurchaseView";
 
 interface HoldingDetailedViewProps {
-  record: HoldingInput;
+  record: any;
   others: any;
 }
 
@@ -78,6 +77,7 @@ export default function HoldingDetailedView({
             isAvgPriceRecord={isAvgPriceOption}
             instruments={preciousMetals}
             setInstruments={setPreciousMetals}
+            isHolding
           />
         </Col>
       ) : (

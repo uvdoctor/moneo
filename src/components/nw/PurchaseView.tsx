@@ -9,19 +9,23 @@ interface PurchaseViewProps {
   isAvgPriceRecord: boolean;
   instruments: Array<any>;
   setInstruments: Function;
+  isHolding?: boolean;
 }
 
 export default function PurchaseView({
   record,
   isAvgPriceRecord,
   instruments,
-  setInstruments
+  setInstruments,
+  isHolding,
 }: PurchaseViewProps) {
   const { selectedCurrency }: any = useContext(NWContext);
   const [avgp, setAvgp] = useState<number>(record.avgp ? record.avgp : 0);
 
   const onChange = (type: string, data: any) => {
-    const index = instruments.findIndex((item: any) => item.id === record.id);
+    let index = isHolding
+      ? record.key
+      : instruments.findIndex((item: any) => item.id === record.id);
     if (index > -1) {
       let purchase: any = [];
       if (type === "pur") {
