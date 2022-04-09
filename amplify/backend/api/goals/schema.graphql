@@ -607,6 +607,7 @@ type Holding {
   ey: Int
   amt: Float
   pur: [Purchase!]
+  avgp: Float
 }
 
 type Instrument {

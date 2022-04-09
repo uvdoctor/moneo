@@ -1007,6 +1007,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       ltdep {
         id
@@ -1031,6 +1032,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       p2p {
         id
@@ -1055,6 +1057,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       loans {
         id
@@ -1079,6 +1082,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       credit {
         id
@@ -1103,6 +1107,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       savings {
         id
@@ -1127,6 +1132,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       property {
         type
@@ -1177,6 +1183,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       pm {
         id
@@ -1201,6 +1208,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       pf {
         id
@@ -1225,6 +1233,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       nps {
         id
@@ -1249,6 +1258,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       crypto {
         id
@@ -1273,6 +1283,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       ins {
         id
@@ -1297,6 +1308,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       other {
         id
@@ -1321,6 +1333,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       angel {
         id
@@ -1345,6 +1358,7 @@ export const getUserHoldings = /* GraphQL */ `
           year
           qty
         }
+        avgp
       }
       createdAt
       updatedAt
@@ -1385,6 +1399,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         ltdep {
           id
@@ -1402,6 +1417,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         p2p {
           id
@@ -1419,6 +1435,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         loans {
           id
@@ -1436,6 +1453,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         credit {
           id
@@ -1453,6 +1471,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         savings {
           id
@@ -1470,6 +1489,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         property {
           type
@@ -1502,6 +1522,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         pm {
           id
@@ -1519,6 +1540,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         pf {
           id
@@ -1536,6 +1558,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         nps {
           id
@@ -1553,6 +1576,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         crypto {
           id
@@ -1570,6 +1594,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         ins {
           id
@@ -1587,6 +1612,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         other {
           id
@@ -1604,6 +1630,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         angel {
           id
@@ -1621,6 +1648,7 @@ export const listUserHoldingss = /* GraphQL */ `
           em
           ey
           amt
+          avgp
         }
         createdAt
         updatedAt

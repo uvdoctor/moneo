@@ -658,6 +658,7 @@ export type HoldingInput = {
   ey?: number | null,
   amt?: number | null,
   pur?: Array< PurchaseInput > | null,
+  avgp?: number | null,
 };
 
 export type PurchaseInput = {
@@ -749,6 +750,7 @@ export type Holding = {
   ey?: number | null,
   amt?: number | null,
   pur?:  Array<Purchase > | null,
+  avgp?: number | null,
 };
 
 export type Purchase = {
@@ -2641,6 +2643,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -2667,6 +2670,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -2693,6 +2697,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -2719,6 +2724,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -2745,6 +2751,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2771,6 +2778,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -2826,6 +2834,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -2852,6 +2861,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -2878,6 +2888,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -2904,6 +2915,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2930,6 +2942,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -2956,6 +2969,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2982,6 +2996,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -3008,6 +3023,7 @@ export type CreateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3049,6 +3065,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -3075,6 +3092,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -3101,6 +3119,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -3127,6 +3146,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -3153,6 +3173,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -3179,6 +3200,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -3234,6 +3256,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -3260,6 +3283,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -3286,6 +3310,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -3312,6 +3337,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -3338,6 +3364,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -3364,6 +3391,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -3390,6 +3418,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -3416,6 +3445,7 @@ export type UpdateUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3457,6 +3487,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -3483,6 +3514,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -3509,6 +3541,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -3535,6 +3568,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -3561,6 +3595,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -3587,6 +3622,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -3642,6 +3678,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -3668,6 +3705,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -3694,6 +3732,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -3720,6 +3759,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -3746,6 +3786,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -3772,6 +3813,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -3798,6 +3840,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -3824,6 +3867,7 @@ export type DeleteUserHoldingsMutation = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -5714,6 +5758,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -5740,6 +5785,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -5766,6 +5812,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -5792,6 +5839,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -5818,6 +5866,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -5844,6 +5893,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -5899,6 +5949,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -5925,6 +5976,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -5951,6 +6003,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -5977,6 +6030,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -6003,6 +6057,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -6029,6 +6084,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -6055,6 +6111,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -6081,6 +6138,7 @@ export type GetUserHoldingsQuery = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -6119,6 +6177,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       ltdep?:  Array< {
         __typename: "Holding",
@@ -6137,6 +6196,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       p2p?:  Array< {
         __typename: "Holding",
@@ -6155,6 +6215,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       loans?:  Array< {
         __typename: "Holding",
@@ -6173,6 +6234,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       credit?:  Array< {
         __typename: "Holding",
@@ -6191,6 +6253,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       savings?:  Array< {
         __typename: "Holding",
@@ -6209,6 +6272,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       property?:  Array< {
         __typename: "Property",
@@ -6243,6 +6307,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       pm?:  Array< {
         __typename: "Holding",
@@ -6261,6 +6326,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       pf?:  Array< {
         __typename: "Holding",
@@ -6279,6 +6345,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       nps?:  Array< {
         __typename: "Holding",
@@ -6297,6 +6364,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       crypto?:  Array< {
         __typename: "Holding",
@@ -6315,6 +6383,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       ins?:  Array< {
         __typename: "Holding",
@@ -6333,6 +6402,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       other?:  Array< {
         __typename: "Holding",
@@ -6351,6 +6421,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       angel?:  Array< {
         __typename: "Holding",
@@ -6369,6 +6440,7 @@ export type ListUserHoldingssQuery = {
         em?: number | null,
         ey?: number | null,
         amt?: number | null,
+        avgp?: number | null,
       } > | null,
       createdAt: string,
       updatedAt: string,
@@ -7550,6 +7622,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -7576,6 +7649,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -7602,6 +7676,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -7628,6 +7703,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -7654,6 +7730,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -7680,6 +7757,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -7735,6 +7813,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -7761,6 +7840,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -7787,6 +7867,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -7813,6 +7894,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -7839,6 +7921,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -7865,6 +7948,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -7891,6 +7975,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -7917,6 +8002,7 @@ export type OnCreateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -7957,6 +8043,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -7983,6 +8070,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -8009,6 +8097,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -8035,6 +8124,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -8061,6 +8151,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -8087,6 +8178,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -8142,6 +8234,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -8168,6 +8261,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -8194,6 +8288,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -8220,6 +8315,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -8246,6 +8342,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -8272,6 +8369,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -8298,6 +8396,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -8324,6 +8423,7 @@ export type OnUpdateUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -8364,6 +8464,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ltdep?:  Array< {
       __typename: "Holding",
@@ -8390,6 +8491,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     p2p?:  Array< {
       __typename: "Holding",
@@ -8416,6 +8518,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     loans?:  Array< {
       __typename: "Holding",
@@ -8442,6 +8545,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     credit?:  Array< {
       __typename: "Holding",
@@ -8468,6 +8572,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -8494,6 +8599,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -8549,6 +8655,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -8575,6 +8682,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     pf?:  Array< {
       __typename: "Holding",
@@ -8601,6 +8709,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -8627,6 +8736,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -8653,6 +8763,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     ins?:  Array< {
       __typename: "Holding",
@@ -8679,6 +8790,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -8705,6 +8817,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     angel?:  Array< {
       __typename: "Holding",
@@ -8731,6 +8844,7 @@ export type OnDeleteUserHoldingsSubscription = {
         year: number,
         qty: number,
       } > | null,
+      avgp?: number | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
