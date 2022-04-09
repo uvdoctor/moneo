@@ -200,8 +200,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to cancel?"
-              onConfirm={() => setEditingKey("")}
-            >
+              onConfirm={() => setEditingKey("")}>
               <Button type="link" icon={<CloseOutlined />} />
             </Popconfirm>
           </span>
@@ -215,8 +214,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to delete?"
-              onConfirm={() => deleteEntry(record)}
-            >
+              onConfirm={() => deleteEntry(record)}>
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
@@ -294,9 +292,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}
-      >
-        Add Purchase Details
+        icon={<PlusOutlined />}>
+        Add buy record
       </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (
@@ -304,7 +301,9 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
           <Col xs={24}>
             <Alert
               type={"error"}
-              message={"Total Purchase Qty should be equal to total qty"}
+              message={
+                "Total quantity bought should be equal to the quantity held"
+              }
             />
           </Col>
         )
