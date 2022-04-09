@@ -1,21 +1,23 @@
 import { Row, Col } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { InstrumentInput } from "../../api/goals";
 import NumberInput from "../form/numberinput";
 import { NWContext } from "./NWContext";
 import Purchase from "./Purchase";
 
 interface PurchaseViewProps {
-  record: InstrumentInput;
+  record: any;
   isAvgPriceRecord: boolean;
+  instruments: Array<any>;
+  setInstruments: Function;
 }
 
 export default function PurchaseView({
   record,
   isAvgPriceRecord,
+  instruments,
+  setInstruments
 }: PurchaseViewProps) {
-  const { instruments, setInstruments, selectedCurrency }: any =
-    useContext(NWContext);
+  const { selectedCurrency }: any = useContext(NWContext);
   const [avgp, setAvgp] = useState<number>(record.avgp ? record.avgp : 0);
 
   const onChange = (type: string, data: any) => {

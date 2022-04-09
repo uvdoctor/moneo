@@ -23,6 +23,7 @@ import Comment from "./Comment";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import MemberInput from "./MemberInput";
 import DeleteButton from "./DeleteButton";
+import HoldingDetailedView from "./HoldingDetailedView";
 require("./ListHoldings.less");
 
 interface ListHoldingsProps {
@@ -245,9 +246,13 @@ export default function ListHoldings({
       className="list-holdings"
       columns={columns}
       expandable={
-        expandedColumns.length
-          ? {
-              expandedRowRender: (record) => expandedRow(record.key),
+        expandedColumns.length ?
+         {
+              expandedRowRender: (record) => {
+                return childTab === PM ? <HoldingDetailedView record={data[record.key]} others={expandedRow(record.key)}/> : 
+                expandedRow(record.key)
+              }
+
             }
           : {}
       }

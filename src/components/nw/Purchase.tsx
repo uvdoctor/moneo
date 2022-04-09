@@ -200,7 +200,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to cancel?"
-              onConfirm={() => setEditingKey("")}>
+              onConfirm={() => setEditingKey("")}
+            >
               <Button type="link" icon={<CloseOutlined />} />
             </Popconfirm>
           </span>
@@ -214,7 +215,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             />
             <Popconfirm
               title="Sure to delete?"
-              onConfirm={() => deleteEntry(record)}>
+              onConfirm={() => deleteEntry(record)}
+            >
               <Button
                 type="link"
                 style={{ marginRight: 8 }}
@@ -282,6 +284,9 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                 key: purchaseDetails.length ? purchaseDetails.length : 0,
                 amt: 100,
                 qty: qty - totalQty,
+                date: `${today.getFullYear()}-${getStr(
+                  today.getMonth() - 1
+                )}-1`,
               },
             ];
             setEditingKey(purchaseDetails.length ? purchaseDetails.length : 0);
@@ -289,7 +294,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}>
+        icon={<PlusOutlined />}
+      >
         Add Purchase Details
       </Button>
       <p>&nbsp;</p>

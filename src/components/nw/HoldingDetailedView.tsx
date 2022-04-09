@@ -1,20 +1,22 @@
 import { Button, Col, Dropdown, Menu, Radio, Row } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
 import React, { useContext, useState } from "react";
-import { InstrumentInput } from "../../api/goals";
+import { HoldingInput } from "../../api/goals";
 import { COLORS } from "../../CONSTANTS";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import { NWContext } from "./NWContext";
 import PurchaseView from "./PurchaseView";
 
-interface InstrumentDetailedViewProps {
-  record: InstrumentInput;
+interface HoldingDetailedViewProps {
+  record: HoldingInput;
+  others: any;
 }
 
-export default function InstrumentDetailedView({
+export default function HoldingDetailedView({
   record,
-}: InstrumentDetailedViewProps) {
-  const { instruments, setInstruments }: any = useContext(NWContext);
+  others,
+}: HoldingDetailedViewProps) {
+  const { preciousMetals, setPreciousMetals }: any = useContext(NWContext);
   const [view, setView] = useState<string>("Purchase");
   const [isAvgPriceOption, setIsAvgPriceOption] = useState<boolean>(
     !record.pur || !record.pur.length
@@ -65,8 +67,8 @@ export default function InstrumentDetailedView({
             </Button>
           </Dropdown>
         </Radio.Button>
-        <Radio.Button key="Analysis" value="Analysis">
-          Analysis
+        <Radio.Button key="Others" value="Others">
+          Others
         </Radio.Button>
       </Radio.Group>
       {view === "Purchase" ? (
@@ -74,12 +76,12 @@ export default function InstrumentDetailedView({
           <PurchaseView
             record={record}
             isAvgPriceRecord={isAvgPriceOption}
-            instruments={instruments}
-            setInstruments={setInstruments}
+            instruments={preciousMetals}
+            setInstruments={setPreciousMetals}
           />
         </Col>
       ) : (
-        <></>
+        <Col xs={24}>{others}</Col>
       )}
     </Row>
   );
