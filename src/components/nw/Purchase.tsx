@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Col,
-  Empty,
-  InputNumber,
-  Popconfirm,
-  Row,
-  Table,
-} from "antd";
+import { Alert, Button, Col, Empty, Popconfirm, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
-import { getStr, isMobileDevice } from "../utils";
+import { getStr, isMobileDevice, toCurrency, toReadableNumber } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import DateInput from "../form/DateInput";
 import {
@@ -20,11 +11,13 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import NumberInput from "../form/numberinput";
 const today = new Date();
 
 interface PurchaseProps {
   qty: number;
   pur: Array<PurchaseInput>;
+  currency: string;
   onSave: Function;
 }
 
@@ -42,6 +35,7 @@ interface EditableCellProps {
   inputType: "number" | "date";
   record: Item;
   index: number;
+  currency: string;
   children: React.ReactNode;
 }
 
@@ -52,6 +46,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   inputType,
   record,
   index,
+  currency,
   children,
   ...restProps
 }) => {
@@ -66,12 +61,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const inputNode = (inputType: string, key?: string) => {
     const type = key ? key : dataIndex;
     return inputType === "number" && record ? (
-      <InputNumber
-        style={{ width: "150px" }}
+      <NumberInput
+        pre=""
         value={type === "qty" ? qty : amt}
-        onChange={(value: any) =>
-          type === "qty" ? setQty(value) : setAmt(value)
-        }
+        changeHandler={type === "qty" ? setQty : setAmt}
+        currency={type === "qty" ? "" : currency}
+        noRangeFactor
       />
     ) : (
       <DateInput
@@ -106,11 +101,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
         isMobileDevice(fsb) && record ? (
           <Row gutter={[0, 8]}>
             <Col xs={24}>
-              <label>Qty: </label>
+              <label>Quantity: </label>
               {inputNode("number", "qty")}
             </Col>
             <Col xs={24}>
-              <label>Amt: </label>
+              <label>Amount: </label>
               {inputNode("number", "amt")}
             </Col>
             <Col xs={24}>{inputNode("date")}</Col>
@@ -121,11 +116,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
       ) : isMobileDevice(fsb) && record ? (
         <>
           <label>
-            Qty: <strong>{record.qty}</strong>
+            Quantity: <strong>{toReadableNumber(record.qty, 2)}</strong>
           </label>
           <br />
           <label>
-            Amt: <strong>{record.amt}</strong>
+            Amount: <strong>{toCurrency(record.amt, currency)}</strong>
           </label>{" "}
           <br />
           <label>
@@ -140,7 +135,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
-export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
+export default function Purchase({
+  pur,
+  qty,
+  currency,
+  onSave,
+}: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
   const [editingKey, setEditingKey] = useState<string>("");
   const fsb = useFullScreenBrowser();
@@ -166,7 +166,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   const isEditing = (record: Item) => record.key === editingKey;
   const columns = [
     {
-      title: isMobileDevice(fsb) ? "Details" : "Qty",
+      title: isMobileDevice(fsb) ? "Details" : "Quantity",
       dataIndex: "qty",
       key: "qty",
       editable: true,
@@ -239,6 +239,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
         inputType: col.dataIndex === "date" ? "date" : "number",
         dataIndex: col.dataIndex,
         title: col.title,
+        currency: currency,
         editing: isEditing(record),
         responsive: col.responsive,
       }),
@@ -293,7 +294,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
           }
         }}
         icon={<PlusOutlined />}>
-        Add buy record
+        Add buy transaction
       </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (

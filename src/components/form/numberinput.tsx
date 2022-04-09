@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getRangeFactor,
   parseNumber,
@@ -30,7 +30,7 @@ export default function NumberInput({
   pre,
   post,
   min = 0,
-  max = 100000000,
+  max = Number.MAX_SAFE_INTEGER,
   value,
   currency,
   unit,
@@ -39,9 +39,8 @@ export default function NumberInput({
   noRangeFactor = currency ? false : true,
   addBefore,
   disabled,
-  autoFocus
+  autoFocus,
 }: NumberInputProps) {
-  const inputRef = useRef(null);
   const [rangeFactor, setRangeFactor] = useState<number>(
     noRangeFactor || !currency ? 1 : getRangeFactor(currency)
   );
@@ -54,7 +53,9 @@ export default function NumberInput({
     let maxNum = max * rangeFactor;
     let stepNum = step * rangeFactor;
     setMinNum(minNum);
-    setMaxNum(maxNum);
+    setMaxNum(
+      maxNum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER : maxNum
+    );
     setStepNum(stepNum);
   }, [rangeFactor, min, max]);
 
@@ -66,7 +67,6 @@ export default function NumberInput({
 
   const inputConfig = {
     autoFocus,
-    ref: inputRef,
     value,
     min: minNum,
     max: maxNum,
@@ -81,7 +81,7 @@ export default function NumberInput({
     parser: (val: string) =>
       currency
         ? parseFloat(parseNumber(val as string, currency))
-        : parseFloat(val as string),
+        : parseFloat(parseNumber(val as string, null)),
     onPressEnter: (e: any) => {
       e.preventDefault();
       //@ts-ignore
@@ -103,15 +103,12 @@ export default function NumberInput({
     },
   };
 
+  console.log("Input config max: ", inputConfig.max);
   return (
     <>
       <LabelWithTooltip label={pre} info={info} />
       {/*@ts-ignore*/}
-      <InputNumber
-        {...inputConfig}
-        key={currency ? `${currency}-${pre}` : pre}
-        disabled={disabled}
-      />
+      <InputNumber {...inputConfig} disabled={disabled} />
       {currency && value > 100000
         ? `${value % 1000 ? " ~ " : " "}${toHumanFriendlyCurrency(
             value,
