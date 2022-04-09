@@ -282,11 +282,9 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                 key: purchaseDetails.length ? purchaseDetails.length : 0,
                 amt: 100,
                 qty: qty - totalQty,
-                date: `${today.getFullYear()}-${getStr(
-                  today.getMonth() - 1
-                )}-1`,
               },
             ];
+            setEditingKey(purchaseDetails.length ? purchaseDetails.length : 0);
             setPurchaseDetails(purchase);
             onSave(purchase);
           }

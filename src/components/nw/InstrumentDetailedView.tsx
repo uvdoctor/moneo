@@ -27,7 +27,7 @@ export default function InstrumentDetailedView({
         <Radio.Button key="Purchase" value="Purchase">
           <Dropdown
             overlay={
-              <Menu>
+              record?.pur?.length ? <></> : <Menu>
                 <MenuItem key="avg" onClick={() => setIsAvgPriceOption(true)}>
                   <LabelWithTooltip
                     label="Average price"
