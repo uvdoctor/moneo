@@ -204,7 +204,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                   noDecimal
                   info={
                     returnPer
-                      ? `Based on the purchase input, your investment of about ${toHumanFriendlyCurrency(
+                      ? `Based on the purchase input, your investment of ${toHumanFriendlyCurrency(
                           buyTotal,
                           holding.curr
                         )} has ${
