@@ -203,7 +203,8 @@ export default function ListHoldings({
         gutter={[
           { xs: 0, sm: 10, md: 30 },
           { xs: 20, sm: 10, md: 20 },
-        ]}>
+        ]}
+      >
         {expandedColumns.map((item: any) => {
           return (
             dataSource[item] && (
@@ -246,13 +247,18 @@ export default function ListHoldings({
       className="list-holdings"
       columns={columns}
       expandable={
-        expandedColumns.length ?
-         {
+        expandedColumns.length
+          ? {
               expandedRowRender: (record) => {
-                return childTab === PM ? <HoldingDetailedView record={data[record.key]} others={expandedRow(record.key)}/> : 
-                expandedRow(record.key)
-              }
-
+                return childTab === PM ? (
+                  <HoldingDetailedView
+                    record={record}
+                    others={expandedRow(record.key)}
+                  />
+                ) : (
+                  expandedRow(record.key)
+                );
+              },
             }
           : {}
       }
