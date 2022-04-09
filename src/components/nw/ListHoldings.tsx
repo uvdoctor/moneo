@@ -252,7 +252,7 @@ export default function ListHoldings({
               expandedRowRender: (record) => {
                 return childTab === PM ? (
                   <HoldingDetailedView
-                    record={record}
+                    record={{ key: record.key, ...data[record.key] }}
                     others={expandedRow(record.key)}
                   />
                 ) : (

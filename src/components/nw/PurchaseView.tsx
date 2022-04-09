@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import NumberInput from "../form/numberinput";
 import { NWContext } from "./NWContext";
 import Purchase from "./Purchase";
@@ -20,7 +20,6 @@ export default function PurchaseView({
   isHolding,
 }: PurchaseViewProps) {
   const { selectedCurrency }: any = useContext(NWContext);
-  const [avgp, setAvgp] = useState<number>(record.avgp ? record.avgp : 0);
 
   const onChange = (type: string, data: any) => {
     let index = isHolding
@@ -41,22 +40,13 @@ export default function PurchaseView({
           });
         });
         instruments[index].pur = purchase;
-        instruments[index].avgp = purchase.length ? 0 : avgp;
+        instruments[index].avgp = purchase.length ? 0 : record.avgp;
       } else if (type === "avgp") {
         instruments[index].avgp = data;
       }
       setInstruments([...instruments]);
     }
   };
-
-  useEffect(() => {
-    if (record?.pur?.length) {
-      record.avgp = 0;
-    } else {
-      record.avgp = avgp;
-      onChange("avgp", avgp);
-    }
-  }, [avgp]);
 
   return (
     <Row justify="center">
@@ -71,9 +61,17 @@ export default function PurchaseView({
           <Row justify="center">
             <Col>
               <NumberInput
+              autoFocus
                 pre="Average Price"
-                value={avgp}
-                changeHandler={setAvgp}
+                value={record.avgp ? record.avgp : 0}
+                changeHandler={(val: any)=>{
+                  if (record?.pur?.length) {
+                    record.avgp = 0;
+                  } else {
+                    record.avgp = val;
+                    onChange("avgp", val);
+                  }
+                }}
                 currency={selectedCurrency}
               />
             </Col>

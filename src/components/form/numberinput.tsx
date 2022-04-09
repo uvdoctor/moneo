@@ -22,6 +22,7 @@ interface NumberInputProps {
   noRangeFactor?: boolean;
   addBefore?: any;
   disabled?: boolean;
+  autoFocus?: boolean;
 }
 
 export default function NumberInput({
@@ -38,6 +39,7 @@ export default function NumberInput({
   noRangeFactor = currency ? false : true,
   addBefore,
   disabled,
+  autoFocus
 }: NumberInputProps) {
   const inputRef = useRef(null);
   const [rangeFactor, setRangeFactor] = useState<number>(
@@ -63,6 +65,7 @@ export default function NumberInput({
   }, [currency]);
 
   const inputConfig = {
+    autoFocus,
     ref: inputRef,
     value,
     min: minNum,
