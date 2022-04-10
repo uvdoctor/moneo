@@ -76,7 +76,7 @@ export default function DateInput({
           : getMonthEndDate(),
     },
     date: {
-      format: "yyyy-MM-dd",
+      format: "dd-MMM-yyyy",
       date:
         startMonthValue && startYearValue && startDateValue
           ? `${startYearValue}-${startMonthValue}-${startDateValue}`
