@@ -253,7 +253,7 @@ export default function ListHoldings({
               expandedRowRender: (record) => {
                 return childTab === PM ? (
                   <InstrumentDetailedView
-                    record={{ key: record.key, ...data[record.key] }}
+                    record={{ key: record.key, ...preciousMetals[record.key] }}
                     data={preciousMetals}
                     dataHandler={setPreciousMetals}
                     otherView={expandedRow(record.key)}
