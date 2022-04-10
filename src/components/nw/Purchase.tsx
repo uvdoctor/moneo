@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Alert, Button, Col, Empty, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
-import { getStr, isMobileDevice, toHumanFriendlyCurrency } from "../utils";
+import { isMobileDevice, toHumanFriendlyCurrency } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import DateInput from "../form/DateInput";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
@@ -216,9 +216,9 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                 key: purchaseDetails.length ? purchaseDetails.length : 0,
                 amt: 0,
                 qty: qty - totalQty,
-                date: `${today.getFullYear()}-${getStr(
-                  today.getMonth() - 1
-                )}-1`,
+                day: today.getDate(),
+                month: today.getMonth(),
+                year: today.getFullYear(),
               },
             ];
             setPurchaseDetails(purchase);
