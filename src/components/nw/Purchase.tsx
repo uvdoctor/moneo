@@ -294,7 +294,7 @@ export default function Purchase({
           }
         }}
         icon={<PlusOutlined />}>
-        Add buy transaction
+        Add transaction
       </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (
