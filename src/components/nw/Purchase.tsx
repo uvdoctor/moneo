@@ -76,7 +76,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
       <NumberInput
         pre={pre ? pre : ""}
         value={type === "qty" ? qty : amt}
-        changeHandler={type === "qty" ? setQty : setAmt}
+        autoFocus
+        changeHandler={(val: any) => {
+          if (record) {
+            if (type === "qty") {
+              setQty(val);
+              record.qty = qty;
+            } else {
+              setAmt(val);
+              record.amt = amt;
+            }
+            save(record);
+          }
+        }}
         currency={type === "qty" ? "" : selectedCurrency}
         noRangeFactor
       />
@@ -95,7 +107,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       record && (
         <span>
           <label>
-            {toHumanFriendlyCurrency(record.qty * record.amt, "INR")}
+            {toHumanFriendlyCurrency(record.qty * record.amt, selectedCurrency)}
           </label>
           <Button
             type="link"
@@ -116,20 +128,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
       save(record);
     }
   }, [day, month, year]);
-
-  useEffect(() => {
-    if (record) {
-      record.qty = qty;
-      save(record);
-    }
-  }, [qty]);
-
-  useEffect(() => {
-    if (record) {
-      record.amt = amt;
-      save(record);
-    }
-  }, [amt]);
 
   return (
     <td {...restProps}>
@@ -238,7 +236,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}>
+        icon={<PlusOutlined />}
+      >
         Add transaction
       </Button>
       <p>&nbsp;</p>
