@@ -21,8 +21,9 @@ export default function Purchase({ record, data, dataHandler }: PurchaseProps) {
   const { selectedCurrency }: any = useContext(NWContext);
 
   const deleteEntry = (record: any) => {
-    purchaseDetails.splice(record.key, 1);
-    setPurchaseDetails([...purchaseDetails]);
+    setPurchaseDetails([
+      ...purchaseDetails.filter((item: PurchaseInput) => item !== record),
+    ]);
   };
 
   useEffect(() => {
