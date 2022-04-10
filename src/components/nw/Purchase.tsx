@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Alert, Button, Col, Empty, Row, Table } from "antd";
+import { Alert, Button, Col, Divider, Empty, List, Row } from "antd";
 import { PurchaseInput } from "../../api/goals";
 import { toHumanFriendlyCurrency } from "../utils";
 import DateInput from "../form/DateInput";
@@ -33,91 +33,6 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     setPurchaseDetails([...purchaseDetails]);
     onSave(purchaseDetails);
   };
-
-  const columns = [
-    {
-      title: "Transaction",
-      key: "txn",
-      render: (record: any) => {
-        return (
-          <Row justify="space-between">
-            <Col xs={12} lg={6}>
-              <NumberInput
-                pre="Bought"
-                value={record?.qty}
-                autoFocus
-                changeHandler={(val: any) => {
-                  if (record) {
-                    record.qty = val;
-                    save(record);
-                  }
-                }}
-                noRangeFactor
-                inline
-              />
-            </Col>
-            <Col xs={12} lg={6}>
-              <DateInput
-                title="on"
-                startMonthHandler={(val: any) => {
-                  if (record) {
-                    record.month = val;
-                    save(record);
-                  }
-                }}
-                startYearHandler={(val: any) => {
-                  if (record) {
-                    record.year = val;
-                    save(record);
-                  }
-                }}
-                startDateHandler={(val: any) => {
-                  if (record) {
-                    record.day = val;
-                    save(record);
-                  }
-                }}
-                startDateValue={record?.day}
-                startMonthValue={record?.month}
-                startYearValue={record?.year}
-                size="middle"
-                inline
-              />
-            </Col>
-            <Col xs={12} lg={6}>
-              <NumberInput
-                pre="at price of "
-                value={record?.amt || 0}
-                autoFocus
-                changeHandler={(val: any) => {
-                  if (record) {
-                    record.amt = val;
-                    save(record);
-                  }
-                }}
-                currency={selectedCurrency}
-                noRangeFactor
-                inline
-              />
-            </Col>
-            <Col xs={12} lg={6}>
-              {`Total ${toHumanFriendlyCurrency(
-                record.qty * record.amt,
-                selectedCurrency
-              )}`}
-              <Button
-                type="link"
-                danger
-                style={{ marginRight: 8 }}
-                icon={<DeleteOutlined />}
-                onClick={() => deleteEntry(record)}
-              />
-            </Col>
-          </Row>
-        );
-      },
-    },
-  ];
 
   useEffect(() => {
     let purchaseDetails: Array<any> = [];
@@ -158,7 +73,8 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}>
+        icon={<PlusOutlined />}
+      >
         Add transaction
       </Button>
       <p>&nbsp;</p>
@@ -178,16 +94,88 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
       )}
       <Col xs={24}>
         {purchaseDetails.length ? (
-          <Table
-            className="list-holdings"
-            bordered
-            // @ts-ignore
-            pagination={purchaseDetails.length < 10 ? false : true}
-            // @ts-ignore
-            columns={columns}
+          <List
+            itemLayout="horizontal"
             dataSource={purchaseDetails}
-            columnTitle={null}
-            size="small"
+            renderItem={(record: any) => (
+              <>
+                <Row justify="space-between">
+                  <Col xs={12} lg={6}>
+                    <NumberInput
+                      pre="Bought"
+                      value={record?.qty}
+                      autoFocus
+                      changeHandler={(val: any) => {
+                        if (record) {
+                          record.qty = val;
+                          save(record);
+                        }
+                      }}
+                      noRangeFactor
+                      // inline
+                    />
+                  </Col>
+                  <Col xs={12} lg={6}>
+                    <DateInput
+                      title="on"
+                      startMonthHandler={(val: any) => {
+                        if (record) {
+                          record.month = val;
+                          save(record);
+                        }
+                      }}
+                      startYearHandler={(val: any) => {
+                        if (record) {
+                          record.year = val;
+                          save(record);
+                        }
+                      }}
+                      startDateHandler={(val: any) => {
+                        if (record) {
+                          record.day = val;
+                          save(record);
+                        }
+                      }}
+                      startDateValue={record?.day}
+                      startMonthValue={record?.month}
+                      startYearValue={record?.year}
+                      size="middle"
+                      inline
+                    />
+                  </Col>
+                  <Col xs={12} lg={6}>
+                    <NumberInput
+                      pre="at price of "
+                      value={record?.amt || 0}
+                      autoFocus
+                      changeHandler={(val: any) => {
+                        if (record) {
+                          record.amt = val;
+                          save(record);
+                        }
+                      }}
+                      currency={selectedCurrency}
+                      noRangeFactor
+                      // inline
+                    />
+                  </Col>
+                  <Col xs={12} lg={6}>
+                    {`Total ${toHumanFriendlyCurrency(
+                      record.qty * record.amt,
+                      selectedCurrency
+                    )}`}
+                    <Button
+                      type="link"
+                      danger
+                      style={{ marginRight: 8 }}
+                      icon={<DeleteOutlined />}
+                      onClick={() => deleteEntry(record)}
+                    />
+                  </Col>
+                </Row>
+                <Divider />
+              </>
+            )}
           />
         ) : (
           <Empty description={<p>No data found.</p>} />
