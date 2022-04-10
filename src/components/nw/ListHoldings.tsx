@@ -23,7 +23,7 @@ import Comment from "./Comment";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import MemberInput from "./MemberInput";
 import DeleteButton from "./DeleteButton";
-import HoldingDetailedView from "./HoldingDetailedView";
+import InstrumentDetailedView from "./InstrumentDetailedView";
 require("./ListHoldings.less");
 
 interface ListHoldingsProps {
@@ -46,6 +46,8 @@ export default function ListHoldings({
     childTab,
     fxRates,
     familyOptions,
+    preciousMetals,
+    setPreciousMetals,
   }: any = useContext(NWContext);
   const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
   const [dataSource, setDataSource] = useState<Array<any>>([]);
@@ -203,8 +205,7 @@ export default function ListHoldings({
         gutter={[
           { xs: 0, sm: 10, md: 30 },
           { xs: 20, sm: 10, md: 20 },
-        ]}
-      >
+        ]}>
         {expandedColumns.map((item: any) => {
           return (
             dataSource[item] && (
@@ -251,9 +252,12 @@ export default function ListHoldings({
           ? {
               expandedRowRender: (record) => {
                 return childTab === PM ? (
-                  <HoldingDetailedView
+                  <InstrumentDetailedView
                     record={{ key: record.key, ...data[record.key] }}
-                    others={expandedRow(record.key)}
+                    data={preciousMetals}
+                    dataHandler={setPreciousMetals}
+                    otherView={expandedRow(record.key)}
+                    isHolding
                   />
                 ) : (
                   expandedRow(record.key)

@@ -264,7 +264,14 @@ export default function InstrumentValuation() {
   };
 
   const expandedRow = (record: any) => {
-    return <InstrumentDetailedView record={record} />;
+    return (
+      <InstrumentDetailedView
+        data={instruments}
+        dataHandler={setInstruments}
+        record={record}
+        hasAnalysis
+      />
+    );
   };
 
   return !loadingInstruments ? (

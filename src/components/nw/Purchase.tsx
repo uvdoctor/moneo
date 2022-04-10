@@ -248,9 +248,8 @@ export default function Purchase({
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}
-      >
-        Add buy transaction
+        icon={<PlusOutlined />}>
+        Add transaction
       </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (
