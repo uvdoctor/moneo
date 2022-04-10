@@ -77,18 +77,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         pre={pre ? pre : ""}
         value={type === "qty" ? qty : amt}
         autoFocus
-        changeHandler={(val: any) => {
-          if (record) {
-            if (type === "qty") {
-              setQty(val);
-              record.qty = qty;
-            } else {
-              setAmt(val);
-              record.amt = amt;
-            }
-            save(record);
-          }
-        }}
+        changeHandler={type === "qty" ? setQty : setAmt}
         currency={type === "qty" ? "" : selectedCurrency}
         noRangeFactor
       />
@@ -120,6 +109,20 @@ const EditableCell: React.FC<EditableCellProps> = ({
       )
     );
   };
+
+  useEffect(() => {
+    if (record) {
+      record.qty = qty;
+      save(record);
+    }
+  }, [qty]);
+
+  useEffect(() => {
+    if (record) {
+      record.amt = amt;
+      save(record);
+    }
+  }, [amt]);
 
   useEffect(() => {
     const date = `${year}-${getStr(month)}-${getStr(day)}`;
