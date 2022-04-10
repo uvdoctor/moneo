@@ -103,7 +103,6 @@ export default function NumberInput({
     },
   };
 
-  console.log("Input config max: ", inputConfig.max);
   return (
     <>
       <LabelWithTooltip label={pre} info={info} />
