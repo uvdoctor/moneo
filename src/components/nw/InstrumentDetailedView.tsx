@@ -41,7 +41,7 @@ export default function InstrumentDetailedView({
             isHolding={isHolding}
           />
         ) : view === OTHER && otherView ? (
-          { otherView }
+          <>{otherView}</>
         ) : hasAnalysis ? (
           <></>
         ) : null}
