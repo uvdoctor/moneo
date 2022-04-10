@@ -273,6 +273,7 @@ export default function ListHoldings({
                     otherView={expandedRow(record.key)}
                     purChange={purDetailsChanged}
                     purChangeHandler={setPurDetailsChanged}
+                    unit="grams"
                   />
                 ) : (
                   expandedRow(record.key)

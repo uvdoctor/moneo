@@ -1,6 +1,6 @@
-import { InputNumber } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import LabelWithTooltip from "../form/LabelWithTooltip";
+import { Col, Row } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import NumberInput from "../form/numberinput";
 import InsPrice from "./InsPrice";
 import { TAB, NWContext } from "./NWContext";
 import { getCommodityRate, getCryptoRate, initializeNPSData } from "./nwutils";
@@ -34,7 +34,10 @@ export default function QuantityWithRate({
       } else return { price: 0, prev: 0 };
     }
     if (childTab === TAB.CRYPTO) {
-      return { price: await getCryptoRate(name, selectedCurrency, fxRates), prev: 0 };
+      return {
+        price: await getCryptoRate(name, selectedCurrency, fxRates),
+        prev: 0,
+      };
     }
     return {
       price: await getCommodityRate(subtype, name, selectedCurrency, fxRates),
@@ -56,22 +59,25 @@ export default function QuantityWithRate({
   }, [name, subtype]);
 
   return (
-    <Fragment>
-      {pre && <LabelWithTooltip label={pre} info={info} />}
-      <InputNumber
-        value={quantity}
-        onChange={(quantity: number) => onChange(quantity)}
-        min={0}
-        max={100000}
-        step={0.1}
-        size="middle"
-      />
-      {` ${childTab === TAB.PM ? ` grams` : ""} x `}
-      <InsPrice
-        price={rate}
-        previousPrice={prevRate}
-        currency={selectedCurrency}
-      />
-    </Fragment>
+    <Row align="middle">
+      <Col>
+        <NumberInput
+          pre={pre}
+          value={quantity}
+          changeHandler={onChange}
+          step={0.1}
+          info={info}
+          unit={childTab === TAB.PM ? "grams" : ""}
+        />
+      </Col>
+      <Col>&nbsp;x&nbsp;</Col>
+      <Col>
+        <InsPrice
+          price={rate}
+          previousPrice={prevRate}
+          currency={selectedCurrency}
+        />
+      </Col>
+    </Row>
   );
 }

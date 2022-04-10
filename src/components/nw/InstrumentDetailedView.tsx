@@ -12,6 +12,7 @@ interface InstrumentDetailedViewProps {
   hasAnalysis?: boolean;
   purChange?: boolean;
   purChangeHandler?: Function;
+  unit?: string;
 }
 
 export default function InstrumentDetailedView({
@@ -22,6 +23,7 @@ export default function InstrumentDetailedView({
   hasAnalysis,
   purChange,
   purChangeHandler,
+  unit,
 }: InstrumentDetailedViewProps) {
   const PURCHASE = "Buy Transactions";
   const ANALYSIS = "Analysis";
@@ -44,6 +46,7 @@ export default function InstrumentDetailedView({
                 record={record}
                 purChange={purChange}
                 purChangeHandler={purChangeHandler}
+                unit={unit}
               />
             </Col>
           </Row>

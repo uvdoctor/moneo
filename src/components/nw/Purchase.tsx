@@ -14,6 +14,7 @@ interface PurchaseProps {
   dataHandler: Function;
   purChange?: boolean;
   purChangeHandler?: Function;
+  unit?: string;
 }
 
 export default function Purchase({
@@ -22,6 +23,7 @@ export default function Purchase({
   dataHandler,
   purChange,
   purChangeHandler,
+  unit,
 }: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<Array<PurchaseInput>>(
     record?.pur ? record.pur : []
@@ -100,6 +102,7 @@ export default function Purchase({
                       pre="Bought"
                       value={record?.qty}
                       autoFocus
+                      unit={unit ? unit : ""}
                       changeHandler={(val: any) => {
                         if (record) {
                           record.qty = val;
