@@ -607,7 +607,6 @@ type Holding {
   ey: Int
   amt: Float
   pur: [Purchase!]
-  avgp: Float
 }
 
 type Instrument {
@@ -616,7 +615,6 @@ type Instrument {
   exchg: String
   qty: Float!
   pur: [Purchase!]
-  avgp: Float
   fId: String!
   curr: String!
   type: AssetType

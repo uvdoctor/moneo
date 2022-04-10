@@ -522,7 +522,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ltdep {
         id
@@ -547,7 +546,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       p2p {
         id
@@ -572,7 +570,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       loans {
         id
@@ -597,7 +594,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       credit {
         id
@@ -622,7 +618,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       savings {
         id
@@ -647,7 +642,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       property {
         type
@@ -698,7 +692,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pm {
         id
@@ -723,7 +716,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pf {
         id
@@ -748,7 +740,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       nps {
         id
@@ -773,7 +764,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       crypto {
         id
@@ -798,7 +788,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ins {
         id
@@ -823,7 +812,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       other {
         id
@@ -848,7 +836,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       angel {
         id
@@ -873,7 +860,6 @@ export const createUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       createdAt
       updatedAt
@@ -911,7 +897,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ltdep {
         id
@@ -936,7 +921,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       p2p {
         id
@@ -961,7 +945,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       loans {
         id
@@ -986,7 +969,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       credit {
         id
@@ -1011,7 +993,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       savings {
         id
@@ -1036,7 +1017,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       property {
         type
@@ -1087,7 +1067,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pm {
         id
@@ -1112,7 +1091,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pf {
         id
@@ -1137,7 +1115,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       nps {
         id
@@ -1162,7 +1139,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       crypto {
         id
@@ -1187,7 +1163,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ins {
         id
@@ -1212,7 +1187,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       other {
         id
@@ -1237,7 +1211,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       angel {
         id
@@ -1262,7 +1235,6 @@ export const updateUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       createdAt
       updatedAt
@@ -1300,7 +1272,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ltdep {
         id
@@ -1325,7 +1296,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       p2p {
         id
@@ -1350,7 +1320,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       loans {
         id
@@ -1375,7 +1344,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       credit {
         id
@@ -1400,7 +1368,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       savings {
         id
@@ -1425,7 +1392,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       property {
         type
@@ -1476,7 +1442,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pm {
         id
@@ -1501,7 +1466,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       pf {
         id
@@ -1526,7 +1490,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       nps {
         id
@@ -1551,7 +1514,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       crypto {
         id
@@ -1576,7 +1538,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       ins {
         id
@@ -1601,7 +1562,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       other {
         id
@@ -1626,7 +1586,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       angel {
         id
@@ -1651,7 +1610,6 @@ export const deleteUserHoldings = /* GraphQL */ `
           year
           qty
         }
-        avgp
       }
       createdAt
       updatedAt
@@ -1678,7 +1636,6 @@ export const createUserIns = /* GraphQL */ `
           year
           qty
         }
-        avgp
         fId
         curr
         type
@@ -1717,7 +1674,6 @@ export const updateUserIns = /* GraphQL */ `
           year
           qty
         }
-        avgp
         fId
         curr
         type
@@ -1756,7 +1712,6 @@ export const deleteUserIns = /* GraphQL */ `
           year
           qty
         }
-        avgp
         fId
         curr
         type

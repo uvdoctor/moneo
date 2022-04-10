@@ -78,7 +78,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   };
 
   useEffect(() => {
-    if (!total || (!holding.pur && !holding.avgp)) {
+    if (!total || !holding.pur) {
       setReturnPer(0);
       setBuyTotal(0);
       setAnnualReturnPer(0);
@@ -104,14 +104,12 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
         });
         annualReturnPer = calculateAnnualReturn(cfs);
       }
-    } else if (holding.avgp) {
-      buyTotal = holding.qty * holding.avgp;
     }
     if (buyTotal) returnPer = (total / buyTotal - 1) * 100;
     setBuyTotal(buyTotal);
     setReturnPer(returnPer);
     setAnnualReturnPer(annualReturnPer);
-  }, [total, holding.pur, holding.avgp]);
+  }, [total, holding.pur]);
 
   return (
     <Row
