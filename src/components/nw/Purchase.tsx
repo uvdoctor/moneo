@@ -19,7 +19,9 @@ interface Item {
   key: string;
   amt: number;
   qty: number;
-  date: string;
+  month: number;
+  year: number;
+  day: number;
 }
 
 interface EditableCellProps {
@@ -44,13 +46,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const fsb = useFullScreenBrowser();
   const { selectedCurrency }: any = useContext(NWContext);
-  let date = new Date();
-  if (record && record.date) date = new Date(record.date);
-  const [year, setYear] = useState<number>(date.getFullYear());
-  const [day, setDay] = useState<number>(date.getDate());
-  const [month, setMonth] = useState<number>(date.getMonth() + 1);
-  const [qty, setQty] = useState<number>(record?.qty);
-  const [amt, setAmt] = useState<number>(record?.amt);
 
   const deleteEntry = (record: any) => {
     purchaseDetails.splice(record.key, 1);
@@ -75,21 +70,41 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return inputType === "number" ? (
       <NumberInput
         pre={pre ? pre : ""}
-        value={type === "qty" ? qty : amt}
+        value={type === "qty" ? record?.qty : record?.amt}
         autoFocus
-        changeHandler={type === "qty" ? setQty : setAmt}
+        changeHandler={(val: any) => {
+          if (record) {
+            type === "qty" ? (record.qty = val) : (record.amt = val);
+            save(record);
+          }
+        }}
         currency={type === "qty" ? "" : selectedCurrency}
         noRangeFactor
       />
     ) : inputType === "date" ? (
       <DateInput
         title={pre ? pre : ""}
-        startMonthHandler={(val: any) => setMonth(val)}
-        startYearHandler={(val: any) => setYear(val)}
-        startDateHandler={(val: any) => setDay(val)}
-        startDateValue={day as number}
-        startMonthValue={month}
-        startYearValue={year}
+        startMonthHandler={(val: any) => {
+          if (record) {
+            record.month = val;
+            save(record);
+          }
+        }}
+        startYearHandler={(val: any) => {
+          if (record) {
+            record.year = val;
+            save(record);
+          }
+        }}
+        startDateHandler={(val: any) => {
+          if (record) {
+            record.day = val;
+            save(record);
+          }
+        }}
+        startDateValue={record?.day}
+        startMonthValue={record?.month}
+        startYearValue={record?.year}
         size="middle"
       />
     ) : (
@@ -109,28 +124,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
       )
     );
   };
-
-  useEffect(() => {
-    if (record) {
-      record.qty = qty;
-      save(record);
-    }
-  }, [qty]);
-
-  useEffect(() => {
-    if (record) {
-      record.amt = amt;
-      save(record);
-    }
-  }, [amt]);
-
-  useEffect(() => {
-    const date = `${year}-${getStr(month)}-${getStr(day)}`;
-    if (record) {
-      record.date = date;
-      save(record);
-    }
-  }, [day, month, year]);
 
   return (
     <td {...restProps}>
@@ -198,14 +191,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     setPurchaseDetails([...[]]);
     if (!pur || !pur.length) return;
     for (let i = 0; i < pur.length; ++i) {
-      const { day, month, year, qty, amt } = pur[i];
-      const date = `${year}-${getStr(month)}-${getStr(day as number)}`;
-      purchaseDetails.push({
-        key: i,
-        qty: qty,
-        amt: amt,
-        date: date,
-      });
+      purchaseDetails.push({ key: i, ...pur[i] });
     }
     setPurchaseDetails([...purchaseDetails]);
   }, [pur]);

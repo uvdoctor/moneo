@@ -22,15 +22,8 @@ export default function PurchaseView({
     if (index > -1) {
       let purchase: any = [];
       data.map((item: any) => {
-        const { qty, amt, date } = item;
-        const newDate = new Date(date);
-        purchase.push({
-          qty,
-          amt,
-          month: newDate.getMonth() + 1,
-          year: newDate.getFullYear(),
-          day: newDate.getDate(),
-        });
+        const { qty, amt, day, month, year } = item;
+        purchase.push({ qty, amt, month, year, day });
       });
       instruments[index].pur = purchase;
       setInstruments([...instruments]);
