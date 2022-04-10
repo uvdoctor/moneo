@@ -257,7 +257,6 @@ export default function ListHoldings({
                     data={preciousMetals}
                     dataHandler={setPreciousMetals}
                     otherView={expandedRow(record.key)}
-                    isHolding
                   />
                 ) : (
                   expandedRow(record.key)

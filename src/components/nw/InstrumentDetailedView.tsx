@@ -10,7 +10,6 @@ interface InstrumentDetailedViewProps {
   dataHandler: Function;
   otherView?: any;
   hasAnalysis?: boolean;
-  isHolding?: boolean;
 }
 
 export default function InstrumentDetailedView({
@@ -19,7 +18,6 @@ export default function InstrumentDetailedView({
   dataHandler,
   otherView,
   hasAnalysis,
-  isHolding,
 }: InstrumentDetailedViewProps) {
   const PURCHASE = "Buy Transactions";
   const ANALYSIS = "Analysis";
