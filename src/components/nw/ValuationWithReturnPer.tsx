@@ -76,7 +76,7 @@ export default function ValuationWithReturnPer({
       noDecimal
       info={
         returnPer
-          ? `Based on the purchase input, your investment of ${toHumanFriendlyCurrency(
+          ? `Based on the buy transactions that you have input, your investment of ${toHumanFriendlyCurrency(
               buyTotal,
               selectedCurrency
             )} has ${

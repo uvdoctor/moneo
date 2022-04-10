@@ -107,7 +107,11 @@ export default function NumberInput({
 
   return (
     <>
-      <LabelWithTooltip label={inline ? `${pre} ` : pre} info={info} inline />
+      <LabelWithTooltip
+        label={inline ? `${pre} ` : pre}
+        info={info}
+        inline={inline}
+      />
       {/*@ts-ignore*/}
       <InputNumber {...inputConfig} disabled={disabled} />
       {currency && value > 100000

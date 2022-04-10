@@ -47,8 +47,6 @@ export default function ListHoldings({
     childTab,
     fxRates,
     familyOptions,
-    preciousMetals,
-    setPreciousMetals,
   }: any = useContext(NWContext);
   const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
   const [dataSource, setDataSource] = useState<Array<any>>([]);
@@ -265,18 +263,18 @@ export default function ListHoldings({
         expandedColumns.length
           ? {
               expandedRowRender: (record) => {
-                return childTab === PM ? (
+                return [PM, CRYPTO].includes(childTab) ? (
                   <InstrumentDetailedView
-                    record={preciousMetals[record.key]}
-                    data={preciousMetals}
-                    dataHandler={setPreciousMetals}
+                    record={data[record.key]}
+                    data={data}
+                    dataHandler={changeData}
                     otherView={expandedRow(record.key)}
                     purChange={purDetailsChanged}
                     purChangeHandler={setPurDetailsChanged}
-                    unit="grams"
+                    unit={childTab === PM ? "grams" : ""}
                   />
                 ) : (
-                  expandedRow(record.key)
+                  <>{expandedRow(record.key)} </>
                 );
               },
             }
