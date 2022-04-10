@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button, Col, Empty, Popconfirm, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
 import { getStr, isMobileDevice, toCurrency, toReadableNumber } from "../utils";
@@ -12,12 +12,12 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
+import { NWContext } from "./NWContext";
 const today = new Date();
 
 interface PurchaseProps {
   qty: number;
   pur: Array<PurchaseInput>;
-  currency: string;
   onSave: Function;
 }
 
@@ -35,7 +35,6 @@ interface EditableCellProps {
   inputType: "number" | "date";
   record: Item;
   index: number;
-  currency: string;
   children: React.ReactNode;
 }
 
@@ -46,11 +45,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
   inputType,
   record,
   index,
-  currency,
   children,
   ...restProps
 }) => {
   const fsb = useFullScreenBrowser();
+  const { selectedCurrency }: any = useContext(NWContext);
   let date = new Date();
   if (record && record.date) date = new Date(record.date);
   const [year, setYear] = useState<number>(date.getFullYear());
@@ -65,7 +64,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         pre=""
         value={type === "qty" ? qty : amt}
         changeHandler={type === "qty" ? setQty : setAmt}
-        currency={type === "qty" ? "" : currency}
+        currency={type === "qty" ? "" : selectedCurrency}
         noRangeFactor
       />
     ) : (
@@ -120,7 +119,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           </label>
           <br />
           <label>
-            Amount: <strong>{toCurrency(record.amt, currency)}</strong>
+            Amount: <strong>{toCurrency(record.amt, selectedCurrency)}</strong>
           </label>{" "}
           <br />
           <label>
@@ -135,12 +134,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
-export default function Purchase({
-  pur,
-  qty,
-  currency,
-  onSave,
-}: PurchaseProps) {
+export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
   const [editingKey, setEditingKey] = useState<string>("");
   const fsb = useFullScreenBrowser();
@@ -239,7 +233,6 @@ export default function Purchase({
         inputType: col.dataIndex === "date" ? "date" : "number",
         dataIndex: col.dataIndex,
         title: col.title,
-        currency: currency,
         editing: isEditing(record),
         responsive: col.responsive,
       }),

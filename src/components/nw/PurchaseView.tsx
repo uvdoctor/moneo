@@ -44,7 +44,6 @@ export default function PurchaseView({
           onSave={(pur: any) => onChange(pur)}
           pur={record.pur ? record.pur : []}
           qty={Number(record.qty)}
-          currency={record.curr}
         />
       </Col>
     </Row>
