@@ -100,6 +100,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           </label>
           <Button
             type="link"
+            danger
             style={{ marginRight: 8 }}
             icon={<DeleteOutlined />}
             onClick={() => deleteEntry(record)}
