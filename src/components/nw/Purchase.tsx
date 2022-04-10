@@ -12,9 +12,17 @@ interface PurchaseProps {
   record: InstrumentInput | HoldingInput;
   data: Array<InstrumentInput | HoldingInput>;
   dataHandler: Function;
+  purChange?: boolean;
+  purChangeHandler?: Function;
 }
 
-export default function Purchase({ record, data, dataHandler }: PurchaseProps) {
+export default function Purchase({
+  record,
+  data,
+  dataHandler,
+  purChange,
+  purChangeHandler,
+}: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<Array<PurchaseInput>>(
     record.pur ? record.pur : []
   );
@@ -28,8 +36,14 @@ export default function Purchase({ record, data, dataHandler }: PurchaseProps) {
 
   useEffect(() => {
     record.pur = [...purchaseDetails];
-    dataHandler([...data]);
+    if (purChangeHandler) purChangeHandler(true);
+    else dataHandler([...data]);
   }, [purchaseDetails]);
+
+  useEffect(() => {
+    if (!purChange) return;
+    dataHandler([...data]);
+  }, [purChange]);
 
   const calculateBoughtQuantity = () => {
     let totalqty = 0;

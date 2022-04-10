@@ -10,6 +10,8 @@ interface InstrumentDetailedViewProps {
   dataHandler: Function;
   otherView?: any;
   hasAnalysis?: boolean;
+  purChange?: boolean;
+  purChangeHandler?: Function;
 }
 
 export default function InstrumentDetailedView({
@@ -18,6 +20,8 @@ export default function InstrumentDetailedView({
   dataHandler,
   otherView,
   hasAnalysis,
+  purChange,
+  purChangeHandler,
 }: InstrumentDetailedViewProps) {
   const PURCHASE = "Buy Transactions";
   const ANALYSIS = "Analysis";
@@ -34,7 +38,13 @@ export default function InstrumentDetailedView({
         {view === PURCHASE ? (
           <Row justify="center">
             <Col span={24}>
-              <Purchase data={data} dataHandler={dataHandler} record={record} />
+              <Purchase
+                data={data}
+                dataHandler={dataHandler}
+                record={record}
+                purChange={purChange}
+                purChangeHandler={purChangeHandler}
+              />
             </Col>
           </Row>
         ) : view === OTHER && otherView ? (

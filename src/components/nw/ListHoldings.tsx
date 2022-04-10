@@ -51,6 +51,7 @@ export default function ListHoldings({
   }: any = useContext(NWContext);
   const { PM, NPS, CRYPTO, VEHICLE, LENT, LOAN, PF, OTHER, P2P, LTDEP } = TAB;
   const [dataSource, setDataSource] = useState<Array<any>>([]);
+  const [purDetailsChanged, setPurDetailsChanged] = useState<boolean>(false);
 
   const allColumns: any = {
     type: { title: fields.type, dataIndex: "type", key: "type" },
@@ -199,7 +200,7 @@ export default function ListHoldings({
 
   const expandedRow = (i: number) => {
     const dataSource = getAllData(data[i], i);
-    if (!dataSource) return;
+    if (!dataSource) return null;
     return (
       <Row
         gutter={[
@@ -240,6 +241,10 @@ export default function ListHoldings({
         }
       }
     };
+    if (purDetailsChanged) {
+      setPurDetailsChanged(false);
+      return;
+    }
     getData();
   }, [data, selectedMembers, selectedCurrency, familyOptions, childTab]);
 
@@ -251,12 +256,15 @@ export default function ListHoldings({
         expandedColumns.length
           ? {
               expandedRowRender: (record) => {
+                console.log("Record: ", preciousMetals[record.key]);
                 return childTab === PM ? (
                   <InstrumentDetailedView
-                    record={record}
+                    record={preciousMetals[record.key]}
                     data={preciousMetals}
                     dataHandler={setPreciousMetals}
                     otherView={expandedRow(record.key)}
+                    purChange={purDetailsChanged}
+                    purChangeHandler={setPurDetailsChanged}
                   />
                 ) : (
                   expandedRow(record.key)

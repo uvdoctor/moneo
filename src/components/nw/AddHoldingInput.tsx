@@ -96,6 +96,7 @@ export default function AddHoldingInput({
       qty: 0,
       fId: "",
       curr: selectedCurrency,
+      pur: [],
     };
     switch (childTab) {
       case HEALTH_INS:
