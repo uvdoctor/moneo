@@ -30,6 +30,7 @@ interface DateInputProps {
   initialValue?: number;
   endValue?: number;
   dateWithEnddate?: boolean;
+  inline?: boolean;
 }
 
 export default function DateInput({
@@ -52,7 +53,8 @@ export default function DateInput({
   disabled,
   initialValue,
   endValue,
-  dateWithEnddate
+  dateWithEnddate,
+  inline,
 }: DateInputProps) {
   const [customDate, setCustomDate] = useState<Array<Date>>([]);
   const today = new Date();
@@ -120,11 +122,17 @@ export default function DateInput({
     : "year";
   const { format, date, endDate } = data[picker];
 
-  return ( 
+  return (
     <Fragment>
-      <div className={className ? className : "date"}>
-        <LabelWithTooltip label={title} info={info} />
-      </div>
+      {inline ? (
+        <span className={className ? className : "date"}>
+          <LabelWithTooltip label={`${title} `} info={info} inline />
+        </span>
+      ) : (
+        <div className={className ? className : "date"}>
+          <LabelWithTooltip label={title} info={info} />
+        </div>
+      )}
       <span>
         {endMonthHandler || endYearHandler || endDateHandler ? (
           <RangePicker
@@ -150,14 +158,14 @@ export default function DateInput({
                   startMonthHandler(
                     start.getMonth() > month - 1 && startYear >= year
                       ? month
-                      : start.getMonth()+1
+                      : start.getMonth() + 1
                   );
                 endMonthHandler &&
                   endMonthHandler(
                     end.getFullYear() < year ||
                       (end.getFullYear() === year && end.getMonth() < month - 1)
                       ? month
-                      : end.getMonth()+1
+                      : end.getMonth() + 1
                   );
                 startDateHandler && startDateHandler(start.getDate());
                 endDateHandler && endDateHandler(end.getDate());
@@ -169,12 +177,12 @@ export default function DateInput({
             value={[
               new Date(
                 startYearValue ? startYearValue : year,
-                startMonthValue ? (startMonthValue-1) : month - 1,
+                startMonthValue ? startMonthValue - 1 : month - 1,
                 startDateValue ? startDateValue : 1
               ),
               new Date(
                 endYearValue ? endYearValue : year + 1,
-                endMonthValue ? (endMonthValue-1) : month,
+                endMonthValue ? endMonthValue - 1 : month,
                 endDateValue ? endDateValue : 1
               ),
             ]}
@@ -187,13 +195,17 @@ export default function DateInput({
             format={format}
             onChange={(value: Date | null) => {
               if (!value) return;
-              const monthValue = value.getMonth() > month - 1 && value.getFullYear() >= year && !dateWithEnddate
-              ? month
-              : value.getMonth()+1
-              const yearValue =  value.getFullYear() >= year && !dateWithEnddate
-              ? year
-              : value?.getFullYear()
-              
+              const monthValue =
+                value.getMonth() > month - 1 &&
+                value.getFullYear() >= year &&
+                !dateWithEnddate
+                  ? month
+                  : value.getMonth() + 1;
+              const yearValue =
+                value.getFullYear() >= year && !dateWithEnddate
+                  ? year
+                  : value?.getFullYear();
+
               startDateHandler && startDateHandler(value?.getDate());
               startMonthHandler && startMonthHandler(monthValue);
               startYearHandler && startYearHandler(yearValue);
@@ -204,7 +216,7 @@ export default function DateInput({
             value={
               new Date(
                 startYearValue ? startYearValue : year,
-                startMonthValue ? (startMonthValue-1) : month - 1,
+                startMonthValue ? startMonthValue - 1 : month - 1,
                 startDateValue ? startDateValue : 1
               )
             }

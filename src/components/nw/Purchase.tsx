@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Alert, Button, Col, Empty, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
-import { isMobileDevice, toHumanFriendlyCurrency } from "../utils";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import { toHumanFriendlyCurrency } from "../utils";
 import DateInput from "../form/DateInput";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
@@ -15,36 +14,8 @@ interface PurchaseProps {
   onSave: Function;
 }
 
-interface Item {
-  key: string;
-  amt: number;
-  qty: number;
-  month: number;
-  year: number;
-  day: number;
-}
-
-interface EditableCellProps {
-  col: any;
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-  purchaseDetails: Array<any>;
-  setPurchaseDetails: Function;
-  onSave: Function;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  col,
-  record,
-  index,
-  children,
-  setPurchaseDetails,
-  purchaseDetails,
-  onSave,
-  ...restProps
-}) => {
-  const fsb = useFullScreenBrowser();
+export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
+  const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
   const { selectedCurrency }: any = useContext(NWContext);
 
   const deleteEntry = (record: any) => {
@@ -59,132 +30,94 @@ const EditableCell: React.FC<EditableCellProps> = ({
       ...item,
       ...record,
     });
-    setPurchaseDetails(purchaseDetails);
+    setPurchaseDetails([...purchaseDetails]);
     onSave(purchaseDetails);
   };
 
-  const inputType = col.dataIndex;
-
-  const inputNode = (inputType: string, key?: string, pre?: string) => {
-    const type = key ? key : col.key;
-    return inputType === "number" ? (
-      <NumberInput
-        pre={pre ? pre : ""}
-        value={type === "qty" ? record?.qty : record?.amt}
-        autoFocus
-        changeHandler={(val: any) => {
-          if (record) {
-            type === "qty" ? (record.qty = val) : (record.amt = val);
-            save(record);
-          }
-        }}
-        currency={type === "qty" ? "" : selectedCurrency}
-        noRangeFactor
-      />
-    ) : inputType === "date" ? (
-      <DateInput
-        title={pre ? pre : ""}
-        startMonthHandler={(val: any) => {
-          if (record) {
-            record.month = val;
-            save(record);
-          }
-        }}
-        startYearHandler={(val: any) => {
-          if (record) {
-            record.year = val;
-            save(record);
-          }
-        }}
-        startDateHandler={(val: any) => {
-          if (record) {
-            record.day = val;
-            save(record);
-          }
-        }}
-        startDateValue={record?.day}
-        startMonthValue={record?.month}
-        startYearValue={record?.year}
-        size="middle"
-      />
-    ) : (
-      record && (
-        <span>
-          <label>
-            {toHumanFriendlyCurrency(record.qty * record.amt, selectedCurrency)}
-          </label>
-          <Button
-            type="link"
-            danger
-            style={{ marginRight: 8 }}
-            icon={<DeleteOutlined />}
-            onClick={() => deleteEntry(record)}
-          />
-        </span>
-      )
-    );
-  };
-
-  return (
-    <td {...restProps}>
-      {isMobileDevice(fsb) && record ? (
-        inputType === "total" ? (
-          inputNode("total")
-        ) : (
-          <Row gutter={[0, 8]}>
-            <Col xs={24}>{inputNode("date", "", "Date")}</Col>
-            <Col xs={24}>{inputNode("number", "qty", "Quantity")}</Col>
-            <Col xs={24}>{inputNode("number", "amt", "Price")}</Col>
-          </Row>
-        )
-      ) : (
-        inputNode(inputType)
-      )}
-    </td>
-  );
-};
-
-export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
-  const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
-  const fsb = useFullScreenBrowser();
-
   const columns = [
     {
-      title: "Date",
-      key: "date",
-      dataIndex: "date",
-      responsive: ["md"],
-    },
-    {
-      title: isMobileDevice(fsb) ? "Details" : "Quantity",
-      dataIndex: "number",
-      key: "qty",
-    },
-    {
-      title: "Price",
-      key: "amt",
-      dataIndex: "number",
-      responsive: ["md"],
-    },
-    {
-      title: "Total",
-      dataIndex: "total",
-      key: "total",
+      title: "Transaction",
+      key: "txn",
+      render: (record: any) => {
+        return (
+          <Row justify="space-between">
+            <Col xs={12} lg={6}>
+              <NumberInput
+                pre="Bought"
+                value={record?.qty}
+                autoFocus
+                changeHandler={(val: any) => {
+                  if (record) {
+                    record.qty = val;
+                    save(record);
+                  }
+                }}
+                noRangeFactor
+                inline
+              />
+            </Col>
+            <Col xs={12} lg={6}>
+              <DateInput
+                title="on"
+                startMonthHandler={(val: any) => {
+                  if (record) {
+                    record.month = val;
+                    save(record);
+                  }
+                }}
+                startYearHandler={(val: any) => {
+                  if (record) {
+                    record.year = val;
+                    save(record);
+                  }
+                }}
+                startDateHandler={(val: any) => {
+                  if (record) {
+                    record.day = val;
+                    save(record);
+                  }
+                }}
+                startDateValue={record?.day}
+                startMonthValue={record?.month}
+                startYearValue={record?.year}
+                size="middle"
+                inline
+              />
+            </Col>
+            <Col xs={12} lg={6}>
+              <NumberInput
+                pre="at price of "
+                value={record?.amt || 0}
+                autoFocus
+                changeHandler={(val: any) => {
+                  if (record) {
+                    record.amt = val;
+                    save(record);
+                  }
+                }}
+                currency={selectedCurrency}
+                noRangeFactor
+                inline
+              />
+            </Col>
+            <Col xs={12} lg={6}>
+              {`Total ${toHumanFriendlyCurrency(
+                record.qty * record.amt,
+                selectedCurrency
+              )}`}
+              <Button
+                type="link"
+                danger
+                style={{ marginRight: 8 }}
+                icon={<DeleteOutlined />}
+                onClick={() => deleteEntry(record)}
+              />
+            </Col>
+          </Row>
+        );
+      },
     },
   ];
-
-  const mergedColumns = columns.map((col) => {
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        col: col,
-        setPurchaseDetails: setPurchaseDetails,
-        purchaseDetails: purchaseDetails,
-        onSave: onSave,
-      }),
-    };
-  });
 
   useEffect(() => {
     let purchaseDetails: Array<any> = [];
@@ -203,7 +136,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
   };
 
   return (
-    <Row justify="center" gutter={[8, 8]}>
+    <Row justify="center">
       <Button
         type="dashed"
         disabled={totalqty() === qty || totalqty() > qty}
@@ -225,8 +158,7 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
             onSave(purchase);
           }
         }}
-        icon={<PlusOutlined />}
-      >
+        icon={<PlusOutlined />}>
         Add transaction
       </Button>
       <p>&nbsp;</p>
@@ -248,17 +180,13 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
         {purchaseDetails.length ? (
           <Table
             className="list-holdings"
-            components={{
-              body: {
-                cell: EditableCell,
-              },
-            }}
             bordered
             // @ts-ignore
             pagination={purchaseDetails.length < 10 ? false : true}
             // @ts-ignore
-            columns={mergedColumns}
+            columns={columns}
             dataSource={purchaseDetails}
+            columnTitle={null}
             size="small"
           />
         ) : (

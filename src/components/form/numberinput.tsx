@@ -23,6 +23,7 @@ interface NumberInputProps {
   addBefore?: any;
   disabled?: boolean;
   autoFocus?: boolean;
+  inline?: boolean;
 }
 
 export default function NumberInput({
@@ -40,6 +41,7 @@ export default function NumberInput({
   addBefore,
   disabled,
   autoFocus,
+  inline,
 }: NumberInputProps) {
   const [rangeFactor, setRangeFactor] = useState<number>(
     noRangeFactor || !currency ? 1 : getRangeFactor(currency)
@@ -105,7 +107,7 @@ export default function NumberInput({
 
   return (
     <>
-      <LabelWithTooltip label={pre} info={info} />
+      <LabelWithTooltip label={inline ? `${pre} ` : pre} info={info} inline />
       {/*@ts-ignore*/}
       <InputNumber {...inputConfig} disabled={disabled} />
       {currency && value > 100000
