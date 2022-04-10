@@ -9,20 +9,10 @@ import {
   UserOutlined,
   HourglassOutlined,
 } from "@ant-design/icons";
-import xirr from "xirr";
 
 require("./Holding.less");
-import {
-  toCurrency,
-  toHumanFriendlyCurrency,
-  toReadableNumber,
-} from "../utils";
-import {
-  AssetSubType,
-  AssetType,
-  InstrumentInput,
-  PurchaseInput,
-} from "../../api/goals";
+import { toCurrency, toReadableNumber } from "../utils";
+import { AssetSubType, AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
 import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
@@ -33,6 +23,7 @@ import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
 import { getMarketCapLabel, isFund } from "./nwutils";
 import InsPrice from "./InsPrice";
+import ValuationWithReturnPer from "./ValuationWithReturnPer";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -48,9 +39,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   const { allFamily, setInstruments, instruments }: any = useContext(NWContext);
   const [total, setTotal] = useState<number>(holding.qty * price);
   const [isEditMode, setEditMode] = useState(false);
-  const [returnPer, setReturnPer] = useState<number>(0);
-  const [buyTotal, setBuyTotal] = useState<number>(0);
-  const [annualReturnPer, setAnnualReturnPer] = useState<number>(0);
 
   function onEdit() {
     setEditMode(true);
@@ -64,52 +52,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   useEffect(() => {
     setTotal(holding.qty * price);
   }, [price, holding.qty]);
-
-  const calculateAnnualReturn = (cfs: Array<any>) => {
-    if (!cfs.length) return 0;
-    let result = 0;
-    try {
-      result = xirr(cfs) * 100;
-    } catch (e) {
-      console.log("Error while calculating xirr for a holding: ", e);
-    } finally {
-      return result;
-    }
-  };
-
-  useEffect(() => {
-    if (!total || !holding.pur) {
-      setReturnPer(0);
-      setBuyTotal(0);
-      setAnnualReturnPer(0);
-      return;
-    }
-    let buyTotal = 0;
-    let returnPer = 0;
-    let annualReturnPer = 0;
-    if (holding.pur && holding.pur.length) {
-      let cfs: Array<any> = [];
-      holding.pur.forEach((pur: PurchaseInput) => {
-        if (!pur.qty || !pur.amt) return;
-        buyTotal += pur.qty * pur.amt;
-        cfs.push({
-          amount: -(pur.qty * pur.amt),
-          when: new Date(pur.year, pur.month, pur.day as number),
-        });
-      });
-      if (cfs.length) {
-        cfs.push({
-          amount: total,
-          when: new Date(),
-        });
-        annualReturnPer = calculateAnnualReturn(cfs);
-      }
-    }
-    if (buyTotal) returnPer = (total / buyTotal - 1) * 100;
-    setBuyTotal(buyTotal);
-    setReturnPer(returnPer);
-    setAnnualReturnPer(annualReturnPer);
-  }, [total, holding.pur]);
 
   return (
     <Row
@@ -194,35 +136,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           {price ? (
             <Col className="quantity">
               {total ? (
-                <InsPrice
-                  price={total}
-                  currency={holding.curr}
-                  previousPrice={returnPer}
-                  noPerCalc
-                  noDecimal
-                  info={
-                    returnPer
-                      ? `Based on the purchase input, your investment of ${toHumanFriendlyCurrency(
-                          buyTotal,
-                          holding.curr
-                        )} has ${
-                          returnPer > 0 ? "gained" : "lost"
-                        } by about ${toReadableNumber(
-                          Math.abs(returnPer),
-                          2
-                        )}%.${
-                          annualReturnPer
-                            ? ` In terms of annual performance, this is about ${toReadableNumber(
-                                Math.abs(annualReturnPer),
-                                2
-                              )}% ${
-                                annualReturnPer > 0 ? "gain" : "loss"
-                              } per year.`
-                            : ""
-                        }`
-                      : ""
-                  }
-                />
+                <ValuationWithReturnPer valuation={total} holding={holding} />
               ) : (
                 ""
               )}

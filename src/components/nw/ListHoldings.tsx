@@ -24,6 +24,7 @@ import LabelWithTooltip from "../form/LabelWithTooltip";
 import MemberInput from "./MemberInput";
 import DeleteButton from "./DeleteButton";
 import InstrumentDetailedView from "./InstrumentDetailedView";
+import ValuationWithReturnPer from "./ValuationWithReturnPer";
 require("./ListHoldings.less");
 
 interface ListHoldingsProps {
@@ -118,12 +119,20 @@ export default function ListHoldings({
         />
       ),
       val: valuation && (
-        <>
-          {toHumanFriendlyCurrency(valuation, selectedCurrency)}
+        <Row align="middle">
+          <Col>
+            <ValuationWithReturnPer
+              valuation={valuation}
+              holding={data[i]}
+              purDetailsChanged={purDetailsChanged}
+            />
+          </Col>
           {defaultColumns[1] === "val" ? (
-            <DeleteButton data={data} changeData={changeData} index={i} />
+            <Col>
+              <DeleteButton data={data} changeData={changeData} index={i} />
+            </Col>
           ) : null}
-        </>
+        </Row>
       ),
       qty: hasPF(childTab) && (
         <Quantity
@@ -256,7 +265,6 @@ export default function ListHoldings({
         expandedColumns.length
           ? {
               expandedRowRender: (record) => {
-                console.log("Record: ", preciousMetals[record.key]);
                 return childTab === PM ? (
                   <InstrumentDetailedView
                     record={preciousMetals[record.key]}

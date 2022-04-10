@@ -24,7 +24,7 @@ export default function Purchase({
   purChangeHandler,
 }: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<Array<PurchaseInput>>(
-    record.pur ? record.pur : []
+    record?.pur ? record.pur : []
   );
   const { selectedCurrency }: any = useContext(NWContext);
 
