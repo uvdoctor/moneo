@@ -1,16 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Alert, Button, Col, Empty, Popconfirm, Row, Table } from "antd";
+import React, { useEffect, useContext, useState } from "react";
+import { Alert, Button, Col, Empty, Row, Table } from "antd";
 import { PurchaseInput } from "../../api/goals";
-import { getStr, isMobileDevice, toCurrency, toReadableNumber } from "../utils";
+import { getStr, isMobileDevice, toHumanFriendlyCurrency } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import DateInput from "../form/DateInput";
-import {
-  SaveOutlined,
-  EditOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import { NWContext } from "./NWContext";
 const today = new Date();
@@ -29,23 +23,23 @@ interface Item {
 }
 
 interface EditableCellProps {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "date";
+  col: any;
   record: Item;
   index: number;
   children: React.ReactNode;
+  purchaseDetails: Array<any>;
+  setPurchaseDetails: Function;
+  onSave: Function;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
+  col,
   record,
   index,
   children,
+  setPurchaseDetails,
+  purchaseDetails,
+  onSave,
   ...restProps
 }) => {
   const fsb = useFullScreenBrowser();
@@ -57,87 +51,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const [month, setMonth] = useState<number>(date.getMonth() + 1);
   const [qty, setQty] = useState<number>(record?.qty);
   const [amt, setAmt] = useState<number>(record?.amt);
-  const inputNode = (inputType: string, key?: string) => {
-    const type = key ? key : dataIndex;
-    return inputType === "number" && record ? (
-      <NumberInput
-        pre=""
-        value={type === "qty" ? qty : amt}
-        changeHandler={type === "qty" ? setQty : setAmt}
-        currency={type === "qty" ? "" : selectedCurrency}
-        noRangeFactor
-      />
-    ) : (
-      <DateInput
-        title={""}
-        startMonthHandler={(val: any) => setMonth(val)}
-        startYearHandler={(val: any) => setYear(val)}
-        startDateHandler={(val: any) => setDay(val)}
-        startDateValue={day as number}
-        startMonthValue={month}
-        startYearValue={year}
-        size="middle"
-      />
-    );
+
+  const deleteEntry = (record: any) => {
+    purchaseDetails.splice(record.key, 1);
+    setPurchaseDetails([...purchaseDetails]);
+    onSave(purchaseDetails);
   };
-
-  useEffect(() => {
-    const date = `${year}-${getStr(month)}-${getStr(day)}`;
-    if (record) record.date = date;
-  }, [day, month, year]);
-
-  useEffect(() => {
-    if (record) record.qty = qty;
-  }, [qty]);
-
-  useEffect(() => {
-    if (record) record.amt = amt;
-  }, [amt]);
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        isMobileDevice(fsb) && record ? (
-          <Row gutter={[0, 8]}>
-            <Col xs={24}>
-              <label>Quantity: </label>
-              {inputNode("number", "qty")}
-            </Col>
-            <Col xs={24}>
-              <label>Amount: </label>
-              {inputNode("number", "amt")}
-            </Col>
-            <Col xs={24}>{inputNode("date")}</Col>
-          </Row>
-        ) : (
-          inputNode(inputType)
-        )
-      ) : isMobileDevice(fsb) && record ? (
-        <>
-          <label>
-            Quantity: <strong>{toReadableNumber(record.qty, 2)}</strong>
-          </label>
-          <br />
-          <label>
-            Amount: <strong>{toCurrency(record.amt, selectedCurrency)}</strong>
-          </label>{" "}
-          <br />
-          <label>
-            Date: <strong>{record.date}</strong>
-          </label>{" "}
-          <br />
-        </>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
-  const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
-  const [editingKey, setEditingKey] = useState<string>("");
-  const fsb = useFullScreenBrowser();
 
   const save = (record: any) => {
     const item = purchaseDetails[record.key];
@@ -147,94 +66,128 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     });
     setPurchaseDetails(purchaseDetails);
     onSave(purchaseDetails);
-    setEditingKey("");
   };
 
-  const deleteEntry = (record: any) => {
-    purchaseDetails.splice(record.key, 1);
-    setPurchaseDetails([...purchaseDetails]);
-    onSave(purchaseDetails);
-    setEditingKey("");
+  const inputType = col.dataIndex;
+
+  const inputNode = (inputType: string, key?: string, pre?: string) => {
+    const type = key ? key : col.key;
+    return inputType === "number" ? (
+      <NumberInput
+        pre={pre ? pre : ""}
+        value={type === "qty" ? qty : amt}
+        changeHandler={type === "qty" ? setQty : setAmt}
+        currency={type === "qty" ? "" : selectedCurrency}
+        noRangeFactor
+      />
+    ) : inputType === "date" ? (
+      <DateInput
+        title={pre ? pre : ""}
+        startMonthHandler={(val: any) => setMonth(val)}
+        startYearHandler={(val: any) => setYear(val)}
+        startDateHandler={(val: any) => setDay(val)}
+        startDateValue={day as number}
+        startMonthValue={month}
+        startYearValue={year}
+        size="middle"
+      />
+    ) : (
+      record && (
+        <span>
+          <label>
+            {toHumanFriendlyCurrency(record.qty * record.amt, "INR")}
+          </label>
+          <Button
+            type="link"
+            danger
+            style={{ marginRight: 8 }}
+            icon={<DeleteOutlined />}
+            onClick={() => deleteEntry(record)}
+          />
+        </span>
+      )
+    );
   };
 
-  const isEditing = (record: Item) => record.key === editingKey;
+  useEffect(() => {
+    const date = `${year}-${getStr(month)}-${getStr(day)}`;
+    if (record) {
+      record.date = date;
+      save(record);
+    }
+  }, [day, month, year]);
+
+  useEffect(() => {
+    if (record) {
+      record.qty = qty;
+      save(record);
+    }
+  }, [qty]);
+
+  useEffect(() => {
+    if (record) {
+      record.amt = amt;
+      save(record);
+    }
+  }, [amt]);
+
+  return (
+    <td {...restProps}>
+      {isMobileDevice(fsb) && record ? (
+        inputType === "total" ? (
+          inputNode("total")
+        ) : (
+          <Row gutter={[0, 8]}>
+            <Col xs={24}>{inputNode("date", "", "Date")}</Col>
+            <Col xs={24}>{inputNode("number", "qty", "Quantity")}</Col>
+            <Col xs={24}>{inputNode("number", "amt", "Price")}</Col>
+          </Row>
+        )
+      ) : (
+        inputNode(inputType)
+      )}
+    </td>
+  );
+};
+
+export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
+  const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
+  const fsb = useFullScreenBrowser();
+
   const columns = [
-    {
-      title: isMobileDevice(fsb) ? "Details" : "Quantity",
-      dataIndex: "qty",
-      key: "qty",
-      editable: true,
-    },
-    {
-      title: "Amount",
-      key: "amt",
-      dataIndex: "amt",
-      editable: true,
-      responsive: ["md"],
-    },
     {
       title: "Date",
       key: "date",
       dataIndex: "date",
-      editable: true,
       responsive: ["md"],
     },
     {
-      title: "Action",
-      dataIndex: "action",
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Button
-              type="link"
-              onClick={() => save(record)}
-              style={{ marginRight: 8 }}
-              icon={<SaveOutlined />}
-            />
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => setEditingKey("")}>
-              <Button type="link" icon={<CloseOutlined />} />
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <Button
-              type="link"
-              icon={<EditOutlined />}
-              disabled={editingKey !== ""}
-              onClick={() => setEditingKey(record.key)}
-            />
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => deleteEntry(record)}>
-              <Button
-                type="link"
-                style={{ marginRight: 8 }}
-                disabled={editingKey !== ""}
-                icon={<DeleteOutlined />}
-              />
-            </Popconfirm>
-          </span>
-        );
-      },
+      title: isMobileDevice(fsb) ? "Details" : "Quantity",
+      dataIndex: "number",
+      key: "qty",
+    },
+    {
+      title: "Price",
+      key: "amt",
+      dataIndex: "number",
+      responsive: ["md"],
+    },
+    {
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
     },
   ];
 
   const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
     return {
       ...col,
       onCell: (record: Item) => ({
         record,
-        inputType: col.dataIndex === "date" ? "date" : "number",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-        responsive: col.responsive,
+        col: col,
+        setPurchaseDetails: setPurchaseDetails,
+        purchaseDetails: purchaseDetails,
+        onSave: onSave,
       }),
     };
   });
@@ -281,7 +234,6 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                 )}-1`,
               },
             ];
-            setEditingKey(purchaseDetails.length ? purchaseDetails.length : 0);
             setPurchaseDetails(purchase);
             onSave(purchase);
           }
