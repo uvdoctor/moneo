@@ -40,7 +40,7 @@ export default function Purchase({ record, data, dataHandler }: PurchaseProps) {
     <Row justify="center">
       <Button
         type="dashed"
-        disabled={calculateBoughtQuantity() !== record.qty}
+        disabled={calculateBoughtQuantity() === record.qty}
         onClick={() => {
           const totalQty = calculateBoughtQuantity();
           if (totalQty < record.qty) {
