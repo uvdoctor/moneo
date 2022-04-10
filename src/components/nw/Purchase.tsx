@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Alert, Button, Col, Divider, Empty, List, Row } from "antd";
-import { PurchaseInput } from "../../api/goals";
+import { HoldingInput, InstrumentInput, PurchaseInput } from "../../api/goals";
 import { toHumanFriendlyCurrency } from "../utils";
 import DateInput from "../form/DateInput";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
@@ -9,44 +9,30 @@ import { NWContext } from "./NWContext";
 const today = new Date();
 
 interface PurchaseProps {
-  qty: number;
-  pur: Array<PurchaseInput>;
-  onSave: Function;
+  record: InstrumentInput | HoldingInput;
+  data: Array<InstrumentInput | HoldingInput>;
+  dataHandler: Function;
 }
 
-export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
-  const [purchaseDetails, setPurchaseDetails] = useState<any>([]);
+export default function Purchase({ record, data, dataHandler }: PurchaseProps) {
+  const [purchaseDetails, setPurchaseDetails] = useState<Array<PurchaseInput>>(
+    record.pur ? record.pur : []
+  );
   const { selectedCurrency }: any = useContext(NWContext);
 
   const deleteEntry = (record: any) => {
     purchaseDetails.splice(record.key, 1);
     setPurchaseDetails([...purchaseDetails]);
-    onSave(purchaseDetails);
-  };
-
-  const save = (record: any) => {
-    const item = purchaseDetails[record.key];
-    purchaseDetails.splice(record.key, 1, {
-      ...item,
-      ...record,
-    });
-    setPurchaseDetails([...purchaseDetails]);
-    onSave(purchaseDetails);
   };
 
   useEffect(() => {
-    let purchaseDetails: Array<any> = [];
-    setPurchaseDetails([...[]]);
-    if (!pur || !pur.length) return;
-    for (let i = 0; i < pur.length; ++i) {
-      purchaseDetails.push({ key: i, ...pur[i] });
-    }
-    setPurchaseDetails([...purchaseDetails]);
-  }, [pur]);
+    record.pur = [...purchaseDetails];
+    dataHandler([...data]);
+  }, [purchaseDetails]);
 
-  const totalqty = () => {
+  const calculateBoughtQuantity = () => {
     let totalqty = 0;
-    purchaseDetails.map((item: any) => (totalqty += Number(item.qty)));
+    purchaseDetails.forEach((item: any) => (totalqty += Number(item.qty)));
     return totalqty;
   };
 
@@ -54,32 +40,26 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
     <Row justify="center">
       <Button
         type="dashed"
-        disabled={totalqty() === qty || totalqty() > qty}
+        disabled={calculateBoughtQuantity() !== record.qty}
         onClick={() => {
-          const totalQty = totalqty();
-          if (totalQty < qty) {
-            const purchase = [
-              ...purchaseDetails,
-              {
-                key: purchaseDetails.length ? purchaseDetails.length : 0,
-                amt: 0,
-                qty: qty - totalQty,
-                day: today.getDate(),
-                month: today.getMonth(),
-                year: today.getFullYear(),
-              },
-            ];
-            setPurchaseDetails(purchase);
-            onSave(purchase);
+          const totalQty = calculateBoughtQuantity();
+          if (totalQty < record.qty) {
+            purchaseDetails.push({
+              amt: 0,
+              qty: record.qty - totalQty,
+              day: today.getDate(),
+              month: today.getMonth(),
+              year: today.getFullYear(),
+            });
+            setPurchaseDetails([...purchaseDetails]);
           }
         }}
-        icon={<PlusOutlined />}
-      >
+        icon={<PlusOutlined />}>
         Add transaction
       </Button>
       <p>&nbsp;</p>
       {purchaseDetails.length ? (
-        (totalqty() > qty || totalqty() < qty) && (
+        calculateBoughtQuantity() !== record.qty && (
           <Col xs={24}>
             <Alert
               type={"error"}
@@ -108,11 +88,11 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                       changeHandler={(val: any) => {
                         if (record) {
                           record.qty = val;
-                          save(record);
+                          setPurchaseDetails([...purchaseDetails]);
                         }
                       }}
                       noRangeFactor
-                      // inline
+                      inline
                     />
                   </Col>
                   <Col xs={12} lg={6}>
@@ -121,19 +101,19 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                       startMonthHandler={(val: any) => {
                         if (record) {
                           record.month = val;
-                          save(record);
+                          setPurchaseDetails([...purchaseDetails]);
                         }
                       }}
                       startYearHandler={(val: any) => {
                         if (record) {
                           record.year = val;
-                          save(record);
+                          setPurchaseDetails([...purchaseDetails]);
                         }
                       }}
                       startDateHandler={(val: any) => {
                         if (record) {
                           record.day = val;
-                          save(record);
+                          setPurchaseDetails([...purchaseDetails]);
                         }
                       }}
                       startDateValue={record?.day}
@@ -151,26 +131,28 @@ export default function Purchase({ pur, qty, onSave }: PurchaseProps) {
                       changeHandler={(val: any) => {
                         if (record) {
                           record.amt = val;
-                          save(record);
+                          setPurchaseDetails([...purchaseDetails]);
                         }
                       }}
                       currency={selectedCurrency}
                       noRangeFactor
-                      // inline
+                      inline
                     />
                   </Col>
                   <Col xs={12} lg={6}>
-                    {`Total ${toHumanFriendlyCurrency(
-                      record.qty * record.amt,
-                      selectedCurrency
-                    )}`}
-                    <Button
-                      type="link"
-                      danger
-                      style={{ marginRight: 8 }}
-                      icon={<DeleteOutlined />}
-                      onClick={() => deleteEntry(record)}
-                    />
+                    <Row justify="end">
+                      {`Total ${toHumanFriendlyCurrency(
+                        record.qty * record.amt,
+                        selectedCurrency
+                      )}`}
+                      <Button
+                        type="link"
+                        danger
+                        style={{ marginRight: 8 }}
+                        icon={<DeleteOutlined />}
+                        onClick={() => deleteEntry(record)}
+                      />
+                    </Row>
                   </Col>
                 </Row>
                 <Divider />

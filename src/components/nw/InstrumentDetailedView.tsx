@@ -2,7 +2,7 @@ import { Col, Row } from "antd";
 import React, { useState } from "react";
 import { HoldingInput, InstrumentInput } from "../../api/goals";
 import RadioInput from "../form/RadioInput";
-import PurchaseView from "./PurchaseView";
+import Purchase from "./Purchase";
 
 interface InstrumentDetailedViewProps {
   record: any;
@@ -34,12 +34,11 @@ export default function InstrumentDetailedView({
       <RadioInput options={radioOptions} value={view} changeHandler={setView} />
       <Col xs={24}>
         {view === PURCHASE ? (
-          <PurchaseView
-            record={record}
-            instruments={data}
-            setInstruments={dataHandler}
-            isHolding={isHolding}
-          />
+          <Row justify="center">
+            <Col span={24}>
+              <Purchase data={data} dataHandler={dataHandler} record={record} />
+            </Col>
+          </Row>
         ) : view === OTHER && otherView ? (
           <>{otherView}</>
         ) : hasAnalysis ? (
