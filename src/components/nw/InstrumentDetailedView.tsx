@@ -1,9 +1,8 @@
-import { Button, Col, Dropdown, Menu, Radio, Row } from "antd";
-import MenuItem from "antd/lib/menu/MenuItem";
+import { Col, Row } from "antd";
 import React, { useContext, useState } from "react";
 import { InstrumentInput } from "../../api/goals";
-import { COLORS } from "../../CONSTANTS";
-import LabelWithTooltip from "../form/LabelWithTooltip";
+import RadioInput from "../form/RadioInput";
+import CommonStock from "../stockDetail/CommonStock";
 import { NWContext } from "./NWContext";
 import PurchaseView from "./PurchaseView";
 
@@ -15,65 +14,22 @@ export default function InstrumentDetailedView({
   record,
 }: InstrumentDetailedViewProps) {
   const { instruments, setInstruments }: any = useContext(NWContext);
-  const [view, setView] = useState<string>("Purchase");
-  const [isAvgPriceOption, setIsAvgPriceOption] = useState<boolean>(
-    !record.pur || !record.pur.length
-  );
+  CommonStock;
+  const PURCHASE = "Purchase";
+  const ANALYSIS = "Analysis";
+  const [view, setView] = useState<string>(PURCHASE);
 
   return (
     <Row justify="center" gutter={[0, 8]}>
-      <Radio.Group
-        defaultValue={view}
+      <RadioInput
+        options={[PURCHASE, ANALYSIS]}
         value={view}
-        onChange={(e) => setView(e.target.value)}
-      >
-        <Radio.Button key="Purchase" value="Purchase">
-          <Dropdown
-            overlay={
-              record?.pur?.length ? (
-                <></>
-              ) : (
-                <Menu>
-                  <MenuItem key="avg" onClick={() => setIsAvgPriceOption(true)}>
-                    <LabelWithTooltip
-                      label="Average price"
-                      info="Get a highly approximate performance figure by entering average price of all the purchases done"
-                    />
-                  </MenuItem>
-                  <MenuItem
-                    key="details"
-                    onClick={() => setIsAvgPriceOption(false)}
-                  >
-                    <LabelWithTooltip
-                      label="Buy transactions"
-                      info="Get a much more accurate performance figure by entering all relevant buy transactions"
-                    />
-                  </MenuItem>
-                </Menu>
-              )
-            }
-            onVisibleChange={() => setView("Purchase")}
-          >
-            <Button
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-                color: view === "Purchase" ? COLORS.WHITE : COLORS.DEFAULT,
-              }}
-            >
-              Purchase Input
-            </Button>
-          </Dropdown>
-        </Radio.Button>
-        <Radio.Button key="Analysis" value="Analysis">
-          Analysis
-        </Radio.Button>
-      </Radio.Group>
-      {view === "Purchase" ? (
+        changeHandler={setView}
+      />
+      {view === PURCHASE ? (
         <Col xs={24}>
           <PurchaseView
             record={record}
-            isAvgPriceRecord={isAvgPriceOption}
             instruments={instruments}
             setInstruments={setInstruments}
           />
