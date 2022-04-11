@@ -196,7 +196,7 @@ export default function HoldingInput(props: any) {
     );
     const isAllItemFiled = toValidateArr.every((item) => {
       return (
-        toValidateHoldingState[item] && toValidateHoldingState[item].length > 0
+        toValidateHoldingState[item]
       );
     });
     dispatchDataState({
@@ -256,7 +256,7 @@ export default function HoldingInput(props: any) {
           min={0}
           style={{ width: 80 }}
           onChange={(e) => {
-            const data = { qty: e.target.value };
+            const data = { qty: Number(e.target.value) };
             dispatch({ type: "formUpdate", data });
             updateButtonStatus(data);
           }}

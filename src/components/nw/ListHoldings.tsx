@@ -263,7 +263,7 @@ export default function ListHoldings({
         expandedColumns.length
           ? {
               expandedRowRender: (record) => {
-                return [PM, CRYPTO].includes(childTab) ? (
+                return [PM, CRYPTO, NPS].includes(childTab) ? (
                   <InstrumentDetailedView
                     record={data[record.key]}
                     data={data}
