@@ -113,6 +113,7 @@ export default function Purchase({
                         value={record?.qty}
                         autoFocus
                         unit={unit ? unit : ""}
+                        digit={3}
                         changeHandler={(val: any) => {
                           if (record) {
                             record.qty = val;

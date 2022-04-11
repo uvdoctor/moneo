@@ -24,6 +24,7 @@ interface NumberInputProps {
   disabled?: boolean;
   autoFocus?: boolean;
   inline?: boolean;
+  digit?: number;
 }
 
 export default function NumberInput({
@@ -42,6 +43,7 @@ export default function NumberInput({
   disabled,
   autoFocus,
   inline,
+  digit
 }: NumberInputProps) {
   const [rangeFactor, setRangeFactor] = useState<number>(
     noRangeFactor || !currency ? 1 : getRangeFactor(currency)
@@ -79,7 +81,7 @@ export default function NumberInput({
     formatter: (val: number) =>
       currency
         ? toCurrency(val as number, currency)
-        : toReadableNumber(val as number, 2),
+        : toReadableNumber(val as number, digit ? digit : 2),
     parser: (val: string) =>
       currency
         ? parseFloat(parseNumber(val as string, currency))
