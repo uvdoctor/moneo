@@ -33,14 +33,14 @@ export const incomeStatementParticulars = {
 				"It is the total profit after accounting for operating and non-operating expenses but before paying corporate tax.",
 		},
 	},
-	taxProvision: {
+	incomeTaxExpense: {
 		particulars: {
 			label: "Tax",
 			tooltip:
 				"The amount of income taxes paid or payable on the net earnings of the business.",
 		},
 	},
-	taxProvision: {
+	netIncomeFromContinuingOps: {
 		particulars: {
 			label: "Profit After Tax",
 			tooltip:

@@ -32,6 +32,15 @@ export default function CommonStock() {
 					<Tag color="green">Stock</Tag>
 				</Col>
 			</Row>
+			<iframe
+				src={`/static/charting/index.html?code=${state.data.General?.Code}`}
+				style={{
+					width: "100%",
+					height: "500px",
+					border: "none",
+					marginBottom: "15px",
+				}}
+			></iframe>
 			<Collapse
 				defaultActiveKey={["1", "2", "3", "4", "5", "6", "7"]}
 				style={{ marginBottom: "35px" }}
