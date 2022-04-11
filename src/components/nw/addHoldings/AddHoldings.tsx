@@ -126,10 +126,6 @@ export default function AddHoldings({
           />
       ) : null}
       &nbsp;&nbsp;
-      {hasInstruments(childTab) &&
-        <Watchlist/>
-      }
-      &nbsp;&nbsp;
       <Button
         type={hasInstruments(childTab) ? "default" : "primary"}
         icon={<PlusOutlined />}
