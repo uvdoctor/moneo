@@ -45,14 +45,14 @@ export default function CascaderInput({
 	return (
 		<Fragment>
 			<LabelWithTooltip label={pre} info={info} />
-			<Cascader
+			{Object.keys(options).length && <Cascader
 				allowClear={false}
 				style={{ width: isMobileDevice(fsb) ? 100 : width ? width : 200 }}
 				defaultValue={defaultValue}
 				options={options}
 				onChange={onChange}
 				showSearch={{ filter }}
-			/>
+			/>}
 			{post ? post : null}
 		</Fragment>
 	);
