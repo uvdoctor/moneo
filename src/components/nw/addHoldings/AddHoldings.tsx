@@ -14,7 +14,6 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import { InstrumentInput } from "../../../api/goals";
 import { hasTags } from "../nwutils";
 import Filter from "./Filter";
-import Watchlist from "../Watchlist";
 
 require("./AddHoldings.less");
 
