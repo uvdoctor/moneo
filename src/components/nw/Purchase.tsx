@@ -6,6 +6,7 @@ import DateInput from "../form/DateInput";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import NumberInput from "../form/numberinput";
 import { NWContext } from "./NWContext";
+require("./Purchase.less");
 const today = new Date();
 
 interface PurchaseProps {
@@ -71,7 +72,8 @@ export default function Purchase({
             setPurchaseDetails([...purchaseDetails]);
           }
         }}
-        icon={<PlusOutlined />}>
+        icon={<PlusOutlined />}
+      >
         Add transaction
       </Button>
       <p>&nbsp;</p>
@@ -91,7 +93,13 @@ export default function Purchase({
       )}
       <Col xs={24}>
         {purchaseDetails.length ? (
-          <>
+          <div
+            id="scrollableDiv"
+            style={{
+              height: 400,
+              overflow: "auto",
+            }}
+          >
             <List
               itemLayout="horizontal"
               dataSource={purchaseDetails}
@@ -159,7 +167,7 @@ export default function Purchase({
                         inline
                       />
                     </Col>
-                    <Col xs={12} lg={6}>
+                    <Col xs={12} lg={6} className="total-col">
                       <Row justify="end" align="middle">
                         {`Total ${toHumanFriendlyCurrency(
                           record.qty * record.amt,
@@ -178,7 +186,7 @@ export default function Purchase({
                 </>
               )}
             />
-          </>
+          </div>
         ) : (
           <Empty description={<p>No data found.</p>} />
         )}
