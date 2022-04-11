@@ -43,23 +43,20 @@ const processData = () => {
       const commodityList = await getCommodityList();
 
       Object.keys(usersMap).map((user) => {
-        let prev = 0;
-        let price = 0;
         const email = usersMap[user];
         let { gainers, losers, yhighList, ylowList, totalPrev, totalPrice } =
           instrumentValuation(infoMap, usersinsMap[user]);
-        prev += totalPrev;
-        price += totalPrice;
         const chgAmount = toHumanFriendlyCurrency(
-          Math.abs(price - prev),
+          Math.abs(totalPrice - totalPrev),
           "INR"
         );
-        const chgImpact = Math.sign(price - prev) > 0 ? true : false;
+        const chgImpact = Math.sign(totalPrice - totalPrev) > 0;
         sendUserInfo[email] = {
           gainers,
           losers,
           yhigh: yhighList,
           ylow: ylowList,
+          valuation: totalPrice,
           chgAmount,
           chgImpact,
           metal: commodityList,

@@ -6,6 +6,7 @@ const gainers = [ { name: "SAIL" } ]
 const losers = [{ name: "COAL" }]
 const metal = [{ name: "10 grams of 24k gold:", price: "12672", up: true, chg: "7.3" }, { name: "10 grams of 99.99% Silver", price: "12345", up: false, chg: "6.3" }]
 const chgAmount = 400000;
+const valuation = 10000000;
 
 sendEmail({
   templateName: "alerts",
@@ -15,6 +16,7 @@ sendEmail({
     losers: losers,
     yhigh: yhigh,
     ylow: ylow,
+    valuation: valuation,
     chgAmount: chgAmount,
     chgImpact: false,
     metal: metal
