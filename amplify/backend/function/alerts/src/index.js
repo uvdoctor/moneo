@@ -16,7 +16,6 @@ const processData = () => {
     try {
       const usersinsMap = {};
       const infoMap = {};
-      let sendUserInfo = {};
       const usersMap = {};
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
       const userinfodata = await filterTableByList(
@@ -26,7 +25,7 @@ const processData = () => {
           "emailumangdoctor@gmail.com",
           "mehzabeen1526@gmail.com",
           "ravinder.singh.rawat2008@gmail.com",
-          "nipathakarbank@gmail.com"
+          "nipathakarbank@gmail.com",
         ],
         "email",
         "uname, email"
@@ -41,8 +40,8 @@ const processData = () => {
       await processInstruments(infoMap, usersMap, usersinsMap);
       await processHoldings(infoMap, usersMap, usersinsMap);
       const commodityList = await getCommodityList();
-
-      Object.keys(usersMap).map((user) => {
+      const users = Object.keys(usersMap);
+      for (let user of users) {
         const email = usersMap[user];
         let { gainers, losers, yhighList, ylowList, totalPrev, totalPrice } =
           instrumentValuation(infoMap, usersinsMap[user]);
@@ -51,18 +50,19 @@ const processData = () => {
           "INR"
         );
         const chgImpact = Math.sign(totalPrice - totalPrev) > 0;
-        sendUserInfo[email] = {
+        const sendUserInfo = {
+          email,
           gainers,
           losers,
           yhigh: yhighList,
           ylow: ylowList,
-          valuation: totalPrice,
+          valuation: toHumanFriendlyCurrency(totalPrice, "INR"),
           chgAmount,
           chgImpact,
           metal: commodityList,
         };
-      });
-      await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
+        await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
+      }
     } catch (err) {
       reject(err);
     }

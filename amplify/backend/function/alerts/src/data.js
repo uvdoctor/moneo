@@ -5,7 +5,6 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const {
   divideArrayBySize,
-  utility,
   toCurrency,
 } = require("/opt/nodejs/utility");
 const {
