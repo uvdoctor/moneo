@@ -3,31 +3,16 @@ const { deleteMessage } = require("/opt/nodejs/sqsUtils");
 
 const processData = (records) => {
   return new Promise(async (resolve, reject) => {
-    let queueData;
-    records.forEach(async (item) => {
-      queueData = JSON.parse(item.body);
-      await deleteMessage(process.env.PRICE_ALERTS_QUEUE, item.receiptHandle);
-    });
-
-    const users = Object.keys(queueData);
-    for (let user of users) {
-      const { gainers, losers, yhigh, ylow, chgAmount, chgImpact, metal } =
-        queueData[user];
+    for (let item of records) {
+      let queueData = JSON.parse(item.body);
       try {
         const message = await sendEmail({
           templateName: "alerts",
-          email: user,
-          values: {
-            gainers,
-            losers,
-            yhigh,
-            ylow,
-            chgImpact,
-            chgAmount,
-            metal
-          },
+          email: queueData.email,
+          values: queueData,
         });
         console.log(message);
+        await deleteMessage(process.env.PRICE_ALERTS_QUEUE, item.receiptHandle);
       } catch (err) {
         reject(err);
       }
