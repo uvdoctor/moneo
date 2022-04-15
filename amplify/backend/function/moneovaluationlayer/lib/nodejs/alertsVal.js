@@ -30,7 +30,7 @@ const checkDate = (date) => {
   return days <= 3;
 };
 
-const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2));
+const convertTroyOunceToGram = (amt) => parseFloat((amt / 31.1).toFixed(2)) * 1.1;
 
 const sortDescending = (array, key) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
