@@ -2033,54 +2033,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const createInsUserMap = /* GraphQL */ `
-  mutation CreateInsUserMap(
-    $input: CreateInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    createInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsUserMap = /* GraphQL */ `
-  mutation UpdateInsUserMap(
-    $input: UpdateInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    updateInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsUserMap = /* GraphQL */ `
-  mutation DeleteInsUserMap(
-    $input: DeleteInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    deleteInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createAllIndices = /* GraphQL */ `
   mutation CreateAllIndices(
     $input: CreateAllIndicesInput!

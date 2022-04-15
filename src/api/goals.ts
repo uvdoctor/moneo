@@ -1247,47 +1247,6 @@ export type DeleteINExchgPriceInput = {
   id: string,
 };
 
-export type CreateInsUserMapInput = {
-  id: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user: string,
-};
-
-export type ModelInsUserMapConditionInput = {
-  sid?: ModelStringInput | null,
-  type?: ModelAssetTypeInput | null,
-  subt?: ModelAssetSubTypeInput | null,
-  and?: Array< ModelInsUserMapConditionInput | null > | null,
-  or?: Array< ModelInsUserMapConditionInput | null > | null,
-  not?: ModelInsUserMapConditionInput | null,
-};
-
-export type InsUserMap = {
-  __typename: "InsUserMap",
-  id?: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user?: string,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateInsUserMapInput = {
-  id: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user: string,
-};
-
-export type DeleteInsUserMapInput = {
-  id: string,
-  user: string,
-};
-
 export type CreateAllIndicesInput = {
   id: string,
   name: string,
@@ -1910,33 +1869,6 @@ export type ModelINExchgPriceFilterInput = {
 export type ModelINExchgPriceConnection = {
   __typename: "ModelINExchgPriceConnection",
   items?:  Array<INExchgPrice | null >,
-  nextToken?: string | null,
-};
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
-export type ModelInsUserMapFilterInput = {
-  id?: ModelStringInput | null,
-  sid?: ModelStringInput | null,
-  type?: ModelAssetTypeInput | null,
-  subt?: ModelAssetSubTypeInput | null,
-  user?: ModelStringInput | null,
-  and?: Array< ModelInsUserMapFilterInput | null > | null,
-  or?: Array< ModelInsUserMapFilterInput | null > | null,
-  not?: ModelInsUserMapFilterInput | null,
-};
-
-export type ModelInsUserMapConnection = {
-  __typename: "ModelInsUserMapConnection",
-  items?:  Array<InsUserMap | null >,
   nextToken?: string | null,
 };
 
@@ -4291,60 +4223,6 @@ export type DeleteInExchgPriceMutation = {
   } | null,
 };
 
-export type CreateInsUserMapMutationVariables = {
-  input?: CreateInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type CreateInsUserMapMutation = {
-  createInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInsUserMapMutationVariables = {
-  input?: UpdateInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type UpdateInsUserMapMutation = {
-  updateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInsUserMapMutationVariables = {
-  input?: DeleteInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type DeleteInsUserMapMutation = {
-  deleteInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateAllIndicesMutationVariables = {
   input?: CreateAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
@@ -5394,50 +5272,6 @@ export type ListInExchgPricesQuery = {
       risk?: RiskProfile | null,
       vol?: number | null,
       prevol?: number | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInsUserMapQueryVariables = {
-  id?: string,
-  user?: string,
-};
-
-export type GetInsUserMapQuery = {
-  getInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInsUserMapsQueryVariables = {
-  id?: string | null,
-  user?: ModelStringKeyConditionInput | null,
-  filter?: ModelInsUserMapFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInsUserMapsQuery = {
-  listInsUserMaps?:  {
-    __typename: "ModelInsUserMapConnection",
-    items:  Array< {
-      __typename: "InsUserMap",
-      id: string,
-      sid?: string | null,
-      type?: AssetType | null,
-      subt?: AssetSubType | null,
-      user: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -7215,45 +7049,6 @@ export type OnDeleteInExchgPriceSubscription = {
     risk?: RiskProfile | null,
     vol?: number | null,
     prevol?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateInsUserMapSubscription = {
-  onCreateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInsUserMapSubscription = {
-  onUpdateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInsUserMapSubscription = {
-  onDeleteInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,

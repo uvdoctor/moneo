@@ -32,6 +32,14 @@
       "Type": "String",
       "Default": "custompricealertsArn"
     },
+    "customwatchalertsName": {
+      "Type": "String",
+      "Default": "customwatchalertsName"
+    },
+    "customwatchalertsArn": {
+      "Type": "String",
+      "Default": "customwatchalertsArn"
+    },
     "functionmoneovaluationlayerArn": {
       "Type": "String",
       "Default": "functionmoneovaluationlayerArn"
@@ -96,6 +104,9 @@
             },
             "PRICE_ALERTS_QUEUE": {
               "Ref": "custompricealertsName"
+            },
+            "WATCH_ALERTS_QUEUE": {
+              "Ref": "customwatchalertsName"
             }
           }
         },

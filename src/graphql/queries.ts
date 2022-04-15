@@ -705,49 +705,6 @@ export const listInExchgPrices = /* GraphQL */ `
     }
   }
 `;
-export const getInsUserMap = /* GraphQL */ `
-  query GetInsUserMap($id: String!, $user: String!) {
-    getInsUserMap(id: $id, user: $user) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsUserMaps = /* GraphQL */ `
-  query ListInsUserMaps(
-    $id: String
-    $user: ModelStringKeyConditionInput
-    $filter: ModelInsUserMapFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsUserMaps(
-      id: $id
-      user: $user
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        type
-        subt
-        user
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getAllIndices = /* GraphQL */ `
   query GetAllIndices($id: String!) {
     getAllIndices(id: $id) {

@@ -710,45 +710,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInsUserMap = /* GraphQL */ `
-  subscription OnCreateInsUserMap {
-    onCreateInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInsUserMap = /* GraphQL */ `
-  subscription OnUpdateInsUserMap {
-    onUpdateInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInsUserMap = /* GraphQL */ `
-  subscription OnDeleteInsUserMap {
-    onDeleteInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateAllIndices = /* GraphQL */ `
   subscription OnCreateAllIndices {
     onCreateAllIndices {

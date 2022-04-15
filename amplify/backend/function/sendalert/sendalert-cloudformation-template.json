@@ -27,6 +27,14 @@
     "custompricealertsArn": {
       "Type": "String",
       "Default": "custompricealertsArn"
+    },
+    "customwatchalertsName": {
+      "Type": "String",
+      "Default": "customwatchalertsName"
+    },
+    "customwatchalertsArn": {
+      "Type": "String",
+      "Default": "customwatchalertsArn"
     }
   },
   "Conditions": {
@@ -84,6 +92,9 @@
             },
             "PRICE_ALERTS_QUEUE": {
               "Ref": "custompricealertsName"
+            },
+            "WATCH_ALERTS_QUEUE": {
+              "Ref": "customwatchalertsName"
             }
           }
         },

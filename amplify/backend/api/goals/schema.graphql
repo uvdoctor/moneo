@@ -416,25 +416,6 @@ enum Recommendation {
   H
   S
 }
-type InsUserMap
-  @model
-  @aws_iam
-  @key(fields: ["id", "user"])
-  @auth(
-    rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
-    ]
-  ) {
-  id: String!
-  sid: String
-  type: AssetType
-  subt: AssetSubType
-  user: String!
-}
 
 type AllIndices
   @model
