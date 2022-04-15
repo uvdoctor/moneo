@@ -299,6 +299,20 @@
           ]
         }
       ]
+    },
+    "sendwatchalert": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "moneoutilslayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
@@ -311,6 +325,11 @@
   "interactions": {},
   "custom": {
     "pricealerts": {
+      "service": "customCloudformation",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    },
+    "watchalerts": {
       "service": "customCloudformation",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

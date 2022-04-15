@@ -94,6 +94,12 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string",
             "lambdaexecutionpolicy": "string"
+        },
+        "sendwatchalert": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "storage": {
@@ -104,6 +110,11 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "custom": {
         "pricealerts": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string"
+        },
+        "watchalerts": {
             "Name": "string",
             "Arn": "string",
             "Region": "string"
