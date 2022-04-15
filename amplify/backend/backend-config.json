@@ -167,28 +167,6 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "InsUni": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "goals",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "moneoutilslayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
     "alerts": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -293,50 +271,6 @@
         {
           "category": "custom",
           "resourceName": "pricealerts",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "sendwatchalert": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneoutilslayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "custom",
-          "resourceName": "watchalerts",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "watchalerts": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneoutilslayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "custom",
-          "resourceName": "watchalerts",
           "attributes": [
             "Name",
             "Arn"

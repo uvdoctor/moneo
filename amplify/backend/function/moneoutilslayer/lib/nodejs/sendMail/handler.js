@@ -1,15 +1,17 @@
 const { sendEmail } = require("./EmailSender");
-
+const { toHumanFriendlyCurrency } = require("../utility");
 const yhigh = [ { name: "HDFC" }]
 const ylow = [ {name: "ICICI"} ]
 const gainers = [ { name: "SAIL" } ]
 const losers = [{ name: "COAL" }]
 const metal = [{ name: "10 grams of 24k gold:", price: "12672", up: true, chg: "7.3" }, { name: "10 grams of 99.99% Silver", price: "12345", up: false, chg: "6.3" }]
 const chgAmount = 400000;
-const valuation = 10000000;
+const valuation = toHumanFriendlyCurrency(10000000, "INR");
+const buy = [{ name: "HDFC" }, { name: "ICICI" }];
+const sell = [{ name: "IDFC" }, { name: "SBI" }];
 
 sendEmail({
-  templateName: "alerts",
+  templateName: "pricealerts",
   email: 'mehzabeen1526@gmail.com',
   values: {
     gainers: gainers,
@@ -22,5 +24,16 @@ sendEmail({
     metal: metal
   },
 }).then((data) => {
-  console.log("Compeleted", data);
+  console.log("Compeleted price alert: ", data);
+});
+
+sendEmail({
+  templateName: "watchalerts",
+  email: 'mehzabeen1526@gmail.com',
+  values: {
+    buy: buy,
+    sell: sell
+  },
+}).then((data) => {
+  console.log("Compeleted watch alert: ", data);
 });

@@ -56,12 +56,6 @@ export type AmplifyDependentResourcesAttributes = {
         "moneopricelayer": {
             "Arn": "string"
         },
-        "InsUni": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "alerts": {
             "Name": "string",
             "Arn": "string",
@@ -94,20 +88,6 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string",
             "lambdaexecutionpolicy": "string"
-        },
-        "sendwatchalert": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string",
-            "lambdaexecutionpolicy": "string"
-        },
-        "watchalerts": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string",
-            "CloudWatchEventRule": "string"
         }
     },
     "storage": {

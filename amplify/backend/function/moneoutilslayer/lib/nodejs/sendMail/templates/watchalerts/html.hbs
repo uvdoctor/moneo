@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Moneo Buy/Sell Alerts</title>
+</head>
+
+<body>
+    {{#> layout }}
+    {{#if buy}}
+    <div class="box-container-high">
+        <p class='main-text'>{{buy.length}} buy opportunities</p>
+        {{#each buy}}
+        <div class="data-container">
+            <a>{{this.name}}</a>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if buy}}
+        <div class="box-container-high">
+            <p class='main-text'>{{sell.length}} sell opportunities</p>
+            {{#each sell}}
+            <div class="data-container">
+                <a>{{sell.name}}</a>
+            </div>
+            {{/each}}
+        </div>
+    {{/if}}
+
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <a href="https://moneo.in/dashboard" target="_blank">
+                        View Details
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    {{/layout}}
+</body>
+
+</html>
