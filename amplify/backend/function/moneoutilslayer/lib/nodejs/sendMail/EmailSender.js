@@ -4,7 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
-
+const PRICE_TEMPLATE_NAME = "pricealerts";
+const WATCH_TEMPLATE_NAME = "watchalerts";
 const resolved = (fileName) => path.resolve(__dirname, fileName)
 const senderAddress = "noreply <no-reply@comms.moneo.in>";
 let preCompiledTemplates = {};
@@ -88,4 +89,4 @@ const sendEmail = async ({ templateName, email, values }) => {
   await performSend(request);
 };
 
-module.exports = { sendEmail };
+module.exports = { sendEmail, PRICE_TEMPLATE_NAME, WATCH_TEMPLATE_NAME };
