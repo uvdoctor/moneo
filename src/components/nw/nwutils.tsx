@@ -513,7 +513,7 @@ export const getCommodityRate = async (
     .then((result) => {
       if (!result || isNaN(result)) return 0;
       let rate = Number((result / 31.1).toFixed(2));
-      if(subtype === APIt.AssetSubType.Gold || subtype === "SI") rate = rate * 1.1;
+      if(subtype === APIt.AssetSubType.Gold || subtype === "SI") rate = rate * 1.11;
       return (
         rate *
         ((getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
