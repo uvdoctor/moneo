@@ -12,6 +12,7 @@ interface InvestmentAlertListProps {
   negativeViewLabel: string;
   footerLabel: string;
   isPrice?: boolean;
+  isFooterPrice?: boolean;
 }
 
 export default function InvestmentAlertList(props: InvestmentAlertListProps) {
@@ -53,8 +54,8 @@ export default function InvestmentAlertList(props: InvestmentAlertListProps) {
             labelHighlight
             currency={props.isPrice ? defaultCurrency : ""}
             unit={!props.isPrice ? "%" : ""}
-            footer={`${props.footerLabel} - ${
-              props.isPrice
+            footer={`${props.footerLabel} is ${
+              props.isFooterPrice
                 ? toHumanFriendlyCurrency(item.value, defaultCurrency)
                 : toReadableNumber(item.value)
             }`}
