@@ -16,10 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "functionmoneoutilslayerArn": {
-      "Type": "String",
-      "Default": "functionmoneoutilslayerArn"
-    },
     "customwatchalertsName": {
       "Type": "String",
       "Default": "customwatchalertsName"
@@ -27,6 +23,10 @@
     "customwatchalertsArn": {
       "Type": "String",
       "Default": "customwatchalertsArn"
+    },
+    "functionmoneoutilslayerArn": {
+      "Type": "String",
+      "Default": "functionmoneoutilslayerArn"
     }
   },
   "Conditions": {
@@ -59,12 +59,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "sendwatchalert",
+            "watchalerts",
             {
               "Fn::Join": [
                 "",
                 [
-                  "sendwatchalert",
+                  "watchalerts",
                   "-",
                   {
                     "Ref": "env"
@@ -108,12 +108,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "moneoLambdaRole38f835a9",
+            "moneoLambdaRole9bd13006",
             {
               "Fn::Join": [
                 "",
                 [
-                  "moneoLambdaRole38f835a9",
+                  "moneoLambdaRole9bd13006",
                   "-",
                   {
                     "Ref": "env"
@@ -138,20 +138,6 @@
               ]
             }
           ]
-        }
-      }
-    },
-    "LambdaFunctionEventSourceMapping": {
-      "DependsOn": [
-        "lambdaexecutionpolicy"
-      ],
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "Properties": {
-        "EventSourceArn": {
-          "Ref": "customwatchalertsArn"
-        },
-        "FunctionName": {
-          "Ref": "LambdaFunction"
         }
       }
     },
@@ -197,20 +183,50 @@
             {
               "Effect": "Allow",
               "Action": [
-                "ses:SendEmail",
-                "ses:SendRawEmail"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "sqs:ReceiveMessage",
-                "sqs:DeleteMessage",
+                "sqs:SendMessage",
                 "sqs:GetQueueAttributes"
               ],
               "Resource": "*"
             }
+          ]
+        }
+      }
+    },
+    "CloudWatchEvent": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Description": "Schedule rule for Lambda",
+        "ScheduleExpression": {
+          "Ref": "CloudWatchRule"
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "LambdaFunction",
+                "Arn"
+              ]
+            },
+            "Id": {
+              "Ref": "LambdaFunction"
+            }
+          }
+        ]
+      }
+    },
+    "PermissionForEventsToInvokeLambda": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "CloudWatchEvent",
+            "Arn"
           ]
         }
       }
@@ -240,9 +256,9 @@
         "Ref": "LambdaExecutionRole"
       }
     },
-    "lambdaexecutionpolicy": {
+    "CloudWatchEventRule": {
       "Value": {
-        "Ref": "lambdaexecutionpolicy"
+        "Ref": "CloudWatchEvent"
       }
     }
   }

@@ -173,18 +173,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "moneoutilslayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
           "category": "api",
           "resourceName": "goals",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "moneoutilslayer",
+          "attributes": [
+            "Arn"
           ]
         }
       ]
@@ -309,6 +309,36 @@
           "category": "function",
           "resourceName": "moneoutilslayer",
           "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "watchalerts",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "watchalerts": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "moneoutilslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "watchalerts",
+          "attributes": [
+            "Name",
             "Arn"
           ]
         }

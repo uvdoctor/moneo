@@ -1,4 +1,9 @@
-const {
+/* Amplify Params - DO NOT EDIT
+	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
+	API_GOALS_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const {
   pushData,
   getTableNameFromInitialWord,
   appendGenericFields,

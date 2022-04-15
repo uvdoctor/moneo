@@ -7,15 +7,5 @@
       "isLatestVersionSelected": true,
       "env": "dev"
     }
-  ],
-  "permissions": {
-    "api": {
-      "goals": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ]
-    }
-  }
+  ]
 }

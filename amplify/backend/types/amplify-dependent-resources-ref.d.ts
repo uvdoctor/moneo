@@ -99,7 +99,15 @@ export type AmplifyDependentResourcesAttributes = {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
-            "LambdaExecutionRole": "string"
+            "LambdaExecutionRole": "string",
+            "lambdaexecutionpolicy": "string"
+        },
+        "watchalerts": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string",
+            "CloudWatchEventRule": "string"
         }
     },
     "storage": {
