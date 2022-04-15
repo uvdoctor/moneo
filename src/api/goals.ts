@@ -863,7 +863,24 @@ export type InsWatchInput = {
   lowt?: number | null,
   type: AssetType,
   subt: AssetSubType,
+  itype?: InsType | null,
 };
+
+export enum InsType {
+  ETF = "ETF",
+  REIT = "REIT",
+  InvIT = "InvIT",
+  DEB = "DEB",
+  CP = "CP",
+  TB = "TB",
+  CD = "CD",
+  PB = "PB",
+  IB = "IB",
+  TFB = "TFB",
+  FRB = "FRB",
+  CB = "CB",
+}
+
 
 export type ModelUserInsConditionInput = {
   and?: Array< ModelUserInsConditionInput | null > | null,
@@ -902,6 +919,7 @@ export type InsWatch = {
   lowt?: number | null,
   type?: AssetType,
   subt?: AssetSubType,
+  itype?: InsType | null,
 };
 
 export type UpdateUserInsInput = {
@@ -1095,22 +1113,6 @@ export type CreateINExchgPriceInput = {
   vol?: number | null,
   prevol?: number | null,
 };
-
-export enum InsType {
-  ETF = "ETF",
-  REIT = "REIT",
-  InvIT = "InvIT",
-  DEB = "DEB",
-  CP = "CP",
-  TB = "TB",
-  CD = "CD",
-  PB = "PB",
-  IB = "IB",
-  TFB = "TFB",
-  FRB = "FRB",
-  CB = "CB",
-}
-
 
 export enum MCap {
   Small = "Small",
@@ -3865,6 +3867,7 @@ export type CreateUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3908,6 +3911,7 @@ export type UpdateUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3951,6 +3955,7 @@ export type DeleteUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -6408,6 +6413,7 @@ export type GetUserInsQuery = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -6448,6 +6454,7 @@ export type ListUserInssQuery = {
         lowt?: number | null,
         type: AssetType,
         subt: AssetSubType,
+        itype?: InsType | null,
       } > | null,
       createdAt: string,
       updatedAt: string,
@@ -8766,6 +8773,7 @@ export type OnCreateUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -8808,6 +8816,7 @@ export type OnUpdateUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -8850,6 +8859,7 @@ export type OnDeleteUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,

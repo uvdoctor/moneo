@@ -669,6 +669,7 @@ type InsWatch {
   lowt: Float
   type: AssetType!
   subt: AssetSubType!
+  itype: InsType
 }
 
 type Balance {
