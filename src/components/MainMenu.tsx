@@ -10,13 +10,13 @@ import {
 import { Auth, Hub } from "aws-amplify";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import Search from "./Search";
 import { calcList } from "./landing/Calculator";
 import { COLORS, ROUTES } from "../CONSTANTS";
 import { useRouter } from "next/router";
 import { menuItem } from "./utils";
 import { AppContext } from "./AppContext";
 import SocialShare from "./SocialShare";
+import SearchInput from "./SearchInput";
 
 export interface MainMenuProps {
   mode?: any;
@@ -44,7 +44,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
       <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
         {!isMobileDevice(fsb) && (
           <Menu.Item key="Search">
-            <Search />
+            <SearchInput />
           </Menu.Item>
         )}
         <SubMenu key="calcs" title="Calculate">
