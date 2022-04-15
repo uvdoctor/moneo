@@ -82,7 +82,7 @@ const getCommodityPrice = async (symbol, isDate) => {
     prev++;
     data = await getCommodityPrice(symbol, isDate);
   }
-  return data;
+  return Array.isArray(data) && data.length > 2 ? data.slice(-2) : data;
 };
 
 const getFXRate = async (curr) => {
