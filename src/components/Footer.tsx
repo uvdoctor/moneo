@@ -28,19 +28,31 @@ export default function Footer() {
 	</Row>*/}
       <Row justify="center">
         <Col xs={24} sm={12} md={10} lg={6} className="social-icons">
-          <a target="_blank" href={url} rel="noopener noreferrer">
+          <a
+            target="https://facebook.com/moneocap"
+            href={url}
+            rel="noopener noreferrer">
             <FacebookIcon round />
           </a>
-          <a target="_blank" href={url} rel="noopener noreferrer">
+          <a
+            target="https://linkedin.com/company/moneocap"
+            href={url}
+            rel="noopener noreferrer">
             <LinkedinIcon round />
           </a>
-          <a target="_blank" href={url} rel="noopener noreferrer">
+          <a
+            target="https://twitter.com/moneocap"
+            href={url}
+            rel="noopener noreferrer">
             <TwitterIcon round />
           </a>
           <a target="_blank" href={url} rel="noopener noreferrer">
             <YoutubeFilled />
           </a>
-          <a target="_blank" href={url} rel="noopener noreferrer">
+          <a
+            target="https://instagram.com/moneocap"
+            href={url}
+            rel="noopener noreferrer">
             <InstagramFilled />
           </a>
         </Col>
