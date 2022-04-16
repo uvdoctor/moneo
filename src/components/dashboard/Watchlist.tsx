@@ -73,7 +73,7 @@ export default function Watchlist() {
       watchlist.push({ id, sid, type, subt, itype });
     } else {
       notification.error({ message: `${Name} already exists` });
-      return
+      return;
     }
     setSearchText(Name);
   };
@@ -89,7 +89,7 @@ export default function Watchlist() {
 
   return (
     <>
-      <Title level={5}>Watchlist</Title>
+      <Title level={5}>Investment Watchlist</Title>
       <Card style={{ width: "100%", height: 600 }}>
         <>
           <p>
@@ -100,8 +100,7 @@ export default function Watchlist() {
                 style={{ fontSize: "15px" }}
                 onChange={(checked: boolean) =>
                   checked ? setActiveTag(item.key) : null
-                }
-              >
+                }>
                 {item.key}
               </CheckableTag>
             ))}
@@ -115,8 +114,7 @@ export default function Watchlist() {
                 type="primary"
                 icon={<SaveOutlined />}
                 onClick={async () => await saveHoldings()}
-                className="steps-start-btn"
-              >
+                className="steps-start-btn">
                 Save
               </Button>
             </Col>
@@ -142,8 +140,7 @@ export default function Watchlist() {
                         <List.Item>
                           <Typography.Link
                             onClick={() => onSelectInstruments(resp)}
-                            style={{ marginRight: 8 }}
-                          >
+                            style={{ marginRight: 8 }}>
                             {resp.Name}
                           </Typography.Link>
                         </List.Item>
@@ -171,8 +168,7 @@ export default function Watchlist() {
                 style={{
                   height: 400,
                   overflow: "auto",
-                }}
-              >
+                }}>
                 <List
                   itemLayout="horizontal"
                   dataSource={filterByTab}
