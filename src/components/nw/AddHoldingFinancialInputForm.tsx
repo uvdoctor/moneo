@@ -1,14 +1,17 @@
 import React, { useReducer, useContext, useState, useEffect } from "react";
 import { Row, Col, Button, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { getInstrumentDataWithKey } from "./nwutils";
+import { getInstrumentDataWithKey, optionTableMap } from "./nwutils";
 import { NWContext, TAB } from "./NWContext";
-import { AssetSubType, InsType } from "../../api/goals";
 
 interface InstrumentsData {
-  listInExchgPrices: [];
-  listInBondPrices: [];
-  listInmfPrices: [];
+  Stocks: [];
+  "Gold Bonds": [];
+  ETFs: [];
+  Bonds: [];
+  "Mutual Funds": [];
+  REITs: [];
+  "Other Investments": [];
 }
 
 interface Holding {
@@ -31,18 +34,6 @@ interface DataState {
   suggestions: [];
   buttonState: boolean;
 }
-interface OptionTableMap {
-  [Stock: string]: string;
-}
-const optionTableMap: OptionTableMap = {
-  Stocks: "listInExchgPrices",
-  "Gold Bonds": "listInExchgPrices",
-  ETFs: "listInExchgPrices",
-  Bonds: "listInBondPrices",
-  "Mutual Funds": "listInmfPrices",
-  REITs: "listInExchgPrices",
-  "Other Investments": "listInExchgPrices",
-} as const;
 
 const holdingReducer = (
   holdingState: Holding,
@@ -97,7 +88,7 @@ const dataReducer = (
 };
 export default function HoldingInput(props: any) {
   const { childTab }: any = useContext(NWContext);
-  const { STOCK, GOLDB, BOND, REIT, OIT, ETF } = TAB;
+  const { STOCK } = TAB;
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [rawDetails, setRawDetails] = useState<{}>({});
   const [holdingState, dispatch] = useReducer(holdingReducer, {
@@ -117,9 +108,13 @@ export default function HoldingInput(props: any) {
     price: 0,
     type: "",
     instrumentData: {
-      listInExchgPrices: [],
-      listInBondPrices: [],
-      listInmfPrices: [],
+      Stocks: [],
+      "Gold Bonds": [],
+      ETFs: [],
+      Bonds: [],
+      "Mutual Funds": [],
+      REITs: [],
+      "Other Investments": [],
     },
     suggestions: [],
     buttonState: true,
@@ -139,37 +134,14 @@ export default function HoldingInput(props: any) {
     props.addToHoldings(holdingState, rawDetails);
     dispatch({ type: "reset", data: {} });
   };
-  const getFilters = (option: string) => {
-    switch (option) {
-      case GOLDB:
-        return { prop: "subt", value: AssetSubType.GoldB };
-      case ETF:
-        return { prop: "itype", value: InsType.ETF };
-      case REIT:
-        return { prop: "itype", value: InsType.REIT };
-      case OIT:
-        return { prop: "itype", value: InsType.InvIT };
-      case STOCK:
-        return { prop: "subt", value: AssetSubType.S };
-      case BOND:
-        return {
-          prop: "subt",
-          value: [AssetSubType.GB, AssetSubType.GBO, AssetSubType.CB],
-        };
-      default:
-        return null;
-    }
-  };
+
   const updateOptions = async (option: string) => {
     setShowSpinner(true);
-    let data = await getInstrumentDataWithKey(
-      optionTableMap[option],
-      getFilters(option)
-    );
+    let data = await getInstrumentDataWithKey(optionTableMap[option], option);
     if (option === STOCK)
       data = data.filter((item: any) => item.itype === null);
     const fetchedInstrumentData = Object.assign(instrumentData, {
-      [optionTableMap[option]]: data,
+      [option]: data,
     });
     // required value prop to render in auto suggestions
     data.forEach(
@@ -195,9 +167,7 @@ export default function HoldingInput(props: any) {
       data
     );
     const isAllItemFiled = toValidateArr.every((item) => {
-      return (
-        toValidateHoldingState[item]
-      );
+      return toValidateHoldingState[item];
     });
     dispatchDataState({
       type: "dataUpdate",

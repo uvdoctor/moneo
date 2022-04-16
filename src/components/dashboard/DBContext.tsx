@@ -1,9 +1,20 @@
 import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { CreateUserHoldingsInput, CreateUserInsInput } from "../../api/goals";
+import {
+  CreateUserHoldingsInput,
+  CreateUserInsInput,
+  InstrumentInput,
+  InsWatchInput,
+  UpdateUserInsInput,
+} from "../../api/goals";
 import { AppContext } from "../AppContext";
 import { ALL_FAMILY } from "../nw/FamilyInput";
-import { loadAllHoldings, loadInsHoldings } from "../nw/nwutils";
+import {
+  addInsHoldings,
+  loadAllHoldings,
+  loadInsHoldings,
+  updateInsHoldings,
+} from "../nw/nwutils";
 import {
   calculateAlerts,
   calculateTotalAssets,
@@ -22,6 +33,9 @@ function DBContextProvider({ fxRates }: any) {
   const [ylow, setYlow] = useState<Array<any>>([]);
   const [volGainers, setVolGainers] = useState<Array<any>>([]);
   const [volLosers, setVolLosers] = useState<Array<any>>([]);
+  const [watchlist, setWatchlist] = useState<Array<InsWatchInput>>([]);
+  const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
+  const [insholdings, setInsholdings] = useState<boolean>(false);
 
   const initializeHoldings = async () => {
     try {
@@ -36,6 +50,9 @@ function DBContextProvider({ fxRates }: any) {
         defaultCurrency,
         fxRates
       );
+      if(insHoldings) setInsholdings(true);
+      if (insHoldings?.watch) setWatchlist([...insHoldings?.watch]);
+      if(insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
       const data = await calculateAlerts(
         allHoldings,
@@ -67,6 +84,32 @@ function DBContextProvider({ fxRates }: any) {
 
   const initializeData = async () => await initializeHoldings();
 
+  const saveHoldings = async () => {
+    let updatedInsHoldings: CreateUserInsInput = {
+      uname: owner,
+      ins: instruments,
+      watch: watchlist,
+    };
+    try {
+      if (insholdings) {
+        await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
+      } else {
+        await addInsHoldings(updatedInsHoldings);
+        setInsholdings(true);
+      }
+      notification.success({
+        message: "Data saved",
+        description: "All holdings data has been saved.",
+      });
+    } catch (e) {
+      notification.error({
+        message: "Unable to save holdings",
+        description:
+          "Sorry! An unexpected error occurred while trying to save the data.",
+      });
+    }
+  };
+
   useEffect(() => {
     if (!owner) return;
     initializeData();
@@ -84,7 +127,11 @@ function DBContextProvider({ fxRates }: any) {
         ylow,
         volLosers,
         volGainers,
-      }}>
+        watchlist,
+        setWatchlist,
+        saveHoldings
+      }}
+    >
       <DBView />
     </DBContext.Provider>
   );

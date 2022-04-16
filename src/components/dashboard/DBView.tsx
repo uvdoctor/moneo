@@ -4,10 +4,10 @@ import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
 import { DBContext } from "./DBContext";
 import { ROUTES } from "../../CONSTANTS";
-import EconomicCalendar from "./EconomicCalendar";
 import StockMarket from "./StockMarket";
 import MarketOverview from "./MarketOverview";
 import InvestmentAlerts from "./InvestmentAlerts";
+import Watchlist from "./Watchlist";
 
 require("./DBView.less");
 
@@ -98,7 +98,7 @@ export default function DBView() {
               </Row>
             </Col>
             <Col xs={24} sm={24} md={6}>
-              <EconomicCalendar />
+              <Watchlist />
             </Col>
           </Row>
         </Fragment>

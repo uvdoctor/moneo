@@ -22,8 +22,8 @@ import {
 import {
   COLORS,
   LOCAL_DATA_TTL,
+  LOCAL_EXCHG_DATA_KEY,
   LOCAL_FUN_DATA_KEY,
-  LOCAL_INSTRUMENT_RAW_DATA_KEY,
   LOCAL_INS_DATA_KEY,
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
@@ -37,7 +37,12 @@ import {
   calculateProvidentFund,
   calculateVehicle,
 } from "./valuationutils";
-import { AssetSubType, InstrumentInput, PropertyType } from "../../api/goals";
+import {
+  AssetSubType,
+  InstrumentInput,
+  InsType,
+  PropertyType,
+} from "../../api/goals";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -513,7 +518,8 @@ export const getCommodityRate = async (
     .then((result) => {
       if (!result || isNaN(result)) return 0;
       let rate = Number((result / 31.1).toFixed(2));
-      if(subtype === APIt.AssetSubType.Gold || subtype === "SI") rate = rate * 1.11;
+      if (subtype === APIt.AssetSubType.Gold || subtype === "SI")
+        rate = rate * 1.11;
       return (
         rate *
         ((getFXRate(fxRates, currency) * Number.parseFloat(purity)) /
@@ -587,27 +593,49 @@ export const initializeNPSData = async () => {
   return npsData;
 };
 
-export const getInstrumentDataWithKey = async (
-  key: string,
-  filter: { prop: string; value: string | Array<string> } | null
-) => {
-  const instrumentData = simpleStorage.get("instrumentData") || {};
+export const getFinTabFilters = (option: string) => {
+  const { STOCK, GOLDB, BOND, REIT, OIT, ETF } = TAB;
+  switch (option) {
+    case GOLDB:
+      return { prop: "subt", value: AssetSubType.GoldB };
+    case ETF:
+      return { prop: "itype", value: InsType.ETF };
+    case REIT:
+      return { prop: "itype", value: InsType.REIT };
+    case OIT:
+      return { prop: "itype", value: InsType.InvIT };
+    case STOCK:
+      return { prop: "subt", value: AssetSubType.S };
+    case BOND:
+      return {
+        prop: "subt",
+        value: [AssetSubType.GB, AssetSubType.GBO, AssetSubType.CB],
+      };
+    default:
+      return null;
+  }
+};
+
+export const getInstrumentDataWithKey = async (key: string, option: string) => {
+  let instrumentData = key === "listInExchgPrices"
+      ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
+      : simpleStorage.get(option) || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
+  const filter: { prop: string; value: string | Array<string> } | null = getFinTabFilters(option);
   const dataKeys: OptionTableMap = {
     listInExchgPrices: "listINExchgPrices",
     listInBondPrices: "listINBondPrices",
     listInmfPrices: "listINMFPrices",
   };
   const getData = async (query: any, nextToken: any) => {
-    const data: any = await API.graphql({
+    return await API.graphql({
       query: query,
       variables: { limit: 20000, nextToken: nextToken },
     });
-    return data;
   };
 
   try {
-    if (!instrumentData || !instrumentData[key]) {
+    if (!Object.keys(instrumentData).length) {
       let nextToken = undefined;
       let items: any = [];
       while (nextToken !== null) {
@@ -616,21 +644,21 @@ export const getInstrumentDataWithKey = async (
         items = [...dataObj.items, ...items];
         nextToken = dataObj.nextToken;
       }
-      instrumentData[key] = items;
-      simpleStorage.set(
-        LOCAL_INSTRUMENT_RAW_DATA_KEY,
-        instrumentData,
-        LOCAL_DATA_TTL
-      );
+      instrumentData = items;
+      if (key === LOCAL_EXCHG_DATA_KEY) {
+        simpleStorage.set(LOCAL_EXCHG_DATA_KEY, instrumentData, LOCAL_DATA_TTL);
+      } else {
+        simpleStorage.set(option, instrumentData, LOCAL_DATA_TTL);
+      }
     }
-    if (!filter) {
-      return instrumentData[key];
-    }
+    if (!filter) return instrumentData;
     const { prop, value } = filter;
-    return instrumentData[key].filter((item: OptionTableMap) => {
+    const data = instrumentData.filter((item: OptionTableMap) => {
       if (Array.isArray(value)) return value.includes(item[prop]);
       else return item[prop] === value;
     });
+    simpleStorage.set(option, data, LOCAL_DATA_TTL);
+    return data;
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
   }
@@ -1265,4 +1293,30 @@ export const filterYearHighLow = (
     selectedTags.includes("yhighlow") &&
     yhighlow.some((item: any) => item.id === id)
   );
+};
+
+export const optionTableMap: { [key: string]: string } = {
+  Stocks: "listInExchgPrices",
+  "Gold Bonds": "listInExchgPrices",
+  ETFs: "listInExchgPrices",
+  Bonds: "listInBondPrices",
+  "Mutual Funds": "listInmfPrices",
+  REITs: "listInExchgPrices",
+  "Other Investments": "listInExchgPrices",
+} as const;
+
+export const filterTabs = (data: any, childTab: string) => {
+  const { STOCK, GOLDB, BOND, REIT, OIT, ETF, MF } = TAB;
+  if (childTab === REIT) return data.itype === InsType.REIT;
+  if (childTab === OIT) return data.itype === InsType.InvIT;
+  if (childTab === ETF) return data.itype === InsType.ETF;
+  if (childTab === MF) return isFund(data.id) && !data.itype;
+  if (childTab === GOLDB) return data.subt === AssetSubType.GoldB;
+  if (childTab === BOND)
+    return (
+      data.type === APIt.AssetType.F &&
+      !isFund(data.id) &&
+      data.subt !== AssetSubType.GoldB
+    );
+  if (childTab === STOCK) return isStock(data.subt as string, data.id);
 };

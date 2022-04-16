@@ -43,7 +43,6 @@ export default function SearchInput({ inline }: SearchInputProps) {
       setSearchText={setSearchText}
       searchType={searchType}
       renderItem={(item: any) => {
-        console.log(item);
         const { Code, Exchange, Name, Type } = item;
         return (
           <List.Item>
