@@ -122,8 +122,8 @@ export default function HoldingInput(props: any) {
   const { instrumentData, suggestions, buttonState, assetType } = dataState;
 
   const onSearch = (searchText: any) => {
-    const data = instrumentData[optionTableMap[assetType]]
-      ? instrumentData[optionTableMap[assetType]].filter(
+    const data = instrumentData[assetType]
+      ? instrumentData[assetType].filter(
           (item: { value: string }) =>
             item.value.toLowerCase().includes(searchText.toLowerCase())
         )
