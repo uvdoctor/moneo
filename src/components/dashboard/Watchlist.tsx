@@ -39,7 +39,7 @@ export default function Watchlist() {
     { key: OIT, tab: OIT, type: OIT },
   ];
 
-  const getTabData = () => {
+  const loadData = () => {
     if (!watchlist.length) return;
     let filteredData: Array<any> = watchlist.filter(
       (instrument: InsWatchInput) => {
@@ -72,14 +72,16 @@ export default function Watchlist() {
       const { id, sid, type, subt, itype } = data;
       watchlist.push({ id, sid, type, subt, itype });
     } else {
-      notification.error({ message: `${Name} already exists` });
+      notification.error({
+        message: `${Name} already exists in the watchlist`,
+      });
       return;
     }
     setSearchText(Name);
   };
 
   useEffect(() => {
-    getTabData();
+    loadData();
   }, [activeTag, watchlist]);
 
   useEffect(() => {
