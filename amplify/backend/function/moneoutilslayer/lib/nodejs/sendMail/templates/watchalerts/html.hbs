@@ -21,11 +21,11 @@
     {{/if}}
 
     {{#if buy}}
-        <div class="box-container-high">
+        <div class="box-container-low">
             <p class='main-text'>{{sell.length}} sell opportunities</p>
             {{#each sell}}
             <div class="data-container">
-                <a>{{sell.name}}</a>
+                <a>{{this.name}}</a>
             </div>
             {{/each}}
         </div>
