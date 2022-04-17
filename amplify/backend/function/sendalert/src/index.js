@@ -13,10 +13,10 @@ const processData = (records) => {
       let queue = "";
       let templateName = "";
       if (queueARN.includes("price")) {
-        queue = PRICE_ALERTS_QUEUE;
+        queue = process.env.PRICE_ALERTS_QUEUE;
         templateName = PRICE_TEMPLATE_NAME;
       } else {
-        queue = WATCH_ALERTS_QUEUE;
+        queue = process.env.WATCH_ALERTS_QUEUE;
         templateName = WATCH_TEMPLATE_NAME;
       }
       try {
