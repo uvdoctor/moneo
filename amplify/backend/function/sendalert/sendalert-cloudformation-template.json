@@ -166,6 +166,20 @@
         }
       }
     },
+    "LambdaFunctionEventSourceMapping2": {
+      "DependsOn": [
+        "lambdaexecutionpolicy"
+      ],
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "Properties": {
+        "EventSourceArn": {
+          "Ref": "customwatchalertsArn"
+        },
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        }
+      }
+    },
     "lambdaexecutionpolicy": {
       "DependsOn": [
         "LambdaExecutionRole"
