@@ -5,6 +5,7 @@ const {
 const { instrumentValuation } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
 const { toHumanFriendlyCurrency } = require("/opt/nodejs/utility");
+const { watchlistValuation } = require("/opt/nodejs/watchlistVal");
 const {
   processHoldings,
   processInstruments,
@@ -15,6 +16,7 @@ const processData = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const usersinsMap = {};
+      const usersWatchMap = {};
       const infoMap = {};
       const usersMap = {};
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
@@ -37,31 +39,38 @@ const processData = () => {
       //   { ":notify": true }
 
       userinfodata.map((item) => (usersMap[item.uname] = item.email));
-      await processInstruments(infoMap, usersMap, usersinsMap);
+      await processInstruments(infoMap, usersMap, usersinsMap, usersWatchMap);
       await processHoldings(infoMap, usersMap, usersinsMap);
       const commodityList = await getCommodityList();
       const users = Object.keys(usersMap);
       for (let user of users) {
         const email = usersMap[user];
-        let { gainers, losers, yhighList, ylowList, totalPrev, totalPrice } =
-          instrumentValuation(infoMap, usersinsMap[user]);
-        const chgAmount = toHumanFriendlyCurrency(
-          Math.abs(totalPrice - totalPrev),
-          "INR"
-        );
-        const chgImpact = Math.sign(totalPrice - totalPrev) > 0;
-        const sendUserInfo = {
-          email,
-          gainers,
-          losers,
-          yhigh: yhighList,
-          ylow: ylowList,
-          valuation: toHumanFriendlyCurrency(totalPrice, "INR"),
-          chgAmount,
-          chgImpact,
-          metal: commodityList,
-        };
-        await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
+        if (usersinsMap[user]?.length) {
+          let { gainers, losers, yhighList, ylowList, totalPrev, totalPrice } =
+            instrumentValuation(infoMap, usersinsMap[user]);
+          const chgAmount = toHumanFriendlyCurrency(
+            Math.abs(totalPrice - totalPrev),
+            "INR"
+          );
+          const chgImpact = Math.sign(totalPrice - totalPrev) > 0;
+          const sendUserInfo = {
+            email,
+            gainers,
+            losers,
+            yhigh: yhighList,
+            ylow: ylowList,
+            valuation: toHumanFriendlyCurrency(totalPrice, "INR"),
+            chgAmount,
+            chgImpact,
+            metal: commodityList,
+          };
+          await sendMessage(sendUserInfo, process.env.PRICE_ALERTS_QUEUE);
+        }
+        if (usersWatchMap[user]?.length) {
+          let { buy, sell } = watchlistValuation(infoMap, usersWatchMap[user]);
+          const sendUserInfo = { email, buy, sell };
+          await sendMessage(sendUserInfo, process.env.WATCH_ALERTS_QUEUE);
+        }
       }
     } catch (err) {
       reject(err);
