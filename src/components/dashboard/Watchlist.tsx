@@ -77,6 +77,7 @@ export default function Watchlist() {
       return;
     }
     setWatchlist([...watchlist]);
+    notification.success({ message: `${Name} - Added to Watchlist` })
   };
 
   useEffect(() => {
