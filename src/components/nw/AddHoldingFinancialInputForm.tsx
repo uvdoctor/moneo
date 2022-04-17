@@ -123,9 +123,8 @@ export default function HoldingInput(props: any) {
 
   const onSearch = (searchText: any) => {
     const data = instrumentData[assetType]
-      ? instrumentData[assetType].filter(
-          (item: { value: string }) =>
-            item.value.toLowerCase().includes(searchText.toLowerCase())
+      ? instrumentData[assetType].filter((item: { value: string }) =>
+          item.value.toLowerCase().includes(searchText.toLowerCase())
         )
       : [];
     dispatchDataState({ type: "formUpdate", data: { suggestions: data } });
@@ -202,7 +201,7 @@ export default function HoldingInput(props: any) {
               data: { buttonState: true },
             });
           }}
-          onSelect={(option, obj) => {
+          onSelect={(option: any, obj: any) => {
             const { price, id, type, sid, exchg, subt } = obj;
             dispatch({
               type: "formUpdate",
