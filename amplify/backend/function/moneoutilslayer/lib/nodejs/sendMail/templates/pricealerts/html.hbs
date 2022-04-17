@@ -10,15 +10,15 @@
 <body>
 	{{#> layout templateName="pricealerts" }}
 
-	<div>
-		<p class="text-title">Investment</p>
-		<p class="text-title"><strong>{{valuation}}</strong>
-			<strong {{#if chgImpact}} style="color: green" {{else}} style="color: red" {{/if}}> {{#if
+	<p class="text-title">
+		<strong>{{valuation}}</strong>
+		<strong {{#if chgImpact}} style="color: green" {{else}} style="color: red" {{/if}}> {{#if
 				chgImpact}} ▲
 				{{else}}
-				▼{{/if}} {{ chgAmount }}</strong>
-		</p>
-	</div>
+				▼{{/if}} {{ chgAmount }}
+		</strong>
+	</p>
+
 	{{#if gainers}}
 	<div class="box-container-high">
 		<p class='main-text'>Top {{gainers.length}} gainers</p>
