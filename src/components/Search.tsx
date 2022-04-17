@@ -8,10 +8,8 @@ import { TAB } from "./nw/NWContext";
 interface SearchProps {
   inline?: boolean;
   options: any;
-  searchText: string;
   searchResults: any;
   setSearchResults: Function;
-  setSearchText: Function;
   header?: any;
   searchType: string;
   renderItem: any;
@@ -20,10 +18,8 @@ interface SearchProps {
 export default function Search({
   inline,
   options,
-  searchText,
   searchResults,
   setSearchResults,
-  setSearchText,
   header,
   searchType,
   renderItem,
@@ -31,6 +27,8 @@ export default function Search({
   const { Option } = Select;
   const { BOND, MF, ETF } = TAB;
   const [exchange, setExchange] = useState("NSE");
+  const [searchText, setSearchText] = useState("");
+  
   const exchangeComp = (
     <Select value={exchange} onChange={setExchange}>
       {options &&
@@ -145,7 +143,7 @@ export default function Search({
       arrow
     >
       <Input
-        style={{ width: "300px" }}
+        style={{ width: "auto" }}
         value={searchText}
         size="large"
         placeholder="Search stocks, bonds and MF's"

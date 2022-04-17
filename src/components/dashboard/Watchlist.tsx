@@ -3,7 +3,7 @@ import { Button, Card, Col, List, notification, Row } from "antd";
 import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
-import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 import { InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
 import { filterTabs } from "../nw/nwutils";
@@ -18,7 +18,6 @@ export default function Watchlist() {
   const { Title } = Typography;
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
-  const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("stock");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -77,7 +76,7 @@ export default function Watchlist() {
       });
       return;
     }
-    setSearchText(Name);
+    setWatchlist([...watchlist]);
   };
 
   useEffect(() => {
@@ -134,8 +133,6 @@ export default function Watchlist() {
                     }
                     searchType={searchType}
                     searchResults={searchResults}
-                    setSearchText={setSearchText}
-                    searchText={searchText}
                     setSearchResults={setSearchResults}
                     renderItem={(resp: any) => {
                       return (
@@ -150,17 +147,6 @@ export default function Watchlist() {
                     }}
                   />
                 </Col>
-                <Col>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<PlusOutlined />}
-                    onClick={() => {
-                      setSearchText("");
-                      setWatchlist([...watchlist]);
-                    }}
-                  />
-                </Col>
               </Row>
             </Col>
 
@@ -168,7 +154,7 @@ export default function Watchlist() {
               <div
                 id="scrollableDiv"
                 style={{
-                  height: 400,
+                  height: 350,
                   overflow: "auto",
                 }}>
                 <List

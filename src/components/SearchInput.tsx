@@ -9,7 +9,6 @@ interface SearchInputProps {
 }
 
 export default function SearchInput({ inline }: SearchInputProps) {
-  const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("stock");
   const [searchResults, setSearchResults] = useState([
     {
@@ -37,10 +36,8 @@ export default function SearchInput({ inline }: SearchInputProps) {
         { key: "BSE", value: "BSE" },
         { key: "US", value: "US" },
       ]}
-      searchText={searchText}
       searchResults={searchResults}
       setSearchResults={setSearchResults}
-      setSearchText={setSearchText}
       searchType={searchType}
       renderItem={(item: any) => {
         const { Code, Exchange, Name, Type } = item;
