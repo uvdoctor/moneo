@@ -37,6 +37,7 @@ function DBContextProvider({ fxRates }: any) {
   const [watchlist, setWatchlist] = useState<Array<InsWatchInput>>([]);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [insholdings, setInsholdings] = useState<boolean>(false);
+  const [holdingsLoaded, setHoldingsLoaded] = useState<boolean>(false);
 
   const initializeHoldings = async () => {
     try {
@@ -51,12 +52,12 @@ function DBContextProvider({ fxRates }: any) {
         defaultCurrency,
         fxRates
       );
-      if(insHoldings) setInsholdings(true);
+      if (insHoldings) setInsholdings(true);
       if (insHoldings?.watch) {
-        await initializeWatchlist(insHoldings?.watch)
+        await initializeWatchlist(insHoldings?.watch);
         setWatchlist([...insHoldings?.watch]);
       }
-      if(insHoldings?.ins) setInstruments([...insHoldings?.ins]);
+      if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
       const data = await calculateAlerts(
         allHoldings,
@@ -116,7 +117,7 @@ function DBContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     if (!owner) return;
-    initializeData();
+    initializeData().then(() => setHoldingsLoaded(true));
   }, [owner]);
 
   return (
@@ -133,9 +134,9 @@ function DBContextProvider({ fxRates }: any) {
         volGainers,
         watchlist,
         setWatchlist,
-        saveHoldings
-      }}
-    >
+        saveHoldings,
+        holdingsLoaded,
+      }}>
       <DBView />
     </DBContext.Provider>
   );

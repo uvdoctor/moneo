@@ -1,4 +1,5 @@
 import { Col, Row } from "antd";
+import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { CreateGoalInput } from "../../api/goals";
 import { ROUTES } from "../../CONSTANTS";
@@ -40,41 +41,47 @@ export default function SetResult() {
   }, []);
 
   return (
-    <Row>
-      <Col span={24}>
-        <ItemDisplay
-          label="Financial Independence Age"
-          result={
-            !ffGoal
-              ? "Not defined"
-              : ffYear
-              ? ffYear - ffGoal.sy
-              : "Not achievable"
-          }
-          info={"Earliest age when you can achieve financial independence."}
-          loading={!goalsLoaded}
-        />
-        {!ffGoal ? (
-          <a href={ROUTES.SET}>Discover financial independence age</a>
-        ) : null}
-      </Col>
-      <Col xs={12}>
-        <ItemDisplay
-          label="Amount needed"
-          result={ffAmt}
-          currency={defaultCurrency}
-          info="This is the minimum amount needed to achieve financial independence."
-        />
-      </Col>
-      {totalAssets || totalLiabilities ? (
-        <Col xs={12}>
-          <ItemDisplay
-            label="Number of Goals"
-            result={numOfGoals}
-            info="Number of goals defined in the financial plan."
-          />
-        </Col>
-      ) : null}
-    </Row>
+    <Link href={ROUTES.SET}>
+      <a>
+        <Row>
+          <Col span={24}>
+            <ItemDisplay
+              label="Financial Independence Age"
+              result={
+                !ffGoal
+                  ? "Not defined"
+                  : ffYear
+                  ? ffYear - ffGoal.sy
+                  : "Not achievable"
+              }
+              info={"Earliest age when you can achieve financial independence."}
+              loading={!goalsLoaded}
+            />
+            {!ffGoal ? (
+              <a href={ROUTES.SET}>Discover financial independence age</a>
+            ) : null}
+          </Col>
+          <Col xs={12}>
+            <ItemDisplay
+              label="Amount needed"
+              result={ffAmt}
+              currency={defaultCurrency}
+              loading={!goalsLoaded}
+              info="This is the minimum amount needed to achieve financial independence."
+            />
+          </Col>
+          {totalAssets || totalLiabilities ? (
+            <Col xs={12}>
+              <ItemDisplay
+                label="Number of Goals"
+                result={numOfGoals}
+                loading={!goalsLoaded}
+                info="Number of goals defined in the financial plan."
+              />
+            </Col>
+          ) : null}
+        </Row>
+      </a>
+    </Link>
   );
 }

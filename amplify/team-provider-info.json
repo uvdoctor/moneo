@@ -63,7 +63,7 @@
         },
         "sendalert": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/sendalert-6b617556724e44436d77-build.zip"
+          "s3Key": "amplify-builds/sendalert-76383266454432634553-build.zip"
         }
       },
       "auth": {
