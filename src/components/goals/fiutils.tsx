@@ -95,7 +95,6 @@ export const calculateFI = (
   ffYear: number | null,
   allGoals: Array<CreateGoalInput>,
   allCFs: any,
-  mergedCFs: any,
   isPublicCalc: boolean,
   defaultCurrency: string,
   fxRates: any
@@ -156,7 +155,7 @@ export const calculateFI = (
       );
     mergeCFs(mCFs, cfs, g.sy, g.ccy, defaultCurrency, fxRates);
   });
-  let result = findEarliestFFYear(ffGoal, mergedCFs, ffYear, mustCFs, tryCFs);
+  let result = findEarliestFFYear(ffGoal, mCFs, ffYear, mustCFs, tryCFs);
   return {
     mustCFs,
     tryCFs,

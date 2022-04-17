@@ -6,7 +6,6 @@ import { FIGoalContextProvider } from "./FIGoalContext";
 import { FeedbackContextProvider } from "../feedback/FeedbackContext";
 import PlanView from "./PlanView";
 import { PlanContext } from "./PlanContext";
-import CalcTemplate from "../calc/CalcTemplate";
 import { Skeleton } from "antd";
 
 export default function SetPlan() {
@@ -18,13 +17,9 @@ export default function SetPlan() {
       <FeedbackContextProvider>
         <CalcContextProvider>
           {(goal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
-            <FIGoalContextProvider>
-              <CalcTemplate />
-            </FIGoalContextProvider>
+            <FIGoalContextProvider />
           ) : (
-            <GoalContextProvider>
-              <CalcTemplate />
-            </GoalContextProvider>
+            <GoalContextProvider />
           )}
         </CalcContextProvider>
       </FeedbackContextProvider>

@@ -474,7 +474,7 @@ function CalcContextProvider({
           centered
           title={
             <Fragment>
-              <WarningOutlined /> Detected Changes
+              <WarningOutlined /> Detected changes
             </Fragment>
           }
           onOk={() => handleSubmit()}
@@ -483,7 +483,7 @@ function CalcContextProvider({
           cancelText="No"
           destroyOnClose
           visible={showConfirmationModal}>
-          <p>Do You Wish to Save them?</p>
+          <p>Do you wish to save the changes?</p>
         </Modal>
       )}
     </CalcContext.Provider>

@@ -126,7 +126,7 @@ export default function CalcHeader() {
         <Modal
           visible={showFeedbackModal}
           centered
-          title="Please help Us to Improve"
+          title="Please help us to improve"
           footer={null}
           maskClosable
           onCancel={closeModal}>

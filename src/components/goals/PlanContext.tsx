@@ -90,7 +90,6 @@ function PlanContextProvider({
       ffYear,
       allGoals,
       allCFs,
-      mergedCFs,
       isPublicCalc,
       defaultCurrency,
       fxRates
@@ -98,7 +97,7 @@ function PlanContextProvider({
     setMustCFs(result.mustCFs);
     setTryCFs(result.tryCFs);
     setOptCFs(result.optCFs);
-    setMergedCFs(result.mergeCFs);
+    setMergedCFs(result.mergedCFs);
     setOppCostCache(result.oppCostCache);
     setFFResult(result.ffResult);
     setFFYear(result.ffYear);
