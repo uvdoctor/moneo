@@ -19,6 +19,7 @@ import {
   calculateAlerts,
   calculateTotalAssets,
   calculateTotalLiabilities,
+  initializeWatchlist,
 } from "../nw/valuationutils";
 import DBView from "./DBView";
 const DBContext = createContext({});
@@ -51,7 +52,10 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       if(insHoldings) setInsholdings(true);
-      if (insHoldings?.watch) setWatchlist([...insHoldings?.watch]);
+      if (insHoldings?.watch) {
+        await initializeWatchlist(insHoldings?.watch)
+        setWatchlist([...insHoldings?.watch]);
+      }
       if(insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
       const data = await calculateAlerts(

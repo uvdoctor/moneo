@@ -12,6 +12,7 @@ import {
   HoldingInput,
   InstrumentInput,
   InsType,
+  InsWatchInput,
   MFSchemeType,
   PropertyInput,
   PropertyType,
@@ -1198,4 +1199,10 @@ export const calculateAlerts = async (
     fxRates,
     currency
   );
+};
+
+export const initializeWatchlist = async (instruments: Array<InsWatchInput>) => {
+  const ids: Array<string> = [];
+  instruments.forEach((instrument: InsWatchInput) => ids.push(instrument.id));
+  return await loadInstruments(ids);
 };
