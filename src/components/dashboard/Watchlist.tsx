@@ -20,9 +20,6 @@ export default function Watchlist() {
   const [activeTag, setActiveTag] = useState<string>(STOCK);
   const [searchType, setSearchType] = useState("stock");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
-  const [searchResults, setSearchResults] = useState([]);
-
-  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT].includes(tab);
 
   const getType = (searchType: string) => {
     if (searchType === "stock") return { type: "A", subt: "S", itype: null };
@@ -122,17 +119,7 @@ export default function Watchlist() {
             </Col>
             <Col span={24}>
                   <Search
-                    options={
-                      hasOnlyIndiaIns(searchType)
-                        ? [{ key: "NSE", value: "INDIA" }]
-                        : [
-                            { key: "NSE", value: "INDIA" },
-                            { key: "US", value: "US" },
-                          ]
-                    }
                     searchType={searchType}
-                    searchResults={searchResults}
-                    setSearchResults={setSearchResults}
                     renderItem={(resp: any) => {
                       return (
                         <List.Item>

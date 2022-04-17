@@ -10,20 +10,6 @@ interface SearchInputProps {
 
 export default function SearchInput({ inline }: SearchInputProps) {
   const [searchType, setSearchType] = useState("stock");
-  const [searchResults, setSearchResults] = useState([
-    {
-      Code: "SBIN",
-      Exchange: "NSE",
-      Name: "State Bank of India",
-      Type: "Common Stock",
-      Country: "India",
-      Currency: "INR",
-      ISIN: "INE062A01020",
-      previousClose: 529.6,
-      previousCloseDate: "2022-02-11",
-    },
-  ]);
-
   const onSearchTypeChange = ({ target: { value } }: any) => {
     setSearchType(value);
   };
@@ -31,13 +17,6 @@ export default function SearchInput({ inline }: SearchInputProps) {
   return (
     <Search
       inline={inline}
-      options={[
-        { key: "NSE", value: "NSE" },
-        { key: "BSE", value: "BSE" },
-        { key: "US", value: "US" },
-      ]}
-      searchResults={searchResults}
-      setSearchResults={setSearchResults}
       searchType={searchType}
       renderItem={(item: any) => {
         const { Code, Exchange, Name, Type } = item;
