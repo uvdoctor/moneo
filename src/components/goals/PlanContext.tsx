@@ -10,21 +10,20 @@ import {
   CreateGoalInput,
   GoalType,
   LMH,
-  TaxLiability,
   UpdateGoalInput,
 } from "../../api/goals";
 import { ROUTES } from "../../CONSTANTS";
-import { appendValue, getFXRate, removeFromArray } from "../utils";
-import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
+import { removeFromArray } from "../utils";
 import {
   changeGoal,
   createNewGoal,
   deleteGoal,
-  getDuration,
-  getGoalsList,
+  loadAllGoals,
+  loadStateFromUserInfo,
 } from "./goalutils";
 import { useRouter } from "next/router";
 import { AppContext } from "../AppContext";
+import { calculateFI, calculateFIImpactYears } from "./fiutils";
 
 const PlanContext = createContext({});
 
@@ -63,135 +62,75 @@ function PlanContextProvider({
     !isPublicCalc ? null : discountRate ? discountRate : 5
   );
   const [planError, setPlanError] = useState<string>("");
-  const nowYear = new Date().getFullYear();
-
-  const getCurrencyFactor = (currency: string) => {
-    return getFXRate(fxRates, defaultCurrency) / getFXRate(fxRates, currency);
-  };
-
-  const loadStateFromUserInfo = (g: CreateGoalInput) => {
-    if (!userInfo) return;
-    g.sy = new Date(userInfo.dob).getFullYear();
-    if (g.loan) g.loan.dur = userInfo.le;
-    g.rp = userInfo.rp;
-    g.manual =
-      userInfo.tax === TaxLiability.NIL || userInfo.tax === TaxLiability.L
-        ? 0
-        : 1;
-  };
-
-  const loadAllGoals = async () => {
-    let goals: Array<CreateGoalInput> | null = await getGoalsList();
-    if (!goals || goals.length === 0) {
-      setGoalsLoaded(true);
-      return [];
-    }
-    let allCFs: any = {};
-    let ffGoalId = "";
-    goals?.forEach((g) => {
-      if (g.type === GoalType.FF) {
-        loadStateFromUserInfo(g);
-        setFFGoal(g);
-        ffGoalId = g.id as string;
-      } else {
-        let result: any = calculateCFs(
-          null,
-          g,
-          getDuration(
-            g.sa as number,
-            g.sy,
-            g.sm as number,
-            g.ey,
-            g.manual,
-            g.loan?.per as number,
-            g.loan?.ry as number,
-            g.loan?.dur as number,
-            g.type === GoalType.E && (g?.loan?.per as number) > 0,
-            g.achg as number
-          )
-        );
-        allCFs[g.id as string] = result.cfs;
-      }
-    });
-    removeFromArray(goals, "id", ffGoalId);
-    setAllCFs(allCFs);
-    return goals;
-  };
-
-  const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
-    if (!ffGoal) return {};
-    let mCFs: any = {};
-    let ffToYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-    if (toYear < ffToYear) toYear = ffToYear;
-    for (let year = fromYear; year <= toYear; year++) mCFs[year] = 0;
-    return mCFs;
-  };
-
-  const calculateFFYear = (
-    mergedCFs: any,
-    mustCFs: Array<number>,
-    tryCFs: Array<number>
-  ) => {
-    if (!ffGoal) return;
-    let result = findEarliestFFYear(ffGoal, mergedCFs, ffYear, mustCFs, tryCFs);
-    setFFResult(result);
-    setOppCostCache({});
-    setRR([...result.rr]);
-    setFFYear(isFFPossible(result, ffGoal.sa as number) ? result.ffYear : null);
-  };
 
   useEffect(() => {
     if (!appContextLoaded) return;
     if (isPublicCalc) {
       setAllGoals([...[]]);
+      setAllCFs({});
+      setGoalsLoaded(true);
     } else
-      loadAllGoals().then((allGoals) => {
-        setAllGoals([
-          ...(allGoals?.sort(
-            (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
-          ) as Array<CreateGoalInput>),
-        ]);
-        setGoalsLoaded(true);
+      loadAllGoals(userInfo).then((result: any) => {
+        if (!result?.ffGoal) return;
+        setFFGoal(result.ffGoal);
+        setAllCFs(result.allCFs);
+        if (result?.goals && result.goals.length)
+          setAllGoals([
+            ...(result?.goals.sort(
+              (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+            ) as Array<CreateGoalInput>),
+          ]);
       });
-  }, [appContextLoaded]);
-
-  const calculateFI = (allGoals: Array<CreateGoalInput> | null) => {
-    if (!ffGoal) return;
-    let yearRange = getYearRange();
-    let mustCFs = populateWithZeros(yearRange.from, yearRange.to);
-    let tryCFs = populateWithZeros(yearRange.from, yearRange.to);
-    let optCFs = populateWithZeros(yearRange.from, yearRange.to);
-    let mCFs = buildEmptyMergedCFs(
-      yearRange.from,
-      ffGoal.sy + (ffGoal.loan?.dur as number)
-    );
-    if (isPublicCalc) {
-      setMustCFs([...mustCFs]);
-      setOptCFs([...optCFs]);
-      setTryCFs([...tryCFs]);
-      setMergedCFs(mCFs);
-      return;
-    }
-    allGoals?.forEach((g) => {
-      let cfs: Array<number> = allCFs[g.id as string];
-      if (!cfs) return;
-      if (g.imp === LMH.H)
-        populateData(mustCFs, cfs, g.sy, yearRange.from, g.ccy);
-      else if (g.imp === LMH.M)
-        populateData(tryCFs, cfs, g.sy, yearRange.from, g.ccy);
-      else populateData(optCFs, cfs, g.sy, yearRange.from, g.ccy);
-      mergeCFs(mCFs, cfs, g.sy, g.ccy);
-    });
-    setMustCFs([...mustCFs]);
-    setOptCFs([...optCFs]);
-    setTryCFs([...tryCFs]);
-    setMergedCFs(mCFs);
-    calculateFFYear(mCFs, mustCFs, tryCFs);
-  };
+  }, [appContextLoaded, userInfo]);
 
   useEffect(() => {
-    calculateFI(allGoals);
+    if (!ffGoal || !allGoals) return;
+    const result: any = calculateFI(
+      ffGoal,
+      ffYear,
+      allGoals,
+      allCFs,
+      mergedCFs,
+      isPublicCalc,
+      defaultCurrency,
+      fxRates
+    );
+    setMustCFs(result.mustCFs);
+    setTryCFs(result.tryCFs);
+    setOptCFs(result.optCFs);
+    setMergedCFs(result.mergeCFs);
+    setOppCostCache(result.oppCostCache);
+    setFFResult(result.ffResult);
+    setFFYear(result.ffYear);
+    setRR([...result.rr]);
+    setGoalsLoaded(true);
   }, [allGoals]);
+
+  const calculateFFImpactYear = (
+    startYear: number,
+    cfs: Array<number>,
+    goalId: string,
+    goalImpLevel: LMH,
+    goalCurrency: string
+  ) => {
+    if (!ffGoal || !allGoals) return;
+    return calculateFIImpactYears(
+      ffGoal,
+      allGoals,
+      allCFs,
+      ffYear,
+      defaultCurrency,
+      fxRates,
+      startYear,
+      cfs,
+      goalId,
+      goalImpLevel,
+      goalCurrency,
+      mergedCFs,
+      mustCFs,
+      tryCFs
+    );
+  };
 
   const addGoal = async (newGoal: CreateGoalInput, cfs: Array<number> = []) => {
     let g = null;
@@ -207,7 +146,7 @@ function PlanContextProvider({
     if (!g) return false;
     setGoal(null);
     if (g.type === GoalType.FF) {
-      loadStateFromUserInfo(g);
+      loadStateFromUserInfo(userInfo, g);
       setFFGoal(g);
       setAllGoals([
         ...(allGoals?.sort(
@@ -249,7 +188,7 @@ function PlanContextProvider({
         description:
           "Success! Your Financial Independence Target has been Updated.",
       });
-      loadStateFromUserInfo(savedGoal as CreateGoalInput);
+      loadStateFromUserInfo(userInfo, savedGoal as CreateGoalInput);
       setFFGoal(savedGoal as CreateGoalInput);
       setAllGoals([
         ...(allGoals?.sort(
@@ -312,142 +251,6 @@ function PlanContextProvider({
     }
     if (!allGoals || !allGoals.length) return;
     setGoal(allGoals.filter((g) => g.id === id)[0]);
-  };
-
-  const getYearRange = () => {
-    let fromYear = nowYear + 1;
-    if (!ffGoal || !allGoals || !allGoals[0])
-      return { from: fromYear, to: fromYear };
-    let toYear = nowYear + 1;
-    allGoals.forEach((g) => {
-      let endYear = g.sy + allCFs[g.id as string].length;
-      if (endYear > toYear) toYear = endYear;
-    });
-    let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-    if (toYear > ffGoalEndYear) toYear = ffGoalEndYear;
-    return { from: fromYear, to: toYear };
-  };
-
-  const populateWithZeros = (firstYear: number, lastYear: number) => {
-    let cfs: Array<number> = [];
-    for (let year = firstYear; year <= lastYear; year++) {
-      cfs.push(0);
-    }
-    return cfs;
-  };
-
-  const populateData = (
-    totalCfs: Array<number>,
-    cfs: Array<number>,
-    sy: number,
-    firstYear: number,
-    goalCurrency: string
-  ) => {
-    let firstIndex = sy - firstYear;
-    let currencyFactor = getCurrencyFactor(goalCurrency);
-    cfs.forEach((cf, i) => {
-      if (firstIndex + i >= 0) totalCfs[firstIndex + i] += cf * currencyFactor;
-    });
-  };
-
-  const mergeCFs = (
-    obj: Object,
-    cfs: Array<number>,
-    sy: number,
-    goalCurrency: string
-  ) => {
-    let currencyFactor = getCurrencyFactor(goalCurrency);
-    cfs.forEach((cf, i) => {
-      let year = sy + i;
-      appendValue(obj, year, cf * currencyFactor);
-    });
-  };
-
-  const calculateFFImpactYear = (
-    startYear: number,
-    cfs: Array<number>,
-    goalId: string,
-    goalImp: LMH,
-    goalCurrency: string,
-    result?: any,
-    mergedCashflows?: any,
-    mustCashflows?: any,
-    tryCashflows?: any
-  ) => {
-    if (!ffGoal) return null;
-    let mCFs: any = Object.assign(
-      {},
-      mergedCashflows ? mergedCashflows : mergedCFs
-    );
-    let highImpCFs: any = Object.assign(
-      [],
-      mustCashflows ? mustCashflows : mustCFs
-    );
-    let medImpCFs: any = Object.assign(
-      [],
-      tryCashflows ? tryCashflows : tryCFs
-    );
-    let nowYear = new Date().getFullYear();
-    let currencyFactor = getCurrencyFactor(goalCurrency);
-    if (goalId) {
-      let existingGoal = (
-        allGoals?.filter((g) => g.id === goalId) as Array<CreateGoalInput>
-      )[0];
-      let existingSY = existingGoal.sy;
-      let existingImp = existingGoal.imp;
-      let existingCFs = allCFs[goalId];
-      existingCFs.forEach((cf: number, i: number) => {
-        let cashFlow = -cf * currencyFactor;
-        appendValue(mCFs, existingSY + i, cashFlow);
-        let index = existingSY + i - (nowYear + 1);
-        if (existingImp === LMH.H) {
-          appendValue(highImpCFs, index, cashFlow);
-        } else if (existingImp === LMH.M) {
-          appendValue(medImpCFs, index, cashFlow);
-        }
-      });
-    }
-    let nomineeAmt = ffGoal?.sa as number;
-    let resultWithoutGoal = findEarliestFFYear(
-      ffGoal,
-      mCFs,
-      result ? result.ffYear : ffYear,
-      highImpCFs,
-      medImpCFs
-    );
-    if (!isFFPossible(resultWithoutGoal, nomineeAmt))
-      return {
-        impactYears: null,
-        rr: resultWithoutGoal.rr,
-      };
-    cfs.forEach((cf, i) => {
-      let cashFlow = cf * currencyFactor;
-      appendValue(mCFs, startYear + i, cashFlow);
-      let index = startYear + i - (nowYear + 1);
-      if (goalImp === LMH.H) {
-        appendValue(highImpCFs, index, cashFlow);
-      } else if (goalImp === LMH.M) {
-        appendValue(medImpCFs, index, cashFlow);
-      }
-    });
-    let resultWithGoal = result
-      ? result
-      : findEarliestFFYear(
-          ffGoal,
-          mCFs,
-          result ? result.ffYear : ffYear,
-          highImpCFs,
-          medImpCFs
-        );
-    if (!isFFPossible(resultWithGoal, nomineeAmt))
-      return {
-        impactYears: null,
-        rr: resultWithoutGoal.rr,
-      };
-    return {
-      impactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
-      rr: resultWithoutGoal.rr,
-    };
   };
 
   return (
