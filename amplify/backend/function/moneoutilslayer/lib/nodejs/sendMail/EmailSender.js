@@ -52,6 +52,13 @@ const sendEmail = async ({ templateName, email, values }) => {
   console.log(path.resolve("./email.css"));
   console.log(path.resolve("./partials"));
   registerPartials(partialsPath);
+  handlebars.registerHelper("title", function (templateName) {
+    switch (templateName) {
+      case PRICE_TEMPLATE_NAME: return "Investment Valuation";
+      case WATCH_TEMPLATE_NAME: return "Buy / Sell Alerts";
+      default: return "";
+    }
+  });
   console.log(templateName, email, values);
   const [html, text, subject] = await Promise.all([
     renderTemplate(templateName, "html", values),
