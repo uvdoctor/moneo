@@ -103,7 +103,7 @@ export default function SummaryView() {
                         onClick={() => {
                           confirm({
                             icon: <ExclamationCircleOutlined />,
-                            content: "Are You Sure about Deleting this Goal?",
+                            content: "Are you sure about deleting this goal?",
                             onOk() {
                               removeGoal(goal.id);
                             },

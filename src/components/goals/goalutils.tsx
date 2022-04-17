@@ -2,7 +2,7 @@ import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
-import { getRangeFactor } from "../utils";
+import { getRangeFactor, removeFromArray } from "../utils";
 import {
   faUserGraduate,
   faShoppingCart,
@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Storage } from "aws-amplify";
 import { BuyType } from "../../api/goals";
+import { calculateCFs } from "./cfutils";
 
 export const getGoalsList = async () => {
   try {
@@ -359,4 +360,56 @@ export const goalImgStorage = {
       return curGoal.id !== goalId && curGoal.img === goalImgKey;
     });
   },
+};
+
+export const loadStateFromUserInfo = (
+  userInfo: any,
+  g: APIt.CreateGoalInput
+) => {
+  if (!userInfo) return;
+  g.sy = new Date(userInfo.dob).getFullYear();
+  if (g.loan) g.loan.dur = userInfo.le;
+  g.rp = userInfo.rp;
+  g.manual =
+    userInfo.tax === APIt.TaxLiability.NIL ||
+    userInfo.tax === APIt.TaxLiability.L
+      ? 0
+      : 1;
+};
+
+export const loadAllGoals = async (userInfo: any) => {
+  let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList();
+  if (!goals || !goals.length) {
+    return { ffGoal: null, goals: [], allCFs: null };
+  }
+  let allCFs: any = {};
+  let ffGoal: any = null;
+  let ffGoalId = "";
+  goals?.forEach((g) => {
+    if (g.type === APIt.GoalType.FF) {
+      ffGoal = g;
+      loadStateFromUserInfo(userInfo, g);
+      ffGoalId = g.id as string;
+    } else {
+      let result: any = calculateCFs(
+        null,
+        g,
+        getDuration(
+          g.sa as number,
+          g.sy,
+          g.sm as number,
+          g.ey,
+          g.manual,
+          g.loan?.per as number,
+          g.loan?.ry as number,
+          g.loan?.dur as number,
+          g.type === APIt.GoalType.E && (g?.loan?.per as number) > 0,
+          g.achg as number
+        )
+      );
+      allCFs[g.id as string] = result.cfs;
+    }
+  });
+  removeFromArray(goals, "id", ffGoalId);
+  return { ffGoal, goals, allCFs };
 };
