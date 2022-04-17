@@ -34,7 +34,7 @@ export default function CryptoTypeahead({
 
   useEffect(() => {
     getList().then((response) => {
-      if(response) {
+      if (response) {
         setData([...response]);
         setSuggestions([...response]);
       }
@@ -58,8 +58,8 @@ export default function CryptoTypeahead({
         id="name"
         options={suggestions}
         style={{ width: 230 }}
-        onChange={(option) => setValue(option)}
-        onSelect={(_option, obj) => {
+        onChange={(option: string) => setValue(option)}
+        onSelect={(_option: any, obj: any) => {
           const { code } = obj;
           changehandler(code);
         }}
