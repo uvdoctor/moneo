@@ -121,8 +121,6 @@ export default function Watchlist() {
               </Button>
             </Col>
             <Col span={24}>
-              <Row justify="space-between" align="middle">
-                <Col>
                   <Search
                     options={
                       hasOnlyIndiaIns(searchType)
@@ -147,8 +145,6 @@ export default function Watchlist() {
                       );
                     }}
                   />
-                </Col>
-              </Row>
             </Col>
 
             <Col xs={24}>
