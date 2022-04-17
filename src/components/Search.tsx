@@ -7,9 +7,6 @@ import { TAB } from "./nw/NWContext";
 
 interface SearchProps {
   inline?: boolean;
-  options: any;
-  searchResults: any;
-  setSearchResults: Function;
   header?: any;
   searchType: string;
   renderItem: any;
@@ -17,28 +14,45 @@ interface SearchProps {
 
 export default function Search({
   inline,
-  options,
-  searchResults,
-  setSearchResults,
   header,
   searchType,
   renderItem,
 }: SearchProps) {
   const { Option } = Select;
-  const { BOND, MF, ETF } = TAB;
+  const { BOND, MF, ETF, GOLDB, REIT, OIT } = TAB;
   const [exchange, setExchange] = useState("NSE");
   const [searchText, setSearchText] = useState("");
-  
+  const [searchResults, setSearchResults] = useState([
+    {
+      Code: "SBIN",
+      Exchange: "NSE",
+      Name: "State Bank of India",
+      Type: "Common Stock",
+      Country: "India",
+      Currency: "INR",
+      ISIN: "INE062A01020",
+      previousClose: 529.6,
+      previousCloseDate: "2022-02-11",
+    },
+  ]);
+
+  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT].includes(tab);
+  const options = hasOnlyIndiaIns(searchType)
+    ? [{ key: "NSE", value: "INDIA" }]
+    : [
+        { key: "NSE", value: "INDIA" },
+        { key: "US", value: "US" },
+      ];
+
   const exchangeComp = (
     <Select value={exchange} onChange={setExchange}>
-      {options &&
-        options.map((item: { key: string; value: string }) => {
-          return (
-            <Option key={item.key} value={item.key}>
-              {item.value}
-            </Option>
-          );
-        })}
+      {options.map((item: { key: string; value: string }) => {
+        return (
+          <Option key={item.key} value={item.key}>
+            {item.value}
+          </Option>
+        );
+      })}
     </Select>
   );
   interface InlineListProps {
@@ -98,7 +112,12 @@ export default function Search({
           `/api/search?text=${searchText}&type=${searchType}&exchange=${exchange}`
         );
         data = await response.json();
-        // if(!data.length && exchange !== "US")
+        if(!data.length && exchange === "NSE") {
+          response = await fetch(
+            `/api/search?text=${searchText}&type=${searchType}&exchange=BSE`
+          );
+          data = await response.json();
+        }
       }
       setSearchResults(data);
     } catch (err) {
