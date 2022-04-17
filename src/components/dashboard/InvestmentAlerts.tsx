@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button, Card, Row, Tag } from "antd";
+import { Button, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useRouter } from "next/router";
-import { Typography } from "antd";
 import InvestmentAlertList from "./InvestmentAlertList";
+import CardView from "./CardView";
 require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
@@ -22,9 +22,7 @@ export default function InvestmentAlerts({
   volGainers,
   volLosers,
 }: InvestmentAlertsProps) {
-  const { Title } = Typography;
   const router = useRouter();
-  const { CheckableTag } = Tag;
   const PRICE_TAG = "Price";
   const VOLUME_TAG = "Volume";
   const HIGH_LOW_TAG = "52-weeks";
@@ -64,38 +62,26 @@ export default function InvestmentAlerts({
   };
 
   return (
-    <>
-      <Title level={5}>Investment Updates</Title>
-      <Card style={{ width: "100%", height: 600 }}>
-        <>
-          <p>
-            {Object.keys(contentList).map((key: string) => (
-              <CheckableTag
-                key={key}
-                checked={activeTag === key}
-                style={{ fontSize: "15px" }}
-                onChange={(checked: boolean) =>
-                  checked ? setActiveTag(key) : null
-                }>
-                {key}
-              </CheckableTag>
-            ))}
-          </p>
-          {contentList[activeTag]}
-          <Row justify="center">
-            <Button
-              key="more"
-              type="primary"
-              href={`${ROUTES.GET}?show=fin`}
-              onClick={(e: any) => {
-                e.preventDefault();
-                router.push(`${ROUTES.GET}?show=fin`);
-              }}>
-              More Details
-            </Button>
-          </Row>
-        </>
-      </Card>
-    </>
+    <CardView
+      title="Investment Updates"
+      tags={Object.keys(contentList)}
+      activeTag={activeTag}
+      activeTagHandler={setActiveTag}>
+      <>
+        {contentList[activeTag]}
+        <Row justify="center">
+          <Button
+            key="more"
+            type="primary"
+            href={`${ROUTES.GET}?show=fin`}
+            onClick={(e: any) => {
+              e.preventDefault();
+              router.push(`${ROUTES.GET}?show=fin`);
+            }}>
+            More Details
+          </Button>
+        </Row>
+      </>
+    </CardView>
   );
 }

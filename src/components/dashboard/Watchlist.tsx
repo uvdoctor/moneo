@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, Col, List, notification, Row } from "antd";
+import { Button, Col, List, notification, Row } from "antd";
 import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
@@ -9,13 +9,12 @@ import simpleStorage from "simplestorage.js";
 import { filterTabs } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
-import CheckableTag from "antd/lib/tag/CheckableTag";
 import Search from "../Search";
+import CardView from "./CardView";
 require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
   const { watchlist, setWatchlist, saveHoldings }: any = useContext(DBContext);
-  const { Title } = Typography;
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
   const [searchType, setSearchType] = useState("stock");
@@ -25,15 +24,15 @@ export default function Watchlist() {
     if (searchType === "stock") return { type: "A", subt: "S", itype: null };
   };
 
-  const tabList = [
-    { key: STOCK, tab: STOCK, type: "stock" },
-    { key: MF, tab: MF, type: "fund" },
-    { key: BOND, tab: BOND, type: "bond" },
-    { key: GOLDB, tab: GOLDB, type: GOLDB },
-    { key: ETF, tab: ETF, type: "etf" },
-    { key: REIT, tab: REIT, type: REIT },
-    { key: OIT, tab: OIT, type: OIT },
-  ];
+  const typesList = {
+    [STOCK]: "stock",
+    [MF]: "fund",
+    [BOND]: "bond",
+    [GOLDB]: GOLDB,
+    [ETF]: "etf",
+    [REIT]: REIT,
+    [OIT]: OIT,
+  };
 
   const loadData = () => {
     if (!watchlist.length) return;
@@ -74,85 +73,67 @@ export default function Watchlist() {
       return;
     }
     setWatchlist([...watchlist]);
-    notification.success({ message: `${Name} - Added to Watchlist` })
+    notification.success({ message: `${Name} - Added to Watchlist` });
   };
 
   useEffect(() => {
     loadData();
   }, [activeTag, watchlist]);
 
-  useEffect(() => {
-    const data = tabList.find((item: any) => item.key === activeTag);
-    if (data) setSearchType(data.type);
-  }, [activeTag]);
+  useEffect(() => setSearchType(typesList[activeTag]), [activeTag]);
 
   return (
-    <>
-      <Title level={5}>Investment Watchlist</Title>
-      <Card style={{ width: "100%", height: 600 }}>
-        <>
-          <p>
-            {tabList.map((item: any) => (
-              <CheckableTag
-                key={item.key}
-                checked={activeTag === item.key}
-                style={{ fontSize: "15px" }}
-                onChange={(checked: boolean) =>
-                  checked ? setActiveTag(item.key) : null
-                }>
-                {item.key}
-              </CheckableTag>
-            ))}
-          </p>
+    <CardView
+      title="Investment Watchlist"
+      activeTag={activeTag}
+      activeTagHandler={setActiveTag}
+      tags={Object.keys(typesList)}>
+      <Row justify="center" gutter={[0, 10]} align="middle">
+        <Col xs={24}>
+          <Button
+            key="save"
+            style={{ float: "right" }}
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={async () => await saveHoldings()}
+            className="steps-start-btn">
+            Save
+          </Button>
+        </Col>
+        <Col span={24}>
+          <Search
+            searchType={searchType}
+            renderItem={(resp: any) => {
+              return (
+                <List.Item>
+                  <Typography.Link
+                    onClick={() => onSelectInstruments(resp)}
+                    style={{ marginRight: 8 }}>
+                    {resp.Name}
+                  </Typography.Link>
+                </List.Item>
+              );
+            }}
+          />
+        </Col>
 
-          <Row justify="center" gutter={[0, 10]} align="middle">
-            <Col xs={24}>
-              <Button
-                key="save"
-                style={{ float: "right" }}
-                type="primary"
-                icon={<SaveOutlined />}
-                onClick={async () => await saveHoldings()}
-                className="steps-start-btn">
-                Save
-              </Button>
-            </Col>
-            <Col span={24}>
-                  <Search
-                    searchType={searchType}
-                    renderItem={(resp: any) => {
-                      return (
-                        <List.Item>
-                          <Typography.Link
-                            onClick={() => onSelectInstruments(resp)}
-                            style={{ marginRight: 8 }}>
-                            {resp.Name}
-                          </Typography.Link>
-                        </List.Item>
-                      );
-                    }}
-                  />
-            </Col>
-
-            <Col xs={24}>
-              <div
-                id="scrollableDiv"
-                style={{
-                  height: 350,
-                  overflow: "auto",
-                }}>
-                <List
-                  itemLayout="horizontal"
-                  dataSource={filterByTab}
-                  renderItem={(item) => {
-                    return <WatchlistRow record={item} />;
-                  }}
-                />
-              </div>
-            </Col>
-          </Row>
-        </>
-      </Card>
-    </>
+        <Col xs={24}>
+          <div
+            id="scrollableDiv"
+            style={{
+              height: 350,
+              overflow: "auto",
+            }}>
+            <List
+              itemLayout="horizontal"
+              dataSource={filterByTab}
+              renderItem={(item) => {
+                return <WatchlistRow record={item} />;
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
+    </CardView>
   );
 }

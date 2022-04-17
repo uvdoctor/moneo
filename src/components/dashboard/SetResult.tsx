@@ -56,6 +56,7 @@ export default function SetResult() {
               }
               info={"Earliest age when you can achieve financial independence."}
               loading={!goalsLoaded}
+              unit={ffYear ? "years" : ""}
             />
             {!ffGoal ? (
               <a href={ROUTES.SET}>Discover financial independence age</a>
