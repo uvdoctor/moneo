@@ -3,26 +3,35 @@ import { Button, Col, List, notification, Row } from "antd";
 import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
-import { SaveOutlined } from "@ant-design/icons";
-import { InsWatchInput } from "../../api/goals";
+import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
+import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import { filterTabs } from "../nw/nwutils";
+import { filterTabs, getCryptoRate } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
+import { AppContext } from "../AppContext";
+import { getCryptoPrevPrice } from "../utils";
 require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
-  const { watchlist, setWatchlist, saveHoldings }: any = useContext(DBContext);
-  const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT } = TAB;
+  const { defaultCurrency }: any = useContext(AppContext);
+  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
+    useContext(DBContext);
+  const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, PM, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
   const [searchType, setSearchType] = useState("stock");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
   const getType = (searchType: string) => {
     if (searchType === "stock") return { type: "A", subt: "S", itype: null };
+    // type & subt needs to be changed
+    if(searchType === "index") return { type: "A", subt: "I", itype: null}
   };
+
+  // currency list
+  // https://eodhistoricaldata.com/api/exchange-symbol-list/FOREX?api_token=61ff9bf3d40797.93512142&fmt=json
 
   const typesList = {
     [STOCK]: "stock",
@@ -32,38 +41,58 @@ export default function Watchlist() {
     [ETF]: "etf",
     [REIT]: REIT,
     [OIT]: OIT,
+    [CRYPTO]: CRYPTO,
+    // [PM]: PM,
+    // Currency: "Curr",
+    Index: "index",
   };
 
   const loadData = () => {
     if (!watchlist.length) return;
     let filteredData: Array<any> = watchlist.filter(
       (instrument: InsWatchInput) => {
-        const id = instrument.id;
+        const { id, subt } = instrument;
+        if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
+        if (activeTag === "Index" && subt === AssetSubType.I) return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id]) return;
         return filterTabs(cachedData[id], activeTag);
       }
     );
-    console.log(filteredData);
     setFilterByTab([...filteredData]);
   };
 
-  const onSelectInstruments = (resp: any) => {
+  const onSelectInstruments = async (resp: any) => {
     const { ISIN, Code, type, subt, itype, previousClose, Name } = resp;
-    const data = {
-      id: ISIN,
-      sid: Code,
-      type: type ? type : getType(searchType)?.type,
-      subt: subt ? subt : getType(searchType)?.subt,
-      itype: itype ? itype : null,
-      price: previousClose,
-      name: Name,
-      ...resp,
-    };
+    let data: any = {};
+    if (searchType === CRYPTO) {
+      const price = await getCryptoRate(ISIN, defaultCurrency, fxRates);
+      const prev = await getCryptoPrevPrice(ISIN, defaultCurrency, fxRates);
+      data = {
+        id: ISIN,
+        sid: Code,
+        type: AssetType.A,
+        subt: AssetSubType.C,
+        prev,
+        price,
+        name: Name,
+      };
+    } else {
+      data = {
+        id: ISIN ? ISIN : Code,
+        sid: Code,
+        type: type ? type : getType(searchType)?.type,
+        subt: subt ? subt : getType(searchType)?.subt,
+        itype: itype ? itype : getType(searchType)?.itype,
+        price: previousClose,
+        name: Name,
+        ...resp,
+      };
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     const mergedInsData = Object.assign({}, insData, { [data.id]: data });
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
-    if (!watchlist.some((item: InsWatchInput) => item.id === ISIN)) {
+    }
+    if (!watchlist.some((item: InsWatchInput) => item.id === data.id)) {
       const { id, sid, type, subt, itype } = data;
       watchlist.push({ id, sid, type, subt, itype });
     } else {
@@ -87,7 +116,8 @@ export default function Watchlist() {
       title="Investment Watchlist"
       activeTag={activeTag}
       activeTagHandler={setActiveTag}
-      tags={Object.keys(typesList)}>
+      tags={Object.keys(typesList)}
+    >
       <Row justify="center" gutter={[0, 10]} align="middle">
         <Col xs={24}>
           <Button
@@ -96,7 +126,8 @@ export default function Watchlist() {
             type="primary"
             icon={<SaveOutlined />}
             onClick={async () => await saveHoldings()}
-            className="steps-start-btn">
+            className="steps-start-btn"
+          >
             Save
           </Button>
         </Col>
@@ -107,9 +138,10 @@ export default function Watchlist() {
               return (
                 <List.Item>
                   <Typography.Link
-                    onClick={() => onSelectInstruments(resp)}
-                    style={{ marginRight: 8 }}>
-                    {resp.Name}
+                    onClick={async () => await onSelectInstruments(resp)}
+                    style={{ marginRight: 8 }}
+                  >
+                    {resp.Name} <Button icon={<PlusOutlined/> } type="link" shape="circle"/>
                   </Typography.Link>
                 </List.Item>
               );
@@ -123,7 +155,8 @@ export default function Watchlist() {
             style={{
               height: 350,
               overflow: "auto",
-            }}>
+            }}
+          >
             <List
               itemLayout="horizontal"
               dataSource={filterByTab}

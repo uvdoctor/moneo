@@ -1,13 +1,15 @@
 import { Button, Col, Divider, Row, Tooltip } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import simpleStorage from "simplestorage.js";
-import { InsWatchInput } from "../../api/goals";
+import { AssetSubType, InsWatchInput } from "../../api/goals";
 import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import NumberInput from "../form/numberinput";
-import { toHumanFriendlyCurrency } from "../utils";
 import { DBContext } from "./DBContext";
 import { AlertOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
+import InsPrice from "../nw/InsPrice";
+import { getCryptoRate } from "../nw/nwutils";
+import { getCryptoPrevPrice } from "../utils";
 
 interface WatchlistRowProps {
   record: InsWatchInput;
@@ -15,12 +17,12 @@ interface WatchlistRowProps {
 
 export default function WatchlistRow({ record }: WatchlistRowProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { watchlist, setWatchlist }: any = useContext(DBContext);
+  const { watchlist, setWatchlist, fxRates }: any = useContext(DBContext);
   const [showThresholds, setShowThresholds] = useState<boolean>(
     record.hight || record.lowt ? true : false
   );
+  const [watchIns, setWatchIns] = useState<any>({});
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  const watchIns = insData && insData[record.id] ? insData[record.id] : null;
 
   const onDelete = (id: string) => {
     const index = watchlist.findIndex((item: any) => item.id === id);
@@ -30,12 +32,33 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
     }
   };
 
+  const getWatchIns = async () => {
+    let watchdata: any = {};
+    if (record.subt === AssetSubType.C) {
+      watchdata.price = await getCryptoRate(record.id, defaultCurrency, fxRates);
+      watchdata.prev = await getCryptoPrevPrice(record.id, defaultCurrency, fxRates);
+      watchdata.name = record.sid;
+    } else {
+      watchdata = insData && insData[record.id] ? insData[record.id] : null;
+    }
+    return watchdata;
+  };
+
+  useEffect(() => {
+    getWatchIns().then((watchIns: any) => setWatchIns({ ...watchIns }));
+  }, [record]);
+
   return (
     <>
       <Row justify="space-between" align="middle">
-        <Col>{watchIns.name}</Col>
+        <Col>{watchIns?.name}</Col>
         <Col>
-          {toHumanFriendlyCurrency(watchIns.price, defaultCurrency)}
+          {/* {toHumanFriendlyCurrency(watchIns.price, defaultCurrency)} */}
+          <InsPrice
+            price={watchIns?.price}
+            currency={defaultCurrency}
+            previousPrice={watchIns?.prev ? watchIns?.prev : null}
+          />
           <Tooltip title="Buy / Sell alerts">
             <Button
               type="link"
