@@ -19,7 +19,7 @@ export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
   const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
     useContext(DBContext);
-  const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, PM, CRYPTO } = TAB;
+  const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
   const [searchType, setSearchType] = useState("stock");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
