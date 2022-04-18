@@ -1,4 +1,4 @@
-import { AutoComplete } from "antd";
+import { AutoComplete, Skeleton } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import LabelWithTooltip from "../form/LabelWithTooltip";
 import { getCryptoList } from "../utils";
@@ -51,7 +51,7 @@ export default function CryptoTypeahead({
     setSuggestions([...result]);
   };
 
-  return (
+  return data.length ? (
     <Fragment>
       <LabelWithTooltip label={label} info={info} />
       <AutoComplete
@@ -67,5 +67,7 @@ export default function CryptoTypeahead({
         onSearch={onSearch}
       />
     </Fragment>
+  ) : (
+    <Skeleton active/>
   );
 }
