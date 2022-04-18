@@ -137,7 +137,7 @@ renderItem,
           data = await response.json();
         }
       }
-      setSearchResults(data);
+      Array.isArray(data) ? setSearchResults(data) : setSearchResults([]);
     } catch (err) {
       console.log(err);
     }
