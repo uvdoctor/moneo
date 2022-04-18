@@ -8,6 +8,7 @@ import Watchlist from "./Watchlist";
 import GetResult from "./GetResult";
 import ResultCarousel from "../ResultCarousel";
 import SetResult from "./SetResult";
+import EconomicCalendar from "./EconomicCalendar";
 
 require("./DBView.less");
 
@@ -59,6 +60,9 @@ export default function DBView() {
             </Col>
             <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
               <StockMarket />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <EconomicCalendar />
             </Col>
           </Row>
         </Fragment>

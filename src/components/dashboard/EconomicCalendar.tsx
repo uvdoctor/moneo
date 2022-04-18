@@ -9,14 +9,13 @@ export default function EconomicCalendar() {
     height: 600,
     colorTheme: "light",
     isTransparent: false,
-    locale: "in",
+    locale: "us",
     importanceFilter: "0,1",
-    currencyFilter: "INR",
+    currencyFilter: "USD",
   };
 
   useEffect(() => {
     const scriptTag = document.createElement("script");
-
     scriptTag.type = "text/javascript";
     scriptTag.src =
       "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
@@ -28,7 +27,7 @@ export default function EconomicCalendar() {
 
   return (
     <>
-      <Title level={5}>Economic Calendar</Title>
+      <Title level={5}>USA Economic Calendar</Title>
       <div ref={scriptParent}></div>
     </>
   );
