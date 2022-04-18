@@ -32,8 +32,7 @@ export default function ResultCarousel({ results }: ResultCarouselProps) {
         },
       ]}
       showArrows={false}>
-      {results && results instanceof Array ? (
-        results.length > 0 &&
+      {results && results instanceof Array && results.length > 0 ? (
         results.map((result, i) =>
           result ? (
             <div className="dd-stat" key={"result" + i}>
@@ -41,9 +40,9 @@ export default function ResultCarousel({ results }: ResultCarouselProps) {
             </div>
           ) : null
         )
-      ) : (
+      ) : results ? (
         <div className="dd-stat">{results}</div>
-      )}
+      ) : null}
     </Carousel>
   );
 }

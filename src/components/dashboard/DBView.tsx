@@ -39,7 +39,7 @@ export default function DBView() {
       </div>
       <div className="db-container">
         <Fragment>
-          <Row justify="center">
+          <Row justify="space-around" gutter={[30, 50]}>
             <ResultCarousel
               results={[<GetResult key="getr" />, <SetResult key="setr" />]}
             />
