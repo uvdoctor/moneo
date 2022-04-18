@@ -39,37 +39,27 @@ export default function DBView() {
       </div>
       <div className="db-container">
         <Fragment>
-          <Row justify="center" gutter={[30, 16]}>
-            <Col xs={24} sm={24} md={18}>
-              <Row gutter={[50, 30]}>
-                <Col xs={24}>
-                  <ResultCarousel
-                    results={[
-                      <GetResult key="getr" />,
-                      <SetResult key="setr" />,
-                    ]}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <InvestmentAlerts
-                    gainers={gainers}
-                    losers={losers}
-                    yhigh={yhigh}
-                    ylow={ylow}
-                    volGainers={volGainers}
-                    volLosers={volLosers}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <StockMarket />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <MarketOverview />
-                </Col>
-              </Row>
+          <Row justify="center">
+            <ResultCarousel
+              results={[<GetResult key="getr" />, <SetResult key="setr" />]}
+            />
+          </Row>
+          <Row justify="space-around">
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <InvestmentAlerts
+                gainers={gainers}
+                losers={losers}
+                yhigh={yhigh}
+                ylow={ylow}
+                volGainers={volGainers}
+                volLosers={volLosers}
+              />
             </Col>
-            <Col xs={24} sm={24} md={6}>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
               <Watchlist />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <StockMarket />
             </Col>
           </Row>
         </Fragment>
