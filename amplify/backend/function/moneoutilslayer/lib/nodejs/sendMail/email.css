@@ -3,19 +3,19 @@ img {
   -ms-interpolation-mode: bicubic;
 }
 
-.title-column {
-  flex: 50%;
-  padding: 2px;
+#title-column-right{
+  float: right;
+  width: 80%;
+  margin-top: 50px;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-.title-column-left {
-  margin-left: 40px;
-  margin-top: 20px;
-}
+#title-column-left{
+  float: left;
+  width: 20%;
 
-.title-row {
-  display: flex;
 }
 
 body {
@@ -293,13 +293,6 @@ a {
     text-align: center !important;
   }
 
-  .title-column-left {
-    margin-top: 30px !important;
-    margin-left: 0px !important;
-    margin-right: 50px !important;
-    text-align: center;
-  }
-
   .box-container-high {
     margin: auto !important;
     margin-top: 10px !important;
@@ -316,5 +309,9 @@ a {
 
   .metal-container {
     margin-top: 10px !important ;
+  }
+
+  #title-column-right{
+    margin-top: 60px !important;
   }
 }
