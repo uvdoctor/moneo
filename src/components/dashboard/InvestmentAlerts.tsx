@@ -33,7 +33,7 @@ export default function InvestmentAlerts({
       <InvestmentAlertList
         positiveViewLabel="Gainers"
         negativeViewLabel="Losers"
-        footerLabel="Price"
+        footerLabel="price"
         positives={gainers}
         negatives={losers}
         isFooterPrice
@@ -43,7 +43,7 @@ export default function InvestmentAlerts({
       <InvestmentAlertList
         positiveViewLabel="Gainers"
         negativeViewLabel="Losers"
-        footerLabel="Volume"
+        footerLabel="volume"
         positives={volGainers}
         negatives={volLosers}
       />
@@ -52,7 +52,7 @@ export default function InvestmentAlerts({
       <InvestmentAlertList
         positiveViewLabel="High"
         negativeViewLabel="Low"
-        footerLabel="Price"
+        footerLabel="price"
         isPrice
         isFooterPrice
         positives={yhigh}

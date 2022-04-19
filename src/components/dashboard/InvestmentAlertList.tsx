@@ -54,7 +54,7 @@ export default function InvestmentAlertList(props: InvestmentAlertListProps) {
             labelHighlight
             currency={props.isPrice ? defaultCurrency : ""}
             unit={!props.isPrice ? "%" : ""}
-            footer={`${props.footerLabel} is ${
+            footer={`Closing ${props.footerLabel} was ${
               props.isFooterPrice
                 ? toHumanFriendlyCurrency(item.value, defaultCurrency)
                 : toReadableNumber(item.value)
