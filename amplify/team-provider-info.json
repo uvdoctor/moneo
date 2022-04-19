@@ -43,7 +43,7 @@
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/alerts-4443306f4d783870542f-build.zip"
+          "s3Key": "amplify-builds/alerts-5a4a6c4933356c6c4a43-build.zip"
         },
         "moneoutilslayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
