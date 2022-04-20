@@ -17,8 +17,8 @@ const constructedApiArray = (diff) => {
         price: 0,
         name: "",
         ind: "",
-        pe: "",
-        pb: "",
+        pe: 0,
+        pb: 0,
         chg: 0,
       },
       codes: {
