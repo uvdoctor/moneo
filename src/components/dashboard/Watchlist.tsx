@@ -46,7 +46,7 @@ export default function Watchlist() {
       (instrument: InsWatchInput) => {
         const { id, subt } = instrument;
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === "Index" && !id.startsWith("IN")) return true;
+        if (activeTag === "Index" && !id.startsWith("IN") && subt !== AssetSubType.C) return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id]) return;
         return filterTabs(cachedData[id], activeTag);
