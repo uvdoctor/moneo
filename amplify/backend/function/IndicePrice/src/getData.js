@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { calcInd, calcType, calcSubType } = require("./calculate");
+const { calcInd, calcType, calcSubType, calcPrevPrice } = require("./calculate");
 const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 
 const getData = async (
@@ -27,8 +27,15 @@ const getData = async (
         switch (key) {
           case "price":
             return (schema[key] = record[codes[key]] ? (Math.round(record[codes[key]] * 100) / 100) : 0);
+          case "chg":
+            const prev = record[codes[key]] ? calcPrevPrice(schema.price, parseFloat(record[codes[key]])) : 0;
+            if(exchg === "NSE") schema.prev = prev;
+            return;
           case "prev":
-            return (schema[key] = (record[codes[key]] ? parseFloat(record[codes[key]]) : 0));
+            if(exchg === "BSE") {
+              schema[key] = record[codes[key]] ? parseFloat(record[codes[key]]) : 0;
+            }
+            return;
           case "name":
             return (schema[key] = record[codes[key]].trim());
           case "yhigh":

@@ -19,6 +19,7 @@ const constructedApiArray = (diff) => {
         ind: "",
         pe: "",
         pb: "",
+        chg: 0,
       },
       codes: {
         id: "Index Name",
@@ -27,6 +28,7 @@ const constructedApiArray = (diff) => {
         price: "Closing Index Value",
         pe: "P/E",
         pb: "P/B",
+        chg: "Change(%)"
       },
     },
     {

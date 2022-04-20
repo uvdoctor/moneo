@@ -34,4 +34,10 @@ const calcSubType = (name) => {
 	return 'S';
 };
 
-module.exports = { calcInd, calcType, calcSubType };
+const calcPrevPrice = (currentPrice, chg) => {
+	const percent = (100 + chg)/100;
+	const prev = currentPrice/percent;
+	return isNaN(prev) ? 0 : Math.round(prev * 100) / 100; 
+}
+
+module.exports = { calcInd, calcType, calcSubType, calcPrevPrice };
