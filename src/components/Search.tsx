@@ -20,7 +20,7 @@ export default function Search({
   renderItem,
 }: SearchProps) {
   const { Option } = Select;
-  const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
+  const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO, STOCK } = TAB;
   const [exchange, setExchange] = useState("NSE");
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([
@@ -77,6 +77,17 @@ export default function Search({
     return await getInstrumentDataWithKey(optionTableMap[opt], opt);
   };
 
+  const getOption = (type: string) => {
+    const opt: { [key:string]: string } = {
+      bond: BOND,
+      etf: ETF,
+      fund: MF,
+      index: "Index",
+      stock: STOCK
+    }
+    return opt[type] ? opt[type] : type;
+  }
+
   const getSearchData = async () => {
     try {
       let data = [];
@@ -93,18 +104,7 @@ export default function Search({
           };
         });
       } else if (exchange !== "US") {
-        let opt =
-          searchType === "bond"
-            ? BOND
-            : searchType === "etf"
-            ? ETF
-            : searchType === "fund"
-            ? MF
-            : searchType === "index"
-            ? "Index"
-            : searchType === "stock" 
-            ? "Stocks"
-            : searchType;
+        let opt = getOption(searchType);
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
         const response = cachedData.filter(
