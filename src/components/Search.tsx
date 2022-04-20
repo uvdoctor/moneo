@@ -36,8 +36,7 @@ export default function Search({
     },
   ]);
 
-  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT].includes(tab);
-  const hasNoDropdown = (type: string) => ["index"].includes(type);
+  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab);
   const options = hasOnlyIndiaIns(searchType)
     ? [{ key: "NSE", value: "INDIA" }]
     : [
@@ -79,11 +78,7 @@ export default function Search({
   const getSearchData = async () => {
     try {
       let data = [];
-      if (
-        exchange !== "US" &&
-        searchType !== "stock" &&
-        searchType !== "index"
-      ) {
+      if (exchange !== "US") {
         let opt =
           searchType === "bond"
             ? BOND
@@ -91,13 +86,17 @@ export default function Search({
             ? ETF
             : searchType === "fund"
             ? MF
+            : searchType === "index"
+            ? "Index"
+            : searchType === "stock" 
+            ? "Stocks"
             : searchType;
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
         const response = cachedData.filter(
           (item: any) =>
-            item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            item.sid.toLowerCase().includes(searchText.toLowerCase())
+            item?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+            item?.sid?.toLowerCase().includes(searchText.toLowerCase())
         );
         data = response.map((item: any) => {
           return {
@@ -117,12 +116,6 @@ export default function Search({
           `/api/search?text=${searchText}&type=${searchType}&exchange=${exchange}`
         );
         data = await response.json();
-        if (!data.length && exchange === "NSE" && searchType !== "index") {
-          response = await fetch(
-            `/api/search?text=${searchText}&type=${searchType}&exchange=BSE`
-          );
-          data = await response.json();
-        }
       }
       Array.isArray(data) ? setSearchResults(data) : setSearchResults([]);
     } catch (err) {
@@ -171,7 +164,7 @@ export default function Search({
         value={searchText}
         size="large"
         placeholder="Search stocks, bonds and MF's"
-        addonAfter={hasNoDropdown(searchType) ? "" : exchangeComp}
+        addonAfter={exchangeComp}
         prefix={<SearchOutlined />}
         onChange={onSearch}
       />

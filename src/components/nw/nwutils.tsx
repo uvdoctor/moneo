@@ -625,7 +625,8 @@ export const getInstrumentDataWithKey = async (key: string, option: string) => {
   const dataKeys: OptionTableMap = {
     listInExchgPrices: "listINExchgPrices",
     listInBondPrices: "listINBondPrices",
-    listInmfPrices: "listINMFPrices",
+    listInmfPrices: "listINMFPrices", 
+    listAllIndicess: "listAllIndicess"
   };
   const getData = async (query: any, nextToken: any) => {
     return await API.graphql({
@@ -1303,6 +1304,7 @@ export const optionTableMap: { [key: string]: string } = {
   "Mutual Funds": "listInmfPrices",
   REITs: "listInExchgPrices",
   "Other Investments": "listInExchgPrices",
+  "Index": "listAllIndicess"    
 } as const;
 
 export const filterTabs = (data: any, childTab: string) => {
