@@ -26,8 +26,6 @@ export default function Watchlist() {
 
   const getType = (searchType: string) => {
     if (searchType === "stock") return { type: "A", subt: "S", itype: null };
-    // type & subt needs to be changed
-    if (searchType === "index") return { type: "A", subt: "I", itype: null };
   };
 
   const typesList = {
