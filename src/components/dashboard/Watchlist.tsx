@@ -4,20 +4,17 @@ import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
 import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
-import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
+import { AssetSubType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import { filterTabs, getCryptoRate } from "../nw/nwutils";
+import { filterTabs } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
-import { AppContext } from "../AppContext";
-import { getCryptoPrevPrice } from "../utils";
 require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
-  const { defaultCurrency }: any = useContext(AppContext);
-  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
+  const { watchlist, setWatchlist, saveHoldings }: any =
     useContext(DBContext);
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
@@ -27,11 +24,8 @@ export default function Watchlist() {
   const getType = (searchType: string) => {
     if (searchType === "stock") return { type: "A", subt: "S", itype: null };
     // type & subt needs to be changed
-    if(searchType === "index") return { type: "A", subt: "I", itype: null}
+    if (searchType === "index") return { type: "A", subt: "I", itype: null };
   };
-
-  // currency list
-  // https://eodhistoricaldata.com/api/exchange-symbol-list/FOREX?api_token=61ff9bf3d40797.93512142&fmt=json
 
   const typesList = {
     [STOCK]: "stock",
@@ -41,9 +35,6 @@ export default function Watchlist() {
     [ETF]: "etf",
     [REIT]: REIT,
     [OIT]: OIT,
-    [CRYPTO]: CRYPTO,
-    // [PM]: PM,
-    // Currency: "Curr",
     Index: "index",
   };
 
@@ -64,34 +55,19 @@ export default function Watchlist() {
 
   const onSelectInstruments = async (resp: any) => {
     const { ISIN, Code, type, subt, itype, previousClose, Name } = resp;
-    let data: any = {};
-    if (searchType === CRYPTO) {
-      const price = await getCryptoRate(ISIN, defaultCurrency, fxRates);
-      const prev = await getCryptoPrevPrice(ISIN, defaultCurrency, fxRates);
-      data = {
-        id: ISIN,
-        sid: Code,
-        type: AssetType.A,
-        subt: AssetSubType.C,
-        prev,
-        price,
-        name: Name,
-      };
-    } else {
-      data = {
-        id: ISIN ? ISIN : Code,
-        sid: Code,
-        type: type ? type : getType(searchType)?.type,
-        subt: subt ? subt : getType(searchType)?.subt,
-        itype: itype ? itype : getType(searchType)?.itype,
-        price: previousClose,
-        name: Name,
-        ...resp,
-      };
+    let data: any = {
+      id: ISIN ? ISIN : Code,
+      sid: Code,
+      type: type ? type : getType(searchType)?.type,
+      subt: subt ? subt : getType(searchType)?.subt,
+      itype: itype ? itype : getType(searchType)?.itype,
+      price: previousClose,
+      name: Name,
+      ...resp,
+    };
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     const mergedInsData = Object.assign({}, insData, { [data.id]: data });
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
-    }
     if (!watchlist.some((item: InsWatchInput) => item.id === data.id)) {
       const { id, sid, type, subt, itype } = data;
       watchlist.push({ id, sid, type, subt, itype });
@@ -141,7 +117,12 @@ export default function Watchlist() {
                     onClick={async () => await onSelectInstruments(resp)}
                     style={{ marginRight: 8 }}
                   >
-                    {resp.Name} <Button icon={<PlusOutlined/> } type="link" shape="circle"/>
+                    {resp.Name}{" "}
+                    <Button
+                      icon={<PlusOutlined />}
+                      type="link"
+                      shape="circle"
+                    />
                   </Typography.Link>
                 </List.Item>
               );
