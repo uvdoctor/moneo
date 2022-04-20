@@ -40,15 +40,17 @@ export default function Watchlist() {
     [CRYPTO]: CRYPTO,
   };
 
+  const isISIN = (item: string) => item.length === 12 && item.startsWith('IN');
+
   const loadData = () => {
     if (!watchlist.length) return;
     let filteredData: Array<any> = watchlist.filter(
       (instrument: InsWatchInput) => {
         const { id, subt } = instrument;
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === "Index" && !id.startsWith("IN") && subt !== AssetSubType.C) return true;
+        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C) return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-        if (!cachedData || !cachedData[id]) return;
+        if (!cachedData || !cachedData[id] || !isISIN(id)) return;
         return filterTabs(cachedData[id], activeTag);
       }
     );
