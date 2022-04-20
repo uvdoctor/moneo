@@ -4,17 +4,20 @@ import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
 import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
-import { AssetSubType, InsWatchInput } from "../../api/goals";
+import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import { filterTabs } from "../nw/nwutils";
+import { filterTabs, getCryptoRate } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
+import { getCryptoPrevPrice } from "../utils";
+import { AppContext } from "../AppContext";
 require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
-  const { watchlist, setWatchlist, saveHoldings }: any =
+  const { defaultCurrency }: any = useContext(AppContext);
+  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
     useContext(DBContext);
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
@@ -36,6 +39,7 @@ export default function Watchlist() {
     [REIT]: REIT,
     [OIT]: OIT,
     Index: "index",
+    [CRYPTO]: CRYPTO,
   };
 
   const loadData = () => {
@@ -55,19 +59,34 @@ export default function Watchlist() {
 
   const onSelectInstruments = async (resp: any) => {
     const { ISIN, Code, type, subt, itype, previousClose, Name } = resp;
-    let data: any = {
-      id: ISIN ? ISIN : Code,
-      sid: Code,
-      type: type ? type : getType(searchType)?.type,
-      subt: subt ? subt : getType(searchType)?.subt,
-      itype: itype ? itype : getType(searchType)?.itype,
-      price: previousClose,
-      name: Name,
-      ...resp,
-    };
-    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    const mergedInsData = Object.assign({}, insData, { [data.id]: data });
-    simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
+    let data: any = {};
+    if (searchType === CRYPTO) {
+      const price = await getCryptoRate(ISIN, defaultCurrency, fxRates);
+      const prev = await getCryptoPrevPrice(ISIN, defaultCurrency, fxRates);
+      data = {
+        id: ISIN,
+        sid: Code,
+        type: AssetType.A,
+        subt: AssetSubType.C,
+        prev,
+        price,
+        name: Name,
+      };
+    } else {
+      data = {
+        id: ISIN ? ISIN : Code,
+        sid: Code,
+        type: type ? type : getType(searchType)?.type,
+        subt: subt ? subt : getType(searchType)?.subt,
+        itype: itype ? itype : getType(searchType)?.itype,
+        price: previousClose,
+        name: Name,
+        ...resp,
+      };
+      const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+      const mergedInsData = Object.assign({}, insData, { [data.id]: data });
+      simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
+    }
     if (!watchlist.some((item: InsWatchInput) => item.id === data.id)) {
       const { id, sid, type, subt, itype } = data;
       watchlist.push({ id, sid, type, subt, itype });

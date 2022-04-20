@@ -4,6 +4,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import { getInstrumentDataWithKey, optionTableMap } from "./nw/nwutils";
 import { TAB } from "./nw/NWContext";
+import { getCryptoList } from "./utils";
 
 interface SearchProps {
   inline?: boolean;
@@ -19,7 +20,7 @@ export default function Search({
   renderItem,
 }: SearchProps) {
   const { Option } = Select;
-  const { BOND, MF, ETF, GOLDB, REIT, OIT } = TAB;
+  const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [exchange, setExchange] = useState("NSE");
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([
@@ -37,6 +38,7 @@ export default function Search({
   ]);
 
   const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab);
+  const hasNoDropdown = (type: string) => [CRYPTO].includes(type);
   const options = hasOnlyIndiaIns(searchType)
     ? [{ key: "NSE", value: "INDIA" }]
     : [
@@ -78,7 +80,19 @@ export default function Search({
   const getSearchData = async () => {
     try {
       let data = [];
-      if (exchange !== "US") {
+      if (searchType === CRYPTO) {
+        const cryptolist = await getCryptoList();
+        const response = cryptolist.filter((item: any) =>
+          item.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+        data = response.map((item: any) => {
+          return {
+            Code: item.name,
+            Name: item.name,
+            ISIN: item.code,
+          };
+        });
+      } else if (exchange !== "US") {
         let opt =
           searchType === "bond"
             ? BOND
@@ -164,7 +178,7 @@ export default function Search({
         value={searchText}
         size="large"
         placeholder="Search stocks, bonds and MF's"
-        addonAfter={exchangeComp}
+        addonAfter={hasNoDropdown(searchType) ? "" : exchangeComp}
         prefix={<SearchOutlined />}
         onChange={onSearch}
       />
