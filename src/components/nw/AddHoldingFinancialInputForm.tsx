@@ -45,6 +45,7 @@ export default function HoldingInput(props: any) {
     <Row gutter={[10, 10]}>
       <Col flex={8}>
         <Search
+          hasOnlyIndiaOption
           searchType={searchType}
           renderItem={(resp: any) => {
             return (

@@ -11,6 +11,7 @@ interface SearchProps {
   header?: any;
   searchType: string;
   renderItem: any;
+  hasOnlyIndiaOption?: boolean;
 }
 
 export default function Search({
@@ -18,6 +19,7 @@ export default function Search({
   header,
   searchType,
   renderItem,
+  hasOnlyIndiaOption
 }: SearchProps) {
   const { Option } = Select;
   const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO, STOCK } = TAB;
@@ -37,7 +39,7 @@ export default function Search({
     // },
   ]);
 
-  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab);
+  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab) || hasOnlyIndiaOption;
   const hasNoDropdown = (type: string) => [CRYPTO].includes(type);
   const options = hasOnlyIndiaIns(searchType)
     ? [{ key: "NSE", value: "INDIA" }]
