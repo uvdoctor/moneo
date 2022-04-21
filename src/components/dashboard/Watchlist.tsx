@@ -24,10 +24,6 @@ export default function Watchlist() {
   const [searchType, setSearchType] = useState("stock");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
-  const getType = (searchType: string) => {
-    if (searchType === "stock") return { type: "A", subt: "S", itype: null };
-  };
-
   const typesList = {
     [STOCK]: "stock",
     [MF]: "fund",
@@ -40,7 +36,7 @@ export default function Watchlist() {
     [CRYPTO]: CRYPTO,
   };
 
-  const isISIN = (item: string) => item.length === 12 && item.startsWith('IN');
+  const isISIN = (item: string) => item.length === 12 && item.startsWith("IN");
 
   const loadData = () => {
     if (!watchlist.length) return;
@@ -48,7 +44,8 @@ export default function Watchlist() {
       (instrument: InsWatchInput) => {
         const { id, subt } = instrument;
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C) return true;
+        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C)
+          return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id] || !isISIN(id)) return;
         return filterTabs(cachedData[id], activeTag);
@@ -76,9 +73,9 @@ export default function Watchlist() {
       data = {
         id: ISIN ? ISIN : Code,
         sid: Code,
-        type: type ? type : getType(searchType)?.type,
-        subt: subt ? subt : getType(searchType)?.subt,
-        itype: itype ? itype : getType(searchType)?.itype,
+        type: type,
+        subt: subt,
+        itype: itype,
         price: previousClose,
         name: Name,
         ...resp,
