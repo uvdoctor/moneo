@@ -111,13 +111,18 @@ export default function AddHoldingFinancialInput(props: any) {
                   )
                 )}
               </span>
-              {(
-                <Button
-                  type="link"
-                  icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
-                  onClick={() => isEditMode ? setEditMode(false) : setEditMode(true)}
-                />
-              )}
+              <Button
+                type="link"
+                icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                onClick={() => {
+                  if (isEditMode) {
+                    setEditMode(false);
+                    setHoldings([...holdings]);
+                  } else {
+                    setEditMode(true);
+                  }
+                }}
+              />
               <Button
                 type="link"
                 danger
