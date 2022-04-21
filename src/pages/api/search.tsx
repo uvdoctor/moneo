@@ -9,9 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await fetch(
-      `https://eodhistoricaldata.com/api/search/${text}?api_token=${eodKey}&type=${type}${
-        type !== "index" ? `exchange=${exchange}` : ""
-      }`
+      `https://eodhistoricaldata.com/api/search/${text}?api_token=${eodKey}&type=${type}&exchange=${exchange}`
     );
     const data = await response.json();
 
