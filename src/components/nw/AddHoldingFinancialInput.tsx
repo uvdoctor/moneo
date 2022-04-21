@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Divider, Badge } from "antd";
-import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Row, Col, Button, Divider, Badge, InputNumber } from "antd";
 import simpleStorage from "simplestorage.js";
 import { COLORS, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { AssetType, InstrumentInput } from "../../api/goals";
@@ -10,6 +9,12 @@ import {
   toHumanFriendlyCurrency,
   toReadableNumber,
 } from "../utils";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ShoppingCartOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 import { getColourForAssetType } from "./nwutils";
 
 export default function AddHoldingFinancialInput(props: any) {
@@ -38,6 +43,7 @@ export default function AddHoldingFinancialInput(props: any) {
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
+    const [isEditMode, setEditMode] = useState<boolean>(false);
     let price = 0;
     let type = "";
     const { holding, key } = props;
@@ -62,7 +68,7 @@ export default function AddHoldingFinancialInput(props: any) {
           </Row>
 
           <Row justify="space-between">
-            <Col>{insData[id].name}</Col>
+            <Col>{insData[id]?.name}</Col>
 
             <Col className="quantity">
               <strong>
@@ -90,8 +96,28 @@ export default function AddHoldingFinancialInput(props: any) {
               <span className="quantity">
                 {`${toCurrency(price, curr as string, true)} `}
                 <ShoppingCartOutlined />{" "}
-                {toReadableNumber(qty, ("" + qty).includes(".") ? 3 : 0)}
+                {isEditMode ? (
+                  <InputNumber
+                    value={holding.qty}
+                    size="small"
+                    onChange={(val) => {
+                      holding.qty = val as number;
+                    }}
+                  />
+                ) : (
+                  toReadableNumber(
+                    holding.qty,
+                    ("" + holding.qty).includes(".") ? 3 : 0
+                  )
+                )}
               </span>
+              {price ? (
+                <Button
+                  type="link"
+                  icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                  onClick={() => isEditMode ? setEditMode(false) : setEditMode(true)}
+                />
+              ) : null}
               <Button
                 type="link"
                 danger
