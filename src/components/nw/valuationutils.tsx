@@ -83,25 +83,22 @@ export const loadInstruments = async (ids: Array<string>) => {
   });
   if (!gotodb) return allInsData;
   let unmatchedIds: Array<string> | null = [];
-  if (mfIds.length) {
+  if (mfIds.length)
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINMutual,
       mfIds,
       allInsData
     );
-  }
   if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
-  if (exchangeIds.length) {
+  if (exchangeIds.length)
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINExchange,
       exchangeIds,
       allInsData
     );
-  }
   if (unmatchedIds?.length) bondIds.push(...unmatchedIds);
-  if (bondIds.length) {
+  if (bondIds.length)
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
-  }
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
   return allInsData;
 };
