@@ -25,6 +25,7 @@ export default function Search({
   const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO, STOCK } = TAB;
   const [exchange, setExchange] = useState("NSE");
   const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<Array<any>>([
     // {
     //   Code: "SBIN",
@@ -92,6 +93,7 @@ export default function Search({
 
   const getSearchData = async () => {
     try {
+      setLoading(true);
       let data = [];
       if (searchType === CRYPTO) {
         const cryptolist = await getCryptoList();
@@ -134,6 +136,7 @@ export default function Search({
         data = await response.json();
       }
       Array.isArray(data) ? setSearchResults(data) : setSearchResults([]);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -147,6 +150,11 @@ export default function Search({
       getSearchData();
     }, 200);
   }, [searchText]);
+
+  useEffect(()=>{
+    setSearchResults([...[]])
+    setSearchText('')
+  },[searchType])
 
   useEffect(() => {
     if (searchText?.length < 3) return;
@@ -166,6 +174,7 @@ export default function Search({
         >
           <List
             size="small"
+            loading={loading}
             header={header && header}
             bordered
             dataSource={searchResults}
