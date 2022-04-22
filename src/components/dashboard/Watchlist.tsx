@@ -7,7 +7,7 @@ import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
 import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
 import { filterTabs, getCryptoRate } from "../nw/nwutils";
-import { DBContext } from "./DBContext";
+import { DBContext, NIFTY50, SENSEX } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
@@ -26,6 +26,7 @@ export default function Watchlist() {
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
   const typesList = {
+    Index: "index",
     [STOCK]: "stock",
     [MF]: "fund",
     [BOND]: "bond",
@@ -33,7 +34,6 @@ export default function Watchlist() {
     [ETF]: "etf",
     [REIT]: REIT,
     [OIT]: OIT,
-    Index: "index",
     [CRYPTO]: CRYPTO,
   };
 
@@ -96,6 +96,20 @@ export default function Watchlist() {
     notification.success({ message: `${Name} - Added to Watchlist` });
   };
 
+  const addDefaultWatchlist = () => {
+    const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    if (!cachedData) return;
+    const defaultList = [SENSEX, NIFTY50];
+    for (let item of defaultList) {
+      if (!cachedData[item]) return;
+      const data = cachedData[item];
+      const { id, subt, type } = data;
+      watchlist.push({ id, type, subt });
+    }
+    setWatchlist([...watchlist]);
+    setActiveTag("Index");
+  };
+
   useEffect(() => {
     loadData();
   }, [activeTag, watchlist]);
@@ -105,64 +119,77 @@ export default function Watchlist() {
   return (
     <CardView
       title="Investment Watchlist"
-      activeTag={activeTag}
-      activeTagHandler={setActiveTag}
-      tags={Object.keys(typesList)}
+      activeTag={watchlist.length ? activeTag : ""}
+      activeTagHandler={watchlist.length ? setActiveTag : () => {}}
+      tags={watchlist.length ? Object.keys(typesList) : []}
     >
-      <Row justify="center" gutter={[0, 10]} align="middle">
-        <Col xs={24}>
-          <Button
-            key="save"
-            style={{ float: "right" }}
-            type="primary"
-            icon={<SaveOutlined />}
-            onClick={async () => await saveHoldings()}
-            className="steps-start-btn"
-          >
-            Save
-          </Button>
-        </Col>
-        <Col span={24}>
-          <Search
-            searchType={searchType}
-            renderItem={(resp: any) => {
-              return (
-                <List.Item>
-                  <Typography.Link
-                    onClick={async () => await onSelectInstruments(resp)}
-                    style={{ marginRight: 8 }}
-                  >
-                    {resp.Name}{" "}
-                    <Button
-                      icon={<PlusOutlined />}
-                      type="link"
-                      shape="circle"
-                    />
-                  </Typography.Link>
-                </List.Item>
-              );
-            }}
-          />
-        </Col>
-
-        <Col xs={24}>
-          <div
-            id="scrollableDiv"
-            style={{
-              height: 350,
-              overflow: "auto",
-            }}
-          >
-            <List
-              itemLayout="horizontal"
-              dataSource={filterByTab}
-              renderItem={(item) => {
-                return <WatchlistRow record={item} />;
+      {watchlist.length ? (
+        <Row justify="center" gutter={[0, 10]} align="middle">
+          <Col xs={24}>
+            <Button
+              key="save"
+              style={{ float: "right" }}
+              type="primary"
+              icon={<SaveOutlined />}
+              onClick={async () => await saveHoldings()}
+              className="steps-start-btn"
+            >
+              Save
+            </Button>
+          </Col>
+          <Col span={24}>
+            <Search
+              searchType={searchType}
+              renderItem={(resp: any) => {
+                return (
+                  <List.Item>
+                    <Typography.Link
+                      onClick={async () => await onSelectInstruments(resp)}
+                      style={{ marginRight: 8 }}
+                    >
+                      {resp.Name}{" "}
+                      <Button
+                        icon={<PlusOutlined />}
+                        type="link"
+                        shape="circle"
+                      />
+                    </Typography.Link>
+                  </List.Item>
+                );
               }}
             />
-          </div>
-        </Col>
-      </Row>
+          </Col>
+
+          <Col xs={24}>
+            <div
+              id="scrollableDiv"
+              style={{
+                height: 350,
+                overflow: "auto",
+              }}
+            >
+              <List
+                itemLayout="horizontal"
+                dataSource={filterByTab}
+                renderItem={(item) => {
+                  return <WatchlistRow record={item} />;
+                }}
+              />
+            </div>
+          </Col>
+        </Row>
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <p>&nbsp;</p>
+          <h3>Please input data for your watchlist.</h3>
+          {/* <h3>More data you provide, better the analysis!</h3> */}
+          <p>&nbsp;</p>
+          <Button type="primary" onClick={() => addDefaultWatchlist()}>
+            Get Started
+          </Button>
+          <p>&nbsp;</p>
+        </div>
+      )}
     </CardView>
   );
 }
