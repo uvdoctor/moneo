@@ -29,11 +29,9 @@ const getData = async (
           case "pe":
           case "pb":
             return (schema[key] = record[codes[key]] ? (Math.round(record[codes[key]] * 100) / 100) : 0);
-          case "chg":
-            const prev = record[codes[key]] ? calcPrevPrice(schema.price, parseFloat(record[codes[key]])) : 0;
-            if(exchg === "NSE") schema.prev = prev;
-            return;
           case "prev":
+            const prev = record[codes["chg"]] ? calcPrevPrice(schema.price, parseFloat(record[codes["chg"]])) : 0;
+            if(exchg === "NSE") schema[key] = prev;
             if(exchg === "BSE") {
               schema[key] = record[codes[key]] ? parseFloat(record[codes[key]]) : 0;
             }
@@ -47,7 +45,7 @@ const getData = async (
           case "ind":
             return (schema[key] = calcInd(record[codes[key]]));
           case "id":
-            return schema[key] = record[codes[key]];
+            return schema[key] = record[codes[key]].trim();
         }
       });
       schema.exchg = exchg;

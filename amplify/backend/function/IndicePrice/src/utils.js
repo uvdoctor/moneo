@@ -19,7 +19,7 @@ const constructedApiArray = (diff) => {
         ind: "",
         pe: 0,
         pb: 0,
-        chg: 0,
+        prev: 0,
       },
       codes: {
         id: "Index Name",
