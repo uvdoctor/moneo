@@ -13,9 +13,10 @@ import EconomicCalendar from "./EconomicCalendar";
 require("./DBView.less");
 
 export default function DBView() {
-  const { gainers, losers, yhigh, ylow, volLosers, volGainers }: any =
+  const { gainers, losers, yhigh, ylow, volLosers, volGainers, headerData }: any =
     useContext(DBContext);
   const { appContextLoaded }: any = useContext(AppContext);
+  const { gold, silver, nifty, sensex, usd, petrol, diesel } = headerData;
 
   return appContextLoaded ? (
     <Fragment>
@@ -26,13 +27,13 @@ export default function DBView() {
           </Col>
           <Col span={24} className="secondary-header">
             <Row justify="space-between" align="middle">
-              <Col>Gold: 55,000</Col>
-              <Col>Silver: 24,000</Col>
-              <Col>Petrol: 110</Col>
-              <Col>Diesel: 90</Col>
-              <Col>Sensex: 58,338</Col>
-              <Col>Nifty 50: 17,289.3</Col>
-              <Col>USD: 76.5</Col>
+              <Col>Gold: {gold}</Col>
+              <Col>Silver: {silver}</Col>
+              <Col>Sensex: {sensex}</Col>
+              <Col>Nifty 50: {nifty}</Col>
+              <Col>Petrol: {petrol}</Col>
+              <Col>Diesel: {diesel}</Col>
+              <Col>USD: {usd}</Col>
             </Row>
           </Col>
         </Row>

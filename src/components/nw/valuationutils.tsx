@@ -24,6 +24,7 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
+import { NIFTY50, SENSEX } from "../dashboard/DBContext";
 import {
   awsdate,
   getCryptoPrevPrice,
@@ -1227,7 +1228,7 @@ export const initializeWatchlist = async (
   instruments: Array<InsWatchInput>
 ) => {
   const ids: Array<string> = [];
-  const indexIds: Array<string> = [];
+  const indexIds: Array<string> = [NIFTY50, SENSEX];
   for (let instrument of instruments) {
     const { id, subt } = instrument;
     if (!isISIN(id) && subt !== AssetSubType.C) {
