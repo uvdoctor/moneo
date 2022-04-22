@@ -41,6 +41,7 @@ import {
   isFund,
   isLargeCap,
   loadMatchingINBond,
+  loadMatchingIndices,
   loadMatchingINExchange,
   loadMatchingINMutual,
 } from "./nwutils";
@@ -81,22 +82,25 @@ export const loadInstruments = async (ids: Array<string>) => {
   });
   if (!gotodb) return allInsData;
   let unmatchedIds: Array<string> | null = [];
-  if (mfIds.length)
+  if (mfIds.length) {
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINMutual,
       mfIds,
       allInsData
     );
+  }
   if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
-  if (exchangeIds.length)
+  if (exchangeIds.length) {
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINExchange,
       exchangeIds,
       allInsData
     );
+  }
   if (unmatchedIds?.length) bondIds.push(...unmatchedIds);
-  if (bondIds.length)
+  if (bondIds.length) {
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
+  }
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
   return allInsData;
 };
@@ -1201,8 +1205,36 @@ export const calculateAlerts = async (
   );
 };
 
-export const initializeWatchlist = async (instruments: Array<InsWatchInput>) => {
+export const isISIN = (item: string) =>
+  item.length === 12 && item.startsWith("IN");
+
+export const loadIndices = async (ids: Array<string>) => {
+  let gotodb = false;
+  let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  if (!allInsData) allInsData = {};
+  ids.forEach((id: string) => {
+    if (!allInsData[id]) gotodb = true;
+  });
+  if (!gotodb) return allInsData;
+  if (ids.length) {
+    await loadInstrumentPrices(loadMatchingIndices, ids, allInsData);
+  }
+  simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+  return allInsData;
+};
+
+export const initializeWatchlist = async (
+  instruments: Array<InsWatchInput>
+) => {
   const ids: Array<string> = [];
-  instruments.forEach((instrument: InsWatchInput) => ids.push(instrument.id));
+  const indexIds: Array<string> = [];
+  for (let instrument of instruments) {
+    const { id, subt } = instrument;
+    if (!isISIN(id) && subt !== AssetSubType.C) {
+      indexIds.push(id);
+      await loadIndices(indexIds);
+    }
+    ids.push(instrument.id);
+  }
   return await loadInstruments(ids);
 };

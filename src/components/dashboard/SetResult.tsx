@@ -33,9 +33,9 @@ export default function SetResult() {
         defaultCurrency,
         fxRates
       );
-      setFFYear(fiResult.ffYear);
+      setFFYear(fiResult?.ffYear);
       setNumOfGoals(goals.length);
-      setFFAmt(fiResult.ffResult?.ffAmt);
+      setFFAmt(fiResult?.ffResult?.ffAmt);
       setGoalsLoaded(true);
     });
   }, []);

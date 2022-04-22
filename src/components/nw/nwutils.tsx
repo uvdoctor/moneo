@@ -359,6 +359,28 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
+export const loadMatchingIndices = async (isins: Array<string>) => {
+  if (!isins.length) return null;
+  let idList: Array<APIt.ModelAllIndicesFilterInput> = [];
+  let returnList: Array<APIt.AllIndices> = [];
+  let nextToken = null;
+  do {
+    let variables: any = { limit: 5000, filter: getORIdList(idList, isins) };
+    if (nextToken) variables.nextToken = nextToken;
+    const {
+      data: { listAllIndicess },
+    } = (await API.graphql(
+      graphqlOperation(queries.listAllIndicess, variables)
+    )) as {
+      data: APIt.ListAllIndicessQuery;
+    };
+    if (listAllIndicess?.items?.length)
+      returnList.push(...(listAllIndicess.items as Array<APIt.AllIndices>));
+    nextToken = listAllIndicess?.nextToken;
+  } while (nextToken);
+  return returnList.length ? returnList : null;
+};
+
 export const getAssetTypes = () => {
   return {
     [APIt.AssetType.E]: "Equity",

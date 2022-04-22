@@ -13,6 +13,7 @@ import Search from "../Search";
 import CardView from "./CardView";
 import { getCryptoPrevPrice } from "../utils";
 import { AppContext } from "../AppContext";
+import { isISIN } from "../nw/valuationutils";
 require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
@@ -35,8 +36,6 @@ export default function Watchlist() {
     Index: "index",
     [CRYPTO]: CRYPTO,
   };
-
-  const isISIN = (item: string) => item.length === 12 && item.startsWith("IN");
 
   const loadData = () => {
     if (!watchlist.length) return;
