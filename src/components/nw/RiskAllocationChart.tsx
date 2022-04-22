@@ -234,7 +234,7 @@ export default function RiskAllocationChart() {
                       (v * totalAssets) / 100,
                       selectedCurrency
                     )}</b> (${toReadableNumber(v, 2)}%)${breakdownRiskInfo(
-                      riskData.risk
+                      riskData?.risk
                     )}`
                   : "";
               },

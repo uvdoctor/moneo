@@ -280,8 +280,9 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
   };
 };
 
-export const loadMatchingINExchange = async (isins: Array<string>) => {
-  if (!isins.length) return null;
+export const loadMatchingINExchange = async (ids: Array<string>) => {
+  if (!ids.length) return null;
+  const isins = JSON.parse(JSON.stringify(ids))
   let returnList: Array<APIt.INExchgPrice> = [];
   const maxLimit = 50;
   const isinChunks: Array<Array<string>> = new Array(
