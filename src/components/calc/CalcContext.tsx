@@ -87,8 +87,6 @@ function CalcContextProvider({
   const [startYear, setStartYear] = useState<number>(
     goal.type === GoalType.FF && userInfo
       ? new Date(userInfo.dob).getFullYear()
-      : isPublicCalc
-      ? new Date().getFullYear()
       : goal.sy
   );
   const [startMonth, setStartMonth] = useState<number>(
