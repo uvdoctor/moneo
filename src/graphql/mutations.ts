@@ -395,6 +395,8 @@ export const createUserInfo = /* GraphQL */ `
       dr
       tc
       le
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -417,6 +419,8 @@ export const updateUserInfo = /* GraphQL */ `
       dr
       tc
       le
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -439,6 +443,8 @@ export const deleteUserInfo = /* GraphQL */ `
       dr
       tc
       le
+      exp
+      invest
       createdAt
       updatedAt
     }

@@ -56,6 +56,8 @@ export default function BasicAuthenticator({
     TaxLiability.M
   );
   const [uname, setUname] = useState<string>("");
+  const [monthlyExp, setMonthlyExp] = useState<number>(0);
+  const [monthlyInv, setMonthlyInv] = useState<number>(0);
   const [state, dispatch] = useReducer(stepReducer, { step: 0 });
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
@@ -83,6 +85,10 @@ export default function BasicAuthenticator({
           setDOB={setDOB}
           lifeExpectancy={lifeExpectancy}
           setLifeExpectancy={setLifeExpectancy}
+          monthlyExp={monthlyExp}
+          setMonthlyExp={setMonthlyExp}
+          monthlyInv={monthlyInv}
+          setMonthlyInv={setMonthlyInv}
         />
       ),
     },
@@ -127,6 +133,8 @@ export default function BasicAuthenticator({
       dr: 0,
       tc: new Date().toISOString(),
       le: lifeExpectancy,
+      exp: monthlyExp,
+      invest: monthlyInv,
     });
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",

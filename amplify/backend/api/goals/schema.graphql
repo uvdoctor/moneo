@@ -211,6 +211,8 @@ type UserInfo
   dr: Float!
   tc: AWSDateTime!
   le: Int!
+  exp: Int
+  invest: Int
 }
 
 type InsAnalytics
