@@ -14,10 +14,6 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const eodKey = "61ff9bf3d40797.93512142";
 
   const getRate = (id: string, type: string) => {
-    // `https://eodhistoricaldata.com/api/${time}/${id}.${type}?api_token=${eodKey}&fmt=json&filter=${
-    //     time === "real-time" ? "close" : "last_close"
-    //   }`
-    // const time = type === "CC" ? "real-time" : "eod";
     fetch(
       `https://eodhistoricaldata.com/api/real-time/${id}.${type}?api_token=${eodKey}&fmt=json&filter=close`
     )

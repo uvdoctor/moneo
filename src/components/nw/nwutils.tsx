@@ -561,6 +561,15 @@ export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev
     .catch(() => 0);
 };
 
+export const getForexRate = (currency: string, isPrev: boolean = false) => {
+  return getPrice(currency, "FOREX", isPrev)
+    .then((rate) => {
+      if (!rate || isNaN(rate)) return 0;
+      return rate;
+    })
+    .catch(() => 0);
+};
+
 export const getNPSFundManagers = () => {
   return {
     L: "LIC",

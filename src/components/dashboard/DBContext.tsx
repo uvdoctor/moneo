@@ -2,6 +2,7 @@ import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import simpleStorage from "simplestorage.js";
 import {
+  AssetSubType,
   CreateUserHoldingsInput,
   CreateUserInsInput,
   InstrumentInput,
@@ -14,6 +15,7 @@ import { ALL_FAMILY } from "../nw/FamilyInput";
 import {
   addInsHoldings,
   getCommodityRate,
+  getForexRate,
   loadAllHoldings,
   loadInsHoldings,
   updateInsHoldings,
@@ -24,7 +26,6 @@ import {
   calculateTotalLiabilities,
   initializeWatchlist,
 } from "../nw/valuationutils";
-import { getFXRate } from "../utils";
 import DBView from "./DBView";
 const DBContext = createContext({});
 
@@ -96,8 +97,10 @@ function DBContextProvider({ fxRates }: any) {
   };
 
   const initializeHeader = async () => {
-    const gold = await getCommodityRate("Gold", "24", defaultCurrency, fxRates);
-    const goldPrev = await getCommodityRate("Gold", "24", defaultCurrency, fxRates, true);
+    const gold = await getCommodityRate(AssetSubType.Gold, "24", defaultCurrency, fxRates);
+    const goldPrev = await getCommodityRate(AssetSubType.Gold, "24", defaultCurrency, fxRates, true);
+    const usd = await getForexRate(defaultCurrency);
+    const usdPrev = await getForexRate(defaultCurrency, true);
     const silver = await getCommodityRate(
       "SI",
       "100",
@@ -111,7 +114,6 @@ function DBContextProvider({ fxRates }: any) {
       fxRates,
       true
     );
-    const usd = getFXRate(fxRates, defaultCurrency);
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     const nifty = insData && insData[NIFTY50] ? insData[NIFTY50] : {price:0,prev:0}; 
     const sensex = insData && insData[SENSEX] ? insData[SENSEX] : {price:0,prev:0}; 
@@ -122,7 +124,7 @@ function DBContextProvider({ fxRates }: any) {
       { label: "Nifty 50", prev: nifty?.prev, price: nifty?.price },
       { label: "Petrol", prev: 115, price: 110 },
       { label: "Diesel", prev: 95, price: 90 },
-      { label: "USD", prev: usd, price: usd },
+      { label: "USD", prev: usdPrev, price: usd },
     ];
     setHeaderlist([ ...headerlist ]);
   };
