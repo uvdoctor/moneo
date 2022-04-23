@@ -25,11 +25,7 @@ import {
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { NIFTY50, SENSEX } from "../dashboard/DBContext";
-import {
-  awsdate,
-  getNumberOfDays,
-  includesAny,
-} from "../utils";
+import { awsdate, getNumberOfDays, includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   doesHoldingMatch,
@@ -1221,10 +1217,14 @@ export const loadIndices = async (ids: Array<string>) => {
 };
 
 export const initializeWatchlist = async (
-  instruments: Array<InsWatchInput>
+  instruments?: Array<InsWatchInput> | null | undefined
 ) => {
   const ids: Array<string> = [];
-  const indexIds: Array<string> = [NIFTY50, SENSEX];
+  let indexIds: Array<string> = [];
+  if (!instruments) {
+    await loadIndices([NIFTY50, SENSEX]);
+    return;
+  }
   for (let instrument of instruments) {
     const { id, subt } = instrument;
     if (!isISIN(id) && subt !== AssetSubType.C) {
