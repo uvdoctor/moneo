@@ -1,6 +1,5 @@
 import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import simpleStorage from "simplestorage.js";
 import {
   AssetSubType,
   CreateUserHoldingsInput,
@@ -9,7 +8,6 @@ import {
   InsWatchInput,
   UpdateUserInsInput,
 } from "../../api/goals";
-import { LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import { ALL_FAMILY } from "../nw/FamilyInput";
 import {
@@ -97,8 +95,19 @@ function DBContextProvider({ fxRates }: any) {
   };
 
   const initializeHeader = async () => {
-    const gold = await getCommodityRate(AssetSubType.Gold, "24", defaultCurrency, fxRates);
-    const goldPrev = await getCommodityRate(AssetSubType.Gold, "24", defaultCurrency, fxRates, true);
+    const gold = await getCommodityRate(
+      AssetSubType.Gold,
+      "24",
+      defaultCurrency,
+      fxRates
+    );
+    const goldPrev = await getCommodityRate(
+      AssetSubType.Gold,
+      "24",
+      defaultCurrency,
+      fxRates,
+      true
+    );
     const usd = await getForexRate(defaultCurrency);
     const usdPrev = await getForexRate(defaultCurrency, true);
     const silver = await getCommodityRate(
@@ -114,19 +123,14 @@ function DBContextProvider({ fxRates }: any) {
       fxRates,
       true
     );
-    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    const nifty = insData && insData[NIFTY50] ? insData[NIFTY50] : {price:0,prev:0}; 
-    const sensex = insData && insData[SENSEX] ? insData[SENSEX] : {price:0,prev:0}; 
     const headerlist = [
       { label: "Gold", prev: goldPrev * 10, price: gold * 10 },
       { label: "Silver", prev: silverPrev * 10, price: silver * 10 },
-      { label: "Sensex", prev: sensex?.prev, price: sensex?.price },
-      { label: "Nifty 50", prev: nifty?.prev, price: nifty?.price },
       { label: "Petrol", prev: 115, price: 110 },
       { label: "Diesel", prev: 95, price: 90 },
       { label: "USD", prev: usdPrev, price: usd },
     ];
-    setHeaderlist([ ...headerlist ]);
+    setHeaderlist([...headerlist]);
   };
 
   const initializeData = async () => {
@@ -181,9 +185,8 @@ function DBContextProvider({ fxRates }: any) {
         setWatchlist,
         saveHoldings,
         holdingsLoaded,
-        headerlist
-      }}
-    >
+        headerlist,
+      }}>
       <DBView />
     </DBContext.Provider>
   );

@@ -120,8 +120,7 @@ export default function Watchlist() {
       title="Investment Watchlist"
       activeTag={watchlist.length ? activeTag : ""}
       activeTagHandler={watchlist.length ? setActiveTag : () => {}}
-      tags={watchlist.length ? Object.keys(typesList) : []}
-    >
+      tags={watchlist.length ? Object.keys(typesList) : []}>
       {watchlist.length ? (
         <Row justify="center" gutter={[0, 10]} align="middle">
           <Col xs={24}>
@@ -131,8 +130,7 @@ export default function Watchlist() {
               type="primary"
               icon={<SaveOutlined />}
               onClick={async () => await saveHoldings()}
-              className="steps-start-btn"
-            >
+              className="steps-start-btn">
               Save
             </Button>
           </Col>
@@ -144,8 +142,7 @@ export default function Watchlist() {
                   <List.Item>
                     <Typography.Link
                       onClick={async () => await onSelectInstruments(resp)}
-                      style={{ marginRight: 8 }}
-                    >
+                      style={{ marginRight: 8 }}>
                       {resp.Name}{" "}
                       <Button
                         icon={<PlusOutlined />}
@@ -165,8 +162,7 @@ export default function Watchlist() {
               style={{
                 height: 350,
                 overflow: "auto",
-              }}
-            >
+              }}>
               <List
                 itemLayout="horizontal"
                 dataSource={filterByTab}
