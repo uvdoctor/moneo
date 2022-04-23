@@ -307,17 +307,15 @@ export default function UserSettings() {
             </TabPane>
             <TabPane className="settings-tabpane-view" tab="Profile" key="2">
               <Row>
-                {userInfo && (
-                  <Col span={24}>
-                    <ProfileTab
-                      dispatch={dispatch}
-                      isDrManual={isDrManual}
-                      notify={notify}
-                      riskProfile={riskProfile}
-                      tax={tax}
-                    />
-                  </Col>
-                )}
+                <Col span={24}>
+                  <ProfileTab
+                    dispatch={dispatch}
+                    isDrManual={isDrManual}
+                    notify={notify}
+                    riskProfile={riskProfile}
+                    tax={tax}
+                  />
+                </Col>
                 <Col xs={24} sm={24} md={16}>
                   <SaveButton
                     loading={loading}
