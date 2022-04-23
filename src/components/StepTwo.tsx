@@ -1,29 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
 import DateInput from "./form/DateInput";
 import { Col, Row } from "antd";
-import LifeExpectancy from "./LifeExpectancy";
 import { getStr } from "./utils";
 import NumberInput from "./form/numberinput";
 import { AppContext } from "./AppContext";
 
 interface StepTwoProps {
   setDOB: Function;
-  lifeExpectancy: number;
-  setLifeExpectancy: Function;
   monthlyExp: number;
   setMonthlyExp: Function;
   monthlyInv: number;
   setMonthlyInv: Function;
+  totalPortfolio: number;
+  setTotalPortfolio: Function;
 }
 
 export default function StepTwo({
   setDOB,
-  lifeExpectancy,
-  setLifeExpectancy,
   monthlyExp,
   setMonthlyExp,
   monthlyInv,
   setMonthlyInv,
+  totalPortfolio,
+  setTotalPortfolio,
 }: StepTwoProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const [date, setDate] = useState<number>(1);
@@ -49,9 +48,15 @@ export default function StepTwo({
         />
       </Col>
       <Col span={24}>
-        <LifeExpectancy
-          value={lifeExpectancy}
-          changeHandler={setLifeExpectancy}
+        <NumberInput
+          info="Current portfolio value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include the value of the property where you live."
+          value={totalPortfolio}
+          pre="Current portfolio value"
+          min={500}
+          max={900000}
+          changeHandler={setTotalPortfolio}
+          step={100}
+          currency={defaultCurrency}
         />
       </Col>
       <Col span={24}>

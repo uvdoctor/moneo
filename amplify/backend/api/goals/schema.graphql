@@ -210,7 +210,8 @@ type UserInfo
   rp: RiskProfile!
   dr: Float!
   tc: AWSDateTime!
-  le: Int!
+  ta: Float
+  tid: String
   exp: Int
   invest: Int
 }

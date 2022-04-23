@@ -52,9 +52,6 @@ const initialState = {
   isDrManual: 0,
   notify: 0,
   tax: "",
-  lifeExpectancy: 0,
-  monthlyExp: 0,
-  monthlyInv: 0,
 };
 
 const userReducer = (
@@ -100,12 +97,9 @@ export default function UserSettings() {
     notify,
     isDrManual,
     tax,
-    lifeExpectancy,
     dobDate,
     dobMonth,
     dobYear,
-    monthlyExp,
-    monthlyInv,
   } = userState;
   const [loading, setLoading] = useState<boolean>(false);
   const fsb = useFullScreenBrowser();
@@ -191,7 +185,6 @@ export default function UserSettings() {
       const result = await updateUserDetails({
         uname: owner,
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
-        le: lifeExpectancy,
       });
       setUserInfo(result);
       success("Updated Successfully");
@@ -210,8 +203,6 @@ export default function UserSettings() {
         notify,
         rp: riskProfile,
         tax,
-        exp: monthlyExp,
-        invest: monthlyInv,
       });
       setUserInfo(results);
       success("Updated Successfully");
@@ -300,7 +291,6 @@ export default function UserSettings() {
                     dobDate={dobDate}
                     dobMonth={dobMonth}
                     dobYear={dobYear}
-                    lifeExpectancy={lifeExpectancy}
                     user={user}
                   />
                 </Col>
@@ -324,8 +314,6 @@ export default function UserSettings() {
                       notify={notify}
                       riskProfile={riskProfile}
                       tax={tax}
-                      monthlyExp={monthlyExp}
-                      monthlyInv={monthlyInv}
                     />
                   </Col>
                 )}

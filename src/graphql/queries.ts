@@ -317,7 +317,8 @@ export const getUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
       exp
       invest
       createdAt
@@ -351,7 +352,8 @@ export const listUserInfos = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
         exp
         invest
         createdAt
@@ -387,7 +389,8 @@ export const regByIm = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
         exp
         invest
         createdAt
@@ -423,7 +426,8 @@ export const regByMob = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
         exp
         invest
         createdAt
@@ -459,7 +463,8 @@ export const regByEmail = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
         exp
         invest
         createdAt
@@ -495,7 +500,8 @@ export const regByDob = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
         exp
         invest
         createdAt

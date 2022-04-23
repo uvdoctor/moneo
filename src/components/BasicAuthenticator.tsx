@@ -58,11 +58,12 @@ export default function BasicAuthenticator({
   const [uname, setUname] = useState<string>("");
   const [monthlyExp, setMonthlyExp] = useState<number>(0);
   const [monthlyInv, setMonthlyInv] = useState<number>(0);
+  const [totalPortfolio, setTotalPortfolio] = useState<number>(0);
   const [state, dispatch] = useReducer(stepReducer, { step: 0 });
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
-  const [lifeExpectancy, setLifeExpectancy] = useState<number>(90);
+  const [taxId, setTaxId] = useState<string>("");
   const [cognitoUser, setCognitoUser] = useState<any | null>(null);
   const { Step } = Steps;
 
@@ -83,12 +84,12 @@ export default function BasicAuthenticator({
       content: (
         <StepTwo
           setDOB={setDOB}
-          lifeExpectancy={lifeExpectancy}
-          setLifeExpectancy={setLifeExpectancy}
           monthlyExp={monthlyExp}
           setMonthlyExp={setMonthlyExp}
           monthlyInv={monthlyInv}
           setMonthlyInv={setMonthlyInv}
+          totalPortfolio={totalPortfolio}
+          setTotalPortfolio={setTotalPortfolio}
         />
       ),
     },
@@ -103,6 +104,8 @@ export default function BasicAuthenticator({
           setRiskProfile={setRiskProfile}
           taxLiability={taxLiability}
           setTaxLiability={setTaxLiability}
+          taxId={taxId}
+          setTaxId={setTaxId}
         />
       ),
     },
@@ -132,9 +135,10 @@ export default function BasicAuthenticator({
       rp: riskProfile,
       dr: 0,
       tc: new Date().toISOString(),
-      le: lifeExpectancy,
       exp: monthlyExp,
       invest: monthlyInv,
+      ta: totalPortfolio,
+      tid: taxId,
     });
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",

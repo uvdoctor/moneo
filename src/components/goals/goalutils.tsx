@@ -127,8 +127,8 @@ const createFFGoalInput = (currency: string) => {
       emi: 3000 * rf,
       ry: nowYear,
       per: 3,
-      dur: 85,
-      rate: 65,
+      dur: 90,
+      rate: 60,
       type: APIt.LoanType.A,
       pmi: 2000 * rf,
     },
@@ -185,6 +185,25 @@ const createFFGoalInput = (currency: string) => {
       p2p: 8 + irDiff,
     },
   } as APIt.CreateGoalInput;
+};
+
+export const createDefaultFFGoalForUser = (
+  birthYear: number,
+  totalAssets: number,
+  riskProfile: APIt.RiskProfile,
+  monthlyExpense: number,
+  monthlyInvestment: number,
+  currency: string
+) => {
+  let goal: APIt.CreateGoalInput = createFFGoalInput(currency);
+  goal.sy = birthYear;
+  goal.ra = totalAssets;
+  goal.rachg = monthlyInvestment;
+  goal.tdli = monthlyExpense * 12;
+  if (goal?.loan) goal.loan.emi = monthlyExpense * 6;
+  goal.rp = riskProfile;
+  goal.tbr = 0;
+  return goal;
 };
 
 const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
@@ -368,7 +387,6 @@ export const loadStateFromUserInfo = (
 ) => {
   if (!userInfo) return;
   g.sy = new Date(userInfo.dob).getFullYear();
-  if (g.loan) g.loan.dur = userInfo.le;
   g.rp = userInfo.rp;
   g.manual =
     userInfo.tax === APIt.TaxLiability.NIL ||

@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Alert, Checkbox, Col, Form, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
 import TaxLiabilityInput from "./TaxLiabilityInput";
 import RiskProfileInput from "./RiskProfileInput";
+import TextInput from "./form/textinput";
 
 interface StepThreeProps {
   riskProfile: string;
@@ -13,10 +14,13 @@ interface StepThreeProps {
   error: string;
   setNotify: Function;
   setDisable: Function;
+  taxId: string;
+  setTaxId: Function;
 }
 
 export default function StepThree(props: StepThreeProps) {
   const [form] = useForm();
+  const [taxIdError, setTaxIdError] = useState<string>("");
 
   const handleFormChange = () =>
     props.setDisable(
@@ -31,6 +35,21 @@ export default function StepThree(props: StepThreeProps) {
         </Col>
       </Row>
       <Row gutter={[0, 20]}>
+        <Col span={24}>
+          <TextInput
+            pre="Tax id"
+            info="This is your PAN number"
+            placeholder="XXXXX1234X"
+            value={props.taxId}
+            changeHandler={props.setTaxId}
+            minLength={10}
+            setError={setTaxIdError}
+            pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+            fieldName="PAN number"
+            size="middle"
+            post={taxIdError}
+          />
+        </Col>
         <Col xs={24} sm={12} md={12} lg={12}>
           <RiskProfileInput
             value={props.riskProfile}

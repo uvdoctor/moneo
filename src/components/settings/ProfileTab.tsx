@@ -12,8 +12,6 @@ interface ProfileTabProps {
   notify: boolean;
   riskProfile: string;
   tax: string;
-  monthlyExp: number;
-  monthlyInv: number;
   dispatch: Function;
 }
 
@@ -22,8 +20,6 @@ export default function ProfileTab({
   notify,
   riskProfile,
   tax,
-  monthlyExp,
-  monthlyInv,
   dispatch,
 }: ProfileTabProps) {
   const { discountRate, setDiscountRate, defaultCurrency }: any =
@@ -93,38 +89,6 @@ export default function ProfileTab({
               data: { field: "tax", val },
             })
           }
-        />
-      </Col>
-      <Col xs={24} md={12}>
-        <NumberInput
-          pre="Average monthly investment"
-          value={monthlyInv}
-          changeHandler={(val: number) =>
-            dispatch({
-              type: "single",
-              data: { field: "monthlyInv", val },
-            })
-          }
-          currency={defaultCurrency}
-          min={100}
-          max={1000000}
-          noRangeFactor
-        />
-      </Col>
-      <Col xs={24} md={12}>
-        <NumberInput
-          pre="Average monthly expense"
-          value={monthlyExp}
-          min={100}
-          max={1000000}
-          noRangeFactor
-          changeHandler={(val: number) =>
-            dispatch({
-              type: "single",
-              data: { field: "monthlyExp", val },
-            })
-          }
-          currency={defaultCurrency}
         />
       </Col>
     </Row>
