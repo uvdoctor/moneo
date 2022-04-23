@@ -22,8 +22,7 @@ export default function ProfileTab({
   tax,
   dispatch,
 }: ProfileTabProps) {
-  const { discountRate, setDiscountRate, defaultCurrency }: any =
-    useContext(AppContext);
+  const { discountRate, setDiscountRate }: any = useContext(AppContext);
 
   return (
     <Row

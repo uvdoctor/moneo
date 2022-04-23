@@ -6,7 +6,7 @@ import { ROUTES } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import ItemDisplay from "../calc/ItemDisplay";
 import { calculateFI } from "../goals/fiutils";
-import { loadAllGoals } from "../goals/goalutils";
+import { createDefaultFFGoalForUser, loadAllGoals } from "../goals/goalutils";
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
@@ -18,25 +18,40 @@ export default function SetResult() {
   const [numOfGoals, setNumOfGoals] = useState<number>(0);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null);
 
+  const initFFGoal = async (result: any) => {
+    let ffGoal = result.ffGoal;
+    if (!ffGoal)
+      ffGoal = await createDefaultFFGoalForUser(
+        userInfo.dob.getFullYear(),
+        userInfo.ta,
+        userInfo.rp,
+        userInfo.exp,
+        userInfo.invest,
+        defaultCurrency
+      );
+    return ffGoal;
+  };
+
   useEffect(() => {
     loadAllGoals(userInfo).then((result: any) => {
-      const ffGoal = result.ffGoal;
-      setFFGoal(ffGoal);
-      const goals = result.goals;
-      const allCFs = result.allCFs;
-      const fiResult: any = calculateFI(
-        ffGoal,
-        null,
-        goals,
-        allCFs,
-        false,
-        defaultCurrency,
-        fxRates
-      );
-      setFFYear(fiResult?.ffYear);
-      setNumOfGoals(goals.length);
-      setFFAmt(fiResult?.ffResult?.ffAmt);
-      setGoalsLoaded(true);
+      initFFGoal(result).then((ffGoal: CreateGoalInput) => {
+        setFFGoal(ffGoal);
+        const goals = result.goals;
+        const allCFs = result.allCFs;
+        const fiResult: any = calculateFI(
+          ffGoal,
+          null,
+          goals,
+          allCFs,
+          false,
+          defaultCurrency,
+          fxRates
+        );
+        setFFYear(fiResult?.ffYear);
+        setNumOfGoals(goals.length);
+        setFFAmt(fiResult?.ffResult?.ffAmt);
+        setGoalsLoaded(true);
+      });
     });
   }, []);
 
