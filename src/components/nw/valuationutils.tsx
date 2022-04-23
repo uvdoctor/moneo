@@ -27,7 +27,6 @@ import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { NIFTY50, SENSEX } from "../dashboard/DBContext";
 import {
   awsdate,
-  getCryptoPrevPrice,
   getNumberOfDays,
   includesAny,
 } from "../utils";
@@ -1166,7 +1165,7 @@ export const calculatePrice = async (
       if (isin[id]) continue;
       isin[id] = id;
       const price = await getCryptoRate(id, currency as string, fxRates);
-      const prev = await getCryptoPrevPrice(id, currency as string, fxRates);
+      const prev = await getCryptoRate(id, currency as string, fxRates, true);
       if (!prev || !price) continue;
       const diff = calculateDiffPercent(price, prev);
       Math.sign(diff) > 0

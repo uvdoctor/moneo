@@ -24,7 +24,7 @@ import {
   calculateTotalLiabilities,
   initializeWatchlist,
 } from "../nw/valuationutils";
-import { getFXRate, toHumanFriendlyCurrency } from "../utils";
+import { getFXRate } from "../utils";
 import DBView from "./DBView";
 const DBContext = createContext({});
 
@@ -45,7 +45,7 @@ function DBContextProvider({ fxRates }: any) {
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [insholdings, setInsholdings] = useState<boolean>(false);
   const [holdingsLoaded, setHoldingsLoaded] = useState<boolean>(false);
-  const [headerData, setHeaderData] = useState<{}>({});
+  const [headerlist, setHeaderlist] = useState<any[]>([]);
 
   const initializeHoldings = async () => {
     try {
@@ -97,26 +97,34 @@ function DBContextProvider({ fxRates }: any) {
 
   const initializeHeader = async () => {
     const gold = await getCommodityRate("Gold", "24", defaultCurrency, fxRates);
+    const goldPrev = await getCommodityRate("Gold", "24", defaultCurrency, fxRates, true);
     const silver = await getCommodityRate(
       "SI",
       "100",
       defaultCurrency,
       fxRates
     );
+    const silverPrev = await getCommodityRate(
+      "SI",
+      "100",
+      defaultCurrency,
+      fxRates,
+      true
+    );
     const usd = getFXRate(fxRates, defaultCurrency);
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    const nifty = insData && insData[NIFTY50] ? insData[NIFTY50]?.price : 0;
-    const sensex = insData && insData[SENSEX] ? insData[SENSEX]?.price : 0; 
-    const headerData = {
-      gold: toHumanFriendlyCurrency(gold * 10, defaultCurrency),
-      silver: toHumanFriendlyCurrency(silver * 10, defaultCurrency),
-      usd: toHumanFriendlyCurrency(usd, defaultCurrency),
-      petrol: toHumanFriendlyCurrency(110, defaultCurrency),
-      diesel: toHumanFriendlyCurrency(90, defaultCurrency),
-      nifty: toHumanFriendlyCurrency(nifty, defaultCurrency),
-      sensex: toHumanFriendlyCurrency(sensex, defaultCurrency),
-    };
-    setHeaderData({ ...headerData });
+    const nifty = insData && insData[NIFTY50] ? insData[NIFTY50] : {price:0,prev:0}; 
+    const sensex = insData && insData[SENSEX] ? insData[SENSEX] : {price:0,prev:0}; 
+    const headerlist = [
+      { label: "Gold", prev: goldPrev * 10, price: gold * 10 },
+      { label: "Silver", prev: silverPrev * 10, price: silver * 10 },
+      { label: "Sensex", prev: sensex?.prev, price: sensex?.price },
+      { label: "Nifty 50", prev: nifty?.prev, price: nifty?.price },
+      { label: "Petrol", prev: 115, price: 110 },
+      { label: "Diesel", prev: 95, price: 90 },
+      { label: "USD", prev: usd, price: usd },
+    ];
+    setHeaderlist([ ...headerlist ]);
   };
 
   const initializeData = async () => {
@@ -171,7 +179,7 @@ function DBContextProvider({ fxRates }: any) {
         setWatchlist,
         saveHoldings,
         holdingsLoaded,
-        headerData
+        headerlist
       }}
     >
       <DBView />

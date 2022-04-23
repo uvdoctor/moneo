@@ -9,14 +9,21 @@ import GetResult from "./GetResult";
 import ResultCarousel from "../ResultCarousel";
 import SetResult from "./SetResult";
 import EconomicCalendar from "./EconomicCalendar";
+import InsPrice from "../nw/InsPrice";
 
 require("./DBView.less");
 
 export default function DBView() {
-  const { gainers, losers, yhigh, ylow, volLosers, volGainers, headerData }: any =
-    useContext(DBContext);
-  const { appContextLoaded }: any = useContext(AppContext);
-  const { gold, silver, nifty, sensex, usd, petrol, diesel } = headerData;
+  const {
+    gainers,
+    losers,
+    yhigh,
+    ylow,
+    volLosers,
+    volGainers,
+    headerlist
+  }: any = useContext(DBContext);
+  const { appContextLoaded, defaultCurrency }: any = useContext(AppContext);
 
   return appContextLoaded ? (
     <Fragment>
@@ -27,13 +34,19 @@ export default function DBView() {
           </Col>
           <Col span={24} className="secondary-header">
             <Row justify="space-between" align="middle">
-              <Col>Gold: {gold}</Col>
-              <Col>Silver: {silver}</Col>
-              <Col>Sensex: {sensex}</Col>
-              <Col>Nifty 50: {nifty}</Col>
-              <Col>Petrol: {petrol}</Col>
-              <Col>Diesel: {diesel}</Col>
-              <Col>USD: {usd}</Col>
+              {headerlist.map((item: any) => {
+                const { label, prev, price } = item;
+                return (
+                  <Col key={label}>
+                    {label}:{" "}
+                    <InsPrice
+                      price={price}
+                      currency={defaultCurrency}
+                      previousPrice={prev}
+                    />
+                  </Col>
+                );
+              })}
             </Row>
           </Col>
         </Row>

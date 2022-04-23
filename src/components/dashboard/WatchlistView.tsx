@@ -9,7 +9,6 @@ import { AlertOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import InsPrice from "../nw/InsPrice";
 import { getCryptoRate } from "../nw/nwutils";
-import { getCryptoPrevPrice } from "../utils";
 
 interface WatchlistRowProps {
   record: InsWatchInput;
@@ -36,7 +35,7 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
     let watchdata: any = {};
     if (record.subt === AssetSubType.C) {
       watchdata.price = await getCryptoRate(record.id, defaultCurrency, fxRates);
-      watchdata.prev = await getCryptoPrevPrice(record.id, defaultCurrency, fxRates);
+      watchdata.prev = await getCryptoRate(record.id, defaultCurrency, fxRates, true);
       watchdata.name = record.sid;
     } else {
       watchdata = insData && insData[record.id] ? insData[record.id] : null;

@@ -11,7 +11,6 @@ import { DBContext, NIFTY50, SENSEX } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
-import { getCryptoPrevPrice } from "../utils";
 import { AppContext } from "../AppContext";
 import { isISIN } from "../nw/valuationutils";
 require("./InvestmentAlerts.less");
@@ -58,7 +57,7 @@ export default function Watchlist() {
     let data: any = {};
     if (searchType === CRYPTO) {
       const price = await getCryptoRate(ISIN, defaultCurrency, fxRates);
-      const prev = await getCryptoPrevPrice(ISIN, defaultCurrency, fxRates);
+      const prev = await getCryptoRate(ISIN, defaultCurrency, fxRates, true);
       data = {
         id: ISIN,
         sid: Code,

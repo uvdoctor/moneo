@@ -532,12 +532,11 @@ export const getCommodityRate = async (
   subtype: string,
   purity: string,
   currency: string,
-  fxRates: any
+  fxRates: any,
+  isPrev: boolean = false
 ) => {
   return await getPrice(
-    subtype === APIt.AssetSubType.Gold ? "GC" : subtype,
-    "COMM"
-  )
+    subtype === APIt.AssetSubType.Gold ? "GC" : subtype,"COMM", isPrev)
     .then((result) => {
       if (!result || isNaN(result)) return 0;
       let rate = Number((result / 31.1).toFixed(2));
@@ -553,8 +552,8 @@ export const getCommodityRate = async (
     .catch(() => 0);
 };
 
-export const getCryptoRate = (id: string, currency: string, fxRates: any) => {
-  return getPrice(id, "CC")
+export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev: boolean = false) => {
+  return getPrice(id, "CC", isPrev)
     .then((rate) => {
       if (!rate || isNaN(rate)) return 0;
       return rate * getFXRate(fxRates, currency);
