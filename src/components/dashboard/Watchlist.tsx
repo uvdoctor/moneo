@@ -22,7 +22,7 @@ export default function Watchlist() {
     useContext(DBContext);
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>(STOCK);
-  const [searchType, setSearchType] = useState("stock");
+  const [searchType, setSearchType] = useState("index");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
   const typesList = {
