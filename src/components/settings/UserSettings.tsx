@@ -241,7 +241,7 @@ export default function UserSettings() {
 
   useEffect(() => {
     if (!userInfo) return;
-    const { rp, notify, dr, tax, le, dob, exp, invest } = userInfo;
+    const { rp, notify, dr, tax, dob, tid, exp, ta, invest } = userInfo;
     const date = new Date(dob);
     dispatch({
       type: "userUpdate",
@@ -250,11 +250,12 @@ export default function UserSettings() {
         notify,
         tax,
         isDrManual: !dr ? 0 : 1,
-        lifeExpectancy: le,
         dobYear: date.getFullYear(),
         dobMonth: date.getMonth() + 1,
         dobDate: date.getDate(),
+        tid,
         exp,
+        ta,
         invest,
       },
     });
