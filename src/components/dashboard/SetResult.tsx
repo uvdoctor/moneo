@@ -22,7 +22,7 @@ export default function SetResult() {
     let ffGoal = result.ffGoal;
     if (!ffGoal)
       ffGoal = await createDefaultFFGoalForUser(
-        userInfo.dob.getFullYear(),
+        new Date(userInfo.dob).getFullYear(),
         userInfo.ta,
         userInfo.rp,
         userInfo.exp,
