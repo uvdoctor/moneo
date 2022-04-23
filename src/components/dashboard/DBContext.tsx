@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import simpleStorage from "simplestorage.js";
 import {
   AssetSubType,
   CreateUserHoldingsInput,
@@ -8,6 +9,7 @@ import {
   InsWatchInput,
   UpdateUserInsInput,
 } from "../../api/goals";
+import { LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import { ALL_FAMILY } from "../nw/FamilyInput";
 import {
@@ -60,9 +62,20 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       if (insHoldings) setInsholdings(true);
+      await initializeWatchlist(insHoldings?.watch);
       if (insHoldings?.watch) {
-        await initializeWatchlist(insHoldings?.watch);
         setWatchlist([...insHoldings?.watch]);
+      } else {
+        const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+        if (!cachedData) return;
+        const defaultList = [SENSEX, NIFTY50];
+        for (let item of defaultList) {
+          if (!cachedData[item]) return;
+          const data = cachedData[item];
+          const { id, subt, type } = data;
+          watchlist.push({ id, type, subt });
+        }
+        setWatchlist([...watchlist]);
       }
       if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
@@ -186,7 +199,8 @@ function DBContextProvider({ fxRates }: any) {
         saveHoldings,
         holdingsLoaded,
         headerlist,
-      }}>
+      }}
+    >
       <DBView />
     </DBContext.Provider>
   );
