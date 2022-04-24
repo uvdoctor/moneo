@@ -94,7 +94,7 @@ export default function SetResult() {
               info={
                 numOfGoals
                   ? "Number of goals defined in the financial plan."
-                  : "Set your financial goals so that you get a more accurate investment plan linked to your goals."
+                  : "Define your financial goals with easy-to-use goal templates so that you get a more accurate investment plan linked to your goals."
               }
             />
           </Col>
