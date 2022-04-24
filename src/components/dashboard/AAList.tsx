@@ -33,18 +33,25 @@ export default function AAList() {
         style={{ width: "100%", height: 600 }}
         title={`Target Asset Allocation for the year ${year}`}
         loading={!currentAllocationDone}>
-        {Object.keys(currentYearAA).map((key: string) => (
-          <>
-            <ItemDisplay
-              label={getAssetName(key)}
-              unit="%"
-              result={currentYearAA[key]}
-              noResultFormat
-              labelHighlight
-            />
-            <Divider />
-          </>
-        ))}
+        <div
+          id="scrollableDiv"
+          style={{
+            height: 350,
+            overflow: "auto",
+          }}>
+          {Object.keys(currentYearAA).map((key: string) => (
+            <>
+              <ItemDisplay
+                label={getAssetName(key)}
+                unit="%"
+                result={currentYearAA[key]}
+                noResultFormat
+                labelHighlight
+              />
+              <Divider />
+            </>
+          ))}
+        </div>
         <Row justify="center">
           <Button key="more" type="link" href={ROUTES.SET}>
             Set goals for more accurate allocation
