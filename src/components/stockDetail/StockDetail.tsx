@@ -19,7 +19,8 @@ export default function StockDetail() {
 			) : state.error ? (
 				<Alert
 					message={state.error.title}
-					description={state.error.text}
+					description="Not found"
+					// description={state.error.text}
 					type="error"
 					showIcon
 				/>
