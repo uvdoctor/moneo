@@ -36,7 +36,7 @@ export default function AAList() {
         <div
           id="scrollableDiv"
           style={{
-            height: 350,
+            height: 400,
             overflow: "auto",
           }}>
           {Object.keys(currentYearAA).map((key: string) => (
