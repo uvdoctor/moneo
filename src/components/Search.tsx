@@ -142,24 +142,24 @@ export default function Search({
     }
   };
 
-  useEffect(() => {
-    if (searchText?.length < 3) return;
-    if (searchTimeout) clearTimeout(searchTimeout);
+  // useEffect(() => {
+  //   if (searchText?.length < 3) return;
+  //   if (searchTimeout) clearTimeout(searchTimeout);
 
-    searchTimeout = setTimeout(() => {
-      getSearchData();
-    }, 200);
-  }, [searchText]);
+  //   searchTimeout = setTimeout(() => {
+  //     getSearchData();
+  //   }, 200);
+  // }, [searchText]);
 
   useEffect(()=>{
-    setSearchResults([...[]])
     setSearchText('')
+    setSearchResults([...[]])
   },[searchType])
 
   useEffect(() => {
     if (searchText?.length < 3) return;
     getSearchData();
-  }, [searchType, exchange]);
+  }, [exchange, searchText]);
 
   return (
     <Comp
