@@ -35,14 +35,14 @@ export default function DBView() {
           <Col span={24} className="secondary-header">
             <Row justify="space-between" align="middle">
               {headerlist.map((item: any) => {
-                const { label, prev, price } = item;
+                const { label, price } = item;
                 return (
                   <Col key={label}>
                     {label}:{" "}
                     <InsPrice
                       price={price}
                       currency={defaultCurrency}
-                      previousPrice={prev}
+                      previousPrice={0}
                     />
                   </Col>
                 );

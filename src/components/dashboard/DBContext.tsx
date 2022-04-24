@@ -114,34 +114,19 @@ function DBContextProvider({ fxRates }: any) {
       defaultCurrency,
       fxRates
     );
-    const goldPrev = await getCommodityRate(
-      AssetSubType.Gold,
-      "24",
-      defaultCurrency,
-      fxRates,
-      true
-    );
     const usd = await getForexRate(defaultCurrency);
-    const usdPrev = await getForexRate(defaultCurrency, true);
     const silver = await getCommodityRate(
       "SI",
       "100",
       defaultCurrency,
       fxRates
     );
-    const silverPrev = await getCommodityRate(
-      "SI",
-      "100",
-      defaultCurrency,
-      fxRates,
-      true
-    );
     const headerlist = [
-      { label: "Gold", prev: goldPrev * 10, price: gold * 10 },
-      { label: "Silver", prev: silverPrev * 10, price: silver * 10 },
-      { label: "Petrol", prev: 115, price: 110 },
-      { label: "Diesel", prev: 95, price: 90 },
-      { label: "USD", prev: usdPrev, price: usd },
+      { label: "Gold", price: gold * 10 },
+      { label: "Silver", price: silver * 10 },
+      { label: "Petrol", price: 110 },
+      { label: "Diesel", price: 90 },
+      { label: "USD", price: usd },
     ];
     setHeaderlist([...headerlist]);
   };
