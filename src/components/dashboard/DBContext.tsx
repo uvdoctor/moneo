@@ -47,6 +47,7 @@ function DBContextProvider({ fxRates }: any) {
   const [insholdings, setInsholdings] = useState<boolean>(false);
   const [holdingsLoaded, setHoldingsLoaded] = useState<boolean>(false);
   const [headerlist, setHeaderlist] = useState<any[]>([]);
+  const [aa, setAA] = useState<any>({});
 
   const initializeHoldings = async () => {
     try {
@@ -184,8 +185,9 @@ function DBContextProvider({ fxRates }: any) {
         saveHoldings,
         holdingsLoaded,
         headerlist,
-      }}
-    >
+        aa,
+        setAA,
+      }}>
       <DBView />
     </DBContext.Provider>
   );

@@ -10,7 +10,7 @@ import { createDefaultFFGoalForUser, loadAllGoals } from "../goals/goalutils";
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
-  const { fxRates }: any = useContext(DBContext);
+  const { fxRates, setAA }: any = useContext(DBContext);
   const { userInfo, defaultCurrency }: any = useContext(AppContext);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffYear, setFFYear] = useState<number | null>(null);
@@ -50,6 +50,7 @@ export default function SetResult() {
         setFFYear(fiResult?.ffYear);
         setNumOfGoals(goals.length);
         setFFAmt(fiResult?.ffResult?.ffAmt);
+        setAA(fiResult?.ffResult.aa);
         setGoalsLoaded(true);
       });
     });

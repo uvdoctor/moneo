@@ -119,6 +119,7 @@ export const calculateFI = (
       ffResult: null,
       ffYear: null,
       rr: [],
+      aa: {},
     };
   allGoals?.forEach((g) => {
     let cfs: Array<number> = allCFs[g.id as string];
@@ -165,6 +166,7 @@ export const calculateFI = (
     ffResult: result,
     ffYear: isFFPossible(result, ffGoal.sa as number) ? result.ffYear : null,
     rr: result?.rr,
+    aa: result?.aa,
   };
 };
 

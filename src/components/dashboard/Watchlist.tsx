@@ -105,42 +105,43 @@ export default function Watchlist() {
       title="Investment Watchlist"
       activeTag={activeTag}
       activeTagHandler={setActiveTag}
-      tags={Object.keys(typesList)}
-    >
+      tags={Object.keys(typesList)}>
       <Row justify="center" gutter={[0, 10]} align="middle">
-        <Col xs={24}>
-          <Button
-            key="save"
-            style={{ float: "right" }}
-            type="primary"
-            icon={<SaveOutlined />}
-            onClick={async () => await saveHoldings()}
-            className="steps-start-btn"
-          >
-            Save
-          </Button>
-        </Col>
         <Col span={24}>
-          <Search
-            searchType={searchType}
-            renderItem={(resp: any) => {
-              return (
-                <List.Item>
-                  <Typography.Link
-                    onClick={async () => await onSelectInstruments(resp)}
-                    style={{ marginRight: 8 }}
-                  >
-                    {resp.Name}{" "}
-                    <Button
-                      icon={<PlusOutlined />}
-                      type="link"
-                      shape="circle"
-                    />
-                  </Typography.Link>
-                </List.Item>
-              );
-            }}
-          />
+          <Row align="middle" justify="space-between">
+            <Col>
+              <Search
+                searchType={searchType}
+                renderItem={(resp: any) => {
+                  return (
+                    <List.Item>
+                      <Typography.Link
+                        onClick={async () => await onSelectInstruments(resp)}
+                        style={{ marginRight: 8 }}>
+                        {resp.Name}{" "}
+                        <Button
+                          icon={<PlusOutlined />}
+                          type="link"
+                          shape="circle"
+                        />
+                      </Typography.Link>
+                    </List.Item>
+                  );
+                }}
+              />
+            </Col>
+            <Col>
+              <Button
+                key="save"
+                style={{ float: "right" }}
+                type="primary"
+                icon={<SaveOutlined />}
+                onClick={async () => await saveHoldings()}
+                className="steps-start-btn">
+                Save
+              </Button>
+            </Col>
+          </Row>
         </Col>
 
         <Col xs={24}>
@@ -149,8 +150,7 @@ export default function Watchlist() {
             style={{
               height: 350,
               overflow: "auto",
-            }}
-          >
+            }}>
             <List
               itemLayout="horizontal"
               dataSource={filterByTab}
