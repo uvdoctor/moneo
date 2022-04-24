@@ -1119,7 +1119,7 @@ export const calculatePrice = async (
   ];
   const isin: { [key: string]: string } = {};
   let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  insHoldings.forEach((instrument: InstrumentInput) => {
+  insHoldings?.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
     if (isin[id] || !data) return;
