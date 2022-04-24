@@ -4,7 +4,6 @@ import { ROUTES } from "../../CONSTANTS";
 import { useRouter } from "next/router";
 import InvestmentAlertList from "./InvestmentAlertList";
 import CardView from "./CardView";
-require("./InvestmentAlerts.less");
 interface InvestmentAlertsProps {
   gainers: Array<any>;
   losers: Array<any>;

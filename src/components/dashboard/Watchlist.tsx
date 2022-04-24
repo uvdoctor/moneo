@@ -13,7 +13,6 @@ import Search from "../Search";
 import CardView from "./CardView";
 import { AppContext } from "../AppContext";
 import { isISIN } from "../nw/valuationutils";
-require("./InvestmentAlerts.less");
 
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
