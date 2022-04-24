@@ -55,7 +55,7 @@ export default function AddHoldingFinancialInput(props: any) {
       type = value.type;
     }
     return (
-      <Row className="holding" gutter={[16, 50]} key={key}>
+      <Row className="holding" gutter={[16, 50]} key={id}>
         <Col span={24}>
           <Row justify="space-between">
             <Col>
