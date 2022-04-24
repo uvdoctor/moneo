@@ -8,8 +8,8 @@ import Watchlist from "./Watchlist";
 import GetResult from "./GetResult";
 import ResultCarousel from "../ResultCarousel";
 import SetResult from "./SetResult";
-import EconomicCalendar from "./EconomicCalendar";
 import InsPrice from "../nw/InsPrice";
+import AAList from "./AAList";
 
 require("./DBView.less");
 
@@ -21,7 +21,7 @@ export default function DBView() {
     ylow,
     volLosers,
     volGainers,
-    headerlist
+    headerlist,
   }: any = useContext(DBContext);
   const { appContextLoaded, defaultCurrency }: any = useContext(AppContext);
 
@@ -60,6 +60,12 @@ export default function DBView() {
           </Row>
           <Row justify="space-around">
             <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <AAList />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <Watchlist />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
               <InvestmentAlerts
                 gainers={gainers}
                 losers={losers}
@@ -70,13 +76,7 @@ export default function DBView() {
               />
             </Col>
             <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
-              <Watchlist />
-            </Col>
-            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
               <StockMarket />
-            </Col>
-            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
-              <EconomicCalendar />
             </Col>
           </Row>
         </Fragment>
