@@ -26,19 +26,7 @@ export default function Search({
   const [exchange, setExchange] = useState("NSE");
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState<Array<any>>([
-    // {
-    //   Code: "SBIN",
-    //   Exchange: "NSE",
-    //   Name: "State Bank of India",
-    //   Type: "Common Stock",
-    //   Country: "India",
-    //   Currency: "INR",
-    //   ISIN: "INE062A01020",
-    //   previousClose: 529.6,
-    //   previousCloseDate: "2022-02-11",
-    // },
-  ]);
+  const [searchResults, setSearchResults] = useState<Array<any>>([]);
 
   const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab) || hasOnlyIndiaOption;
   const hasNoDropdown = (type: string) => [CRYPTO].includes(type);
@@ -46,7 +34,7 @@ export default function Search({
     ? [{ key: "NSE", value: "INDIA" }]
     : [
         { key: "NSE", value: "INDIA" },
-        { key: "US", value: "US" },
+        // { key: "US", value: "US" },
       ];
 
   const exchangeComp = (
