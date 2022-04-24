@@ -10,7 +10,7 @@ import { createDefaultFFGoalForUser, loadAllGoals } from "../goals/goalutils";
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
-  const { fxRates, totalAssets, totalLiabilities }: any = useContext(DBContext);
+  const { fxRates }: any = useContext(DBContext);
   const { userInfo, defaultCurrency }: any = useContext(AppContext);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffYear, setFFYear] = useState<number | null>(null);
@@ -86,16 +86,18 @@ export default function SetResult() {
               info="This is the minimum amount needed to achieve financial independence."
             />
           </Col>
-          {totalAssets || totalLiabilities ? (
-            <Col xs={12}>
-              <ItemDisplay
-                label="Number of Goals"
-                result={numOfGoals}
-                loading={!goalsLoaded}
-                info="Number of goals defined in the financial plan."
-              />
-            </Col>
-          ) : null}
+          <Col xs={12}>
+            <ItemDisplay
+              label={numOfGoals ? "Number of Goals" : "Goals"}
+              result={numOfGoals ? numOfGoals : "Define"}
+              loading={!goalsLoaded}
+              info={
+                numOfGoals
+                  ? "Number of goals defined in the financial plan."
+                  : "Set your financial goals so that you get a more accurate investment plan linked to your goals."
+              }
+            />
+          </Col>
         </Row>
       </a>
     </Link>
