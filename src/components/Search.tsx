@@ -71,7 +71,7 @@ export default function Search({
     </div>
   );
   const Comp = inline ? InlineList : Dropdown;
-  let searchTimeout: any;
+  // let searchTimeout: any;
   const onSearch = ({ target: { value } }: any) => {
     setSearchText(value);
   };
