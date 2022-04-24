@@ -46,7 +46,7 @@ export default function AddHoldingFinancialInput(props: any) {
     const [isEditMode, setEditMode] = useState<boolean>(false);
     let price = 0;
     let type = "";
-    const { holding, key } = props;
+    const { holding } = props;
     const { id, qty, curr } = holding;
     const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     if (insData[id]) {
