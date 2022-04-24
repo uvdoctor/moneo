@@ -67,7 +67,7 @@ function DBContextProvider({ fxRates }: any) {
         setWatchlist([...insHoldings?.watch]);
       } else {
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-        if (!cachedData) return;
+        if (!cachedData || watchlist.length) return;
         const defaultList = [SENSEX, NIFTY50];
         for (let item of defaultList) {
           if (!cachedData[item]) return;

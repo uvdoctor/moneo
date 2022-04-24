@@ -22,11 +22,11 @@ export default function SetResult() {
     let ffGoal = result.ffGoal;
     if (!ffGoal)
       ffGoal = await createDefaultFFGoalForUser(
-        new Date(userInfo.dob).getFullYear(),
-        userInfo.ta,
-        userInfo.rp,
-        userInfo.exp,
-        userInfo.invest,
+        new Date(userInfo?.dob).getFullYear(),
+        userInfo?.ta,
+        userInfo?.rp,
+        userInfo?.exp,
+        userInfo?.invest,
         defaultCurrency
       );
     return ffGoal;
@@ -53,7 +53,7 @@ export default function SetResult() {
         setGoalsLoaded(true);
       });
     });
-  }, []);
+  }, [userInfo]);
 
   return (
     <Link href={ROUTES.SET}>
