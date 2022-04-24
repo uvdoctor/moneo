@@ -39,7 +39,7 @@ export default function StepThree(props: StepThreeProps) {
           <span>
             <TextInput
               pre="Tax id"
-              info="This is your PAN number"
+              info="Your PAN number"
               placeholder="XXXXX1234X"
               value={props.taxId}
               changeHandler={props.setTaxId}
