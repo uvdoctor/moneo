@@ -80,6 +80,7 @@ function PlanContextProvider({
               (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
             ) as Array<CreateGoalInput>),
           ]);
+        else setGoalsLoaded(true);
       });
   }, [appContextLoaded, userInfo]);
 
