@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Alert, Checkbox, Col, Form, Row } from "antd";
-import { ROUTES } from "../CONSTANTS";
+import { COLORS, ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
 import TaxLiabilityInput from "./TaxLiabilityInput";
 import RiskProfileInput from "./RiskProfileInput";
@@ -36,19 +36,23 @@ export default function StepThree(props: StepThreeProps) {
       </Row>
       <Row gutter={[0, 20]}>
         <Col span={24}>
-          <TextInput
-            pre="Tax id"
-            info="This is your PAN number"
-            placeholder="XXXXX1234X"
-            value={props.taxId}
-            changeHandler={props.setTaxId}
-            minLength={10}
-            setError={setTaxIdError}
-            pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
-            fieldName="PAN number"
-            size="middle"
-            post={taxIdError}
-          />
+          <span>
+            <TextInput
+              pre="Tax id"
+              info="This is your PAN number"
+              placeholder="XXXXX1234X"
+              value={props.taxId}
+              changeHandler={props.setTaxId}
+              minLength={10}
+              setError={setTaxIdError}
+              pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+              fieldName="PAN number"
+              size="middle"
+            />
+            {taxIdError ? (
+              <label style={{ color: COLORS.RED }}>{taxIdError}</label>
+            ) : null}
+          </span>
         </Col>
         <Col xs={24} sm={12} md={12} lg={12}>
           <RiskProfileInput
