@@ -511,6 +511,43 @@ export const regByDob = /* GraphQL */ `
     }
   }
 `;
+export const regByTaxId = /* GraphQL */ `
+  query RegByTaxId(
+    $tid: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByTaxId(
+      tid: $tid
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        uname
+        email
+        dob
+        im
+        mob
+        notify
+        tax
+        rp
+        dr
+        tc
+        ta
+        tid
+        exp
+        invest
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getInsAnalytics = /* GraphQL */ `
   query GetInsAnalytics($id: String!) {
     getInsAnalytics(id: $id) {
@@ -1677,6 +1714,51 @@ export const listUserInss = /* GraphQL */ `
           subt
           itype
         }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCoachingReq = /* GraphQL */ `
+  query GetCoachingReq($id: ID!) {
+    getCoachingReq(id: $id) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCoachingReqs = /* GraphQL */ `
+  query ListCoachingReqs(
+    $filter: ModelCoachingReqFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCoachingReqs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        dur
+        text
+        page
+        type
+        status
+        payment
+        curr
+        paid
+        pt
         createdAt
         updatedAt
         owner

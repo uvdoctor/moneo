@@ -1743,6 +1743,50 @@ export const deleteUserIns = /* GraphQL */ `
     }
   }
 `;
+export const createCoachingReq = /* GraphQL */ `
+  mutation CreateCoachingReq(
+    $input: CreateCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    createCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteCoachingReq = /* GraphQL */ `
+  mutation DeleteCoachingReq(
+    $input: DeleteCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    deleteCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback(
     $input: CreateFeedbackInput!
@@ -2333,6 +2377,28 @@ export const deleteNpsPrice = /* GraphQL */ `
       risk
       createdAt
       updatedAt
+    }
+  }
+`;
+export const updateCoachingReq = /* GraphQL */ `
+  mutation UpdateCoachingReq(
+    $input: UpdateCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    updateCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

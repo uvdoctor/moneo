@@ -2201,3 +2201,60 @@ export const onDeleteUserIns = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCoachingReq = /* GraphQL */ `
+  subscription OnCreateCoachingReq($owner: String) {
+    onCreateCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCoachingReq = /* GraphQL */ `
+  subscription OnUpdateCoachingReq($owner: String) {
+    onUpdateCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCoachingReq = /* GraphQL */ `
+  subscription OnDeleteCoachingReq($owner: String) {
+    onDeleteCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

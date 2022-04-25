@@ -944,6 +944,93 @@ export type DeleteUserInsInput = {
   uname: string,
 };
 
+export type CreateCoachingReqInput = {
+  id?: string | null,
+  dur: number,
+  text?: string | null,
+  page: string,
+  type: CoachingType,
+  status: CoachingStatus,
+  payment: number,
+  curr: string,
+  paid: boolean,
+  pt?: PaymentType | null,
+};
+
+export enum CoachingType {
+  Inv = "Inv",
+  Ins = "Ins",
+  FI = "FI",
+}
+
+
+export enum CoachingStatus {
+  P = "P",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+
+
+export enum PaymentType {
+  D = "D",
+  C = "C",
+  UPI = "UPI",
+  B = "B",
+}
+
+
+export type ModelCoachingReqConditionInput = {
+  dur?: ModelIntInput | null,
+  text?: ModelStringInput | null,
+  page?: ModelStringInput | null,
+  type?: ModelCoachingTypeInput | null,
+  status?: ModelCoachingStatusInput | null,
+  payment?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  paid?: ModelBooleanInput | null,
+  pt?: ModelPaymentTypeInput | null,
+  and?: Array< ModelCoachingReqConditionInput | null > | null,
+  or?: Array< ModelCoachingReqConditionInput | null > | null,
+  not?: ModelCoachingReqConditionInput | null,
+};
+
+export type ModelCoachingTypeInput = {
+  eq?: CoachingType | null,
+  ne?: CoachingType | null,
+};
+
+export type ModelCoachingStatusInput = {
+  eq?: CoachingStatus | null,
+  ne?: CoachingStatus | null,
+};
+
+export type ModelPaymentTypeInput = {
+  eq?: PaymentType | null,
+  ne?: PaymentType | null,
+};
+
+export type CoachingReq = {
+  __typename: "CoachingReq",
+  id?: string,
+  dur?: number,
+  text?: string | null,
+  page?: string,
+  type?: CoachingType,
+  status?: CoachingStatus,
+  payment?: number,
+  curr?: string,
+  paid?: boolean,
+  pt?: PaymentType | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type DeleteCoachingReqInput = {
+  id: string,
+};
+
 export type CreateFeedbackInput = {
   id?: string | null,
   type: FeedbackType,
@@ -1652,6 +1739,19 @@ export type DeleteNPSPriceInput = {
   id: string,
 };
 
+export type UpdateCoachingReqInput = {
+  id: string,
+  dur?: number | null,
+  text?: string | null,
+  page?: string | null,
+  type?: CoachingType | null,
+  status?: CoachingStatus | null,
+  payment?: number | null,
+  curr?: string | null,
+  paid?: boolean | null,
+  pt?: PaymentType | null,
+};
+
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelFeedbackTypeInput | null,
@@ -2012,6 +2112,28 @@ export type ModelUserInsFilterInput = {
 export type ModelUserInsConnection = {
   __typename: "ModelUserInsConnection",
   items?:  Array<UserIns | null >,
+  nextToken?: string | null,
+};
+
+export type ModelCoachingReqFilterInput = {
+  id?: ModelIDInput | null,
+  dur?: ModelIntInput | null,
+  text?: ModelStringInput | null,
+  page?: ModelStringInput | null,
+  type?: ModelCoachingTypeInput | null,
+  status?: ModelCoachingStatusInput | null,
+  payment?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  paid?: ModelBooleanInput | null,
+  pt?: ModelPaymentTypeInput | null,
+  and?: Array< ModelCoachingReqFilterInput | null > | null,
+  or?: Array< ModelCoachingReqFilterInput | null > | null,
+  not?: ModelCoachingReqFilterInput | null,
+};
+
+export type ModelCoachingReqConnection = {
+  __typename: "ModelCoachingReqConnection",
+  items?:  Array<CoachingReq | null >,
   nextToken?: string | null,
 };
 
@@ -3919,6 +4041,54 @@ export type DeleteUserInsMutation = {
   } | null,
 };
 
+export type CreateCoachingReqMutationVariables = {
+  input?: CreateCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type CreateCoachingReqMutation = {
+  createCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteCoachingReqMutationVariables = {
+  input?: DeleteCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type DeleteCoachingReqMutation = {
+  deleteCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateFeedbackMutationVariables = {
   input?: CreateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
@@ -4565,6 +4735,30 @@ export type DeleteNpsPriceMutation = {
   } | null,
 };
 
+export type UpdateCoachingReqMutationVariables = {
+  input?: UpdateCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type UpdateCoachingReqMutation = {
+  updateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type GetFeedbackQueryVariables = {
   id?: string,
 };
@@ -5081,6 +5275,40 @@ export type RegByDobQueryVariables = {
 
 export type RegByDobQuery = {
   regByDOB?:  {
+    __typename: "ModelUserInfoConnection",
+    items:  Array< {
+      __typename: "UserInfo",
+      uname: string,
+      email: string,
+      dob: string,
+      im?: number | null,
+      mob?: number | null,
+      notify: boolean,
+      tax: TaxLiability,
+      rp: RiskProfile,
+      dr: number,
+      tc: string,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type RegByTaxIdQueryVariables = {
+  tid?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type RegByTaxIdQuery = {
+  regByTaxId?:  {
     __typename: "ModelUserInfoConnection",
     items:  Array< {
       __typename: "UserInfo",
@@ -6332,6 +6560,58 @@ export type ListUserInssQuery = {
         subt: AssetSubType,
         itype?: InsType | null,
       } > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCoachingReqQueryVariables = {
+  id?: string,
+};
+
+export type GetCoachingReqQuery = {
+  getCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListCoachingReqsQueryVariables = {
+  filter?: ModelCoachingReqFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCoachingReqsQuery = {
+  listCoachingReqs?:  {
+    __typename: "ModelCoachingReqConnection",
+    items:  Array< {
+      __typename: "CoachingReq",
+      id: string,
+      dur: number,
+      text?: string | null,
+      page: string,
+      type: CoachingType,
+      status: CoachingStatus,
+      payment: number,
+      curr: string,
+      paid: boolean,
+      pt?: PaymentType | null,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -8707,6 +8987,75 @@ export type OnDeleteUserInsSubscription = {
       subt: AssetSubType,
       itype?: InsType | null,
     } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateCoachingReqSubscription = {
+  onCreateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateCoachingReqSubscription = {
+  onUpdateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteCoachingReqSubscription = {
+  onDeleteCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

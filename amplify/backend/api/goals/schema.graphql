@@ -194,6 +194,7 @@ type UserInfo
   @key(name: "ByMob", fields: ["mob"], queryField: "regByMob")
   @key(name: "ByEmail", fields: ["email"], queryField: "regByEmail")
   @key(name: "ByDOB", fields: ["dob"], queryField: "regByDOB")
+  @key(name: "ByTaxId", fields: ["tid"], queryField: "regByTaxId")
   @auth(
     rules: [
       { allow: public, provider: iam, operations: [read] }
@@ -710,4 +711,45 @@ type UserIns
   uname: String!
   ins: [Instrument!]!
   watch: [InsWatch!]
+}
+
+enum CoachingType {
+  Inv
+  Ins
+  FI
+}
+
+enum CoachingStatus {
+  P
+  B
+  C
+  D
+}
+
+enum PaymentType {
+  D
+  C
+  UPI
+  B
+}
+
+type CoachingReq
+  @model
+  @aws_iam
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  dur: Int!
+  text: String
+  page: String!
+  type: CoachingType!
+  status: CoachingStatus!
+  payment: Int!
+  curr: String!
+  paid: Boolean!
+  pt: PaymentType
 }
