@@ -6,7 +6,11 @@ import { ROUTES } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import ItemDisplay from "../calc/ItemDisplay";
 import { calculateFI } from "../goals/fiutils";
-import { createDefaultFFGoalForUser, loadAllGoals } from "../goals/goalutils";
+import {
+  createDefaultFFGoalForUser,
+  createNewGoal,
+  loadAllGoals,
+} from "../goals/goalutils";
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
@@ -20,8 +24,8 @@ export default function SetResult() {
 
   const initFFGoal = async (result: any) => {
     let ffGoal = result.ffGoal;
-    if (!ffGoal)
-      ffGoal = await createDefaultFFGoalForUser(
+    if (!ffGoal) {
+      ffGoal = createDefaultFFGoalForUser(
         new Date(userInfo?.dob).getFullYear(),
         userInfo?.ta,
         userInfo?.rp,
@@ -29,6 +33,8 @@ export default function SetResult() {
         userInfo?.invest,
         defaultCurrency
       );
+      ffGoal = await createNewGoal(ffGoal);
+    }
     return ffGoal;
   };
 

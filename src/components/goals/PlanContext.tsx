@@ -71,16 +71,17 @@ function PlanContextProvider({
       setGoalsLoaded(true);
     } else
       loadAllGoals(userInfo).then((result: any) => {
-        if (!result?.ffGoal) return;
+        if (!result?.ffGoal) {
+          setGoalsLoaded(true);
+          return;
+        }
         setFFGoal(result.ffGoal);
         setAllCFs(result.allCFs);
-        if (result?.goals && result.goals.length)
-          setAllGoals([
-            ...(result?.goals.sort(
-              (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
-            ) as Array<CreateGoalInput>),
-          ]);
-        else setGoalsLoaded(true);
+        setAllGoals([
+          ...(result?.goals.sort(
+            (g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy
+          ) as Array<CreateGoalInput>),
+        ]);
       });
   }, [appContextLoaded, userInfo]);
 

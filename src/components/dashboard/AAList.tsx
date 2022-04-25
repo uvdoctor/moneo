@@ -14,6 +14,7 @@ export default function AAList() {
   const year = new Date().getFullYear();
 
   useEffect(() => {
+    if (!aa || !Object.keys(aa).length) return;
     let currentAA: any = {};
     Object.keys(aa).forEach((key: string) => {
       const allocation = aa[key][0];
