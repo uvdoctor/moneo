@@ -37,7 +37,6 @@ export const getGoalsList = async () => {
 };
 
 export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
-  console.log("Going to create goal: ", goal);
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.createGoal, { input: goal })

@@ -17,6 +17,7 @@ export const ROUTES = {
   SECURITY: "/policies/security",
   PRIVACY: "/policies/privacy",
   LOOKUP: "/lookup",
+  DASHBOARD: "/dashboard",
 };
 
 export const CALC_NAMES = {

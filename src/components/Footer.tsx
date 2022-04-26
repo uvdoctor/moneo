@@ -27,7 +27,7 @@ export default function Footer() {
 				</Col>
 	</Row>*/}
       <Row justify="center">
-        <Col xs={24} sm={12} md={10} lg={6} className="social-icons">
+        <Col xs={24} sm={12} md={10} lg={8} className="social-icons">
           <a
             target="https://facebook.com/moneocap"
             href={url}

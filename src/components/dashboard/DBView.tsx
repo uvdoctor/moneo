@@ -10,6 +10,7 @@ import ResultCarousel from "../ResultCarousel";
 import SetResult from "./SetResult";
 import InsPrice from "../nw/InsPrice";
 import AAList from "./AAList";
+import CoachingRequest from "../CoachingRequest";
 
 require("./DBView.less");
 
@@ -30,7 +31,10 @@ export default function DBView() {
       <div className="primary-header">
         <Row>
           <Col span={24}>
-            <PageHeader title="Dashboard" />
+            <PageHeader
+              title="Dashboard"
+              extra={[<CoachingRequest key="coach" />]}
+            />
           </Col>
           <Col span={24} className="secondary-header">
             <Row justify="space-between" align="middle">
