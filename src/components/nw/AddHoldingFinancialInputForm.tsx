@@ -1,64 +1,41 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col, Button, List, Typography } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { NWContext, TAB } from "./NWContext";
+import { Row, Col } from "antd";
+import { NWContext } from "./NWContext";
 import Search from "../Search";
 
 export default function HoldingInput(props: any) {
   const { childTab }: any = useContext(NWContext);
-  const { STOCK, MF, BOND, GOLDB, ETF, REIT, OIT, CRYPTO } = TAB;
   const [searchType, setSearchType] = useState<string>("");
 
-  const searchtypeList = {
-    [STOCK]: "stock",
-    [MF]: "fund",
-    [BOND]: "bond",
-    [GOLDB]: GOLDB,
-    [ETF]: "etf",
-    [REIT]: REIT,
-    [OIT]: OIT,
-    [CRYPTO]: CRYPTO,
-  };
-
   const addToHoldings = (resp: any) => {
-    const { ISIN, Code, type, subt } = resp;
+    const { id, sid, type, subt, exchg } = resp;
     props.addToHoldings(
       {
         qty: 0,
         fId: "",
-        id: ISIN,
-        sid: Code,
+        id,
+        sid,
         curr: "INR",
-        exchg: resp.exchg,
+        exchg,
         subt,
         type,
       },
-      { [ISIN]: resp }
+      { [id]: resp }
     );
   };
 
   useEffect(() => {
-    setSearchType(searchtypeList[childTab]);
+    setSearchType(childTab);
   }, [childTab]);
 
   return (
     <Row gutter={[10, 10]}>
       <Col flex={8}>
         <Search
-          hasOnlyIndiaOption
+          width="300px"
           searchType={searchType}
-          renderItem={(resp: any) => {
-            return (
-              <List.Item>
-                <Typography.Link
-                  onClick={() => addToHoldings(resp)}
-                  style={{ marginRight: 8 }}
-                >
-                  {resp.Name}{" "}
-                  <Button icon={<PlusOutlined />} type="link" shape="circle" />
-                </Typography.Link>
-              </List.Item>
-            );
+          onClick={(resp: any) => {
+            addToHoldings(resp);
           }}
         />
       </Col>

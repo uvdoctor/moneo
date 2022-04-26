@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Col, List, notification, Row } from "antd";
-import { Typography } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
-import { SaveOutlined, PlusOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
 import { filterTabs, getCryptoRate } from "../nw/nwutils";
@@ -16,24 +15,12 @@ import { isISIN } from "../nw/valuationutils";
 
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
-    useContext(DBContext);
+  const { watchlist, setWatchlist, saveHoldings, fxRates }: any = useContext(DBContext);
   const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>("Index");
-  const [searchType, setSearchType] = useState<string>("index");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
-  const typesList = {
-    Index: "index",
-    [STOCK]: "stock",
-    [MF]: "fund",
-    [BOND]: "bond",
-    [GOLDB]: GOLDB,
-    [ETF]: "etf",
-    [REIT]: REIT,
-    [OIT]: OIT,
-    [CRYPTO]: CRYPTO,
-  };
+  const typesList = ["Index", STOCK, MF, BOND, GOLDB, ETF, REIT, OIT, CRYPTO];
 
   const loadData = () => {
     if (!watchlist.length) return;
@@ -52,33 +39,24 @@ export default function Watchlist() {
   };
 
   const onSelectInstruments = async (resp: any) => {
-    const { ISIN, Code, type, subt, itype, previousClose, Name } = resp;
+    const { id, name } = resp;
     let data: any = {};
-    if (searchType === CRYPTO) {
-      const price = await getCryptoRate(ISIN, defaultCurrency, fxRates);
-      const prev = await getCryptoRate(ISIN, defaultCurrency, fxRates, true);
+    if (activeTag === CRYPTO) {
+      const price = await getCryptoRate(id, defaultCurrency, fxRates);
+      const prev = await getCryptoRate(id, defaultCurrency, fxRates, true);
       data = {
-        id: ISIN,
-        sid: Code,
+        id,
+        sid: id,
         type: AssetType.A,
         subt: AssetSubType.C,
         prev,
         price,
-        name: Name,
+        name,
       };
     } else {
-      data = {
-        id: ISIN ? ISIN : Code,
-        sid: Code,
-        type: type,
-        subt: subt,
-        itype: itype,
-        price: previousClose,
-        name: Name,
-        ...resp,
-      };
+      data = resp;
       const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-      const mergedInsData = Object.assign({}, insData, { [data.id]: data });
+      const mergedInsData = Object.assign({}, insData, { [id]: data });
       simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
     }
     if (!watchlist.some((item: InsWatchInput) => item.id === data.id)) {
@@ -86,49 +64,30 @@ export default function Watchlist() {
       watchlist.push({ id, sid, type, subt, itype });
     } else {
       notification.error({
-        message: `${Name} already exists in the watchlist`,
+        message: `${name} already exists in the watchlist`,
       });
       return;
     }
     setWatchlist([...watchlist]);
-    notification.success({ message: `${Name} - Added to Watchlist` });
+    notification.success({ message: `${name} - Added to Watchlist` });
   };
 
   useEffect(() => {
     loadData();
   }, [activeTag, watchlist]);
 
-  useEffect(() => setSearchType(typesList[activeTag]), [activeTag]);
-
   return (
     <CardView
       title="Investment Watchlist"
       activeTag={activeTag}
       activeTagHandler={setActiveTag}
-      tags={Object.keys(typesList)}>
+      tags={typesList}
+    >
       <Row justify="center" gutter={[0, 10]} align="middle">
         <Col span={24}>
           <Row align="middle" justify="space-between">
             <Col>
-              <Search
-                searchType={searchType}
-                renderItem={(resp: any) => {
-                  return (
-                    <List.Item>
-                      <Typography.Link
-                        onClick={async () => await onSelectInstruments(resp)}
-                        style={{ marginRight: 8 }}>
-                        {resp.Name}{" "}
-                        <Button
-                          icon={<PlusOutlined />}
-                          type="link"
-                          shape="circle"
-                        />
-                      </Typography.Link>
-                    </List.Item>
-                  );
-                }}
-              />
+              <Search searchType={activeTag} onClick={(resp: any) => onSelectInstruments(resp)} />
             </Col>
             <Col>
               <Button
@@ -137,7 +96,8 @@ export default function Watchlist() {
                 type="primary"
                 icon={<SaveOutlined />}
                 onClick={async () => await saveHoldings()}
-                className="steps-start-btn">
+                className="steps-start-btn"
+              >
                 Save
               </Button>
             </Col>
@@ -150,7 +110,8 @@ export default function Watchlist() {
             style={{
               height: 350,
               overflow: "auto",
-            }}>
+            }}
+          >
             <List
               itemLayout="horizontal"
               dataSource={filterByTab}

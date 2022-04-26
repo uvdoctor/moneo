@@ -74,7 +74,7 @@ export default function Nav({
             onClose={onCloseSearchDrawer}
             visible={showSearchDrawer}
           >
-            <SearchInput inline />
+            <SearchInput />
           </Drawer>
         </Fragment>
       )}

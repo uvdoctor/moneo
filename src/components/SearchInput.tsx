@@ -1,43 +1,22 @@
 import React, { useState } from "react";
-import { Radio, List, Tag } from "antd";
-import Link from "next/link";
-import { ROUTES } from "../CONSTANTS";
 import Search from "./Search";
+import { TAB } from "./nw/NWContext";
+import { useRouter } from "next/router";
+import { ROUTES } from "../CONSTANTS";
 
-interface SearchInputProps {
-  inline?: boolean;
-}
-
-export default function SearchInput({ inline }: SearchInputProps) {
-  const [searchType, setSearchType] = useState("stock");
-  const onSearchTypeChange = ({ target: { value } }: any) => {
-    setSearchType(value);
-  };
+export default function SearchInput() {
+  const {STOCK} = TAB;
+  const router = useRouter();
+  const [searchType, setSearchType] = useState(STOCK);
 
   return (
     <Search
-      inline={inline}
+      isNav
       searchType={searchType}
-      renderItem={(item: any) => {
-        const { Code, Exchange, Name, Type } = item;
-        return (
-          <List.Item>
-            <Link href={`${ROUTES.LOOKUP}/${Code}.${Exchange}`}>
-              <a>
-                {Name} <Tag color="green">{Type}</Tag>
-              </a>
-            </Link>
-          </List.Item>
-        );
-      }}
-      header={
-        <Radio.Group value={searchType} onChange={onSearchTypeChange}>
-          <Radio.Button value="stock">Stocks</Radio.Button>
-          <Radio.Button value="etf">ETFs</Radio.Button>
-          <Radio.Button value="bond">Bonds</Radio.Button>
-          <Radio.Button value="fund">Mutual Funds</Radio.Button>
-        </Radio.Group>
-      }
+      setSearchType={setSearchType} width={"250px"}     
+      onClick={(item: any)=>{
+        router.push(`${ROUTES.LOOKUP}/${item.sid}.${item.exchg}`);
+      }} 
     />
   );
 }

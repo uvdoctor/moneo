@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Dropdown, List, Select } from "antd";
+import { Select, AutoComplete, Input, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import { getInstrumentDataWithKey, optionTableMap } from "./nw/nwutils";
@@ -7,180 +7,108 @@ import { TAB } from "./nw/NWContext";
 import { getCryptoList } from "./utils";
 
 interface SearchProps {
-  inline?: boolean;
-  header?: any;
   searchType: string;
-  renderItem: any;
-  hasOnlyIndiaOption?: boolean;
+  width?: string;
+  setSearchType?: Function;
+  isNav?: boolean;
+  onClick: Function;
 }
 
 export default function Search({
-  inline,
-  header,
   searchType,
-  renderItem,
-  hasOnlyIndiaOption
+  width,
+  setSearchType,
+  isNav,
+  onClick,
 }: SearchProps) {
   const { Option } = Select;
-  const { BOND, MF, ETF, GOLDB, REIT, OIT, CRYPTO, STOCK } = TAB;
-  const [exchange, setExchange] = useState("NSE");
+  const { BOND, MF, ETF, CRYPTO, STOCK } = TAB;
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState<Array<any>>([]);
+  const [suggestions, setSuggestions] = useState<Array<any>>([]);
+  const [data, setData] = useState<Array<any>>([]);
 
-  const hasOnlyIndiaIns = (tab: string) => [GOLDB, REIT, OIT, "index"].includes(tab) || hasOnlyIndiaOption;
-  const hasNoDropdown = (type: string) => [CRYPTO].includes(type);
-  const options = hasOnlyIndiaIns(searchType)
-    ? [{ key: "NSE", value: "INDIA" }]
-    : [
-        { key: "NSE", value: "INDIA" },
-        // { key: "US", value: "US" },
-      ];
-
-  const exchangeComp = (
-    <Select value={exchange} onChange={setExchange}>
-      {options.map((item: { key: string; value: string }) => {
-        return (
-          <Option key={item.key} value={item.key}>
-            {item.value}
-          </Option>
-        );
-      })}
-    </Select>
-  );
-  interface InlineListProps {
-    style?: any;
-    children?: any;
-    overlay?: any;
-  }
-  const InlineList = ({ children, overlay }: InlineListProps) => (
-    <div>
-      {children} {overlay}
-    </div>
-  );
-  const Comp = inline ? InlineList : Dropdown;
-  // let searchTimeout: any;
-  const onSearch = ({ target: { value } }: any) => {
-    setSearchText(value);
+  const onSearch = (text: any) => {
+    if (!data) return;
+    const result = data
+      ? data.filter((item: { name: string }) =>
+          item.name.toLowerCase().includes(text.toLowerCase())
+        )
+      : [];
+    setSuggestions([...result]);
   };
 
-  const updateOptions = async (opt: string) => {
-    return await getInstrumentDataWithKey(optionTableMap[opt], opt);
-  };
-
-  const getOption = (type: string) => {
-    const opt: { [key:string]: string } = {
-      bond: BOND,
-      etf: ETF,
-      fund: MF,
-      index: "Index",
-      stock: STOCK
-    }
-    return opt[type] ? opt[type] : type;
-  }
+  useEffect(() => {
+    getSearchData();
+  }, [searchType]);
 
   const getSearchData = async () => {
     try {
       setLoading(true);
-      let data = [];
       if (searchType === CRYPTO) {
         const cryptolist = await getCryptoList();
-        const response = cryptolist.filter((item: any) =>
-          item.name.toLowerCase().includes(searchText.toLowerCase())
-        );
-        data = response.map((item: any) => {
-          return {
-            Code: item.name,
-            Name: item.name,
-            ISIN: item.code,
-          };
-        });
-      } else if (exchange !== "US") {
-        let opt = getOption(searchType);
+        setData([...cryptolist]);
+        setSuggestions([...cryptolist]);
+      } else {
+        let opt = searchType;
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
-        const response = cachedData.filter(
-          (item: any) =>
-            item?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-            item?.sid?.toLowerCase().includes(searchText.toLowerCase())
+        cachedData?.forEach(
+          (item: { value: string; name: string }) => (item.value = item.name)
         );
-        data = response.map((item: any) => {
-          return {
-            Code: item.sid,
-            Exchange: item.exchg ? item.exchg : "",
-            Name: item.name,
-            Type: searchType,
-            Country: "India",
-            Currency: "INR",
-            ISIN: item.id,
-            previousClose: item.price,
-            ...item,
-          };
-        });
-      } else {
-        let response = await fetch(
-          `/api/search?text=${searchText}&type=${searchType}&exchange=${exchange}`
-        );
-        data = await response.json();
+        setData([...cachedData]);
+        setSuggestions([...cachedData]);
       }
-      Array.isArray(data) ? setSearchResults(data) : setSearchResults([]);
       setLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
 
-  // useEffect(() => {
-  //   if (searchText?.length < 3) return;
-  //   if (searchTimeout) clearTimeout(searchTimeout);
+  const typeComp = (
+    <Select
+      value={searchType}
+      onChange={(val) => setSearchType && setSearchType(val)}
+    >
+      <Option value={STOCK}>{STOCK}</Option>
+      <Option value={MF}>{MF}</Option>
+      <Option value={BOND}>{BOND}</Option>
+      <Option value={ETF}>{ETF}</Option>
+    </Select>
+  );
 
-  //   searchTimeout = setTimeout(() => {
-  //     getSearchData();
-  //   }, 200);
-  // }, [searchText]);
-
-  useEffect(()=>{
-    setSearchText('')
-    setSearchResults([...[]])
-  },[searchType])
+  const updateOptions = async (opt: string) => {
+    return await getInstrumentDataWithKey(optionTableMap[opt], opt);
+  };
 
   useEffect(() => {
-    if (searchText?.length < 3) return;
-    getSearchData();
-  }, [exchange, searchText]);
+    setSearchText('')
+    setSuggestions([...[]]);
+  }, [searchType]);
 
   return (
-    <Comp
-      style={{ width: "600px" }}
-      overlay={
-        <div
-          id="scrollableDiv"
-          style={{
-            height: 450,
-            overflow: "auto",
-          }}
-        >
-          <List
-            size="small"
-            loading={loading}
-            header={header && header}
-            bordered
-            dataSource={searchResults}
-            renderItem={(item: any) => renderItem(item)}
-          />
-        </div>
-      }
-      arrow
+    <AutoComplete
+      id="search"
+      options={suggestions}
+      onChange={(option) => setSearchText(option)}
+      onSelect={(_option, obj) => {
+        let resp = obj;
+        if (searchType === CRYPTO) {
+          resp = { id: obj.code, name: obj.name };
+        }
+        onClick(resp);
+      }}
+      size="large"
+      value={searchText}
+      onSearch={onSearch}
     >
       <Input
-        style={{ width: "auto" }}
-        value={searchText}
+        style={{ width: width ? width : "auto" }}
         size="large"
         placeholder="Search stocks, bonds and MF's"
-        addonAfter={hasNoDropdown(searchType) ? "" : exchangeComp}
-        prefix={<SearchOutlined />}
-        onChange={onSearch}
+        addonAfter={isNav ? typeComp : ""}
+        prefix={loading ? <Spin /> : <SearchOutlined />}
       />
-    </Comp>
+    </AutoComplete>
   );
 }

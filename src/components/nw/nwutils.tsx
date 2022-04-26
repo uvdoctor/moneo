@@ -649,6 +649,7 @@ export const getFinTabFilters = (option: string) => {
 };
 
 export const getInstrumentDataWithKey = async (key: string, option: string) => {
+  const { STOCK } = TAB;
   let instrumentData = key === "listInExchgPrices"
       ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
       : simpleStorage.get(option) || {};
@@ -688,7 +689,10 @@ export const getInstrumentDataWithKey = async (key: string, option: string) => {
     const { prop, value } = filter;
     const data = instrumentData.filter((item: OptionTableMap) => {
       if (Array.isArray(value)) return value.includes(item[prop]);
-      else return item[prop] === value;
+      else {
+        if(option === STOCK) return item[prop] === value && !item.itype
+        return item[prop] === value;
+      }
     });
     simpleStorage.set(option, data, LOCAL_DATA_TTL);
     return data;

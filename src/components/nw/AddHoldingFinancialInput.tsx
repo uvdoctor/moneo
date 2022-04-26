@@ -7,13 +7,10 @@ import HoldingInput from "./AddHoldingFinancialInputForm";
 import {
   toCurrency,
   toHumanFriendlyCurrency,
-  toReadableNumber,
 } from "../utils";
 import {
   DeleteOutlined,
-  EditOutlined,
   ShoppingCartOutlined,
-  SaveOutlined,
 } from "@ant-design/icons";
 import { getColourForAssetType } from "./nwutils";
 
@@ -43,7 +40,6 @@ export default function AddHoldingFinancialInput(props: any) {
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
-    const [isEditMode, setEditMode] = useState<boolean>(false);
     let price = 0;
     let type = "";
     const { holding } = props;
@@ -96,33 +92,15 @@ export default function AddHoldingFinancialInput(props: any) {
               <span className="quantity">
                 {`${toCurrency(price, curr as string, true)} `}
                 <ShoppingCartOutlined />{" "}
-                {isEditMode ? (
                   <InputNumber
                     value={holding.qty}
                     size="small"
                     onChange={(val) => {
                       holding.qty = val as number;
+                      setHoldings([...holdings])
                     }}
                   />
-                ) : (
-                  toReadableNumber(
-                    holding.qty,
-                    ("" + holding.qty).includes(".") ? 3 : 0
-                  )
-                )}
               </span>
-              <Button
-                type="link"
-                icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
-                onClick={() => {
-                  if (isEditMode) {
-                    setEditMode(false);
-                    setHoldings([...holdings]);
-                  } else {
-                    setEditMode(true);
-                  }
-                }}
-              />
               <Button
                 type="link"
                 danger
