@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 import * as queries from "../graphql/queries";
 import * as mutations from "../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
-import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from "../api/goals";
+import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RegByTaxIdQuery } from "../api/goals";
 import * as APIt from "../api/goals";
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
@@ -23,6 +23,31 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
       })) as { data: RegByEmailQuery };
       if (regByEmail?.items?.length) return true;
       nextToken = regByEmail?.nextToken;
+    } while (nextToken);
+    return false;
+  } catch (e) {
+    console.log("Error while checking if email is unique: ", e);
+  }
+};
+
+export const doesTaxIdExist = async (tid: string, authMode?: string) => {
+  let nextToken = null;
+  try {
+    do {
+      let variables: any = { limit: 20000, tid: tid };
+      if (nextToken) variables.nextToken = nextToken;
+      const {
+        data: { regByTaxId },
+      } = (await API.graphql({
+        query: queries.regByTaxId,
+        variables: variables,
+        authMode:
+          authMode === "AWS_IAM"
+            ? GRAPHQL_AUTH_MODE.AWS_IAM
+            : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+      })) as { data: RegByTaxIdQuery };
+      if (regByTaxId?.items?.length) return true;
+      nextToken = regByTaxId?.nextToken;
     } while (nextToken);
     return false;
   } catch (e) {

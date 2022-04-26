@@ -1,10 +1,11 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { Alert, Checkbox, Col, Form, Row } from "antd";
 import { COLORS, ROUTES } from "../CONSTANTS";
 import { useForm } from "antd/lib/form/Form";
 import TaxLiabilityInput from "./TaxLiabilityInput";
 import RiskProfileInput from "./RiskProfileInput";
 import TextInput from "./form/textinput";
+import { useEffect } from "react";
 
 interface StepThreeProps {
   riskProfile: string;
@@ -16,16 +17,25 @@ interface StepThreeProps {
   setDisable: Function;
   taxId: string;
   setTaxId: Function;
+  setTaxIdError: Function;
+  taxIdError: string;
 }
 
 export default function StepThree(props: StepThreeProps) {
   const [form] = useForm();
-  const [taxIdError, setTaxIdError] = useState<string>("");
 
   const handleFormChange = () =>
     props.setDisable(
-      form.getFieldError("terms").length > 0 || !form.isFieldTouched("terms")
+      form.getFieldError("terms").length > 0 || !form.isFieldTouched("terms") || !props.taxId
     );
+    
+  useEffect(()=>{
+    if(props.taxIdError || !props.taxId) {
+      props.setDisable(true)
+    } else {
+      props.setDisable(false);
+    }
+  },[props.taxIdError, props.taxId])
 
   return (
     <Fragment>
@@ -44,13 +54,13 @@ export default function StepThree(props: StepThreeProps) {
               value={props.taxId}
               changeHandler={props.setTaxId}
               minLength={10}
-              setError={setTaxIdError}
+              setError={props.setTaxIdError}
               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
               fieldName="PAN number"
               size="middle"
             />
-            {taxIdError ? (
-              <label style={{ color: COLORS.RED }}>{taxIdError}</label>
+            {props.taxIdError ? (
+              <label style={{ color: COLORS.RED }}>{props.taxIdError}</label>
             ) : null}
           </span>
         </Col>

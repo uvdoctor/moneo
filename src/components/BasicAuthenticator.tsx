@@ -13,7 +13,7 @@ import {
 } from "@aws-amplify/ui-components";
 import { Row, Skeleton, Steps } from "antd";
 import Title from "antd/lib/typography/Title";
-import { createUserinfo, doesEmailExist } from "./userinfoutils";
+import { createUserinfo, doesEmailExist, doesTaxIdExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
 import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
@@ -65,6 +65,7 @@ export default function BasicAuthenticator({
   );
   const [taxId, setTaxId] = useState<string>("");
   const [cognitoUser, setCognitoUser] = useState<any | null>(null);
+  const [taxIdError, setTaxIdError] = useState<any>("");
   const { Step } = Steps;
 
   const steps = [
@@ -90,6 +91,7 @@ export default function BasicAuthenticator({
           setMonthlyInv={setMonthlyInv}
           totalPortfolio={totalPortfolio}
           setTotalPortfolio={setTotalPortfolio}
+          setDisable={setDisable}
         />
       ),
     },
@@ -106,6 +108,8 @@ export default function BasicAuthenticator({
           setTaxLiability={setTaxLiability}
           taxId={taxId}
           setTaxId={setTaxId}
+          taxIdError={taxIdError}
+          setTaxIdError={setTaxIdError}
         />
       ),
     },
@@ -151,6 +155,15 @@ export default function BasicAuthenticator({
     setLoading(true);
     validateCaptcha("registration").then(async (success: boolean) => {
       if (!success) return;
+      setTaxIdError("");
+      if (await doesTaxIdExist(taxId, "AWS_IAM")) {
+        setTaxIdError(
+          "Please check your tax id properly as this one is already used by another account."
+        );
+        setLoading(false);
+        setDisable(true);
+        return;
+      }
       const username = generateFromEmail(email);
       setUname(username);
       Auth.signUp({
@@ -248,7 +261,7 @@ export default function BasicAuthenticator({
                 {state.step < 2 && (
                   <Button
                     type="primary"
-                    disabled={state.step === 0 && disable}
+                    disabled={disable}
                     onClick={state.step === 0 ? verifyEmail : next}
                     loading={loading}>
                     Next

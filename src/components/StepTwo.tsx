@@ -13,6 +13,7 @@ interface StepTwoProps {
   setMonthlyInv: Function;
   totalPortfolio: number;
   setTotalPortfolio: Function;
+  setDisable: Function;
 }
 
 export default function StepTwo({
@@ -23,6 +24,7 @@ export default function StepTwo({
   setMonthlyInv,
   totalPortfolio,
   setTotalPortfolio,
+  setDisable
 }: StepTwoProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const [date, setDate] = useState<number>(1);
@@ -32,6 +34,10 @@ export default function StepTwo({
   useEffect(() => {
     setDOB(`${year}-${getStr(month)}-${getStr(date)}`);
   }, [date, month, year]);
+
+  useEffect(()=>{
+    (!monthlyInv || !monthlyExp || !totalPortfolio) ? setDisable(true) : setDisable(false)
+  },[monthlyExp, monthlyInv, totalPortfolio])
 
   return (
     <Row gutter={[8, 16]}>
