@@ -875,6 +875,19 @@ const calculateAllocation = (
     100
   );
   if (!remPer) return;
+  remPer = allocate(
+    aa.ltdep,
+    i,
+    Math.round(
+      remPer *
+        (ffGoal.rp === RiskProfile.VC
+          ? 0.3
+          : ffGoal.rp === RiskProfile.C
+          ? 0.2
+          : 0.1)
+    ),
+    remPer
+  );
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
   let fixedIncomeTEAsset = aa.teb;
   let fixedIncomeAsset = aa.mtb;
@@ -892,19 +905,6 @@ const calculateAllocation = (
     remPer
   );
   if (!remPer) return;
-  remPer = allocate(
-    aa.ltdep,
-    i,
-    Math.round(
-      remPer *
-        (ffGoal.rp === RiskProfile.VC
-          ? 0.1
-          : ffGoal.rp === RiskProfile.C
-          ? 0.05
-          : 0.02)
-    ),
-    remPer
-  );
   remPer = allocate(
     aa.re,
     i,

@@ -53,21 +53,10 @@ export default function AAList() {
             </>
           ))}
         </div>
-        <Row justify="center">
-          <Button key="more" type="link" href={ROUTES.SET}>
-            Set goals for more accurate allocation
-          </Button>
-        </Row>
         <br />
         <Row justify="center">
-          <Button
-            key="more"
-            type="primary"
-            onClick={(e: any) => {
-              e.preventDefault();
-              alert("Coaching requested");
-            }}>
-            Connect with a Coach
+          <Button key="more" type="primary" href={ROUTES.SET}>
+            Set Goals for more accurate allocation
           </Button>
         </Row>
       </Card>

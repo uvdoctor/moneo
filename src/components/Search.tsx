@@ -65,8 +65,7 @@ export default function Search({
   const typeComp = (
     <Select
       value={searchType}
-      onChange={(val) => setSearchType && setSearchType(val)}
-    >
+      onChange={(val) => setSearchType && setSearchType(val)}>
       <Option value={STOCK}>{STOCK}</Option>
       <Option value={MF}>{MF}</Option>
       <Option value={BOND}>{BOND}</Option>
@@ -79,7 +78,7 @@ export default function Search({
   };
 
   useEffect(() => {
-    setSearchText('')
+    setSearchText("");
     setSuggestions([...[]]);
   }, [searchType]);
 
@@ -97,12 +96,11 @@ export default function Search({
       }}
       size="large"
       value={searchText}
-      onSearch={onSearch}
-    >
+      onSearch={onSearch}>
       <Input
         style={{ width: width ? width : "auto" }}
         size="large"
-        placeholder="Search stocks, bonds and MF's"
+        placeholder={"Search " + searchType}
         addonAfter={isNav ? typeComp : ""}
         prefix={<SearchOutlined />}
       />

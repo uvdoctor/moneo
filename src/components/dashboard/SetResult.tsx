@@ -14,7 +14,7 @@ import {
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
-  const { fxRates, setAA }: any = useContext(DBContext);
+  const { fxRates, aa, setAA }: any = useContext(DBContext);
   const { userInfo, defaultCurrency }: any = useContext(AppContext);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffYear, setFFYear] = useState<number | null>(null);
@@ -57,10 +57,13 @@ export default function SetResult() {
         setNumOfGoals(goals.length);
         setFFAmt(fiResult?.ffResult?.ffAmt);
         setAA(fiResult?.ffResult.aa);
-        setGoalsLoaded(true);
       });
     });
   }, [userInfo]);
+
+  useEffect(() => {
+    setGoalsLoaded(true);
+  }, [aa]);
 
   return (
     <Link href={ROUTES.SET}>
