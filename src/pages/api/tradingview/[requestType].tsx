@@ -2,11 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const eodKey = "61ff9bf3d40797.93512142";
-const count = 0;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { requestType, symbol, from, to, countback } = req.query;
-  let data = {};
+  const { requestType, symbol, to, countback } = req.query;
+  let data: any;
 
   if (requestType === "config") {
     data = getConfig();
@@ -17,7 +16,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await fetch(
       `https://eodhistoricaldata.com/api/fundamentals/${symbol}.NSE?api_token=${eodKey}`
     );
-    const data = await response.json();
+
+    data = await response.json();
 
     res.send({
       name: symbol,
@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ticker: symbol,
     });
   } else if (requestType === "history") {
-    data = await getSymbolData(symbol, from, to, countback);
+    data = await getSymbolData(symbol, to, countback);
     res.send(data);
   }
 };
@@ -66,14 +66,14 @@ function getConfig() {
   };
 }
 
-function stringToEODDate(timeStamp) {
+function stringToEODDate(timeStamp: any) {
   const date = new Date(parseInt(timeStamp));
   //date.setUTCSeconds(parseInt(UTCSeconds));
 
-  let day = date.getDate();
+  let day: any = date.getDate();
   day = day.toString().length === 1 ? `0${day}` : day;
 
-  let month = date.getMonth() + 1;
+  let month: any = date.getMonth() + 1;
   month = month.toString().length === 1 ? `0${month}` : month;
 
   const year = date.getFullYear();
@@ -81,7 +81,7 @@ function stringToEODDate(timeStamp) {
   return `${year}-${month}-${day}`;
 }
 
-function getSymbolData(symbol, from, to, countback) {
+function getSymbolData(symbol: any, to: any, countback: any) {
   return new Promise(async (resolve, reject) => {
     try {
       if (to.length === 10) to += "000";
