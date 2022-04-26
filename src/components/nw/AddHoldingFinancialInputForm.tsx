@@ -1,15 +1,42 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Divider } from "antd";
 import { NWContext } from "./NWContext";
 import Search from "../Search";
+import { InstrumentInput } from "../../api/goals";
+import simpleStorage from "simplestorage.js";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import InstrumentManualInput from "./InstrumentManualInput";
 
-export default function HoldingInput(props: any) {
+export default function AddHoldingFinancialInputForm(props: any) {
   const { childTab }: any = useContext(NWContext);
   const [searchType, setSearchType] = useState<string>("");
+  const [instruments, setInstruments] = useState<InstrumentInput[]>([]);
+  const { updateInstruments, disableOk } = props;
 
-  const addToHoldings = (resp: any) => {
+  useEffect(() => {
+    disableOk(true);
+  }, [disableOk]);
+
+  const addToHoldings = (newHolding: any, newRawDetails: any) => {
+    const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    const mergedInsData = Object.assign({}, insData, newRawDetails);
+    instruments.push(newHolding);
+    setInstruments([...instruments]);
+    updateInstruments(instruments);
+    simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
+    disableOk(!instruments.length);
+  };
+
+  const deleteInstrument = (index: number) => {
+    instruments.splice(index, 1);
+    setInstruments([...instruments]);
+    updateInstruments(instruments);
+    disableOk(!instruments.length);
+  };
+
+  const addInstrument = (resp: any) => {
     const { id, sid, type, subt, exchg } = resp;
-    props.addToHoldings(
+    addToHoldings(
       {
         qty: 0,
         fId: "",
@@ -29,16 +56,37 @@ export default function HoldingInput(props: any) {
   }, [childTab]);
 
   return (
-    <Row gutter={[10, 10]}>
-      <Col flex={8}>
-        <Search
-          width="300px"
-          searchType={searchType}
-          onClick={(resp: any) => {
-            addToHoldings(resp);
-          }}
-        />
-      </Col>
-    </Row>
+    <>
+      <Row>
+        <Col span={24}>
+          <Search
+            searchType={searchType}
+            onClick={(resp: any) => {
+              addInstrument(resp);
+            }}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          {instruments.length ? (
+            <div className="holdings-entry-container">
+              {instruments.map((ins, index) => (
+                <Row className="instrument" key={ins.id}>
+                  <Divider />
+                  <Col span={24}>
+                    <InstrumentManualInput
+                      instrument={ins}
+                      index={index}
+                      deleteInstrument={deleteInstrument}
+                    />
+                  </Col>
+                </Row>
+              ))}
+            </div>
+          ) : null}
+        </Col>
+      </Row>
+    </>
   );
 }

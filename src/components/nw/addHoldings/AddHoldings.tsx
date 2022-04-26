@@ -7,13 +7,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import AddHoldingInput from "../AddHoldingInput";
-import AddHoldingFiancialInput from "../AddHoldingFinancialInput";
 import { NWContext, TAB } from "../NWContext";
 import AddPropertiesInput from "../AddPropertiesInput";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { InstrumentInput } from "../../../api/goals";
 import { hasTags } from "../nwutils";
 import Filter from "./Filter";
+import AddHoldingFinancialInputForm from "../AddHoldingFinancialInputForm";
 
 require("./AddHoldings.less");
 
@@ -36,7 +36,7 @@ export default function AddHoldings({
   fields,
   defaultRate,
   info,
-  filterOption
+  filterOption,
 }: AddHoldingsProps) {
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const [okDisabled, setOkDisabled] = useState<boolean>(true);
@@ -112,24 +112,19 @@ export default function AddHoldings({
   const updateInstruments = (instrumentsToAdd: []) => {
     instrumentsToAdd.map((item: any) => {
       if (item.name) delete item.name;
-      if (!item.exchg) item.exchg = null
+      if (!item.exchg) item.exchg = null;
     });
     setInstrumentsList([...instrumentsToAdd, ...instruments]);
   };
 
   return (
     <Fragment>
-      {hasTags(childTab) ? (
-          <Filter
-            options={filterOption}
-          />
-      ) : null}
+      {hasTags(childTab) ? <Filter options={filterOption} /> : null}
       &nbsp;&nbsp;
       <Button
         type={hasInstruments(childTab) ? "default" : "primary"}
         icon={<PlusOutlined />}
-        onClick={() => setModalVisibility(true)}
-      >
+        onClick={() => setModalVisibility(true)}>
         Add
       </Button>
       &nbsp;&nbsp;
@@ -139,8 +134,7 @@ export default function AddHoldings({
         disabled={!isDirty}
         icon={<SaveOutlined />}
         onClick={() => saveHoldings()}
-        className="steps-start-btn"
-      >
+        className="steps-start-btn">
         Save
       </Button>
       <Modal
@@ -164,13 +158,11 @@ export default function AddHoldings({
               key={"add"}
               disabled={
                 hasInstruments(childTab) && instrumentsList.length === 0
-              }
-            >
+              }>
               <Button
                 key="addfamily"
                 type="primary"
-                onClick={handleAddButtonClick}
-              >
+                onClick={handleAddButtonClick}>
                 Add
                 <DownOutlined />
               </Button>
@@ -182,15 +174,13 @@ export default function AddHoldings({
               onClick={handleAddButtonClick}
               disabled={
                 hasInstruments(childTab) && instrumentsList.length === 0
-              }
-            >
+              }>
               Add
             </Button>
           ),
-        ]}
-      >
+        ]}>
         {hasInstruments(childTab) ? (
-          <AddHoldingFiancialInput
+          <AddHoldingFinancialInputForm
             updateInstruments={updateInstruments}
             disableOk={setOkDisabled}
           />
