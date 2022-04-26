@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select, AutoComplete, Input, Spin } from "antd";
+import { Select, AutoComplete, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import { getInstrumentDataWithKey, optionTableMap } from "./nw/nwutils";
@@ -24,7 +24,6 @@ export default function Search({
   const { Option } = Select;
   const { BOND, MF, ETF, CRYPTO, STOCK } = TAB;
   const [searchText, setSearchText] = useState("");
-  const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
 
@@ -44,7 +43,6 @@ export default function Search({
 
   const getSearchData = async () => {
     try {
-      setLoading(true);
       if (searchType === CRYPTO) {
         const cryptolist = await getCryptoList();
         setData([...cryptolist]);
@@ -59,7 +57,6 @@ export default function Search({
         setData([...cachedData]);
         setSuggestions([...cachedData]);
       }
-      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -107,7 +104,7 @@ export default function Search({
         size="large"
         placeholder="Search stocks, bonds and MF's"
         addonAfter={isNav ? typeComp : ""}
-        prefix={loading ? <Spin /> : <SearchOutlined />}
+        prefix={<SearchOutlined />}
       />
     </AutoComplete>
   );
