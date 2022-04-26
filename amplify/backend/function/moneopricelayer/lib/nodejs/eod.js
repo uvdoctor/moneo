@@ -65,7 +65,7 @@ const getCryptoPrice = async (symbol, isDate) => {
     ? `https://eodhistoricaldata.com/api/real-time/${symbol}.CC?api_token=${token}&fmt=json&filter=close`
     : `https://eodhistoricaldata.com/api/eod/${symbol}.CC?api_token=${token}&fmt=json&from=${date}&filter=close`;
   let data = await getData(url);
-  if (isDate && !Array.isArray(data) && prev <= 5) {
+  if (isDate && (!Array.isArray(data) || !data?.length) && prev <= 5) {
     prev++;
     data = await getCryptoPrice(symbol, isDate);
   }
@@ -78,7 +78,7 @@ const getCommodityPrice = async (symbol, isDate) => {
     ? `https://eodhistoricaldata.com/api/eod/${symbol}.COMM?api_token=${token}&fmt=json&filter=last_close`
     : `https://eodhistoricaldata.com/api/eod/${symbol}.COMM?api_token=${token}&fmt=json&from=${date}&filter=close`;
   let data = await getData(url);
-  if (isDate && !Array.isArray(data) && prev <= 5) {
+  if (isDate && (!Array.isArray(data) || !data?.length) && prev <= 5) {
     prev++;
     data = await getCommodityPrice(symbol, isDate);
   }

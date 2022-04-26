@@ -167,28 +167,6 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "InsUni": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneoutilslayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "goals",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
     "alerts": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -218,6 +196,14 @@
         {
           "category": "custom",
           "resourceName": "pricealerts",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "watchalerts",
           "attributes": [
             "Name",
             "Arn"
@@ -297,6 +283,14 @@
             "Name",
             "Arn"
           ]
+        },
+        {
+          "category": "custom",
+          "resourceName": "watchalerts",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
         }
       ]
     }
@@ -311,6 +305,11 @@
   "interactions": {},
   "custom": {
     "pricealerts": {
+      "service": "customCloudformation",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    },
+    "watchalerts": {
       "service": "customCloudformation",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

@@ -52,7 +52,6 @@ const initialState = {
   isDrManual: 0,
   notify: 0,
   tax: "",
-  lifeExpectancy: 0,
 };
 
 const userReducer = (
@@ -82,8 +81,8 @@ export default function UserSettings() {
     userInfo,
     discountRate,
     setDiscountRate,
-    appContextLoaded, 
-    setUserInfo
+    appContextLoaded,
+    setUserInfo,
   }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const {
@@ -98,7 +97,6 @@ export default function UserSettings() {
     notify,
     isDrManual,
     tax,
-    lifeExpectancy,
     dobDate,
     dobMonth,
     dobYear,
@@ -141,8 +139,11 @@ export default function UserSettings() {
         }`
       );
       if (attr === "Whatsapp Number") {
-        const result = await updateUserDetails({ uname: owner, im: data as number });
-        setUserInfo(result)
+        const result = await updateUserDetails({
+          uname: owner,
+          im: data as number,
+        });
+        setUserInfo(result);
       }
       return true;
     } catch (error) {
@@ -184,9 +185,8 @@ export default function UserSettings() {
       const result = await updateUserDetails({
         uname: owner,
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
-        le: lifeExpectancy,
       });
-      setUserInfo(result)
+      setUserInfo(result);
       success("Updated Successfully");
     } catch (error) {
       failure(`Unable to update ${error}`);
@@ -204,7 +204,7 @@ export default function UserSettings() {
         rp: riskProfile,
         tax,
       });
-      setUserInfo(results)
+      setUserInfo(results);
       success("Updated Successfully");
     } catch (error) {
       failure("Unable to update");
@@ -240,8 +240,8 @@ export default function UserSettings() {
   }, [countryCode?.value, user]);
 
   useEffect(() => {
-    if(!userInfo) return;
-    const { rp, notify, dr, tax, le, dob } = userInfo;
+    if (!userInfo) return;
+    const { rp, notify, dr, tax, dob, tid, exp, ta, invest } = userInfo;
     const date = new Date(dob);
     dispatch({
       type: "userUpdate",
@@ -250,12 +250,15 @@ export default function UserSettings() {
         notify,
         tax,
         isDrManual: !dr ? 0 : 1,
-        lifeExpectancy: le,
         dobYear: date.getFullYear(),
         dobMonth: date.getMonth() + 1,
         dobDate: date.getDate(),
+        tid,
+        exp,
+        ta,
+        invest,
       },
-      });
+    });
   }, [userInfo]);
 
   useEffect(() => {
@@ -289,7 +292,6 @@ export default function UserSettings() {
                     dobDate={dobDate}
                     dobMonth={dobMonth}
                     dobYear={dobYear}
-                    lifeExpectancy={lifeExpectancy}
                     user={user}
                   />
                 </Col>
@@ -305,7 +307,7 @@ export default function UserSettings() {
             </TabPane>
             <TabPane className="settings-tabpane-view" tab="Profile" key="2">
               <Row>
-                {userInfo  && <Col span={24}>
+                <Col span={24}>
                   <ProfileTab
                     dispatch={dispatch}
                     isDrManual={isDrManual}
@@ -313,7 +315,7 @@ export default function UserSettings() {
                     riskProfile={riskProfile}
                     tax={tax}
                   />
-                </Col>}
+                </Col>
                 <Col xs={24} sm={24} md={16}>
                   <SaveButton
                     loading={loading}

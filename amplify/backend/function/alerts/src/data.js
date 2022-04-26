@@ -5,7 +5,6 @@ const {
 } = require("/opt/nodejs/databaseUtils");
 const {
   divideArrayBySize,
-  utility,
   toCurrency,
 } = require("/opt/nodejs/utility");
 const {
@@ -34,7 +33,7 @@ const getInstrumentsData = async (ids, table, infoMap) => {
   });
 };
 
-const processInstruments = async (infoMap, usersMap, usersinsMap) => {
+const processInstruments = async (infoMap, usersMap, usersinsMap, usersWatchMap) => {
   let mfIds = new Set();
   let otherIds = new Set();
   const userinsTableName = await getTableNameFromInitialWord("UserIns");
@@ -42,13 +41,21 @@ const processInstruments = async (infoMap, usersMap, usersinsMap) => {
     userinsTableName,
     Object.keys(usersMap),
     "uname",
-    "uname, ins"
+    "uname, ins, watch"
   );
   for (let item of userinsdata) {
-    usersinsMap[item.uname] = item.ins;
-    for (let ins of item.ins) {
-      if (ins.id.startsWith("INF")) mfIds.add(ins.id);
-      else otherIds.add(ins.id);
+    let instruments = [];
+    if(item.ins) {
+      usersinsMap[item.uname] = item.ins;
+      instruments = [ ...item.ins ]
+    } 
+    if(item.watch) {
+      usersWatchMap[item.uname] = item.watch;
+      instruments = [ ...instruments, ...item.watch ]
+    }
+    for (let item of instruments) {
+      if (item.id.startsWith("INF")) mfIds.add(item.id);
+      else otherIds.add(item.id);
     }
   }
   if (mfIds.size) {

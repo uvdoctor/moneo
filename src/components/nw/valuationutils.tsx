@@ -12,6 +12,7 @@ import {
   HoldingInput,
   InstrumentInput,
   InsType,
+  InsWatchInput,
   MFSchemeType,
   PropertyInput,
   PropertyType,
@@ -23,12 +24,8 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import {
-  awsdate,
-  getCryptoPrevPrice,
-  getNumberOfDays,
-  includesAny,
-} from "../utils";
+import { NIFTY50, SENSEX } from "../dashboard/DBContext";
+import { awsdate, getNumberOfDays, includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
   doesHoldingMatch,
@@ -40,6 +37,7 @@ import {
   isFund,
   isLargeCap,
   loadMatchingINBond,
+  loadMatchingIndices,
   loadMatchingINExchange,
   loadMatchingINMutual,
 } from "./nwutils";
@@ -462,10 +460,7 @@ export const priceInstruments = async (
     [RiskProfile.A]: initRiskAttribs(),
     [RiskProfile.VA]: initRiskAttribs(),
   };
-  let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  if (!cachedData) {
-    cachedData = await initializeInsData(instruments);
-  }
+  let cachedData = await initializeInsData(instruments);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
@@ -1121,7 +1116,7 @@ export const calculatePrice = async (
   ];
   const isin: { [key: string]: string } = {};
   let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  insHoldings.forEach((instrument: InstrumentInput) => {
+  insHoldings?.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
     if (isin[id] || !data) return;
@@ -1163,7 +1158,7 @@ export const calculatePrice = async (
       if (isin[id]) continue;
       isin[id] = id;
       const price = await getCryptoRate(id, currency as string, fxRates);
-      const prev = await getCryptoPrevPrice(id, currency as string, fxRates);
+      const prev = await getCryptoRate(id, currency as string, fxRates, true);
       if (!prev || !price) continue;
       const diff = calculateDiffPercent(price, prev);
       Math.sign(diff) > 0
@@ -1185,7 +1180,6 @@ export const calculateAlerts = async (
   currency: string
 ) => {
   if (insHoldings?.ins?.length) {
-    if (!simpleStorage.get(LOCAL_INS_DATA_KEY))
       await initializeInsData(insHoldings?.ins);
   }
   if (holdings?.nps?.length) {
@@ -1198,4 +1192,42 @@ export const calculateAlerts = async (
     fxRates,
     currency
   );
+};
+
+export const isISIN = (item: string) =>
+  item.length === 12 && item.startsWith("IN");
+
+export const loadIndices = async (ids: Array<string>) => {
+  let gotodb = false;
+  let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  if (!allInsData) allInsData = {};
+  ids.forEach((id: string) => {
+    if (!allInsData[id]) gotodb = true;
+  });
+  if (!gotodb) return allInsData;
+  if (ids.length) {
+    await loadInstrumentPrices(loadMatchingIndices, ids, allInsData);
+  }
+  simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+  return allInsData;
+};
+
+export const initializeWatchlist = async (
+  instruments?: Array<InsWatchInput> | null | undefined
+) => {
+  const ids: Array<string> = [];
+  let indexIds: Array<string> = [];
+  if (!instruments) {
+    await loadIndices([NIFTY50, SENSEX]);
+    return;
+  }
+  for (let instrument of instruments) {
+    const { id, subt } = instrument;
+    if (!isISIN(id) && subt !== AssetSubType.C) {
+      indexIds.push(id);
+      await loadIndices(indexIds);
+    }
+    ids.push(instrument.id);
+  }
+  return await loadInstruments(ids);
 };

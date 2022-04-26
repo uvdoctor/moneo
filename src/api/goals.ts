@@ -516,7 +516,10 @@ export type CreateUserInfoInput = {
   rp: RiskProfile,
   dr: number,
   tc: string,
-  le: number,
+  ta?: number | null,
+  tid?: string | null,
+  exp?: number | null,
+  invest?: number | null,
 };
 
 export enum TaxLiability {
@@ -538,7 +541,10 @@ export type ModelUserInfoConditionInput = {
   rp?: ModelRiskProfileInput | null,
   dr?: ModelFloatInput | null,
   tc?: ModelStringInput | null,
-  le?: ModelIntInput | null,
+  ta?: ModelFloatInput | null,
+  tid?: ModelStringInput | null,
+  exp?: ModelIntInput | null,
+  invest?: ModelIntInput | null,
   and?: Array< ModelUserInfoConditionInput | null > | null,
   or?: Array< ModelUserInfoConditionInput | null > | null,
   not?: ModelUserInfoConditionInput | null,
@@ -561,7 +567,10 @@ export type UserInfo = {
   rp?: RiskProfile,
   dr?: number,
   tc?: string,
-  le?: number,
+  ta?: number | null,
+  tid?: string | null,
+  exp?: number | null,
+  invest?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -577,7 +586,10 @@ export type UpdateUserInfoInput = {
   rp?: RiskProfile | null,
   dr?: number | null,
   tc?: string | null,
-  le?: number | null,
+  ta?: number | null,
+  tid?: string | null,
+  exp?: number | null,
+  invest?: number | null,
 };
 
 export type DeleteUserInfoInput = {
@@ -863,7 +875,24 @@ export type InsWatchInput = {
   lowt?: number | null,
   type: AssetType,
   subt: AssetSubType,
+  itype?: InsType | null,
 };
+
+export enum InsType {
+  ETF = "ETF",
+  REIT = "REIT",
+  InvIT = "InvIT",
+  DEB = "DEB",
+  CP = "CP",
+  TB = "TB",
+  CD = "CD",
+  PB = "PB",
+  IB = "IB",
+  TFB = "TFB",
+  FRB = "FRB",
+  CB = "CB",
+}
+
 
 export type ModelUserInsConditionInput = {
   and?: Array< ModelUserInsConditionInput | null > | null,
@@ -902,6 +931,7 @@ export type InsWatch = {
   lowt?: number | null,
   type?: AssetType,
   subt?: AssetSubType,
+  itype?: InsType | null,
 };
 
 export type UpdateUserInsInput = {
@@ -912,6 +942,93 @@ export type UpdateUserInsInput = {
 
 export type DeleteUserInsInput = {
   uname: string,
+};
+
+export type CreateCoachingReqInput = {
+  id?: string | null,
+  dur: number,
+  text?: string | null,
+  page: string,
+  type: CoachingType,
+  status: CoachingStatus,
+  payment: number,
+  curr: string,
+  paid: boolean,
+  pt?: PaymentType | null,
+};
+
+export enum CoachingType {
+  Inv = "Inv",
+  Ins = "Ins",
+  FI = "FI",
+}
+
+
+export enum CoachingStatus {
+  P = "P",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+
+
+export enum PaymentType {
+  D = "D",
+  C = "C",
+  UPI = "UPI",
+  B = "B",
+}
+
+
+export type ModelCoachingReqConditionInput = {
+  dur?: ModelIntInput | null,
+  text?: ModelStringInput | null,
+  page?: ModelStringInput | null,
+  type?: ModelCoachingTypeInput | null,
+  status?: ModelCoachingStatusInput | null,
+  payment?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  paid?: ModelBooleanInput | null,
+  pt?: ModelPaymentTypeInput | null,
+  and?: Array< ModelCoachingReqConditionInput | null > | null,
+  or?: Array< ModelCoachingReqConditionInput | null > | null,
+  not?: ModelCoachingReqConditionInput | null,
+};
+
+export type ModelCoachingTypeInput = {
+  eq?: CoachingType | null,
+  ne?: CoachingType | null,
+};
+
+export type ModelCoachingStatusInput = {
+  eq?: CoachingStatus | null,
+  ne?: CoachingStatus | null,
+};
+
+export type ModelPaymentTypeInput = {
+  eq?: PaymentType | null,
+  ne?: PaymentType | null,
+};
+
+export type CoachingReq = {
+  __typename: "CoachingReq",
+  id?: string,
+  dur?: number,
+  text?: string | null,
+  page?: string,
+  type?: CoachingType,
+  status?: CoachingStatus,
+  payment?: number,
+  curr?: string,
+  paid?: boolean,
+  pt?: PaymentType | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type DeleteCoachingReqInput = {
+  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -1096,22 +1213,6 @@ export type CreateINExchgPriceInput = {
   prevol?: number | null,
 };
 
-export enum InsType {
-  ETF = "ETF",
-  REIT = "REIT",
-  InvIT = "InvIT",
-  DEB = "DEB",
-  CP = "CP",
-  TB = "TB",
-  CD = "CD",
-  PB = "PB",
-  IB = "IB",
-  TFB = "TFB",
-  FRB = "FRB",
-  CB = "CB",
-}
-
-
 export enum MCap {
   Small = "Small",
   Mid = "Mid",
@@ -1243,47 +1344,6 @@ export type UpdateINExchgPriceInput = {
 
 export type DeleteINExchgPriceInput = {
   id: string,
-};
-
-export type CreateInsUserMapInput = {
-  id: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user: string,
-};
-
-export type ModelInsUserMapConditionInput = {
-  sid?: ModelStringInput | null,
-  type?: ModelAssetTypeInput | null,
-  subt?: ModelAssetSubTypeInput | null,
-  and?: Array< ModelInsUserMapConditionInput | null > | null,
-  or?: Array< ModelInsUserMapConditionInput | null > | null,
-  not?: ModelInsUserMapConditionInput | null,
-};
-
-export type InsUserMap = {
-  __typename: "InsUserMap",
-  id?: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user?: string,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateInsUserMapInput = {
-  id: string,
-  sid?: string | null,
-  type?: AssetType | null,
-  subt?: AssetSubType | null,
-  user: string,
-};
-
-export type DeleteInsUserMapInput = {
-  id: string,
-  user: string,
 };
 
 export type CreateAllIndicesInput = {
@@ -1679,6 +1739,19 @@ export type DeleteNPSPriceInput = {
   id: string,
 };
 
+export type UpdateCoachingReqInput = {
+  id: string,
+  dur?: number | null,
+  text?: string | null,
+  page?: string | null,
+  type?: CoachingType | null,
+  status?: CoachingStatus | null,
+  payment?: number | null,
+  curr?: string | null,
+  paid?: boolean | null,
+  pt?: PaymentType | null,
+};
+
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelFeedbackTypeInput | null,
@@ -1801,7 +1874,10 @@ export type ModelUserInfoFilterInput = {
   rp?: ModelRiskProfileInput | null,
   dr?: ModelFloatInput | null,
   tc?: ModelStringInput | null,
-  le?: ModelIntInput | null,
+  ta?: ModelFloatInput | null,
+  tid?: ModelStringInput | null,
+  exp?: ModelIntInput | null,
+  invest?: ModelIntInput | null,
   and?: Array< ModelUserInfoFilterInput | null > | null,
   or?: Array< ModelUserInfoFilterInput | null > | null,
   not?: ModelUserInfoFilterInput | null,
@@ -1908,33 +1984,6 @@ export type ModelINExchgPriceFilterInput = {
 export type ModelINExchgPriceConnection = {
   __typename: "ModelINExchgPriceConnection",
   items?:  Array<INExchgPrice | null >,
-  nextToken?: string | null,
-};
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
-export type ModelInsUserMapFilterInput = {
-  id?: ModelStringInput | null,
-  sid?: ModelStringInput | null,
-  type?: ModelAssetTypeInput | null,
-  subt?: ModelAssetSubTypeInput | null,
-  user?: ModelStringInput | null,
-  and?: Array< ModelInsUserMapFilterInput | null > | null,
-  or?: Array< ModelInsUserMapFilterInput | null > | null,
-  not?: ModelInsUserMapFilterInput | null,
-};
-
-export type ModelInsUserMapConnection = {
-  __typename: "ModelInsUserMapConnection",
-  items?:  Array<InsUserMap | null >,
   nextToken?: string | null,
 };
 
@@ -2063,6 +2112,28 @@ export type ModelUserInsFilterInput = {
 export type ModelUserInsConnection = {
   __typename: "ModelUserInsConnection",
   items?:  Array<UserIns | null >,
+  nextToken?: string | null,
+};
+
+export type ModelCoachingReqFilterInput = {
+  id?: ModelIDInput | null,
+  dur?: ModelIntInput | null,
+  text?: ModelStringInput | null,
+  page?: ModelStringInput | null,
+  type?: ModelCoachingTypeInput | null,
+  status?: ModelCoachingStatusInput | null,
+  payment?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  paid?: ModelBooleanInput | null,
+  pt?: ModelPaymentTypeInput | null,
+  and?: Array< ModelCoachingReqFilterInput | null > | null,
+  or?: Array< ModelCoachingReqFilterInput | null > | null,
+  not?: ModelCoachingReqFilterInput | null,
+};
+
+export type ModelCoachingReqConnection = {
+  __typename: "ModelCoachingReqConnection",
+  items?:  Array<CoachingReq | null >,
   nextToken?: string | null,
 };
 
@@ -2497,7 +2568,10 @@ export type CreateUserInfoMutation = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2521,7 +2595,10 @@ export type UpdateUserInfoMutation = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2545,7 +2622,10 @@ export type DeleteUserInfoMutation = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3865,6 +3945,7 @@ export type CreateUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3908,6 +3989,7 @@ export type UpdateUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3951,7 +4033,56 @@ export type DeleteUserInsMutation = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateCoachingReqMutationVariables = {
+  input?: CreateCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type CreateCoachingReqMutation = {
+  createCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteCoachingReqMutationVariables = {
+  input?: DeleteCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type DeleteCoachingReqMutation = {
+  deleteCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4286,60 +4417,6 @@ export type DeleteInExchgPriceMutation = {
   } | null,
 };
 
-export type CreateInsUserMapMutationVariables = {
-  input?: CreateInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type CreateInsUserMapMutation = {
-  createInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInsUserMapMutationVariables = {
-  input?: UpdateInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type UpdateInsUserMapMutation = {
-  updateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInsUserMapMutationVariables = {
-  input?: DeleteInsUserMapInput,
-  condition?: ModelInsUserMapConditionInput | null,
-};
-
-export type DeleteInsUserMapMutation = {
-  deleteInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateAllIndicesMutationVariables = {
   input?: CreateAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
@@ -4655,6 +4732,30 @@ export type DeleteNpsPriceMutation = {
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type UpdateCoachingReqMutationVariables = {
+  input?: UpdateCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type UpdateCoachingReqMutation = {
+  updateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -5019,7 +5120,10 @@ export type GetUserInfoQuery = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5048,7 +5152,10 @@ export type ListUserInfosQuery = {
       rp: RiskProfile,
       dr: number,
       tc: string,
-      le: number,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5079,7 +5186,10 @@ export type RegByImQuery = {
       rp: RiskProfile,
       dr: number,
       tc: string,
-      le: number,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5110,7 +5220,10 @@ export type RegByMobQuery = {
       rp: RiskProfile,
       dr: number,
       tc: string,
-      le: number,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5141,7 +5254,10 @@ export type RegByEmailQuery = {
       rp: RiskProfile,
       dr: number,
       tc: string,
-      le: number,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5172,7 +5288,44 @@ export type RegByDobQuery = {
       rp: RiskProfile,
       dr: number,
       tc: string,
-      le: number,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type RegByTaxIdQueryVariables = {
+  tid?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type RegByTaxIdQuery = {
+  regByTaxId?:  {
+    __typename: "ModelUserInfoConnection",
+    items:  Array< {
+      __typename: "UserInfo",
+      uname: string,
+      email: string,
+      dob: string,
+      im?: number | null,
+      mob?: number | null,
+      notify: boolean,
+      tax: TaxLiability,
+      rp: RiskProfile,
+      dr: number,
+      tc: string,
+      ta?: number | null,
+      tid?: string | null,
+      exp?: number | null,
+      invest?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5389,50 +5542,6 @@ export type ListInExchgPricesQuery = {
       risk?: RiskProfile | null,
       vol?: number | null,
       prevol?: number | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInsUserMapQueryVariables = {
-  id?: string,
-  user?: string,
-};
-
-export type GetInsUserMapQuery = {
-  getInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInsUserMapsQueryVariables = {
-  id?: string | null,
-  user?: ModelStringKeyConditionInput | null,
-  filter?: ModelInsUserMapFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInsUserMapsQuery = {
-  listInsUserMaps?:  {
-    __typename: "ModelInsUserMapConnection",
-    items:  Array< {
-      __typename: "InsUserMap",
-      id: string,
-      sid?: string | null,
-      type?: AssetType | null,
-      subt?: AssetSubType | null,
-      user: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6408,6 +6517,7 @@ export type GetUserInsQuery = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -6448,7 +6558,60 @@ export type ListUserInssQuery = {
         lowt?: number | null,
         type: AssetType,
         subt: AssetSubType,
+        itype?: InsType | null,
       } > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCoachingReqQueryVariables = {
+  id?: string,
+};
+
+export type GetCoachingReqQuery = {
+  getCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListCoachingReqsQueryVariables = {
+  filter?: ModelCoachingReqFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCoachingReqsQuery = {
+  listCoachingReqs?:  {
+    __typename: "ModelCoachingReqConnection",
+    items:  Array< {
+      __typename: "CoachingReq",
+      id: string,
+      dur: number,
+      text?: string | null,
+      page: string,
+      type: CoachingType,
+      status: CoachingStatus,
+      payment: number,
+      curr: string,
+      paid: boolean,
+      pt?: PaymentType | null,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -6941,7 +7104,10 @@ export type OnCreateUserInfoSubscription = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6960,7 +7126,10 @@ export type OnUpdateUserInfoSubscription = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6979,7 +7148,10 @@ export type OnDeleteUserInfoSubscription = {
     rp: RiskProfile,
     dr: number,
     tc: string,
-    le: number,
+    ta?: number | null,
+    tid?: string | null,
+    exp?: number | null,
+    invest?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7208,45 +7380,6 @@ export type OnDeleteInExchgPriceSubscription = {
     risk?: RiskProfile | null,
     vol?: number | null,
     prevol?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateInsUserMapSubscription = {
-  onCreateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInsUserMapSubscription = {
-  onUpdateInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInsUserMapSubscription = {
-  onDeleteInsUserMap?:  {
-    __typename: "InsUserMap",
-    id: string,
-    sid?: string | null,
-    type?: AssetType | null,
-    subt?: AssetSubType | null,
-    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -8766,6 +8899,7 @@ export type OnCreateUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -8808,6 +8942,7 @@ export type OnUpdateUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -8850,7 +8985,77 @@ export type OnDeleteUserInsSubscription = {
       lowt?: number | null,
       type: AssetType,
       subt: AssetSubType,
+      itype?: InsType | null,
     } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateCoachingReqSubscription = {
+  onCreateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateCoachingReqSubscription = {
+  onUpdateCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteCoachingReqSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteCoachingReqSubscription = {
+  onDeleteCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

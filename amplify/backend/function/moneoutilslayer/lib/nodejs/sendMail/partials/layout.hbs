@@ -6,21 +6,12 @@
 				<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
 					<tr>
 						<td>
-							<div class="title-row">
-								<div class="title-column">
+								<section id="title-column-left">
 									<img src="https://moneo.in/images/icons/tlogo128.png" alt="Moneo" />
-								</div>
-								<div class="title-column title-column-left">
-									<p class="text-title">Investment</p>
-									<p class="text-title">
-										<strong>{{valuation}}</strong> - 
-										<strong {{#if chgImpact}} style="color: green" {{else}} style="color: red" {{/if}}> {{#if
-											chgImpact}} ▲
-											{{else}}
-											▼{{/if}} {{ chgAmount }}</strong>
-									</p>
-								</div>
-							</div>
+								</section>
+								<aside id="title-column-right">
+									<p class="text-title">{{ title templateName }}</p>
+								</aside>
 						</td>
 					</tr>
 				</table>

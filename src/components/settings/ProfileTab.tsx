@@ -10,9 +10,9 @@ import RiskProfileInput from "../RiskProfileInput";
 interface ProfileTabProps {
   isDrManual: boolean;
   notify: boolean;
-  dispatch: Function;
   riskProfile: string;
   tax: string;
+  dispatch: Function;
 }
 
 export default function ProfileTab({
@@ -56,51 +56,39 @@ export default function ProfileTab({
         />
       </Col>
       <Col xs={24} md={12}>
-        <Row>
-          <Col xs={24}>Subscribe to offers and newsletters</Col>
-          <Col>
-            <RadioInput
-              options={["Yes", "No"]}
-              value={notify ? "Yes" : "No"}
-              changeHandler={(value: string) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "notify", val: value === "Yes" },
-                })
-              }
-            />
-          </Col>
-        </Row>
+        <RadioInput
+          options={["Send", "Do not send"]}
+          value={notify ? "Yes" : "No"}
+          changeHandler={(value: string) =>
+            dispatch({
+              type: "single",
+              data: { field: "notify", val: value === "Yes" },
+            })
+          }
+        />
+        &nbsp; offers and newsletters
       </Col>
       <Col xs={24} md={12}>
-        <Row>
-          <Col>
-            <RiskProfileInput
-              value={riskProfile}
-              changeHandler={(val: string) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "riskProfile", val },
-                })
-              }
-            />
-          </Col>
-        </Row>
+        <RiskProfileInput
+          value={riskProfile}
+          changeHandler={(val: string) =>
+            dispatch({
+              type: "single",
+              data: { field: "riskProfile", val },
+            })
+          }
+        />
       </Col>
       <Col xs={24} md={12}>
-        <Row>
-          <Col>
-            <TaxLiabilityInput
-              value={tax}
-              changeHandler={(val: string) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "tax", val },
-                })
-              }
-            />
-          </Col>
-        </Row>
+        <TaxLiabilityInput
+          value={tax}
+          changeHandler={(val: string) =>
+            dispatch({
+              type: "single",
+              data: { field: "tax", val },
+            })
+          }
+        />
       </Col>
     </Row>
   );

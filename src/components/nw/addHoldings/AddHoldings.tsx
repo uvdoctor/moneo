@@ -146,6 +146,7 @@ export default function AddHoldings({
       <Modal
         className="add-holdings"
         title={title}
+        style={{ height: "600px" }}
         visible={isModalVisible}
         okButtonProps={{ disabled: okDisabled }}
         destroyOnClose

@@ -56,12 +56,6 @@ export type AmplifyDependentResourcesAttributes = {
         "moneopricelayer": {
             "Arn": "string"
         },
-        "InsUni": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "alerts": {
             "Name": "string",
             "Arn": "string",
@@ -104,6 +98,11 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "custom": {
         "pricealerts": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string"
+        },
+        "watchalerts": {
             "Name": "string",
             "Arn": "string",
             "Region": "string"

@@ -27,6 +27,14 @@
     "custompricealertsArn": {
       "Type": "String",
       "Default": "custompricealertsArn"
+    },
+    "customwatchalertsName": {
+      "Type": "String",
+      "Default": "customwatchalertsName"
+    },
+    "customwatchalertsArn": {
+      "Type": "String",
+      "Default": "customwatchalertsArn"
     }
   },
   "Conditions": {
@@ -84,6 +92,9 @@
             },
             "PRICE_ALERTS_QUEUE": {
               "Ref": "custompricealertsName"
+            },
+            "WATCH_ALERTS_QUEUE": {
+              "Ref": "customwatchalertsName"
             }
           }
         },
@@ -149,6 +160,20 @@
       "Properties": {
         "EventSourceArn": {
           "Ref": "custompricealertsArn"
+        },
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        }
+      }
+    },
+    "LambdaFunctionEventSourceMapping2": {
+      "DependsOn": [
+        "lambdaexecutionpolicy"
+      ],
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "Properties": {
+        "EventSourceArn": {
+          "Ref": "customwatchalertsArn"
         },
         "FunctionName": {
           "Ref": "LambdaFunction"

@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Moneo</title>
+</head>
+
+<body>
+	{{#> layout templateName="pricealerts" }}
+
+	<p class="text-title">
+		<strong>{{valuation}}</strong>
+		<strong {{#if chgImpact}} style="color: green" {{else}} style="color: red" {{/if}}> {{#if
+				chgImpact}} ▲
+				{{else}}
+				▼{{/if}} {{ chgAmount }}
+		</strong>
+	</p>
+
+	{{#if gainers}}
+	<div class="box-container-high">
+		<p class='main-text'>Top {{gainers.length}} gainers</p>
+		{{#each gainers}}
+		<div class="data-container">
+			<a>{{this.name}}</a>
+		</div>
+		{{/each}}
+	</div>
+	{{/if}}
+
+	{{#if losers}}
+	<div class='box-container-low'>
+		<p class='main-text'>Top {{losers.length}} losers</p>
+		{{#each losers}}
+		<div class="data-container">
+			<a>{{this.name}}</a>
+		</div>
+		{{/each}}
+	</div>
+	{{/if}}
+
+	{{#if yhigh}}
+	<div class="box-container-high">
+		<p class='main-text'>Recent 52-week high</p>
+		{{#each yhigh}}
+		<div class="data-container">
+			<a>{{this.name}}</a>
+		</div>
+		{{/each}}
+	</div>
+	{{/if}}
+
+	{{#if ylow}}
+	<div class='box-container-low'>
+		<p class='main-text'>Recent 52-week low</p>
+		{{#each ylow}}
+		<div class="data-container">
+			<a>{{this.name}}</a>
+		</div>
+		{{/each}}
+	</div>
+	{{/if}}
+
+	{{#if metal}}
+	{{#each metal}}
+	<div class="metal-container">
+		<p style="text-align: center;" class="main-text">{{ this.name }}</p>
+		<div class="row">
+			<div class="column">
+				<p class="main-text">{{ this.price }}</p>
+			</div>
+			<div class="column">
+				<p class="main-text" {{#if this.up}} style="color: green" {{else}} style="color: red" {{/if}}>
+					{{#if this.up}}
+					▲
+					{{else}}
+					▼
+					{{/if}}
+					{{ this.chg }}%</p>
+			</div>
+		</div>
+	</div>
+	{{/each}}
+	{{/if}}
+
+	<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+		<tbody>
+			<tr>
+				<td align="center">
+					<a href="https://moneo.in/dashboard" target="_blank">
+						View Details
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	{{/layout}}
+</body>
+
+</html>

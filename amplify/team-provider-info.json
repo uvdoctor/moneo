@@ -31,7 +31,7 @@
         },
         "IndicePrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/IndicePrice-4a4d765537676138717a-build.zip"
+          "s3Key": "amplify-builds/IndicePrice-6644434e4a3835714677-build.zip"
         },
         "INExchgPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
@@ -39,19 +39,15 @@
         },
         "moneopricelayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion747797a6-build.zip"
-        },
-        "InsUni": {
-          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/InsUni-36592b565a784b32614c-build.zip"
+          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersiond39b125c-build.zip"
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/alerts-4856726b6336676b6e52-build.zip"
+          "s3Key": "amplify-builds/alerts-636e493746476a773837-build.zip"
         },
         "moneoutilslayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersion46c12f80-build.zip"
+          "s3Key": "amplify-builds/moneoutilslayer-LambdaLayerVersionc097cdbc-build.zip"
         },
         "feedback": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
@@ -63,11 +59,11 @@
         },
         "moneovaluationlayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneovaluationlayer-LambdaLayerVersion59148b54-build.zip"
+          "s3Key": "amplify-builds/moneovaluationlayer-LambdaLayerVersion9999109c-build.zip"
         },
         "sendalert": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/sendalert-4a644c6873744c637a72-build.zip"
+          "s3Key": "amplify-builds/sendalert-76383266454432634553-build.zip"
         }
       },
       "auth": {

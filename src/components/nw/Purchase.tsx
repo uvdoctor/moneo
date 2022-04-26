@@ -27,7 +27,7 @@ export default function Purchase({
   unit,
 }: PurchaseProps) {
   const [purchaseDetails, setPurchaseDetails] = useState<Array<PurchaseInput>>(
-    record?.pur ? record.pur : []
+    record.pur ? record.pur : []
   );
   const { selectedCurrency }: any = useContext(NWContext);
 
@@ -36,6 +36,12 @@ export default function Purchase({
       ...purchaseDetails.filter((item: PurchaseInput) => item !== record),
     ]);
   };
+
+  useEffect(() => {
+    if (!record || !record.pur) {
+      setPurchaseDetails([...[]]);
+    }
+  }, [record]);
 
   useEffect(() => {
     record.pur = [...purchaseDetails];

@@ -1,26 +1,27 @@
 import React, { Fragment, useContext } from "react";
 import { Col, PageHeader, Row, Skeleton } from "antd";
-import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
 import { DBContext } from "./DBContext";
-import { ROUTES } from "../../CONSTANTS";
-import EconomicCalendar from "./EconomicCalendar";
 import StockMarket from "./StockMarket";
-import MarketOverview from "./MarketOverview";
 import InvestmentAlerts from "./InvestmentAlerts";
+import Watchlist from "./Watchlist";
+import GetResult from "./GetResult";
+import ResultCarousel from "../ResultCarousel";
+import SetResult from "./SetResult";
+import InsPrice from "../nw/InsPrice";
+import AAList from "./AAList";
 
 require("./DBView.less");
 
 export default function DBView() {
   const {
-    totalAssets,
-    totalLiabilities,
     gainers,
     losers,
     yhigh,
     ylow,
     volLosers,
     volGainers,
+    headerlist,
   }: any = useContext(DBContext);
   const { appContextLoaded, defaultCurrency }: any = useContext(AppContext);
 
@@ -31,74 +32,51 @@ export default function DBView() {
           <Col span={24}>
             <PageHeader title="Dashboard" />
           </Col>
+          <Col span={24} className="secondary-header">
+            <Row justify="space-between" align="middle">
+              {headerlist.map((item: any) => {
+                const { label, price } = item;
+                return (
+                  <Col key={label}>
+                    {label}:{" "}
+                    <InsPrice
+                      price={price}
+                      currency={defaultCurrency}
+                      previousPrice={0}
+                    />
+                  </Col>
+                );
+              })}
+            </Row>
+          </Col>
         </Row>
       </div>
       <div className="db-container">
         <Fragment>
-          <Row justify="center" gutter={[30, 16]}>
-            <Col xs={24} sm={24} md={18}>
-              <Row gutter={[50, 30]}>
-                <Col xs={24}>
-                  <div className="dd-stat">
-                    <Row gutter={[10, 10]}>
-                      <Col span={24}>
-                        <ItemDisplay
-                          label="Net Worth"
-                          result={totalAssets - totalLiabilities}
-                          currency={defaultCurrency}
-                          pl
-                          info={
-                            "Net Worth equals what you own minus what you owe."
-                          }
-                        />
-                        {!(totalAssets - totalLiabilities) ? (
-                          <a href={ROUTES.GET}>Discover your networth</a>
-                        ) : null}
-                      </Col>
-                      {totalAssets || totalLiabilities ? (
-                        <Col xs={12}>
-                          <ItemDisplay
-                            label="You Own"
-                            result={totalAssets}
-                            currency={defaultCurrency}
-                            info="This is the total valuation of the assets you own."
-                          />
-                        </Col>
-                      ) : null}
-                      {totalAssets || totalLiabilities ? (
-                        <Col xs={12}>
-                          <ItemDisplay
-                            label="You Owe"
-                            result={-totalLiabilities}
-                            currency={defaultCurrency}
-                            info="This is the total valuation of all the money you owe."
-                            pl
-                          />
-                        </Col>
-                      ) : null}
-                    </Row>
-                  </div>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <InvestmentAlerts
-                    gainers={gainers}
-                    losers={losers}
-                    yhigh={yhigh}
-                    ylow={ylow}
-                    volGainers={volGainers}
-                    volLosers={volLosers}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <StockMarket />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <MarketOverview />
-                </Col>
-              </Row>
+          <Row justify="space-around" gutter={[30, 50]}>
+            <ResultCarousel
+              results={[<GetResult key="getr" />, <SetResult key="setr" />]}
+            />
+          </Row>
+          <Row justify="space-around">
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <AAList />
             </Col>
-            <Col xs={24} sm={24} md={6}>
-              <EconomicCalendar />
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <Watchlist />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <InvestmentAlerts
+                gainers={gainers}
+                losers={losers}
+                yhigh={yhigh}
+                ylow={ylow}
+                volGainers={volGainers}
+                volLosers={volLosers}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={10} style={{ marginBottom: "10px" }}>
+              <StockMarket />
             </Col>
           </Row>
         </Fragment>

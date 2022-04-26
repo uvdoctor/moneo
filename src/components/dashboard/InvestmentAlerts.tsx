@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Button, Card, Row } from "antd";
+import { Button, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useRouter } from "next/router";
-import { Typography } from "antd";
 import InvestmentAlertList from "./InvestmentAlertList";
-require("./InvestmentAlerts.less");
+import CardView from "./CardView";
 interface InvestmentAlertsProps {
   gainers: Array<any>;
   losers: Array<any>;
@@ -22,69 +21,53 @@ export default function InvestmentAlerts({
   volGainers,
   volLosers,
 }: InvestmentAlertsProps) {
-  const { Title } = Typography;
   const router = useRouter();
-  const [activeTabkey, setActiveTabkey] = useState<string>("Price");
-
-  const tabList = [
-    {
-      key: "Price",
-      tab: "Price",
-    },
-    {
-      key: "Volume",
-      tab: "Volume",
-    },
-    {
-      key: "52-weeks",
-      tab: "52-weeks",
-    },
-  ];
+  const PRICE_TAG = "Price";
+  const VOLUME_TAG = "Volume";
+  const HIGH_LOW_TAG = "52-weeks";
+  const [activeTag, setActiveTag] = useState<string>(PRICE_TAG);
 
   const contentList: any = {
-    ["52-weeks"]: (
-      <InvestmentAlertList
-        positiveViewLabel="High"
-        negativeViewLabel="Low"
-        footerLabel="Price"
-        isPrice
-        positives={yhigh}
-        negatives={ylow}
-      />
-    ),
-    Price: (
+    [PRICE_TAG]: (
       <InvestmentAlertList
         positiveViewLabel="Gainers"
         negativeViewLabel="Losers"
-        footerLabel="Price"
+        footerLabel="price"
         positives={gainers}
         negatives={losers}
+        isFooterPrice
       />
     ),
-    Volume: (
+    [VOLUME_TAG]: (
       <InvestmentAlertList
         positiveViewLabel="Gainers"
         negativeViewLabel="Losers"
-        footerLabel="Volume"
+        footerLabel="volume"
         positives={volGainers}
         negatives={volLosers}
       />
     ),
-  };
-
-  const onTabChange = (key: string) => {
-    setActiveTabkey(key);
+    [HIGH_LOW_TAG]: (
+      <InvestmentAlertList
+        positiveViewLabel="High"
+        negativeViewLabel="Low"
+        footerLabel="price"
+        isPrice
+        isFooterPrice
+        positives={yhigh}
+        negatives={ylow}
+      />
+    ),
   };
 
   return (
-    <>
-      <Title level={5}>Investment Updates</Title>
-      <Card
-        style={{ width: "100%", height: 600 }}
-        tabList={tabList}
-        activeTabKey={activeTabkey}
-        onTabChange={(key) => onTabChange(key)}>
-        {contentList[activeTabkey]}
+    <CardView
+      title="Investment Updates"
+      tags={Object.keys(contentList)}
+      activeTag={activeTag}
+      activeTagHandler={setActiveTag}>
+      <>
+        {contentList[activeTag]}
         <Row justify="center">
           <Button
             key="more"
@@ -97,7 +80,7 @@ export default function InvestmentAlerts({
             More Details
           </Button>
         </Row>
-      </Card>
-    </>
+      </>
+    </CardView>
   );
 }

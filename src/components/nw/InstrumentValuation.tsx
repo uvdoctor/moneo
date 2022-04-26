@@ -12,7 +12,6 @@ import {
   AssetSubType,
   AssetType,
   InstrumentInput,
-  InsType,
   MCap,
 } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
@@ -21,10 +20,10 @@ import {
   isFund,
   filterRisk,
   filterFixCategory,
-  isStock,
   filterYearHighLow,
   filterLosersGainers,
   filterVolumeGL,
+  filterTabs,
 } from "./nwutils";
 import { AppContext } from "../AppContext";
 import InsPrice from "./InsPrice";
@@ -50,7 +49,7 @@ export default function InstrumentValuation() {
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
   const [totalFilterAmt, setTotalFilterAmt] = useState<number>(0);
   const [totalPrevAmt, setTotalPrevAmt] = useState<number>(0);
-  const { MF, STOCK, BOND, OIT, GOLDB } = TAB;
+  const { MF, STOCK, BOND } = TAB;
 
   const delRecord = (id: string) =>
     setInstruments([
@@ -164,7 +163,6 @@ export default function InstrumentValuation() {
 
   const filterInstrumentsByTabs = () => {
     if (!instruments.length) return;
-    const { REIT, InvIT, ETF } = InsType;
     let filteredData: Array<any> = instruments.filter(
       (instrument: any, index: number) => {
         instrument.key = index;
@@ -183,19 +181,7 @@ export default function InstrumentValuation() {
           data &&
           doesHoldingMatch(instrument, selectedMembers, selectedCurrency)
         ) {
-          if (childTab === TAB.REIT) return data.itype === REIT;
-          if (childTab === OIT) return data.itype === InvIT;
-          if (childTab === TAB.ETF) return data.itype === ETF;
-          if (childTab === MF) return isFund(id) && !data.itype;
-          if (childTab === GOLDB) return data.subt === AssetSubType.GoldB;
-          if (childTab === BOND)
-            return (
-              data.type === AssetType.F &&
-              !isFund(id) &&
-              !data.itype &&
-              data.subt !== AssetSubType.GoldB
-            );
-          if (childTab === STOCK) return isStock(data.subt, id);
+          return filterTabs(data, childTab);
         }
       }
     );

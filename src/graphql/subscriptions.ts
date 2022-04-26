@@ -438,7 +438,10 @@ export const onCreateUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -457,7 +460,10 @@ export const onUpdateUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -476,7 +482,10 @@ export const onDeleteUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -705,45 +714,6 @@ export const onDeleteInExchgPrice = /* GraphQL */ `
       risk
       vol
       prevol
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateInsUserMap = /* GraphQL */ `
-  subscription OnCreateInsUserMap {
-    onCreateInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInsUserMap = /* GraphQL */ `
-  subscription OnUpdateInsUserMap {
-    onUpdateInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInsUserMap = /* GraphQL */ `
-  subscription OnDeleteInsUserMap {
-    onDeleteInsUserMap {
-      id
-      sid
-      type
-      subt
-      user
       createdAt
       updatedAt
     }
@@ -2151,6 +2121,7 @@ export const onCreateUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
       createdAt
       updatedAt
@@ -2186,6 +2157,7 @@ export const onUpdateUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
       createdAt
       updatedAt
@@ -2221,7 +2193,65 @@ export const onDeleteUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateCoachingReq = /* GraphQL */ `
+  subscription OnCreateCoachingReq($owner: String) {
+    onCreateCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateCoachingReq = /* GraphQL */ `
+  subscription OnUpdateCoachingReq($owner: String) {
+    onUpdateCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteCoachingReq = /* GraphQL */ `
+  subscription OnDeleteCoachingReq($owner: String) {
+    onDeleteCoachingReq(owner: $owner) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
       createdAt
       updatedAt
       owner

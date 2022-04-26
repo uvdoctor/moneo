@@ -23,7 +23,8 @@ const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
 });
 
 export default function InsuranceCFChart() {
-  const { selectedCurrency, insurance, selectedMembers }: any = useContext(NWContext);
+  const { selectedCurrency, insurance, selectedMembers }: any =
+    useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
   const fsb = useFullScreenBrowser();
   const [data, setData] = useState<Array<any>>([]);
@@ -31,11 +32,9 @@ export default function InsuranceCFChart() {
 
   useEffect(() => {
     let data: Array<any> = [];
-    if(!insurance.length) return;
+    if (!insurance.length) return;
     for (let holding of insurance) {
-      if (
-        doesHoldingMatch(holding, selectedMembers, selectedCurrency)
-      ) {
+      if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
         const { cashflows, subt } = calculateInsurance(
           holding,
           userInfo?.le,
@@ -86,6 +85,7 @@ export default function InsuranceCFChart() {
           xAxis={getCommonXAxis("Year")}
           meta={getCommonMeta(currency)}
           legend={{ position: "top" }}
+          //@ts-ignore
           color={(column: any) => getColumnColor(column.name)}
           isStack={true}
           tooltip={{
@@ -96,8 +96,7 @@ export default function InsuranceCFChart() {
                 value: toHumanFriendlyCurrency(Math.abs(value), currency),
               };
             },
-          }}
-        >
+          }}>
           <Slider {...getDefaultSliderProps()} />
         </ColumnChart>
       </Col>

@@ -317,7 +317,10 @@ export const getUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -349,7 +352,10 @@ export const listUserInfos = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
+        exp
+        invest
         createdAt
         updatedAt
       }
@@ -383,7 +389,10 @@ export const regByIm = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
+        exp
+        invest
         createdAt
         updatedAt
       }
@@ -417,7 +426,10 @@ export const regByMob = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
+        exp
+        invest
         createdAt
         updatedAt
       }
@@ -451,7 +463,10 @@ export const regByEmail = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
+        exp
+        invest
         createdAt
         updatedAt
       }
@@ -485,7 +500,47 @@ export const regByDob = /* GraphQL */ `
         rp
         dr
         tc
-        le
+        ta
+        tid
+        exp
+        invest
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const regByTaxId = /* GraphQL */ `
+  query RegByTaxId(
+    $tid: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByTaxId(
+      tid: $tid
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        uname
+        email
+        dob
+        im
+        mob
+        notify
+        tax
+        rp
+        dr
+        tc
+        ta
+        tid
+        exp
+        invest
         createdAt
         updatedAt
       }
@@ -698,49 +753,6 @@ export const listInExchgPrices = /* GraphQL */ `
         risk
         vol
         prevol
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInsUserMap = /* GraphQL */ `
-  query GetInsUserMap($id: String!, $user: String!) {
-    getInsUserMap(id: $id, user: $user) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsUserMaps = /* GraphQL */ `
-  query ListInsUserMaps(
-    $id: String
-    $user: ModelStringKeyConditionInput
-    $filter: ModelInsUserMapFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsUserMaps(
-      id: $id
-      user: $user
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        type
-        subt
-        user
         createdAt
         updatedAt
       }
@@ -1658,6 +1670,7 @@ export const getUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
       createdAt
       updatedAt
@@ -1699,7 +1712,53 @@ export const listUserInss = /* GraphQL */ `
           lowt
           type
           subt
+          itype
         }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCoachingReq = /* GraphQL */ `
+  query GetCoachingReq($id: ID!) {
+    getCoachingReq(id: $id) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCoachingReqs = /* GraphQL */ `
+  query ListCoachingReqs(
+    $filter: ModelCoachingReqFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCoachingReqs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        dur
+        text
+        page
+        type
+        status
+        payment
+        curr
+        paid
+        pt
         createdAt
         updatedAt
         owner

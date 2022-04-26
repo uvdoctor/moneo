@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { calcInd, calcType, calcSubType } = require("./calculate");
+const { calcInd, calcType, calcSubType, calcPrevPrice } = require("./calculate");
 const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
 
 const getData = async (
@@ -26,9 +26,16 @@ const getData = async (
       Object.keys(schema).map((key) => {
         switch (key) {
           case "price":
+          case "pe":
+          case "pb":
             return (schema[key] = record[codes[key]] ? (Math.round(record[codes[key]] * 100) / 100) : 0);
           case "prev":
-            return (schema[key] = (record[codes[key]] ? parseFloat(record[codes[key]]) : 0));
+            const prev = record[codes["chg"]] ? calcPrevPrice(schema.price, parseFloat(record[codes["chg"]])) : 0;
+            if(exchg === "NSE") schema[key] = prev;
+            if(exchg === "BSE") {
+              schema[key] = record[codes[key]] ? parseFloat(record[codes[key]]) : 0;
+            }
+            return;
           case "name":
             return (schema[key] = record[codes[key]].trim());
           case "yhigh":
@@ -37,8 +44,8 @@ const getData = async (
             return (schema[key] = Math.round(record[codes[key]] * 100) / 100);
           case "ind":
             return (schema[key] = calcInd(record[codes[key]]));
-          default:
-            schema[key] = record[codes[key]];
+          case "id":
+            return schema[key] = record[codes[key]].trim();
         }
       });
       schema.exchg = exchg;

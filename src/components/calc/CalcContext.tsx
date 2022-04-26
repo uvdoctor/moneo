@@ -87,8 +87,6 @@ function CalcContextProvider({
   const [startYear, setStartYear] = useState<number>(
     goal.type === GoalType.FF && userInfo
       ? new Date(userInfo.dob).getFullYear()
-      : isPublicCalc
-      ? new Date().getFullYear()
       : goal.sy
   );
   const [startMonth, setStartMonth] = useState<number>(
@@ -474,7 +472,7 @@ function CalcContextProvider({
           centered
           title={
             <Fragment>
-              <WarningOutlined /> Detected Changes
+              <WarningOutlined /> Detected changes
             </Fragment>
           }
           onOk={() => handleSubmit()}
@@ -483,7 +481,7 @@ function CalcContextProvider({
           cancelText="No"
           destroyOnClose
           visible={showConfirmationModal}>
-          <p>Do You Wish to Save them?</p>
+          <p>Do you wish to save the changes?</p>
         </Modal>
       )}
     </CalcContext.Provider>

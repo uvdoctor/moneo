@@ -4,10 +4,10 @@ import { useScroll } from "react-browser-hooks";
 import { MenuOutlined, SearchOutlined } from "@ant-design/icons";
 import MainMenu from "./MainMenu";
 import Logo from "./Logo";
-import Search from "./Search";
 
 require("./Nav.less");
 import FSToggle from "./FSToggle";
+import SearchInput from "./SearchInput";
 
 interface NavProps {
   onBack?: Function | undefined | null;
@@ -74,7 +74,7 @@ export default function Nav({
             onClose={onCloseSearchDrawer}
             visible={showSearchDrawer}
           >
-            <Search inline />
+            <SearchInput />
           </Drawer>
         </Fragment>
       )}

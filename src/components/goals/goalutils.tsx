@@ -2,7 +2,7 @@ import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
-import { getRangeFactor } from "../utils";
+import { getRangeFactor, removeFromArray } from "../utils";
 import {
   faUserGraduate,
   faShoppingCart,
@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Storage } from "aws-amplify";
 import { BuyType } from "../../api/goals";
+import { calculateCFs } from "./cfutils";
 
 export const getGoalsList = async () => {
   try {
@@ -36,6 +37,7 @@ export const getGoalsList = async () => {
 };
 
 export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
+  console.log("Going to create goal: ", goal);
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.createGoal, { input: goal })
@@ -126,8 +128,8 @@ const createFFGoalInput = (currency: string) => {
       emi: 3000 * rf,
       ry: nowYear,
       per: 3,
-      dur: 85,
-      rate: 65,
+      dur: 90,
+      rate: 60,
       type: APIt.LoanType.A,
       pmi: 2000 * rf,
     },
@@ -184,6 +186,25 @@ const createFFGoalInput = (currency: string) => {
       p2p: 8 + irDiff,
     },
   } as APIt.CreateGoalInput;
+};
+
+export const createDefaultFFGoalForUser = (
+  birthYear: number,
+  totalAssets: number,
+  riskProfile: APIt.RiskProfile,
+  monthlyExpense: number,
+  monthlyInvestment: number,
+  currency: string
+) => {
+  let goal: APIt.CreateGoalInput = createFFGoalInput(currency);
+  goal.sy = birthYear;
+  goal.ra = totalAssets;
+  goal.rachg = monthlyInvestment;
+  goal.tdli = monthlyExpense * 12;
+  if (goal?.loan) goal.loan.emi = monthlyExpense * 6;
+  goal.rp = riskProfile;
+  goal.tbr = 0;
+  return goal;
 };
 
 const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
@@ -359,4 +380,55 @@ export const goalImgStorage = {
       return curGoal.id !== goalId && curGoal.img === goalImgKey;
     });
   },
+};
+
+export const loadStateFromUserInfo = (
+  userInfo: any,
+  g: APIt.CreateGoalInput
+) => {
+  if (!userInfo) return;
+  g.sy = new Date(userInfo.dob).getFullYear();
+  g.rp = userInfo.rp;
+  g.manual =
+    userInfo.tax === APIt.TaxLiability.NIL ||
+    userInfo.tax === APIt.TaxLiability.L
+      ? 0
+      : 1;
+};
+
+export const loadAllGoals = async (userInfo: any) => {
+  let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList();
+  if (!goals || !goals.length) {
+    return { ffGoal: null, goals: [], allCFs: null };
+  }
+  let allCFs: any = {};
+  let ffGoal: any = null;
+  let ffGoalId = "";
+  goals?.forEach((g) => {
+    if (g.type === APIt.GoalType.FF) {
+      ffGoal = g;
+      loadStateFromUserInfo(userInfo, g);
+      ffGoalId = g.id as string;
+    } else {
+      let result: any = calculateCFs(
+        null,
+        g,
+        getDuration(
+          g.sa as number,
+          g.sy,
+          g.sm as number,
+          g.ey,
+          g.manual,
+          g.loan?.per as number,
+          g.loan?.ry as number,
+          g.loan?.dur as number,
+          g.type === APIt.GoalType.E && (g?.loan?.per as number) > 0,
+          g.achg as number
+        )
+      );
+      allCFs[g.id as string] = result.cfs;
+    }
+  });
+  removeFromArray(goals, "id", ffGoalId);
+  return { ffGoal, goals, allCFs };
 };

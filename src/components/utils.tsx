@@ -907,12 +907,3 @@ export const getCustomDate = (num: any) => {
   const awsdate = `${year}-${getStr(month)}-${getStr(date)}`;
   return awsdate;
 };
-
-export const getCryptoPrevPrice = (id: string, currency: string, fxRates: any) => {
-  return getPrice(id, "CC", true)
-    .then((rate) => {
-      if (!rate) return 0;
-      return rate * getFXRate(fxRates, currency);
-    })
-    .catch(() => 0);
-};

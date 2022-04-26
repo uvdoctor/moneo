@@ -394,7 +394,10 @@ export const createUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -416,7 +419,10 @@ export const updateUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -438,7 +444,10 @@ export const deleteUserInfo = /* GraphQL */ `
       rp
       dr
       tc
-      le
+      ta
+      tid
+      exp
+      invest
       createdAt
       updatedAt
     }
@@ -1648,6 +1657,7 @@ export const createUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
       createdAt
       updatedAt
@@ -1686,6 +1696,7 @@ export const updateUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
       createdAt
       updatedAt
@@ -1724,7 +1735,52 @@ export const deleteUserIns = /* GraphQL */ `
         lowt
         type
         subt
+        itype
       }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createCoachingReq = /* GraphQL */ `
+  mutation CreateCoachingReq(
+    $input: CreateCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    createCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteCoachingReq = /* GraphQL */ `
+  mutation DeleteCoachingReq(
+    $input: DeleteCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    deleteCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
       createdAt
       updatedAt
       owner
@@ -2030,54 +2086,6 @@ export const deleteInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const createInsUserMap = /* GraphQL */ `
-  mutation CreateInsUserMap(
-    $input: CreateInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    createInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsUserMap = /* GraphQL */ `
-  mutation UpdateInsUserMap(
-    $input: UpdateInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    updateInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsUserMap = /* GraphQL */ `
-  mutation DeleteInsUserMap(
-    $input: DeleteInsUserMapInput!
-    $condition: ModelInsUserMapConditionInput
-  ) {
-    deleteInsUserMap(input: $input, condition: $condition) {
-      id
-      sid
-      type
-      subt
-      user
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createAllIndices = /* GraphQL */ `
   mutation CreateAllIndices(
     $input: CreateAllIndicesInput!
@@ -2369,6 +2377,28 @@ export const deleteNpsPrice = /* GraphQL */ `
       risk
       createdAt
       updatedAt
+    }
+  }
+`;
+export const updateCoachingReq = /* GraphQL */ `
+  mutation UpdateCoachingReq(
+    $input: UpdateCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    updateCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

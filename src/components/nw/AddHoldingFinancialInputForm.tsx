@@ -1,281 +1,44 @@
-import React, { useReducer, useContext, useState, useEffect } from "react";
-import { Row, Col, Button, Input, AutoComplete, Spin } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { getInstrumentDataWithKey } from "./nwutils";
-import { NWContext, TAB } from "./NWContext";
-import { AssetSubType, InsType } from "../../api/goals";
+import React, { useContext, useEffect, useState } from "react";
+import { Row, Col } from "antd";
+import { NWContext } from "./NWContext";
+import Search from "../Search";
 
-interface InstrumentsData {
-  listInExchgPrices: [];
-  listInBondPrices: [];
-  listInmfPrices: [];
-}
-
-interface Holding {
-  qty: number;
-  name: string;
-  sid: string;
-  fId: string;
-  id: string;
-  curr: string;
-  subt: string;
-  exchg: string;
-  type: string;
-}
-
-interface DataState {
-  assetType: string;
-  price: number;
-  type: string;
-  instrumentData: InstrumentsData;
-  suggestions: [];
-  buttonState: boolean;
-}
-interface OptionTableMap {
-  [Stock: string]: string;
-}
-const optionTableMap: OptionTableMap = {
-  Stocks: "listInExchgPrices",
-  "Gold Bonds": "listInExchgPrices",
-  ETFs: "listInExchgPrices",
-  Bonds: "listInBondPrices",
-  "Mutual Funds": "listInmfPrices",
-  REITs: "listInExchgPrices",
-  "Other Investments": "listInExchgPrices",
-} as const;
-
-const holdingReducer = (
-  holdingState: Holding,
-  { type, data }: { type: string; data: any }
-) => {
-  switch (type) {
-    case "reset":
-      return {
-        ...holdingState,
-        ...{
-          qty: 0,
-          name: "",
-          fId: "",
-          id: "",
-          sid: "",
-          curr: "INR",
-          subt: "",
-          exchg: "",
-          type: "",
-        },
-      };
-    default:
-      return {
-        ...holdingState,
-        ...data,
-      };
-  }
-};
-const dataReducer = (
-  dataState: DataState,
-  { type, data }: { type: string; data: any }
-) => {
-  switch (type) {
-    case "reset":
-      return {
-        ...dataState,
-        ...{
-          instrumentData: {},
-          suggestions: [],
-          buttonState: false,
-          assetType: "",
-          type: "",
-          price: 0,
-        },
-      };
-    default:
-      return {
-        ...dataState,
-        ...data,
-      };
-  }
-};
 export default function HoldingInput(props: any) {
   const { childTab }: any = useContext(NWContext);
-  const { STOCK, GOLDB, BOND, REIT, OIT, ETF } = TAB;
-  const [showSpinner, setShowSpinner] = useState<boolean>(false);
-  const [rawDetails, setRawDetails] = useState<{}>({});
-  const [holdingState, dispatch] = useReducer(holdingReducer, {
-    qty: 0,
-    name: "",
-    fId: "",
-    id: "",
-    sid: "",
-    curr: "INR",
-    subt: "",
-    exchg: "",
-    type: "",
-  });
-  const { qty } = holdingState;
-  const [dataState, dispatchDataState] = useReducer(dataReducer, {
-    assetType: "",
-    price: 0,
-    type: "",
-    instrumentData: {
-      listInExchgPrices: [],
-      listInBondPrices: [],
-      listInmfPrices: [],
-    },
-    suggestions: [],
-    buttonState: true,
-  });
-  const { instrumentData, suggestions, buttonState, assetType } = dataState;
+  const [searchType, setSearchType] = useState<string>("");
 
-  const onSearch = (searchText: any) => {
-    const data = instrumentData[optionTableMap[assetType]]
-      ? instrumentData[optionTableMap[assetType]].filter(
-          (item: { value: string }) =>
-            item.value.toLowerCase().includes(searchText.toLowerCase())
-        )
-      : [];
-    dispatchDataState({ type: "formUpdate", data: { suggestions: data } });
-  };
-  const addToHoldings = () => {
-    props.addToHoldings(holdingState, rawDetails);
-    dispatch({ type: "reset", data: {} });
-  };
-  const getFilters = (option: string) => {
-    switch (option) {
-      case GOLDB:
-        return { prop: "subt", value: AssetSubType.GoldB };
-      case ETF:
-        return { prop: "itype", value: InsType.ETF };
-      case REIT:
-        return { prop: "itype", value: InsType.REIT };
-      case OIT:
-        return { prop: "itype", value: InsType.InvIT };
-      case STOCK:
-        return { prop: "subt", value: AssetSubType.S };
-      case BOND:
-        return {
-          prop: "subt",
-          value: [AssetSubType.GB, AssetSubType.GBO, AssetSubType.CB],
-        };
-      default:
-        return null;
-    }
-  };
-  const updateOptions = async (option: string) => {
-    setShowSpinner(true);
-    let data = await getInstrumentDataWithKey(
-      optionTableMap[option],
-      getFilters(option)
-    );
-    if (option === STOCK)
-      data = data.filter((item: any) => item.itype === null);
-    const fetchedInstrumentData = Object.assign(instrumentData, {
-      [optionTableMap[option]]: data,
-    });
-    // required value prop to render in auto suggestions
-    data.forEach(
-      (item: { value: string; name: string }) => (item.value = item.name)
-    );
-    dispatch({ type: "formUpdate", data: { name: "", qty: 0 } });
-    dispatchDataState({
-      type: "dataUpdate",
-      data: {
-        instrumentData: Object.assign({}, fetchedInstrumentData),
-        suggestions: data,
+  const addToHoldings = (resp: any) => {
+    const { id, sid, type, subt, exchg } = resp;
+    props.addToHoldings(
+      {
+        qty: 0,
+        fId: "",
+        id,
+        sid,
+        curr: "INR",
+        exchg,
+        subt,
+        type,
       },
-    });
-    setShowSpinner(false);
+      { [id]: resp }
+    );
   };
 
-  const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["qty", "name", "id"];
-    const toValidateHoldingState = Object.assign(
-      {},
-      holdingState,
-      dataState,
-      data
-    );
-    const isAllItemFiled = toValidateArr.every((item) => {
-      return (
-        toValidateHoldingState[item]
-      );
-    });
-    dispatchDataState({
-      type: "dataUpdate",
-      data: { buttonState: !isAllItemFiled },
-    });
-  };
-  const changeAssetType = (option: string) => {
-    const data = { assetType: option };
-    dispatchDataState({ type: "formUpdate", data });
-    updateOptions(option);
-    updateButtonStatus(data);
-  };
   useEffect(() => {
-    dispatchDataState({ type: "reset", data: {} });
-    changeAssetType(childTab);
+    setSearchType(childTab);
   }, [childTab]);
 
-  return !showSpinner ? (
-    <Row gutter={[16, 16]}>
+  return (
+    <Row gutter={[10, 10]}>
       <Col flex={8}>
-        <label htmlFor="name">Name</label>
-        <br />
-        <AutoComplete
-          id="name"
-          options={suggestions}
-          style={{ width: 230 }}
-          onChange={(option) => {
-            const data = { name: option };
-            dispatch({ type: "formUpdate", data });
-            dispatchDataState({
-              type: "dataUpdate",
-              data: { buttonState: true },
-            });
+        <Search
+          width="300px"
+          searchType={searchType}
+          onClick={(resp: any) => {
+            addToHoldings(resp);
           }}
-          onSelect={(option, obj) => {
-            const { price, id, type, sid, exchg, subt } = obj;
-            dispatch({
-              type: "formUpdate",
-              data: { name: option, id, type, subt, sid, exchg },
-            });
-            dispatchDataState({ type: "formUpdate", data: { price } });
-            setRawDetails({ [id]: obj });
-            updateButtonStatus({ name: option, id });
-          }}
-          value={holdingState.name}
-          onSearch={onSearch}
-        />
-      </Col>
-
-      <Col flex={3}>
-        <label htmlFor="qty">Quantity</label> <br />
-        <Input
-          id="qty"
-          value={qty}
-          placeholder="Quantity"
-          min={0}
-          style={{ width: 80 }}
-          onChange={(e) => {
-            const data = { qty: Number(e.target.value) };
-            dispatch({ type: "formUpdate", data });
-            updateButtonStatus(data);
-          }}
-          type="number"
-        />
-      </Col>
-
-      <Col flex={2}>
-        <label>&nbsp;</label> <br />
-        <Button
-          type="default"
-          onClick={addToHoldings}
-          disabled={buttonState}
-          shape={"circle"}
-          icon={<PlusOutlined />}
         />
       </Col>
     </Row>
-  ) : (
-    <Spin>Loading...</Spin>
   );
 }

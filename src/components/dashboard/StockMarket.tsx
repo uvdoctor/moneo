@@ -41,7 +41,7 @@ export default function StockMarket() {
 
   return (
     <>
-      <Title level={5}>Stock Market</Title>
+      <Title level={5}>Stock Market Overview</Title>
       <div ref={scriptParent}></div>
     </>
   );

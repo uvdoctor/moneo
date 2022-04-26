@@ -4,7 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
-
+const PRICE_TEMPLATE_NAME = "pricealerts";
+const WATCH_TEMPLATE_NAME = "watchalerts";
 const resolved = (fileName) => path.resolve(__dirname, fileName)
 const senderAddress = "noreply <no-reply@comms.moneo.in>";
 let preCompiledTemplates = {};
@@ -51,6 +52,13 @@ const sendEmail = async ({ templateName, email, values }) => {
   console.log(path.resolve("./email.css"));
   console.log(path.resolve("./partials"));
   registerPartials(partialsPath);
+  handlebars.registerHelper("title", function (templateName) {
+    switch (templateName) {
+      case PRICE_TEMPLATE_NAME: return "Investment Valuation";
+      case WATCH_TEMPLATE_NAME: return "Buy / Sell Alerts";
+      default: return "";
+    }
+  });
   console.log(templateName, email, values);
   const [html, text, subject] = await Promise.all([
     renderTemplate(templateName, "html", values),
@@ -88,4 +96,4 @@ const sendEmail = async ({ templateName, email, values }) => {
   await performSend(request);
 };
 
-module.exports = { sendEmail };
+module.exports = { sendEmail, PRICE_TEMPLATE_NAME, WATCH_TEMPLATE_NAME };
