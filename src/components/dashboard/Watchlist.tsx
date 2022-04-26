@@ -16,11 +16,11 @@ import { isISIN } from "../nw/valuationutils";
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
   const { watchlist, setWatchlist, saveHoldings, fxRates }: any = useContext(DBContext);
-  const { STOCK, MF, BOND, ETF, GOLDB, REIT, OIT, CRYPTO } = TAB;
+  const { STOCK, MF, ETF, REIT, OIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>("Index");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
-  const typesList = ["Index", STOCK, MF, BOND, GOLDB, ETF, REIT, OIT, CRYPTO];
+  const typesList = ["Index", STOCK, MF, ETF, REIT, OIT, CRYPTO];
 
   const loadData = () => {
     if (!watchlist.length) return;

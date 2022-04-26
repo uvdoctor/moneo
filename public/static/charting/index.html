@@ -24,18 +24,20 @@
 				var widget = window.tvWidget = new TradingView.widget({
 					// debug: true, // uncomment this line to see Library errors and warnings in the console
 					fullscreen: true,
-					symbol: getParameterByName('code') || 'AAPL',
+					//symbol: 'AAPL',
+					symbol: getParameterByName('code'),
 					interval: '1D',
 					container: "tv_chart_container",
 
 					//	BEWARE: no trailing slash is expected in feed URL
-					datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo-feed-data.tradingview.com"),
+					datafeed: new Datafeeds.UDFCompatibleDatafeed(window.location.protocol + '//' + window.location.host + '/api/tradingview'),
+					//datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo-feed-data.tradingview.com"),
 					library_path: "charting_library/",
 					locale: getParameterByName('lang') || "en",
 
 					disabled_features: ["use_localstorage_for_settings"],
 					enabled_features: ["study_templates"],
-					charts_storage_url: 'https://saveload.tradingview.com',
+					charts_storage_url: '',
 					charts_storage_api_version: "1.1",
 					client_id: 'tradingview.com',
 					user_id: 'public_user_id',
