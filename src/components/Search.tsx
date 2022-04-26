@@ -88,7 +88,7 @@ export default function Search({
       id="search"
       options={suggestions}
       onChange={(option) => setSearchText(option)}
-      onSelect={(_option, obj) => {
+      onSelect={(_option: any, obj: any) => {
         let resp = obj;
         if (searchType === CRYPTO) {
           resp = { id: obj.code, name: obj.name };
