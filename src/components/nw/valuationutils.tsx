@@ -460,10 +460,7 @@ export const priceInstruments = async (
     [RiskProfile.A]: initRiskAttribs(),
     [RiskProfile.VA]: initRiskAttribs(),
   };
-  let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  if (!cachedData) {
-    cachedData = await initializeInsData(instruments);
-  }
+  let cachedData = await initializeInsData(instruments);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
@@ -1183,7 +1180,6 @@ export const calculateAlerts = async (
   currency: string
 ) => {
   if (insHoldings?.ins?.length) {
-    if (!simpleStorage.get(LOCAL_INS_DATA_KEY))
       await initializeInsData(insHoldings?.ins);
   }
   if (holdings?.nps?.length) {
