@@ -1,31 +1,35 @@
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-const {
-  COACHING_CONFIRMATION_TEMPLATE_NAME,
-  sendEmail
-} = require("../../moneoutilslayer/lib/nodejs/sendMail/EmailSender");
-
-const {
- getTabledata
-} = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-// const { sendEmail } = require("/opt/nodejs/sendMail/EmailSender");
+// const {
+//   COACHING_CONFIRMATION_TEMPLATE_NAME,
+//   sendEmail,
+// } = require("../../moneoutilslayer/lib/nodejs/sendMail/EmailSender");
+// const {
+//   getTabledata,
+//   getTableNameFromInitialWord,
+// } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+const { sendEmail, COACHING_CONFIRMATION_TEMPLATE_NAME } = require("/opt/nodejs/sendMail/EmailSender");
+const { getTabledata, getTableNameFromInitialWord } = require('/opt/nodejs/databaseUtils');
 
 const processData = (records) => {
   return new Promise(async (resolve, reject) => {
+    let userinfodata;
     for (let item of records) {
       if (item.eventName === "INSERT") {
         const data = item.dynamodb.NewImage;
         const user = data.owner.S;
         const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
-        const userinfodata = await getTabledata(
+        const result = await getTabledata(
           userInfoTableName,
           "uname, email",
-          `owner = :owner`,
-          { ":owner": user }
+          `uname = :uname`,
+          { ":uname": user }
         );
+        userinfodata = result.find((item) => item.uname === user);
         console.log(userinfodata);
       }
+      if (!userinfodata) return;
       try {
         const message = await sendEmail({
           templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
@@ -42,5 +46,5 @@ const processData = (records) => {
 };
 
 exports.handler = async (event) => {
-  return await processData(JSON.parse(event.Records));
+  return await processData(event.Records);
 };
