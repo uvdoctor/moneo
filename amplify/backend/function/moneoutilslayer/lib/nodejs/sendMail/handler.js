@@ -10,29 +10,39 @@ const valuation = toHumanFriendlyCurrency(10000000, "INR");
 const buy = [{ name: "HDFC" }, { name: "ICICI" }];
 const sell = [{ name: "IDFC" }, { name: "SBI" }];
 
-sendEmail({
-  templateName: "pricealerts",
-  email: 'mehzabeen1526@gmail.com',
-  values: {
-    gainers: gainers,
-    losers: losers,
-    yhigh: yhigh,
-    ylow: ylow,
-    valuation: valuation,
-    chgAmount: chgAmount,
-    chgImpact: false,
-    metal: metal
-  },
-}).then((data) => {
-  console.log("Compeleted price alert: ", data);
-});
+// sendEmail({
+//   templateName: "pricealerts",
+//   email: 'mehzabeen1526@gmail.com',
+//   values: {
+//     gainers: gainers,
+//     losers: losers,
+//     yhigh: yhigh,
+//     ylow: ylow,
+//     valuation: valuation,
+//     chgAmount: chgAmount,
+//     chgImpact: false,
+//     metal: metal
+//   },
+// }).then((data) => {
+//   console.log("Compeleted price alert: ", data);
+// });
+
+// sendEmail({
+//   templateName: "watchalerts",
+//   email: 'mehzabeen1526@gmail.com',
+//   values: {
+//     buy: buy,
+//     sell: sell
+//   },
+// }).then((data) => {
+//   console.log("Compeleted watch alert: ", data);
+// });
 
 sendEmail({
-  templateName: "watchalerts",
+  templateName: "coachingconfirmation",
   email: 'mehzabeen1526@gmail.com',
   values: {
-    buy: buy,
-    sell: sell
+   
   },
 }).then((data) => {
   console.log("Compeleted watch alert: ", data);

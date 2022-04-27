@@ -6,6 +6,7 @@ const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
 const PRICE_TEMPLATE_NAME = "pricealerts";
 const WATCH_TEMPLATE_NAME = "watchalerts";
+const COACHING_CONFIRMATION_TEMPLATE_NAME = 'coachingconfirmation';
 const resolved = (fileName) => path.resolve(__dirname, fileName)
 const senderAddress = "noreply <no-reply@comms.moneo.in>";
 let preCompiledTemplates = {};
@@ -56,6 +57,7 @@ const sendEmail = async ({ templateName, email, values }) => {
     switch (templateName) {
       case PRICE_TEMPLATE_NAME: return "Investment Valuation";
       case WATCH_TEMPLATE_NAME: return "Buy / Sell Alerts";
+      case COACHING_CONFIRMATION_TEMPLATE_NAME: return "Received your coaching request";
       default: return "";
     }
   });
@@ -96,4 +98,4 @@ const sendEmail = async ({ templateName, email, values }) => {
   await performSend(request);
 };
 
-module.exports = { sendEmail, PRICE_TEMPLATE_NAME, WATCH_TEMPLATE_NAME };
+module.exports = { sendEmail, PRICE_TEMPLATE_NAME, WATCH_TEMPLATE_NAME, COACHING_CONFIRMATION_TEMPLATE_NAME };

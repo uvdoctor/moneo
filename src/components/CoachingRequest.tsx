@@ -93,11 +93,10 @@ export default function CoachingRequest() {
           </span>
           <Divider />
           <TextArea
-            rows={4}
+            rows={6}
             placeholder="What do you wish to ask?"
             value={text}
             onChange={(e: any) => setText(e.currentTarget.value)}
-            maxLength={6}
           />
         </Modal>
       )}
