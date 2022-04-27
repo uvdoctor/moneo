@@ -6,7 +6,7 @@ const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 const client = new SESClient({ apiVersion: "2010-12-01" });
 const PRICE_TEMPLATE_NAME = "pricealerts";
 const WATCH_TEMPLATE_NAME = "watchalerts";
-const COACHING_CONFIRMATION_TEMPLATE_NAME = 'coachingconfirmation';
+const COACHING_CONFIRMATION_TEMPLATE_NAME = 'coachingreq';
 const resolved = (fileName) => path.resolve(__dirname, fileName)
 const senderAddress = "noreply <no-reply@comms.moneo.in>";
 let preCompiledTemplates = {};
