@@ -59,6 +59,7 @@ export default function InstrumentManualInput({
             <Col>
               <Badge
                 count={instrument.sid}
+                overflowCount={100000000}
                 style={{
                   color: COLORS.WHITE,
                   backgroundColor: getColourForAssetType(
