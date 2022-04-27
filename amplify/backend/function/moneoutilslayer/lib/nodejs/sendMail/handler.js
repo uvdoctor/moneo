@@ -38,17 +38,17 @@ const sell = [{ name: "IDFC" }, { name: "SBI" }];
 //   console.log("Compeleted watch alert: ", data);
 // });
 
-// sendEmail({
-//   templateName: "coachingreq",
-//   email: 'mehzabeen1526@gmail.com',
-//   values: {
-//    owner: false,
-//    mob: 82685520515,
-//    email: "www.google.com",
-//    text:'Hii',
-//    duration: 30,
-//    user: "mehza5454"
-//   },
-// }).then((data) => {
-//   console.log("Compeleted watch alert: ", data);
-// });
+sendEmail({
+  templateName: "coachingreq",
+  email: 'mehzabeen1526@gmail.com',
+  values: {
+   owner: false,
+   mob: 82685520515,
+   email: "www.google.com",
+   text:'Hii',
+   duration: 30,
+   user: "mehza5454"
+  },
+}).then((data) => {
+  console.log("Compeleted watch alert: ", data);
+});

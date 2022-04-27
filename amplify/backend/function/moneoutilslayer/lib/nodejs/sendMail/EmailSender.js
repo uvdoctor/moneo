@@ -57,7 +57,8 @@ const sendEmail = async ({ templateName, email, values }) => {
     switch (templateName) {
       case PRICE_TEMPLATE_NAME: return "Investment Valuation";
       case WATCH_TEMPLATE_NAME: return "Buy / Sell Alerts";
-      case COACHING_CONFIRMATION_TEMPLATE_NAME: return "Received your coaching request";
+      case COACHING_CONFIRMATION_TEMPLATE_NAME:
+        return values.owner ? "Received coaching request" : "Received your coaching request";
       default: return "";
     }
   });

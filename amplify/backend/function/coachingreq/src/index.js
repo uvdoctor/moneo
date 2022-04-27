@@ -49,7 +49,7 @@ const processData = (records) => {
           // to owner
           const ownerMessage = await sendEmail({
             templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
-            email: ["mehzabeen1526@gmail.com", "emailumangdoctor@gmail.com" ],
+            email: "emailumangdoctor@gmail.com",
             values: {
               user,
               email,
