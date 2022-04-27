@@ -39,7 +39,7 @@ const sell = [{ name: "IDFC" }, { name: "SBI" }];
 // });
 
 sendEmail({
-  templateName: "coachingconfirmation",
+  templateName: "coachingreq",
   email: 'mehzabeen1526@gmail.com',
   values: {
    
