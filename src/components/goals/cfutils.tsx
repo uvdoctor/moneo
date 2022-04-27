@@ -893,7 +893,7 @@ const calculateAllocation = (
   let fixedIncomeAsset = aa.mtb;
   let goldAsset = ffGoal.ccy === "INR" ? aa.goldb : aa.gold;
   remPer = allocate(
-    allocateTEBonds ? fixedIncomeTEAsset : fixedIncomeAsset,
+    aa.ltdep,
     i,
     Math.round((mustAllocation.bonds[y] / cs) * 100),
     remPer
@@ -901,7 +901,13 @@ const calculateAllocation = (
   remPer = allocate(
     fixedIncomeAsset,
     i,
-    Math.round((tryBA / cs) * 100),
+    Math.round(((0.5 * tryBA) / cs) * 100),
+    remPer
+  );
+  remPer = allocate(
+    allocateTEBonds ? fixedIncomeTEAsset : fixedIncomeAsset,
+    i,
+    Math.round(((0.5 * tryBA) / cs) * 100),
     remPer
   );
   if (!remPer) return;

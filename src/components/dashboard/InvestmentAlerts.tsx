@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Row } from "antd";
 import { ROUTES } from "../../CONSTANTS";
 import { useRouter } from "next/router";
 import InvestmentAlertList from "./InvestmentAlertList";
 import CardView from "./CardView";
+import { DBContext } from "./DBContext";
 interface InvestmentAlertsProps {
   gainers: Array<any>;
   losers: Array<any>;
@@ -26,6 +27,7 @@ export default function InvestmentAlerts({
   const VOLUME_TAG = "Volume";
   const HIGH_LOW_TAG = "52-weeks";
   const [activeTag, setActiveTag] = useState<string>(PRICE_TAG);
+  const { instruments }: any = useContext(DBContext);
 
   const contentList: any = {
     [PRICE_TAG]: (
@@ -77,7 +79,9 @@ export default function InvestmentAlerts({
               e.preventDefault();
               router.push(`${ROUTES.GET}?show=fin`);
             }}>
-            More Details
+            {instruments?.length
+              ? "More Details"
+              : "Input investments for daily updates"}
           </Button>
         </Row>
       </>

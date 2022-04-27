@@ -34,8 +34,17 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
   const getWatchIns = async () => {
     let watchdata: any = {};
     if (record.subt === AssetSubType.C) {
-      watchdata.price = await getCryptoRate(record.id, defaultCurrency, fxRates);
-      watchdata.prev = await getCryptoRate(record.id, defaultCurrency, fxRates, true);
+      watchdata.price = await getCryptoRate(
+        record.id,
+        defaultCurrency,
+        fxRates
+      );
+      watchdata.prev = await getCryptoRate(
+        record.id,
+        defaultCurrency,
+        fxRates,
+        true
+      );
       watchdata.name = record.sid;
     } else {
       watchdata = insData && insData[record.id] ? insData[record.id] : null;
@@ -58,20 +67,24 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
             currency={defaultCurrency}
             previousPrice={watchIns?.prev ? watchIns?.prev : null}
           />
-          <Tooltip title="Buy / Sell alerts">
+          <Row justify="end">
+            <Tooltip title="Buy / Sell alerts">
+              <Button
+                type="link"
+                icon={<AlertOutlined />}
+                onClick={() => setShowThresholds(!showThresholds)}
+                style={{
+                  color: showThresholds ? COLORS.GREEN : COLORS.DEFAULT,
+                }}
+              />
+            </Tooltip>
             <Button
               type="link"
-              icon={<AlertOutlined />}
-              onClick={() => setShowThresholds(!showThresholds)}
-              style={{ color: showThresholds ? COLORS.GREEN : COLORS.DEFAULT }}
+              icon={<DeleteOutlined />}
+              onClick={() => onDelete(record.id)}
+              danger
             />
-          </Tooltip>
-          <Button
-            type="link"
-            icon={<DeleteOutlined />}
-            onClick={() => onDelete(record.id)}
-            danger
-          />
+          </Row>
         </Col>
       </Row>
       {showThresholds ? (

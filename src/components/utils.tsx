@@ -2,7 +2,12 @@ import { Menu } from "antd";
 import Link from "next/link";
 import simpleStorage from "simplestorage.js";
 import { RiskProfile, TaxLiability } from "../api/goals";
-import { ASSET_CATEGORIES, COLORS, LOCAL_CRYPTOLIST_DATA_KEY, LOCAL_DATA_TTL } from "../CONSTANTS";
+import {
+  ASSET_CATEGORIES,
+  COLORS,
+  LOCAL_CRYPTOLIST_DATA_KEY,
+  LOCAL_DATA_TTL,
+} from "../CONSTANTS";
 
 export function getCurrencyList() {
   return {
@@ -240,7 +245,7 @@ export const getAllAssetDetails = () => {
       cat: "Cash",
     },
     ltdep: {
-      label: "Retirement Funds",
+      label: "Long-term Deposits & Funds",
       color: "#82d949",
       cat: "Cash",
     },
@@ -489,8 +494,7 @@ export const menuItem = (
   <Menu.Item
     key={key ? key : path}
     icon={icon ? icon : null}
-    className={multiCol ? "multi-col-submenu" : ""}
-  >
+    className={multiCol ? "multi-col-submenu" : ""}>
     {selectedKey !== path ? (
       <Link href={path}>
         <a>{name}</a>
@@ -814,7 +818,11 @@ export const getFXData = async (token: string) => {
   return defaultFXRates;
 };
 
-export const getPrice = async (id: string, type: string, isPrev: boolean = false) => {
+export const getPrice = async (
+  id: string,
+  type: string,
+  isPrev: boolean = false
+) => {
   let rate = simpleStorage.get(isPrev ? `${id}-prev` : id);
   if (rate) return rate;
   return await fetch("/api/price", {
@@ -825,7 +833,7 @@ export const getPrice = async (id: string, type: string, isPrev: boolean = false
     body: JSON.stringify({
       id: id,
       type: type,
-      isPrev: isPrev
+      isPrev: isPrev,
     }),
   })
     .then(async (res: any) => {
@@ -846,7 +854,7 @@ export const getCryptoList = async () => {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
-    body: JSON.stringify({ id: '', type: ''}),
+    body: JSON.stringify({ id: "", type: "" }),
   })
     .then(async (res: any) => {
       const re = await res.json();
@@ -873,7 +881,7 @@ export const defaultPrices: { [key: string]: number } = {
   PA: 74.66,
 };
 
-export const getStr = (num: number) => (num < 10 ? `0${num}` : '' + num);
+export const getStr = (num: number) => (num < 10 ? `0${num}` : "" + num);
 
 export const awsdate = (dateStr: any) => {
   if (!dateStr) return;
@@ -891,7 +899,7 @@ export const getNumberOfDays = (start: string, end: string) => {
   const diffInTime = date2.getTime() - date1.getTime();
   const diffInDays = Math.round(diffInTime / oneDay);
   return diffInDays;
-}
+};
 
 export const getCustomDate = (num: any) => {
   if (!num) num = 0;

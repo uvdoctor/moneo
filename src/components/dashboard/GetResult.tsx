@@ -31,7 +31,7 @@ export default function GetResult() {
           <Col xs={12}>
             <ItemDisplay
               label="You Own"
-              result={totalAssets}
+              result={!totalAssets ? "Discover" : totalAssets}
               currency={defaultCurrency}
               loading={!holdingsLoaded}
               info="This is the total valuation of the assets you own."
@@ -41,7 +41,7 @@ export default function GetResult() {
           <Col xs={12}>
             <ItemDisplay
               label="You Owe"
-              result={-totalLiabilities}
+              result={!totalLiabilities ? "Discover" : -totalLiabilities}
               currency={defaultCurrency}
               loading={!holdingsLoaded}
               info="This is the total valuation of all the money you owe."
