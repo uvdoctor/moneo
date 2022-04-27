@@ -9,16 +9,23 @@
 //   getTabledata,
 //   getTableNameFromInitialWord,
 // } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const { sendEmail, COACHING_CONFIRMATION_TEMPLATE_NAME } = require("/opt/nodejs/sendMail/EmailSender");
-const { getTabledata, getTableNameFromInitialWord } = require('/opt/nodejs/databaseUtils');
+const {
+  sendEmail,
+  COACHING_CONFIRMATION_TEMPLATE_NAME,
+} = require("/opt/nodejs/sendMail/EmailSender");
+const {
+  getTabledata,
+  getTableNameFromInitialWord,
+} = require("/opt/nodejs/databaseUtils");
 
 const processData = (records) => {
   return new Promise(async (resolve, reject) => {
-    let userinfodata;
     for (let item of records) {
       if (item.eventName === "INSERT") {
         const data = item.dynamodb.NewImage;
         const user = data.owner.S;
+        const duration = data.dur.N;
+        const text = data.text.S;
         const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
         const result = await getTabledata(
           userInfoTableName,
@@ -26,19 +33,36 @@ const processData = (records) => {
           `uname = :uname`,
           { ":uname": user }
         );
-        userinfodata = result.find((item) => item.uname === user);
+        const userinfodata = result.find((item) => item.uname === user);
         console.log(userinfodata);
-      }
-      if (!userinfodata) return;
-      try {
-        const message = await sendEmail({
-          templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
-          email: userinfodata.email,
-          values: {},
-        });
-        console.log(message);
-      } catch (err) {
-        reject(err);
+        if (!userinfodata) return;
+        const { email, mob } = userinfodata;
+        try {
+          const message = await sendEmail({
+            templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
+            email: email,
+            values: {
+              owner: false
+            },
+          });
+          console.log(message);
+          // to owner
+          const ownerMessage = await sendEmail({
+            templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
+            email: ["mehzabeen1526@gmail.com", "emailumangdoctor@gmail.com" ],
+            values: {
+              user,
+              email,
+              duration,
+              mob,
+              text,
+              owner: true
+            },
+          });
+          console.log(ownerMessage);
+        } catch (err) {
+          reject(err);
+        }
       }
     }
     resolve();
