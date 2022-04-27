@@ -32,6 +32,7 @@ import {
   InstrumentInput,
   CreateUserInsInput,
   UpdateUserInsInput,
+  InsWatchInput,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
 import {
@@ -208,6 +209,7 @@ function NWContextProvider({ fxRates }: any) {
     industry: {};
     sector: {};
   }>({ industry: {}, sector: {} });
+  const [watchlist, setWatchlist] = useState<Array<InsWatchInput>>([]);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await initializeNPSData();
@@ -574,6 +576,7 @@ function NWContextProvider({ fxRates }: any) {
       if (!insHoldings) return;
       setInsholdings(true);
       setInstruments([...(insHoldings?.ins ? insHoldings.ins : [])]);
+      setWatchlist([...(insHoldings?.watch ? insHoldings.watch : [])]);
     } catch (e) {
       notification.error({
         message: "Instruments not loaded",
@@ -699,6 +702,7 @@ function NWContextProvider({ fxRates }: any) {
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
       ins: JSON.parse(JSON.stringify(ins)),
+      watch: watchlist
     };
     let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
     updatedHoldings.savings = savings;

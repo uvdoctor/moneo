@@ -24,7 +24,6 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { NIFTY50, SENSEX } from "../dashboard/DBContext";
 import { awsdate, getNumberOfDays, includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
@@ -69,15 +68,23 @@ export const loadInstruments = async (ids: Array<string>) => {
   let mfIds: Array<string> = [];
   let bondIds: Array<string> = [];
   let exchangeIds: Array<string> = [];
+  let indexIds: Array<string> = [];
   let gotodb = false;
   let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!allInsData) allInsData = {};
   ids.forEach((id: string) => {
-    isFund(id) ? mfIds.push(id) : exchangeIds.push(id);
+    !isISIN(id)
+      ? indexIds.push(id)
+      : isFund(id)
+      ? mfIds.push(id)
+      : exchangeIds.push(id);
     if (!allInsData[id]) gotodb = true;
   });
   if (!gotodb) return allInsData;
   let unmatchedIds: Array<string> | null = [];
+  if (indexIds.length) {
+    await loadInstrumentPrices(loadMatchingIndices, ids, allInsData);
+  }
   if (mfIds.length)
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINMutual,
@@ -1180,7 +1187,7 @@ export const calculateAlerts = async (
   currency: string
 ) => {
   if (insHoldings?.ins?.length) {
-      await initializeInsData(insHoldings?.ins);
+    await initializeInsData(insHoldings?.ins);
   }
   if (holdings?.nps?.length) {
     if (!simpleStorage.get(LOCAL_NPS_DATA_KEY)) await initializeNPSData();
@@ -1197,37 +1204,68 @@ export const calculateAlerts = async (
 export const isISIN = (item: string) =>
   item.length === 12 && item.startsWith("IN");
 
-export const loadIndices = async (ids: Array<string>) => {
-  let gotodb = false;
-  let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  if (!allInsData) allInsData = {};
-  ids.forEach((id: string) => {
-    if (!allInsData[id]) gotodb = true;
-  });
-  if (!gotodb) return allInsData;
-  if (ids.length) {
-    await loadInstrumentPrices(loadMatchingIndices, ids, allInsData);
-  }
-  simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
-  return allInsData;
-};
-
 export const initializeWatchlist = async (
-  instruments?: Array<InsWatchInput> | null | undefined
+  instruments?: Array<InsWatchInput> | null | undefined,
+  fxRates?: any,
+  defaultCurrency?: any
 ) => {
-  const ids: Array<string> = [];
-  let indexIds: Array<string> = [];
+  let ids: Array<string> = [];
+  let watchlist = [];
+  const NIFTY50 = "Nifty 50";
+  const SENSEX = "BSE30";
+  const BSE500 = "BSE500";
+  const ICICI = "INE090A01021";
+  const ADANI_WILMAR = "INE699H01024";
+  const HDFC_Nifty50_ETF = "INF179KC1965";
+  const Kotak_Gold_ETF = "INF174KA1HJ8";
+  const SBI_ETF_Sensex = "INF200K01VT2";
+  const SBI_Contra_Fund = "INF200K01RA0";
+  const IDFC_Tax_Advantage = "INF194K01Y29";
+  const Quant_Taxplan = "INF966L01986";
+  const Embassy = "INE041025011";
+  const Mindspace = "INE0CCU25019";
   if (!instruments) {
-    await loadIndices([NIFTY50, SENSEX]);
-    return;
+    ids = [
+      NIFTY50,
+      SENSEX,
+      BSE500,
+      ICICI,
+      ADANI_WILMAR,
+      HDFC_Nifty50_ETF,
+      Kotak_Gold_ETF,
+      SBI_ETF_Sensex,
+      SBI_Contra_Fund,
+      IDFC_Tax_Advantage,
+      Quant_Taxplan,
+      Embassy,
+      Mindspace,
+    ];
+    const crypto = ["BTC-USD", "XRP-USD", "ETH-USD"];
+    await loadInstruments(ids);
+    const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    if (!cachedData) return;
+    for (let item of ids) {
+      if (!cachedData[item]) return;
+      const data = cachedData[item];
+      const { id, subt, type, itype, sid } = data;
+      watchlist.push({ id, type, subt, itype, sid });
+    }
+    for (let code of crypto) {
+      await getCryptoRate(code, defaultCurrency, fxRates);
+      await getCryptoRate(code, defaultCurrency, fxRates, true);
+      watchlist.push({
+        id: code,
+        sid: code,
+        type: AssetType.A,
+        subt: AssetSubType.C,
+      });
+    }
+    return watchlist;
   }
   for (let instrument of instruments) {
     const { id, subt } = instrument;
-    if (!isISIN(id) && subt !== AssetSubType.C) {
-      indexIds.push(id);
-      await loadIndices(indexIds);
-    }
-    ids.push(instrument.id);
+    if (subt === AssetSubType.C) continue;
+    ids.push(id);
   }
   return await loadInstruments(ids);
 };

@@ -1,6 +1,5 @@
 import { notification } from "antd";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import simpleStorage from "simplestorage.js";
 import {
   AssetSubType,
   CreateUserHoldingsInput,
@@ -9,7 +8,6 @@ import {
   InsWatchInput,
   UpdateUserInsInput,
 } from "../../api/goals";
-import { LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import { ALL_FAMILY } from "../nw/FamilyInput";
 import {
@@ -28,9 +26,6 @@ import {
 } from "../nw/valuationutils";
 import DBView from "./DBView";
 const DBContext = createContext({});
-
-export const NIFTY50 = "Nifty 50";
-export const SENSEX = "BSE30";
 
 function DBContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner }: any = useContext(AppContext);
@@ -67,16 +62,15 @@ function DBContextProvider({ fxRates }: any) {
       if (insHoldings?.watch) {
         setWatchlist([...insHoldings?.watch]);
       } else {
-        const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-        if (!cachedData || watchlist.length) return;
-        const defaultList = [SENSEX, NIFTY50];
-        for (let item of defaultList) {
-          if (!cachedData[item]) return;
-          const data = cachedData[item];
-          const { id, subt, type } = data;
-          watchlist.push({ id, type, subt });
+        const watch = await initializeWatchlist(
+          insHoldings?.watch,
+          fxRates,
+          defaultCurrency
+        );
+        if (!watchlist.length) {
+          setWatchlist([...watch]);
+          await saveHoldings(watch, false);
         }
-        setWatchlist([...watchlist]);
       }
       if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
@@ -137,11 +131,11 @@ function DBContextProvider({ fxRates }: any) {
     await initializeHeader();
   };
 
-  const saveHoldings = async () => {
+  const saveHoldings = async (watch?: Array<InsWatchInput>, notify: boolean = true) => {
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
       ins: instruments,
-      watch: watchlist,
+      watch: watch ? watch : watchlist,
     };
     try {
       if (insholdings) {
@@ -150,16 +144,20 @@ function DBContextProvider({ fxRates }: any) {
         await addInsHoldings(updatedInsHoldings);
         setInsholdings(true);
       }
-      notification.success({
-        message: "Data saved",
-        description: "All holdings data has been saved.",
-      });
+      if (notify) {
+        notification.success({
+          message: "Data saved",
+          description: "All holdings data has been saved.",
+        });
+      }
     } catch (e) {
-      notification.error({
-        message: "Unable to save holdings",
-        description:
-          "Sorry! An unexpected error occurred while trying to save the data.",
-      });
+      if (notify) {
+        notification.error({
+          message: "Unable to save holdings",
+          description:
+            "Sorry! An unexpected error occurred while trying to save the data.",
+        });
+      }
     }
   };
 
@@ -187,7 +185,8 @@ function DBContextProvider({ fxRates }: any) {
         headerlist,
         aa,
         setAA,
-      }}>
+      }}
+    >
       <DBView />
     </DBContext.Provider>
   );

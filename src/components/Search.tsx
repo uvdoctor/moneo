@@ -38,6 +38,9 @@ export default function Search({
   };
 
   useEffect(() => {
+    setSearchText('')
+    setData([...[]])
+    setSuggestions([...[]]);
     getSearchData();
   }, [searchType]);
 
