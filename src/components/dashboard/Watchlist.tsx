@@ -36,7 +36,8 @@ export default function Watchlist() {
           return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id] || !isISIN(id)) return;
-        return exchg !== "US" && filterTabs(cachedData[id], activeTag);
+        if(activeTag === STOCK) return exchg !== 'US' && filterTabs(cachedData[id], activeTag);
+        return filterTabs(cachedData[id], activeTag);
       }
     );
     setFilterByTab([...filteredData]);
