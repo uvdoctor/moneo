@@ -48,7 +48,6 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
       watchdata.name = record.sid;
     } else if (record.id.startsWith("US")) {
       const data = await getExchgRate(record.sid as string, "US");
-      console.log(data);
       watchdata.price = data.price;
       watchdata.prev = data.prev;
       watchdata.name = record.sid;
@@ -67,10 +66,9 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
       <Row justify="space-between" align="middle">
         <Col>{watchIns?.name}</Col>
         <Col>
-          {/* {toHumanFriendlyCurrency(watchIns.price, defaultCurrency)} */}
           <InsPrice
             price={watchIns?.price}
-            currency={defaultCurrency}
+            currency={record.id.startsWith('US') ? 'USD' : defaultCurrency}
             previousPrice={watchIns?.prev ? watchIns?.prev : null}
           />
           <Row justify="end">
