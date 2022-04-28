@@ -12,7 +12,7 @@ function Dashboard({
   fxRates,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <BasicPage title="Moneo - Dashboard" secure>
+    <BasicPage title="Moneo - Overview" secure>
       <DBContextProvider fxRates={fxRates} />
     </BasicPage>
   );

@@ -30,7 +30,7 @@ export default function CoachingRequest() {
       page: path,
       text,
       type:
-        path === ROUTES.SET || ROUTES.DASHBOARD
+        path === ROUTES.SET || ROUTES.OVERVIEW
           ? CoachingType.FI
           : CoachingType.Inv,
       status: CoachingStatus.P,

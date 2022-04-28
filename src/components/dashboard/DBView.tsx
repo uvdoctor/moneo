@@ -32,7 +32,7 @@ export default function DBView() {
         <Row>
           <Col span={24}>
             <PageHeader
-              title="Dashboard"
+              title="Overview"
               extra={[<CoachingRequest key="coach" />]}
             />
           </Col>

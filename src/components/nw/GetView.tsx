@@ -8,6 +8,7 @@ import { AppContext } from "../AppContext";
 import NWView from "./NWView";
 import RiskView from "./RiskView";
 import RadioInput from "../form/RadioInput";
+import CoachingRequest from "../CoachingRequest";
 
 require("./NWView.less");
 
@@ -21,17 +22,20 @@ export default function GetView() {
         <Row>
           <Col span={24}>
             <PageHeader
-              title="Financial Health Analysis"
-              extra={
+              title={
                 <RadioInput
                   options={[NETWORTH_VIEW, RISKCOVER_VIEW]}
                   value={view}
                   changeHandler={(val: string) => setView(val)}
                   style={{ color: "black", backgroundColor: "white" }}
-                  onchangeStyle={{ color: "white", backgroundColor: "#3d4a53" }}
+                  onchangeStyle={{
+                    color: "white",
+                    backgroundColor: "#3d4a53",
+                  }}
                   size="large"
                 />
               }
+              extra={[<CoachingRequest key="cr" />]}
             />
           </Col>
         </Row>

@@ -54,6 +54,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
         </SubMenu>
         {user ? (
           <Fragment>
+            {menuItem("Overview", ROUTES.OVERVIEW, selectedKey)}
             {menuItem("Get", ROUTES.GET, selectedKey)}
             {menuItem("Set", ROUTES.SET, selectedKey)}
             <Menu.Item key="Grow" disabled>
@@ -67,8 +68,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
                 ) : (
                   <UserOutlined />
                 )
-              }
-            >
+              }>
               {menuItem(
                 "Settings",
                 ROUTES.SETTINGS,
@@ -78,8 +78,7 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
               <Menu.Item
                 key="logout"
                 icon={<PoweroffOutlined style={{ color: COLORS.RED }} />}
-                onClick={handleLogout}
-              >
+                onClick={handleLogout}>
                 Logout
               </Menu.Item>
             </SubMenu>

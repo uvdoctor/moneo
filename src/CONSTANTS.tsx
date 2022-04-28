@@ -17,7 +17,7 @@ export const ROUTES = {
   SECURITY: "/policies/security",
   PRIVACY: "/policies/privacy",
   LOOKUP: "/lookup",
-  DASHBOARD: "/dashboard",
+  OVERVIEW: "/overview",
 };
 
 export const CALC_NAMES = {
