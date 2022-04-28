@@ -33,9 +33,10 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
     )
       .then((data) => data.json())
       .then((result) => {
-        console.log(result);
-       // @ts-ignore
-        res.status(200).json({ prev: result[1].close, price: result[0].close })
+        const prev = result[1].close;
+        const price = result[0].close;
+        // @ts-ignore
+        res.status(200).json({ prev, price })
       })
       .catch((err) => {
         console.log(`Error while getting eod price for ${id} due to ${err}`);

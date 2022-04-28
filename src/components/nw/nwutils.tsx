@@ -561,15 +561,10 @@ export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev
     .catch(() => 0);
 };
 
-export const getExchgRate = (id: string, exchg: string) => {
-  return getPrice(id, "US", false, exchg)
-    .then((rate) => {
-      if (!rate) return { prev: 0, price: 0 };
-      return rate;
-    })
-    .catch(() => {
-     return { prev: 0, price: 0 }
-    });
+export const getExchgRate = async (id: string, exchg: string) => {
+  const data = await getPrice(id, "US", false, exchg);
+  if(!data) return { prev: 0, price: 0 };
+  return data;
 };
 
 export const getForexRate = (currency: string, isPrev: boolean = false) => {

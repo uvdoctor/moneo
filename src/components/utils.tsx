@@ -840,8 +840,8 @@ export const getPrice = async (
   })
     .then(async (res: any) => {
       const re = await res.json();
-      simpleStorage.set(isPrev ? `${id}-prev` : id, re.rate, LOCAL_DATA_TTL);
-      return re.rate;
+      simpleStorage.set(isPrev ? `${id}-prev` : id, exchg ? re : re.rate, LOCAL_DATA_TTL);
+      return exchg ? re : re.rate;
     })
     .catch(() => {
       return defaultPrices[id];
