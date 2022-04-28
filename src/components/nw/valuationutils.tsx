@@ -1269,16 +1269,9 @@ export const initializeWatchlist = async (
     return watchlist;
   }
   for (let instrument of instruments) {
-    const { id, subt, sid } = instrument;
-    if (id.startsWith("US")) {
-      await getExchgRate(sid as string, "US");
-      continue;
-    }
-    if (subt === AssetSubType.C) {
-      await getCryptoRate(id, defaultCurrency, fxRates);
-      await getCryptoRate(id, defaultCurrency, fxRates, true);
-      continue;
-    }
+    const { id, subt } = instrument;
+    if (id.startsWith("US")) continue;
+    if (subt === AssetSubType.C) continue;
     ids.push(id);
   }
   return await loadInstruments(ids);

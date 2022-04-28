@@ -48,7 +48,7 @@ export default function Search({
           result.push({
             id: ISIN,
             sid: Code,
-            name: Name,
+            name: Code,
             type: "A",
             subt: "S",
             price: previousClose,

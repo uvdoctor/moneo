@@ -8,7 +8,7 @@ import { DBContext } from "./DBContext";
 import { AlertOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import InsPrice from "../nw/InsPrice";
-import { getCryptoRate } from "../nw/nwutils";
+import { getCryptoRate, getExchgRate } from "../nw/nwutils";
 
 interface WatchlistRowProps {
   record: InsWatchInput;
@@ -45,6 +45,11 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
         fxRates,
         true
       );
+      watchdata.name = record.sid;
+    } else if (record.id.startsWith("US")) {
+      const data = await getExchgRate(record.sid as string, "US");
+      watchdata.price = data.price;
+      watchdata.prev = data.prev;
       watchdata.name = record.sid;
     } else {
       watchdata = insData && insData[record.id] ? insData[record.id] : null;
