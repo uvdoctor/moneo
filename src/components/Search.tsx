@@ -39,6 +39,7 @@ export default function Search({
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const onSearch = async (text: any) => {
     setOpen(true);
@@ -108,6 +109,10 @@ export default function Search({
 
   const typeComp = (
     <Select
+      open={dropdownOpen}
+      onMouseEnter={()=>setDropdownOpen(true)}
+      onSelect={()=>setDropdownOpen(false)}
+      onPopupScroll={()=>setDropdownOpen(true)}
       value={isNav ? searchType : exchg}
       onChange={(val) =>
         isNav ? setSearchType && setSearchType(val) : setExchg && setExchg(val)
