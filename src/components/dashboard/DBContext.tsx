@@ -28,7 +28,7 @@ import DBView from "./DBView";
 const DBContext = createContext({});
 
 function DBContextProvider({ fxRates }: any) {
-  const { defaultCurrency, owner }: any = useContext(AppContext);
+  const { defaultCurrency, owner, user }: any = useContext(AppContext);
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
   const [gainers, setGainers] = useState<Array<any>>([]);
@@ -163,7 +163,7 @@ function DBContextProvider({ fxRates }: any) {
   };
 
   useEffect(() => {
-    if (!owner) return;
+    if (!owner || !user) return;
     initializeData().then(() => setHoldingsLoaded(true));
   }, [owner]);
 

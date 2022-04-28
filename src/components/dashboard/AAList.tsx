@@ -41,7 +41,7 @@ export default function AAList() {
             overflow: "auto",
           }}>
           {Object.keys(currentYearAA).map((key: string) => (
-            <>
+            <div key={key}>
               <ItemDisplay
                 label={getAssetName(key)}
                 unit="%"
@@ -50,7 +50,7 @@ export default function AAList() {
                 labelHighlight
               />
               <Divider />
-            </>
+            </div>
           ))}
         </div>
         <br />

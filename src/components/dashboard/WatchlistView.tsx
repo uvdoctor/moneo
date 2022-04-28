@@ -65,13 +65,15 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
   return (
     <>
       <Row justify="space-between" align="middle">
-        <Col>{watchIns?.name}</Col>
-        <Col>
-          <InsPrice
-            price={watchIns?.price}
-            currency={record.id.startsWith('US') ? 'USD' : defaultCurrency}
-            previousPrice={watchIns?.prev ? watchIns?.prev : null}
-          />
+        <Col span={14}>{watchIns?.name}</Col>
+        <Col span={10}>
+          <Row justify="end">
+            <InsPrice
+              price={watchIns?.price}
+              currency={record.id.startsWith("US") ? "USD" : defaultCurrency}
+              previousPrice={watchIns?.prev ? watchIns?.prev : null}
+            />
+          </Row>
           <Row justify="end">
             <Tooltip title="Buy / Sell alerts">
               <Button

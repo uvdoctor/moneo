@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Col, List, notification, Row } from "antd";
+import { Button, Col, Divider, List, notification, Row } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
 import { SaveOutlined } from "@ant-design/icons";
@@ -41,7 +41,7 @@ export default function Watchlist() {
         if (!cachedData || !data) return;
         if (
           activeTag === "Index" &&
-          (id.length !== 12 || id.indexOf(' ') >= 0) &&
+          (id.length !== 12 || id.indexOf(" ") >= 0) &&
           subt !== AssetSubType.C &&
           data.exchg
         )
@@ -113,8 +113,7 @@ export default function Watchlist() {
       title="Investment Watchlist"
       activeTag={activeTag}
       activeTagHandler={setActiveTag}
-      tags={typesList}
-    >
+      tags={typesList}>
       <Row justify="center" gutter={[0, 10]} align="middle">
         <Col span={24}>
           <Row align="middle" justify="space-between">
@@ -134,22 +133,20 @@ export default function Watchlist() {
                 type="primary"
                 icon={<SaveOutlined />}
                 onClick={async () => await saveHoldings()}
-                className="steps-start-btn"
-              >
+                className="steps-start-btn">
                 Save
               </Button>
             </Col>
           </Row>
         </Col>
-
+        <Divider />
         <Col xs={24}>
           <div
             id="scrollableDiv"
             style={{
-              height: 450,
+              height: 400,
               overflow: "auto",
-            }}
-          >
+            }}>
             <List
               itemLayout="horizontal"
               dataSource={filterByTab}
