@@ -36,7 +36,7 @@ export default function Search({
 
   const onSearch = async (text: any) => {
     setOpen(true)
-    if (exchg === "US") {
+    if (exchg === "US" && searchType === STOCK) {
       let response = await fetch(
         `/api/search?text=${searchText}&type=stock&exchange=${exchg}`
       );
@@ -71,7 +71,7 @@ export default function Search({
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
-    if (exchg !== "US") getSearchData();
+    if (exchg !== "US" && searchType !== STOCK) getSearchData();
   }, [searchType, exchg]);
 
   const getSearchData = async () => {
