@@ -1,6 +1,6 @@
 const {
   getTableNameFromInitialWord,
-  filterTableByList,
+  getTabledata,
 } = require("/opt/nodejs/databaseUtils");
 const { instrumentValuation } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
@@ -20,7 +20,7 @@ const processData = () => {
       const infoMap = {};
       const usersMap = {};
       const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
-      const userinfodata = await filterTableByList(
+      /*const userinfodata = await filterTableByList(
         userInfoTableName,
         [
           "investments.doctor@gmail.com",
@@ -74,16 +74,17 @@ const processData = () => {
           "shekhaliyakrishna@gmail.com",
           "vishal3006@gmail.com",
           "harshil.vakhariya143@gmail.com",
+          "21.ramit@gmail.com"
         ],
         "email",
         "uname, email"
+      );*/
+      const userinfodata = await getTabledata(
+        userInfoTableName,
+        "uname, email",
+        `notify = :notify`,
+        { ":notify": true }
       );
-      // const userinfodata = await getTabledata(
-      //   userInfoTableName,
-      //   "uname, email",
-      //   `notify = :notify`,
-      //   { ":notify": true }
-
       userinfodata.map((item) => (usersMap[item.uname] = item.email));
       await processInstruments(infoMap, usersMap, usersinsMap, usersWatchMap);
       await processHoldings(infoMap, usersMap, usersinsMap);
