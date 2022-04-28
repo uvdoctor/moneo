@@ -32,8 +32,11 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       `https://eodhistoricaldata.com/api/eod/${id}.${exchg}?api_token=${eodKey}&period=d&fmt=json&order=d`
     )
       .then((data) => data.json())
+      .then((result) => {
+        console.log(result);
        // @ts-ignore
-      .then((result) => res.status(200).json({ prev: result[1].close, price: result[0].close }))
+        res.status(200).json({ prev: result[1].close, price: result[0].close })
+      })
       .catch((err) => {
         console.log(`Error while getting eod price for ${id} due to ${err}`);
         res
