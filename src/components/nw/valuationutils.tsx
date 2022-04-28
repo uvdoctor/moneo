@@ -74,7 +74,7 @@ export const loadInstruments = async (ids: Array<string>) => {
   let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!allInsData) allInsData = {};
   ids.forEach((id: string) => {
-    !isISIN(id)
+    !isIndISIN(id)
       ? indexIds.push(id)
       : isFund(id)
       ? mfIds.push(id)
@@ -1202,8 +1202,10 @@ export const calculateAlerts = async (
   );
 };
 
-export const isISIN = (item: string) =>
+export const isIndISIN = (item: string) =>
   item.length === 12 && item.startsWith("IN");
+
+export const otherISIN = (item: string) => item.length === 12 && !item.startsWith('IN')
 
 export const initializeWatchlist = async (
   instruments?: Array<InsWatchInput> | null | undefined,

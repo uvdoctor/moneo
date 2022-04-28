@@ -11,7 +11,7 @@ import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
 import { AppContext } from "../AppContext";
-import { isISIN } from "../nw/valuationutils";
+import { isIndISIN, otherISIN } from "../nw/valuationutils";
 
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
@@ -29,15 +29,31 @@ export default function Watchlist() {
     let filteredData: Array<any> = watchlist.filter(
       (instrument: InsWatchInput) => {
         const { id, subt } = instrument;
-        if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === STOCK && id.startsWith("US") && exchg === "US")
-          return true;
-        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C && !id.startsWith("US"))
-          return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-        if (!cachedData || !cachedData[id] || !isISIN(id)) return;
-        if(activeTag === STOCK) return exchg !== 'US' && filterTabs(cachedData[id], activeTag);
-        return filterTabs(cachedData[id], activeTag);
+        const data = cachedData[id];
+        if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
+        if (
+          activeTag === STOCK &&
+          (id.startsWith("US") || otherISIN(id)) &&
+          exchg === "US"
+        )
+          return true;
+        if (!cachedData || !data) return;
+        if (
+          activeTag === "Index" &&
+          (id.length !== 12 || id.indexOf(' ') >= 0) &&
+          subt !== AssetSubType.C &&
+          data.exchg
+        )
+          return true;
+        if (activeTag === STOCK) {
+          return (
+            exchg !== "US" &&
+            isIndISIN(id) &&
+            filterTabs(cachedData[id], activeTag)
+          );
+        }
+        return filterTabs(data, activeTag);
       }
     );
     setFilterByTab([...filteredData]);
