@@ -71,7 +71,7 @@ export default function Search({
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
-    if(searchType !== STOCK) setExchg('INDIA');
+    if(searchType !== STOCK) setExchg && setExchg('INDIA');
     if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
 
@@ -150,7 +150,7 @@ export default function Search({
       <Input
         style={{ width: width ? width : "auto" }}
         size="large"
-        placeholder={`Search ${isNav ? exchg : searchType}`}
+        placeholder={`Search ${searchType}`}
         addonAfter={options ? typeComp : ""}
         prefix={<SearchOutlined />}
       />
