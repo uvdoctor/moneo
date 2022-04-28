@@ -34,9 +34,9 @@ export default function NWView() {
   const { appContextLoaded }: any = useContext(AppContext);
   const UPLOAD_OPTION = "Upload";
   const MANUAL_OPTION = "Manual";
-  const startOptions = {
+  const startOptions: any = {
     [UPLOAD_OPTION]: "Upload NSDL / CSDL monthly statement",
-    [MANUAL_OPTION]: "Input data manually",
+    [MANUAL_OPTION]: "Start manual entry of my investments",
   };
   return (
     <Fragment>
@@ -111,9 +111,6 @@ export default function NWView() {
             </h3>
             <h3>More data you provide, better the analysis!</h3>
             <p>&nbsp;</p>
-            <Button type="primary" onClick={() => addSelfMember()}>
-              Get Started
-            </Button>
             <Dropdown
               overlay={
                 <Menu>
@@ -127,12 +124,12 @@ export default function NWView() {
                           setShowInsUpload(true);
                         }
                       }}>
-                      &nbsp;&nbsp;
+                      {startOptions[key]}
                     </MenuItem>
                   ))}
                 </Menu>
               }>
-              <Button>Get Started</Button>
+              <Button type="primary">Get Started</Button>
             </Dropdown>
 
             <p>&nbsp;</p>

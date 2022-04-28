@@ -75,6 +75,7 @@ export default function UploadHoldings() {
   const [memberKey, setMemberKey] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
   const [overwrite, setOverwrite] = useState<number>(1);
+  const [showUploadDrawer, setShowUploadDrawer] = useState<boolean>(false);
   const [uploadedInstruments, setUploadedInstruments] = useState<Array<any>>(
     []
   );
@@ -86,6 +87,7 @@ export default function UploadHoldings() {
     setError("");
     setProcessing(false);
     setShowInsUpload(false);
+    setShowUploadDrawer(false);
     setOverwrite(1);
     setUploadedInstruments([...[]]);
   };
@@ -185,8 +187,8 @@ export default function UploadHoldings() {
       });
     });
     setLoading(false);
-    setShowInsUpload(true);
     setUploadedInstruments([...uploadedInstruments]);
+    setShowUploadDrawer(true);
   };
 
   const parseHoldings = async (pdf: any) => {
@@ -228,6 +230,7 @@ export default function UploadHoldings() {
             "mode of",
             "nominee",
             "total expense ratio",
+            "nil holding",
           ])
         ) {
           console.log("Ending holdings: ", value);
@@ -324,7 +327,7 @@ export default function UploadHoldings() {
     <Fragment>
       <Button
         icon={<UploadOutlined />}
-        onClick={setShowInsUpload}
+        onClick={() => setShowInsUpload(true)}
         type="primary">
         Upload Statement
       </Button>
@@ -334,13 +337,15 @@ export default function UploadHoldings() {
         placement="right"
         closable={false}
         onClose={resetState}
-        visible={showInsUpload}>
+        visible={showInsUpload}
+        destroyOnClose>
         <Dragger {...getUploaderSettings(parseHoldings)}>
           {loading ? <Spin tip="Loading..." size="large" /> : uploadContent()}
         </Dragger>
       </Drawer>
       <Drawer
         className="upload-holdings-drawer"
+        destroyOnClose
         width={isMobileDevice(fsb) ? 320 : 550}
         title={
           uploadedInstruments.length ? (
@@ -381,11 +386,11 @@ export default function UploadHoldings() {
         }
         placement="right"
         closable={false}
-        visible={showInsUpload}
+        visible={showUploadDrawer}
         footer={
           <div className="text-right">
             <Button
-              onClick={() => setShowInsUpload(false)}
+              onClick={resetState}
               style={{ marginRight: 8 }}
               disabled={processing}>
               Cancel

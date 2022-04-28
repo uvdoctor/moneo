@@ -119,7 +119,7 @@ export default function DeleteAccount() {
           <Text strong>Are you sure you want to delete this account?</Text>
           <Text>
             This action cannot be undone. This will permanently delete your
-            account and all your data will be deleted.
+            account and all your data.
           </Text>
           <Text>
             To confirm deletion, enter{" "}
@@ -146,8 +146,7 @@ export default function DeleteAccount() {
           danger
           loading={loading}
           disabled={loading}
-          icon={<DeleteOutlined />}
-        >
+          icon={<DeleteOutlined />}>
           Delete Account
         </Button>
       </Col>

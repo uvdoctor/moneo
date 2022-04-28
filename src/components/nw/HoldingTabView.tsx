@@ -7,6 +7,7 @@ import {
   LIABILITIES_VIEW,
   RISKCOVER_VIEW,
   RISK_TAB,
+  FINANCIAL_LABEL,
 } from "./NWContext";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
@@ -71,8 +72,8 @@ export default function HoldingTabView({
         ? RISK_TAB
         : nwview === LIABILITIES_VIEW
         ? LIABILITIES_TAB
-        : query?.show === "fin" 
-        ? "Financial"
+        : query?.show === "fin" || activeTab === FINANCIAL_LABEL
+        ? FINANCIAL_LABEL
         : !totalAssets
         ? "Cash"
         : TAB.SUMMARY
