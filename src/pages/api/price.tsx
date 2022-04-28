@@ -9,7 +9,7 @@ type Data = {
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const {
     method,
-    body: { id, type, isPrev },
+    body: { id, type, isPrev, exchg },
   } = req;
   const eodKey = "61ff9bf3d40797.93512142";
 
@@ -24,6 +24,22 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res
           .status(200)
           .json({ rate: defaultPrices[id] ? defaultPrices[id] : 0 });
+      });
+  };
+
+  const getExchgRate = (id: string, exchg: string) => {
+    fetch(
+      `https://eodhistoricaldata.com/api/eod/${id}.${exchg}?api_token=${eodKey}&period=d&fmt=json&order=d`
+    )
+      .then((data) => data.json())
+       // @ts-ignore
+      .then((result) => res.status(200).json({ prev: result[1].close, price: result[0].close }))
+      .catch((err) => {
+        console.log(`Error while getting eod price for ${id} due to ${err}`);
+        res
+          .status(200)
+           // @ts-ignore
+          .json({ prev: 0, price: 0 });
       });
   };
 
@@ -74,7 +90,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   };
 
   if (method === "POST") {
-    !id || !type
+    exchg ? getExchgRate(id, exchg) : !id || !type
       ? getCryptolist()
       : isPrev
       ? getPrevRate(id, type)

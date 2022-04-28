@@ -821,7 +821,8 @@ export const getFXData = async (token: string) => {
 export const getPrice = async (
   id: string,
   type: string,
-  isPrev: boolean = false
+  isPrev: boolean = false,
+  exchg?: string
 ) => {
   let rate = simpleStorage.get(isPrev ? `${id}-prev` : id);
   if (rate) return rate;
@@ -834,6 +835,7 @@ export const getPrice = async (
       id: id,
       type: type,
       isPrev: isPrev,
+      exchg: exchg ? exchg : ''
     }),
   })
     .then(async (res: any) => {

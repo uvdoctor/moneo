@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Select, AutoComplete, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
-import { getInstrumentDataWithKey, optionTableMap } from "./nw/nwutils";
+import { getExchgRate, getInstrumentDataWithKey, optionTableMap } from "./nw/nwutils";
 import { TAB } from "./nw/NWContext";
 import { getCryptoList } from "./utils";
 
@@ -28,12 +28,14 @@ export default function Search({
   setExchg,
 }: SearchProps) {
   const { Option } = Select;
-  const { CRYPTO } = TAB;
+  const { CRYPTO, STOCK } = TAB;
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   const onSearch = async (text: any) => {
+    setOpen(true)
     if (exchg === "US") {
       let response = await fetch(
         `/api/search?text=${searchText}&type=stock&exchange=${exchg}`
@@ -51,6 +53,7 @@ export default function Search({
             subt: "S",
             price: previousClose,
             value: Name,
+            key: ISIN
           });
         });
       return setSuggestions(result);
@@ -70,11 +73,6 @@ export default function Search({
     setSuggestions([...[]]);
     if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
-
-  useEffect(() => {
-    setSearchText("");
-    setSuggestions([...[]]);
-  }, [searchType]);
 
   const getSearchData = async () => {
     try {
@@ -124,18 +122,28 @@ export default function Search({
       id="search"
       options={suggestions}
       onChange={(option) => setSearchText(option)}
-      onSelect={(_option: any, obj: any) => {
+      onSelect={async (_option: any, obj: any) => {
         let resp = obj;
         if (searchType === CRYPTO) {
           resp = { id: obj.code, name: obj.name };
         }
+        if(searchType === STOCK && exchg === "US") {
+          console.log(1);
+          const data = await getExchgRate(obj.sid, exchg);
+          console.log(data);
+          resp.price = data.price;
+          resp.prev = data.prev;
+          console.log(resp);
+        }
         onClick(resp);
         setSearchText("");
         setSuggestions([...[]]);
+        setOpen(false)
       }}
       size="large"
       value={searchText}
       onSearch={onSearch}
+      open={open}
     >
       <Input
         style={{ width: width ? width : "auto" }}

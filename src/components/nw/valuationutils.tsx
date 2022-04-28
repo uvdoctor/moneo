@@ -32,6 +32,7 @@ import {
   doesPropertyMatch,
   getCommodityRate,
   getCryptoRate,
+  getExchgRate,
   initializeNPSData,
   isFund,
   isLargeCap,
@@ -1260,11 +1261,24 @@ export const initializeWatchlist = async (
         subt: AssetSubType.C,
       });
     }
+    // US
+    const data = await getExchgRate("AAPL", "US");
+    if (data.price && data.prev) {
+      watchlist.push({ id: "US0378331005", type: "A", subt: "S", sid: "AAPL" });
+    }
     return watchlist;
   }
   for (let instrument of instruments) {
-    const { id, subt } = instrument;
-    if (subt === AssetSubType.C) continue;
+    const { id, subt, sid } = instrument;
+    if (id.startsWith("US")) {
+      await getExchgRate(sid as string, "US");
+      continue;
+    }
+    if (subt === AssetSubType.C) {
+      await getCryptoRate(id, defaultCurrency, fxRates);
+      await getCryptoRate(id, defaultCurrency, fxRates, true);
+      continue;
+    }
     ids.push(id);
   }
   return await loadInstruments(ids);

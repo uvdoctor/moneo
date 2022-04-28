@@ -5,7 +5,7 @@ import WatchlistRow from "./WatchlistView";
 import { SaveOutlined } from "@ant-design/icons";
 import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
-import { filterTabs, getCryptoRate } from "../nw/nwutils";
+import { filterTabs, getCryptoRate, getExchgRate } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
@@ -30,9 +30,9 @@ export default function Watchlist() {
       (instrument: InsWatchInput) => {
         const { id, subt } = instrument;
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C)
-          return true;
         if (activeTag === STOCK && id.startsWith("US") && exchg === "US")
+          return true;
+        if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C && !id.startsWith("US"))
           return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id] || !isISIN(id)) return;
@@ -43,7 +43,7 @@ export default function Watchlist() {
   };
 
   const onSelectInstruments = async (resp: any) => {
-    const { id, name } = resp;
+    const { id, name, sid } = resp;
     let data: any = {};
     if (activeTag === CRYPTO) {
       const price = await getCryptoRate(id, defaultCurrency, fxRates);
@@ -55,6 +55,17 @@ export default function Watchlist() {
         subt: AssetSubType.C,
         prev,
         price,
+        name,
+      };
+    } else if (id.startsWith("US") && activeTag === STOCK) {
+      const result = await getExchgRate(sid as string, "US");
+      data = {
+        id,
+        sid,
+        type: AssetType.A,
+        subt: AssetSubType.S,
+        prev: result.prev,
+        price: result.price,
         name,
       };
     } else {
