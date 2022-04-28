@@ -32,7 +32,6 @@ import {
   InstrumentInput,
   CreateUserInsInput,
   UpdateUserInsInput,
-  InsWatchInput,
 } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
 import {
