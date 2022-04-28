@@ -71,6 +71,7 @@ export default function Search({
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
+    if(searchType !== STOCK) setExchg('INDIA');
     if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
 
