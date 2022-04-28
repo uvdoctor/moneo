@@ -50,6 +50,8 @@ export default function UploadHoldings() {
     selectedCurrency,
     setSelectedMembers,
     setFamilyOptions,
+    showInsUpload,
+    setShowInsUpload,
   }: any = useContext(NWContext);
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
@@ -68,26 +70,21 @@ export default function UploadHoldings() {
   const [otherItsNum, setOtherItsNum] = useState<number>(0);
   const [mfsNum, setMFsNum] = useState<number>(0);
   const { Dragger } = Upload;
-  const [showDrawer, setDrawerVisibility] = useState(false);
   const [processing, setProcessing] = useState<boolean>(false);
   const [taxId, setTaxId] = useState<string | null>(null);
   const [memberKey, setMemberKey] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
   const [overwrite, setOverwrite] = useState<number>(1);
-  const [showInsUpload, setShowInsUpload] = useState<boolean>(false);
   const [uploadedInstruments, setUploadedInstruments] = useState<Array<any>>(
     []
   );
   const [loading, setLoading] = useState<boolean>(false);
-
-  const onShowDrawer = () => setDrawerVisibility(true);
 
   const resetState = () => {
     setTaxId(null);
     setMemberKey(null);
     setError("");
     setProcessing(false);
-    setDrawerVisibility(false);
     setShowInsUpload(false);
     setOverwrite(1);
     setUploadedInstruments([...[]]);
@@ -325,19 +322,19 @@ export default function UploadHoldings() {
 
   return (
     <Fragment>
-      <Button icon={<UploadOutlined />} onClick={onShowDrawer} type="primary">
+      <Button
+        icon={<UploadOutlined />}
+        onClick={setShowInsUpload}
+        type="primary">
         Upload Statement
       </Button>
       <Drawer
         width={isMobileDevice(fsb) ? 320 : 550}
-        title="Upload NSDL or CSDL Monthly PDF Statement"
+        title="Upload NSDL or CSDL CAS PDF"
         placement="right"
         closable={false}
-        onClose={() => {
-          resetState();
-          setDrawerVisibility(false);
-        }}
-        visible={showDrawer}>
+        onClose={resetState}
+        visible={showInsUpload}>
         <Dragger {...getUploaderSettings(parseHoldings)}>
           {loading ? <Spin tip="Loading..." size="large" /> : uploadContent()}
         </Dragger>

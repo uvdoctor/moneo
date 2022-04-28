@@ -1,13 +1,19 @@
 import React, { Fragment, useContext } from "react";
 import HoldingTabView from "./HoldingTabView";
-import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from "./NWContext";
-import { Button, Col, Radio, Row, Skeleton } from "antd";
+import {
+  ASSETS_VIEW,
+  FINANCIAL_LABEL,
+  LIABILITIES_VIEW,
+  NWContext,
+} from "./NWContext";
+import { Button, Col, Dropdown, Menu, Radio, Row, Skeleton } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 
 require("./nw.less");
 import TotalNetWorth from "./TotalNetWorth";
 import ItemDisplay from "../calc/ItemDisplay";
 import { AppContext } from "../AppContext";
+import MenuItem from "antd/lib/menu/MenuItem";
 
 require("./NWView.less");
 
@@ -22,9 +28,16 @@ export default function NWView() {
     addSelfMember,
     familyMemberKeys,
     loadingInstruments,
+    setActiveTab,
+    setShowInsUpload,
   }: any = useContext(NWContext);
   const { appContextLoaded }: any = useContext(AppContext);
-
+  const UPLOAD_OPTION = "Upload";
+  const MANUAL_OPTION = "Manual";
+  const startOptions = {
+    [UPLOAD_OPTION]: "Upload NSDL / CSDL monthly statement",
+    [MANUAL_OPTION]: "Input data manually",
+  };
   return (
     <Fragment>
       {appContextLoaded && !loadingHoldings && !loadingInstruments ? (
@@ -101,6 +114,27 @@ export default function NWView() {
             <Button type="primary" onClick={() => addSelfMember()}>
               Get Started
             </Button>
+            <Dropdown
+              overlay={
+                <Menu>
+                  {Object.keys(startOptions).map((key: string) => (
+                    <MenuItem
+                      key={key}
+                      onClick={() => {
+                        addSelfMember();
+                        if (key === UPLOAD_OPTION) {
+                          setActiveTab(FINANCIAL_LABEL);
+                          setShowInsUpload(true);
+                        }
+                      }}>
+                      &nbsp;&nbsp;
+                    </MenuItem>
+                  ))}
+                </Menu>
+              }>
+              <Button>Get Started</Button>
+            </Dropdown>
+
             <p>&nbsp;</p>
           </div>
         )

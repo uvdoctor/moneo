@@ -104,6 +104,7 @@ export const LIABILITIES_VIEW = "liabilities";
 export const NETWORTH_VIEW = "Net Worth";
 export const RISKCOVER_VIEW = "Risk Cover";
 export const RISK_TAB = "Risk";
+export const FINANCIAL_LABEL = "Financial";
 
 function NWContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, userInfo, user }: any =
@@ -170,7 +171,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalCash, setTotalCash] = useState<number>(0);
   const [totalPhysical, setTotalPhysical] = useState<number>(0);
   const [totalFinancial, setTotalFinancial] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<string>("Financial");
+  const [activeTab, setActiveTab] = useState<string>(FINANCIAL_LABEL);
   const [activeTabSum, setActiveTabSum] = useState<number>(0);
   const [results, setResults] = useState<Array<any>>([]);
   const [loadingHoldings, setLoadingHoldings] = useState<boolean>(true);
@@ -204,6 +205,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalAccidentIns, setTotalAccidentIns] = useState<number>(0);
   const [totalYearlyPremium, setTotalYearlyPremium] = useState<Object>({});
   const [riskTotals, setRiskTotals] = useState<any>({});
+  const [showInsUpload, setShowInsUpload] = useState<boolean>(false);
   const [industryAndSector, setIndustryAndSector] = useState<{
     industry: {};
     sector: {};
@@ -308,8 +310,8 @@ function NWContextProvider({ fxRates }: any) {
         },
       },
     },
-    Financial: {
-      label: "Financial",
+    [FINANCIAL_LABEL]: {
+      label: FINANCIAL_LABEL,
       total: totalFinancial,
       children: {
         [TAB.STOCK]: {
@@ -1056,6 +1058,8 @@ function NWContextProvider({ fxRates }: any) {
         riskTotals,
         industryAndSector,
         setIndustryAndSector,
+        showInsUpload,
+        setShowInsUpload,
       }}>
       <GetView />
     </NWContext.Provider>
