@@ -562,9 +562,9 @@ export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev
 };
 
 export const getExchgRate = (id: string, exchg: string) => {
-  return getPrice(id, "CC", false, exchg)
+  return getPrice(id, "US", false, exchg)
     .then((rate) => {
-      if (!rate || isNaN(rate)) return { prev: 0, price: 0 };
+      if (!rate) return { prev: 0, price: 0 };
       return rate;
     })
     .catch(() => {

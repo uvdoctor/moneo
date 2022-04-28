@@ -48,6 +48,7 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
       watchdata.name = record.sid;
     } else if (record.id.startsWith("US")) {
       const data = await getExchgRate(record.sid as string, "US");
+      console.log(data);
       watchdata.price = data.price;
       watchdata.prev = data.prev;
       watchdata.name = record.sid;
