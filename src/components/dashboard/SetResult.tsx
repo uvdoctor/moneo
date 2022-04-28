@@ -73,19 +73,16 @@ export default function SetResult() {
             <ItemDisplay
               label="Financial Independence Age"
               result={
-                !ffGoal
-                  ? "Not defined"
-                  : ffYear
-                  ? ffYear - ffGoal.sy
-                  : "Not achievable"
+                ffGoal
+                  ? ffYear
+                    ? ffYear - ffGoal.sy
+                    : "Not achievable"
+                  : "Loading"
               }
               info={"Earliest age when you can achieve financial independence."}
               loading={!goalsLoaded}
               unit={ffYear ? "years" : ""}
             />
-            {!ffGoal ? (
-              <a href={ROUTES.SET}>Discover financial independence age</a>
-            ) : null}
           </Col>
           <Col xs={12}>
             <ItemDisplay

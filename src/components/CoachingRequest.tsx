@@ -75,7 +75,7 @@ export default function CoachingRequest() {
       {showModal && (
         <Modal
           centered
-          title="Request video call with a Coach"
+          title="Request video call with a Financial Coach"
           onCancel={() => setShowModal(false)}
           onOk={createRequest}
           destroyOnClose
@@ -93,7 +93,7 @@ export default function CoachingRequest() {
           </span>
           <Divider />
           <TextArea
-            rows={6}
+            rows={4}
             placeholder="What do you wish to ask?"
             value={text}
             onChange={(e: any) => setText(e.currentTarget.value)}

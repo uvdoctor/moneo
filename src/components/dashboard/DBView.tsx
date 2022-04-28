@@ -37,20 +37,25 @@ export default function DBView() {
             />
           </Col>
           <Col span={24} className="secondary-header">
-            <Row justify="space-between" align="middle">
-              {headerlist.map((item: any) => {
-                const { label, price } = item;
-                return (
-                  <Col key={label}>
-                    {label}:{" "}
-                    <InsPrice
-                      price={price}
-                      currency={defaultCurrency}
-                      previousPrice={0}
-                    />
-                  </Col>
-                );
-              })}
+            <Row>
+              <Col xs={24} md={4}>{`Today's Prices`}</Col>
+              <Col xs={24} md={20}>
+                <Row justify="space-between">
+                  {headerlist.map((item: any) => {
+                    const { label, price } = item;
+                    return (
+                      <Col key={label}>
+                        {label} :{" "}
+                        <InsPrice
+                          price={price}
+                          currency={defaultCurrency}
+                          previousPrice={0}
+                        />
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </Col>
             </Row>
           </Col>
         </Row>

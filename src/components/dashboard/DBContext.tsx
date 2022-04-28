@@ -119,8 +119,6 @@ function DBContextProvider({ fxRates }: any) {
     const headerlist = [
       { label: "Gold", price: gold * 10 },
       { label: "Silver", price: silver * 10 },
-      { label: "Petrol", price: 110 },
-      { label: "Diesel", price: 90 },
       { label: "USD", price: usd },
     ];
     setHeaderlist([...headerlist]);
@@ -131,7 +129,10 @@ function DBContextProvider({ fxRates }: any) {
     await initializeHeader();
   };
 
-  const saveHoldings = async (watch?: Array<InsWatchInput>, notify: boolean = true) => {
+  const saveHoldings = async (
+    watch?: Array<InsWatchInput>,
+    notify: boolean = true
+  ) => {
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
       ins: instruments,
@@ -185,8 +186,7 @@ function DBContextProvider({ fxRates }: any) {
         headerlist,
         aa,
         setAA,
-      }}
-    >
+      }}>
       <DBView />
     </DBContext.Provider>
   );
