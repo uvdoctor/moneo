@@ -8,10 +8,13 @@ import { getCryptoList } from "./utils";
 
 interface SearchProps {
   searchType: string;
-  width?: string;
   setSearchType?: Function;
+  width?: string;
   isNav?: boolean;
   onClick: Function;
+  options?: any;
+  exchg?: string;
+  setExchg?: any;
 }
 
 export default function Search({
@@ -20,14 +23,38 @@ export default function Search({
   setSearchType,
   isNav,
   onClick,
+  options,
+  exchg,
+  setExchg,
 }: SearchProps) {
   const { Option } = Select;
-  const { BOND, MF, ETF, CRYPTO, STOCK } = TAB;
+  const { CRYPTO } = TAB;
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
 
-  const onSearch = (text: any) => {
+  const onSearch = async (text: any) => {
+    if (exchg === "US") {
+      let response = await fetch(
+        `/api/search?text=${searchText}&type=stock&exchange=${exchg}`
+      );
+      const data = await response.json();
+      let result: any = [];
+      if (Array.isArray(data))
+        data.map((item: any) => {
+          const { Code, ISIN, Name, previousClose } = item;
+          result.push({
+            id: ISIN,
+            sid: Code,
+            name: Name,
+            type: "A",
+            subt: "S",
+            price: previousClose,
+            value: Name,
+          });
+        });
+      return setSuggestions(result);
+    }
     if (!data) return;
     const result = data
       ? data.filter((item: { name: string }) =>
@@ -38,10 +65,15 @@ export default function Search({
   };
 
   useEffect(() => {
-    setSearchText('')
-    setData([...[]])
+    setSearchText("");
+    setData([...[]]);
     setSuggestions([...[]]);
-    getSearchData();
+    if (exchg !== "US") getSearchData();
+  }, [searchType, exchg]);
+
+  useEffect(() => {
+    setSearchText("");
+    setSuggestions([...[]]);
   }, [searchType]);
 
   const getSearchData = async () => {
@@ -67,23 +99,25 @@ export default function Search({
 
   const typeComp = (
     <Select
-      value={searchType}
-      onChange={(val) => setSearchType && setSearchType(val)}>
-      <Option value={STOCK}>{STOCK}</Option>
-      <Option value={MF}>{MF}</Option>
-      <Option value={BOND}>{BOND}</Option>
-      <Option value={ETF}>{ETF}</Option>
+      value={isNav ? searchType : exchg}
+      onChange={(val) =>
+        isNav ? setSearchType && setSearchType(val) : setExchg && setExchg(val)
+      }
+    >
+      {options &&
+        options?.map((item: any) => {
+          return (
+            <Option key={item} value={item}>
+              {item}
+            </Option>
+          );
+        })}
     </Select>
   );
 
   const updateOptions = async (opt: string) => {
     return await getInstrumentDataWithKey(optionTableMap[opt], opt);
   };
-
-  useEffect(() => {
-    setSearchText("");
-    setSuggestions([...[]]);
-  }, [searchType]);
 
   return (
     <AutoComplete
@@ -96,15 +130,18 @@ export default function Search({
           resp = { id: obj.code, name: obj.name };
         }
         onClick(resp);
+        setSearchText("");
+        setSuggestions([...[]]);
       }}
       size="large"
       value={searchText}
-      onSearch={onSearch}>
+      onSearch={onSearch}
+    >
       <Input
         style={{ width: width ? width : "auto" }}
         size="large"
-        placeholder={"Search " + searchType}
-        addonAfter={isNav ? typeComp : ""}
+        placeholder={`Search ${isNav ? exchg : searchType}`}
+        addonAfter={options ? typeComp : ""}
         prefix={<SearchOutlined />}
       />
     </AutoComplete>

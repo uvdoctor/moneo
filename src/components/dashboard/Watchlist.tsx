@@ -15,9 +15,11 @@ import { isISIN } from "../nw/valuationutils";
 
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { watchlist, setWatchlist, saveHoldings, fxRates }: any = useContext(DBContext);
+  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
+    useContext(DBContext);
   const { STOCK, MF, ETF, REIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>("Index");
+  const [exchg, setExchg] = useState<string>("INDIA");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
   const typesList = ["Index", STOCK, MF, ETF, REIT, CRYPTO];
@@ -30,9 +32,11 @@ export default function Watchlist() {
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
         if (activeTag === "Index" && !isISIN(id) && subt !== AssetSubType.C)
           return true;
+        if (activeTag === STOCK && id.startsWith("US") && exchg === "US")
+          return true;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         if (!cachedData || !cachedData[id] || !isISIN(id)) return;
-        return filterTabs(cachedData[id], activeTag);
+        return exchg !== "US" && filterTabs(cachedData[id], activeTag);
       }
     );
     setFilterByTab([...filteredData]);
@@ -74,7 +78,7 @@ export default function Watchlist() {
 
   useEffect(() => {
     loadData();
-  }, [activeTag, watchlist]);
+  }, [activeTag, watchlist, exchg]);
 
   return (
     <CardView
@@ -87,7 +91,13 @@ export default function Watchlist() {
         <Col span={24}>
           <Row align="middle" justify="space-between">
             <Col>
-              <Search searchType={activeTag} onClick={(resp: any) => onSelectInstruments(resp)} />
+              <Search
+                searchType={activeTag}
+                onClick={(resp: any) => onSelectInstruments(resp)}
+                options={activeTag === STOCK ? ["INDIA", "US"] : ""}
+                exchg={exchg}
+                setExchg={setExchg}
+              />
             </Col>
             <Col>
               <Button

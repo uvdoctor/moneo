@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { ROUTES } from "../CONSTANTS";
 
 export default function SearchInput() {
-  const {STOCK} = TAB;
+  const {STOCK, BOND, MF, ETF} = TAB;
   const router = useRouter();
   const [searchType, setSearchType] = useState(STOCK);
 
@@ -13,7 +13,8 @@ export default function SearchInput() {
     <Search
       isNav
       searchType={searchType}
-      setSearchType={setSearchType} width={"250px"}     
+      setSearchType={setSearchType} width={"250px"}    
+      options={[STOCK, BOND, MF, ETF]} 
       onClick={(item: any)=>{
         router.push(`${ROUTES.LOOKUP}/${item.sid}.${item.exchg}`);
       }} 
