@@ -128,12 +128,9 @@ export default function Search({
           resp = { id: obj.code, name: obj.name };
         }
         if(searchType === STOCK && exchg === "US") {
-          console.log(1);
           const data = await getExchgRate(obj.sid, exchg);
-          console.log(data);
           resp.price = data.price;
           resp.prev = data.prev;
-          console.log(resp);
         }
         onClick(resp);
         setSearchText("");
