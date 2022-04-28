@@ -74,6 +74,10 @@ export default function Search({
     if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
 
+  useEffect(() => {
+    if(!searchText) setOpen(false);
+  }, [searchText]);
+
   const getSearchData = async () => {
     try {
       if (searchType === CRYPTO) {
@@ -140,7 +144,7 @@ export default function Search({
       size="large"
       value={searchText}
       onSearch={onSearch}
-      open={open}
+      open={options ? open : undefined}
     >
       <Input
         style={{ width: width ? width : "auto" }}
