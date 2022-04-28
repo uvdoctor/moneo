@@ -71,7 +71,7 @@ export default function Search({
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
-    if (exchg !== "US" && searchType !== STOCK) getSearchData();
+    if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
 
   const getSearchData = async () => {
