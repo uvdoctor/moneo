@@ -9,6 +9,7 @@ import { AlertOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import InsPrice from "../nw/InsPrice";
 import { getCryptoRate, getExchgRate } from "../nw/nwutils";
+import { otherISIN } from "../nw/valuationutils";
 
 interface WatchlistRowProps {
   record: InsWatchInput;
@@ -46,7 +47,7 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
         true
       );
       watchdata.name = record.sid;
-    } else if (record.id.startsWith("US")) {
+    } else if (record.id.startsWith("US") || otherISIN(record.id)) {
       const data = await getExchgRate(record.sid as string, "US");
       watchdata.price = data.price;
       watchdata.prev = data.prev;
