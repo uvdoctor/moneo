@@ -56,6 +56,7 @@ import { ROUTES } from "../../CONSTANTS";
 import { ALL_FAMILY } from "./FamilyInput";
 import { AppContext } from "../AppContext";
 import GetView from "./GetView";
+import { loadAllGoals } from "../goals/goalutils";
 
 const NWContext = createContext({});
 
@@ -210,6 +211,7 @@ function NWContextProvider({ fxRates }: any) {
     industry: {};
     sector: {};
   }>({ industry: {}, sector: {} });
+  const [lifeExpectancy, setLifeExpectancy] = useState<number>(0);
 
   const loadNPSSubCategories = async () => {
     let npsData: Array<CreateNPSPriceInput> | null = await initializeNPSData();
@@ -811,7 +813,8 @@ function NWContextProvider({ fxRates }: any) {
       insurance,
       selectedMembers,
       selectedCurrency,
-      userInfo
+      userInfo,
+      lifeExpectancy
     );
     const getValue = (type: string) =>
       presentYearValue[type] ? presentYearValue[type] : 0;
@@ -925,6 +928,12 @@ function NWContextProvider({ fxRates }: any) {
     p2p,
   ]);
 
+  useEffect(() => {
+    loadAllGoals(userInfo).then((result: any) => {
+      setLifeExpectancy(result?.ffGoal?.loan?.dur)
+    });
+  }, [userInfo]);
+
   return (
     <NWContext.Provider
       value={{
@@ -972,6 +981,7 @@ function NWContextProvider({ fxRates }: any) {
         setVehicles,
         pf,
         setPF,
+        lifeExpectancy,
         nps,
         setNPS,
         crypto,

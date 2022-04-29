@@ -23,7 +23,7 @@ const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
 });
 
 export default function InsuranceCFChart() {
-  const { selectedCurrency, insurance, selectedMembers }: any =
+  const { selectedCurrency, insurance, selectedMembers, lifeExpectancy }: any =
     useContext(NWContext);
   const { userInfo }: any = useContext(AppContext);
   const fsb = useFullScreenBrowser();
@@ -37,7 +37,7 @@ export default function InsuranceCFChart() {
       if (doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
         const { cashflows, subt } = calculateInsurance(
           holding,
-          userInfo?.le,
+          lifeExpectancy,
           userInfo?.dob
         );
         let year = new Date().getFullYear();

@@ -760,7 +760,8 @@ export const priceInsurance = (
   holdings: Array<HoldingInput>,
   selectedMembers: Array<string>,
   selectedCurrency: string,
-  userInfo: any
+  userInfo: any,
+  le: any
 ) => {
   let yearlyCashflow: any = {};
   let presentYearValue: { [key: string]: number } = {};
@@ -772,7 +773,7 @@ export const priceInsurance = (
       let year = new Date().getFullYear();
       const { cashflows } = calculateInsurance(
         holding,
-        userInfo?.le,
+        le,
         userInfo?.dob
       );
       presentYearValue[holding.subt as string] = cashflows[0];
