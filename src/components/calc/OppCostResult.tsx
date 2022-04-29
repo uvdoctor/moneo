@@ -69,7 +69,7 @@ export default function OppCostResult({
     by ${goal.type === GoalType.B ? "Buying" : "Spending"} instead of Investing.
 	${
     !isPublicCalc
-      ? ` This calculation assumes that cash flows are invested according to the the target asset allocation until ${
+      ? ` This calculation assumes that cash flows are invested according to the target asset allocation until ${
           startYear + numOfYears
         }. `
       : ""
