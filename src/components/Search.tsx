@@ -136,6 +136,7 @@ export default function Search({
   return (
     <div className="main-search">
       <AutoComplete
+        onMouseLeave={()=>setDropdownOpen(false)}
         id="search"
         options={suggestions}
         onChange={(option) => setSearchText(option)}
