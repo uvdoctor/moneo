@@ -47,6 +47,7 @@ export default function Banner() {
           </Col>
         </Row>
       </div>
+      <p>&nbsp;</p>
     </div>
   );
 }
