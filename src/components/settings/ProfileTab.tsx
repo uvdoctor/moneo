@@ -58,11 +58,11 @@ export default function ProfileTab({
       <Col xs={24} md={12}>
         <RadioInput
           options={["Send", "Do not send"]}
-          value={notify ? "Yes" : "No"}
-          changeHandler={(value: string) =>
+          value={notify ? "Send" : "Do not send"}
+          changeHandler={(value: string) => 
             dispatch({
               type: "single",
-              data: { field: "notify", val: value === "Yes" },
+              data: { field: "notify", val: value === "Send" ? true : false },
             })
           }
         />
