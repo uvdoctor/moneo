@@ -6,21 +6,13 @@ interface EmailInputProps {
 	setEmail: Function;
 	label: string;
 	emailError?: string;
-	setDisabled: Function;
 }
 
-export default function EmailInput({ setEmail, label, emailError, setDisabled }: EmailInputProps) {
+export default function EmailInput({ setEmail, label, emailError }: EmailInputProps) {
 	const [ form ] = useForm();
-	const handleFormChange = () => {
-		setDisabled(
-			form.getFieldError('email').length > 0 ||
-				!form.isFieldTouched('email') ||
-				form.getFieldValue('email').length === 0
-		);
-	};
 
 	return (
-		<Form name="emailChange" layout="vertical" form={form} onFieldsChange={handleFormChange}>
+		<Form name="emailChange" layout="vertical" form={form}>
 			<Form.Item
 				name="email"
 				label={label}
