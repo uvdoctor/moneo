@@ -49,29 +49,29 @@ function DBContextProvider({ fxRates }: any) {
       let allHoldings: CreateUserHoldingsInput | null = await loadAllHoldings(
         owner
       );
-      let insHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
+      let instrumentHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
       const { totalAssets } = await calculateTotalAssets(
         allHoldings,
-        insHoldings,
+        instrumentHoldings,
         [ALL_FAMILY],
         defaultCurrency,
         fxRates
       );
-      if (insHoldings) setInsholdings(true);
+      if (instrumentHoldings) setInsholdings(true);
+      if (instrumentHoldings?.ins) setInstruments([...instrumentHoldings?.ins]);
       const watch = await initializeWatchlist(
-        insHoldings?.watch,
-        insHoldings?.ins,
+        instrumentHoldings?.watch,
+        instrumentHoldings?.ins,
         allHoldings?.crypto
       );
       if (!watchlist.length && watch) {
         setWatchlist([...watch]);
-        await saveHoldings(watch, false);
+        await saveHoldings(watch, instrumentHoldings, false);
       }
-      if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
       const data = await calculateAlerts(
         allHoldings,
-        insHoldings,
+        instrumentHoldings,
         fxRates,
         defaultCurrency
       );
@@ -126,15 +126,16 @@ function DBContextProvider({ fxRates }: any) {
 
   const saveHoldings = async (
     watch?: Array<InsWatchInput>,
+    instrumentHoldings?: CreateUserInsInput | null,
     notify: boolean = true
   ) => {
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
-      ins: instruments,
+      ins: instrumentHoldings?.ins ? instrumentHoldings?.ins : instruments,
       watch: watch ? watch : watchlist,
     };
     try {
-      if (insholdings) {
+      if (insholdings || instrumentHoldings) {
         await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
       } else {
         await addInsHoldings(updatedInsHoldings);
