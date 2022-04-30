@@ -38,6 +38,7 @@ function DBContextProvider({ fxRates }: any) {
   const [volGainers, setVolGainers] = useState<Array<any>>([]);
   const [volLosers, setVolLosers] = useState<Array<any>>([]);
   const [watchlist, setWatchlist] = useState<Array<InsWatchInput>>([]);
+  const [insWatchlist, setInsWatchlist] = useState<Array<any>>([]);
   const [instruments, setInstruments] = useState<Array<InstrumentInput>>([]);
   const [insholdings, setInsholdings] = useState<boolean>(false);
   const [holdingsLoaded, setHoldingsLoaded] = useState<boolean>(false);
@@ -45,33 +46,36 @@ function DBContextProvider({ fxRates }: any) {
   const [aa, setAA] = useState<any>({});
 
   const initializeHoldings = async () => {
+    let combinedWatchlist: any = [];
     try {
       let allHoldings: CreateUserHoldingsInput | null = await loadAllHoldings(
         owner
       );
-      let instrumentHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
+      let insHoldings: CreateUserInsInput | null = await loadInsHoldings(owner);
       const { totalAssets } = await calculateTotalAssets(
         allHoldings,
-        instrumentHoldings,
+        insHoldings,
         [ALL_FAMILY],
         defaultCurrency,
         fxRates
       );
-      if (instrumentHoldings) setInsholdings(true);
-      if (instrumentHoldings?.ins) setInstruments([...instrumentHoldings?.ins]);
-      const watch = await initializeWatchlist(
-        instrumentHoldings?.watch,
-        instrumentHoldings?.ins,
+      if (insHoldings) setInsholdings(true);
+      if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
+      if (insHoldings?.watch) combinedWatchlist = [...insHoldings?.watch];
+      const insWatchlist = await initializeWatchlist(
+        insHoldings?.watch,
+        insHoldings?.ins,
         allHoldings?.crypto
       );
-      if (!watchlist.length && watch) {
-        setWatchlist([...watch]);
-        await saveHoldings(watch, instrumentHoldings, false);
+      if (insWatchlist.length) {
+        combinedWatchlist = [...insWatchlist, ...combinedWatchlist];
+        setInsWatchlist([...insWatchlist]);
       }
+      setWatchlist([...combinedWatchlist])
       setTotalAssets(totalAssets);
       const data = await calculateAlerts(
         allHoldings,
-        instrumentHoldings,
+        insHoldings,
         fxRates,
         defaultCurrency
       );
@@ -124,37 +128,33 @@ function DBContextProvider({ fxRates }: any) {
     await initializeHeader();
   };
 
-  const saveHoldings = async (
-    watch?: Array<InsWatchInput>,
-    instrumentHoldings?: CreateUserInsInput | null,
-    notify: boolean = true
-  ) => {
+  const saveWatchlist = async () => {
+    const watch = watchlist.filter((item: InsWatchInput) => {
+      const results = insWatchlist.find((re: any) => re.id === item.id);
+      return results ? false : true;
+    });
     let updatedInsHoldings: CreateUserInsInput = {
       uname: owner,
-      ins: instrumentHoldings?.ins ? instrumentHoldings?.ins : instruments,
-      watch: watch ? watch : watchlist,
+      ins: instruments,
+      watch: watch,
     };
     try {
-      if (insholdings || instrumentHoldings) {
+      if (insholdings) {
         await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
       } else {
         await addInsHoldings(updatedInsHoldings);
         setInsholdings(true);
       }
-      if (notify) {
-        notification.success({
-          message: "Data saved",
-          description: "All holdings data has been saved.",
-        });
-      }
+      notification.success({
+        message: "Data saved",
+        description: "All holdings data has been saved.",
+      });
     } catch (e) {
-      if (notify) {
-        notification.error({
-          message: "Unable to save holdings",
-          description:
-            "Sorry! An unexpected error occurred while trying to save the data.",
-        });
-      }
+      notification.error({
+        message: "Unable to save holdings",
+        description:
+          "Sorry! An unexpected error occurred while trying to save the data.",
+      });
     }
   };
 
@@ -177,7 +177,7 @@ function DBContextProvider({ fxRates }: any) {
         volGainers,
         watchlist,
         setWatchlist,
-        saveHoldings,
+        saveWatchlist,
         holdingsLoaded,
         headerlist,
         aa,

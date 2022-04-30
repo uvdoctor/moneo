@@ -15,7 +15,7 @@ import { isIndISIN, otherISIN } from "../nw/valuationutils";
 
 export default function Watchlist() {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { watchlist, setWatchlist, saveHoldings, fxRates }: any =
+  const { watchlist, setWatchlist, saveWatchlist, fxRates }: any =
     useContext(DBContext);
   const { STOCK, MF, ETF, REIT, CRYPTO } = TAB;
   const [activeTag, setActiveTag] = useState<string>("Index");
@@ -32,12 +32,7 @@ export default function Watchlist() {
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         const data = cachedData[id];
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (
-          activeTag === STOCK &&
-          (id.startsWith("US") || otherISIN(id)) &&
-          exchg === "US"
-        )
-          return true;
+        if (activeTag === STOCK && otherISIN(id) && exchg === "US") return true;
         if (!cachedData || !data) return;
         if (
           activeTag === "Index" &&
@@ -113,7 +108,8 @@ export default function Watchlist() {
       title="Investment Watchlist"
       activeTag={activeTag}
       activeTagHandler={setActiveTag}
-      tags={typesList}>
+      tags={typesList}
+    >
       <Row justify="center" gutter={[0, 10]} align="middle">
         <Col span={24}>
           <Row align="middle" justify="space-between">
@@ -132,8 +128,9 @@ export default function Watchlist() {
                 style={{ float: "right" }}
                 type="primary"
                 icon={<SaveOutlined />}
-                onClick={async () => await saveHoldings()}
-                className="steps-start-btn">
+                onClick={async () => await saveWatchlist()}
+                className="steps-start-btn"
+              >
                 Save
               </Button>
             </Col>
@@ -146,7 +143,8 @@ export default function Watchlist() {
             style={{
               height: 400,
               overflow: "auto",
-            }}>
+            }}
+          >
             <List
               itemLayout="horizontal"
               dataSource={filterByTab}

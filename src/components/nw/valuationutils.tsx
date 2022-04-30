@@ -1213,67 +1213,43 @@ export const initializeWatchlist = async (
   const SENSEX = "BSE30";
   const BSE500 = "BSE500";
   let ids: Array<string> = [NIFTY50, SENSEX, BSE500];
-  let watchlist: any = [];
-  let cryptolist = [];
-  if (userIns?.length || watchIns?.length) {
-    let instruments: any = [];
-    if (userIns) instruments = [...userIns];
-    if (watchIns) instruments = [...instruments, ...watchIns];
-    const isinMap: any = {
-      ["Nifty 50"]: NIFTY50,
-      BSE30: SENSEX,
-      BSE500: BSE500
-    };
-    for (let ins of instruments) {
+  const isinMap: any = { ["Nifty 50"]: NIFTY50, BSE30: SENSEX, BSE500: BSE500 };
+  let insIds: Array<string> = [NIFTY50, SENSEX, BSE500];
+  let insWatchlist: any = [];
+  if (watchIns?.length) {
+    watchIns.map((item: InsWatchInput) => {
+      ids.push(item.id);
+      isinMap[item.id] = item.id;
+    });
+  }
+  if (userIns?.length) {
+    for (let ins of userIns) {
       if (isinMap[ins.id]) continue;
       isinMap[ins.id] = ins.id;
-      if (ins.subt === AssetSubType.C) {
-        cryptolist.push(ins.id);
-        continue;
-      }
-      if (ins.id.startsWith("US") || otherISIN(ins.id)) {
-        const { id, type, subt, sid } = ins;
-        watchlist.push({ id, type, subt, sid });
-        continue;
-      }
+      insIds.push(ins.id);
       ids.push(ins.id);
     }
-    await loadInstruments(ids);
-    const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    if (!cachedData) return;
-    for (let item of ids) {
-      const data = cachedData[item];
-      if (!data) continue;
-      const { id, subt, type, itype, sid } = data;
-      watchlist.push({ id, type, subt, itype, sid });
-    }
-    if (crypto && crypto?.length) {
-      for (let holding of crypto) {
-        if (isinMap[holding.name as string]) continue;
-        isinMap[holding.name as string] = holding.name; 
-        cryptolist.push(holding.name);
-      }
-    }
-    for (let id of cryptolist) {
-      watchlist.push({
-        id: id,
-        sid: id,
+  }
+  await loadInstruments(ids);
+  const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  if (!cachedData) return;
+  for (let item of insIds) {
+    const data = cachedData[item];
+    if (!data) continue;
+    const { id, subt, type, itype, sid } = data;
+    insWatchlist.push({ id, type, subt, itype, sid });
+  }
+  if (crypto && crypto?.length) {
+    for (let holding of crypto) {
+      if (isinMap[holding.name as string]) continue;
+      isinMap[holding.name as string] = holding.name;
+      insWatchlist.push({
+        id: holding.name,
+        sid: holding.name,
         type: AssetType.A,
         subt: AssetSubType.C,
       });
     }
-    return watchlist;
   }
-  if (!watchIns) {
-    await loadInstruments(ids);
-    const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-    if (!cachedData) return;
-    for (let item of ids) {
-      if (!cachedData[item]) return;
-      const data = cachedData[item];
-      const { id, subt, type, itype, sid } = data;
-      watchlist.push({ id, type, subt, itype, sid });
-    }
-    return watchlist;
-  }
+  return insWatchlist;
 };
