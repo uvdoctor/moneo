@@ -10,7 +10,6 @@ interface StepProps {
   subTitle: string;
   content: string;
   imgSrc: any;
-  link: string;
 }
 
 export default function Step({
@@ -20,7 +19,6 @@ export default function Step({
   subTitle,
   content,
   imgSrc,
-  link,
 }: StepProps) {
   return (
     <Col xs={24} sm={24} md={12}>
