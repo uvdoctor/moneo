@@ -67,6 +67,7 @@ export default function Landing() {
 							subTitle="Real-time Analysis"
 							content="Automatically track your net worth, i.e. what you own minus what you owe, across bank accounts, credit cards, deposits, NPS, loans, etc; and investment portfolio performance."
 							imgSrc={defaultCountry === 'IN' ? 'images/step1-india.jpg' : 'images/step1.jpg'}
+							link="#"
 						/>
 						<Step
 							className="step2"
@@ -75,6 +76,7 @@ export default function Landing() {
 							subTitle="Goals"
 							content="Define your life goals to get a persoalized Financial Plan, including analysis of money and time needed to achieve Financial Independence."
 							imgSrc="images/step2.jpg"
+							link="#"
 						/>
 						<Step
 							className="step3"
@@ -83,6 +85,7 @@ export default function Landing() {
 							subTitle="Wealth"
 							content="Improve savings by identifying money leaks and unwanted expenses, and invest money based on your financial plan, risk appetite and ethics."
 							imgSrc="images/step3.jpg"
+							link="#"
 						/>
 						<GettingStarted />
 					</Row>
