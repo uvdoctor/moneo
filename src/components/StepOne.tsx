@@ -1,17 +1,13 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { Form, Input } from "antd";
 import { Translations } from "@aws-amplify/ui-components";
-import EmailInput from "./form/EmailInput";
 import { useForm } from "antd/lib/form/Form";
 
 interface StepOneProps {
-  email: string;
-  password: string;
   setEmail: Function;
   setPassword: Function;
   emailError: string;
   setDisable: Function;
-  disable: boolean;
 }
 
 export default function StepOne({
@@ -19,32 +15,44 @@ export default function StepOne({
   setPassword,
   emailError,
   setDisable,
-  email,
-  password,
-  disable,
 }: StepOneProps) {
   const [form] = useForm();
 
-  useEffect(() => {
+  const handleFormChange = () =>
     setDisable(
-      !password ||
-        !email ||
-        form.getFieldError("password").length > 0 ||
+      form.getFieldError("password").length > 0 ||
         !form.isFieldTouched("password") ||
         form.getFieldError("email").length > 0 ||
-        !form.isFieldTouched("email")
+        !form.isFieldTouched("email") ||
+        form.getFieldValue("email").length === 0 ||
+        form.getFieldValue("password").length === 0
     );
-  }, [email, password, disable]);
-
 
   return (
     <Fragment>
-      <EmailInput
-        setEmail={setEmail}
-        label={Translations.EMAIL_LABEL}
-        emailError={emailError}
-      />
-      <Form name="password" form={form} layout="vertical">
+      <Form
+        name="form"
+        form={form}
+        layout="vertical"
+        onFieldsChange={handleFormChange}
+      >
+        <Form.Item
+          name="email"
+          label={Translations.EMAIL_LABEL}
+          validateStatus={emailError ? "error" : undefined}
+          help={emailError ? emailError : null}
+          rules={[
+            {
+              pattern:
+                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "This is not a valid email address",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input onChange={(e) => setEmail(e.currentTarget.value)} />
+        </Form.Item>
+
         <Form.Item
           name="password"
           label={Translations.PASSWORD_LABEL}

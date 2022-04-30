@@ -73,13 +73,10 @@ export default function BasicAuthenticator({
       title: "Step 1",
       content: (
         <StepOne
-          email={email}
-          password={password}
           setEmail={setEmail}
           setPassword={setPassword}
           emailError={emailError}
           setDisable={setDisable}
-          disable={disable}
         />
       ),
     },
