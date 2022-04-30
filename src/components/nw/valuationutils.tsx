@@ -771,11 +771,7 @@ export const priceInsurance = (
       doesHoldingMatch(holding, selectedMembers, selectedCurrency)
     ) {
       let year = new Date().getFullYear();
-      const { cashflows } = calculateInsurance(
-        holding,
-        le,
-        userInfo?.dob
-      );
+      const { cashflows } = calculateInsurance(holding, le, userInfo?.dob);
       presentYearValue[holding.subt as string] = cashflows[0];
       for (let value of cashflows) {
         if (yearlyCashflow[year]) {
@@ -1206,45 +1202,66 @@ export const calculateAlerts = async (
 export const isIndISIN = (item: string) =>
   item.length === 12 && item.startsWith("IN");
 
-export const otherISIN = (item: string) => item.length === 12 && !item.startsWith('IN')
+export const otherISIN = (item: string) =>
+  item.length === 12 && !item.startsWith("IN");
 
 export const initializeWatchlist = async (
-  instruments?: Array<InsWatchInput> | null | undefined,
-  fxRates?: any,
-  defaultCurrency?: any
+  watchIns?: Array<InsWatchInput> | null | undefined,
+  userIns?: Array<InstrumentInput> | null | undefined,
+  crypto?: Array<HoldingInput> | null | undefined
 ) => {
-  let ids: Array<string> = [];
-  let watchlist = [];
   const NIFTY50 = "Nifty 50";
   const SENSEX = "BSE30";
   const BSE500 = "BSE500";
-  const ICICI = "INE090A01021";
-  const ADANI_WILMAR = "INE699H01024";
-  const HDFC_Nifty50_ETF = "INF179KC1965";
-  const Kotak_Gold_ETF = "INF174KA1HJ8";
-  const SBI_ETF_Sensex = "INF200K01VT2";
-  const SBI_Contra_Fund = "INF200K01RA0";
-  const IDFC_Tax_Advantage = "INF194K01Y29";
-  const Quant_Taxplan = "INF966L01986";
-  const Embassy = "INE041025011";
-  const Mindspace = "INE0CCU25019";
-  if (!instruments) {
-    ids = [
-      NIFTY50,
-      SENSEX,
-      BSE500,
-      ICICI,
-      ADANI_WILMAR,
-      HDFC_Nifty50_ETF,
-      Kotak_Gold_ETF,
-      SBI_ETF_Sensex,
-      SBI_Contra_Fund,
-      IDFC_Tax_Advantage,
-      Quant_Taxplan,
-      Embassy,
-      Mindspace,
-    ];
-    const crypto = ["BTC-USD", "XRP-USD", "ETH-USD"];
+  let ids: Array<string> = [NIFTY50, SENSEX, BSE500];
+  let watchlist: any = [];
+  let cryptolist = [];
+  if (userIns?.length || watchIns?.length) {
+    let instruments: any = [];
+    if (userIns) instruments = [...userIns];
+    if (watchIns) instruments = [...instruments, ...watchIns];
+    const isinMap: any = {};
+    for (let ins of instruments) {
+      if (isinMap[ins.id]) continue;
+      isinMap[ins.id] = ins.id;
+      if (ins.subt === AssetSubType.C) {
+        cryptolist.push(ins.id);
+        continue;
+      }
+      if (ins.id.startsWith("US") || otherISIN(ins.id)) {
+        const { id, type, subt, sid } = ins;
+        watchlist.push({ id, type, subt, sid });
+        continue;
+      }
+      ids.push(ins.id);
+    }
+    await loadInstruments(ids);
+    const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+    if (!cachedData) return;
+    for (let item of ids) {
+      const data = cachedData[item];
+      if (!data) continue;
+      const { id, subt, type, itype, sid } = data;
+      watchlist.push({ id, type, subt, itype, sid });
+    }
+    if (crypto && crypto?.length) {
+      for (let holding of crypto) {
+        if (isinMap[holding.name as string]) continue;
+        isinMap[holding.name as string] = holding.name; 
+        cryptolist.push(holding.name);
+      }
+    }
+    for (let id of cryptolist) {
+      watchlist.push({
+        id: id,
+        sid: id,
+        type: AssetType.A,
+        subt: AssetSubType.C,
+      });
+    }
+    return watchlist;
+  }
+  if (!watchIns) {
     await loadInstruments(ids);
     const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
     if (!cachedData) return;
@@ -1254,28 +1271,6 @@ export const initializeWatchlist = async (
       const { id, subt, type, itype, sid } = data;
       watchlist.push({ id, type, subt, itype, sid });
     }
-    for (let code of crypto) {
-      await getCryptoRate(code, defaultCurrency, fxRates);
-      await getCryptoRate(code, defaultCurrency, fxRates, true);
-      watchlist.push({
-        id: code,
-        sid: code,
-        type: AssetType.A,
-        subt: AssetSubType.C,
-      });
-    }
-    // US
-    const data = await getExchgRate("AAPL", "US");
-    if (data.price && data.prev) {
-      watchlist.push({ id: "US0378331005", type: "A", subt: "S", sid: "AAPL" });
-    }
     return watchlist;
   }
-  for (let instrument of instruments) {
-    const { id, subt } = instrument;
-    if (id.startsWith("US")) continue;
-    if (subt === AssetSubType.C) continue;
-    ids.push(id);
-  }
-  return await loadInstruments(ids);
 };

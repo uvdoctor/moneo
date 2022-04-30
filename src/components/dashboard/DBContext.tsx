@@ -58,19 +58,14 @@ function DBContextProvider({ fxRates }: any) {
         fxRates
       );
       if (insHoldings) setInsholdings(true);
-      await initializeWatchlist(insHoldings?.watch);
-      if (insHoldings?.watch) {
-        setWatchlist([...insHoldings?.watch]);
-      } else {
-        const watch = await initializeWatchlist(
-          insHoldings?.watch,
-          fxRates,
-          defaultCurrency
-        );
-        if (!watchlist.length) {
-          setWatchlist([...watch]);
-          await saveHoldings(watch, false);
-        }
+      const watch = await initializeWatchlist(
+        insHoldings?.watch,
+        insHoldings?.ins,
+        allHoldings?.crypto
+      );
+      if (!watchlist.length && watch) {
+        setWatchlist([...watch]);
+        await saveHoldings(watch, false);
       }
       if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       setTotalAssets(totalAssets);
@@ -186,7 +181,8 @@ function DBContextProvider({ fxRates }: any) {
         headerlist,
         aa,
         setAA,
-      }}>
+      }}
+    >
       <DBView />
     </DBContext.Provider>
   );
