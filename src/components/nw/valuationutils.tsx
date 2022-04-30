@@ -1220,8 +1220,8 @@ export const initializeWatchlist = async (
     if (userIns) instruments = [...userIns];
     if (watchIns) instruments = [...instruments, ...watchIns];
     const isinMap: any = {
-      NIFTY50: NIFTY50,
-      SENSEX: SENSEX,
+      ["Nifty 50"]: NIFTY50,
+      BSE30: SENSEX,
       BSE500: BSE500
     };
     for (let ins of instruments) {
