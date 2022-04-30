@@ -1219,7 +1219,11 @@ export const initializeWatchlist = async (
     let instruments: any = [];
     if (userIns) instruments = [...userIns];
     if (watchIns) instruments = [...instruments, ...watchIns];
-    const isinMap: any = {};
+    const isinMap: any = {
+      NIFTY50: NIFTY50,
+      SENSEX: SENSEX,
+      BSE500: BSE500
+    };
     for (let ins of instruments) {
       if (isinMap[ins.id]) continue;
       isinMap[ins.id] = ins.id;
