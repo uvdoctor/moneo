@@ -26,7 +26,7 @@ export default function Footer() {
         <Col xs={24} sm={12} md={10} className="social-icons">
           <a
             target="_blank"
-            href="https://facebook.com/moneomoney"
+            href="https://facebook.com/moneoapp"
             rel="noopener noreferrer">
             <FacebookIcon round />
           </a>
@@ -50,7 +50,7 @@ export default function Footer() {
           </a>
           <a
             target="_blank"
-            href="https://instagram.com/moneomoney"
+            href="https://instagram.com/moneoapp"
             rel="noopener noreferrer">
             <InstagramFilled />
           </a>
