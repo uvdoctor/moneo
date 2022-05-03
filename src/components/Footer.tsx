@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Col, Row } from "antd";
 import { FacebookIcon, LinkedinIcon, TwitterIcon } from "react-share";
 import { YoutubeFilled, InstagramFilled } from "@ant-design/icons";
@@ -8,11 +8,7 @@ require("./Footer.less");
 import { COLORS, ROUTES } from "../CONSTANTS";
 
 export default function Footer() {
-  const websiteUrl = "https://moneo.in";
-  const [url, setUrl] = useState(websiteUrl);
   const year = new Date().getFullYear();
-
-  useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), []);
 
   return (
     <Content className="footer">
@@ -27,31 +23,34 @@ export default function Footer() {
 				</Col>
 	</Row>*/}
       <Row justify="center">
-        <Col xs={24} sm={12} md={10} lg={8} className="social-icons">
+        <Col xs={24} sm={12} md={10} className="social-icons">
           <a
-            target="https://facebook.com/moneocap"
-            href={url}
+            target="_blank"
+            href="https://facebook.com/moneomoney"
             rel="noopener noreferrer">
             <FacebookIcon round />
           </a>
           <a
-            target="https://linkedin.com/company/moneocap"
-            href={url}
+            target="_blank"
+            href="https://linkedin.com/company/moneomoney"
             rel="noopener noreferrer">
             <LinkedinIcon round />
           </a>
           <a
-            target="https://twitter.com/moneocap"
-            href={url}
+            target="_blank"
+            href="https://twitter.com/moneomoneyapp"
             rel="noopener noreferrer">
             <TwitterIcon round />
           </a>
-          <a target="_blank" href={url} rel="noopener noreferrer">
+          <a
+            target="_blank"
+            href="https://www.youtube.com/channel/UCXkpjQtx3vAtuUQxpA6o70A"
+            rel="noopener noreferrer">
             <YoutubeFilled />
           </a>
           <a
-            target="https://instagram.com/moneocap"
-            href={url}
+            target="_blank"
+            href="https://instagram.com/moneomoney"
             rel="noopener noreferrer">
             <InstagramFilled />
           </a>
