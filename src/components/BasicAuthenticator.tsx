@@ -32,6 +32,7 @@ export default function BasicAuthenticator({
 }: BasicAuthenticatorProps) {
   const { validateCaptcha, appContextLoaded }: any = useContext(AppContext);
   const [emailError, setEmailError] = useState<any>("");
+  const [passwordError, setPasswordError] = useState<any>("");
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -139,6 +140,26 @@ export default function BasicAuthenticator({
         const user = await Auth.signIn(email, password);
         console.log(user);
       } catch {
+        const isValidEmail =
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            email
+          );
+        const isValidPassword =
+          /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(
+            password
+          );
+
+        if (!isValidEmail || !isValidPassword) {
+          if (!isValidEmail) setEmailError("This is not a valid email address");
+          if (!isValidPassword)
+            setPasswordError(
+              "Passwords must have at least 8 characters and contain at least two of the following: uppercase, letters, lowercase letters, numbers, and symbols"
+            );
+          setError("jdjfsdjfidkf o s ");
+          setLoading(false);
+          setDisable(true);
+          return;
+        }
         await verifyEmail();
       }
       setLoading(false);
@@ -173,6 +194,9 @@ export default function BasicAuthenticator({
             <div className="steps-content">
               {
                 <StepOne
+                  setPasswordError={setPasswordError}
+                  setEmailError={setEmailError}
+                  passwordError={passwordError}
                   setEmail={setEmail}
                   setPassword={setPassword}
                   emailError={emailError}

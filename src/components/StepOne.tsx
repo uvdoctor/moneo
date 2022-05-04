@@ -7,7 +7,10 @@ interface StepOneProps {
   setEmail: Function;
   setPassword: Function;
   emailError: string;
+  passwordError: string;
   setDisable: Function;
+  setEmailError: Function;
+  setPasswordError: Function;
 }
 
 export default function StepOne({
@@ -15,18 +18,22 @@ export default function StepOne({
   setPassword,
   emailError,
   setDisable,
+  passwordError,
+  setEmailError,
+  setPasswordError
 }: StepOneProps) {
   const [form] = useForm();
 
-  const handleFormChange = () =>
+  const handleFormChange = () => {
+    setEmailError('');
+    setPasswordError('');
     setDisable(
-      form.getFieldError("password").length > 0 ||
-        !form.isFieldTouched("password") ||
-        form.getFieldError("email").length > 0 ||
+      !form.isFieldTouched("password") ||
         !form.isFieldTouched("email") ||
         form.getFieldValue("email").length === 0 ||
         form.getFieldValue("password").length === 0
     );
+  }
 
   return (
     <Fragment>
@@ -41,13 +48,6 @@ export default function StepOne({
           label={Translations.EMAIL_LABEL}
           validateStatus={emailError ? "error" : undefined}
           help={emailError ? emailError : null}
-          rules={[
-            {
-              pattern:
-                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "This is not a valid email address",
-            },
-          ]}
           hasFeedback
         >
           <Input onChange={(e) => setEmail(e.currentTarget.value)} />
@@ -56,29 +56,8 @@ export default function StepOne({
         <Form.Item
           name="password"
           label={Translations.PASSWORD_LABEL}
-          rules={[
-            {
-              min: 8,
-              max: 20,
-              message: "Password must be between 8-20 characters",
-            },
-            {
-              pattern: new RegExp("(?=.*[a-z])"),
-              message: "At least one lowercase",
-            },
-            {
-              pattern: new RegExp("(?=.*[A-Z])"),
-              message: "At least one uppercase",
-            },
-            {
-              pattern: new RegExp(".*[0-9].*"),
-              message: "At least one digit",
-            },
-            {
-              pattern: new RegExp("(?=.*[!@#$%^&*])"),
-              message: "At least one special character",
-            },
-          ]}
+          validateStatus={passwordError ? "error" : undefined}
+          help={passwordError ? passwordError : null}
           hasFeedback
         >
           <Input.Password
