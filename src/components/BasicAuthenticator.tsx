@@ -13,13 +13,12 @@ import {
 } from "@aws-amplify/ui-components";
 import { Row, Skeleton, Steps } from "antd";
 import Title from "antd/lib/typography/Title";
-import { createUserinfo, doesEmailExist, doesTaxIdExist } from "./userinfoutils";
+import { createUserinfo, doesEmailExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
 import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
-import StepThree from "./StepThree";
 require("./BasicAuthenticator.less");
 
 interface BasicAuthenticatorProps {
@@ -56,16 +55,11 @@ export default function BasicAuthenticator({
     TaxLiability.M
   );
   const [uname, setUname] = useState<string>("");
-  const [monthlyExp, setMonthlyExp] = useState<number>(0);
-  const [monthlyInv, setMonthlyInv] = useState<number>(0);
-  const [totalPortfolio, setTotalPortfolio] = useState<number>(0);
   const [state, dispatch] = useReducer(stepReducer, { step: 0 });
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
-  const [taxId, setTaxId] = useState<string>("");
   const [cognitoUser, setCognitoUser] = useState<any | null>(null);
-  const [taxIdError, setTaxIdError] = useState<any>("");
   const { Step } = Steps;
 
   const steps = [
@@ -85,20 +79,6 @@ export default function BasicAuthenticator({
       content: (
         <StepTwo
           setDOB={setDOB}
-          monthlyExp={monthlyExp}
-          setMonthlyExp={setMonthlyExp}
-          monthlyInv={monthlyInv}
-          setMonthlyInv={setMonthlyInv}
-          totalPortfolio={totalPortfolio}
-          setTotalPortfolio={setTotalPortfolio}
-          setDisable={setDisable}
-        />
-      ),
-    },
-    {
-      title: "Step 3",
-      content: (
-        <StepThree
           error={error}
           setNotify={setNotify}
           setDisable={setDisable}
@@ -106,10 +86,6 @@ export default function BasicAuthenticator({
           setRiskProfile={setRiskProfile}
           taxLiability={taxLiability}
           setTaxLiability={setTaxLiability}
-          taxId={taxId}
-          setTaxId={setTaxId}
-          taxIdError={taxIdError}
-          setTaxIdError={setTaxIdError}
         />
       ),
     },
@@ -139,10 +115,6 @@ export default function BasicAuthenticator({
       rp: riskProfile,
       dr: 0,
       tc: new Date().toISOString(),
-      exp: monthlyExp,
-      invest: monthlyInv,
-      ta: totalPortfolio,
-      tid: taxId,
     });
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",
@@ -155,15 +127,6 @@ export default function BasicAuthenticator({
     setLoading(true);
     validateCaptcha("registration").then(async (success: boolean) => {
       if (!success) return;
-      setTaxIdError("");
-      if (await doesTaxIdExist(taxId, "AWS_IAM")) {
-        setTaxIdError(
-          "Please check your tax id properly as this one is already used by another account."
-        );
-        setLoading(false);
-        setDisable(true);
-        return;
-      }
       const username = generateFromEmail(email);
       setUname(username);
       Auth.signUp({
@@ -258,20 +221,22 @@ export default function BasicAuthenticator({
                     Back
                   </Button>
                 )}
-                {state.step < 2 && (
+                {state.step === 0 && (
                   <Button
                     type="primary"
                     disabled={disable}
                     onClick={state.step === 0 ? verifyEmail : next}
-                    loading={loading}>
+                    loading={loading}
+                  >
                     Next
                   </Button>
                 )}
-                {state.step === 2 && (
+                {state.step === 1 && (
                   <Button
                     type="primary"
                     disabled={disable}
-                    onClick={handleRegistrationSubmit}>
+                    onClick={handleRegistrationSubmit}
+                  >
                     Done
                   </Button>
                 )}

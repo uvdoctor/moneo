@@ -1,94 +1,121 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { Alert, Checkbox, Col, Form, Row } from "antd";
+import { ROUTES } from "../CONSTANTS";
+import { useForm } from "antd/lib/form/Form";
+import TaxLiabilityInput from "./TaxLiabilityInput";
+import RiskProfileInput from "./RiskProfileInput";
 import DateInput from "./form/DateInput";
-import { Col, Row } from "antd";
 import { getStr } from "./utils";
-import NumberInput from "./form/numberinput";
-import { AppContext } from "./AppContext";
 
 interface StepTwoProps {
   setDOB: Function;
-  monthlyExp: number;
-  setMonthlyExp: Function;
-  monthlyInv: number;
-  setMonthlyInv: Function;
-  totalPortfolio: number;
-  setTotalPortfolio: Function;
+  riskProfile: string;
+  setRiskProfile: Function;
+  taxLiability: string;
+  setTaxLiability: Function;
+  error: string;
+  setNotify: Function;
   setDisable: Function;
 }
 
-export default function StepTwo({
-  setDOB,
-  monthlyExp,
-  setMonthlyExp,
-  monthlyInv,
-  setMonthlyInv,
-  totalPortfolio,
-  setTotalPortfolio,
-  setDisable
-}: StepTwoProps) {
-  const { defaultCurrency }: any = useContext(AppContext);
+export default function StepTwo(props: StepTwoProps) {
+  const [form] = useForm();
   const [date, setDate] = useState<number>(1);
   const [month, setMonth] = useState<number>(1);
   const [year, setYear] = useState<number>(2000);
 
   useEffect(() => {
-    setDOB(`${year}-${getStr(month)}-${getStr(date)}`);
+    props.setDOB(`${year}-${getStr(month)}-${getStr(date)}`);
   }, [date, month, year]);
 
-  useEffect(()=>{
-    (!monthlyInv || !monthlyExp || !totalPortfolio) ? setDisable(true) : setDisable(false)
-  },[monthlyExp, monthlyInv, totalPortfolio])
+  const handleFormChange = () =>
+    props.setDisable(
+      form.getFieldError("terms").length > 0 || !form.isFieldTouched("terms")
+    );
 
   return (
-    <Row gutter={[8, 16]}>
-      <Col span={24}>
-        <DateInput
-          title={"Date of Birth"}
-          startYearHandler={setYear}
-          startDateHandler={setDate}
-          startMonthHandler={setMonth}
-          startYearValue={year}
-          startMonthValue={month}
-          startDateValue={date}
-          size="middle"
-        />
-      </Col>
-      <Col span={24}>
-        <NumberInput
-          info="Current portfolio value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include the value of the property where you live."
-          value={totalPortfolio}
-          pre="Current portfolio value"
-          min={500}
-          max={900000}
-          changeHandler={setTotalPortfolio}
-          step={100}
-          currency={defaultCurrency}
-        />
-      </Col>
-      <Col span={24}>
-        <NumberInput
-          pre="Average monthly expense"
-          value={monthlyExp}
-          changeHandler={setMonthlyExp}
-          currency={defaultCurrency}
-          min={100}
-          max={1000000}
-          info="Average monthly expense of your household"
-          noRangeFactor
-        />
-      </Col>
-      <Col span={24}>
-        <NumberInput
-          pre="Possible monthly investment"
-          value={monthlyInv}
-          changeHandler={setMonthlyInv}
-          currency={defaultCurrency}
-          min={100}
-          max={1000000}
-          info="Amount of money you can invest on a monthly basis"
-          noRangeFactor
-        />
-      </Col>
-    </Row>
+    <Fragment>
+      <Row>
+        <Col span={24}>
+          {props.error ? <Alert type="error" message={props.error} /> : null}
+        </Col>
+      </Row>
+      <Row gutter={[0, 20]}>
+        <Col span={24}>
+          <DateInput
+            title={"Date of Birth"}
+            startYearHandler={setYear}
+            startDateHandler={setDate}
+            startMonthHandler={setMonth}
+            startYearValue={year}
+            startMonthValue={month}
+            startDateValue={date}
+            size="middle"
+          />
+        </Col>
+        <Col xs={24} sm={12} md={12} lg={12}>
+          <RiskProfileInput
+            value={props.riskProfile}
+            changeHandler={props.setRiskProfile}
+          />
+        </Col>
+        <Col xs={24} sm={12} md={12} lg={12}>
+          <TaxLiabilityInput
+            value={props.taxLiability}
+            changeHandler={props.setTaxLiability}
+          />
+        </Col>
+        <Col span={24}>
+          <Form
+            name="password"
+            form={form}
+            onFieldsChange={handleFormChange}
+            layout="vertical"
+          >
+            <Form.Item
+              name="terms"
+              valuePropName="checked"
+              rules={[
+                {
+                  validator: (_: any, value: any) =>
+                    value
+                      ? Promise.resolve()
+                      : Promise.reject(
+                          new Error(
+                            "Please verify that you agree to the policies"
+                          )
+                        ),
+                },
+              ]}
+            >
+              <Checkbox defaultChecked={true}>
+                I accept the{" "}
+                <a target="_blank" href={ROUTES.TC} rel="noreferrer">
+                  Terms & Conditions
+                </a>
+                ,&nbsp;
+                <a target="_blank" href={ROUTES.PRIVACY} rel="noreferrer">
+                  Privacy Policy
+                </a>{" "}
+                &nbsp;and&nbsp;
+                <a target="_blank" href={ROUTES.SECURITY} rel="noreferrer">
+                  Security Policy
+                </a>
+              </Checkbox>
+            </Form.Item>
+          </Form>
+        </Col>
+        <Col span={24}>
+          <Checkbox
+            defaultChecked={true}
+            onChange={(e) =>
+              e.target.checked ? props.setNotify(true) : props.setNotify(false)
+            }
+          >
+            Sign up for emails and text
+          </Checkbox>
+        </Col>
+      </Row>
+    </Fragment>
   );
 }
