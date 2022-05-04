@@ -6,11 +6,7 @@ import { ROUTES } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import ItemDisplay from "../calc/ItemDisplay";
 import { calculateFI } from "../goals/fiutils";
-import {
-  createDefaultFFGoalForUser,
-  createNewGoal,
-  loadAllGoals,
-} from "../goals/goalutils";
+import { loadAllGoals } from "../goals/goalutils";
 import { DBContext } from "./DBContext";
 
 export default function SetResult() {
@@ -22,44 +18,31 @@ export default function SetResult() {
   const [numOfGoals, setNumOfGoals] = useState<number>(0);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null);
 
-  const initFFGoal = async (result: any) => {
-    let ffGoal = result.ffGoal;
-    if (!ffGoal) {
-      ffGoal = createDefaultFFGoalForUser(
-        new Date(userInfo?.dob).getFullYear(),
-        userInfo?.ta,
-        userInfo?.rp,
-        userInfo?.exp,
-        userInfo?.invest,
-        defaultCurrency
-      );
-      ffGoal = await createNewGoal(ffGoal);
-    }
-    return ffGoal;
-  };
-
   useEffect(() => {
     loadAllGoals(userInfo).then((result: any) => {
-      initFFGoal(result).then((ffGoal: CreateGoalInput) => {
-        setFFGoal(ffGoal);
-        const goals = result.goals;
-        const allCFs = result.allCFs;
-        const fiResult: any = calculateFI(
-          ffGoal,
-          null,
-          goals,
-          allCFs,
-          false,
-          defaultCurrency,
-          fxRates
-        );
-        setFFYear(fiResult?.ffYear);
-        setNumOfGoals(goals.length);
-        setFFAmt(fiResult?.ffResult?.ffAmt);
-        setAA(fiResult?.ffResult.aa);
-      });
+      const ffGoal = result.ffGoal;
+      if (!ffGoal) {
+        setGoalsLoaded(true);
+        return;
+      }
+      setFFGoal(ffGoal);
+      const goals = result.goals;
+      const allCFs = result.allCFs;
+      const fiResult: any = calculateFI(
+        ffGoal,
+        null,
+        goals,
+        allCFs,
+        false,
+        defaultCurrency,
+        fxRates
+      );
+      setFFYear(fiResult?.ffYear);
+      setNumOfGoals(goals.length);
+      setFFAmt(fiResult?.ffResult?.ffAmt);
+      setAA(fiResult?.ffResult.aa);
     });
-  }, [userInfo]);
+  }, []);
 
   useEffect(() => {
     setGoalsLoaded(true);
@@ -77,7 +60,7 @@ export default function SetResult() {
                   ? ffYear
                     ? ffYear - ffGoal.sy
                     : "Not achievable"
-                  : "Loading"
+                  : "Discover"
               }
               info={"Earliest age when you can achieve financial independence."}
               loading={!goalsLoaded}
@@ -87,7 +70,7 @@ export default function SetResult() {
           <Col xs={12}>
             <ItemDisplay
               label="Amount needed"
-              result={ffAmt}
+              result={ffAmt ? ffAmt : "Discover"}
               currency={defaultCurrency}
               loading={!goalsLoaded}
               info="This is the minimum amount needed to achieve financial independence."

@@ -187,25 +187,6 @@ const createFFGoalInput = (currency: string) => {
   } as APIt.CreateGoalInput;
 };
 
-export const createDefaultFFGoalForUser = (
-  birthYear: number,
-  totalAssets: number,
-  riskProfile: APIt.RiskProfile,
-  monthlyExpense: number,
-  monthlyInvestment: number,
-  currency: string
-) => {
-  let goal: APIt.CreateGoalInput = createFFGoalInput(currency);
-  goal.sy = birthYear;
-  goal.ra = totalAssets;
-  goal.rachg = monthlyInvestment;
-  goal.tdli = monthlyExpense * 12;
-  if (goal?.loan) goal.loan.emi = monthlyExpense * 6;
-  goal.rp = riskProfile;
-  goal.tbr = 0;
-  return goal;
-};
-
 const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
   let nowYear = new Date().getFullYear();
   let startYear = nowYear + 1;
