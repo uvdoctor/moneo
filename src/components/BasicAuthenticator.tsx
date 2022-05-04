@@ -5,13 +5,13 @@ import {
   AmplifySection,
 } from "@aws-amplify/ui-react";
 import { Auth, Hub } from "aws-amplify";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   AuthState,
   Translations,
   onAuthUIStateChange,
 } from "@aws-amplify/ui-components";
-import { Row, Skeleton, Steps } from "antd";
+import { Row, Skeleton } from "antd";
 import Title from "antd/lib/typography/Title";
 import { createUserinfo, doesEmailExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
@@ -26,17 +26,6 @@ interface BasicAuthenticatorProps {
 }
 
 Auth.configure({ authenticationFlowType: "USER_PASSWORD_AUTH" });
-
-const stepReducer = (state: any, { type }: { type: string }) => {
-  switch (type) {
-    case "increment":
-      return { step: state.step + 1 };
-    case "decrement":
-      return { step: state.step - 1 };
-    default:
-      return { step: 0 };
-  }
-};
 
 export default function BasicAuthenticator({
   children,
@@ -55,45 +44,10 @@ export default function BasicAuthenticator({
     TaxLiability.M
   );
   const [uname, setUname] = useState<string>("");
-  const [state, dispatch] = useReducer(stepReducer, { step: 0 });
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
   const [cognitoUser, setCognitoUser] = useState<any | null>(null);
-  const { Step } = Steps;
-
-  const steps = [
-    {
-      title: "Step 1",
-      content: (
-        <StepOne
-          setEmail={setEmail}
-          setPassword={setPassword}
-          emailError={emailError}
-          setDisable={setDisable}
-        />
-      ),
-    },
-    {
-      title: "Step 2",
-      content: (
-        <StepTwo
-          setDOB={setDOB}
-          error={error}
-          setNotify={setNotify}
-          setDisable={setDisable}
-          riskProfile={riskProfile}
-          setRiskProfile={setRiskProfile}
-          taxLiability={taxLiability}
-          setTaxLiability={setTaxLiability}
-        />
-      ),
-    },
-  ];
-
-  const next = () => dispatch({ type: "increment" });
-
-  const prev = () => dispatch({ type: "decrement" });
 
   const generateFromEmail = (email: string) => {
     // Retrive name from email address
@@ -162,17 +116,30 @@ export default function BasicAuthenticator({
     });
   };
 
-  const verifyEmail = () => {
+  const verifyEmail = async () => {
+    setEmailError("");
+    if (await doesEmailExist(email, "AWS_IAM")) {
+      setEmailError(
+        "Please use another email address as this one is already used by another account."
+      );
+    } else {
+      Hub.dispatch("UI Auth", {
+        event: "AuthStateChange",
+        message: AuthState.SignUp,
+      });
+    }
+    setDisable(true);
+  };
+
+  const signIn = () => {
     setLoading(true);
     validateCaptcha("registration_step").then(async (success: boolean) => {
       if (!success) return;
-      setEmailError("");
-      if (await doesEmailExist(email, "AWS_IAM")) {
-        setEmailError(
-          "Please use another email address as this one is already used by another account."
-        );
-      } else {
-        next();
+      try {
+        const user = await Auth.signIn(email, password);
+        console.log(user);
+      } catch {
+        await verifyEmail();
       }
       setLoading(false);
       setDisable(true);
@@ -200,46 +167,62 @@ export default function BasicAuthenticator({
             ]}
           />
         )}
-        {authState !== AuthState.SignIn && (
-          <AmplifySection slot="sign-up">
-            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
-            <Steps current={state.step} size="small">
-              {steps.map((item) => (
-                <Step key={item.title} title={item.title} />
-              ))}
-            </Steps>
-            <div className="steps-content">{steps[state.step].content}</div>
+        {authState === AuthState.SignIn && (
+          <AmplifySection slot="sign-in">
+            <Title level={5}>{Translations.SIGN_IN_HEADER_TEXT}</Title>
+            <div className="steps-content">
+              {
+                <StepOne
+                  setEmail={setEmail}
+                  setPassword={setPassword}
+                  emailError={emailError}
+                  setDisable={setDisable}
+                />
+              }
+            </div>
             <div className="steps-action">
               <Row justify="end">
-                {state.step === 0 && (
-                  <Button type="link" htmlType="button" onClick={onCancel}>
-                    Cancel
-                  </Button>
-                )}
-                {state.step > 0 && (
-                  <Button type="link" onClick={() => prev()}>
-                    Back
-                  </Button>
-                )}
-                {state.step === 0 && (
-                  <Button
-                    type="primary"
-                    disabled={disable}
-                    onClick={state.step === 0 ? verifyEmail : next}
-                    loading={loading}
-                  >
-                    Next
-                  </Button>
-                )}
-                {state.step === 1 && (
-                  <Button
-                    type="primary"
-                    disabled={disable}
-                    onClick={handleRegistrationSubmit}
-                  >
-                    Done
-                  </Button>
-                )}
+                <Button
+                  type="primary"
+                  disabled={disable}
+                  onClick={signIn}
+                  loading={loading}
+                >
+                  {Translations.SIGN_IN_TEXT}
+                </Button>
+              </Row>
+            </div>
+          </AmplifySection>
+        )}
+        {authState === AuthState.SignUp && (
+          <AmplifySection slot="sign-up">
+            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+            <div className="steps-content">
+              {
+                <StepTwo
+                  setDOB={setDOB}
+                  error={error}
+                  setNotify={setNotify}
+                  setDisable={setDisable}
+                  riskProfile={riskProfile}
+                  setRiskProfile={setRiskProfile}
+                  taxLiability={taxLiability}
+                  setTaxLiability={setTaxLiability}
+                />
+              }
+            </div>
+            <div className="steps-action">
+              <Row justify="end">
+                <Button type="link" onClick={onCancel}>
+                  Back
+                </Button>
+                <Button
+                  type="primary"
+                  disabled={disable}
+                  onClick={handleRegistrationSubmit}
+                >
+                  Done
+                </Button>
               </Row>
             </div>
           </AmplifySection>
