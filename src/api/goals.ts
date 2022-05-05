@@ -1454,6 +1454,76 @@ export type DeleteAllIndicesInput = {
   id: string,
 };
 
+export type CreateIndicePerfInput = {
+  id: string,
+  price1y: number,
+  price3y: number,
+  price5y: number,
+  price10y: number,
+};
+
+export type ModelIndicePerfConditionInput = {
+  price1y?: ModelFloatInput | null,
+  price3y?: ModelFloatInput | null,
+  price5y?: ModelFloatInput | null,
+  price10y?: ModelFloatInput | null,
+  and?: Array< ModelIndicePerfConditionInput | null > | null,
+  or?: Array< ModelIndicePerfConditionInput | null > | null,
+  not?: ModelIndicePerfConditionInput | null,
+};
+
+export type IndicePerf = {
+  __typename: "IndicePerf",
+  id?: string,
+  price1y?: number,
+  price3y?: number,
+  price5y?: number,
+  price10y?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateIndicePerfInput = {
+  id: string,
+  price1y?: number | null,
+  price3y?: number | null,
+  price5y?: number | null,
+  price10y?: number | null,
+};
+
+export type DeleteIndicePerfInput = {
+  id: string,
+};
+
+export type CreateIndiceCompInput = {
+  id: string,
+  comp: Array< string >,
+};
+
+export type ModelIndiceCompConditionInput = {
+  comp?: ModelStringInput | null,
+  and?: Array< ModelIndiceCompConditionInput | null > | null,
+  or?: Array< ModelIndiceCompConditionInput | null > | null,
+  not?: ModelIndiceCompConditionInput | null,
+};
+
+export type IndiceComp = {
+  __typename: "IndiceComp",
+  id?: string,
+  comp?: Array< string >,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateIndiceCompInput = {
+  id: string,
+  comp?: Array< string > | null,
+};
+
+export type DeleteIndiceCompInput = {
+  id: string,
+};
+
 export type CreateINBondPriceInput = {
   id: string,
   sid: string,
@@ -2009,6 +2079,37 @@ export type ModelAllIndicesFilterInput = {
 export type ModelAllIndicesConnection = {
   __typename: "ModelAllIndicesConnection",
   items?:  Array<AllIndices | null >,
+  nextToken?: string | null,
+};
+
+export type ModelIndicePerfFilterInput = {
+  id?: ModelStringInput | null,
+  price1y?: ModelFloatInput | null,
+  price3y?: ModelFloatInput | null,
+  price5y?: ModelFloatInput | null,
+  price10y?: ModelFloatInput | null,
+  and?: Array< ModelIndicePerfFilterInput | null > | null,
+  or?: Array< ModelIndicePerfFilterInput | null > | null,
+  not?: ModelIndicePerfFilterInput | null,
+};
+
+export type ModelIndicePerfConnection = {
+  __typename: "ModelIndicePerfConnection",
+  items?:  Array<IndicePerf | null >,
+  nextToken?: string | null,
+};
+
+export type ModelIndiceCompFilterInput = {
+  id?: ModelStringInput | null,
+  comp?: ModelStringInput | null,
+  and?: Array< ModelIndiceCompFilterInput | null > | null,
+  or?: Array< ModelIndiceCompFilterInput | null > | null,
+  not?: ModelIndiceCompFilterInput | null,
+};
+
+export type ModelIndiceCompConnection = {
+  __typename: "ModelIndiceCompConnection",
+  items?:  Array<IndiceComp | null >,
   nextToken?: string | null,
 };
 
@@ -4495,6 +4596,105 @@ export type DeleteAllIndicesMutation = {
   } | null,
 };
 
+export type CreateIndicePerfMutationVariables = {
+  input?: CreateIndicePerfInput,
+  condition?: ModelIndicePerfConditionInput | null,
+};
+
+export type CreateIndicePerfMutation = {
+  createIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateIndicePerfMutationVariables = {
+  input?: UpdateIndicePerfInput,
+  condition?: ModelIndicePerfConditionInput | null,
+};
+
+export type UpdateIndicePerfMutation = {
+  updateIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteIndicePerfMutationVariables = {
+  input?: DeleteIndicePerfInput,
+  condition?: ModelIndicePerfConditionInput | null,
+};
+
+export type DeleteIndicePerfMutation = {
+  deleteIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateIndiceCompMutationVariables = {
+  input?: CreateIndiceCompInput,
+  condition?: ModelIndiceCompConditionInput | null,
+};
+
+export type CreateIndiceCompMutation = {
+  createIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateIndiceCompMutationVariables = {
+  input?: UpdateIndiceCompInput,
+  condition?: ModelIndiceCompConditionInput | null,
+};
+
+export type UpdateIndiceCompMutation = {
+  updateIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteIndiceCompMutationVariables = {
+  input?: DeleteIndiceCompInput,
+  condition?: ModelIndiceCompConditionInput | null,
+};
+
+export type DeleteIndiceCompMutation = {
+  deleteIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateInBondPriceMutationVariables = {
   input?: CreateINBondPriceInput,
   condition?: ModelINBondPriceConditionInput | null,
@@ -5600,6 +5800,84 @@ export type ListAllIndicessQuery = {
       subt?: AssetSubType | null,
       curr: string,
       ind?: Industry | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetIndicePerfQueryVariables = {
+  id?: string,
+};
+
+export type GetIndicePerfQuery = {
+  getIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListIndicePerfsQueryVariables = {
+  id?: string | null,
+  filter?: ModelIndicePerfFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListIndicePerfsQuery = {
+  listIndicePerfs?:  {
+    __typename: "ModelIndicePerfConnection",
+    items:  Array< {
+      __typename: "IndicePerf",
+      id: string,
+      price1y: number,
+      price3y: number,
+      price5y: number,
+      price10y: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetIndiceCompQueryVariables = {
+  id?: string,
+};
+
+export type GetIndiceCompQuery = {
+  getIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListIndiceCompsQueryVariables = {
+  id?: string | null,
+  filter?: ModelIndiceCompFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListIndiceCompsQuery = {
+  listIndiceComps?:  {
+    __typename: "ModelIndiceCompConnection",
+    items:  Array< {
+      __typename: "IndiceComp",
+      id: string,
+      comp: Array< string >,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -7443,6 +7721,75 @@ export type OnDeleteAllIndicesSubscription = {
     subt?: AssetSubType | null,
     curr: string,
     ind?: Industry | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateIndicePerfSubscription = {
+  onCreateIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateIndicePerfSubscription = {
+  onUpdateIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteIndicePerfSubscription = {
+  onDeleteIndicePerf?:  {
+    __typename: "IndicePerf",
+    id: string,
+    price1y: number,
+    price3y: number,
+    price5y: number,
+    price10y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateIndiceCompSubscription = {
+  onCreateIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateIndiceCompSubscription = {
+  onUpdateIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteIndiceCompSubscription = {
+  onDeleteIndiceComp?:  {
+    __typename: "IndiceComp",
+    id: string,
+    comp: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,

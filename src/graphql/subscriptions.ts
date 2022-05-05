@@ -782,6 +782,75 @@ export const onDeleteAllIndices = /* GraphQL */ `
     }
   }
 `;
+export const onCreateIndicePerf = /* GraphQL */ `
+  subscription OnCreateIndicePerf {
+    onCreateIndicePerf {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndicePerf = /* GraphQL */ `
+  subscription OnUpdateIndicePerf {
+    onUpdateIndicePerf {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndicePerf = /* GraphQL */ `
+  subscription OnDeleteIndicePerf {
+    onDeleteIndicePerf {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateIndiceComp = /* GraphQL */ `
+  subscription OnCreateIndiceComp {
+    onCreateIndiceComp {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndiceComp = /* GraphQL */ `
+  subscription OnUpdateIndiceComp {
+    onUpdateIndiceComp {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndiceComp = /* GraphQL */ `
+  subscription OnDeleteIndiceComp {
+    onDeleteIndiceComp {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateInBondPrice = /* GraphQL */ `
   subscription OnCreateInBondPrice {
     onCreateINBondPrice {

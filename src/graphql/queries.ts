@@ -817,6 +817,82 @@ export const listAllIndicess = /* GraphQL */ `
     }
   }
 `;
+export const getIndicePerf = /* GraphQL */ `
+  query GetIndicePerf($id: String!) {
+    getIndicePerf(id: $id) {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndicePerfs = /* GraphQL */ `
+  query ListIndicePerfs(
+    $id: String
+    $filter: ModelIndicePerfFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndicePerfs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        price1y
+        price3y
+        price5y
+        price10y
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getIndiceComp = /* GraphQL */ `
+  query GetIndiceComp($id: String!) {
+    getIndiceComp(id: $id) {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndiceComps = /* GraphQL */ `
+  query ListIndiceComps(
+    $id: String
+    $filter: ModelIndiceCompFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndiceComps(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        comp
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getInBondPrice = /* GraphQL */ `
   query GetInBondPrice($id: String!) {
     getINBondPrice(id: $id) {

@@ -2158,6 +2158,93 @@ export const deleteAllIndices = /* GraphQL */ `
     }
   }
 `;
+export const createIndicePerf = /* GraphQL */ `
+  mutation CreateIndicePerf(
+    $input: CreateIndicePerfInput!
+    $condition: ModelIndicePerfConditionInput
+  ) {
+    createIndicePerf(input: $input, condition: $condition) {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateIndicePerf = /* GraphQL */ `
+  mutation UpdateIndicePerf(
+    $input: UpdateIndicePerfInput!
+    $condition: ModelIndicePerfConditionInput
+  ) {
+    updateIndicePerf(input: $input, condition: $condition) {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteIndicePerf = /* GraphQL */ `
+  mutation DeleteIndicePerf(
+    $input: DeleteIndicePerfInput!
+    $condition: ModelIndicePerfConditionInput
+  ) {
+    deleteIndicePerf(input: $input, condition: $condition) {
+      id
+      price1y
+      price3y
+      price5y
+      price10y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createIndiceComp = /* GraphQL */ `
+  mutation CreateIndiceComp(
+    $input: CreateIndiceCompInput!
+    $condition: ModelIndiceCompConditionInput
+  ) {
+    createIndiceComp(input: $input, condition: $condition) {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateIndiceComp = /* GraphQL */ `
+  mutation UpdateIndiceComp(
+    $input: UpdateIndiceCompInput!
+    $condition: ModelIndiceCompConditionInput
+  ) {
+    updateIndiceComp(input: $input, condition: $condition) {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteIndiceComp = /* GraphQL */ `
+  mutation DeleteIndiceComp(
+    $input: DeleteIndiceCompInput!
+    $condition: ModelIndiceCompConditionInput
+  ) {
+    deleteIndiceComp(input: $input, condition: $condition) {
+      id
+      comp
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInBondPrice = /* GraphQL */ `
   mutation CreateInBondPrice(
     $input: CreateINBondPriceInput!
