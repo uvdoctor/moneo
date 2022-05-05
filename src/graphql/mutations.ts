@@ -2158,49 +2158,73 @@ export const deleteAllIndices = /* GraphQL */ `
     }
   }
 `;
-export const createIndicePerf = /* GraphQL */ `
-  mutation CreateIndicePerf(
-    $input: CreateIndicePerfInput!
-    $condition: ModelIndicePerfConditionInput
+export const createIndiceHistPerf = /* GraphQL */ `
+  mutation CreateIndiceHistPerf(
+    $input: CreateIndiceHistPerfInput!
+    $condition: ModelIndiceHistPerfConditionInput
   ) {
-    createIndicePerf(input: $input, condition: $condition) {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+    createIndiceHistPerf(input: $input, condition: $condition) {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
   }
 `;
-export const updateIndicePerf = /* GraphQL */ `
-  mutation UpdateIndicePerf(
-    $input: UpdateIndicePerfInput!
-    $condition: ModelIndicePerfConditionInput
+export const updateIndiceHistPerf = /* GraphQL */ `
+  mutation UpdateIndiceHistPerf(
+    $input: UpdateIndiceHistPerfInput!
+    $condition: ModelIndiceHistPerfConditionInput
   ) {
-    updateIndicePerf(input: $input, condition: $condition) {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+    updateIndiceHistPerf(input: $input, condition: $condition) {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteIndicePerf = /* GraphQL */ `
-  mutation DeleteIndicePerf(
-    $input: DeleteIndicePerfInput!
-    $condition: ModelIndicePerfConditionInput
+export const deleteIndiceHistPerf = /* GraphQL */ `
+  mutation DeleteIndiceHistPerf(
+    $input: DeleteIndiceHistPerfInput!
+    $condition: ModelIndiceHistPerfConditionInput
   ) {
-    deleteIndicePerf(input: $input, condition: $condition) {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+    deleteIndiceHistPerf(input: $input, condition: $condition) {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }

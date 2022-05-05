@@ -817,40 +817,56 @@ export const listAllIndicess = /* GraphQL */ `
     }
   }
 `;
-export const getIndicePerf = /* GraphQL */ `
-  query GetIndicePerf($id: String!) {
-    getIndicePerf(id: $id) {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+export const getIndiceHistPerf = /* GraphQL */ `
+  query GetIndiceHistPerf($name: String!) {
+    getIndiceHistPerf(name: $name) {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
   }
 `;
-export const listIndicePerfs = /* GraphQL */ `
-  query ListIndicePerfs(
-    $id: String
-    $filter: ModelIndicePerfFilterInput
+export const listIndiceHistPerfs = /* GraphQL */ `
+  query ListIndiceHistPerfs(
+    $name: String
+    $filter: ModelIndiceHistPerfFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listIndicePerfs(
-      id: $id
+    listIndiceHistPerfs(
+      name: $name
       filter: $filter
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
       items {
-        id
-        price1y
-        price3y
-        price5y
-        price10y
+        name
+        p1m
+        p3m
+        p1y
+        p3y
+        p5y
+        vol
+        beta
+        corr
+        rsq
+        pe
+        pb
+        div
         createdAt
         updatedAt
       }

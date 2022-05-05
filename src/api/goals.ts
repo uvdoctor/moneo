@@ -1454,45 +1454,77 @@ export type DeleteAllIndicesInput = {
   id: string,
 };
 
-export type CreateIndicePerfInput = {
-  id: string,
-  price1y: number,
-  price3y: number,
-  price5y: number,
-  price10y: number,
+export type CreateIndiceHistPerfInput = {
+  name: string,
+  p1m: number,
+  p3m: number,
+  p1y: number,
+  p3y: number,
+  p5y: number,
+  vol: number,
+  beta: number,
+  corr: number,
+  rsq: number,
+  pe: number,
+  pb: number,
+  div: number,
 };
 
-export type ModelIndicePerfConditionInput = {
-  price1y?: ModelFloatInput | null,
-  price3y?: ModelFloatInput | null,
-  price5y?: ModelFloatInput | null,
-  price10y?: ModelFloatInput | null,
-  and?: Array< ModelIndicePerfConditionInput | null > | null,
-  or?: Array< ModelIndicePerfConditionInput | null > | null,
-  not?: ModelIndicePerfConditionInput | null,
+export type ModelIndiceHistPerfConditionInput = {
+  p1m?: ModelFloatInput | null,
+  p3m?: ModelFloatInput | null,
+  p1y?: ModelFloatInput | null,
+  p3y?: ModelFloatInput | null,
+  p5y?: ModelFloatInput | null,
+  vol?: ModelFloatInput | null,
+  beta?: ModelFloatInput | null,
+  corr?: ModelFloatInput | null,
+  rsq?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
+  div?: ModelFloatInput | null,
+  and?: Array< ModelIndiceHistPerfConditionInput | null > | null,
+  or?: Array< ModelIndiceHistPerfConditionInput | null > | null,
+  not?: ModelIndiceHistPerfConditionInput | null,
 };
 
-export type IndicePerf = {
-  __typename: "IndicePerf",
-  id?: string,
-  price1y?: number,
-  price3y?: number,
-  price5y?: number,
-  price10y?: number,
+export type IndiceHistPerf = {
+  __typename: "IndiceHistPerf",
+  name?: string,
+  p1m?: number,
+  p3m?: number,
+  p1y?: number,
+  p3y?: number,
+  p5y?: number,
+  vol?: number,
+  beta?: number,
+  corr?: number,
+  rsq?: number,
+  pe?: number,
+  pb?: number,
+  div?: number,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateIndicePerfInput = {
-  id: string,
-  price1y?: number | null,
-  price3y?: number | null,
-  price5y?: number | null,
-  price10y?: number | null,
+export type UpdateIndiceHistPerfInput = {
+  name: string,
+  p1m?: number | null,
+  p3m?: number | null,
+  p1y?: number | null,
+  p3y?: number | null,
+  p5y?: number | null,
+  vol?: number | null,
+  beta?: number | null,
+  corr?: number | null,
+  rsq?: number | null,
+  pe?: number | null,
+  pb?: number | null,
+  div?: number | null,
 };
 
-export type DeleteIndicePerfInput = {
-  id: string,
+export type DeleteIndiceHistPerfInput = {
+  name: string,
 };
 
 export type CreateIndiceCompInput = {
@@ -2082,20 +2114,28 @@ export type ModelAllIndicesConnection = {
   nextToken?: string | null,
 };
 
-export type ModelIndicePerfFilterInput = {
-  id?: ModelStringInput | null,
-  price1y?: ModelFloatInput | null,
-  price3y?: ModelFloatInput | null,
-  price5y?: ModelFloatInput | null,
-  price10y?: ModelFloatInput | null,
-  and?: Array< ModelIndicePerfFilterInput | null > | null,
-  or?: Array< ModelIndicePerfFilterInput | null > | null,
-  not?: ModelIndicePerfFilterInput | null,
+export type ModelIndiceHistPerfFilterInput = {
+  name?: ModelStringInput | null,
+  p1m?: ModelFloatInput | null,
+  p3m?: ModelFloatInput | null,
+  p1y?: ModelFloatInput | null,
+  p3y?: ModelFloatInput | null,
+  p5y?: ModelFloatInput | null,
+  vol?: ModelFloatInput | null,
+  beta?: ModelFloatInput | null,
+  corr?: ModelFloatInput | null,
+  rsq?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
+  div?: ModelFloatInput | null,
+  and?: Array< ModelIndiceHistPerfFilterInput | null > | null,
+  or?: Array< ModelIndiceHistPerfFilterInput | null > | null,
+  not?: ModelIndiceHistPerfFilterInput | null,
 };
 
-export type ModelIndicePerfConnection = {
-  __typename: "ModelIndicePerfConnection",
-  items?:  Array<IndicePerf | null >,
+export type ModelIndiceHistPerfConnection = {
+  __typename: "ModelIndiceHistPerfConnection",
+  items?:  Array<IndiceHistPerf | null >,
   nextToken?: string | null,
 };
 
@@ -4596,55 +4636,79 @@ export type DeleteAllIndicesMutation = {
   } | null,
 };
 
-export type CreateIndicePerfMutationVariables = {
-  input?: CreateIndicePerfInput,
-  condition?: ModelIndicePerfConditionInput | null,
+export type CreateIndiceHistPerfMutationVariables = {
+  input?: CreateIndiceHistPerfInput,
+  condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
-export type CreateIndicePerfMutation = {
-  createIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type CreateIndiceHistPerfMutation = {
+  createIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateIndicePerfMutationVariables = {
-  input?: UpdateIndicePerfInput,
-  condition?: ModelIndicePerfConditionInput | null,
+export type UpdateIndiceHistPerfMutationVariables = {
+  input?: UpdateIndiceHistPerfInput,
+  condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
-export type UpdateIndicePerfMutation = {
-  updateIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type UpdateIndiceHistPerfMutation = {
+  updateIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteIndicePerfMutationVariables = {
-  input?: DeleteIndicePerfInput,
-  condition?: ModelIndicePerfConditionInput | null,
+export type DeleteIndiceHistPerfMutationVariables = {
+  input?: DeleteIndiceHistPerfInput,
+  condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
-export type DeleteIndicePerfMutation = {
-  deleteIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type DeleteIndiceHistPerfMutation = {
+  deleteIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5807,41 +5871,57 @@ export type ListAllIndicessQuery = {
   } | null,
 };
 
-export type GetIndicePerfQueryVariables = {
-  id?: string,
+export type GetIndiceHistPerfQueryVariables = {
+  name?: string,
 };
 
-export type GetIndicePerfQuery = {
-  getIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type GetIndiceHistPerfQuery = {
+  getIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListIndicePerfsQueryVariables = {
-  id?: string | null,
-  filter?: ModelIndicePerfFilterInput | null,
+export type ListIndiceHistPerfsQueryVariables = {
+  name?: string | null,
+  filter?: ModelIndiceHistPerfFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListIndicePerfsQuery = {
-  listIndicePerfs?:  {
-    __typename: "ModelIndicePerfConnection",
+export type ListIndiceHistPerfsQuery = {
+  listIndiceHistPerfs?:  {
+    __typename: "ModelIndiceHistPerfConnection",
     items:  Array< {
-      __typename: "IndicePerf",
-      id: string,
-      price1y: number,
-      price3y: number,
-      price5y: number,
-      price10y: number,
+      __typename: "IndiceHistPerf",
+      name: string,
+      p1m: number,
+      p3m: number,
+      p1y: number,
+      p3y: number,
+      p5y: number,
+      vol: number,
+      beta: number,
+      corr: number,
+      rsq: number,
+      pe: number,
+      pb: number,
+      div: number,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -7726,40 +7806,64 @@ export type OnDeleteAllIndicesSubscription = {
   } | null,
 };
 
-export type OnCreateIndicePerfSubscription = {
-  onCreateIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type OnCreateIndiceHistPerfSubscription = {
+  onCreateIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateIndicePerfSubscription = {
-  onUpdateIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type OnUpdateIndiceHistPerfSubscription = {
+  onUpdateIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteIndicePerfSubscription = {
-  onDeleteIndicePerf?:  {
-    __typename: "IndicePerf",
-    id: string,
-    price1y: number,
-    price3y: number,
-    price5y: number,
-    price10y: number,
+export type OnDeleteIndiceHistPerfSubscription = {
+  onDeleteIndiceHistPerf?:  {
+    __typename: "IndiceHistPerf",
+    name: string,
+    p1m: number,
+    p3m: number,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    vol: number,
+    beta: number,
+    corr: number,
+    rsq: number,
+    pe: number,
+    pb: number,
+    div: number,
     createdAt: string,
     updatedAt: string,
   } | null,

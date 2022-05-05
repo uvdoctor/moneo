@@ -450,10 +450,10 @@ type AllIndices
   ind: Industry
 }
 
-type IndicePerf
+type IndiceHistPerf
   @model
   @aws_iam
-  @key(fields: ["id"])
+  @key(fields: ["name"])
   @auth(
     rules: [
       {
@@ -464,11 +464,19 @@ type IndicePerf
       { allow: private, operations: [read] }
     ]
   ) {
-  id: String!
-  price1y: Float!
-  price3y: Float!
-  price5y: Float!
-  price10y: Float!
+  name: String!
+  p1m: Float!
+  p3m: Float!
+  p1y: Float!
+  p3y: Float!
+  p5y: Float!
+  vol: Float!
+  beta: Float!
+  corr: Float!
+  rsq: Float!
+  pe: Float!
+  pb: Float!
+  div: Float!
 }
 
 type IndiceComp

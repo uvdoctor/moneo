@@ -782,40 +782,64 @@ export const onDeleteAllIndices = /* GraphQL */ `
     }
   }
 `;
-export const onCreateIndicePerf = /* GraphQL */ `
-  subscription OnCreateIndicePerf {
-    onCreateIndicePerf {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+export const onCreateIndiceHistPerf = /* GraphQL */ `
+  subscription OnCreateIndiceHistPerf {
+    onCreateIndiceHistPerf {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateIndicePerf = /* GraphQL */ `
-  subscription OnUpdateIndicePerf {
-    onUpdateIndicePerf {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+export const onUpdateIndiceHistPerf = /* GraphQL */ `
+  subscription OnUpdateIndiceHistPerf {
+    onUpdateIndiceHistPerf {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteIndicePerf = /* GraphQL */ `
-  subscription OnDeleteIndicePerf {
-    onDeleteIndicePerf {
-      id
-      price1y
-      price3y
-      price5y
-      price10y
+export const onDeleteIndiceHistPerf = /* GraphQL */ `
+  subscription OnDeleteIndiceHistPerf {
+    onDeleteIndiceHistPerf {
+      name
+      p1m
+      p3m
+      p1y
+      p3y
+      p5y
+      vol
+      beta
+      corr
+      rsq
+      pe
+      pb
+      div
       createdAt
       updatedAt
     }
