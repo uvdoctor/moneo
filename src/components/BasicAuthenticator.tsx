@@ -132,6 +132,13 @@ export default function BasicAuthenticator({
     setDisable(true);
   };
 
+  const forgotPassword = () => {
+    Hub.dispatch("UI Auth", {
+      event: "AuthStateChange",
+      message: AuthState.ForgotPassword,
+    });
+  };
+
   const signIn = () => {
     setLoading(true);
     validateCaptcha("registration_step").then(async (success: boolean) => {
@@ -192,20 +199,21 @@ export default function BasicAuthenticator({
           <AmplifySection slot="sign-in">
             <Title level={5}>{Translations.SIGN_IN_HEADER_TEXT}</Title>
             <div className="steps-content">
-              {
-                <StepOne
-                  setPasswordError={setPasswordError}
-                  setEmailError={setEmailError}
-                  passwordError={passwordError}
-                  setEmail={setEmail}
-                  setPassword={setPassword}
-                  emailError={emailError}
-                  setDisable={setDisable}
-                />
-              }
+              <StepOne
+                setPasswordError={setPasswordError}
+                setEmailError={setEmailError}
+                passwordError={passwordError}
+                setEmail={setEmail}
+                setPassword={setPassword}
+                emailError={emailError}
+                setDisable={setDisable}
+              />
             </div>
             <div className="steps-action">
-              <Row justify="end">
+              <Row justify="space-between">
+                <Button type="primary" onClick={forgotPassword}>
+                  {Translations.FORGOT_PASSWORD_TEXT}
+                </Button>
                 <Button
                   type="primary"
                   disabled={disable}
