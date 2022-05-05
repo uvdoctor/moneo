@@ -211,7 +211,7 @@ export default function BasicAuthenticator({
             </div>
             <div className="steps-action">
               <Row justify="space-between">
-                <Button type="primary" onClick={forgotPassword}>
+                <Button type="link" onClick={forgotPassword}>
                   {Translations.FORGOT_PASSWORD_TEXT}
                 </Button>
                 <Button
