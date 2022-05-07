@@ -16,6 +16,7 @@ const {
   getTableNameFromInitialWord,
   pushData,
   pushDataForFeed,
+  appendGenericFields
 } = require("/opt/nodejs/databaseUtils");
 const table = "IndexConst";
 
@@ -32,6 +33,7 @@ const arrangeData = async (indexList) => {
       name: element.Name,
       comp,
     };
+    appendGenericFields(schema, table)
     console.log(schema);
     batch.push({ PutRequest: { Item: schema } });
   }
