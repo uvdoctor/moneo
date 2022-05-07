@@ -1,13 +1,20 @@
 var pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
-const {
-  appendGenericFields,
-} = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const {
-  divideArrayBySize,
-} = require("../../moneoutilslayer/lib/nodejs/utility");
+// const {
+//   appendGenericFields,
+// } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+// const {
+//   divideArrayBySize,
+// } = require("../../moneoutilslayer/lib/nodejs/utility");
+const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
+const { divideArrayBySize } = require("/opt/nodejs/utility");
 const dataObj = [];
 
 const parseDataFromPDF = async (url, table) => {
+  const parse = (num) => {
+    let number = parseFloat(num);
+    if (isNaN(number)) number = 0;
+    return number;
+  };
   var loadingTask = pdfjsLib.getDocument(url);
   await loadingTask.promise
     .then(function (doc) {
@@ -44,22 +51,22 @@ const parseDataFromPDF = async (url, table) => {
                     div,
                   ] = data.slice(data.indexOf(item), data.indexOf(item) + 13);
                   const schema = {
-                    name,
-                    p1m,
-                    p3m,
-                    p1y,
-                    p3y,
-                    p5y,
-                    vol,
-                    beta,
-                    corr,
-                    rsq,
-                    pe,
-                    pb,
-                    div,
+                    name: name.trim(),
+                    p1m: parse(p1m),
+                    p3m: parse(p3m),
+                    p1y: parse(p1y),
+                    p3y: parse(p3y),
+                    p5y: parse(p5y),
+                    vol: parse(vol),
+                    beta: parse(beta),
+                    corr: parse(corr),
+                    rsq: parse(rsq),
+                    pe: parse(pe),
+                    pb: parse(pb),
+                    div: parse(div),
                   };
                   appendGenericFields(schema, table);
-                  dataObj.push(schema);
+                  dataObj.push({ PutRequest: { Item: schema } });
                 }
               });
               page.cleanup();

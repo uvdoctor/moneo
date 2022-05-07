@@ -1,5 +1,11 @@
-const { utility } = require("../../moneoutilslayer/lib/nodejs/utility");
-const { getTableNameFromInitialWord, pushDataForFeed } = require('../../moneoutilslayer/lib/nodejs/databaseUtils')
+// const { utility } = require("../../moneoutilslayer/lib/nodejs/utility");
+// const { getTableNameFromInitialWord, pushDataForFeed, pushData } = require('../../moneoutilslayer/lib/nodejs/databaseUtils')
+const { utility } = require("/opt/nodejs/utility");
+const {
+  getTableNameFromInitialWord,
+  pushDataForFeed,
+  pushData,
+} = require("/opt/nodejs/databaseUtils");
 const { getData } = require("./getData");
 const table = "IndiceHistPerf";
 
@@ -9,6 +15,7 @@ const getAndPushData = async () => {
     console.log("Table name fetched: ", tableName);
     const { monthChar, yearFull } = utility(30);
     const url = `https://www1.nseindia.com/content/indices/Index_Dashboard_${monthChar}${yearFull}.pdf`;
+    console.log(url);
     try {
       const batches = await getData(url, table);
       console.log(batches.length);
