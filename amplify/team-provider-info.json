@@ -39,7 +39,7 @@
         },
         "moneopricelayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersiond39b125c-build.zip"
+          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion0faffc0c-build.zip"
         },
         "alerts": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
@@ -71,11 +71,11 @@
         },
         "indicecomp": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/indicecomp-6471766d416753437a32-build.zip"
+          "s3Key": "amplify-builds/indicecomp-644e7a5231586978685a-build.zip"
         },
         "indiceperf": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/indiceperf-48444245484470353465-build.zip"
+          "s3Key": "amplify-builds/indiceperf-61597376747a67506d51-build.zip"
         }
       },
       "auth": {
