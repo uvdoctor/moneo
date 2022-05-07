@@ -29,6 +29,7 @@ const arrangeData = async (indexList) => {
       const ele = data[item];
       comp.push(ele.Code);
     });
+    if(!comp.length) continue;
     const schema = {
       name: element.Name,
       comp,
