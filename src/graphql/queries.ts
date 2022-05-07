@@ -817,6 +817,45 @@ export const listAllIndicess = /* GraphQL */ `
     }
   }
 `;
+export const getInsHistPerf = /* GraphQL */ `
+  query GetInsHistPerf($id: String!) {
+    getInsHistPerf(id: $id) {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInsHistPerfs = /* GraphQL */ `
+  query ListInsHistPerfs(
+    $id: String
+    $filter: ModelInsHistPerfFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInsHistPerfs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        p1y
+        p3y
+        p5y
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getIndiceHistPerf = /* GraphQL */ `
   query GetIndiceHistPerf($name: String!) {
     getIndiceHistPerf(name: $name) {
@@ -874,34 +913,34 @@ export const listIndiceHistPerfs = /* GraphQL */ `
     }
   }
 `;
-export const getIndiceComp = /* GraphQL */ `
-  query GetIndiceComp($id: String!) {
-    getIndiceComp(id: $id) {
-      id
-      comp
+export const getIndexConst = /* GraphQL */ `
+  query GetIndexConst($name: String!) {
+    getIndexConst(name: $name) {
+      name
+      const
       createdAt
       updatedAt
     }
   }
 `;
-export const listIndiceComps = /* GraphQL */ `
-  query ListIndiceComps(
-    $id: String
-    $filter: ModelIndiceCompFilterInput
+export const listIndexConsts = /* GraphQL */ `
+  query ListIndexConsts(
+    $name: String
+    $filter: ModelIndexConstFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listIndiceComps(
-      id: $id
+    listIndexConsts(
+      name: $name
       filter: $filter
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
       items {
-        id
-        comp
+        name
+        const
         createdAt
         updatedAt
       }

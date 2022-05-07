@@ -450,6 +450,26 @@ type AllIndices
   ind: Industry
 }
 
+type InsHistPerf
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  p1y: Float!
+  p3y: Float!
+  p5y: Float!
+}
+
 type IndiceHistPerf
   @model
   @aws_iam
@@ -479,10 +499,10 @@ type IndiceHistPerf
   div: Float!
 }
 
-type IndiceComp
+type IndexConst
   @model
   @aws_iam
-  @key(fields: ["id"])
+  @key(fields: ["name"])
   @auth(
     rules: [
       {
@@ -493,8 +513,8 @@ type IndiceComp
       { allow: private, operations: [read] }
     ]
   ) {
-  id: String!
-  comp: [String!]!
+  name: String!
+  const: [String!]!
 }
 
 type INBondPrice

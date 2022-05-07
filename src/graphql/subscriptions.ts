@@ -782,6 +782,42 @@ export const onDeleteAllIndices = /* GraphQL */ `
     }
   }
 `;
+export const onCreateInsHistPerf = /* GraphQL */ `
+  subscription OnCreateInsHistPerf {
+    onCreateInsHistPerf {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInsHistPerf = /* GraphQL */ `
+  subscription OnUpdateInsHistPerf {
+    onUpdateInsHistPerf {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInsHistPerf = /* GraphQL */ `
+  subscription OnDeleteInsHistPerf {
+    onDeleteInsHistPerf {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateIndiceHistPerf = /* GraphQL */ `
   subscription OnCreateIndiceHistPerf {
     onCreateIndiceHistPerf {
@@ -845,31 +881,31 @@ export const onDeleteIndiceHistPerf = /* GraphQL */ `
     }
   }
 `;
-export const onCreateIndiceComp = /* GraphQL */ `
-  subscription OnCreateIndiceComp {
-    onCreateIndiceComp {
-      id
-      comp
+export const onCreateIndexConst = /* GraphQL */ `
+  subscription OnCreateIndexConst {
+    onCreateIndexConst {
+      name
+      const
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateIndiceComp = /* GraphQL */ `
-  subscription OnUpdateIndiceComp {
-    onUpdateIndiceComp {
-      id
-      comp
+export const onUpdateIndexConst = /* GraphQL */ `
+  subscription OnUpdateIndexConst {
+    onUpdateIndexConst {
+      name
+      const
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteIndiceComp = /* GraphQL */ `
-  subscription OnDeleteIndiceComp {
-    onDeleteIndiceComp {
-      id
-      comp
+export const onDeleteIndexConst = /* GraphQL */ `
+  subscription OnDeleteIndexConst {
+    onDeleteIndexConst {
+      name
+      const
       createdAt
       updatedAt
     }

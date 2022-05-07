@@ -2158,6 +2158,51 @@ export const deleteAllIndices = /* GraphQL */ `
     }
   }
 `;
+export const createInsHistPerf = /* GraphQL */ `
+  mutation CreateInsHistPerf(
+    $input: CreateInsHistPerfInput!
+    $condition: ModelInsHistPerfConditionInput
+  ) {
+    createInsHistPerf(input: $input, condition: $condition) {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInsHistPerf = /* GraphQL */ `
+  mutation UpdateInsHistPerf(
+    $input: UpdateInsHistPerfInput!
+    $condition: ModelInsHistPerfConditionInput
+  ) {
+    updateInsHistPerf(input: $input, condition: $condition) {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInsHistPerf = /* GraphQL */ `
+  mutation DeleteInsHistPerf(
+    $input: DeleteInsHistPerfInput!
+    $condition: ModelInsHistPerfConditionInput
+  ) {
+    deleteInsHistPerf(input: $input, condition: $condition) {
+      id
+      p1y
+      p3y
+      p5y
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createIndiceHistPerf = /* GraphQL */ `
   mutation CreateIndiceHistPerf(
     $input: CreateIndiceHistPerfInput!
@@ -2230,40 +2275,40 @@ export const deleteIndiceHistPerf = /* GraphQL */ `
     }
   }
 `;
-export const createIndiceComp = /* GraphQL */ `
-  mutation CreateIndiceComp(
-    $input: CreateIndiceCompInput!
-    $condition: ModelIndiceCompConditionInput
+export const createIndexConst = /* GraphQL */ `
+  mutation CreateIndexConst(
+    $input: CreateIndexConstInput!
+    $condition: ModelIndexConstConditionInput
   ) {
-    createIndiceComp(input: $input, condition: $condition) {
-      id
-      comp
+    createIndexConst(input: $input, condition: $condition) {
+      name
+      const
       createdAt
       updatedAt
     }
   }
 `;
-export const updateIndiceComp = /* GraphQL */ `
-  mutation UpdateIndiceComp(
-    $input: UpdateIndiceCompInput!
-    $condition: ModelIndiceCompConditionInput
+export const updateIndexConst = /* GraphQL */ `
+  mutation UpdateIndexConst(
+    $input: UpdateIndexConstInput!
+    $condition: ModelIndexConstConditionInput
   ) {
-    updateIndiceComp(input: $input, condition: $condition) {
-      id
-      comp
+    updateIndexConst(input: $input, condition: $condition) {
+      name
+      const
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteIndiceComp = /* GraphQL */ `
-  mutation DeleteIndiceComp(
-    $input: DeleteIndiceCompInput!
-    $condition: ModelIndiceCompConditionInput
+export const deleteIndexConst = /* GraphQL */ `
+  mutation DeleteIndexConst(
+    $input: DeleteIndexConstInput!
+    $condition: ModelIndexConstConditionInput
   ) {
-    deleteIndiceComp(input: $input, condition: $condition) {
-      id
-      comp
+    deleteIndexConst(input: $input, condition: $condition) {
+      name
+      const
       createdAt
       updatedAt
     }

@@ -1454,6 +1454,43 @@ export type DeleteAllIndicesInput = {
   id: string,
 };
 
+export type CreateInsHistPerfInput = {
+  id: string,
+  p1y: number,
+  p3y: number,
+  p5y: number,
+};
+
+export type ModelInsHistPerfConditionInput = {
+  p1y?: ModelFloatInput | null,
+  p3y?: ModelFloatInput | null,
+  p5y?: ModelFloatInput | null,
+  and?: Array< ModelInsHistPerfConditionInput | null > | null,
+  or?: Array< ModelInsHistPerfConditionInput | null > | null,
+  not?: ModelInsHistPerfConditionInput | null,
+};
+
+export type InsHistPerf = {
+  __typename: "InsHistPerf",
+  id?: string,
+  p1y?: number,
+  p3y?: number,
+  p5y?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateInsHistPerfInput = {
+  id: string,
+  p1y?: number | null,
+  p3y?: number | null,
+  p5y?: number | null,
+};
+
+export type DeleteInsHistPerfInput = {
+  id: string,
+};
+
 export type CreateIndiceHistPerfInput = {
   name: string,
   p1m: number,
@@ -1527,33 +1564,33 @@ export type DeleteIndiceHistPerfInput = {
   name: string,
 };
 
-export type CreateIndiceCompInput = {
-  id: string,
-  comp: Array< string >,
+export type CreateIndexConstInput = {
+  name: string,
+  const: Array< string >,
 };
 
-export type ModelIndiceCompConditionInput = {
-  comp?: ModelStringInput | null,
-  and?: Array< ModelIndiceCompConditionInput | null > | null,
-  or?: Array< ModelIndiceCompConditionInput | null > | null,
-  not?: ModelIndiceCompConditionInput | null,
+export type ModelIndexConstConditionInput = {
+  const?: ModelStringInput | null,
+  and?: Array< ModelIndexConstConditionInput | null > | null,
+  or?: Array< ModelIndexConstConditionInput | null > | null,
+  not?: ModelIndexConstConditionInput | null,
 };
 
-export type IndiceComp = {
-  __typename: "IndiceComp",
-  id?: string,
-  comp?: Array< string >,
+export type IndexConst = {
+  __typename: "IndexConst",
+  name?: string,
+  const?: Array< string >,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateIndiceCompInput = {
-  id: string,
-  comp?: Array< string > | null,
+export type UpdateIndexConstInput = {
+  name: string,
+  const?: Array< string > | null,
 };
 
-export type DeleteIndiceCompInput = {
-  id: string,
+export type DeleteIndexConstInput = {
+  name: string,
 };
 
 export type CreateINBondPriceInput = {
@@ -2114,6 +2151,22 @@ export type ModelAllIndicesConnection = {
   nextToken?: string | null,
 };
 
+export type ModelInsHistPerfFilterInput = {
+  id?: ModelStringInput | null,
+  p1y?: ModelFloatInput | null,
+  p3y?: ModelFloatInput | null,
+  p5y?: ModelFloatInput | null,
+  and?: Array< ModelInsHistPerfFilterInput | null > | null,
+  or?: Array< ModelInsHistPerfFilterInput | null > | null,
+  not?: ModelInsHistPerfFilterInput | null,
+};
+
+export type ModelInsHistPerfConnection = {
+  __typename: "ModelInsHistPerfConnection",
+  items?:  Array<InsHistPerf | null >,
+  nextToken?: string | null,
+};
+
 export type ModelIndiceHistPerfFilterInput = {
   name?: ModelStringInput | null,
   p1m?: ModelFloatInput | null,
@@ -2139,17 +2192,17 @@ export type ModelIndiceHistPerfConnection = {
   nextToken?: string | null,
 };
 
-export type ModelIndiceCompFilterInput = {
-  id?: ModelStringInput | null,
-  comp?: ModelStringInput | null,
-  and?: Array< ModelIndiceCompFilterInput | null > | null,
-  or?: Array< ModelIndiceCompFilterInput | null > | null,
-  not?: ModelIndiceCompFilterInput | null,
+export type ModelIndexConstFilterInput = {
+  name?: ModelStringInput | null,
+  const?: ModelStringInput | null,
+  and?: Array< ModelIndexConstFilterInput | null > | null,
+  or?: Array< ModelIndexConstFilterInput | null > | null,
+  not?: ModelIndexConstFilterInput | null,
 };
 
-export type ModelIndiceCompConnection = {
-  __typename: "ModelIndiceCompConnection",
-  items?:  Array<IndiceComp | null >,
+export type ModelIndexConstConnection = {
+  __typename: "ModelIndexConstConnection",
+  items?:  Array<IndexConst | null >,
   nextToken?: string | null,
 };
 
@@ -4636,6 +4689,57 @@ export type DeleteAllIndicesMutation = {
   } | null,
 };
 
+export type CreateInsHistPerfMutationVariables = {
+  input?: CreateInsHistPerfInput,
+  condition?: ModelInsHistPerfConditionInput | null,
+};
+
+export type CreateInsHistPerfMutation = {
+  createInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInsHistPerfMutationVariables = {
+  input?: UpdateInsHistPerfInput,
+  condition?: ModelInsHistPerfConditionInput | null,
+};
+
+export type UpdateInsHistPerfMutation = {
+  updateInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInsHistPerfMutationVariables = {
+  input?: DeleteInsHistPerfInput,
+  condition?: ModelInsHistPerfConditionInput | null,
+};
+
+export type DeleteInsHistPerfMutation = {
+  deleteInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateIndiceHistPerfMutationVariables = {
   input?: CreateIndiceHistPerfInput,
   condition?: ModelIndiceHistPerfConditionInput | null,
@@ -4714,46 +4818,46 @@ export type DeleteIndiceHistPerfMutation = {
   } | null,
 };
 
-export type CreateIndiceCompMutationVariables = {
-  input?: CreateIndiceCompInput,
-  condition?: ModelIndiceCompConditionInput | null,
+export type CreateIndexConstMutationVariables = {
+  input?: CreateIndexConstInput,
+  condition?: ModelIndexConstConditionInput | null,
 };
 
-export type CreateIndiceCompMutation = {
-  createIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type CreateIndexConstMutation = {
+  createIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateIndiceCompMutationVariables = {
-  input?: UpdateIndiceCompInput,
-  condition?: ModelIndiceCompConditionInput | null,
+export type UpdateIndexConstMutationVariables = {
+  input?: UpdateIndexConstInput,
+  condition?: ModelIndexConstConditionInput | null,
 };
 
-export type UpdateIndiceCompMutation = {
-  updateIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type UpdateIndexConstMutation = {
+  updateIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteIndiceCompMutationVariables = {
-  input?: DeleteIndiceCompInput,
-  condition?: ModelIndiceCompConditionInput | null,
+export type DeleteIndexConstMutationVariables = {
+  input?: DeleteIndexConstInput,
+  condition?: ModelIndexConstConditionInput | null,
 };
 
-export type DeleteIndiceCompMutation = {
-  deleteIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type DeleteIndexConstMutation = {
+  deleteIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5871,6 +5975,46 @@ export type ListAllIndicessQuery = {
   } | null,
 };
 
+export type GetInsHistPerfQueryVariables = {
+  id?: string,
+};
+
+export type GetInsHistPerfQuery = {
+  getInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInsHistPerfsQueryVariables = {
+  id?: string | null,
+  filter?: ModelInsHistPerfFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInsHistPerfsQuery = {
+  listInsHistPerfs?:  {
+    __typename: "ModelInsHistPerfConnection",
+    items:  Array< {
+      __typename: "InsHistPerf",
+      id: string,
+      p1y: number,
+      p3y: number,
+      p5y: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetIndiceHistPerfQueryVariables = {
   name?: string,
 };
@@ -5929,35 +6073,35 @@ export type ListIndiceHistPerfsQuery = {
   } | null,
 };
 
-export type GetIndiceCompQueryVariables = {
-  id?: string,
+export type GetIndexConstQueryVariables = {
+  name?: string,
 };
 
-export type GetIndiceCompQuery = {
-  getIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type GetIndexConstQuery = {
+  getIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListIndiceCompsQueryVariables = {
-  id?: string | null,
-  filter?: ModelIndiceCompFilterInput | null,
+export type ListIndexConstsQueryVariables = {
+  name?: string | null,
+  filter?: ModelIndexConstFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListIndiceCompsQuery = {
-  listIndiceComps?:  {
-    __typename: "ModelIndiceCompConnection",
+export type ListIndexConstsQuery = {
+  listIndexConsts?:  {
+    __typename: "ModelIndexConstConnection",
     items:  Array< {
-      __typename: "IndiceComp",
-      id: string,
-      comp: Array< string >,
+      __typename: "IndexConst",
+      name: string,
+      const: Array< string >,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -7806,6 +7950,42 @@ export type OnDeleteAllIndicesSubscription = {
   } | null,
 };
 
+export type OnCreateInsHistPerfSubscription = {
+  onCreateInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInsHistPerfSubscription = {
+  onUpdateInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInsHistPerfSubscription = {
+  onDeleteInsHistPerf?:  {
+    __typename: "InsHistPerf",
+    id: string,
+    p1y: number,
+    p3y: number,
+    p5y: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateIndiceHistPerfSubscription = {
   onCreateIndiceHistPerf?:  {
     __typename: "IndiceHistPerf",
@@ -7869,31 +8049,31 @@ export type OnDeleteIndiceHistPerfSubscription = {
   } | null,
 };
 
-export type OnCreateIndiceCompSubscription = {
-  onCreateIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type OnCreateIndexConstSubscription = {
+  onCreateIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateIndiceCompSubscription = {
-  onUpdateIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type OnUpdateIndexConstSubscription = {
+  onUpdateIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteIndiceCompSubscription = {
-  onDeleteIndiceComp?:  {
-    __typename: "IndiceComp",
-    id: string,
-    comp: Array< string >,
+export type OnDeleteIndexConstSubscription = {
+  onDeleteIndexConst?:  {
+    __typename: "IndexConst",
+    name: string,
+    const: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
