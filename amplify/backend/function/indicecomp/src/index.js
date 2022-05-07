@@ -54,7 +54,7 @@ const getAndPushData = async () => {
         const result = await pushData(batches[batch], tableName);
         console.log(result);
       }
-      await pushDataForFeed(table, batches, `NSE-IndiceComp`, "", NSE);
+      await pushDataForFeed(table, batches, `NSE-IndiceComp`, "", 'NSE');
     } catch (err) {
       reject(err);
     }
