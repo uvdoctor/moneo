@@ -17,7 +17,7 @@ const {
   pushData,
   pushDataForFeed,
 } = require("/opt/nodejs/databaseUtils");
-const table = "IndiceComp";
+const table = "IndexConst";
 
 const arrangeData = async (indexList) => {
   const batch = [];
@@ -29,7 +29,7 @@ const arrangeData = async (indexList) => {
       comp.push(ele.Code);
     });
     const schema = {
-      id: element.Name,
+      name: element.Name,
       comp,
     };
     console.log(schema);

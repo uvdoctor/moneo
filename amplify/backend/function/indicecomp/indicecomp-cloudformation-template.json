@@ -238,7 +238,7 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/IndiceComp-*"
+              "Resource": "arn:aws:dynamodb:*:*:table/IndexConst-*"
             },
             {
               "Sid": "ReadWriteFeedsTable",
