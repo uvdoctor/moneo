@@ -14,7 +14,10 @@ export default function AAList() {
   const year = new Date().getFullYear();
 
   useEffect(() => {
-    if (!aa || !Object.keys(aa).length) return;
+    if (!aa || !Object.keys(aa).length) {
+      setCurrentAllocationDone(true);
+      return;
+    }
     let currentAA: any = {};
     Object.keys(aa).forEach((key: string) => {
       const allocation = aa[key][0];
@@ -34,29 +37,37 @@ export default function AAList() {
         style={{ width: "100%", height: 600 }}
         title={`Target Asset Allocation for the year ${year}`}
         loading={!currentAllocationDone}>
-        <div
-          id="scrollableDiv"
-          style={{
-            height: 400,
-            overflow: "auto",
-          }}>
-          {Object.keys(currentYearAA).map((key: string) => (
-            <div key={key}>
-              <ItemDisplay
-                label={getAssetName(key)}
-                unit="%"
-                result={currentYearAA[key]}
-                noResultFormat
-                labelHighlight
-              />
-              <Divider />
-            </div>
-          ))}
-        </div>
+        {Object.keys(currentYearAA).length ? (
+          <div
+            id="scrollableDiv"
+            style={{
+              height: 400,
+              overflow: "auto",
+            }}>
+            {Object.keys(currentYearAA).map((key: string) => (
+              <div key={key}>
+                <ItemDisplay
+                  label={getAssetName(key)}
+                  unit="%"
+                  result={currentYearAA[key]}
+                  noResultFormat
+                  labelHighlight
+                />
+                <Divider />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Row justify="center">
+            <h3>Define your goals to discover where to invest.</h3>
+          </Row>
+        )}
         <br />
         <Row justify="center">
           <Button key="more" type="primary" href={ROUTES.SET}>
-            Set Goals for more accurate allocation
+            {Object.keys(currentYearAA).length
+              ? "Set Goals for more accurate allocation"
+              : "Define Goals"}
           </Button>
         </Row>
       </Card>
