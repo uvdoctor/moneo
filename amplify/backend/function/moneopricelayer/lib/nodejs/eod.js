@@ -91,6 +91,12 @@ const getFXRate = async (curr) => {
   return await response.close;
 };
 
+const getIndexComponents = async (symbol) => {
+  let url = `https://eodhistoricaldata.com/api/fundamentals/${symbol}.INDX?api_token=${token}&fmt=json`;
+  const response = await getData(url);
+  return await response.Components;
+};
+
 module.exports = {
   getEODdata,
   getSplitInfo,
@@ -100,4 +106,5 @@ module.exports = {
   getCommodityPrice,
   getFXRate,
   getEODdataByDate,
+  getIndexComponents,
 };

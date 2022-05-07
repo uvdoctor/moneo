@@ -1,17 +1,91 @@
+const getAndPushData = async () => {
+  return new Promise(async (resolve, reject) => {
+    const tableName = await getTableNameFromInitialWord(table);
+    console.log("Table name fetched: ", tableName);
+    const exchgList = ["CNXAUTO", "CNXCMDT"];
+//     CNXAUTO	NIFTY AUTO	INDEX	
+// CNXCMDT	NIFTY COMMODITIES	INDEX	
+// 'CNXCONSUM'	NIFTY CONSUMPTION	INDEX	
+// CNXENERGY	NIFTY ENERGY	INDEX	
+// CNXFIN	NIFTY FIN SERVICE	INDEX	
+// CNXFMCG	NIFTY FMCG	INDEX	
+// CNXINFRA	NIFTY INFRA	INDEX	
+// CNXIT	NIFTY IT	INDEX	
+// CNXMEDIA	NIFTY MEDIA	INDEX	
+// CNXMETAL	NIFTY METAL	INDEX	
+// CNXPHARMA	NIFTY PHARMA	INDEX	
+// CNXSERVICE	NIFTY SERV SECTOR	INDEX	
+// NI15	NIFTY GROWTH SECTORS 15	INDEX	
+// NICPSE	NIFTY CPSE	INDEX	
+// NIF500TRI	Nifty 500 TRI	INDEX	
+// NIFGS10CLN	NIFTY 10 YR BENCHMARK G-SEC (CLEAN PRICE)	INDEX	
+// NIFGS1115	NIFTY 11-15 YR G-SEC INDEX	INDEX	
+// NIFGS15PLS	NIFTY 15 YR AND ABOVE G-SEC INDEX	INDEX	
+// NIFGS48	NIFTY 4-8 YR G-SEC INDEX	INDEX	
+// NIFGS813	NIFTY 8-13 YR G-SEC	INDEX	
+// NIFGSCMP	NIFTY COMPOSITE G-SEC INDEX	INDEX	
+// NIFMDCP100	NIFTY Midcap 100	INDEX	
+// NIFML15	NIFTY MIDCAP LIQUID 15	INDEX	
+// NIFPR1X	NIFTY50 PR 1X INVERSE	INDEX	
+// NIFPR2X	NIFTY50 PR 2X LEVERAGE	INDEX	
+// NIFPVTBNK	NIFTY PRIVATE BANK	INDEX	
+// NIFSMCP100	NIFTY Smallcap 100	INDEX	
+// NIFTR1X	NIFTY50 TR 1X INVERSE	INDEX	
+// NIFTR2X	NIFTY50 TR 2X LEVERAGE	INDEX	
+// NIFTY100	NIFTY 100	INDEX	
+// NIFTY100ESGSECLDR	NIFTY100 ESG SECTOR LEADERS	INDEX	
+// NIFTY100EW	NIFTY100 EQUAL WEIGHT	INDEX	
+// NIFTY100LOWVOL30	NIFTY100 LOW VOLATILITY 30	INDEX	
+// NIFTY100QUALTY30	NIFTY100 QUALITY 30	INDEX	
+// NIFTY200	NIFTY 200	INDEX	
+// NIFTY200MOMENTM30	NIFTY200 MOMENTUM 30	INDEX	
+// NIFTY200QUALTY30	NIFTY200 QUALITY 30	INDEX	
+// NIFTY500	Nifty 500	INDEX	
+// NIFTY50EQLWGT	NIFTY50 EQUAL WEIGHT	INDEX	
+// NIFTYALI	Nifty Alpha 50	INDEX	
+// NIFTYALPHALOWVOL	NIFTY ALPHA LOW-VOLATILITY 30	INDEX	
+// NIFTYDV	NIFTY50 DIVIDEND POINTS	INDEX	
+// NIFTYDVOP	NIFTY DIVIDEND OPPORTUNITIES 50	INDEX	
+// NIFTYFINSRV2550	NIFTY FINANCIAL SERVICES 25/50	INDEX	
+// NIFTYLVI	Nifty Low Volatility 50	INDEX	
+// NIFTYMIDCAP150	NIFTY MIDCAP 150	INDEX	
+// NIFTYMIDSML400	NIFTY MIDSMALLCAP 400	INDEX	
+// NIFTYMNC	NIFTY MNC	INDEX	
+// NIFTYPSE	NIFTY PSE	INDEX	
+// NIFTYPSU	NIFTY PSU BANK	INDEX	
+// NIFTYREAL	NIFTY REALTY	INDEX	
+// NIMDCP50	NIFTY MIDCAP 50	INDEX	
+// NISM250	NIFTY SMALLCAP 250	INDEX	
+// NISM50	NIFTY SMALLCAP 50	INDEX	
+// NLIX50	NIFTY100 LIQUID 15	INDEX	
+// NN50	NIFTY NEXT 50	INDEX	
+// NSEBANK	Nifty Bank	INDEX	
+// NSEI	Nifty 50	INDEX	
+// NV20	NIFTY50 VALUE 20	INDEX	
+    const offset = [0, 500, 1000, 1500];
+    try {
+      for (let exchg of exchgList) {
+        for (let i = 0; i < offset.length; i++) {
+          const { data, url } = await getFundamentalDataByLimit(
+            exchg,
+            offset[i]
+          );
+          const batches = calculateSchema(data, isinMap, exchg, table);
+          console.log(batches);
+          for (let batch in batches) {
+            const result = await pushData(batches[batch], tableName);
+            console.log(result);
+          }
+          await pushDataForFeed(table, batches, `${exchg}-${i}`, url, exchg);
+        }
+      }
+    } catch (err) {
+      reject(err);
+    }
+    resolve();
+  });
+};
 
-
-/**
- * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
- */
 exports.handler = async (event) => {
-    console.log(`EVENT: ${JSON.stringify(event)}`);
-    return {
-        statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  }, 
-        body: JSON.stringify('Hello from Lambda!'),
-    };
+  return await getAndPushData(event.diff);
 };
