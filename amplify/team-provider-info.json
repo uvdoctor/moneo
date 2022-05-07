@@ -71,7 +71,7 @@
         },
         "indicecomp": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/indicecomp-644e7a5231586978685a-build.zip"
+          "s3Key": "amplify-builds/indicecomp-306d6244347876397a49-build.zip"
         },
         "indiceperf": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
