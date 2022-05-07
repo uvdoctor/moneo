@@ -97,6 +97,13 @@ const getIndexComponents = async (symbol) => {
   return await response.Components;
 };
 
+const getIndexList = async () => {
+  let url = `https://eodhistoricaldata.com/api/exchange-symbol-list/INDX?api_token=${token}&fmt=json`;
+  const response = await getData(url);
+  return await response;
+  
+}
+
 module.exports = {
   getEODdata,
   getSplitInfo,
@@ -107,4 +114,5 @@ module.exports = {
   getFXRate,
   getEODdataByDate,
   getIndexComponents,
+  getIndexList
 };
