@@ -23,7 +23,7 @@ const getAndPushData = async () => {
         const result = await pushData(batches[batch], tableName);
         console.log(result);
       }
-      await pushDataForFeed(table, batches, "NSE-IndiceHistPref", url, "NSE");
+      await pushDataForFeed(table, batches, "NSE", url, "NSE");
     } catch (err) {
       reject(err);
     }
