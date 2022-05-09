@@ -218,6 +218,45 @@
           ]
         }
       }
+    },
+    "LambdaDynamoDbPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "dynamo-db-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "ReadWriteTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/InsHistPerf-*"
+            },
+            {
+              "Sid": "ReadWriteFeedsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
+            },
+            {
+              "Sid": "ListTables",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:ListTables"
+              ],
+              "Resource": "arn:aws:dynamodb:*:*:*"
+            }
+          ]
+        }
+      }
     }
   },
   "Outputs": {
