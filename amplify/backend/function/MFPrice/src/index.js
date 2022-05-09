@@ -17,22 +17,34 @@ const {
 } = require("./calculate");
 const table = "INMFPrice";
 
+const isWeekend = (date) => date.getDay() % 6 == 0;
+const getPrevDate = (prev) => {
+  let { date, monthChar, yearFull } = utility(prev);
+  return new Date(`${date} ${monthChar} ${yearFull}`);
+};
+
 let prev = 1;
+let mfInfoArray = [];
 const getInfo = async () => {
-  let mfInfoArray = {};
-  const { date, monthChar, yearFull } = utility(prev);
-  const prevDate = new Date(`${date} ${monthChar} ${yearFull}`);
-  const isWeekend = (date) => date.getDay() % 6 == 0;
+  const prevDate = getPrevDate(prev);
   try {
     mfInfoArray = await mfData.history(prevDate, new Date());
-    if (mfInfoArray.length < 8000) return;
   } catch (error) {
     console.log(error);
   }
-  if (mfInfoArray.length < 2000 && !isWeekend) {
+  if (
+    mfInfoArray.length < 2000 || mfInfoArray.length < 8000 ||
+    isWeekend(prevDate)
+  ) {
     prev++;
     await getInfo();
   }
+  return prev;
+};
+
+const arrangeData = async () => {
+  const prev = await getInfo();
+  const prevDate = getPrevDate(prev);
   const prevInfoMap = {};
   const currInfoArray = [];
   mfInfoArray.forEach((element) => {
@@ -43,13 +55,14 @@ const getInfo = async () => {
     if (date.toDateString() === prevDate.toDateString()) {
       prevInfoMap[id] = parseFloat(price);
     } else if (
-      date.toDateString() === new Date().toDateString()
+      date.toDateString() !== prevDate.toDateString() &&
+      !isWeekend(date)
     ) {
       currInfoArray.push(element);
     }
   });
-	console.log("CurrInfoArray", currInfoArray.length);
-	console.log("PrevInfoMap", Object.keys(prevInfoMap).length);
+  console.log("CurrInfoArray", currInfoArray.length);
+  console.log("PrevInfoMap", Object.keys(prevInfoMap).length);
   return { prevInfoMap, currInfoArray };
 };
 
@@ -59,7 +72,7 @@ const getData = () => {
     let batchRecords = [];
     let isinMap = {};
     let count = 0;
-    const data = await getInfo();
+    const data = await arrangeData();
     if (!data) resolve();
     const { prevInfoMap, currInfoArray } = data;
     const regdirData = directISIN(currInfoArray);
@@ -110,7 +123,7 @@ exports.handler = async (event) => {
   console.log("Table name fetched: ", tableName);
   const data = await getData();
   if (!data) return;
-	console.log(data.length);
+  console.log(data.length);
   for (let batch in data) {
     await pushData(data[batch], tableName);
   }
