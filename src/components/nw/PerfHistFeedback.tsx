@@ -21,9 +21,9 @@ export default function PerfHistFeedback({
     const diffOne = calculateDiffPercent(instrument?.price, performance.p1y);
     const diffThree = calculateDiffPercent(instrument?.price, performance.p3y);
     const diffFive = calculateDiffPercent(instrument?.price, performance.p5y);
-    const indexDiffOne = indexPerf["NIFTY 50"]?.p1y;
-    const indexDiffTwo = indexPerf["NIFTY 50"]?.p3y;
-    const indexDiffThree = indexPerf["NIFTY 50"]?.p5y;
+    const indexDiffOne = indexPerf && indexPerf["NIFTY 50"]?.p1y;
+    const indexDiffTwo = indexPerf && indexPerf["NIFTY 50"]?.p3y;
+    const indexDiffThree =indexPerf && indexPerf["NIFTY 50"]?.p5y;
     if(diffOne > indexDiffOne) star += 2;
     if(diffThree > indexDiffTwo) star += 1;
     if(diffFive > indexDiffThree) star += 1;
