@@ -20,7 +20,9 @@ import {
 } from "../../api/goals";
 import {
   LOCAL_DATA_TTL,
+  LOCAL_INDEX_PERF_KEY,
   LOCAL_INS_DATA_KEY,
+  LOCAL_INS_PERF_KEY,
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
@@ -36,9 +38,11 @@ import {
   isFund,
   isLargeCap,
   loadMatchingINBond,
+  loadMatchingIndexPerf,
   loadMatchingIndices,
   loadMatchingINExchange,
   loadMatchingINMutual,
+  loadMatchingInsPerf,
 } from "./nwutils";
 const today = new Date();
 const presentMonth = today.getMonth() + 1;
@@ -47,14 +51,16 @@ const presentYear = today.getFullYear();
 const loadInstrumentPrices = async (
   fun: Function,
   ids: Array<string>,
-  allInsData: any
+  allInsData: any,
+  key?: string
 ) => {
   if (!ids.length) return null;
   let matchingList: Array<any> | null = await fun(ids);
   if (!matchingList || !matchingList.length) return ids;
   matchingList?.forEach(
     (matchingEntry: InstrumentInput) =>
-      (allInsData[matchingEntry.id] = matchingEntry)
+    // @ts-ignore
+      (allInsData[key ? matchingEntry[key] : matchingEntry.id] = matchingEntry)
   );
   if (matchingList.length === ids.length) return null;
   let unmatched: Array<string> = [];
@@ -105,10 +111,52 @@ export const loadInstruments = async (ids: Array<string>) => {
   return allInsData;
 };
 
+export const loadInsPerf = async (ids: Array<string>) => {
+  let gotodb = false;
+  let allInsPrefData: any = simpleStorage.get(LOCAL_INS_PERF_KEY);
+  if (!allInsPrefData) allInsPrefData = {};
+  ids.forEach((id: string) => {
+    if (!allInsPrefData[id]) gotodb = true;
+  });
+  if (!gotodb) return allInsPrefData;
+  if (ids.length) {
+    await loadInstrumentPrices(loadMatchingInsPerf, ids, allInsPrefData);
+  }
+  simpleStorage.set(LOCAL_INS_PERF_KEY, allInsPrefData, LOCAL_DATA_TTL);
+  return allInsPrefData;
+};
+
+export const loadIndexPerf = async (ids: Array<string>) => {
+  let gotodb = false;
+  let allIndexPrefData: any = simpleStorage.get(LOCAL_INDEX_PERF_KEY);
+  if (!allIndexPrefData) allIndexPrefData = {};
+  ids.forEach((id: string) => {
+    if (!allIndexPrefData[id]) gotodb = true;
+  });
+  if (!gotodb) return allIndexPrefData;
+  if (ids.length) {
+    await loadInstrumentPrices(loadMatchingIndexPerf, ids, allIndexPrefData, "name");
+  }
+  simpleStorage.set(LOCAL_INDEX_PERF_KEY, allIndexPrefData, LOCAL_DATA_TTL);
+  return allIndexPrefData;
+};
+
 const initializeInsData = async (instruments: Array<InstrumentInput>) => {
   const ids: Array<string> = [];
   instruments.forEach((instrument: InstrumentInput) => ids.push(instrument.id));
   return await loadInstruments(ids);
+};
+
+const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
+  const ids: Array<string> = [];
+  const indexIds: Array<string> = ["NIFTY 50"];
+  instruments.forEach((instrument: InstrumentInput) => {
+    isFund(instrument.id)
+      ? ids.push(instrument.id)
+      : ids.push(instrument.sid as string);
+  });
+  await loadIndexPerf(indexIds);
+  return await loadInsPerf(ids);
 };
 
 const getCashFlows = (
@@ -467,6 +515,7 @@ export const priceInstruments = async (
     [RiskProfile.A]: initRiskAttribs(),
     [RiskProfile.VA]: initRiskAttribs(),
   };
+  await initializeIndexPerf(instruments);
   let cachedData = await initializeInsData(instruments);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
@@ -1086,7 +1135,7 @@ export const calculateTotalLiabilities = (
   return totalLiabilities;
 };
 
-const calculateDiffPercent = (curr: number, prev: number) => {
+export const calculateDiffPercent = (curr: number, prev: number) => {
   const diff = (100 * (curr - prev)) / prev;
   return Math.round(diff * 100) / 100;
 };

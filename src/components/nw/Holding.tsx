@@ -14,7 +14,11 @@ require("./Holding.less");
 import { toCurrency, toReadableNumber } from "../utils";
 import { AssetSubType, AssetType, InstrumentInput } from "../../api/goals";
 import { useEffect } from "react";
-import { COLORS, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
+import {
+  COLORS,
+  LOCAL_INS_DATA_KEY,
+  LOCAL_INS_PERF_KEY,
+} from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 import { faCoins, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,6 +28,7 @@ import IdWithRisk from "./IdWithRisk";
 import { getMarketCapLabel, isFund } from "./nwutils";
 import InsPrice from "./InsPrice";
 import ValuationWithReturnPer from "./ValuationWithReturnPer";
+import PerfHistFeedback from "./PerfHistFeedback";
 
 interface HoldingProp {
   holding: InstrumentInput;
@@ -33,6 +38,13 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+  const insprefData = simpleStorage.get(LOCAL_INS_PERF_KEY);
+  const instrumentPerf =
+    insprefData && insprefData[holding.id]
+      ? insprefData[holding.id]
+      : insprefData[holding.sid as string]
+      ? insprefData[holding.sid as string]
+      : null;
   const instrument =
     insData && insData[holding.id] ? insData[holding.id] : null;
   const price = instrument ? instrument.price : 0;
@@ -58,7 +70,8 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       className="holding"
       align="middle"
       justify="space-between"
-      gutter={[5, 5]}>
+      gutter={[5, 5]}
+    >
       {price ? (
         <Col span={24}>
           <Row justify="space-between">
@@ -135,6 +148,8 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           </Col>
           {price ? (
             <Col className="quantity">
+              {instrumentPerf ? <PerfHistFeedback performance={instrumentPerf} instrument={instrument} /> : ""}
+              &nbsp;
               {total ? (
                 <ValuationWithReturnPer valuation={total} holding={holding} />
               ) : (

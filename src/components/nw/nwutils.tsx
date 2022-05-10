@@ -280,6 +280,16 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
   };
 };
 
+const getORNameList = (list: Array<any>, ids: Array<string>) => {
+  ids.forEach((id: string) => {
+    if (!id) return;
+    list.push({ name: { eq: id } });
+  });
+  return {
+    or: list,
+  };
+};
+
 export const loadMatchingINExchange = async (ids: Array<string>) => {
   if (!ids.length) return null;
   const isins = JSON.parse(JSON.stringify(ids))
@@ -378,6 +388,50 @@ export const loadMatchingIndices = async (isins: Array<string>) => {
     if (listAllIndicess?.items?.length)
       returnList.push(...(listAllIndicess.items as Array<APIt.AllIndices>));
     nextToken = listAllIndicess?.nextToken;
+  } while (nextToken);
+  return returnList.length ? returnList : null;
+};
+
+export const loadMatchingInsPerf = async (isins: Array<string>) => {
+  if (!isins.length) return null;
+  let idList: Array<APIt.ModelInsHistPerfFilterInput> = [];
+  let returnList: Array<APIt.InsHistPerf> = [];
+  let nextToken = null;
+  do {
+    let variables: any = { limit: 5000, filter: getORIdList(idList, isins) };
+    if (nextToken) variables.nextToken = nextToken;
+    const {
+      data: { listInsHistPerfs },
+    } = (await API.graphql(
+      graphqlOperation(queries.listInsHistPerfs, variables)
+    )) as {
+      data: APIt.ListInsHistPerfsQuery;
+    };
+    if (listInsHistPerfs?.items?.length)
+      returnList.push(...(listInsHistPerfs.items as Array<APIt.InsHistPerf>));
+    nextToken = listInsHistPerfs?.nextToken;
+  } while (nextToken);
+  return returnList.length ? returnList : null;
+};
+
+export const loadMatchingIndexPerf = async (isins: Array<string>) => {
+  if (!isins.length) return null;
+  let idList: Array<APIt.ModelIndiceHistPerfFilterInput> = [];
+  let returnList: Array<APIt.IndiceHistPerf> = [];
+  let nextToken = null;
+  do {
+    let variables: any = { limit: 5000, filter: getORNameList(idList, isins) };
+    if (nextToken) variables.nextToken = nextToken;
+    const {
+      data: { listIndiceHistPerfs },
+    } = (await API.graphql(
+      graphqlOperation(queries.listIndiceHistPerfs, variables)
+    )) as {
+      data: APIt.ListIndiceHistPerfsQuery;
+    };
+    if (listIndiceHistPerfs?.items?.length)
+      returnList.push(...(listIndiceHistPerfs.items as Array<APIt.IndiceHistPerf>));
+    nextToken = listIndiceHistPerfs?.nextToken;
   } while (nextToken);
   return returnList.length ? returnList : null;
 };
