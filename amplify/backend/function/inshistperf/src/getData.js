@@ -38,7 +38,7 @@ const arrangeAndPushData = async (ids, p1y, p3y, p5y, tableName, type) => {
     const p1 = p1y.find((item) => item.id === key);
     const p3 = p3y.find((item) => item.id === key);
     const p5 = p5y.find((item) => item.id === key);
-    const schema = { id: key };
+    const schema = { id: key, p1y: 0, p3y: 0, p5y: 0 };
     if (!p1) return;
     if (p1) schema.p1y = p1.price;
     if (p3) schema.p3y = p3.price;
@@ -94,7 +94,7 @@ const getExchgData = async (yearsList, tableName) => {
         isinMap[item.code] = item.code;
         const id = item.code;
         const price = item.adjusted_close;
-        if (!price) return;
+        if (!price || isNaN(price)) return;
         if (year === 365) p1y.push({ id, price });
         if (year === 365 * 3) p3y.push({ id, price });
         if (year === 365 * 5) p5y.push({ id, price });

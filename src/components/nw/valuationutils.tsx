@@ -153,7 +153,7 @@ const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
   instruments.forEach((instrument: InstrumentInput) => {
     isFund(instrument.id)
       ? ids.push(instrument.id)
-      : ids.push(instrument.sid as string);
+      : instrument.sid ? ids.push(instrument.sid) : '';
   });
   await loadIndexPerf(indexIds);
   return await loadInsPerf(ids);
