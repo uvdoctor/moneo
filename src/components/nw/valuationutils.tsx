@@ -536,8 +536,8 @@ export const priceInstruments = async (
     [RiskProfile.A]: initRiskAttribs(),
     [RiskProfile.VA]: initRiskAttribs(),
   };
-  await initializeIndexPerf(instruments);
   let cachedData = await initializeInsData(instruments);
+  await initializeIndexPerf(instruments);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
