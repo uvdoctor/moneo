@@ -59,7 +59,7 @@ const loadInstrumentPrices = async (
   if (!matchingList || !matchingList.length) return ids;
   matchingList?.forEach(
     (matchingEntry: InstrumentInput) =>
-    // @ts-ignore
+      // @ts-ignore
       (allInsData[key ? matchingEntry[key] : matchingEntry.id] = matchingEntry)
   );
   if (matchingList.length === ids.length) return null;
@@ -135,7 +135,12 @@ export const loadIndexPerf = async (ids: Array<string>) => {
   });
   if (!gotodb) return allIndexPrefData;
   if (ids.length) {
-    await loadInstrumentPrices(loadMatchingIndexPerf, ids, allIndexPrefData, "name");
+    await loadInstrumentPrices(
+      loadMatchingIndexPerf,
+      ids,
+      allIndexPrefData,
+      "name"
+    );
   }
   simpleStorage.set(LOCAL_INDEX_PERF_KEY, allIndexPrefData, LOCAL_DATA_TTL);
   return allIndexPrefData;
@@ -147,13 +152,29 @@ const initializeInsData = async (instruments: Array<InstrumentInput>) => {
   return await loadInstruments(ids);
 };
 
-const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
+export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
   const ids: Array<string> = [];
-  const indexIds: Array<string> = ["NIFTY 50"];
+  const indexIds: Array<string> = [
+    "NIFTY 50",
+    "NIFTY Financial Services",
+    "NIFTY Healthcare Index",
+    "NIFTY IT",
+    "NIFTY Media",
+    "NIFTY Realty",
+    "NIFTY Energy",
+    "NIFTY Services Sector",
+    "NIFTY Oil & Gas",
+    "NIFTY Metal",
+    "NIFTY India Consumption",
+    "NIFTY Consumer Durables",
+    "NIFTY FMCG",
+  ];
   instruments.forEach((instrument: InstrumentInput) => {
     isFund(instrument.id)
       ? ids.push(instrument.id)
-      : instrument.sid ? ids.push(instrument.sid) : '';
+      : instrument.sid
+      ? ids.push(instrument.sid)
+      : "";
   });
   await loadIndexPerf(indexIds);
   return await loadInsPerf(ids);
