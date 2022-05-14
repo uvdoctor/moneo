@@ -75,6 +75,7 @@ export const loadInstruments = async (ids: Array<string>) => {
   let bondIds: Array<string> = [];
   let exchangeIds: Array<string> = [];
   let indexIds: Array<string> = [];
+  let insPerfIds: Array<string> = [];
   let gotodb = false;
   let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!allInsData) allInsData = {};
@@ -108,7 +109,43 @@ export const loadInstruments = async (ids: Array<string>) => {
   if (bondIds.length)
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+  ids.forEach((id: string) => {
+    isFund(id)
+      ? insPerfIds.push(id)
+      : allInsData[id] && allInsData[id].sid
+      ? insPerfIds.push(allInsData[id].sid)
+      : "";
+  });
+  await loadInsPerf(insPerfIds);
   return allInsData;
+};
+
+export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
+  const ids: Array<string> = [];
+  const indexIds: Array<string> = [
+    "NIFTY 50",
+    "NIFTY Financial Services",
+    "NIFTY Healthcare Index",
+    "NIFTY IT",
+    "NIFTY Media",
+    "NIFTY Realty",
+    "NIFTY Energy",
+    "NIFTY Services Sector",
+    "NIFTY Oil & Gas",
+    "NIFTY Metal",
+    "NIFTY India Consumption",
+    "NIFTY Consumer Durables",
+    "NIFTY FMCG",
+  ];
+  instruments.forEach((instrument: InstrumentInput) => {
+    isFund(instrument.id)
+      ? ids.push(instrument.id)
+      : instrument.sid
+      ? ids.push(instrument.sid)
+      : "";
+  });
+  await loadIndexPerf(indexIds);
+  return await loadInsPerf(ids);
 };
 
 export const loadInsPerf = async (ids: Array<string>) => {
@@ -150,34 +187,6 @@ const initializeInsData = async (instruments: Array<InstrumentInput>) => {
   const ids: Array<string> = [];
   instruments.forEach((instrument: InstrumentInput) => ids.push(instrument.id));
   return await loadInstruments(ids);
-};
-
-export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
-  const ids: Array<string> = [];
-  const indexIds: Array<string> = [
-    "NIFTY 50",
-    "NIFTY Financial Services",
-    "NIFTY Healthcare Index",
-    "NIFTY IT",
-    "NIFTY Media",
-    "NIFTY Realty",
-    "NIFTY Energy",
-    "NIFTY Services Sector",
-    "NIFTY Oil & Gas",
-    "NIFTY Metal",
-    "NIFTY India Consumption",
-    "NIFTY Consumer Durables",
-    "NIFTY FMCG",
-  ];
-  instruments.forEach((instrument: InstrumentInput) => {
-    isFund(instrument.id)
-      ? ids.push(instrument.id)
-      : instrument.sid
-      ? ids.push(instrument.sid)
-      : "";
-  });
-  await loadIndexPerf(indexIds);
-  return await loadInsPerf(ids);
 };
 
 const getCashFlows = (
