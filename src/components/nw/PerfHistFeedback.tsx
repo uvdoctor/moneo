@@ -57,10 +57,13 @@ export default function PerfHistFeedback({
 
     let sectorRating = 1;
     let fundata = await initializeFundata(instruments);
-    let data = fundata[instrument.sid as string];
+    let data =
+      fundata && fundata[instrument.sid as string]
+        ? fundata[instrument.sid as string]
+        : null;
     if (!data) return;
     const sectorIndex = getIndexBySector(data.sector);
-    if(!sectorIndex) return;
+    if (!sectorIndex) return;
     const sectorDiffOne = indexPerf && indexPerf[sectorIndex]?.p1y;
     const setorDiffThree = indexPerf && indexPerf[sectorIndex]?.p3y;
     const sectorDiffFive = indexPerf && indexPerf[sectorIndex]?.p5y;
