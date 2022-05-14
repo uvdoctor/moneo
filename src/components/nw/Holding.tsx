@@ -106,10 +106,11 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                       {instrument.crstr}
                     </Tooltip>
                   ) : null}
-                  {instrument.mcapt ? (
-                    <Tooltip title="Market capitalization">
-                      {getMarketCapLabel(instrument.mcapt)}
-                    </Tooltip>
+                  {instrument.mcapt && insPerfData ? (
+                    <PerfHistFeedback
+                      performance={instrumentPerf}
+                      instrument={instrument}
+                    />
                   ) : null}
                   {instrument.div ? (
                     <Tooltip title="Recent dividend amount">
@@ -148,15 +149,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           </Col>
           {price ? (
             <Col className="quantity">
-              {instrumentPerf ? (
-                <PerfHistFeedback
-                  performance={instrumentPerf}
-                  instrument={instrument}
-                />
-              ) : (
-                ""
-              )}
-              &nbsp;
               {total ? (
                 <ValuationWithReturnPer valuation={total} holding={holding} />
               ) : (

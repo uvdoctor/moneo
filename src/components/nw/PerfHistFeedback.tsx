@@ -79,15 +79,15 @@ export default function PerfHistFeedback({
 
   return (
     <>
-      <Tooltip title="Performance history feedback in comparison with NIFTY 50">
-        &nbsp;&nbsp;
+      <Tooltip title="Performance consistency compared to NIFTY 50 index over last 5 years">
+        Market performance consistency&nbsp;&nbsp;
         <Rate value={niftyRating} disabled />
       </Tooltip>
       &nbsp;&nbsp;
       {instrument?.itype !== "ETF" &&
       isStock(instrument.subt, instrument.id) ? (
-        <Tooltip title="Performance history feedback in comparison with respective sector">
-          &nbsp;&nbsp;
+        <Tooltip title="Performance consistency compared to the index of respective sector over last 5 years">
+          Sector performance consistency&nbsp;&nbsp;
           <Rate value={sectorRating} disabled />
         </Tooltip>
       ) : (
