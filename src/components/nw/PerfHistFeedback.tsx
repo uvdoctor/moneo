@@ -67,9 +67,9 @@ export default function PerfHistFeedback({
     const sectorDiffOne = indexPerf && indexPerf[sectorIndex]?.p1y;
     const setorDiffThree = indexPerf && indexPerf[sectorIndex]?.p3y;
     const sectorDiffFive = indexPerf && indexPerf[sectorIndex]?.p5y;
-    if (diffOne > sectorDiffOne) niftyRating += 2;
-    if (diffThree > setorDiffThree) niftyRating += 1;
-    if (diffFive > sectorDiffFive) niftyRating += 1;
+    if (diffOne > sectorDiffOne) sectorRating += 2;
+    if (diffThree > setorDiffThree) sectorRating += 1;
+    if (diffFive > sectorDiffFive) sectorRating += 1;
     setSectorRating(sectorRating);
   };
 
