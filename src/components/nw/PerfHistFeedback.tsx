@@ -50,15 +50,15 @@ export default function PerfHistFeedback({
     return niftyRating;
   };
 
-  const calculateSectorRating = () => {
+  const performSectorComparison = () => {
     let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
     let data =
       fundata && fundata[instrument.sid as string]
         ? fundata[instrument.sid as string]
         : null;
-    if (!data) return 0;
+    if (!data) return null;
     const sectorIndex = getIndexBySector(data.sector);
-    if (!sectorIndex) return 0;
+    if (!sectorIndex) return null;
     let sectorRating = 1;
     const diffOne = calcDiff(instrument?.price, performance.p1y, 1);
     const diffThree = calcDiff(instrument?.price, performance.p3y, 3);
@@ -69,11 +69,11 @@ export default function PerfHistFeedback({
     if (diffOne > sectorDiffOne) sectorRating += 2;
     if (diffThree > setorDiffThree) sectorRating += 1;
     if (diffFive > sectorDiffFive) sectorRating += 1;
-    return sectorRating;
+    return { index: sectorIndex, rating: sectorRating };
   };
 
   const niftyRating = calculateOverallRating();
-  const sectorRating = calculateSectorRating();
+  const sectorPerf = performSectorComparison();
 
   return (
     <>
@@ -82,10 +82,10 @@ export default function PerfHistFeedback({
         <Rate value={niftyRating} disabled />
       </Tooltip>
       &nbsp;&nbsp;
-      {sectorRating ? (
+      {sectorPerf ? (
         <Tooltip title="Performance consistency compared to the index of respective sector over last 5 years">
-          Sector rating&nbsp;&nbsp;
-          <Rate value={sectorRating} disabled />
+          {sectorPerf.index} rating&nbsp;&nbsp;
+          <Rate value={sectorPerf.rating} disabled />
         </Tooltip>
       ) : null}
     </>
