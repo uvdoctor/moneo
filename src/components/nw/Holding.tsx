@@ -25,7 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import simpleStorage from "simplestorage.js";
 import YearlyLowHigh from "./YearlyLowHigh";
 import IdWithRisk from "./IdWithRisk";
-import { getMarketCapLabel, isFund } from "./nwutils";
+import { isFund } from "./nwutils";
 import InsPrice from "./InsPrice";
 import ValuationWithReturnPer from "./ValuationWithReturnPer";
 import PerfHistFeedback from "./PerfHistFeedback";
