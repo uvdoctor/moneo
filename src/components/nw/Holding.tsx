@@ -38,13 +38,14 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-  const insprefData = simpleStorage.get(LOCAL_INS_PERF_KEY);
-  const instrumentPerf =
-    insprefData && insprefData[holding.id]
-      ? insprefData[holding.id]
-      : insprefData[holding?.sid as string]
-      ? insprefData[holding?.sid as string]
-      : null;
+  const insPerfData = simpleStorage.get(LOCAL_INS_PERF_KEY);
+  const instrumentPerf = insPerfData
+    ? insPerfData[holding.id]
+      ? insPerfData[holding.id]
+      : insPerfData[holding.sid as string]
+      ? insPerfData[holding.sid as string]
+      : null
+    : null;
   const instrument =
     insData && insData[holding.id] ? insData[holding.id] : null;
   const price = instrument ? instrument.price : 0;
@@ -70,8 +71,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       className="holding"
       align="middle"
       justify="space-between"
-      gutter={[5, 5]}
-    >
+      gutter={[5, 5]}>
       {price ? (
         <Col span={24}>
           <Row justify="space-between">
@@ -148,7 +148,14 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
           </Col>
           {price ? (
             <Col className="quantity">
-              {instrumentPerf ? <PerfHistFeedback performance={instrumentPerf} instrument={instrument} /> : ""}
+              {instrumentPerf ? (
+                <PerfHistFeedback
+                  performance={instrumentPerf}
+                  instrument={instrument}
+                />
+              ) : (
+                ""
+              )}
               &nbsp;
               {total ? (
                 <ValuationWithReturnPer valuation={total} holding={holding} />
