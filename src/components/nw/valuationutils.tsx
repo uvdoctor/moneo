@@ -20,7 +20,6 @@ import {
 } from "../../api/goals";
 import {
   LOCAL_DATA_TTL,
-  LOCAL_INDEX_PERF_KEY,
   LOCAL_INS_DATA_KEY,
   LOCAL_INS_PERF_KEY,
   LOCAL_NPS_DATA_KEY,
@@ -38,8 +37,8 @@ import {
   initializeNPSData,
   isFund,
   isLargeCap,
+  loadIndexPerf,
   loadMatchingINBond,
-  loadMatchingIndexPerf,
   loadMatchingIndices,
   loadMatchingINExchange,
   loadMatchingINMutual,
@@ -119,26 +118,12 @@ export const loadInstruments = async (ids: Array<string>) => {
   });
   await loadInsPerf(insPerfIds);
   await initializeFundata(exchangeIds);
+  await loadIndexPerf();
   return allInsData;
 };
 
 export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
   const ids: Array<string> = [];
-  const indexIds: Array<string> = [
-    "NIFTY 50",
-    "NIFTY Financial Services",
-    "NIFTY Healthcare Index",
-    "NIFTY IT",
-    "NIFTY Media",
-    "NIFTY Realty",
-    "NIFTY Energy",
-    "NIFTY Services Sector",
-    "NIFTY Oil & Gas",
-    "NIFTY Metal",
-    "NIFTY India Consumption",
-    "NIFTY Consumer Durables",
-    "NIFTY FMCG",
-  ];
   instruments.forEach((instrument: InstrumentInput) => {
     isFund(instrument.id)
       ? ids.push(instrument.id)
@@ -146,7 +131,7 @@ export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) =
       ? ids.push(instrument.sid)
       : "";
   });
-  await loadIndexPerf(indexIds);
+  await loadIndexPerf();
   return await loadInsPerf(ids);
 };
 
@@ -165,25 +150,7 @@ export const loadInsPerf = async (ids: Array<string>) => {
   return allInsPrefData;
 };
 
-export const loadIndexPerf = async (ids: Array<string>) => {
-  let gotodb = false;
-  let allIndexPrefData: any = simpleStorage.get(LOCAL_INDEX_PERF_KEY);
-  if (!allIndexPrefData) allIndexPrefData = {};
-  ids.forEach((id: string) => {
-    if (!allIndexPrefData[id]) gotodb = true;
-  });
-  if (!gotodb) return allIndexPrefData;
-  if (ids.length) {
-    await loadInstrumentPrices(
-      loadMatchingIndexPerf,
-      ids,
-      allIndexPrefData,
-      "name"
-    );
-  }
-  simpleStorage.set(LOCAL_INDEX_PERF_KEY, allIndexPrefData, LOCAL_DATA_TTL);
-  return allIndexPrefData;
-};
+
 
 const initializeInsData = async (instruments: Array<InstrumentInput>) => {
   const ids: Array<string> = [];

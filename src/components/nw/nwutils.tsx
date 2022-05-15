@@ -24,6 +24,7 @@ import {
   LOCAL_DATA_TTL,
   LOCAL_EXCHG_DATA_KEY,
   LOCAL_FUN_DATA_KEY,
+  LOCAL_INDEX_PERF_KEY,
   LOCAL_INS_DATA_KEY,
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
@@ -37,11 +38,7 @@ import {
   calculateProvidentFund,
   calculateVehicle,
 } from "./valuationutils";
-import {
-  AssetSubType,
-  InsType,
-  PropertyType,
-} from "../../api/goals";
+import { AssetSubType, InsType, PropertyType } from "../../api/goals";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -291,7 +288,7 @@ const getORNameList = (list: Array<any>, ids: Array<string>) => {
 
 export const loadMatchingINExchange = async (ids: Array<string>) => {
   if (!ids.length) return null;
-  const isins = JSON.parse(JSON.stringify(ids))
+  const isins = JSON.parse(JSON.stringify(ids));
   let returnList: Array<APIt.INExchgPrice> = [];
   const maxLimit = 50;
   const isinChunks: Array<Array<string>> = new Array(
@@ -429,7 +426,9 @@ export const loadMatchingIndexPerf = async (isins: Array<string>) => {
       data: APIt.ListIndiceHistPerfsQuery;
     };
     if (listIndiceHistPerfs?.items?.length)
-      returnList.push(...(listIndiceHistPerfs.items as Array<APIt.IndiceHistPerf>));
+      returnList.push(
+        ...(listIndiceHistPerfs.items as Array<APIt.IndiceHistPerf>)
+      );
     nextToken = listIndiceHistPerfs?.nextToken;
   } while (nextToken);
   return returnList.length ? returnList : null;
@@ -589,7 +588,10 @@ export const getCommodityRate = async (
   isPrev: boolean = false
 ) => {
   return await getPrice(
-    subtype === APIt.AssetSubType.Gold ? "GC" : subtype,"COMM", isPrev)
+    subtype === APIt.AssetSubType.Gold ? "GC" : subtype,
+    "COMM",
+    isPrev
+  )
     .then((result) => {
       if (!result || isNaN(result)) return 0;
       let rate = Number((result / 31.1).toFixed(2));
@@ -605,7 +607,12 @@ export const getCommodityRate = async (
     .catch(() => 0);
 };
 
-export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev: boolean = false) => {
+export const getCryptoRate = (
+  id: string,
+  currency: string,
+  fxRates: any,
+  isPrev: boolean = false
+) => {
   return getPrice(id, "CC", isPrev)
     .then((rate) => {
       if (!rate || isNaN(rate)) return 0;
@@ -616,7 +623,7 @@ export const getCryptoRate = (id: string, currency: string, fxRates: any, isPrev
 
 export const getExchgRate = async (id: string, exchg: string) => {
   const data = await getPrice(id, "US", false, exchg);
-  if(!data) return { prev: 0, price: 0 };
+  if (!data) return { prev: 0, price: 0 };
   return data;
 };
 
@@ -684,6 +691,23 @@ export const initializeNPSData = async () => {
   return npsData;
 };
 
+export const loadIndexPerf = async () => {
+  let indexPerfData: Array<APIt.CreateIndiceHistPerfInput> | null =
+    simpleStorage.get(LOCAL_INDEX_PERF_KEY);
+  if (indexPerfData) return indexPerfData;
+  const {
+    data: { listIndiceHistPerfs },
+  } = (await API.graphql(graphqlOperation(queries.listIndiceHistPerfs))) as {
+    data: APIt.ListIndiceHistPerfsQuery;
+  };
+  indexPerfData = listIndiceHistPerfs?.items?.length
+    ? (listIndiceHistPerfs.items as Array<APIt.CreateIndiceHistPerfInput>)
+    : null;
+  if (indexPerfData)
+    simpleStorage.set(LOCAL_INDEX_PERF_KEY, indexPerfData, LOCAL_DATA_TTL);
+  return indexPerfData;
+};
+
 export const getFinTabFilters = (option: string) => {
   const { STOCK, GOLDB, BOND, REIT, OIT, ETF } = TAB;
   switch (option) {
@@ -709,16 +733,18 @@ export const getFinTabFilters = (option: string) => {
 
 export const getInstrumentDataWithKey = async (key: string, option: string) => {
   const { STOCK } = TAB;
-  let instrumentData = key === "listInExchgPrices"
+  let instrumentData =
+    key === "listInExchgPrices"
       ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
       : simpleStorage.get(option) || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
-  const filter: { prop: string; value: string | Array<string> } | null = getFinTabFilters(option);
+  const filter: { prop: string; value: string | Array<string> } | null =
+    getFinTabFilters(option);
   const dataKeys: OptionTableMap = {
     listInExchgPrices: "listINExchgPrices",
     listInBondPrices: "listINBondPrices",
-    listInmfPrices: "listINMFPrices", 
-    listAllIndicess: "listAllIndicess"
+    listInmfPrices: "listINMFPrices",
+    listAllIndicess: "listAllIndicess",
   };
   const getData = async (query: any, nextToken: any) => {
     return await API.graphql({
@@ -749,7 +775,7 @@ export const getInstrumentDataWithKey = async (key: string, option: string) => {
     const data = instrumentData.filter((item: OptionTableMap) => {
       if (Array.isArray(value)) return value.includes(item[prop]);
       else {
-        if(option === STOCK) return item[prop] === value && !item.itype
+        if (option === STOCK) return item[prop] === value && !item.itype;
         return item[prop] === value;
       }
     });
@@ -1314,9 +1340,7 @@ export const loadMatchingINExchgFun = async (sids: Array<string>) => {
 export const isStock = (subType: string, id: string) =>
   subType === APIt.AssetSubType.S && !isFund(id);
 
-export const initializeFundata = async (
-  ids: Array<string>
-) => {
+export const initializeFundata = async (ids: Array<string>) => {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!insData) return null;
   let sids: Set<string> = new Set();
@@ -1399,7 +1423,7 @@ export const optionTableMap: { [key: string]: string } = {
   "Mutual Funds": "listInmfPrices",
   REITs: "listInExchgPrices",
   "Other Investments": "listInExchgPrices",
-  "Index": "listAllIndicess"    
+  Index: "listAllIndicess",
 } as const;
 
 export const filterTabs = (data: any, childTab: string) => {
