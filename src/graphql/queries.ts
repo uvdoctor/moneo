@@ -363,8 +363,8 @@ export const listUserInfos = /* GraphQL */ `
     }
   }
 `;
-export const regByIm = /* GraphQL */ `
-  query RegByIm(
+export const regByIM = /* GraphQL */ `
+  query RegByIM(
     $im: Float
     $sortDirection: ModelSortDirection
     $filter: ModelUserInfoFilterInput
@@ -474,8 +474,8 @@ export const regByEmail = /* GraphQL */ `
     }
   }
 `;
-export const regByDob = /* GraphQL */ `
-  query RegByDob(
+export const regByDOB = /* GraphQL */ `
+  query RegByDOB(
     $dob: AWSDate
     $sortDirection: ModelSortDirection
     $filter: ModelUserInfoFilterInput
@@ -624,8 +624,8 @@ export const listFeedss = /* GraphQL */ `
     }
   }
 `;
-export const getInExchgFun = /* GraphQL */ `
-  query GetInExchgFun($id: String!) {
+export const getINExchgFun = /* GraphQL */ `
+  query GetINExchgFun($id: String!) {
     getINExchgFun(id: $id) {
       id
       isin
@@ -640,8 +640,8 @@ export const getInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const listInExchgFuns = /* GraphQL */ `
-  query ListInExchgFuns(
+export const listINExchgFuns = /* GraphQL */ `
+  query ListINExchgFuns(
     $id: String
     $filter: ModelINExchgFunFilterInput
     $limit: Int
@@ -671,8 +671,8 @@ export const listInExchgFuns = /* GraphQL */ `
     }
   }
 `;
-export const getInExchgPrice = /* GraphQL */ `
-  query GetInExchgPrice($id: String!) {
+export const getINExchgPrice = /* GraphQL */ `
+  query GetINExchgPrice($id: String!) {
     getINExchgPrice(id: $id) {
       id
       sid
@@ -708,8 +708,8 @@ export const getInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const listInExchgPrices = /* GraphQL */ `
-  query ListInExchgPrices(
+export const listINExchgPrices = /* GraphQL */ `
+  query ListINExchgPrices(
     $id: String
     $filter: ModelINExchgPriceFilterInput
     $limit: Int
@@ -948,8 +948,8 @@ export const listIndexConsts = /* GraphQL */ `
     }
   }
 `;
-export const getInBondPrice = /* GraphQL */ `
-  query GetInBondPrice($id: String!) {
+export const getINBondPrice = /* GraphQL */ `
+  query GetINBondPrice($id: String!) {
     getINBondPrice(id: $id) {
       id
       sid
@@ -975,8 +975,8 @@ export const getInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const listInBondPrices = /* GraphQL */ `
-  query ListInBondPrices(
+export const listINBondPrices = /* GraphQL */ `
+  query ListINBondPrices(
     $id: String
     $filter: ModelINBondPriceFilterInput
     $limit: Int
@@ -1017,8 +1017,8 @@ export const listInBondPrices = /* GraphQL */ `
     }
   }
 `;
-export const getInmfPrice = /* GraphQL */ `
-  query GetInmfPrice($id: String!) {
+export const getINMFPrice = /* GraphQL */ `
+  query GetINMFPrice($id: String!) {
     getINMFPrice(id: $id) {
       id
       sid
@@ -1038,8 +1038,8 @@ export const getInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const listInmfPrices = /* GraphQL */ `
-  query ListInmfPrices(
+export const listINMFPrices = /* GraphQL */ `
+  query ListINMFPrices(
     $id: String
     $filter: ModelINMFPriceFilterInput
     $limit: Int
@@ -1074,8 +1074,8 @@ export const listInmfPrices = /* GraphQL */ `
     }
   }
 `;
-export const getNpsPrice = /* GraphQL */ `
-  query GetNpsPrice($id: String!) {
+export const getNPSPrice = /* GraphQL */ `
+  query GetNPSPrice($id: String!) {
     getNPSPrice(id: $id) {
       id
       pfm
@@ -1091,8 +1091,8 @@ export const getNpsPrice = /* GraphQL */ `
     }
   }
 `;
-export const listNpsPrices = /* GraphQL */ `
-  query ListNpsPrices(
+export const listNPSPrices = /* GraphQL */ `
+  query ListNPSPrices(
     $id: String
     $filter: ModelNPSPriceFilterInput
     $limit: Int
@@ -1866,6 +1866,7 @@ export const getCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
@@ -1890,6 +1891,7 @@ export const listCoachingReqs = /* GraphQL */ `
         curr
         paid
         pt
+        email
         createdAt
         updatedAt
         owner

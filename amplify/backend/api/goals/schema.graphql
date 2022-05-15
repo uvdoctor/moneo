@@ -819,4 +819,5 @@ type CoachingReq
   curr: String!
   paid: Boolean!
   pt: PaymentType
+  email: String
 }

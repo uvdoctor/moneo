@@ -80,19 +80,19 @@ export type ModelSizeInput = {
 
 export type Feedback = {
   __typename: "Feedback",
-  id?: string,
-  type?: FeedbackType,
-  email?: string,
-  name?: Name,
-  feedback?: string,
+  id: string,
+  type: FeedbackType,
+  email: string,
+  name: Name,
+  feedback: string,
   uname?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type Name = {
   __typename: "Name",
-  fn?: string,
+  fn: string,
   ln?: string | null,
 };
 
@@ -145,12 +145,12 @@ export type ModelIntInput = {
 
 export type Rating = {
   __typename: "Rating",
-  id?: string,
-  type?: CalcType,
-  rating?: number,
+  id: string,
+  type: CalcType,
+  rating: number,
   feedbackId?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type DeleteRatingInput = {
@@ -367,29 +367,29 @@ export type ModelBuyTypeInput = {
 
 export type Goal = {
   __typename: "Goal",
-  id?: string,
-  sy?: number,
+  id: string,
+  sy: number,
   sm?: number | null,
-  ey?: number,
-  by?: number,
+  ey: number,
+  by: number,
   btr?: number | null,
-  tdr?: number,
-  tdl?: number,
+  tdr: number,
+  tdl: number,
   tbi?: number | null,
   tdli?: number | null,
   tbr?: number | null,
-  name?: string,
-  type?: GoalType,
-  ccy?: string,
+  name: string,
+  type: GoalType,
+  ccy: string,
   cp?: number | null,
   chg?: number | null,
   achg?: number | null,
   tgts?:  Array<Target > | null,
-  loan?: Loan,
-  imp?: LMH,
+  loan?: Loan | null,
+  imp: LMH,
   met?: boolean | null,
   prob?: LMH | null,
-  manual?: number,
+  manual: number,
   amper?: number | null,
   amsy?: number | null,
   aiper?: number | null,
@@ -401,29 +401,29 @@ export type Goal = {
   ra?: number | null,
   rachg?: number | null,
   img?: string | null,
-  pp?: PP,
+  pp?: PP | null,
   rp?: RiskProfile | null,
   bt?: BuyType | null,
   rc?: number | null,
   rcchg?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
   owner?: string | null,
 };
 
 export type Target = {
   __typename: "Target",
-  num?: number,
-  val?: number,
+  num: number,
+  val: number,
 };
 
 export type Loan = {
   __typename: "Loan",
-  type?: LoanType,
-  per?: number,
+  type: LoanType,
+  per: number,
   rate?: number | null,
-  dur?: number,
-  ry?: number,
+  dur: number,
+  ry: number,
   pp?:  Array<Target > | null,
   ira?:  Array<Target > | null,
   emi?: number | null,
@@ -433,8 +433,8 @@ export type Loan = {
 
 export type PP = {
   __typename: "PP",
-  cash?: number,
-  ltdep?: number,
+  cash: number,
+  ltdep: number,
   mtb?: number | null,
   imtb?: number | null,
   hyb?: number | null,
@@ -557,22 +557,22 @@ export type ModelTaxLiabilityInput = {
 
 export type UserInfo = {
   __typename: "UserInfo",
-  uname?: string,
-  email?: string,
-  dob?: string,
+  uname: string,
+  email: string,
+  dob: string,
   im?: number | null,
   mob?: number | null,
-  notify?: boolean,
-  tax?: TaxLiability,
-  rp?: RiskProfile,
-  dr?: number,
-  tc?: string,
+  notify: boolean,
+  tax: TaxLiability,
+  rp: RiskProfile,
+  dr: number,
+  tc: string,
   ta?: number | null,
   tid?: string | null,
   exp?: number | null,
   invest?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateUserInfoInput = {
@@ -614,12 +614,12 @@ export type ModelFamilyConditionInput = {
 
 export type Family = {
   __typename: "Family",
-  id?: string,
-  tid?: string,
-  name?: string,
-  tax?: TaxLiability,
-  createdAt?: string,
-  updatedAt?: string,
+  id: string,
+  tid: string,
+  name: string,
+  tax: TaxLiability,
+  createdAt: string,
+  updatedAt: string,
   owner?: string | null,
 };
 
@@ -722,7 +722,7 @@ export type ModelUserHoldingsConditionInput = {
 
 export type UserHoldings = {
   __typename: "UserHoldings",
-  uname?: string,
+  uname: string,
   dep?:  Array<Holding > | null,
   ltdep?:  Array<Holding > | null,
   p2p?:  Array<Holding > | null,
@@ -738,18 +738,18 @@ export type UserHoldings = {
   ins?:  Array<Holding > | null,
   other?:  Array<Holding > | null,
   angel?:  Array<Holding > | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
   owner?: string | null,
 };
 
 export type Holding = {
   __typename: "Holding",
-  id?: string,
-  qty?: number,
+  id: string,
+  qty: number,
   name?: string | null,
-  fId?: string,
-  curr?: string,
+  fId: string,
+  curr: string,
   chg?: number | null,
   chgF?: number | null,
   payF?: number | null,
@@ -765,36 +765,36 @@ export type Holding = {
 
 export type Purchase = {
   __typename: "Purchase",
-  amt?: number,
+  amt: number,
   day?: number | null,
-  month?: number,
-  year?: number,
-  qty?: number,
+  month: number,
+  year: number,
+  qty: number,
 };
 
 export type Property = {
   __typename: "Property",
-  type?: PropertyType,
+  type: PropertyType,
   name?: string | null,
   pin?: number | null,
-  purchase?: Purchase,
+  purchase?: Purchase | null,
   address?: string | null,
-  curr?: string,
+  curr: string,
   city?: string | null,
   country?: string | null,
   state?: string | null,
-  own?:  Array<Ownership >,
-  rate?: number,
+  own:  Array<Ownership >,
+  rate: number,
   mv?: number | null,
   mvy?: number | null,
   mvm?: number | null,
-  res?: boolean,
+  res: boolean,
 };
 
 export type Ownership = {
   __typename: "Ownership",
-  fId?: string,
-  per?: number,
+  fId: string,
+  per: number,
 };
 
 export type UpdateUserHoldingsInput = {
@@ -902,35 +902,35 @@ export type ModelUserInsConditionInput = {
 
 export type UserIns = {
   __typename: "UserIns",
-  uname?: string,
-  ins?:  Array<Instrument >,
+  uname: string,
+  ins:  Array<Instrument >,
   watch?:  Array<InsWatch > | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
   owner?: string | null,
 };
 
 export type Instrument = {
   __typename: "Instrument",
-  id?: string,
+  id: string,
   sid?: string | null,
   exchg?: string | null,
-  qty?: number,
+  qty: number,
   pur?:  Array<Purchase > | null,
-  fId?: string,
-  curr?: string,
+  fId: string,
+  curr: string,
   type?: AssetType | null,
   subt?: AssetSubType | null,
 };
 
 export type InsWatch = {
   __typename: "InsWatch",
-  id?: string,
+  id: string,
   sid?: string | null,
   hight?: number | null,
   lowt?: number | null,
-  type?: AssetType,
-  subt?: AssetSubType,
+  type: AssetType,
+  subt: AssetSubType,
   itype?: InsType | null,
 };
 
@@ -955,6 +955,7 @@ export type CreateCoachingReqInput = {
   curr: string,
   paid: boolean,
   pt?: PaymentType | null,
+  email?: string | null,
 };
 
 export enum CoachingType {
@@ -990,6 +991,7 @@ export type ModelCoachingReqConditionInput = {
   curr?: ModelStringInput | null,
   paid?: ModelBooleanInput | null,
   pt?: ModelPaymentTypeInput | null,
+  email?: ModelStringInput | null,
   and?: Array< ModelCoachingReqConditionInput | null > | null,
   or?: Array< ModelCoachingReqConditionInput | null > | null,
   not?: ModelCoachingReqConditionInput | null,
@@ -1012,18 +1014,19 @@ export type ModelPaymentTypeInput = {
 
 export type CoachingReq = {
   __typename: "CoachingReq",
-  id?: string,
-  dur?: number,
+  id: string,
+  dur: number,
   text?: string | null,
-  page?: string,
-  type?: CoachingType,
-  status?: CoachingStatus,
-  payment?: number,
-  curr?: string,
-  paid?: boolean,
+  page: string,
+  type: CoachingType,
+  status: CoachingStatus,
+  payment: number,
+  curr: string,
+  paid: boolean,
   pt?: PaymentType | null,
-  createdAt?: string,
-  updatedAt?: string,
+  email?: string | null,
+  createdAt: string,
+  updatedAt: string,
   owner?: string | null,
 };
 
@@ -1061,10 +1064,10 @@ export type ModelInsAnalyticsConditionInput = {
 
 export type InsAnalytics = {
   __typename: "InsAnalytics",
-  id?: string,
-  analytics?: string,
-  createdAt?: string,
-  updatedAt?: string,
+  id: string,
+  analytics: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateInsAnalyticsInput = {
@@ -1107,13 +1110,13 @@ export type ModelExchangeInput = {
 
 export type Feeds = {
   __typename: "Feeds",
-  id?: string,
-  tname?: string,
+  id: string,
+  tname: string,
   exchg?: Exchange | null,
   url?: string | null,
-  count?: number,
-  createdAt?: string,
-  updatedAt?: string,
+  count: number,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateFeedsInput = {
@@ -1154,16 +1157,16 @@ export type ModelINExchgFunConditionInput = {
 
 export type INExchgFun = {
   __typename: "INExchgFun",
-  id?: string,
+  id: string,
   isin?: string | null,
-  exchg?: Exchange,
+  exchg: Exchange,
   sector?: string | null,
   ind?: string | null,
   tech?: string | null,
   val?: string | null,
   risk?: RiskProfile | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateINExchgFunInput = {
@@ -1277,15 +1280,15 @@ export type ModelMCapInput = {
 
 export type INExchgPrice = {
   __typename: "INExchgPrice",
-  id?: string,
-  sid?: string,
-  name?: string,
-  exchg?: Exchange,
-  type?: AssetType,
-  subt?: AssetSubType,
+  id: string,
+  sid: string,
+  name: string,
+  exchg: Exchange,
+  type: AssetType,
+  subt: AssetSubType,
   itype?: InsType | null,
-  price?: number,
-  prev?: number,
+  price: number,
+  prev: number,
   fv?: number | null,
   under?: string | null,
   yhigh?: number | null,
@@ -1306,8 +1309,8 @@ export type INExchgPrice = {
   risk?: RiskProfile | null,
   vol?: number | null,
   prevol?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateINExchgPriceInput = {
@@ -1417,10 +1420,10 @@ export type ModelIndustryInput = {
 
 export type AllIndices = {
   __typename: "AllIndices",
-  id?: string,
-  name?: string,
-  exchg?: Exchange,
-  price?: number,
+  id: string,
+  name: string,
+  exchg: Exchange,
+  price: number,
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
@@ -1428,10 +1431,10 @@ export type AllIndices = {
   pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
-  curr?: string,
+  curr: string,
   ind?: Industry | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateAllIndicesInput = {
@@ -1472,12 +1475,12 @@ export type ModelInsHistPerfConditionInput = {
 
 export type InsHistPerf = {
   __typename: "InsHistPerf",
-  id?: string,
-  p1y?: number,
-  p3y?: number,
-  p5y?: number,
-  createdAt?: string,
-  updatedAt?: string,
+  id: string,
+  p1y: number,
+  p3y: number,
+  p5y: number,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateInsHistPerfInput = {
@@ -1527,21 +1530,21 @@ export type ModelIndiceHistPerfConditionInput = {
 
 export type IndiceHistPerf = {
   __typename: "IndiceHistPerf",
-  name?: string,
-  p1m?: number,
-  p3m?: number,
-  p1y?: number,
-  p3y?: number,
-  p5y?: number,
-  vol?: number,
-  beta?: number,
-  corr?: number,
-  rsq?: number,
-  pe?: number,
-  pb?: number,
-  div?: number,
-  createdAt?: string,
-  updatedAt?: string,
+  name: string,
+  p1m: number,
+  p3m: number,
+  p1y: number,
+  p3y: number,
+  p5y: number,
+  vol: number,
+  beta: number,
+  corr: number,
+  rsq: number,
+  pe: number,
+  pb: number,
+  div: number,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateIndiceHistPerfInput = {
@@ -1578,10 +1581,10 @@ export type ModelIndexConstConditionInput = {
 
 export type IndexConst = {
   __typename: "IndexConst",
-  name?: string,
-  const?: Array< string >,
-  createdAt?: string,
-  updatedAt?: string,
+  name: string,
+  const: Array< string >,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateIndexConstInput = {
@@ -1655,27 +1658,27 @@ export type ModelCreditRatingInput = {
 
 export type INBondPrice = {
   __typename: "INBondPrice",
-  id?: string,
-  sid?: string,
-  name?: string,
-  type?: AssetType,
-  subt?: AssetSubType,
-  price?: number,
+  id: string,
+  sid: string,
+  name: string,
+  type: AssetType,
+  subt: AssetSubType,
+  price: number,
   prev?: number | null,
-  exchg?: Exchange,
+  exchg: Exchange,
   sm?: number | null,
   sy?: number | null,
   mm?: number | null,
   my?: number | null,
-  rate?: number,
+  rate: number,
   fv?: number | null,
   cr?: CreditRating | null,
   crstr?: string | null,
   ytm?: number | null,
   risk?: RiskProfile | null,
   itype?: InsType | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateINBondPriceInput = {
@@ -1752,21 +1755,21 @@ export type ModelMFSchemeTypeInput = {
 
 export type INMFPrice = {
   __typename: "INMFPrice",
-  id?: string,
-  sid?: string,
+  id: string,
+  sid: string,
   tid?: string | null,
   dir?: string | null,
-  name?: string,
-  type?: AssetType,
-  subt?: AssetSubType,
-  price?: number,
+  name: string,
+  type: AssetType,
+  subt: AssetSubType,
+  price: number,
   prev?: number | null,
-  mftype?: MFSchemeType,
+  mftype: MFSchemeType,
   mcapt?: MCap | null,
   tf?: boolean | null,
   risk?: RiskProfile | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateINMFPriceInput = {
@@ -1849,17 +1852,17 @@ export type ModelNPSSchemeTypeInput = {
 
 export type NPSPrice = {
   __typename: "NPSPrice",
-  id?: string,
-  pfm?: NPSPFM,
-  st?: NPSSchemeType,
-  name?: string,
-  type?: AssetType,
-  subt?: AssetSubType,
-  price?: number,
+  id: string,
+  pfm: NPSPFM,
+  st: NPSSchemeType,
+  name: string,
+  type: AssetType,
+  subt: AssetSubType,
+  price: number,
   prev?: number | null,
   risk?: RiskProfile | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateNPSPriceInput = {
@@ -1889,6 +1892,7 @@ export type UpdateCoachingReqInput = {
   curr?: string | null,
   paid?: boolean | null,
   pt?: PaymentType | null,
+  email?: string | null,
 };
 
 export type ModelFeedbackFilterInput = {
@@ -1920,7 +1924,7 @@ export type ModelIDInput = {
 
 export type ModelFeedbackConnection = {
   __typename: "ModelFeedbackConnection",
-  items?:  Array<Feedback | null >,
+  items:  Array<Feedback | null >,
   nextToken?: string | null,
 };
 
@@ -1936,7 +1940,7 @@ export type ModelRatingFilterInput = {
 
 export type ModelRatingConnection = {
   __typename: "ModelRatingConnection",
-  items?:  Array<Rating | null >,
+  items:  Array<Rating | null >,
   nextToken?: string | null,
 };
 
@@ -1982,7 +1986,7 @@ export type ModelGoalFilterInput = {
 
 export type ModelGoalConnection = {
   __typename: "ModelGoalConnection",
-  items?:  Array<Goal | null >,
+  items:  Array<Goal | null >,
   nextToken?: string | null,
 };
 
@@ -1998,7 +2002,7 @@ export type ModelFamilyFilterInput = {
 
 export type ModelFamilyConnection = {
   __typename: "ModelFamilyConnection",
-  items?:  Array<Family | null >,
+  items:  Array<Family | null >,
   nextToken?: string | null,
 };
 
@@ -2030,7 +2034,7 @@ export enum ModelSortDirection {
 
 export type ModelUserInfoConnection = {
   __typename: "ModelUserInfoConnection",
-  items?:  Array<UserInfo | null >,
+  items:  Array<UserInfo | null >,
   nextToken?: string | null,
 };
 
@@ -2044,7 +2048,7 @@ export type ModelInsAnalyticsFilterInput = {
 
 export type ModelInsAnalyticsConnection = {
   __typename: "ModelInsAnalyticsConnection",
-  items?:  Array<InsAnalytics | null >,
+  items:  Array<InsAnalytics | null >,
   nextToken?: string | null,
 };
 
@@ -2061,7 +2065,7 @@ export type ModelFeedsFilterInput = {
 
 export type ModelFeedsConnection = {
   __typename: "ModelFeedsConnection",
-  items?:  Array<Feeds | null >,
+  items:  Array<Feeds | null >,
   nextToken?: string | null,
 };
 
@@ -2081,7 +2085,7 @@ export type ModelINExchgFunFilterInput = {
 
 export type ModelINExchgFunConnection = {
   __typename: "ModelINExchgFunConnection",
-  items?:  Array<INExchgFun | null >,
+  items:  Array<INExchgFun | null >,
   nextToken?: string | null,
 };
 
@@ -2122,7 +2126,7 @@ export type ModelINExchgPriceFilterInput = {
 
 export type ModelINExchgPriceConnection = {
   __typename: "ModelINExchgPriceConnection",
-  items?:  Array<INExchgPrice | null >,
+  items:  Array<INExchgPrice | null >,
   nextToken?: string | null,
 };
 
@@ -2147,7 +2151,7 @@ export type ModelAllIndicesFilterInput = {
 
 export type ModelAllIndicesConnection = {
   __typename: "ModelAllIndicesConnection",
-  items?:  Array<AllIndices | null >,
+  items:  Array<AllIndices | null >,
   nextToken?: string | null,
 };
 
@@ -2163,7 +2167,7 @@ export type ModelInsHistPerfFilterInput = {
 
 export type ModelInsHistPerfConnection = {
   __typename: "ModelInsHistPerfConnection",
-  items?:  Array<InsHistPerf | null >,
+  items:  Array<InsHistPerf | null >,
   nextToken?: string | null,
 };
 
@@ -2188,7 +2192,7 @@ export type ModelIndiceHistPerfFilterInput = {
 
 export type ModelIndiceHistPerfConnection = {
   __typename: "ModelIndiceHistPerfConnection",
-  items?:  Array<IndiceHistPerf | null >,
+  items:  Array<IndiceHistPerf | null >,
   nextToken?: string | null,
 };
 
@@ -2202,7 +2206,7 @@ export type ModelIndexConstFilterInput = {
 
 export type ModelIndexConstConnection = {
   __typename: "ModelIndexConstConnection",
-  items?:  Array<IndexConst | null >,
+  items:  Array<IndexConst | null >,
   nextToken?: string | null,
 };
 
@@ -2233,7 +2237,7 @@ export type ModelINBondPriceFilterInput = {
 
 export type ModelINBondPriceConnection = {
   __typename: "ModelINBondPriceConnection",
-  items?:  Array<INBondPrice | null >,
+  items:  Array<INBondPrice | null >,
   nextToken?: string | null,
 };
 
@@ -2258,7 +2262,7 @@ export type ModelINMFPriceFilterInput = {
 
 export type ModelINMFPriceConnection = {
   __typename: "ModelINMFPriceConnection",
-  items?:  Array<INMFPrice | null >,
+  items:  Array<INMFPrice | null >,
   nextToken?: string | null,
 };
 
@@ -2279,7 +2283,7 @@ export type ModelNPSPriceFilterInput = {
 
 export type ModelNPSPriceConnection = {
   __typename: "ModelNPSPriceConnection",
-  items?:  Array<NPSPrice | null >,
+  items:  Array<NPSPrice | null >,
   nextToken?: string | null,
 };
 
@@ -2292,7 +2296,7 @@ export type ModelUserHoldingsFilterInput = {
 
 export type ModelUserHoldingsConnection = {
   __typename: "ModelUserHoldingsConnection",
-  items?:  Array<UserHoldings | null >,
+  items:  Array<UserHoldings | null >,
   nextToken?: string | null,
 };
 
@@ -2305,7 +2309,7 @@ export type ModelUserInsFilterInput = {
 
 export type ModelUserInsConnection = {
   __typename: "ModelUserInsConnection",
-  items?:  Array<UserIns | null >,
+  items:  Array<UserIns | null >,
   nextToken?: string | null,
 };
 
@@ -2320,6 +2324,7 @@ export type ModelCoachingReqFilterInput = {
   curr?: ModelStringInput | null,
   paid?: ModelBooleanInput | null,
   pt?: ModelPaymentTypeInput | null,
+  email?: ModelStringInput | null,
   and?: Array< ModelCoachingReqFilterInput | null > | null,
   or?: Array< ModelCoachingReqFilterInput | null > | null,
   not?: ModelCoachingReqFilterInput | null,
@@ -2327,12 +2332,12 @@ export type ModelCoachingReqFilterInput = {
 
 export type ModelCoachingReqConnection = {
   __typename: "ModelCoachingReqConnection",
-  items?:  Array<CoachingReq | null >,
+  items:  Array<CoachingReq | null >,
   nextToken?: string | null,
 };
 
 export type UpdateFeedbackMutationVariables = {
-  input?: UpdateFeedbackInput,
+  input: UpdateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
@@ -2355,7 +2360,7 @@ export type UpdateFeedbackMutation = {
 };
 
 export type DeleteFeedbackMutationVariables = {
-  input?: DeleteFeedbackInput,
+  input: DeleteFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
@@ -2378,7 +2383,7 @@ export type DeleteFeedbackMutation = {
 };
 
 export type UpdateRatingMutationVariables = {
-  input?: UpdateRatingInput,
+  input: UpdateRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
@@ -2395,7 +2400,7 @@ export type UpdateRatingMutation = {
 };
 
 export type DeleteRatingMutationVariables = {
-  input?: DeleteRatingInput,
+  input: DeleteRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
@@ -2412,7 +2417,7 @@ export type DeleteRatingMutation = {
 };
 
 export type CreateGoalMutationVariables = {
-  input?: CreateGoalInput,
+  input: CreateGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
@@ -2523,7 +2528,7 @@ export type CreateGoalMutation = {
 };
 
 export type UpdateGoalMutationVariables = {
-  input?: UpdateGoalInput,
+  input: UpdateGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
@@ -2634,7 +2639,7 @@ export type UpdateGoalMutation = {
 };
 
 export type DeleteGoalMutationVariables = {
-  input?: DeleteGoalInput,
+  input: DeleteGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
@@ -2745,7 +2750,7 @@ export type DeleteGoalMutation = {
 };
 
 export type CreateUserInfoMutationVariables = {
-  input?: CreateUserInfoInput,
+  input: CreateUserInfoInput,
   condition?: ModelUserInfoConditionInput | null,
 };
 
@@ -2772,7 +2777,7 @@ export type CreateUserInfoMutation = {
 };
 
 export type UpdateUserInfoMutationVariables = {
-  input?: UpdateUserInfoInput,
+  input: UpdateUserInfoInput,
   condition?: ModelUserInfoConditionInput | null,
 };
 
@@ -2799,7 +2804,7 @@ export type UpdateUserInfoMutation = {
 };
 
 export type DeleteUserInfoMutationVariables = {
-  input?: DeleteUserInfoInput,
+  input: DeleteUserInfoInput,
   condition?: ModelUserInfoConditionInput | null,
 };
 
@@ -2826,7 +2831,7 @@ export type DeleteUserInfoMutation = {
 };
 
 export type CreateFamilyMutationVariables = {
-  input?: CreateFamilyInput,
+  input: CreateFamilyInput,
   condition?: ModelFamilyConditionInput | null,
 };
 
@@ -2844,7 +2849,7 @@ export type CreateFamilyMutation = {
 };
 
 export type UpdateFamilyMutationVariables = {
-  input?: UpdateFamilyInput,
+  input: UpdateFamilyInput,
   condition?: ModelFamilyConditionInput | null,
 };
 
@@ -2862,7 +2867,7 @@ export type UpdateFamilyMutation = {
 };
 
 export type DeleteFamilyMutationVariables = {
-  input?: DeleteFamilyInput,
+  input: DeleteFamilyInput,
   condition?: ModelFamilyConditionInput | null,
 };
 
@@ -2880,7 +2885,7 @@ export type DeleteFamilyMutation = {
 };
 
 export type CreateUserHoldingsMutationVariables = {
-  input?: CreateUserHoldingsInput,
+  input: CreateUserHoldingsInput,
   condition?: ModelUserHoldingsConditionInput | null,
 };
 
@@ -3288,7 +3293,7 @@ export type CreateUserHoldingsMutation = {
 };
 
 export type UpdateUserHoldingsMutationVariables = {
-  input?: UpdateUserHoldingsInput,
+  input: UpdateUserHoldingsInput,
   condition?: ModelUserHoldingsConditionInput | null,
 };
 
@@ -3696,7 +3701,7 @@ export type UpdateUserHoldingsMutation = {
 };
 
 export type DeleteUserHoldingsMutationVariables = {
-  input?: DeleteUserHoldingsInput,
+  input: DeleteUserHoldingsInput,
   condition?: ModelUserHoldingsConditionInput | null,
 };
 
@@ -4104,7 +4109,7 @@ export type DeleteUserHoldingsMutation = {
 };
 
 export type CreateUserInsMutationVariables = {
-  input?: CreateUserInsInput,
+  input: CreateUserInsInput,
   condition?: ModelUserInsConditionInput | null,
 };
 
@@ -4148,7 +4153,7 @@ export type CreateUserInsMutation = {
 };
 
 export type UpdateUserInsMutationVariables = {
-  input?: UpdateUserInsInput,
+  input: UpdateUserInsInput,
   condition?: ModelUserInsConditionInput | null,
 };
 
@@ -4192,7 +4197,7 @@ export type UpdateUserInsMutation = {
 };
 
 export type DeleteUserInsMutationVariables = {
-  input?: DeleteUserInsInput,
+  input: DeleteUserInsInput,
   condition?: ModelUserInsConditionInput | null,
 };
 
@@ -4236,7 +4241,7 @@ export type DeleteUserInsMutation = {
 };
 
 export type CreateCoachingReqMutationVariables = {
-  input?: CreateCoachingReqInput,
+  input: CreateCoachingReqInput,
   condition?: ModelCoachingReqConditionInput | null,
 };
 
@@ -4253,6 +4258,7 @@ export type CreateCoachingReqMutation = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4260,7 +4266,7 @@ export type CreateCoachingReqMutation = {
 };
 
 export type DeleteCoachingReqMutationVariables = {
-  input?: DeleteCoachingReqInput,
+  input: DeleteCoachingReqInput,
   condition?: ModelCoachingReqConditionInput | null,
 };
 
@@ -4277,6 +4283,7 @@ export type DeleteCoachingReqMutation = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4284,7 +4291,7 @@ export type DeleteCoachingReqMutation = {
 };
 
 export type CreateFeedbackMutationVariables = {
-  input?: CreateFeedbackInput,
+  input: CreateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
@@ -4307,7 +4314,7 @@ export type CreateFeedbackMutation = {
 };
 
 export type CreateRatingMutationVariables = {
-  input?: CreateRatingInput,
+  input: CreateRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
@@ -4324,7 +4331,7 @@ export type CreateRatingMutation = {
 };
 
 export type CreateInsAnalyticsMutationVariables = {
-  input?: CreateInsAnalyticsInput,
+  input: CreateInsAnalyticsInput,
   condition?: ModelInsAnalyticsConditionInput | null,
 };
 
@@ -4339,7 +4346,7 @@ export type CreateInsAnalyticsMutation = {
 };
 
 export type UpdateInsAnalyticsMutationVariables = {
-  input?: UpdateInsAnalyticsInput,
+  input: UpdateInsAnalyticsInput,
   condition?: ModelInsAnalyticsConditionInput | null,
 };
 
@@ -4354,7 +4361,7 @@ export type UpdateInsAnalyticsMutation = {
 };
 
 export type DeleteInsAnalyticsMutationVariables = {
-  input?: DeleteInsAnalyticsInput,
+  input: DeleteInsAnalyticsInput,
   condition?: ModelInsAnalyticsConditionInput | null,
 };
 
@@ -4369,7 +4376,7 @@ export type DeleteInsAnalyticsMutation = {
 };
 
 export type CreateFeedsMutationVariables = {
-  input?: CreateFeedsInput,
+  input: CreateFeedsInput,
   condition?: ModelFeedsConditionInput | null,
 };
 
@@ -4387,7 +4394,7 @@ export type CreateFeedsMutation = {
 };
 
 export type UpdateFeedsMutationVariables = {
-  input?: UpdateFeedsInput,
+  input: UpdateFeedsInput,
   condition?: ModelFeedsConditionInput | null,
 };
 
@@ -4405,7 +4412,7 @@ export type UpdateFeedsMutation = {
 };
 
 export type DeleteFeedsMutationVariables = {
-  input?: DeleteFeedsInput,
+  input: DeleteFeedsInput,
   condition?: ModelFeedsConditionInput | null,
 };
 
@@ -4422,12 +4429,12 @@ export type DeleteFeedsMutation = {
   } | null,
 };
 
-export type CreateInExchgFunMutationVariables = {
-  input?: CreateINExchgFunInput,
+export type CreateINExchgFunMutationVariables = {
+  input: CreateINExchgFunInput,
   condition?: ModelINExchgFunConditionInput | null,
 };
 
-export type CreateInExchgFunMutation = {
+export type CreateINExchgFunMutation = {
   createINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -4443,12 +4450,12 @@ export type CreateInExchgFunMutation = {
   } | null,
 };
 
-export type UpdateInExchgFunMutationVariables = {
-  input?: UpdateINExchgFunInput,
+export type UpdateINExchgFunMutationVariables = {
+  input: UpdateINExchgFunInput,
   condition?: ModelINExchgFunConditionInput | null,
 };
 
-export type UpdateInExchgFunMutation = {
+export type UpdateINExchgFunMutation = {
   updateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -4464,12 +4471,12 @@ export type UpdateInExchgFunMutation = {
   } | null,
 };
 
-export type DeleteInExchgFunMutationVariables = {
-  input?: DeleteINExchgFunInput,
+export type DeleteINExchgFunMutationVariables = {
+  input: DeleteINExchgFunInput,
   condition?: ModelINExchgFunConditionInput | null,
 };
 
-export type DeleteInExchgFunMutation = {
+export type DeleteINExchgFunMutation = {
   deleteINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -4485,12 +4492,12 @@ export type DeleteInExchgFunMutation = {
   } | null,
 };
 
-export type CreateInExchgPriceMutationVariables = {
-  input?: CreateINExchgPriceInput,
+export type CreateINExchgPriceMutationVariables = {
+  input: CreateINExchgPriceInput,
   condition?: ModelINExchgPriceConditionInput | null,
 };
 
-export type CreateInExchgPriceMutation = {
+export type CreateINExchgPriceMutation = {
   createINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -4527,12 +4534,12 @@ export type CreateInExchgPriceMutation = {
   } | null,
 };
 
-export type UpdateInExchgPriceMutationVariables = {
-  input?: UpdateINExchgPriceInput,
+export type UpdateINExchgPriceMutationVariables = {
+  input: UpdateINExchgPriceInput,
   condition?: ModelINExchgPriceConditionInput | null,
 };
 
-export type UpdateInExchgPriceMutation = {
+export type UpdateINExchgPriceMutation = {
   updateINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -4569,12 +4576,12 @@ export type UpdateInExchgPriceMutation = {
   } | null,
 };
 
-export type DeleteInExchgPriceMutationVariables = {
-  input?: DeleteINExchgPriceInput,
+export type DeleteINExchgPriceMutationVariables = {
+  input: DeleteINExchgPriceInput,
   condition?: ModelINExchgPriceConditionInput | null,
 };
 
-export type DeleteInExchgPriceMutation = {
+export type DeleteINExchgPriceMutation = {
   deleteINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -4612,7 +4619,7 @@ export type DeleteInExchgPriceMutation = {
 };
 
 export type CreateAllIndicesMutationVariables = {
-  input?: CreateAllIndicesInput,
+  input: CreateAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
 };
 
@@ -4638,7 +4645,7 @@ export type CreateAllIndicesMutation = {
 };
 
 export type UpdateAllIndicesMutationVariables = {
-  input?: UpdateAllIndicesInput,
+  input: UpdateAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
 };
 
@@ -4664,7 +4671,7 @@ export type UpdateAllIndicesMutation = {
 };
 
 export type DeleteAllIndicesMutationVariables = {
-  input?: DeleteAllIndicesInput,
+  input: DeleteAllIndicesInput,
   condition?: ModelAllIndicesConditionInput | null,
 };
 
@@ -4690,7 +4697,7 @@ export type DeleteAllIndicesMutation = {
 };
 
 export type CreateInsHistPerfMutationVariables = {
-  input?: CreateInsHistPerfInput,
+  input: CreateInsHistPerfInput,
   condition?: ModelInsHistPerfConditionInput | null,
 };
 
@@ -4707,7 +4714,7 @@ export type CreateInsHistPerfMutation = {
 };
 
 export type UpdateInsHistPerfMutationVariables = {
-  input?: UpdateInsHistPerfInput,
+  input: UpdateInsHistPerfInput,
   condition?: ModelInsHistPerfConditionInput | null,
 };
 
@@ -4724,7 +4731,7 @@ export type UpdateInsHistPerfMutation = {
 };
 
 export type DeleteInsHistPerfMutationVariables = {
-  input?: DeleteInsHistPerfInput,
+  input: DeleteInsHistPerfInput,
   condition?: ModelInsHistPerfConditionInput | null,
 };
 
@@ -4741,7 +4748,7 @@ export type DeleteInsHistPerfMutation = {
 };
 
 export type CreateIndiceHistPerfMutationVariables = {
-  input?: CreateIndiceHistPerfInput,
+  input: CreateIndiceHistPerfInput,
   condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
@@ -4767,7 +4774,7 @@ export type CreateIndiceHistPerfMutation = {
 };
 
 export type UpdateIndiceHistPerfMutationVariables = {
-  input?: UpdateIndiceHistPerfInput,
+  input: UpdateIndiceHistPerfInput,
   condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
@@ -4793,7 +4800,7 @@ export type UpdateIndiceHistPerfMutation = {
 };
 
 export type DeleteIndiceHistPerfMutationVariables = {
-  input?: DeleteIndiceHistPerfInput,
+  input: DeleteIndiceHistPerfInput,
   condition?: ModelIndiceHistPerfConditionInput | null,
 };
 
@@ -4819,7 +4826,7 @@ export type DeleteIndiceHistPerfMutation = {
 };
 
 export type CreateIndexConstMutationVariables = {
-  input?: CreateIndexConstInput,
+  input: CreateIndexConstInput,
   condition?: ModelIndexConstConditionInput | null,
 };
 
@@ -4834,7 +4841,7 @@ export type CreateIndexConstMutation = {
 };
 
 export type UpdateIndexConstMutationVariables = {
-  input?: UpdateIndexConstInput,
+  input: UpdateIndexConstInput,
   condition?: ModelIndexConstConditionInput | null,
 };
 
@@ -4849,7 +4856,7 @@ export type UpdateIndexConstMutation = {
 };
 
 export type DeleteIndexConstMutationVariables = {
-  input?: DeleteIndexConstInput,
+  input: DeleteIndexConstInput,
   condition?: ModelIndexConstConditionInput | null,
 };
 
@@ -4863,12 +4870,12 @@ export type DeleteIndexConstMutation = {
   } | null,
 };
 
-export type CreateInBondPriceMutationVariables = {
-  input?: CreateINBondPriceInput,
+export type CreateINBondPriceMutationVariables = {
+  input: CreateINBondPriceInput,
   condition?: ModelINBondPriceConditionInput | null,
 };
 
-export type CreateInBondPriceMutation = {
+export type CreateINBondPriceMutation = {
   createINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -4895,12 +4902,12 @@ export type CreateInBondPriceMutation = {
   } | null,
 };
 
-export type UpdateInBondPriceMutationVariables = {
-  input?: UpdateINBondPriceInput,
+export type UpdateINBondPriceMutationVariables = {
+  input: UpdateINBondPriceInput,
   condition?: ModelINBondPriceConditionInput | null,
 };
 
-export type UpdateInBondPriceMutation = {
+export type UpdateINBondPriceMutation = {
   updateINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -4927,12 +4934,12 @@ export type UpdateInBondPriceMutation = {
   } | null,
 };
 
-export type DeleteInBondPriceMutationVariables = {
-  input?: DeleteINBondPriceInput,
+export type DeleteINBondPriceMutationVariables = {
+  input: DeleteINBondPriceInput,
   condition?: ModelINBondPriceConditionInput | null,
 };
 
-export type DeleteInBondPriceMutation = {
+export type DeleteINBondPriceMutation = {
   deleteINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -4959,12 +4966,12 @@ export type DeleteInBondPriceMutation = {
   } | null,
 };
 
-export type CreateInmfPriceMutationVariables = {
-  input?: CreateINMFPriceInput,
+export type CreateINMFPriceMutationVariables = {
+  input: CreateINMFPriceInput,
   condition?: ModelINMFPriceConditionInput | null,
 };
 
-export type CreateInmfPriceMutation = {
+export type CreateINMFPriceMutation = {
   createINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -4985,12 +4992,12 @@ export type CreateInmfPriceMutation = {
   } | null,
 };
 
-export type UpdateInmfPriceMutationVariables = {
-  input?: UpdateINMFPriceInput,
+export type UpdateINMFPriceMutationVariables = {
+  input: UpdateINMFPriceInput,
   condition?: ModelINMFPriceConditionInput | null,
 };
 
-export type UpdateInmfPriceMutation = {
+export type UpdateINMFPriceMutation = {
   updateINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -5011,12 +5018,12 @@ export type UpdateInmfPriceMutation = {
   } | null,
 };
 
-export type DeleteInmfPriceMutationVariables = {
-  input?: DeleteINMFPriceInput,
+export type DeleteINMFPriceMutationVariables = {
+  input: DeleteINMFPriceInput,
   condition?: ModelINMFPriceConditionInput | null,
 };
 
-export type DeleteInmfPriceMutation = {
+export type DeleteINMFPriceMutation = {
   deleteINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -5037,12 +5044,12 @@ export type DeleteInmfPriceMutation = {
   } | null,
 };
 
-export type CreateNpsPriceMutationVariables = {
-  input?: CreateNPSPriceInput,
+export type CreateNPSPriceMutationVariables = {
+  input: CreateNPSPriceInput,
   condition?: ModelNPSPriceConditionInput | null,
 };
 
-export type CreateNpsPriceMutation = {
+export type CreateNPSPriceMutation = {
   createNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -5059,12 +5066,12 @@ export type CreateNpsPriceMutation = {
   } | null,
 };
 
-export type UpdateNpsPriceMutationVariables = {
-  input?: UpdateNPSPriceInput,
+export type UpdateNPSPriceMutationVariables = {
+  input: UpdateNPSPriceInput,
   condition?: ModelNPSPriceConditionInput | null,
 };
 
-export type UpdateNpsPriceMutation = {
+export type UpdateNPSPriceMutation = {
   updateNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -5081,12 +5088,12 @@ export type UpdateNpsPriceMutation = {
   } | null,
 };
 
-export type DeleteNpsPriceMutationVariables = {
-  input?: DeleteNPSPriceInput,
+export type DeleteNPSPriceMutationVariables = {
+  input: DeleteNPSPriceInput,
   condition?: ModelNPSPriceConditionInput | null,
 };
 
-export type DeleteNpsPriceMutation = {
+export type DeleteNPSPriceMutation = {
   deleteNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -5104,7 +5111,7 @@ export type DeleteNpsPriceMutation = {
 };
 
 export type UpdateCoachingReqMutationVariables = {
-  input?: UpdateCoachingReqInput,
+  input: UpdateCoachingReqInput,
   condition?: ModelCoachingReqConditionInput | null,
 };
 
@@ -5121,6 +5128,7 @@ export type UpdateCoachingReqMutation = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -5128,7 +5136,7 @@ export type UpdateCoachingReqMutation = {
 };
 
 export type GetFeedbackQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetFeedbackQuery = {
@@ -5178,7 +5186,7 @@ export type ListFeedbacksQuery = {
 };
 
 export type GetRatingQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetRatingQuery = {
@@ -5216,7 +5224,7 @@ export type ListRatingsQuery = {
 };
 
 export type GetGoalQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetGoalQuery = {
@@ -5432,7 +5440,7 @@ export type ListGoalsQuery = {
 };
 
 export type GetFamilyQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetFamilyQuery = {
@@ -5472,7 +5480,7 @@ export type ListFamilysQuery = {
 };
 
 export type GetUserInfoQueryVariables = {
-  uname?: string,
+  uname: string,
 };
 
 export type GetUserInfoQuery = {
@@ -5531,7 +5539,7 @@ export type ListUserInfosQuery = {
   } | null,
 };
 
-export type RegByImQueryVariables = {
+export type RegByIMQueryVariables = {
   im?: number | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelUserInfoFilterInput | null,
@@ -5539,7 +5547,7 @@ export type RegByImQueryVariables = {
   nextToken?: string | null,
 };
 
-export type RegByImQuery = {
+export type RegByIMQuery = {
   regByIM?:  {
     __typename: "ModelUserInfoConnection",
     items:  Array< {
@@ -5633,7 +5641,7 @@ export type RegByEmailQuery = {
   } | null,
 };
 
-export type RegByDobQueryVariables = {
+export type RegByDOBQueryVariables = {
   dob?: string | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelUserInfoFilterInput | null,
@@ -5641,7 +5649,7 @@ export type RegByDobQueryVariables = {
   nextToken?: string | null,
 };
 
-export type RegByDobQuery = {
+export type RegByDOBQuery = {
   regByDOB?:  {
     __typename: "ModelUserInfoConnection",
     items:  Array< {
@@ -5702,7 +5710,7 @@ export type RegByTaxIdQuery = {
 };
 
 export type GetInsAnalyticsQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetInsAnalyticsQuery = {
@@ -5738,7 +5746,7 @@ export type ListInsAnalyticssQuery = {
 };
 
 export type GetFeedsQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetFeedsQuery = {
@@ -5779,11 +5787,11 @@ export type ListFeedssQuery = {
   } | null,
 };
 
-export type GetInExchgFunQueryVariables = {
-  id?: string,
+export type GetINExchgFunQueryVariables = {
+  id: string,
 };
 
-export type GetInExchgFunQuery = {
+export type GetINExchgFunQuery = {
   getINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -5799,7 +5807,7 @@ export type GetInExchgFunQuery = {
   } | null,
 };
 
-export type ListInExchgFunsQueryVariables = {
+export type ListINExchgFunsQueryVariables = {
   id?: string | null,
   filter?: ModelINExchgFunFilterInput | null,
   limit?: number | null,
@@ -5807,7 +5815,7 @@ export type ListInExchgFunsQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInExchgFunsQuery = {
+export type ListINExchgFunsQuery = {
   listINExchgFuns?:  {
     __typename: "ModelINExchgFunConnection",
     items:  Array< {
@@ -5827,11 +5835,11 @@ export type ListInExchgFunsQuery = {
   } | null,
 };
 
-export type GetInExchgPriceQueryVariables = {
-  id?: string,
+export type GetINExchgPriceQueryVariables = {
+  id: string,
 };
 
-export type GetInExchgPriceQuery = {
+export type GetINExchgPriceQuery = {
   getINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -5868,7 +5876,7 @@ export type GetInExchgPriceQuery = {
   } | null,
 };
 
-export type ListInExchgPricesQueryVariables = {
+export type ListINExchgPricesQueryVariables = {
   id?: string | null,
   filter?: ModelINExchgPriceFilterInput | null,
   limit?: number | null,
@@ -5876,7 +5884,7 @@ export type ListInExchgPricesQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInExchgPricesQuery = {
+export type ListINExchgPricesQuery = {
   listINExchgPrices?:  {
     __typename: "ModelINExchgPriceConnection",
     items:  Array< {
@@ -5918,7 +5926,7 @@ export type ListInExchgPricesQuery = {
 };
 
 export type GetAllIndicesQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetAllIndicesQuery = {
@@ -5976,7 +5984,7 @@ export type ListAllIndicessQuery = {
 };
 
 export type GetInsHistPerfQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetInsHistPerfQuery = {
@@ -6016,7 +6024,7 @@ export type ListInsHistPerfsQuery = {
 };
 
 export type GetIndiceHistPerfQueryVariables = {
-  name?: string,
+  name: string,
 };
 
 export type GetIndiceHistPerfQuery = {
@@ -6074,7 +6082,7 @@ export type ListIndiceHistPerfsQuery = {
 };
 
 export type GetIndexConstQueryVariables = {
-  name?: string,
+  name: string,
 };
 
 export type GetIndexConstQuery = {
@@ -6109,11 +6117,11 @@ export type ListIndexConstsQuery = {
   } | null,
 };
 
-export type GetInBondPriceQueryVariables = {
-  id?: string,
+export type GetINBondPriceQueryVariables = {
+  id: string,
 };
 
-export type GetInBondPriceQuery = {
+export type GetINBondPriceQuery = {
   getINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -6140,7 +6148,7 @@ export type GetInBondPriceQuery = {
   } | null,
 };
 
-export type ListInBondPricesQueryVariables = {
+export type ListINBondPricesQueryVariables = {
   id?: string | null,
   filter?: ModelINBondPriceFilterInput | null,
   limit?: number | null,
@@ -6148,7 +6156,7 @@ export type ListInBondPricesQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInBondPricesQuery = {
+export type ListINBondPricesQuery = {
   listINBondPrices?:  {
     __typename: "ModelINBondPriceConnection",
     items:  Array< {
@@ -6179,11 +6187,11 @@ export type ListInBondPricesQuery = {
   } | null,
 };
 
-export type GetInmfPriceQueryVariables = {
-  id?: string,
+export type GetINMFPriceQueryVariables = {
+  id: string,
 };
 
-export type GetInmfPriceQuery = {
+export type GetINMFPriceQuery = {
   getINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -6204,7 +6212,7 @@ export type GetInmfPriceQuery = {
   } | null,
 };
 
-export type ListInmfPricesQueryVariables = {
+export type ListINMFPricesQueryVariables = {
   id?: string | null,
   filter?: ModelINMFPriceFilterInput | null,
   limit?: number | null,
@@ -6212,7 +6220,7 @@ export type ListInmfPricesQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInmfPricesQuery = {
+export type ListINMFPricesQuery = {
   listINMFPrices?:  {
     __typename: "ModelINMFPriceConnection",
     items:  Array< {
@@ -6237,11 +6245,11 @@ export type ListInmfPricesQuery = {
   } | null,
 };
 
-export type GetNpsPriceQueryVariables = {
-  id?: string,
+export type GetNPSPriceQueryVariables = {
+  id: string,
 };
 
-export type GetNpsPriceQuery = {
+export type GetNPSPriceQuery = {
   getNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -6258,7 +6266,7 @@ export type GetNpsPriceQuery = {
   } | null,
 };
 
-export type ListNpsPricesQueryVariables = {
+export type ListNPSPricesQueryVariables = {
   id?: string | null,
   filter?: ModelNPSPriceFilterInput | null,
   limit?: number | null,
@@ -6266,7 +6274,7 @@ export type ListNpsPricesQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListNpsPricesQuery = {
+export type ListNPSPricesQuery = {
   listNPSPrices?:  {
     __typename: "ModelNPSPriceConnection",
     items:  Array< {
@@ -6288,7 +6296,7 @@ export type ListNpsPricesQuery = {
 };
 
 export type GetUserHoldingsQueryVariables = {
-  uname?: string,
+  uname: string,
 };
 
 export type GetUserHoldingsQuery = {
@@ -6985,7 +6993,7 @@ export type ListUserHoldingssQuery = {
 };
 
 export type GetUserInsQueryVariables = {
-  uname?: string,
+  uname: string,
 };
 
 export type GetUserInsQuery = {
@@ -7071,7 +7079,7 @@ export type ListUserInssQuery = {
 };
 
 export type GetCoachingReqQueryVariables = {
-  id?: string,
+  id: string,
 };
 
 export type GetCoachingReqQuery = {
@@ -7087,6 +7095,7 @@ export type GetCoachingReqQuery = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -7114,6 +7123,7 @@ export type ListCoachingReqsQuery = {
       curr: string,
       paid: boolean,
       pt?: PaymentType | null,
+      email?: string | null,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -7213,7 +7223,7 @@ export type OnDeleteRatingSubscription = {
 };
 
 export type OnCreateGoalSubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnCreateGoalSubscription = {
@@ -7323,7 +7333,7 @@ export type OnCreateGoalSubscription = {
 };
 
 export type OnUpdateGoalSubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnUpdateGoalSubscription = {
@@ -7433,7 +7443,7 @@ export type OnUpdateGoalSubscription = {
 };
 
 export type OnDeleteGoalSubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnDeleteGoalSubscription = {
@@ -7543,7 +7553,7 @@ export type OnDeleteGoalSubscription = {
 };
 
 export type OnCreateFamilySubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnCreateFamilySubscription = {
@@ -7560,7 +7570,7 @@ export type OnCreateFamilySubscription = {
 };
 
 export type OnUpdateFamilySubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnUpdateFamilySubscription = {
@@ -7577,7 +7587,7 @@ export type OnUpdateFamilySubscription = {
 };
 
 export type OnDeleteFamilySubscriptionVariables = {
-  owner?: string,
+  owner: string,
 };
 
 export type OnDeleteFamilySubscription = {
@@ -7728,7 +7738,7 @@ export type OnDeleteFeedsSubscription = {
   } | null,
 };
 
-export type OnCreateInExchgFunSubscription = {
+export type OnCreateINExchgFunSubscription = {
   onCreateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -7744,7 +7754,7 @@ export type OnCreateInExchgFunSubscription = {
   } | null,
 };
 
-export type OnUpdateInExchgFunSubscription = {
+export type OnUpdateINExchgFunSubscription = {
   onUpdateINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -7760,7 +7770,7 @@ export type OnUpdateInExchgFunSubscription = {
   } | null,
 };
 
-export type OnDeleteInExchgFunSubscription = {
+export type OnDeleteINExchgFunSubscription = {
   onDeleteINExchgFun?:  {
     __typename: "INExchgFun",
     id: string,
@@ -7776,7 +7786,7 @@ export type OnDeleteInExchgFunSubscription = {
   } | null,
 };
 
-export type OnCreateInExchgPriceSubscription = {
+export type OnCreateINExchgPriceSubscription = {
   onCreateINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -7813,7 +7823,7 @@ export type OnCreateInExchgPriceSubscription = {
   } | null,
 };
 
-export type OnUpdateInExchgPriceSubscription = {
+export type OnUpdateINExchgPriceSubscription = {
   onUpdateINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -7850,7 +7860,7 @@ export type OnUpdateInExchgPriceSubscription = {
   } | null,
 };
 
-export type OnDeleteInExchgPriceSubscription = {
+export type OnDeleteINExchgPriceSubscription = {
   onDeleteINExchgPrice?:  {
     __typename: "INExchgPrice",
     id: string,
@@ -8079,7 +8089,7 @@ export type OnDeleteIndexConstSubscription = {
   } | null,
 };
 
-export type OnCreateInBondPriceSubscription = {
+export type OnCreateINBondPriceSubscription = {
   onCreateINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -8106,7 +8116,7 @@ export type OnCreateInBondPriceSubscription = {
   } | null,
 };
 
-export type OnUpdateInBondPriceSubscription = {
+export type OnUpdateINBondPriceSubscription = {
   onUpdateINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -8133,7 +8143,7 @@ export type OnUpdateInBondPriceSubscription = {
   } | null,
 };
 
-export type OnDeleteInBondPriceSubscription = {
+export type OnDeleteINBondPriceSubscription = {
   onDeleteINBondPrice?:  {
     __typename: "INBondPrice",
     id: string,
@@ -8160,7 +8170,7 @@ export type OnDeleteInBondPriceSubscription = {
   } | null,
 };
 
-export type OnCreateInmfPriceSubscription = {
+export type OnCreateINMFPriceSubscription = {
   onCreateINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -8181,7 +8191,7 @@ export type OnCreateInmfPriceSubscription = {
   } | null,
 };
 
-export type OnUpdateInmfPriceSubscription = {
+export type OnUpdateINMFPriceSubscription = {
   onUpdateINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -8202,7 +8212,7 @@ export type OnUpdateInmfPriceSubscription = {
   } | null,
 };
 
-export type OnDeleteInmfPriceSubscription = {
+export type OnDeleteINMFPriceSubscription = {
   onDeleteINMFPrice?:  {
     __typename: "INMFPrice",
     id: string,
@@ -8223,7 +8233,7 @@ export type OnDeleteInmfPriceSubscription = {
   } | null,
 };
 
-export type OnCreateNpsPriceSubscription = {
+export type OnCreateNPSPriceSubscription = {
   onCreateNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -8240,7 +8250,7 @@ export type OnCreateNpsPriceSubscription = {
   } | null,
 };
 
-export type OnUpdateNpsPriceSubscription = {
+export type OnUpdateNPSPriceSubscription = {
   onUpdateNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -8257,7 +8267,7 @@ export type OnUpdateNpsPriceSubscription = {
   } | null,
 };
 
-export type OnDeleteNpsPriceSubscription = {
+export type OnDeleteNPSPriceSubscription = {
   onDeleteNPSPrice?:  {
     __typename: "NPSPrice",
     id: string,
@@ -9641,6 +9651,7 @@ export type OnCreateCoachingReqSubscription = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -9664,6 +9675,7 @@ export type OnUpdateCoachingReqSubscription = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -9687,6 +9699,7 @@ export type OnDeleteCoachingReqSubscription = {
     curr: string,
     paid: boolean,
     pt?: PaymentType | null,
+    email?: string | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
