@@ -10,7 +10,7 @@ const StockDetailContext = createContext({});
 function StockDetailContextProvider({ name, children }: any) {
   //@ts-ignore
   const [state, dispatch, loadData] = useFetch(`/api/details?name=${name}`);
-  const { appContextLoaded, user }: any = useContext(AppContext);
+  const { owner }: any = useContext(AppContext);
   const [quantity, setQuantity] = useState<number>(0);
 
   useEffect(() => {
@@ -19,13 +19,12 @@ function StockDetailContextProvider({ name, children }: any) {
   }, [name]);
 
   useEffect(() => {
-    if (!appContextLoaded) return;
-    if (!user) return;
-    loadInsHoldings(user).then((instruments: any) => {
+    if (!owner) return;
+    loadInsHoldings(owner).then((instruments: any) => {
       console.log("Instruments: ", instruments);
       setQuantity(100);
     });
-  }, [appContextLoaded]);
+  }, [owner]);
 
   return (
     <StockDetailContext.Provider
