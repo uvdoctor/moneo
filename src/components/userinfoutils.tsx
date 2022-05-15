@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 import * as queries from "../graphql/queries";
 import * as mutations from "../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
-import { RegByImQuery, RegByMobQuery, RegByEmailQuery, RegByTaxIdQuery } from "../api/goals";
+import { RegByMobQuery, RegByEmailQuery, RegByTaxIdQuery } from "../api/goals";
 import * as APIt from "../api/goals";
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
@@ -89,9 +89,9 @@ export const doesImExist = async (im: Number) => {
       const {
         data: { regByIM },
       } = (await API.graphql({
-        query: queries.regByIm,
+        query: queries.regByIM,
         variables: variables,
-      })) as { data: RegByImQuery };
+      })) as { data: APIt.RegByIMQuery };
       if (regByIM?.items?.length) return true;
       nextToken = regByIM?.nextToken;
     } while (nextToken);
@@ -103,7 +103,7 @@ export const doesImExist = async (im: Number) => {
 
 export const updateUserDetails = async (input: APIt.UpdateUserInfoInput) => {
   try {
-    const { data } =  (await API.graphql(
+    const { data } = (await API.graphql(
       graphqlOperation(mutations.updateUserInfo, { input: input })
     )) as {
       data: APIt.UpdateUserInfoMutation;
