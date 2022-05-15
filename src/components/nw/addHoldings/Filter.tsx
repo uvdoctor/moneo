@@ -38,7 +38,8 @@ export default function Filter({ options }: FilterProps) {
     let industry: { [key: string]: string } = {};
     let sector: { [key: string]: string } = {};
     let fundata = simpleStorage.get(LOCAL_FUN_DATA_KEY);
-    if(!fundata) fundata = await initializeFundata(instruments);
+    let ids: Array<string> = instruments.map((item: any) => item.id);
+    if(!fundata) fundata = await initializeFundata(ids);
     for (let ins of instruments) {
       let data = fundata[ins.sid as string];
       if (data) {

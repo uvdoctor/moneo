@@ -34,6 +34,7 @@ import {
   doesPropertyMatch,
   getCommodityRate,
   getCryptoRate,
+  initializeFundata,
   initializeNPSData,
   isFund,
   isLargeCap,
@@ -48,7 +49,7 @@ const today = new Date();
 const presentMonth = today.getMonth() + 1;
 const presentYear = today.getFullYear();
 
-const loadInstrumentPrices = async (
+export const loadInstrumentPrices = async (
   fun: Function,
   ids: Array<string>,
   allInsData: any,
@@ -117,6 +118,7 @@ export const loadInstruments = async (ids: Array<string>) => {
       : "";
   });
   await loadInsPerf(insPerfIds);
+  await initializeFundata(exchangeIds);
   return allInsData;
 };
 

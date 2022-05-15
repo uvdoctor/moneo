@@ -39,7 +39,6 @@ import {
 } from "./valuationutils";
 import {
   AssetSubType,
-  InstrumentInput,
   InsType,
   PropertyType,
 } from "../../api/goals";
@@ -1316,18 +1315,18 @@ export const isStock = (subType: string, id: string) =>
   subType === APIt.AssetSubType.S && !isFund(id);
 
 export const initializeFundata = async (
-  instruments: Array<InstrumentInput>
+  ids: Array<string>
 ) => {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!insData) return null;
   let sids: Set<string> = new Set();
   let initFromDB = false;
   const funData = simpleStorage.get(LOCAL_FUN_DATA_KEY);
-  instruments.forEach((ins: InstrumentInput) => {
-    const item = insData[ins.id];
+  ids.forEach((id: string) => {
+    const item = insData[id];
     if (
       !item ||
-      !isStock(item?.subt, ins.id) ||
+      !isStock(item?.subt, id) ||
       !item.sid ||
       !item.hasOwnProperty("beta") ||
       !item?.yhigh
@@ -1335,7 +1334,7 @@ export const initializeFundata = async (
       return;
     }
     sids.add(item.sid as string);
-    if (!initFromDB && (!funData || !funData[ins.sid as string])) {
+    if (!initFromDB && (!funData || !funData[item.sid as string])) {
       initFromDB = true;
     }
   });
