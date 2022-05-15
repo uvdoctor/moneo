@@ -5,6 +5,7 @@ import useFetch from "../useFetch";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import { loadInsHoldings } from "../nw/nwutils";
+import { InstrumentInput } from "../../api/goals";
 const StockDetailContext = createContext({});
 
 function StockDetailContextProvider({ name, children }: any) {
@@ -12,6 +13,7 @@ function StockDetailContextProvider({ name, children }: any) {
   const [state, dispatch, loadData] = useFetch(`/api/details?name=${name}`);
   const { owner }: any = useContext(AppContext);
   const [quantity, setQuantity] = useState<number>(0);
+  const ticker = name && name.split(".")?.length ? name.split(".")[0] : name;
 
   useEffect(() => {
     if (!name) return;
@@ -19,10 +21,19 @@ function StockDetailContextProvider({ name, children }: any) {
   }, [name]);
 
   useEffect(() => {
-    if (!owner) return;
-    loadInsHoldings(owner).then((instruments: any) => {
-      console.log("Instruments: ", instruments);
-      setQuantity(100);
+    if (!owner) {
+      setQuantity(0);
+      return;
+    }
+    loadInsHoldings(owner).then((result: any) => {
+      let quantity = 0;
+      if (result.ins) {
+        const instruments = result.ins;
+        instruments.forEach((instrument: InstrumentInput) => {
+          if (instrument.sid === ticker) quantity += instrument.qty;
+        });
+      }
+      setQuantity(quantity);
     });
   }, [owner]);
 
@@ -37,7 +48,7 @@ function StockDetailContextProvider({ name, children }: any) {
           <Row className="primary-header">
             <Col span={24}>
               <PageHeader
-                title={name.split(".")?.length ? name.split(".")[0] : name}
+                title={ticker}
                 extra={[<CoachingRequest key="cr" />]}
               />
             </Col>
