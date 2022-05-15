@@ -19,7 +19,7 @@ const getIndexBySector = (ind: string) => {
     Services: "NIFTY Services Sector",
     Technology: "NIFTY IT",
     Utilities: "NIFTY Oil & Gas",
-    HealthCare: "NIFTY Healthcare Index",
+    Healthcare: "NIFTY Healthcare Index",
     Energy: "NIFTY Energy",
     "Communication Services": "NIFTY Media",
     "Real Estate": "NIFTY Realty",
@@ -38,9 +38,9 @@ export default function PerfHistFeedback({
 
   const calculateOverallRating = () => {
     let niftyRating = 1;
-    const diffOne = calcDiff(instrument?.price, performance.p1y, 1);
-    const diffThree = calcDiff(instrument?.price, performance.p3y, 3);
-    const diffFive = calcDiff(instrument?.price, performance.p5y, 5);
+    const diffOne = calcDiff(instrument?.price, performance?.p1y, 1);
+    const diffThree = calcDiff(instrument?.price, performance?.p3y, 3);
+    const diffFive = calcDiff(instrument?.price, performance?.p5y, 5);
     const indexDiffOne = indexPerf && indexPerf["NIFTY 50"]?.p1y;
     const indexDiffThree = indexPerf && indexPerf["NIFTY 50"]?.p3y;
     const indexDiffFive = indexPerf && indexPerf["NIFTY 50"]?.p5y;
@@ -60,9 +60,9 @@ export default function PerfHistFeedback({
     const sectorIndex = getIndexBySector(data.sector);
     if (!sectorIndex) return null;
     let sectorRating = 1;
-    const diffOne = calcDiff(instrument?.price, performance.p1y, 1);
-    const diffThree = calcDiff(instrument?.price, performance.p3y, 3);
-    const diffFive = calcDiff(instrument?.price, performance.p5y, 5);
+    const diffOne = calcDiff(instrument?.price, performance?.p1y, 1);
+    const diffThree = calcDiff(instrument?.price, performance?.p3y, 3);
+    const diffFive = calcDiff(instrument?.price, performance?.p5y, 5);
     const sectorDiffOne = indexPerf && indexPerf[sectorIndex]?.p1y;
     const setorDiffThree = indexPerf && indexPerf[sectorIndex]?.p3y;
     const sectorDiffFive = indexPerf && indexPerf[sectorIndex]?.p5y;
