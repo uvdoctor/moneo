@@ -117,7 +117,6 @@ export const loadInstruments = async (ids: Array<string>) => {
       : "";
   });
   await loadInsPerf(insPerfIds);
-  await initializeFundata(exchangeIds);
   await loadIndexPerf();
   return allInsData;
 };
