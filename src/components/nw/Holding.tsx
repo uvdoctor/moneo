@@ -34,9 +34,15 @@ interface HoldingProp {
   holding: InstrumentInput;
   onDelete: Function;
   onChange?: Function;
+  isUploading?: boolean;
 }
 
-export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
+export default function Holding({
+  holding,
+  onDelete,
+  onChange,
+  isUploading,
+}: HoldingProp) {
   const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   const insPerfData = simpleStorage.get(LOCAL_INS_PERF_KEY);
   const instrumentPerf = insPerfData
@@ -71,7 +77,8 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
       className="holding"
       align="middle"
       justify="space-between"
-      gutter={[5, 5]}>
+      gutter={[5, 5]}
+    >
       {price ? (
         <Col span={24}>
           <Row justify="space-between">
@@ -106,7 +113,10 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
                       {instrument.crstr}
                     </Tooltip>
                   ) : null}
-                  {instrument.mcapt && insPerfData ? (
+                  {!isUploading &&
+                  instrument.mcapt &&
+                  instrument.subt === AssetSubType.S &&
+                  insPerfData ? (
                     <PerfHistFeedback
                       performance={instrumentPerf}
                       instrument={instrument}

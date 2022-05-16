@@ -28,7 +28,7 @@ export default function HoldingsTable({ data, num, onChange, onNumChange }: Hold
 	return num ? (
 		<Fragment>
 			{Object.keys(data).map((key: string) => (
-				data[key].qty && <Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} />
+				data[key].qty && <Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} isUploading/>
 			))}
 		</Fragment>
 	) : (
