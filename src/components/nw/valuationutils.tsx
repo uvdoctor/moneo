@@ -33,7 +33,6 @@ import {
   doesPropertyMatch,
   getCommodityRate,
   getCryptoRate,
-  initializeFundata,
   initializeNPSData,
   isFund,
   isLargeCap,
