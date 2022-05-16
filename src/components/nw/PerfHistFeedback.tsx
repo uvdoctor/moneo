@@ -40,7 +40,7 @@ export default function PerfHistFeedback({
 
   return (
     <>
-      <Tooltip title="Performance consistency compared to NIFTY 50 index over last 5 years">
+      <Tooltip title={`Performance consistency compared to ${index} index over last 5 years`}>
         <SelectInput
           pre={""}
           value={index}
