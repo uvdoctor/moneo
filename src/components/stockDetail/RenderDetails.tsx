@@ -7,26 +7,25 @@ import Fund from "./Fund";
 import Crypto from "./Crypto";
 
 export default function RenderDetails() {
-	/* @ts-ignore */
-	const { state } = useContext(StockDetailContext);
+  const { state }: any = useContext(StockDetailContext);
 
-	switch (state.data.General?.Type) {
-		case "Common Stock":
-			return <CommonStock />;
+  switch (state.data.General?.Type) {
+    case "Common Stock":
+      return <CommonStock />;
 
-		case "ETF":
-			return <ETF />;
+    case "ETF":
+      return <ETF />;
 
-		case "Currency":
-			return <Currency />;
+    case "Currency":
+      return <Currency />;
 
-		case "FUND":
-			return <Fund />;
+    case "FUND":
+      return <Fund />;
 
-		case "Crypto":
-			return <Crypto />;
+    case "Crypto":
+      return <Crypto />;
 
-		default:
-			return null;
-	}
+    default:
+      return null;
+  }
 }

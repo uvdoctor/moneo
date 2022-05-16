@@ -16,6 +16,7 @@ interface InsPriceProps {
   noDecimal?: boolean;
   noPerCalc?: boolean;
   info?: string;
+  noColor?: boolean;
 }
 export default function InsPrice({
   price,
@@ -24,6 +25,7 @@ export default function InsPrice({
   noDecimal,
   noPerCalc,
   info,
+  noColor,
 }: InsPriceProps) {
   const getChangeRatio = () =>
     price && previousPrice
@@ -47,11 +49,12 @@ export default function InsPrice({
       {previousPrice && previousPrice !== price ? (
         <span
           style={{
-            color:
-              (noPerCalc && previousPrice > 0) ||
-              (!noPerCalc && price > previousPrice)
-                ? COLORS.GREEN
-                : COLORS.RED,
+            color: noColor
+              ? COLORS.WHITE
+              : (noPerCalc && previousPrice > 0) ||
+                (!noPerCalc && price > previousPrice)
+              ? COLORS.GREEN
+              : COLORS.RED,
           }}>
           <LabelWithTooltip
             label={

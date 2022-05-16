@@ -308,9 +308,9 @@ export const loadMatchingINExchange = async (ids: Array<string>) => {
       const {
         data: { listINExchgPrices },
       } = (await API.graphql(
-        graphqlOperation(queries.listInExchgPrices, variables)
+        graphqlOperation(queries.listINExchgPrices, variables)
       )) as {
-        data: APIt.ListInExchgPricesQuery;
+        data: APIt.ListINExchgPricesQuery;
       };
       if (listINExchgPrices?.items?.length)
         returnList.push(
@@ -333,9 +333,9 @@ export const loadMatchingINMutual = async (isins: Array<string>) => {
     const {
       data: { listINMFPrices },
     } = (await API.graphql(
-      graphqlOperation(queries.listInmfPrices, variables)
+      graphqlOperation(queries.listINMFPrices, variables)
     )) as {
-      data: APIt.ListInmfPricesQuery;
+      data: APIt.ListINMFPricesQuery;
     };
     if (listINMFPrices?.items?.length)
       returnList.push(...(listINMFPrices.items as Array<APIt.INMFPrice>));
@@ -355,9 +355,9 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
     const {
       data: { listINBondPrices },
     } = (await API.graphql(
-      graphqlOperation(queries.listInBondPrices, variables)
+      graphqlOperation(queries.listINBondPrices, variables)
     )) as {
-      data: APIt.ListInBondPricesQuery;
+      data: APIt.ListINBondPricesQuery;
     };
     if (listINBondPrices?.items?.length)
       returnList.push(...(listINBondPrices.items as Array<APIt.INBondPrice>));
@@ -681,8 +681,8 @@ export const initializeNPSData = async () => {
   if (npsData) return npsData;
   const {
     data: { listNPSPrices },
-  } = (await API.graphql(graphqlOperation(queries.listNpsPrices))) as {
-    data: APIt.ListNpsPricesQuery;
+  } = (await API.graphql(graphqlOperation(queries.listNPSPrices))) as {
+    data: APIt.ListNPSPricesQuery;
   };
   npsData = listNPSPrices?.items?.length
     ? (listNPSPrices.items as Array<APIt.CreateNPSPriceInput>)
@@ -1325,9 +1325,9 @@ export const loadMatchingINExchgFun = async (sids: Array<string>) => {
     const {
       data: { listINExchgFuns },
     } = (await API.graphql(
-      graphqlOperation(queries.listInExchgFuns, variables)
+      graphqlOperation(queries.listINExchgFuns, variables)
     )) as {
-      data: APIt.ListInExchgFunsQuery;
+      data: APIt.ListINExchgFunsQuery;
     };
     idList = [];
     if (listINExchgFuns?.items?.length)

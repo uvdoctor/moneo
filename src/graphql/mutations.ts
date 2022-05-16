@@ -1759,6 +1759,7 @@ export const createCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
@@ -1781,6 +1782,7 @@ export const deleteCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
@@ -1909,8 +1911,8 @@ export const deleteFeeds = /* GraphQL */ `
     }
   }
 `;
-export const createInExchgFun = /* GraphQL */ `
-  mutation CreateInExchgFun(
+export const createINExchgFun = /* GraphQL */ `
+  mutation CreateINExchgFun(
     $input: CreateINExchgFunInput!
     $condition: ModelINExchgFunConditionInput
   ) {
@@ -1928,8 +1930,8 @@ export const createInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const updateInExchgFun = /* GraphQL */ `
-  mutation UpdateInExchgFun(
+export const updateINExchgFun = /* GraphQL */ `
+  mutation UpdateINExchgFun(
     $input: UpdateINExchgFunInput!
     $condition: ModelINExchgFunConditionInput
   ) {
@@ -1947,8 +1949,8 @@ export const updateInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const deleteInExchgFun = /* GraphQL */ `
-  mutation DeleteInExchgFun(
+export const deleteINExchgFun = /* GraphQL */ `
+  mutation DeleteINExchgFun(
     $input: DeleteINExchgFunInput!
     $condition: ModelINExchgFunConditionInput
   ) {
@@ -1966,8 +1968,8 @@ export const deleteInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const createInExchgPrice = /* GraphQL */ `
-  mutation CreateInExchgPrice(
+export const createINExchgPrice = /* GraphQL */ `
+  mutation CreateINExchgPrice(
     $input: CreateINExchgPriceInput!
     $condition: ModelINExchgPriceConditionInput
   ) {
@@ -2006,8 +2008,8 @@ export const createInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const updateInExchgPrice = /* GraphQL */ `
-  mutation UpdateInExchgPrice(
+export const updateINExchgPrice = /* GraphQL */ `
+  mutation UpdateINExchgPrice(
     $input: UpdateINExchgPriceInput!
     $condition: ModelINExchgPriceConditionInput
   ) {
@@ -2046,8 +2048,8 @@ export const updateInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const deleteInExchgPrice = /* GraphQL */ `
-  mutation DeleteInExchgPrice(
+export const deleteINExchgPrice = /* GraphQL */ `
+  mutation DeleteINExchgPrice(
     $input: DeleteINExchgPriceInput!
     $condition: ModelINExchgPriceConditionInput
   ) {
@@ -2314,8 +2316,8 @@ export const deleteIndexConst = /* GraphQL */ `
     }
   }
 `;
-export const createInBondPrice = /* GraphQL */ `
-  mutation CreateInBondPrice(
+export const createINBondPrice = /* GraphQL */ `
+  mutation CreateINBondPrice(
     $input: CreateINBondPriceInput!
     $condition: ModelINBondPriceConditionInput
   ) {
@@ -2344,8 +2346,8 @@ export const createInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const updateInBondPrice = /* GraphQL */ `
-  mutation UpdateInBondPrice(
+export const updateINBondPrice = /* GraphQL */ `
+  mutation UpdateINBondPrice(
     $input: UpdateINBondPriceInput!
     $condition: ModelINBondPriceConditionInput
   ) {
@@ -2374,8 +2376,8 @@ export const updateInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const deleteInBondPrice = /* GraphQL */ `
-  mutation DeleteInBondPrice(
+export const deleteINBondPrice = /* GraphQL */ `
+  mutation DeleteINBondPrice(
     $input: DeleteINBondPriceInput!
     $condition: ModelINBondPriceConditionInput
   ) {
@@ -2404,8 +2406,8 @@ export const deleteInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const createInmfPrice = /* GraphQL */ `
-  mutation CreateInmfPrice(
+export const createINMFPrice = /* GraphQL */ `
+  mutation CreateINMFPrice(
     $input: CreateINMFPriceInput!
     $condition: ModelINMFPriceConditionInput
   ) {
@@ -2428,8 +2430,8 @@ export const createInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const updateInmfPrice = /* GraphQL */ `
-  mutation UpdateInmfPrice(
+export const updateINMFPrice = /* GraphQL */ `
+  mutation UpdateINMFPrice(
     $input: UpdateINMFPriceInput!
     $condition: ModelINMFPriceConditionInput
   ) {
@@ -2452,8 +2454,8 @@ export const updateInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const deleteInmfPrice = /* GraphQL */ `
-  mutation DeleteInmfPrice(
+export const deleteINMFPrice = /* GraphQL */ `
+  mutation DeleteINMFPrice(
     $input: DeleteINMFPriceInput!
     $condition: ModelINMFPriceConditionInput
   ) {
@@ -2476,8 +2478,8 @@ export const deleteInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const createNpsPrice = /* GraphQL */ `
-  mutation CreateNpsPrice(
+export const createNPSPrice = /* GraphQL */ `
+  mutation CreateNPSPrice(
     $input: CreateNPSPriceInput!
     $condition: ModelNPSPriceConditionInput
   ) {
@@ -2496,8 +2498,8 @@ export const createNpsPrice = /* GraphQL */ `
     }
   }
 `;
-export const updateNpsPrice = /* GraphQL */ `
-  mutation UpdateNpsPrice(
+export const updateNPSPrice = /* GraphQL */ `
+  mutation UpdateNPSPrice(
     $input: UpdateNPSPriceInput!
     $condition: ModelNPSPriceConditionInput
   ) {
@@ -2516,8 +2518,8 @@ export const updateNpsPrice = /* GraphQL */ `
     }
   }
 `;
-export const deleteNpsPrice = /* GraphQL */ `
-  mutation DeleteNpsPrice(
+export const deleteNPSPrice = /* GraphQL */ `
+  mutation DeleteNPSPrice(
     $input: DeleteNPSPriceInput!
     $condition: ModelNPSPriceConditionInput
   ) {
@@ -2552,6 +2554,7 @@ export const updateCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner

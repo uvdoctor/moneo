@@ -560,8 +560,8 @@ export const onDeleteFeeds = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInExchgFun = /* GraphQL */ `
-  subscription OnCreateInExchgFun {
+export const onCreateINExchgFun = /* GraphQL */ `
+  subscription OnCreateINExchgFun {
     onCreateINExchgFun {
       id
       isin
@@ -576,8 +576,8 @@ export const onCreateInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInExchgFun = /* GraphQL */ `
-  subscription OnUpdateInExchgFun {
+export const onUpdateINExchgFun = /* GraphQL */ `
+  subscription OnUpdateINExchgFun {
     onUpdateINExchgFun {
       id
       isin
@@ -592,8 +592,8 @@ export const onUpdateInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInExchgFun = /* GraphQL */ `
-  subscription OnDeleteInExchgFun {
+export const onDeleteINExchgFun = /* GraphQL */ `
+  subscription OnDeleteINExchgFun {
     onDeleteINExchgFun {
       id
       isin
@@ -608,8 +608,8 @@ export const onDeleteInExchgFun = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInExchgPrice = /* GraphQL */ `
-  subscription OnCreateInExchgPrice {
+export const onCreateINExchgPrice = /* GraphQL */ `
+  subscription OnCreateINExchgPrice {
     onCreateINExchgPrice {
       id
       sid
@@ -645,8 +645,8 @@ export const onCreateInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInExchgPrice = /* GraphQL */ `
-  subscription OnUpdateInExchgPrice {
+export const onUpdateINExchgPrice = /* GraphQL */ `
+  subscription OnUpdateINExchgPrice {
     onUpdateINExchgPrice {
       id
       sid
@@ -682,8 +682,8 @@ export const onUpdateInExchgPrice = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInExchgPrice = /* GraphQL */ `
-  subscription OnDeleteInExchgPrice {
+export const onDeleteINExchgPrice = /* GraphQL */ `
+  subscription OnDeleteINExchgPrice {
     onDeleteINExchgPrice {
       id
       sid
@@ -911,8 +911,8 @@ export const onDeleteIndexConst = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInBondPrice = /* GraphQL */ `
-  subscription OnCreateInBondPrice {
+export const onCreateINBondPrice = /* GraphQL */ `
+  subscription OnCreateINBondPrice {
     onCreateINBondPrice {
       id
       sid
@@ -938,8 +938,8 @@ export const onCreateInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInBondPrice = /* GraphQL */ `
-  subscription OnUpdateInBondPrice {
+export const onUpdateINBondPrice = /* GraphQL */ `
+  subscription OnUpdateINBondPrice {
     onUpdateINBondPrice {
       id
       sid
@@ -965,8 +965,8 @@ export const onUpdateInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInBondPrice = /* GraphQL */ `
-  subscription OnDeleteInBondPrice {
+export const onDeleteINBondPrice = /* GraphQL */ `
+  subscription OnDeleteINBondPrice {
     onDeleteINBondPrice {
       id
       sid
@@ -992,8 +992,8 @@ export const onDeleteInBondPrice = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInmfPrice = /* GraphQL */ `
-  subscription OnCreateInmfPrice {
+export const onCreateINMFPrice = /* GraphQL */ `
+  subscription OnCreateINMFPrice {
     onCreateINMFPrice {
       id
       sid
@@ -1013,8 +1013,8 @@ export const onCreateInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInmfPrice = /* GraphQL */ `
-  subscription OnUpdateInmfPrice {
+export const onUpdateINMFPrice = /* GraphQL */ `
+  subscription OnUpdateINMFPrice {
     onUpdateINMFPrice {
       id
       sid
@@ -1034,8 +1034,8 @@ export const onUpdateInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInmfPrice = /* GraphQL */ `
-  subscription OnDeleteInmfPrice {
+export const onDeleteINMFPrice = /* GraphQL */ `
+  subscription OnDeleteINMFPrice {
     onDeleteINMFPrice {
       id
       sid
@@ -1055,8 +1055,8 @@ export const onDeleteInmfPrice = /* GraphQL */ `
     }
   }
 `;
-export const onCreateNpsPrice = /* GraphQL */ `
-  subscription OnCreateNpsPrice {
+export const onCreateNPSPrice = /* GraphQL */ `
+  subscription OnCreateNPSPrice {
     onCreateNPSPrice {
       id
       pfm
@@ -1072,8 +1072,8 @@ export const onCreateNpsPrice = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateNpsPrice = /* GraphQL */ `
-  subscription OnUpdateNpsPrice {
+export const onUpdateNPSPrice = /* GraphQL */ `
+  subscription OnUpdateNPSPrice {
     onUpdateNPSPrice {
       id
       pfm
@@ -1089,8 +1089,8 @@ export const onUpdateNpsPrice = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteNpsPrice = /* GraphQL */ `
-  subscription OnDeleteNpsPrice {
+export const onDeleteNPSPrice = /* GraphQL */ `
+  subscription OnDeleteNPSPrice {
     onDeleteNPSPrice {
       id
       pfm
@@ -2343,6 +2343,7 @@ export const onCreateCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
@@ -2362,6 +2363,7 @@ export const onUpdateCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
@@ -2381,6 +2383,7 @@ export const onDeleteCoachingReq = /* GraphQL */ `
       curr
       paid
       pt
+      email
       createdAt
       updatedAt
       owner
