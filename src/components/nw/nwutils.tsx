@@ -731,20 +731,17 @@ export const getFinTabFilters = (option: string) => {
   }
 };
 
-export const getInstrumentDataWithKey = async (key: string, option: string) => {
+export const getInstrumentDataWithKey = async (key: { query: any, table: string }, option: string) => {
   const { STOCK } = TAB;
-  let instrumentData =
-    key === "listInExchgPrices"
+  let instrumentData = key.table === "Exchg"
       ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
       : simpleStorage.get(option) || {};
-  const newQueries: OptionTableMap = Object.assign({}, queries);
-  const filter: { prop: string; value: string | Array<string> } | null =
-    getFinTabFilters(option);
-  const dataKeys: OptionTableMap = {
-    listInExchgPrices: "listINExchgPrices",
-    listInBondPrices: "listINBondPrices",
-    listInmfPrices: "listINMFPrices",
-    listAllIndicess: "listAllIndicess",
+  const filter: { prop: string; value: string | Array<string> } | null = getFinTabFilters(option);
+  const dataKeys: { [key: string]: string } = {
+    Exchg: 'listINExchgPrices',
+    Bonds: "listINBondPrices",
+    Funds: "listINMFPrices",
+    Indices: "listAllIndicess",
   };
   const getData = async (query: any, nextToken: any) => {
     return await API.graphql({
@@ -758,13 +755,13 @@ export const getInstrumentDataWithKey = async (key: string, option: string) => {
       let nextToken = undefined;
       let items: any = [];
       while (nextToken !== null) {
-        const data: any = await getData(newQueries[key], nextToken);
-        const dataObj = data.data[dataKeys[key]];
+        const data: any = await getData(key.query, nextToken);
+        const dataObj = data.data[dataKeys[key.table]];
         items = [...dataObj.items, ...items];
         nextToken = dataObj.nextToken;
       }
       instrumentData = items;
-      if (key === LOCAL_EXCHG_DATA_KEY) {
+      if (key.table === 'Exchg') {
         simpleStorage.set(LOCAL_EXCHG_DATA_KEY, instrumentData, LOCAL_DATA_TTL);
       } else {
         simpleStorage.set(option, instrumentData, LOCAL_DATA_TTL);
@@ -1415,15 +1412,15 @@ export const filterYearHighLow = (
   );
 };
 
-export const optionTableMap: { [key: string]: string } = {
-  Stocks: "listInExchgPrices",
-  "Gold Bonds": "listInExchgPrices",
-  ETFs: "listInExchgPrices",
-  Bonds: "listInBondPrices",
-  "Mutual Funds": "listInmfPrices",
-  REITs: "listInExchgPrices",
-  "Other Investments": "listInExchgPrices",
-  Index: "listAllIndicess",
+export const optionTableMap: { [key: string]: { query: any, table: string } } = {
+  Stocks: { query: queries.listINExchgPrices, table: 'Exchg' },
+  "Gold Bonds":  { query: queries.listINExchgPrices, table: 'Exchg' },
+  ETFs:  { query: queries.listINExchgPrices, table: 'Exchg' },
+  Bonds: { query: queries.listINBondPrices, table: 'Bonds' },
+  "Mutual Funds": { query: queries.listINMFPrices, table: 'Funds' },
+  REITs: { query: queries.listINExchgPrices, table: 'Exchg' },
+  "Other Investments": { query: queries.listINExchgPrices, table: 'Exchg' },
+  Index: { query: queries.listAllIndicess, table: 'Indices' }
 } as const;
 
 export const filterTabs = (data: any, childTab: string) => {

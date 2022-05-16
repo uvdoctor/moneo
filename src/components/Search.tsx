@@ -96,11 +96,14 @@ export default function Search({
         let opt = searchType;
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
+        const nameMap: any = {};
         cachedData?.map((item: any) => {
-          item.key = item.id;
+          let value = item.name;
           if (item.createdAt) delete item.createdAt;
           if (item.updatedAt) delete item.updatedAt;
-          item.value = `${item.name} - ${item.sid}`;
+          if(nameMap[value]) value = `${item.name} - ${item.sid}`;
+          item.value = value;
+          nameMap[value] = value;
         });
         setData([...cachedData]);
         setSuggestions([...cachedData]);
