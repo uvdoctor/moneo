@@ -42,6 +42,7 @@ export default function CoachingRequest() {
       paid: false,
       email: email ? email : null,
     };
+    console.log(newRequest);
     try {
       const { data } = (await API.graphql(
         graphqlOperation(mutations.createCoachingReq, { input: newRequest })
@@ -56,6 +57,7 @@ export default function CoachingRequest() {
       });
       return data.createCoachingReq as CreateCoachingReqInput;
     } catch (e) {
+      console.log(e);
       notification.error({
         message: "Unable to create coaching request",
         description:
