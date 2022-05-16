@@ -9,12 +9,13 @@ import {
 } from "../api/goals";
 import { ROUTES } from "../CONSTANTS";
 import * as mutations from "../graphql/mutations";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { AppContext } from "./AppContext";
 import RadioInput from "./form/RadioInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "./form/textinput";
+import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 
 export default function CoachingRequest() {
   const router = useRouter();
@@ -42,11 +43,16 @@ export default function CoachingRequest() {
       paid: false,
       email: email ? email : null,
     };
-    console.log(newRequest);
     try {
-      const { data } = (await API.graphql(
-        graphqlOperation(mutations.createCoachingReq, { input: newRequest })
-      )) as {
+      const { data } = (await API.graphql({
+        query: mutations.createCoachingReq,
+        variables: {
+          input: newRequest,
+        },
+        authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+      })) as {
         data: CreateCoachingReqMutation;
       };
       setText("");
