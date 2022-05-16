@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Rate, Tooltip } from "antd";
+import { Rate } from "antd";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_INDEX_PERF_KEY } from "../../CONSTANTS";
 import SelectInput from "../form/selectinput";
@@ -40,16 +40,16 @@ export default function PerfHistFeedback({
 
   return (
     <>
-      <Tooltip title={`Performance consistency compared to ${index} index over last 5 years`}>
-        <SelectInput
-          pre={""}
-          value={index}
-          changeHandler={setIndex}
-          options={indexMap}
-        />
-        <Rate value={niftyRating} disabled />
-      </Tooltip>
-      &nbsp;&nbsp;
+      <SelectInput
+        pre="Relative performance"
+        value={index}
+        changeHandler={setIndex}
+        options={indexMap}
+        inline
+        info={`Performance consistency compared to ${index} index over last 5 years`}
+      />
+      &nbsp;
+      <Rate value={niftyRating} disabled />
     </>
   );
 }
