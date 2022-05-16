@@ -96,9 +96,12 @@ export default function Search({
         let opt = searchType;
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
-        cachedData?.forEach(
-          (item: { value: string; name: string }) => (item.value = item.name)
-        );
+        cachedData?.map((item: any) => {
+          item.key = item.id;
+          if (item.createdAt) delete item.createdAt;
+          if (item.updatedAt) delete item.updatedAt;
+          item.value = `${item.name} - ${item.sid}`;
+        });
         setData([...cachedData]);
         setSuggestions([...cachedData]);
       }
@@ -110,9 +113,9 @@ export default function Search({
   const typeComp = (
     <Select
       open={dropdownOpen}
-      onMouseEnter={()=>setDropdownOpen(true)}
-      onSelect={()=>setDropdownOpen(false)}
-      onPopupScroll={()=>setDropdownOpen(true)}
+      onMouseEnter={() => setDropdownOpen(true)}
+      onSelect={() => setDropdownOpen(false)}
+      onPopupScroll={() => setDropdownOpen(true)}
       value={isNav ? searchType : exchg}
       onChange={(val) =>
         isNav ? setSearchType && setSearchType(val) : setExchg && setExchg(val)
@@ -136,7 +139,7 @@ export default function Search({
   return (
     <div className="main-search">
       <AutoComplete
-        onMouseLeave={()=>setDropdownOpen(false)}
+        onMouseLeave={() => setDropdownOpen(false)}
         id="search"
         options={suggestions}
         onChange={(option) => setSearchText(option)}
