@@ -106,11 +106,11 @@ export default function CoachingRequest() {
                 value={email}
                 changeHandler={setEmail}
                 pattern={
-                  "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
+                  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 }
                 setError={setError}
                 style={{ width: 300 }}
-                fieldName="email"
+                fieldName="Email"
               />
               {error ? <Alert type="error" message={error} /> : null}
               <Divider />
