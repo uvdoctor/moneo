@@ -156,14 +156,18 @@ export default function UploadHoldings() {
     if (uploadedInstruments.length) {
       let filteredIns: Array<InstrumentInput> = instruments.filter(
         (instrument: InstrumentInput) =>
-          instrument.curr === selectedCurrency &&
-          (overwrite ? instrument.fId !== member : true)
+            instrument.curr === selectedCurrency &&
+            (overwrite ? instrument.fId !== member : true)
       );
-      uploadedInstruments.forEach((instrument: InstrumentInput) => {
-        instrument.curr = selectedCurrency;
-        instrument.fId = member as string;
-      });
-      filteredIns.push(...uploadedInstruments);
+      const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+      let instrumentsToAdd = uploadedInstruments.filter(
+        (instrument: InstrumentInput) => {
+          instrument.curr = selectedCurrency;
+          instrument.fId = member as string;
+          return insData && insData[instrument.id];
+        }
+      );
+      filteredIns.push(...instrumentsToAdd);
       setInstruments([...filteredIns]);
       setSelectedMembers([...[member]]);
     }
