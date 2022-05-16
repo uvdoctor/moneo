@@ -807,6 +807,7 @@ type CoachingReq
     rules: [
       { allow: owner }
       { allow: private, provider: iam, operations: [read, update] }
+      { allow: public, provider: iam, operations: [create] }
     ]
   ) {
   id: ID!

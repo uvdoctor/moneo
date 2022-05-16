@@ -944,42 +944,9 @@ export type DeleteUserInsInput = {
   uname: string,
 };
 
-export type CreateCoachingReqInput = {
-  id?: string | null,
-  dur: number,
-  text?: string | null,
-  page: string,
-  type: CoachingType,
-  status: CoachingStatus,
-  payment: number,
-  curr: string,
-  paid: boolean,
-  pt?: PaymentType | null,
-  email?: string | null,
+export type DeleteCoachingReqInput = {
+  id: string,
 };
-
-export enum CoachingType {
-  Inv = "Inv",
-  Ins = "Ins",
-  FI = "FI",
-}
-
-
-export enum CoachingStatus {
-  P = "P",
-  B = "B",
-  C = "C",
-  D = "D",
-}
-
-
-export enum PaymentType {
-  D = "D",
-  C = "C",
-  UPI = "UPI",
-  B = "B",
-}
-
 
 export type ModelCoachingReqConditionInput = {
   dur?: ModelIntInput | null,
@@ -1002,15 +969,38 @@ export type ModelCoachingTypeInput = {
   ne?: CoachingType | null,
 };
 
+export enum CoachingType {
+  Inv = "Inv",
+  Ins = "Ins",
+  FI = "FI",
+}
+
+
 export type ModelCoachingStatusInput = {
   eq?: CoachingStatus | null,
   ne?: CoachingStatus | null,
 };
 
+export enum CoachingStatus {
+  P = "P",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+
+
 export type ModelPaymentTypeInput = {
   eq?: PaymentType | null,
   ne?: PaymentType | null,
 };
+
+export enum PaymentType {
+  D = "D",
+  C = "C",
+  UPI = "UPI",
+  B = "B",
+}
+
 
 export type CoachingReq = {
   __typename: "CoachingReq",
@@ -1028,10 +1018,6 @@ export type CoachingReq = {
   createdAt: string,
   updatedAt: string,
   owner?: string | null,
-};
-
-export type DeleteCoachingReqInput = {
-  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -1879,6 +1865,20 @@ export type UpdateNPSPriceInput = {
 
 export type DeleteNPSPriceInput = {
   id: string,
+};
+
+export type CreateCoachingReqInput = {
+  id?: string | null,
+  dur: number,
+  text?: string | null,
+  page: string,
+  type: CoachingType,
+  status: CoachingStatus,
+  payment: number,
+  curr: string,
+  paid: boolean,
+  pt?: PaymentType | null,
+  email?: string | null,
 };
 
 export type UpdateCoachingReqInput = {
@@ -4240,31 +4240,6 @@ export type DeleteUserInsMutation = {
   } | null,
 };
 
-export type CreateCoachingReqMutationVariables = {
-  input: CreateCoachingReqInput,
-  condition?: ModelCoachingReqConditionInput | null,
-};
-
-export type CreateCoachingReqMutation = {
-  createCoachingReq?:  {
-    __typename: "CoachingReq",
-    id: string,
-    dur: number,
-    text?: string | null,
-    page: string,
-    type: CoachingType,
-    status: CoachingStatus,
-    payment: number,
-    curr: string,
-    paid: boolean,
-    pt?: PaymentType | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
 export type DeleteCoachingReqMutationVariables = {
   input: DeleteCoachingReqInput,
   condition?: ModelCoachingReqConditionInput | null,
@@ -5107,6 +5082,31 @@ export type DeleteNPSPriceMutation = {
     risk?: RiskProfile | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type CreateCoachingReqMutationVariables = {
+  input: CreateCoachingReqInput,
+  condition?: ModelCoachingReqConditionInput | null,
+};
+
+export type CreateCoachingReqMutation = {
+  createCoachingReq?:  {
+    __typename: "CoachingReq",
+    id: string,
+    dur: number,
+    text?: string | null,
+    page: string,
+    type: CoachingType,
+    status: CoachingStatus,
+    payment: number,
+    curr: string,
+    paid: boolean,
+    pt?: PaymentType | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 

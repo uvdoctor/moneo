@@ -1743,29 +1743,6 @@ export const deleteUserIns = /* GraphQL */ `
     }
   }
 `;
-export const createCoachingReq = /* GraphQL */ `
-  mutation CreateCoachingReq(
-    $input: CreateCoachingReqInput!
-    $condition: ModelCoachingReqConditionInput
-  ) {
-    createCoachingReq(input: $input, condition: $condition) {
-      id
-      dur
-      text
-      page
-      type
-      status
-      payment
-      curr
-      paid
-      pt
-      email
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const deleteCoachingReq = /* GraphQL */ `
   mutation DeleteCoachingReq(
     $input: DeleteCoachingReqInput!
@@ -2535,6 +2512,29 @@ export const deleteNPSPrice = /* GraphQL */ `
       risk
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createCoachingReq = /* GraphQL */ `
+  mutation CreateCoachingReq(
+    $input: CreateCoachingReqInput!
+    $condition: ModelCoachingReqConditionInput
+  ) {
+    createCoachingReq(input: $input, condition: $condition) {
+      id
+      dur
+      text
+      page
+      type
+      status
+      payment
+      curr
+      paid
+      pt
+      email
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
