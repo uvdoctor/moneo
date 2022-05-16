@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Modal, notification } from "antd";
+import { Alert, Button, Divider, Input, Modal, notification } from "antd";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import {
@@ -14,13 +14,16 @@ import { AppContext } from "./AppContext";
 import RadioInput from "./form/RadioInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import TextInput from "./form/textinput";
 
 export default function CoachingRequest() {
   const router = useRouter();
-  const { defaultCurrency }: any = useContext(AppContext);
+  const { defaultCurrency, user }: any = useContext(AppContext);
   const path = router.pathname;
   const [duration, setDuration] = useState<number>(30);
   const [text, setText] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const { TextArea } = Input;
 
@@ -37,6 +40,7 @@ export default function CoachingRequest() {
       payment: 0,
       curr: defaultCurrency,
       paid: false,
+      email: email ? email : null,
     };
     try {
       const { data } = (await API.graphql(
@@ -69,7 +73,8 @@ export default function CoachingRequest() {
         size="large"
         className="steps-start-btn"
         icon={<FontAwesomeIcon icon={faUserCheck} />}
-        onClick={() => setShowModal(true)}>
+        onClick={() => setShowModal(true)}
+      >
         &nbsp;Ask a Coach
       </Button>
       {showModal && (
@@ -79,7 +84,8 @@ export default function CoachingRequest() {
           onCancel={() => setShowModal(false)}
           onOk={createRequest}
           destroyOnClose
-          visible={showModal}>
+          visible={showModal}
+        >
           <span>
             Coaching duration &nbsp;
             <RadioInput
@@ -92,6 +98,26 @@ export default function CoachingRequest() {
             />
           </span>
           <Divider />
+          {!user ? (
+            <>
+              <TextInput
+                pre="Email"
+                placeholder={"abc@xyz.com"}
+                value={email}
+                changeHandler={setEmail}
+                pattern={
+                  "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
+                }
+                setError={setError}
+                style={{ width: 300 }}
+                fieldName="email"
+              />
+              {error ? <Alert type="error" message={error} /> : null}
+              <Divider />
+            </>
+          ) : (
+            <></>
+          )}
           <TextArea
             rows={4}
             placeholder="What do you wish to ask?"
