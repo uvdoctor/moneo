@@ -8,6 +8,9 @@ import { loadInsHoldings } from "../nw/nwutils";
 import { InstrumentInput } from "../../api/goals";
 import { loadInstruments } from "../nw/valuationutils";
 import YearlyLowHigh from "../nw/YearlyLowHigh";
+import PerfHistFeedback from "../nw/PerfHistFeedback";
+import { LOCAL_INS_PERF_KEY } from "../../CONSTANTS";
+import simpleStorage from "simplestorage.js";
 
 const StockDetailContext = createContext({});
 
@@ -17,8 +20,10 @@ function StockDetailContextProvider({ name, children }: any) {
   const { owner }: any = useContext(AppContext);
   const [quantity, setQuantity] = useState<number>(0);
   const [instrument, setInstrument] = useState<any | null>(null);
+  const [instrumentPerf, setInstrumentPerf] = useState<any | null>(null);
   const [currency, setCurrency] = useState<string>("");
   const ticker = name && name.split(".")?.length ? name.split(".")[0] : name;
+  const insPerfData = simpleStorage.get(LOCAL_INS_PERF_KEY);
 
   useEffect(() => {
     if (!name) return;
@@ -36,8 +41,18 @@ function StockDetailContextProvider({ name, children }: any) {
     if (!isin && !currency) return;
     setCurrency(currency);
     loadInstruments([isin]).then((allInsData: any) => {
-      if (allInsData[isin]) setInstrument(allInsData[isin]);
-      console.log(allInsData[isin]);
+      const data = allInsData[isin];
+      if (data) {
+        setInstrument(data);
+        const instrumentPerf = insPerfData
+          ? insPerfData[isin]
+            ? insPerfData[isin]
+            : insPerfData[data.sid as string]
+            ? insPerfData[data.sid as string]
+            : null
+          : null;
+        if (instrumentPerf) setInstrumentPerf(instrumentPerf);
+      }
     });
   }, [state.isLoading]);
 
@@ -63,26 +78,41 @@ function StockDetailContextProvider({ name, children }: any) {
       value={{
         name,
         state,
-      }}>
+      }}
+    >
       <>
         {name ? (
           <Row className="primary-header">
             <Col span={24}>
               <PageHeader
-                title={ticker}
+                title={
+                  <Row>
+                    <Col xs={24}>{ticker}</Col>
+                    <Col xs={24}>
+                      {instrument && currency ? (
+                        <YearlyLowHigh
+                          instrument={instrument}
+                          currency={currency}
+                          price={instrument.price}
+                          previousPrice={instrument.prev}
+                          noColor
+                        />
+                      ) : (
+                        <Spin />
+                      )}
+                    </Col>
+                  </Row>
+                }
                 extra={[<CoachingRequest key="cr" />]}
               />
             </Col>
             <Col span={24} className="secondary-header">
               <Row justify="space-between">
-                <Col xs={20} sm={12} md={6}>
+                <Col xs={20} sm={12}>
                   {instrument && currency ? (
-                    <YearlyLowHigh
+                    <PerfHistFeedback
                       instrument={instrument}
-                      currency={currency}
-                      price={instrument.price}
-                      previousPrice={instrument.prev}
-                      noColor
+                      performance={instrumentPerf}
                     />
                   ) : (
                     <Spin />
