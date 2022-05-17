@@ -358,6 +358,7 @@ type INExchgFun
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -382,6 +383,7 @@ type INExchgPrice
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -433,6 +435,7 @@ type AllIndices
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -462,6 +465,7 @@ type InsHistPerf
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -482,6 +486,7 @@ type IndiceHistPerf
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   name: String!
@@ -511,6 +516,7 @@ type IndexConst
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   name: String!
@@ -529,6 +535,7 @@ type INBondPrice
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -564,6 +571,7 @@ type INMFPrice
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
@@ -613,6 +621,7 @@ type NPSPrice
         operations: [create, read, update, delete]
       }
       { allow: private, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
     ]
   ) {
   id: String!
