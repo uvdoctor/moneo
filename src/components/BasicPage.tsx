@@ -5,6 +5,8 @@ import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
 import { CognitoUser } from "@aws-amplify/auth";
 import { AuthState } from "@aws-amplify/ui-components";
+import { useRouter } from "next/router";
+import { includesAny } from "./utils";
 
 interface BasicPageProps {
   className?: string;
@@ -22,7 +24,7 @@ interface BasicPageProps {
 export default function BasicPage(props: BasicPageProps) {
   const { setAppContextLoaded, user, setUser, setUserChecked }: any =
     useContext(AppContext);
-
+  const router = useRouter();
   const listener = (data: any) => {
     const { payload } = data;
     if (
@@ -33,7 +35,7 @@ export default function BasicPage(props: BasicPageProps) {
   };
 
   useEffect(() => {
-    if (!props.secure) {
+    if (!props.secure && !includesAny(router.pathname, ["lookup"])) {
       setUserChecked(true);
       setAppContextLoaded(true);
       return;
@@ -46,10 +48,12 @@ export default function BasicPage(props: BasicPageProps) {
   const initUser = async () => {
     if (user) return;
     try {
-      setUser(await Auth.currentAuthenticatedUser());
+      const user = await Auth.currentAuthenticatedUser();
+      if (user) setUser(user);
     } catch (e) {
       console.log("Unable to authenticate user: ", e);
       setUserChecked(true);
+      setAppContextLoaded(true);
     }
   };
 

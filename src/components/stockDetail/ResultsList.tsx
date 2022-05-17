@@ -34,7 +34,7 @@ export default function ResultsList({ data, columns }: any) {
       columns={columns}
       dataSource={data}
       pagination={false}
-      rowKey={"" + Math.random()}
+      rowKey={columns[0]}
     />
   );
 }
