@@ -103,8 +103,8 @@ function StockDetailContextProvider({ name, children }: any) {
               />
             </Col>
             <Col span={24} className="secondary-header">
-              <Row justify="space-between">
-                <Col xs={24} md={18} lg={16}>
+              <Row justify="space-between" align="middle">
+                <Col xs={20} sm={12}>
                   {instrument && currency ? (
                     <PerfHistFeedback
                       instrument={instrument}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Select, AutoComplete, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
@@ -9,6 +9,7 @@ import {
 } from "./nw/nwutils";
 import { TAB } from "./nw/NWContext";
 import { getCryptoList } from "./utils";
+import { AppContext } from "./AppContext";
 
 require("./Search.less");
 
@@ -33,6 +34,7 @@ export default function Search({
   exchg,
   setExchg,
 }: SearchProps) {
+  const { owner }: any = useContext(AppContext);
   const { Option } = Select;
   const { CRYPTO, STOCK } = TAB;
   const [searchText, setSearchText] = useState("");
@@ -136,7 +138,7 @@ export default function Search({
   );
 
   const updateOptions = async (opt: string) => {
-    return await getInstrumentDataWithKey(optionTableMap[opt], opt);
+    return await getInstrumentDataWithKey(optionTableMap[opt], opt, owner);
   };
 
   return (

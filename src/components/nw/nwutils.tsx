@@ -39,6 +39,7 @@ import {
   calculateVehicle,
 } from "./valuationutils";
 import { AssetSubType, InsType, PropertyType } from "../../api/goals";
+import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -731,7 +732,7 @@ export const getFinTabFilters = (option: string) => {
   }
 };
 
-export const getInstrumentDataWithKey = async (key: { query: any, table: string }, option: string) => {
+export const getInstrumentDataWithKey = async (key: { query: any, table: string }, option: string, user: string) => {
   const { STOCK } = TAB;
   let instrumentData = key.table === "Exchg"
       ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
@@ -747,6 +748,9 @@ export const getInstrumentDataWithKey = async (key: { query: any, table: string 
     return await API.graphql({
       query: query,
       variables: { limit: 20000, nextToken: nextToken },
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
     });
   };
 
