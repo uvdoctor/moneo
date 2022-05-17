@@ -17,6 +17,7 @@ interface InsPriceProps {
   noPerCalc?: boolean;
   info?: string;
   noColor?: boolean;
+  smallSize?: boolean;
 }
 export default function InsPrice({
   price,
@@ -26,6 +27,7 @@ export default function InsPrice({
   noPerCalc,
   info,
   noColor,
+  smallSize,
 }: InsPriceProps) {
   const getChangeRatio = () =>
     price && previousPrice
@@ -38,7 +40,7 @@ export default function InsPrice({
       : 0;
 
   return (
-    <>
+    <div style={{ fontSize: smallSize ? "16px" : "" }}>
       <Tooltip title="Today's valuation">
         <strong>
           {noDecimal
@@ -73,6 +75,6 @@ export default function InsPrice({
           />
         </span>
       ) : null}
-    </>
+    </div>
   );
 }

@@ -93,6 +93,7 @@ function StockDetailContextProvider({ name, children }: any) {
                         price={instrument.price}
                         previousPrice={instrument.prev}
                         noColor
+                        smallSize
                       />
                     ) : (
                       <Spin />
