@@ -7,10 +7,10 @@ import { AppContext } from "../AppContext";
 import { loadInsHoldings } from "../nw/nwutils";
 import { InstrumentInput } from "../../api/goals";
 import { loadInstruments } from "../nw/valuationutils";
-import YearlyLowHigh from "../nw/YearlyLowHigh";
 import PerfHistFeedback from "../nw/PerfHistFeedback";
 import { LOCAL_INS_PERF_KEY } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
+import InsPrice from "../nw/InsPrice";
 
 const StockDetailContext = createContext({});
 
@@ -78,30 +78,26 @@ function StockDetailContextProvider({ name, children }: any) {
       value={{
         name,
         state,
-      }}
-    >
+      }}>
       <>
         {name ? (
           <Row className="primary-header">
             <Col span={24}>
               <PageHeader
                 title={
-                  <Row>
-                    <Col xs={24}>{ticker}</Col>
-                    <Col xs={24}>
-                      {instrument && currency ? (
-                        <YearlyLowHigh
-                          instrument={instrument}
-                          currency={currency}
-                          price={instrument.price}
-                          previousPrice={instrument.prev}
-                          noColor
-                        />
-                      ) : (
-                        <Spin />
-                      )}
-                    </Col>
-                  </Row>
+                  <>
+                    {ticker}&nbsp;
+                    {instrument && currency ? (
+                      <InsPrice
+                        currency={currency}
+                        price={instrument.price}
+                        previousPrice={instrument.prev}
+                        noColor
+                      />
+                    ) : (
+                      <Spin />
+                    )}
+                  </>
                 }
                 extra={[<CoachingRequest key="cr" />]}
               />
