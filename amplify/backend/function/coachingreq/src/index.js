@@ -21,11 +21,14 @@ const {
 const processData = (records) => {
   return new Promise(async (resolve, reject) => {
     for (let item of records) {
+      let userinfodata = {};
       if (item.eventName === "INSERT") {
         const data = item.dynamodb.NewImage;
-        const user = data.owner.S;
+        const user = data.owner ? data.owner.S : null;
         const duration = data.dur.N;
         const text = data.text.S;
+        let email = data.email ? data.email.S : null;
+        if(user) {
         const userInfoTableName = await getTableNameFromInitialWord("UserInfo");
         const result = await getTabledata(
           userInfoTableName,
@@ -33,14 +36,15 @@ const processData = (records) => {
           `uname = :uname`,
           { ":uname": user }
         );
-        const userinfodata = result.find((item) => item.uname === user);
+        userinfodata = result.find((item) => item.uname === user);
         console.log(userinfodata);
-        if (!userinfodata) return;
-        const { email, mob } = userinfodata;
+        } 
+        email = userinfodata.email ? userinfodata.email : email;
+        if(!email) return;
         try {
           const message = await sendEmail({
             templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
-            email: email,
+            email,
             values: {
               owner: false
             },
@@ -51,10 +55,10 @@ const processData = (records) => {
             templateName: COACHING_CONFIRMATION_TEMPLATE_NAME,
             email: "emailumangdoctor@gmail.com",
             values: {
-              user,
+              user: user ? user : email,
               email,
               duration,
-              mob,
+              mob: userinfodata?.mob,
               text,
               owner: true
             },
