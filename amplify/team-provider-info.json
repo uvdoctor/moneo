@@ -67,7 +67,7 @@
         },
         "coachingreq": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/coachingreq-5365616752485a32666c-build.zip"
+          "s3Key": "amplify-builds/coachingreq-3231422b6f4662486b45-build.zip"
         },
         "indicecomp": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
