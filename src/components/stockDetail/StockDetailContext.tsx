@@ -57,11 +57,13 @@ function StockDetailContextProvider({ name, children }: any) {
   }, [state.isLoading]);
 
   useEffect(() => {
+    console.log("Owner is: ", owner);
     if (!owner) {
       setQuantity(0);
       return;
     }
     loadInsHoldings(owner).then((result: any) => {
+      console.log("Result of insholdings: ", result);
       let quantity = 0;
       if (result.ins) {
         const instruments = result.ins;
