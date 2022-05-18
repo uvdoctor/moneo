@@ -405,29 +405,41 @@ export const loadMatchingIndices = async (isins: Array<string>, user:boolean) =>
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingInsPerf = async (isins: Array<string>, user:boolean) => {
-  if (!isins.length) return null;
-  let idList: Array<APIt.ModelInsHistPerfFilterInput> = [];
+export const loadMatchingInsPerf = async (ids: Array<string>, user:boolean) => {
+  if (!ids.length) return null;
+  const isins = JSON.parse(JSON.stringify(ids));
   let returnList: Array<APIt.InsHistPerf> = [];
-  let nextToken = null;
-  do {
-    let variables: any = { limit: 5000, filter: getORIdList(idList, isins) };
-    if (nextToken) variables.nextToken = nextToken;
-    const {
-      data: { listInsHistPerfs },
-    } = await API.graphql({
-      query: queries.listInsHistPerfs,
-      variables: variables,
-      authMode: !user
-          ? GRAPHQL_AUTH_MODE.AWS_IAM
-          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-    }) as {
-      data: APIt.ListInsHistPerfsQuery;
-    };
-    if (listInsHistPerfs?.items?.length)
-      returnList.push(...(listInsHistPerfs.items as Array<APIt.InsHistPerf>));
-    nextToken = listInsHistPerfs?.nextToken;
-  } while (nextToken);
+  const maxLimit = 50;
+  const isinChunks: Array<Array<string>> = new Array(
+    Math.ceil(isins.length / maxLimit)
+  )
+    .fill("")
+    .map((_) => isins.splice(0, maxLimit));
+  for (let isinChunk of isinChunks) {
+    let idList: Array<APIt.ModelInsHistPerfFilterInput> = [];
+    let nextToken = null;
+    do {
+      let variables: any = {
+        limit: 5000,
+        filter: getORIdList(idList, isinChunk),
+      };
+      if (nextToken) variables.nextToken = nextToken;
+      const {
+        data: { listInsHistPerfs },
+      } = await API.graphql({
+        query: queries.listInsHistPerfs,
+        variables: variables,
+        authMode: !user
+            ? GRAPHQL_AUTH_MODE.AWS_IAM
+            : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+      }) as {
+        data: APIt.ListInsHistPerfsQuery;
+      };
+      if (listInsHistPerfs?.items?.length)
+        returnList.push(...(listInsHistPerfs.items as Array<APIt.InsHistPerf>));
+       nextToken = listInsHistPerfs?.nextToken;
+    } while (nextToken);
+  }
   return returnList.length ? returnList : null;
 };
 
