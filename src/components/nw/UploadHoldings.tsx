@@ -176,7 +176,7 @@ export default function UploadHoldings() {
 
   const loadData = async (insMap: Map<string, number>, currency: string) => {
     setLoading(true);
-    const insData = await loadInstruments(Array.from(insMap.keys()));
+    const insData = await loadInstruments(Array.from(insMap.keys()), true);
     let uploadedInstruments: Array<InstrumentInput> = [];
     insMap.forEach((value: number, id: string) => {
       uploadedInstruments.push({

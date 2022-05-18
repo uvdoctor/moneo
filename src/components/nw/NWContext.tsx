@@ -755,7 +755,7 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalFFixed, totalNPSGFixed, totalNPSCFixed, totalP2P]);
 
   const priceAllInstruments = async () =>
-    await priceInstruments(instruments, selectedMembers, selectedCurrency);
+    await priceInstruments(instruments, selectedMembers, selectedCurrency, user);
 
   useEffect(() => {
     priceAllInstruments().then((totals) => {

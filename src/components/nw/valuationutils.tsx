@@ -69,7 +69,7 @@ export const loadInstrumentPrices = async (
   return unmatched;
 };
 
-export const loadInstruments = async (ids: Array<string>) => {
+export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   let mfIds: Array<string> = [];
   let bondIds: Array<string> = [];
   let exchangeIds: Array<string> = [];
@@ -116,11 +116,11 @@ export const loadInstruments = async (ids: Array<string>) => {
       : "";
   });
   await loadInsPerf(insPerfIds);
-  await loadIndexPerf();
+  await loadIndexPerf(user);
   return allInsData;
 };
 
-export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) => {
+export const initializeIndexPerf = async (instruments: Array<InstrumentInput>, user: boolean) => {
   const ids: Array<string> = [];
   instruments.forEach((instrument: InstrumentInput) => {
     isFund(instrument.id)
@@ -129,7 +129,7 @@ export const initializeIndexPerf = async (instruments: Array<InstrumentInput>) =
       ? ids.push(instrument.sid)
       : "";
   });
-  await loadIndexPerf();
+  await loadIndexPerf(user);
   return await loadInsPerf(ids);
 };
 
@@ -150,10 +150,10 @@ export const loadInsPerf = async (ids: Array<string>) => {
 
 
 
-const initializeInsData = async (instruments: Array<InstrumentInput>) => {
+const initializeInsData = async (instruments: Array<InstrumentInput>, user: boolean) => {
   const ids: Array<string> = [];
   instruments.forEach((instrument: InstrumentInput) => ids.push(instrument.id));
-  return await loadInstruments(ids);
+  return await loadInstruments(ids, user);
 };
 
 const getCashFlows = (
@@ -485,7 +485,8 @@ const initRiskAttribs = () => {
 export const priceInstruments = async (
   instruments: Array<InstrumentInput>,
   selectedMembers: Array<string>,
-  selectedCurrency: string
+  selectedCurrency: string,
+  user: boolean
 ) => {
   let total = 0;
   let totalFGold = 0;
@@ -512,8 +513,8 @@ export const priceInstruments = async (
     [RiskProfile.A]: initRiskAttribs(),
     [RiskProfile.VA]: initRiskAttribs(),
   };
-  let cachedData = await initializeInsData(instruments);
-  await initializeIndexPerf(instruments);
+  let cachedData = await initializeInsData(instruments, user);
+  await initializeIndexPerf(instruments, user);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
@@ -898,7 +899,8 @@ export const calculateTotalAssets = async (
   insHoldings: CreateUserInsInput | null,
   selectedMembers: Array<string>,
   selectedCurrency: string,
-  fxRates: any
+  fxRates: any,
+  user: boolean
 ) => {
   let totalSavings = 0;
   let totalLendings = 0;
@@ -944,7 +946,8 @@ export const calculateTotalAssets = async (
     const value = await priceInstruments(
       insHoldings.ins,
       selectedMembers,
-      selectedCurrency
+      selectedCurrency,
+      user
     );
     totalInstruments += value.total;
     totalFGold += value.totalFGold;
@@ -1227,10 +1230,11 @@ export const calculateAlerts = async (
   holdings: CreateUserHoldingsInput | null,
   insHoldings: CreateUserInsInput | null,
   fxRates: any,
-  currency: string
+  currency: string,
+  user: boolean
 ) => {
   if (insHoldings?.ins?.length) {
-    await initializeInsData(insHoldings?.ins);
+    await initializeInsData(insHoldings?.ins, user);
   }
   if (holdings?.nps?.length) {
     if (!simpleStorage.get(LOCAL_NPS_DATA_KEY)) await initializeNPSData();
@@ -1251,9 +1255,10 @@ export const otherISIN = (item: string) =>
   item.length === 12 && !item.startsWith("IN");
 
 export const initializeWatchlist = async (
+  user: boolean,
   watchIns?: Array<InsWatchInput> | null | undefined,
   userIns?: Array<InstrumentInput> | null | undefined,
-  crypto?: Array<HoldingInput> | null | undefined
+  crypto?: Array<HoldingInput> | null | undefined,
 ) => {
   const NIFTY50 = "Nifty 50";
   const SENSEX = "BSE30";
@@ -1276,7 +1281,7 @@ export const initializeWatchlist = async (
       ids.push(ins.id);
     }
   }
-  await loadInstruments(ids);
+  await loadInstruments(ids, user);
   const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!cachedData) return;
   for (let item of insIds) {

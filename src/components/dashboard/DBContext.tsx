@@ -57,12 +57,14 @@ function DBContextProvider({ fxRates }: any) {
         insHoldings,
         [ALL_FAMILY],
         defaultCurrency,
-        fxRates
+        fxRates,
+        user
       );
       if (insHoldings) setInsholdings(true);
       if (insHoldings?.ins) setInstruments([...insHoldings?.ins]);
       if (insHoldings?.watch) combinedWatchlist = [...insHoldings?.watch];
       const insWatchlist = await initializeWatchlist(
+        user,
         insHoldings?.watch,
         insHoldings?.ins,
         allHoldings?.crypto
@@ -77,7 +79,8 @@ function DBContextProvider({ fxRates }: any) {
         allHoldings,
         insHoldings,
         fxRates,
-        defaultCurrency
+        defaultCurrency,
+        user
       );
       setGainers(data.gainers);
       setLosers(data.losers);

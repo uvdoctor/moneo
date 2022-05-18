@@ -40,7 +40,7 @@ function StockDetailContextProvider({ name, children }: any) {
     const currency = state.data?.General?.CurrencyCode;
     if (!isin && !currency) return;
     setCurrency(currency);
-    loadInstruments([isin]).then((allInsData: any) => {
+    loadInstruments([isin], owner).then((allInsData: any) => {
       const data = allInsData[isin];
       if (data) {
         setInstrument(data);

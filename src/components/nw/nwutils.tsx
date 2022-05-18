@@ -287,7 +287,7 @@ const getORNameList = (list: Array<any>, ids: Array<string>) => {
   };
 };
 
-export const loadMatchingINExchange = async (ids: Array<string>) => {
+export const loadMatchingINExchange = async (ids: Array<string>, user:boolean) => {
   if (!ids.length) return null;
   const isins = JSON.parse(JSON.stringify(ids));
   let returnList: Array<APIt.INExchgPrice> = [];
@@ -308,9 +308,13 @@ export const loadMatchingINExchange = async (ids: Array<string>) => {
       if (nextToken) variables.nextToken = nextToken;
       const {
         data: { listINExchgPrices },
-      } = (await API.graphql(
-        graphqlOperation(queries.listINExchgPrices, variables)
-      )) as {
+      } = await API.graphql({
+        query: queries.listINExchgPrices,
+        variables: variables,
+        authMode: !user
+            ? GRAPHQL_AUTH_MODE.AWS_IAM
+            : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+      }) as {
         data: APIt.ListINExchgPricesQuery;
       };
       if (listINExchgPrices?.items?.length)
@@ -323,7 +327,7 @@ export const loadMatchingINExchange = async (ids: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingINMutual = async (isins: Array<string>) => {
+export const loadMatchingINMutual = async (isins: Array<string>, user:boolean) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelINMFPriceFilterInput> = [];
   let returnList: Array<APIt.INMFPrice> = [];
@@ -333,9 +337,13 @@ export const loadMatchingINMutual = async (isins: Array<string>) => {
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINMFPrices },
-    } = (await API.graphql(
-      graphqlOperation(queries.listINMFPrices, variables)
-    )) as {
+    } = await API.graphql({
+      query: queries.listINMFPrices,
+      variables: variables,
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+    }) as {
       data: APIt.ListINMFPricesQuery;
     };
     if (listINMFPrices?.items?.length)
@@ -345,7 +353,7 @@ export const loadMatchingINMutual = async (isins: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingINBond = async (isins: Array<string>) => {
+export const loadMatchingINBond = async (isins: Array<string>, user:boolean) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelINBondPriceFilterInput> = [];
   let returnList: Array<APIt.INBondPrice> = [];
@@ -355,9 +363,13 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listINBondPrices },
-    } = (await API.graphql(
-      graphqlOperation(queries.listINBondPrices, variables)
-    )) as {
+    } = await API.graphql({
+      query: queries.listINBondPrices,
+      variables: variables,
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+    }) as {
       data: APIt.ListINBondPricesQuery;
     };
     if (listINBondPrices?.items?.length)
@@ -367,7 +379,7 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingIndices = async (isins: Array<string>) => {
+export const loadMatchingIndices = async (isins: Array<string>, user:boolean) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelAllIndicesFilterInput> = [];
   let returnList: Array<APIt.AllIndices> = [];
@@ -377,9 +389,13 @@ export const loadMatchingIndices = async (isins: Array<string>) => {
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listAllIndicess },
-    } = (await API.graphql(
-      graphqlOperation(queries.listAllIndicess, variables)
-    )) as {
+    } = await API.graphql({
+      query: queries.listAllIndicess,
+      variables: variables,
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+    }) as {
       data: APIt.ListAllIndicessQuery;
     };
     if (listAllIndicess?.items?.length)
@@ -389,7 +405,7 @@ export const loadMatchingIndices = async (isins: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingInsPerf = async (isins: Array<string>) => {
+export const loadMatchingInsPerf = async (isins: Array<string>, user:boolean) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelInsHistPerfFilterInput> = [];
   let returnList: Array<APIt.InsHistPerf> = [];
@@ -399,9 +415,13 @@ export const loadMatchingInsPerf = async (isins: Array<string>) => {
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listInsHistPerfs },
-    } = (await API.graphql(
-      graphqlOperation(queries.listInsHistPerfs, variables)
-    )) as {
+    } = await API.graphql({
+      query: queries.listInsHistPerfs,
+      variables: variables,
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+    }) as {
       data: APIt.ListInsHistPerfsQuery;
     };
     if (listInsHistPerfs?.items?.length)
@@ -411,7 +431,7 @@ export const loadMatchingInsPerf = async (isins: Array<string>) => {
   return returnList.length ? returnList : null;
 };
 
-export const loadMatchingIndexPerf = async (isins: Array<string>) => {
+export const loadMatchingIndexPerf = async (isins: Array<string>, user:boolean) => {
   if (!isins.length) return null;
   let idList: Array<APIt.ModelIndiceHistPerfFilterInput> = [];
   let returnList: Array<APIt.IndiceHistPerf> = [];
@@ -421,9 +441,13 @@ export const loadMatchingIndexPerf = async (isins: Array<string>) => {
     if (nextToken) variables.nextToken = nextToken;
     const {
       data: { listIndiceHistPerfs },
-    } = (await API.graphql(
-      graphqlOperation(queries.listIndiceHistPerfs, variables)
-    )) as {
+    } = await API.graphql({
+      query: queries.listIndiceHistPerfs,
+      variables: variables,
+      authMode: !user
+          ? GRAPHQL_AUTH_MODE.AWS_IAM
+          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+    }) as {
       data: APIt.ListIndiceHistPerfsQuery;
     };
     if (listIndiceHistPerfs?.items?.length)
@@ -692,13 +716,18 @@ export const initializeNPSData = async () => {
   return npsData;
 };
 
-export const loadIndexPerf = async () => {
+export const loadIndexPerf = async (user:boolean) => {
   let indexPerfData: Array<APIt.CreateIndiceHistPerfInput> | null =
     simpleStorage.get(LOCAL_INDEX_PERF_KEY);
   if (indexPerfData) return indexPerfData;
   const {
     data: { listIndiceHistPerfs },
-  } = (await API.graphql(graphqlOperation(queries.listIndiceHistPerfs))) as {
+  } = await API.graphql({
+    query: queries.listIndiceHistPerfs,
+    authMode: !user
+        ? GRAPHQL_AUTH_MODE.AWS_IAM
+        : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+  }) as {
     data: APIt.ListIndiceHistPerfsQuery;
   };
   indexPerfData = listIndiceHistPerfs?.items?.length
@@ -732,7 +761,7 @@ export const getFinTabFilters = (option: string) => {
   }
 };
 
-export const getInstrumentDataWithKey = async (key: { query: any, table: string }, option: string, user: string) => {
+export const getInstrumentDataWithKey = async (key: { query: any, table: string }, option: string, user:boolean) => {
   const { STOCK } = TAB;
   let instrumentData = key.table === "Exchg"
       ? simpleStorage.get(LOCAL_EXCHG_DATA_KEY) || {}
