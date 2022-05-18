@@ -11,7 +11,7 @@ interface PerfHistFeedbackProps {
 }
 
 const calcDiff = (curr: number, prev: number, years: number) =>
-  (curr - prev) / years;
+  ((curr / prev - 1) * 100) / years;
 
 export default function PerfHistFeedback({
   instrument,
@@ -47,7 +47,7 @@ export default function PerfHistFeedback({
       const diff = toReadableNumber(Math.abs(insPerf - indPerf), 2);
       return (
         <>
-          {yr} {1 ? 'year' : 'years'}: {perf} index by{" "}
+          {yr} {1 ? "year" : "years"}: {perf} index by{" "}
           <strong style={{ color: `${color}` }}>{diff}%</strong>
         </>
       );
