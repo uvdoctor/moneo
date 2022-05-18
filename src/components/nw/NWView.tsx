@@ -117,8 +117,8 @@ export default function NWView() {
                   {Object.keys(startOptions).map((key: string) => (
                     <MenuItem
                       key={key}
-                      onClick={() => {
-                        addSelfMember();
+                      onClick={async() => {
+                        await addSelfMember();
                         if (key === UPLOAD_OPTION) {
                           setActiveTab(FINANCIAL_LABEL);
                           setShowInsUpload(true);
