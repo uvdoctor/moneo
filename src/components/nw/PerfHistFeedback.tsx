@@ -47,7 +47,7 @@ export default function PerfHistFeedback({
       const diff = toReadableNumber(Math.abs(insPerf - indPerf), 2);
       return (
         <>
-          {yr} year: {perf} index by{" "}
+          {yr} {1 ? 'year' : 'years'}: {perf} index by{" "}
           <strong style={{ color: `${color}` }}>{diff}%</strong>
         </>
       );
