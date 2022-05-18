@@ -719,6 +719,7 @@ function NWContextProvider({ fxRates }: any) {
     updatedHoldings.crypto = crypto;
     updatedHoldings.credit = credit;
     updatedHoldings.ins = insurance;
+    updatedHoldings.p2p = p2p
     try {
       if (holdings) {
         await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
