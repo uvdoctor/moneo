@@ -133,7 +133,7 @@ function DBContextProvider({ fxRates }: any) {
 
   const saveWatchlist = async () => {
     const watch = watchlist.filter((item: InsWatchInput) => {
-      const results = insWatchlist.find((re: any) => re.id === item.id);
+      const results = insWatchlist.find((re: any) => re.id === item.id && !item.hight && !item.lowt);
       return results ? false : true;
     });
     let updatedInsHoldings: CreateUserInsInput = {
