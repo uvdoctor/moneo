@@ -3,6 +3,7 @@ import { Rate } from "antd";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_INDEX_PERF_KEY } from "../../CONSTANTS";
 import SelectInput from "../form/selectinput";
+import { toReadableNumber } from "../utils";
 
 interface PerfHistFeedbackProps {
   instrument: any;
@@ -23,20 +24,50 @@ export default function PerfHistFeedback({
 
   const calculateOverallRating = (index: string) => {
     let niftyRating = 1;
-    const diffOne = calcDiff(instrument?.price, performance?.p1y, 1);
-    const diffThree = calcDiff(instrument?.price, performance?.p3y, 3);
-    const diffFive = calcDiff(instrument?.price, performance?.p5y, 5);
+    const ins1y = calcDiff(instrument?.price, performance?.p1y, 1);
+    const ins3y = calcDiff(instrument?.price, performance?.p3y, 3);
+    const ins5y = calcDiff(instrument?.price, performance?.p5y, 5);
     const perfData = indicePerfData.find((item: any) => item.name === index);
-    const indexDiffOne = perfData && perfData?.p1y;
-    const indexDiffThree = perfData && perfData?.p3y;
-    const indexDiffFive = perfData && perfData?.p5y;
-    if (diffOne > indexDiffOne) niftyRating += 2;
-    if (diffThree > indexDiffThree) niftyRating += 1;
-    if (diffFive > indexDiffFive) niftyRating += 1;
-    return niftyRating;
+    const index1y = perfData && perfData?.p1y;
+    const index3y = perfData && perfData?.p3y;
+    const index5y = perfData && perfData?.p5y;
+    if (ins1y > index1y) niftyRating += 2;
+    if (ins3y > index3y) niftyRating += 1;
+    if (ins5y > index5y) niftyRating += 1;
+    return { niftyRating, ins1y, ins3y, ins5y, index1y, index5y, index3y };
   };
 
-  const niftyRating = calculateOverallRating(index);
+  const { niftyRating, ins1y, ins3y, ins5y, index1y, index5y, index3y } =
+    calculateOverallRating(index);
+
+  const info = () => {
+    const calculateDiff = (insPerf: number, indPerf: number, yr: number) => {
+      const perf = insPerf > indPerf ? "OutPerformed" : "Underperformed";
+      const color = insPerf > indPerf ? "green" : "red";
+      const diff = toReadableNumber(Math.abs(insPerf - indPerf), 2);
+      return (
+        <>
+          {yr} year: {perf} index by{" "}
+          <strong style={{ color: `${color}` }}>{diff}%</strong>
+        </>
+      );
+    };
+    const diff1 = () => calculateDiff(ins1y, index1y, 1);
+    const diff3 = () => calculateDiff(ins3y, index3y, 3);
+    const diff5 = () => calculateDiff(ins5y, index5y, 5);
+
+    return (
+      <>
+        {`Performance consistency compared to ${index} index over last 5 years`}
+        <br />
+        {diff1()}
+        <br />
+        {diff3()}
+        <br />
+        {diff5()}
+      </>
+    );
+  };
 
   return (
     <>
@@ -46,7 +77,8 @@ export default function PerfHistFeedback({
         changeHandler={setIndex}
         options={indexMap}
         inline
-        info={`Performance consistency compared to ${index} index over last 5 years`}
+        // @ts-ignore
+        info={info()}
       />
       &nbsp;
       <Rate value={niftyRating} disabled />
