@@ -85,13 +85,15 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
       : isFund(id)
       ? mfIds.push(id)
       : exchangeIds.push(id);
-
-    isFund(id)
-      ? insPerfIds.push(id)
-      : allInsData[id] && allInsData[id].sid
-      ? insPerfIds.push(allInsData[id].sid)
-      : "";
-    if (!allInsData[id]) gotodb = true;
+    const data = allInsData[id];
+    if (data && data.subt === AssetSubType.S) {
+      isFund(id)
+        ? insPerfIds.push(id)
+        : data.sid && (data?.beta || data?.yhigh)
+        ? insPerfIds.push(data.sid)
+        : "";
+    }
+    if (!data) gotodb = true;
   });
   if (!gotodb) {
     await loadInsPerf(insPerfIds);
@@ -130,6 +132,7 @@ export const loadInsPerf = async (ids: Array<string>) => {
     if (!allInsPrefData[id]) gotodb = true;
   });
   if (!gotodb) return allInsPrefData;
+  console.log("Going to InsPerf Table");
   if (ids.length) {
     await loadInstrumentPrices(loadMatchingInsPerf, ids, allInsPrefData);
   }
