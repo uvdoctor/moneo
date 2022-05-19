@@ -488,6 +488,7 @@ export const priceInstruments = async (
   let totalFFixed = 0;
   let totalFEquity = 0;
   let totalBonds = 0;
+  let totalBondsTab = 0;
   let totalStocks = 0;
   let totalMFs = 0;
   let totalETFs = 0;
@@ -544,6 +545,7 @@ export const priceInstruments = async (
           if (data.risk) riskTotals[data.risk].stocks += value;
         }
       } else if (data.type === AssetType.F) {
+        if( !isFund(data.id) && data.subt !== AssetSubType.GoldB) totalBondsTab += value;
         totalFFixed += value;
         if (data.subt === AssetSubType.I) indexFunds += value;
         else if (data.subt === AssetSubType.L) liquidFunds += value;
@@ -589,6 +591,7 @@ export const priceInstruments = async (
     totalInv,
     totalStocks,
     totalBonds,
+    totalBondsTab,
     totalETFs,
     totalMFs,
     largeCapStocks,

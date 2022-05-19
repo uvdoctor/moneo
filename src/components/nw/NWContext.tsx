@@ -158,6 +158,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalETFs, setTotalETFs] = useState<number>(0);
   const [totalStocks, setTotalStocks] = useState<number>(0);
   const [totalBonds, setTotalBonds] = useState<number>(0);
+  const [totalBondsTab, setTotalBondsTab] = useState<number>(0);
   const [totalLargeCapStocks, setTotalLargeCapStocks] = useState<number>(0);
   const [totalLargeCapFunds, setTotalLargeCapFunds] = useState<number>(0);
   const [totalMultiCap, setTotalMultiCap] = useState<number>(0);
@@ -367,7 +368,7 @@ function NWContextProvider({ fxRates }: any) {
           link: ROUTES.PRIVACY,
           data: instruments,
           setData: setInstruments,
-          total: totalBonds,
+          total: totalBondsTab,
           contentComp: <InstrumentValuation />,
           filterOption: {
             main: { type: "Type", risk: "Risk", movers: "Movers" },
@@ -768,6 +769,7 @@ function NWContextProvider({ fxRates }: any) {
       setTotalFInv(totals.totalInv);
       setTotalStocks(totals.totalStocks);
       setTotalBonds(totals.totalBonds);
+      setTotalBondsTab(totals.totalBondsTab);
       setTotalETFs(totals.totalETFs);
       setTotalMFs(totals.totalMFs);
       setTotalLargeCapStocks(totals.largeCapStocks);
@@ -1071,6 +1073,7 @@ function NWContextProvider({ fxRates }: any) {
         setIndustryAndSector,
         showInsUpload,
         setShowInsUpload,
+        totalBondsTab
       }}>
       <GetView />
     </NWContext.Provider>
