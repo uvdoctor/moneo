@@ -120,19 +120,6 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   return allInsData;
 };
 
-export const initializeIndexPerf = async (instruments: Array<InstrumentInput>, user: boolean) => {
-  const ids: Array<string> = [];
-  instruments.forEach((instrument: InstrumentInput) => {
-    isFund(instrument.id)
-      ? ids.push(instrument.id)
-      : instrument.sid
-      ? ids.push(instrument.sid)
-      : "";
-  });
-  await loadIndexPerf(user);
-  return await loadInsPerf(ids);
-};
-
 export const loadInsPerf = async (ids: Array<string>) => {
   let gotodb = false;
   let allInsPrefData: any = simpleStorage.get(LOCAL_INS_PERF_KEY);
@@ -147,8 +134,6 @@ export const loadInsPerf = async (ids: Array<string>) => {
   simpleStorage.set(LOCAL_INS_PERF_KEY, allInsPrefData, LOCAL_DATA_TTL);
   return allInsPrefData;
 };
-
-
 
 const initializeInsData = async (instruments: Array<InstrumentInput>, user: boolean) => {
   const ids: Array<string> = [];
@@ -514,7 +499,6 @@ export const priceInstruments = async (
     [RiskProfile.VA]: initRiskAttribs(),
   };
   let cachedData = await initializeInsData(instruments, user);
-  await initializeIndexPerf(instruments, user);
   instruments.forEach((instrument: InstrumentInput) => {
     const id = instrument.id;
     const data = cachedData[id];
