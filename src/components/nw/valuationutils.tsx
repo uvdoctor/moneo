@@ -487,8 +487,8 @@ export const priceInstruments = async (
   let totalInv = 0;
   let totalFFixed = 0;
   let totalFEquity = 0;
+  let totalBondsAllocation = 0;
   let totalBonds = 0;
-  let totalBondsTab = 0;
   let totalStocks = 0;
   let totalMFs = 0;
   let totalETFs = 0;
@@ -545,7 +545,7 @@ export const priceInstruments = async (
           if (data.risk) riskTotals[data.risk].stocks += value;
         }
       } else if (data.type === AssetType.F) {
-        if( !isFund(data.id) && data.subt !== AssetSubType.GoldB) totalBondsTab += value;
+        if(!isFund(data.id) && data.subt !== AssetSubType.GoldB) totalBonds += value;
         totalFFixed += value;
         if (data.subt === AssetSubType.I) indexFunds += value;
         else if (data.subt === AssetSubType.L) liquidFunds += value;
@@ -553,31 +553,31 @@ export const priceInstruments = async (
           if (data.mftype === MFSchemeType.I) intervalFunds += value;
           if (data.mftype === MFSchemeType.C) fmp += value;
         } else {
-          totalBonds += value;
+          totalBondsAllocation += value;
           if (data.risk) riskTotals[data.risk].bonds += value;
         }
       } else if (data.type === AssetType.H) {
         if (includesAny(data.name as string, ["conservative"])) {
           totalFFixed += 0.7 * value;
           totalFEquity += 0.3 * value;
-          totalBonds += 0.7 * value;
+          totalBondsAllocation += 0.7 * value;
           multiCap += 0.3 * value;
         } else if (includesAny(data.name as string, ["multi-asset"])) {
           totalFGold += 0.1 * value;
           totalFEquity += 0.6 * value;
           totalFFixed += 0.3 * value;
           multiCap += 0.6 * value;
-          totalBonds += 0.3 * value;
+          totalBondsAllocation += 0.3 * value;
         } else if (includesAny(data.name as string, ["balanced"])) {
           totalFEquity += 0.6 * value;
           totalFFixed += 0.4 * value;
           multiCap += 0.6 * value;
-          totalBonds += 0.4 * value;
+          totalBondsAllocation += 0.4 * value;
         } else {
           totalFFixed += 0.7 * value;
           totalFEquity += 0.3 * value;
           multiCap += 0.3 * value;
-          totalBonds += 0.7 * value;
+          totalBondsAllocation += 0.7 * value;
         }
       }
     }
@@ -590,8 +590,8 @@ export const priceInstruments = async (
     totalFFixed,
     totalInv,
     totalStocks,
+    totalBondsAllocation,
     totalBonds,
-    totalBondsTab,
     totalETFs,
     totalMFs,
     largeCapStocks,
