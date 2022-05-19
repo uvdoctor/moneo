@@ -78,6 +78,7 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   let gotodb = false;
   let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!allInsData) allInsData = {};
+  await loadIndexPerf(user);
   ids.forEach((id: string) => {
     !isIndISIN(id)
       ? indexIds.push(id)
@@ -94,7 +95,6 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   });
   if (!gotodb) {
     await loadInsPerf(insPerfIds);
-    await loadIndexPerf(user);
     return allInsData;
   }
   let unmatchedIds: Array<string> | null = [];
@@ -119,7 +119,6 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
   await loadInsPerf(insPerfIds);
-  await loadIndexPerf(user);
   return allInsData;
 };
 
