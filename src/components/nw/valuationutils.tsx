@@ -84,9 +84,19 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
       : isFund(id)
       ? mfIds.push(id)
       : exchangeIds.push(id);
+
+    isFund(id)
+      ? insPerfIds.push(id)
+      : allInsData[id] && allInsData[id].sid
+      ? insPerfIds.push(allInsData[id].sid)
+      : "";
     if (!allInsData[id]) gotodb = true;
   });
-  if (!gotodb) return allInsData;
+  if (!gotodb) {
+    await loadInsPerf(insPerfIds);
+    await loadIndexPerf(user);
+    return allInsData;
+  }
   let unmatchedIds: Array<string> | null = [];
   if (indexIds.length) {
     await loadInstrumentPrices(loadMatchingIndices, ids, allInsData);
@@ -108,13 +118,6 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   if (bondIds.length)
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
-  ids.forEach((id: string) => {
-    isFund(id)
-      ? insPerfIds.push(id)
-      : allInsData[id] && allInsData[id].sid
-      ? insPerfIds.push(allInsData[id].sid)
-      : "";
-  });
   await loadInsPerf(insPerfIds);
   await loadIndexPerf(user);
   return allInsData;
@@ -135,7 +138,10 @@ export const loadInsPerf = async (ids: Array<string>) => {
   return allInsPrefData;
 };
 
-const initializeInsData = async (instruments: Array<InstrumentInput>, user: boolean) => {
+const initializeInsData = async (
+  instruments: Array<InstrumentInput>,
+  user: boolean
+) => {
   const ids: Array<string> = [];
   instruments.forEach((instrument: InstrumentInput) => ids.push(instrument.id));
   return await loadInstruments(ids, user);
@@ -1242,7 +1248,7 @@ export const initializeWatchlist = async (
   user: boolean,
   watchIns?: Array<InsWatchInput> | null | undefined,
   userIns?: Array<InstrumentInput> | null | undefined,
-  crypto?: Array<HoldingInput> | null | undefined,
+  crypto?: Array<HoldingInput> | null | undefined
 ) => {
   const NIFTY50 = "Nifty 50";
   const SENSEX = "BSE30";

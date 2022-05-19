@@ -116,7 +116,7 @@ export default function Holding({
                   {!isUploading &&
                   instrument.mcapt &&
                   instrument.subt === AssetSubType.S &&
-                  insPerfData ? (
+                  instrumentPerf ? (
                     <PerfHistFeedback
                       performance={instrumentPerf}
                       instrument={instrument}
