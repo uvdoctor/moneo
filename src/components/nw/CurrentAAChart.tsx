@@ -51,7 +51,7 @@ export default function CurrentAAChart() {
     totalFMP,
     totalFFixed,
     totalStLendings,
-    totalBonds,
+    totalBondsAllocation,
     totalStocks,
     loadingInstruments,
   }: any = useContext(NWContext);
@@ -213,13 +213,13 @@ export default function CurrentAAChart() {
       return getTooltipDesc(
         {
           "NPS Bond Schemes": totalNPSGFixed + totalNPSCFixed,
-          Bonds: totalBonds,
+          Bonds: totalBondsAllocation,
           "Fixed Maturity Plan": totalFMP,
           "Interval Funds": totalIntervalFunds,
           "Index Funds": totalIndexFunds,
           "Other Funds":
             totalFFixed -
-            totalBonds -
+            totalBondsAllocation -
             totalFMP -
             totalIntervalFunds -
             totalIndexFunds -
