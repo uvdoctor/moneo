@@ -186,8 +186,8 @@ export const addMemberIfNeeded = async (
   let tidAlreadyExists = getFamilyMemberKey(allFamily, taxId);
   if (tidAlreadyExists) return tidAlreadyExists;
   const id = memberKeys[0];
-  const { name, tax, tid } = allFamily[id];
-  if(memberKeys.length === 1 && tid === DEFAULT_TID) {
+  if(memberKeys.length === 1 && allFamily[id].taxId === DEFAULT_TID) {
+    const { name, tax } = allFamily[id];
     let member = await updateFamilyMember({id, name, tid: taxId, tax});
     allFamily[id] = { name: member?.name, taxId: member?.tid, tax: member?.tax };
     return member?.id;
