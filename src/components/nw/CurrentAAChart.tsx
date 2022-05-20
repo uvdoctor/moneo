@@ -13,7 +13,7 @@ const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
 
 export default function CurrentAAChart() {
   const {
-    totalCash,
+    totalCashAllocation,
     totalSavings,
     totalLendings,
     totalFGold,
@@ -260,7 +260,7 @@ export default function CurrentAAChart() {
         <TreemapChart
           data={{
             name: "root",
-            value: 100 - (totalAssets ? totalCash / totalAssets : 0),
+            value: 100 - (totalAssets ? totalCashAllocation / totalAssets : 0),
             children: data,
           }}
           meta={{

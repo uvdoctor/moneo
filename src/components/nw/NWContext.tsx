@@ -171,6 +171,7 @@ function NWContextProvider({ fxRates }: any) {
   const [totalPGold, setTotalPGold] = useState<number>(0);
   const [totalFGold, setTotalFGold] = useState<number>(0);
   const [totalCash, setTotalCash] = useState<number>(0);
+  const [totalCashAllocation, setTotalCashAllocation] = useState<number>(0);
   const [totalPhysical, setTotalPhysical] = useState<number>(0);
   const [totalFinancial, setTotalFinancial] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<string>(FINANCIAL_LABEL);
@@ -639,10 +640,12 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalAssets, totalLiabilities]);
 
   useEffect(() => {
-    setTotalCash(
-      totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds
-    );
+    setTotalCashAllocation(totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds)
   }, [totalSavings, totalLendings, totalLtdep, totalPF, totalLiquidFunds]);
+
+  useEffect(() => {
+    setTotalCash(totalSavings + totalLendings + totalLtdep + totalPF);
+  }, [totalSavings, totalLendings, totalLtdep, totalPF]);
 
   useEffect(() => {
     setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
@@ -654,8 +657,7 @@ function NWContextProvider({ fxRates }: any) {
         totalAngel +
         totalCrypto +
         totalP2P +
-        totalNPS -
-        totalLiquidFunds
+        totalNPS 
     );
   }, [
     totalInstruments,
@@ -663,7 +665,6 @@ function NWContextProvider({ fxRates }: any) {
     totalCrypto,
     totalP2P,
     totalNPS,
-    totalLiquidFunds,
   ]);
 
   useEffect(() => {
@@ -1073,7 +1074,8 @@ function NWContextProvider({ fxRates }: any) {
         setIndustryAndSector,
         showInsUpload,
         setShowInsUpload,
-        totalBondsAllocation
+        totalBondsAllocation,
+        totalCashAllocation
       }}>
       <GetView />
     </NWContext.Provider>

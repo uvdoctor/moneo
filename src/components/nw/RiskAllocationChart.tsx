@@ -37,7 +37,6 @@ export default function RiskAllocationChart() {
     selectedCurrency,
     totalSavings,
     totalLendings,
-    totalLiquidFunds,
     totalLtdep,
     totalPPF,
     totalEPF,
@@ -69,8 +68,7 @@ export default function RiskAllocationChart() {
   useEffect(() => {
     let data: Array<any> = [];
     const vcVal =
-      totalCash -
-      totalLiquidFunds +
+      totalCash +
       totalProperties +
       totalPGold +
       totalFGold +
@@ -100,7 +98,6 @@ export default function RiskAllocationChart() {
     totalPGold,
     totalFGold,
     totalPM,
-    totalLiquidFunds,
     riskTotals,
   ]);
 

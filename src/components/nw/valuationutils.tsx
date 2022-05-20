@@ -1056,15 +1056,14 @@ export const calculateTotalAssets = async (
   }
 
   const totalCash =
-    totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds;
+    totalSavings + totalLendings + totalLtdep + totalPF;
   const totalPhysical = totalProperties + totalVehicles + totalPM + totalOthers;
   const totalFinancial =
     totalInstruments +
     totalAngel +
     totalCrypto +
     totalP2P +
-    totalNPS -
-    totalLiquidFunds;
+    totalNPS
   const totalAssets = totalCash + totalPhysical + totalFinancial;
   return {
     totalCash,
