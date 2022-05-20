@@ -45,8 +45,8 @@ export default function DBView() {
                     const { label, price } = item;
                     return (
                       <Col key={label}>
-                        {label} :{" "}
                         <InsPrice
+                          pre={label}
                           price={price}
                           currency={defaultCurrency}
                           previousPrice={0}
