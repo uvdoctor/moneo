@@ -156,12 +156,17 @@ export default function UploadHoldings() {
     if (uploadedInstruments.length) {
       let filteredIns: Array<InstrumentInput> = instruments.filter(
         (instrument: InstrumentInput) =>
-            instrument.curr === selectedCurrency &&
-            (overwrite ? instrument.fId !== member : true)
+          instrument.curr === selectedCurrency &&
+          (overwrite ? instrument.fId !== member : true)
       );
       const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
       let instrumentsToAdd = uploadedInstruments.filter(
         (instrument: InstrumentInput) => {
+          const instrumentWithpur: InstrumentInput = instruments.find(
+            (ins: InstrumentInput) =>
+              member === ins.fId && ins.pur && instrument.id === ins.id
+          );
+          if (instrumentWithpur) instrument.pur = instrumentWithpur.pur;
           instrument.curr = selectedCurrency;
           instrument.fId = member as string;
           return insData && insData[instrument.id];
@@ -303,7 +308,8 @@ export default function UploadHoldings() {
       <Badge
         count={count}
         offset={[10, 0]}
-        style={{ marginRight: count > 9 ? 8 : 2 }}>
+        style={{ marginRight: count > 9 ? 8 : 2 }}
+      >
         {content}
         &nbsp;
       </Badge>
@@ -332,7 +338,8 @@ export default function UploadHoldings() {
       <Button
         icon={<UploadOutlined />}
         onClick={() => setShowInsUpload(true)}
-        type="primary">
+        type="primary"
+      >
         Upload Statement
       </Button>
       <Drawer
@@ -342,7 +349,8 @@ export default function UploadHoldings() {
         closable={false}
         onClose={resetState}
         visible={showInsUpload}
-        destroyOnClose>
+        destroyOnClose
+      >
         <Dragger {...getUploaderSettings(parseHoldings)}>
           {loading ? <Spin tip="Loading..." size="large" /> : uploadContent()}
         </Dragger>
@@ -396,18 +404,21 @@ export default function UploadHoldings() {
             <Button
               onClick={resetState}
               style={{ marginRight: 8 }}
-              disabled={processing}>
+              disabled={processing}
+            >
               Cancel
             </Button>
             <Button
               onClick={() => addInstruments()}
               type="primary"
               loading={processing}
-              disabled={!taxId && !memberKey}>
+              disabled={!taxId && !memberKey}
+            >
               Done
             </Button>
           </div>
-        }>
+        }
+      >
         {uploadedInstruments.length ? (
           <Tabs defaultActiveKey="E" type="card">
             {equitiesNum && (
@@ -473,7 +484,8 @@ export default function UploadHoldings() {
             {otherItsNum && (
               <TabPane
                 key="INVIT"
-                tab={contentWithBadge(otherItsNum, "Other Investment Trusts")}>
+                tab={contentWithBadge(otherItsNum, "Other Investment Trusts")}
+              >
                 <HoldingsTable
                   data={otherIts}
                   onChange={setOtherIts}
