@@ -4,6 +4,7 @@ import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
+  DEFAULT_TID,
   NATIONAL_SAVINGS_CERTIFICATE,
   PALLADIUM,
   PLATINUM,
@@ -182,8 +183,15 @@ export const addMemberIfNeeded = async (
   memberKeysSetter: Function,
   taxId: string
 ) => {
-  let id = getFamilyMemberKey(allFamily, taxId);
-  if (id) return id;
+  let tidAlreadyExists = getFamilyMemberKey(allFamily, taxId);
+  if (tidAlreadyExists) return tidAlreadyExists;
+  const id = memberKeys[0];
+  const { name, tax, tid } = allFamily[id];
+  if(memberKeys.length === 1 && tid === DEFAULT_TID) {
+    let member = await updateFamilyMember({id, name, tid: taxId, tax});
+    allFamily[id] = { name: member?.name, taxId: member?.tid, tax: member?.tax };
+    return member?.id;
+  }
   let member = await addFamilyMember(taxId, taxId, APIt.TaxLiability.M);
   allFamily[member?.id as string] = {
     name: member?.name,

@@ -60,6 +60,7 @@ import { loadAllGoals } from "../goals/goalutils";
 
 const NWContext = createContext({});
 
+export const DEFAULT_TID = 'XXXXX1234X';
 export const NATIONAL_SAVINGS_CERTIFICATE = "NSC";
 export const SUKANYA_SAMRIDDHI_YOJANA = "SSY";
 export const GOLD = "GC";
@@ -558,7 +559,7 @@ function NWContextProvider({ fxRates }: any) {
   const addSelfMember = async () => {
     const family = await getFamilysList();
     if (!family || !family.length) {
-      let member = await addFamilyMember("Self", "XXXXX1234X", userInfo?.tax);
+      let member = await addFamilyMember("Self", DEFAULT_TID, userInfo?.tax);
       if (!member) return;
       setAllFamily({
         [member.id as string]: {
