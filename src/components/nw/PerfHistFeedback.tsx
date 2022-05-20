@@ -10,8 +10,10 @@ interface PerfHistFeedbackProps {
   performance: any;
 }
 
-const calcDiff = (curr: number, prev: number, years: number) =>
-  ((curr / prev - 1) * 100) / years;
+const calcDiff = (curr: number, prev: number, years: number) => {
+  if(!curr || !prev) return 0;
+  return ((curr / prev - 1) * 100) / years;
+}
 
 export default function PerfHistFeedback({
   instrument,
@@ -60,11 +62,11 @@ export default function PerfHistFeedback({
       <>
         {`Performance consistency compared to ${index} index over last 5 years`}
         <br />
-        {diff1()}
+        {ins1y ? diff1() : ''}
         <br />
-        {diff3()}
+        {ins3y ? diff3() : ''}
         <br />
-        {diff5()}
+        {ins5y ? diff5() : ''}
       </>
     );
   };
