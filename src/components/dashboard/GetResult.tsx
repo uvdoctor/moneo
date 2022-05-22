@@ -26,6 +26,7 @@ export default function GetResult() {
               pl={totalAssets || totalLiabilities}
               info={"Net Worth equals what you own minus what you owe."}
               loading={!holdingsLoaded}
+              resultLink={!totalAssets && !totalLiabilities}
             />
           </Col>
           <Col xs={12}>
@@ -36,6 +37,7 @@ export default function GetResult() {
               loading={!holdingsLoaded}
               info="This is the total valuation of the assets you own."
               pl
+              resultLink={!totalAssets}
             />
           </Col>
           <Col xs={12}>
@@ -46,6 +48,7 @@ export default function GetResult() {
               loading={!holdingsLoaded}
               info="This is the total valuation of all the money you owe."
               pl
+              resultLink={!totalLiabilities}
             />
           </Col>
         </Row>

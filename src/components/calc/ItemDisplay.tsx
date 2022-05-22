@@ -22,6 +22,7 @@ interface ItemDisplayProps {
   precise?: boolean;
   loading?: boolean;
   labelHighlight?: boolean;
+  resultLink?: boolean;
 }
 
 export default function ItemDisplay(props: ItemDisplayProps) {
@@ -77,7 +78,9 @@ export default function ItemDisplay(props: ItemDisplayProps) {
             : props.result
         }
         valueStyle={{
-          color: props.pl
+          color: props.resultLink
+            ? COLORS.GREEN
+            : props.pl
             ? props.result < 0
               ? COLORS.RED
               : props.result > 0

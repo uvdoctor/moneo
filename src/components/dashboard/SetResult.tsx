@@ -65,6 +65,7 @@ export default function SetResult() {
               info={"Earliest age when you can achieve financial independence."}
               loading={!goalsLoaded}
               unit={ffYear ? "years" : ""}
+              resultLink={!ffGoal}
             />
           </Col>
           <Col xs={12}>
@@ -73,6 +74,7 @@ export default function SetResult() {
               result={ffAmt ? ffAmt : "Discover"}
               currency={defaultCurrency}
               loading={!goalsLoaded}
+              resultLink={!ffAmt}
               info="This is the minimum amount needed to achieve financial independence."
             />
           </Col>
@@ -81,6 +83,7 @@ export default function SetResult() {
               label={numOfGoals ? "Number of Goals" : "Goals"}
               result={numOfGoals ? numOfGoals : "Define"}
               loading={!goalsLoaded}
+              resultLink={!numOfGoals}
               info={
                 numOfGoals
                   ? "Number of goals defined in the financial plan."
