@@ -56,7 +56,8 @@ export default function BasicAuthenticator({
     // Replace all special characters like "@ . _ ";
     let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
     if (name.length > 5) name = name.substring(0, 5);
-    return name + ("" + Math.random()).substring(2, 7);
+    name = name + ("" + Math.random()).substring(2, 7);
+    return name.toLocaleLowerCase();
   };
 
   const handleConfirmSignUp = async () => {
@@ -218,8 +219,7 @@ export default function BasicAuthenticator({
                   type="primary"
                   disabled={disable}
                   onClick={signIn}
-                  loading={loading}
-                >
+                  loading={loading}>
                   {Translations.SIGN_IN_TEXT}
                 </Button>
               </Row>
@@ -251,8 +251,7 @@ export default function BasicAuthenticator({
                 <Button
                   type="primary"
                   disabled={disable}
-                  onClick={handleRegistrationSubmit}
-                >
+                  onClick={handleRegistrationSubmit}>
                   Done
                 </Button>
               </Row>

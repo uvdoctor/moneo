@@ -70,10 +70,17 @@ function AppContextProvider({ children }: AppContextProviderProps) {
   useEffect(() => {
     if (!owner) return;
     Storage.configure({ level: "private" });
-    loadUserInfo().then(() => true);
+    loadUserInfo().then((userInfo: any) => {
+      if (!userInfo) {
+        console.log("User info not loading....");
+        return;
+      }
+      setUserInfo(userInfo);
+    });
   }, [owner]);
 
   useEffect(() => {
+    if (!userInfo) return;
     setDiscountRate(
       !userInfo?.dr
         ? getDiscountRate(userInfo?.rp, defaultCountry)
@@ -82,7 +89,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
     setAppContextLoaded(true);
   }, [userInfo]);
 
-  const loadUserInfo = async () => setUserInfo(await getUserDetails(owner));
+  const loadUserInfo = async () => await getUserDetails(owner);
 
   return (
     <AppContext.Provider
