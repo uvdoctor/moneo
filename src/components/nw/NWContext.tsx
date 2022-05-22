@@ -60,7 +60,7 @@ import { loadAllGoals } from "../goals/goalutils";
 
 const NWContext = createContext({});
 
-export const DEFAULT_TID = 'XXXXX1234X';
+export const DEFAULT_TID = "XXXXX1234X";
 export const NATIONAL_SAVINGS_CERTIFICATE = "NSC";
 export const SUKANYA_SAMRIDDHI_YOJANA = "SSY";
 export const GOLD = "GC";
@@ -559,6 +559,7 @@ function NWContextProvider({ fxRates }: any) {
   const addSelfMember = async () => {
     const family = await getFamilysList();
     if (!family || !family.length) {
+      console.log("Going to create family member with tax id: ", userInfo?.tax);
       let member = await addFamilyMember("Self", DEFAULT_TID, userInfo?.tax);
       if (!member) return;
       setAllFamily({
@@ -641,7 +642,9 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalAssets, totalLiabilities]);
 
   useEffect(() => {
-    setTotalCashAllocation(totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds)
+    setTotalCashAllocation(
+      totalSavings + totalLendings + totalLtdep + totalPF + totalLiquidFunds
+    );
   }, [totalSavings, totalLendings, totalLtdep, totalPF, totalLiquidFunds]);
 
   useEffect(() => {
@@ -654,19 +657,9 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     setTotalFinancial(
-      totalInstruments +
-        totalAngel +
-        totalCrypto +
-        totalP2P +
-        totalNPS 
+      totalInstruments + totalAngel + totalCrypto + totalP2P + totalNPS
     );
-  }, [
-    totalInstruments,
-    totalAngel,
-    totalCrypto,
-    totalP2P,
-    totalNPS,
-  ]);
+  }, [totalInstruments, totalAngel, totalCrypto, totalP2P, totalNPS]);
 
   useEffect(() => {
     setTotalLiabilities(totalLoans + totalCredit);
@@ -722,7 +715,7 @@ function NWContextProvider({ fxRates }: any) {
     updatedHoldings.crypto = crypto;
     updatedHoldings.credit = credit;
     updatedHoldings.ins = insurance;
-    updatedHoldings.p2p = p2p
+    updatedHoldings.p2p = p2p;
     try {
       if (holdings) {
         await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -759,7 +752,12 @@ function NWContextProvider({ fxRates }: any) {
   }, [totalFFixed, totalNPSGFixed, totalNPSCFixed, totalP2P]);
 
   const priceAllInstruments = async () =>
-    await priceInstruments(instruments, selectedMembers, selectedCurrency, user);
+    await priceInstruments(
+      instruments,
+      selectedMembers,
+      selectedCurrency,
+      user
+    );
 
   useEffect(() => {
     priceAllInstruments().then((totals) => {
@@ -935,7 +933,7 @@ function NWContextProvider({ fxRates }: any) {
 
   useEffect(() => {
     loadAllGoals(userInfo).then((result: any) => {
-      setLifeExpectancy(result?.ffGoal?.loan?.dur)
+      setLifeExpectancy(result?.ffGoal?.loan?.dur);
     });
   }, [userInfo]);
 
@@ -1076,7 +1074,7 @@ function NWContextProvider({ fxRates }: any) {
         showInsUpload,
         setShowInsUpload,
         totalBondsAllocation,
-        totalCashAllocation
+        totalCashAllocation,
       }}>
       <GetView />
     </NWContext.Provider>
