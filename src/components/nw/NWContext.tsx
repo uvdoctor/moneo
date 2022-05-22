@@ -559,7 +559,6 @@ function NWContextProvider({ fxRates }: any) {
   const addSelfMember = async () => {
     const family = await getFamilysList();
     if (!family || !family.length) {
-      console.log("Going to create family member with tax id: ", userInfo?.tax);
       let member = await addFamilyMember("Self", DEFAULT_TID, userInfo?.tax);
       if (!member) return;
       setAllFamily({
