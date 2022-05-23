@@ -156,7 +156,7 @@ export default function Watchlist() {
               itemLayout="horizontal"
               dataSource={filterByTab}
               renderItem={(item) => {
-                return <WatchlistRow record={item} />;
+                return <WatchlistRow record={item} exchg={exchg}/>;
               }}
             />
           </div>

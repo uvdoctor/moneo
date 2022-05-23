@@ -13,9 +13,10 @@ import { otherISIN } from "../nw/valuationutils";
 
 interface WatchlistRowProps {
   record: InsWatchInput;
+  exchg: string
 }
 
-export default function WatchlistRow({ record }: WatchlistRowProps) {
+export default function WatchlistRow({ record, exchg }: WatchlistRowProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const { watchlist, setWatchlist, fxRates }: any = useContext(DBContext);
   const [showThresholds, setShowThresholds] = useState<boolean>(
@@ -47,7 +48,7 @@ export default function WatchlistRow({ record }: WatchlistRowProps) {
         true
       );
       watchdata.name = record.sid;
-    } else if (record.id.startsWith("US") || otherISIN(record.id)) {
+    } else if ((record.id.startsWith("US") || otherISIN(record.id)) && exchg === 'US') {
       const data = await getExchgRate(record.sid as string, "US");
       watchdata.price = data.price;
       watchdata.prev = data.prev;
