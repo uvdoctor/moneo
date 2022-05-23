@@ -4,36 +4,25 @@ import { Translations } from "@aws-amplify/ui-components";
 import { useForm } from "antd/lib/form/Form";
 
 interface StepOneProps {
-  setEmail: Function;
   setPassword: Function;
-  emailError: string;
-  passwordError: string;
-  setDisable: Function;
-  setEmailError: Function;
   setPasswordError: Function;
+  setError?: Function;
 }
 
 export default function StepOne({
-  setEmail,
   setPassword,
-  emailError,
-  setDisable,
-  passwordError,
-  setEmailError,
-  setPasswordError
+  setPasswordError,
+  setError
 }: StepOneProps) {
   const [form] = useForm();
 
   const handleFormChange = () => {
-    setEmailError('');
-    setPasswordError('');
-    setDisable(
-      !form.isFieldTouched("password") ||
-        !form.isFieldTouched("email") ||
-        form.getFieldValue("email").length === 0 ||
-        form.getFieldValue("password").length === 0
-    );
-  }
+    setError && setError('')
+    setPasswordError(
+      form.getFieldError("password").length > 0 ||
+      !form.isFieldTouched("password") || 
+      form.getFieldValue("password").length === 0   );
+  };
 
   return (
     <Fragment>
@@ -44,20 +33,31 @@ export default function StepOne({
         onFieldsChange={handleFormChange}
       >
         <Form.Item
-          name="email"
-          label={Translations.EMAIL_LABEL}
-          validateStatus={emailError ? "error" : undefined}
-          help={emailError ? emailError : null}
-          hasFeedback
-        >
-          <Input onChange={(e) => setEmail(e.currentTarget.value)} />
-        </Form.Item>
-
-        <Form.Item
           name="password"
           label={Translations.PASSWORD_LABEL}
-          validateStatus={passwordError ? "error" : undefined}
-          help={passwordError ? passwordError : null}
+          rules={[
+            {
+              min: 8,
+              max: 20,
+              message: "Password must be between 8-20 characters",
+            },
+            {
+              pattern: new RegExp("(?=.*[a-z])"),
+              message: "At least one lowercase",
+            },
+            {
+              pattern: new RegExp("(?=.*[A-Z])"),
+              message: "At least one uppercase",
+            },
+            {
+              pattern: new RegExp(".*[0-9].*"),
+              message: "At least one digit",
+            },
+            {
+              pattern: new RegExp("(?=.*[!@#$%^&*])"),
+              message: "At least one special character",
+            },
+          ]}
           hasFeedback
         >
           <Input.Password
