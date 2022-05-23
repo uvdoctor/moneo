@@ -104,7 +104,7 @@ function StockDetailContextProvider({ name, children }: any) {
                         smallSize
                       />
                     ) : (
-                      currency === 'USD' ? <></> : <Spin />
+                      <Spin />
                     )}
                   </>
                 }
