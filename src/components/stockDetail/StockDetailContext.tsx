@@ -4,7 +4,7 @@ import CoachingRequest from "../CoachingRequest";
 import useFetch from "../useFetch";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
-import { loadInsHoldings } from "../nw/nwutils";
+import { getExchgRate, loadInsHoldings } from "../nw/nwutils";
 import { InstrumentInput } from "../../api/goals";
 import { loadInstruments } from "../nw/valuationutils";
 import PerfHistFeedback from "../nw/PerfHistFeedback";
@@ -38,8 +38,14 @@ function StockDetailContextProvider({ name, children }: any) {
     }
     const isin = state.data?.General?.ISIN;
     const currency = state.data?.General?.CurrencyCode;
-    const exchg = state.data?.General?.Exchange;
-    if (exchg === 'US') return;
+    const country = state.data?.General?.CountryISO;
+    if (country === 'US') {
+      getExchgRate(ticker, "US").then((data: any)=>{
+        setInstrument({ id: ticker, price: data.price, prev: data.prev })
+        setCurrency('USD')
+      })
+      return;
+    }
     if (!isin && !currency) return;
     setCurrency(currency);
     loadInstruments([isin], owner).then((allInsData: any) => {
