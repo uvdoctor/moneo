@@ -11,7 +11,7 @@ import {
   Translations,
   onAuthUIStateChange,
 } from "@aws-amplify/ui-components";
-import { Row, Skeleton } from "antd";
+import { Alert, Row, Skeleton } from "antd";
 import Title from "antd/lib/typography/Title";
 import { createUserinfo, doesEmailExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
@@ -19,6 +19,7 @@ import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
+import EmailInput from "./form/EmailInput";
 require("./BasicAuthenticator.less");
 
 interface BasicAuthenticatorProps {
@@ -31,8 +32,8 @@ export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
   const { validateCaptcha, appContextLoaded }: any = useContext(AppContext);
-  const [emailError, setEmailError] = useState<any>("");
   const [passwordError, setPasswordError] = useState<any>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [disable, setDisable] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -119,18 +120,21 @@ export default function BasicAuthenticator({
   };
 
   const verifyEmail = async () => {
-    setEmailError("");
-    if (await doesEmailExist(email, "AWS_IAM")) {
-      setEmailError(
-        "Please use another email address as this one is already used by another account."
-      );
-    } else {
-      Hub.dispatch("UI Auth", {
-        event: "AuthStateChange",
-        message: AuthState.SignUp,
-      });
-    }
-    setDisable(true);
+    setLoading(true);
+    validateCaptcha("verify_email").then(async (success: boolean) => {
+      if (!success) return;
+      if (await doesEmailExist(email, "AWS_IAM")) {
+        setShowPassword(true);
+      } else {
+        Hub.dispatch("UI Auth", {
+          event: "AuthStateChange",
+          message: AuthState.SignUp,
+        });
+        setShowPassword(true);
+      }
+      setLoading(false);
+      setDisable(true);
+    });
   };
 
   const forgotPassword = () => {
@@ -142,44 +146,45 @@ export default function BasicAuthenticator({
 
   const signIn = () => {
     setLoading(true);
-    validateCaptcha("registration_step").then(async (success: boolean) => {
+    validateCaptcha("sign_in").then(async (success: boolean) => {
       if (!success) return;
       try {
         const user = await Auth.signIn(email, password);
         console.log(user);
-      } catch {
-        const isValidEmail =
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-            email
-          );
-        const isValidPassword =
-          /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(
-            password
-          );
-
-        if (!isValidEmail || !isValidPassword) {
-          if (!isValidEmail) setEmailError("This is not a valid email address");
-          if (!isValidPassword)
-            setPasswordError(
-              "Passwords must have at least 8 characters and contain at least two of the following: uppercase, letters, lowercase letters, numbers, and symbols"
-            );
-          setError("jdjfsdjfidkf o s ");
-          setLoading(false);
-          setDisable(true);
-          return;
-        }
-        await verifyEmail();
+      } catch (error: any) {
+        setError(error.message);
+        console.log(error);
       }
       setLoading(false);
-      setDisable(true);
     });
   };
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
+      if (nextAuthState === AuthState.SignIn) setShowPassword(false);
       setAuthState(nextAuthState);
     });
   }, []);
+
+  useEffect(() => {
+    if (authState === AuthState.SignIn) setShowPassword(false);
+  }, [authState]);
+
+  const CancelButton = () => {
+    return showPassword || authState === AuthState.SignUp ? (
+      <Button
+        type="link"
+        onClick={() => {
+          showPassword ? setShowPassword(false) : setShowPassword(true);
+          if (showPassword && authState === AuthState.SignUp) onCancel();
+        }}
+      >
+        Cancel
+      </Button>
+    ) : (
+      <></>
+    );
+  };
 
   return (
     <AmplifyAuthContainer>
@@ -196,41 +201,55 @@ export default function BasicAuthenticator({
             ]}
           />
         )}
+
         {authState === AuthState.SignIn && (
           <AmplifySection slot="sign-in">
-            <Title level={5}>{Translations.SIGN_IN_HEADER_TEXT}</Title>
+            <Title level={5}>My Account</Title>
             <div className="steps-content">
-              <StepOne
-                setPasswordError={setPasswordError}
-                setEmailError={setEmailError}
-                passwordError={passwordError}
-                setEmail={setEmail}
-                setPassword={setPassword}
-                emailError={emailError}
-                setDisable={setDisable}
-              />
+              {!showPassword ? (
+                <EmailInput
+                  setEmail={setEmail}
+                  label={Translations.EMAIL_LABEL}
+                  setDisable={setDisable}
+                />
+              ) : (
+                <>
+                  <StepOne
+                    setPassword={setPassword}
+                    setPasswordError={setPasswordError}
+                    setError={setError}
+                  />
+                  {error ? <Alert type="error" message={error} /> : null}
+                </>
+              )}
             </div>
+            
             <div className="steps-action">
-              <Row justify="space-between">
-                <Button type="link" onClick={forgotPassword}>
-                  {Translations.FORGOT_PASSWORD_TEXT}
-                </Button>
+              <Row justify={showPassword ? "space-between" : "end"}>
+                {showPassword && (
+                  <Button type="link" onClick={forgotPassword}>
+                    {Translations.FORGOT_PASSWORD_TEXT}
+                  </Button>
+                )}
+                <CancelButton />
                 <Button
                   type="primary"
-                  disabled={disable}
-                  onClick={signIn}
-                  loading={loading}>
-                  {Translations.SIGN_IN_TEXT}
+                  disabled={showPassword ? passwordError : !email || disable}
+                  onClick={showPassword ? signIn : verifyEmail}
+                  loading={loading}
+                >
+                  {showPassword ? Translations.SIGN_IN_TEXT : "Next"}
                 </Button>
               </Row>
             </div>
           </AmplifySection>
         )}
+
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <div className="steps-content">
-              {
+              {!showPassword ? (
                 <StepTwo
                   setDOB={setDOB}
                   error={error}
@@ -241,18 +260,28 @@ export default function BasicAuthenticator({
                   taxLiability={taxLiability}
                   setTaxLiability={setTaxLiability}
                 />
-              }
+              ) : (
+                <StepOne
+                  setPassword={setPassword}
+                  setPasswordError={setPasswordError}
+                />
+              )}
             </div>
+
             <div className="steps-action">
-              <Row justify="end">
-                <Button type="link" onClick={onCancel}>
-                  Back
-                </Button>
+              <Row justify={"end"}>
+                <CancelButton />
                 <Button
                   type="primary"
-                  disabled={disable}
-                  onClick={handleRegistrationSubmit}>
-                  Done
+                  disabled={showPassword ? passwordError : disable}
+                  onClick={() =>
+                    showPassword
+                      ? setShowPassword(false)
+                      : handleRegistrationSubmit()
+                  }
+                  loading={loading}
+                >
+                  {showPassword ? "Next" : "Done"}
                 </Button>
               </Row>
             </div>
