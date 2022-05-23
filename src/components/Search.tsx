@@ -19,7 +19,6 @@ interface SearchProps {
   width?: string;
   isNav?: boolean;
   onClick: Function;
-  options?: any;
   exchg?: string;
   setExchg?: any;
 }
@@ -30,39 +29,49 @@ export default function Search({
   setSearchType,
   isNav,
   onClick,
-  options,
   exchg,
   setExchg,
 }: SearchProps) {
   const { owner }: any = useContext(AppContext);
   const { Option } = Select;
-  const { CRYPTO, STOCK } = TAB;
+  const { CRYPTO, STOCK, MF, BOND, ETF } = TAB;
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [typeDropdownOpen, setTypeDropdownOpen] = useState<boolean>(false);
+  const [exchgDropdownOpen, setExchgDropdownOpen] = useState<boolean>(false);
+
+  const hasExchg = (type: string) => [STOCK, MF, BOND, ETF].includes(type);
+  const usSearchType = {
+    [STOCK]: 'stock',
+    [MF]: 'fund',
+    [ETF]: 'etf',
+    [BOND]: 'bond'
+  }
 
   const onSearch = async (text: any) => {
     setOpen(true);
-    if (exchg === "US" && searchType === STOCK) {
+    if (exchg === "US") {
       let response = await fetch(
-        `/api/search?text=${searchText}&type=stock&exchange=${exchg}`
+        `/api/search?text=${searchText}&type=${usSearchType[searchType]}&exchange=${exchg}`
       );
       const data = await response.json();
       let result: any = [];
       if (Array.isArray(data))
         data.map((item: any) => {
-          const { Code, ISIN, Name, previousClose } = item;
+          const { Code, ISIN, Name, previousClose, Currency } = item;
           result.push({
-            id: ISIN,
+            id: ISIN ? ISIN : Code,
             sid: Code,
             name: Code,
-            type: "A",
-            subt: "S",
+            type: searchType === STOCK ? "A" : null,
+            subt: searchType === STOCK ? "S" : null,
             price: previousClose,
             value: Name,
             key: ISIN,
+            itype: searchType === ETF ? "ETF" : null,
+            curr: Currency
           });
         });
       return setSuggestions(result);
@@ -80,7 +89,7 @@ export default function Search({
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
-    if (searchType !== STOCK) setExchg && setExchg("INDIA");
+    if (!hasExchg(searchType)) setExchg && setExchg("INDIA");
     if (exchg !== "US") getSearchData();
   }, [searchType, exchg]);
 
@@ -103,7 +112,7 @@ export default function Search({
           let value = item.name;
           if (item.createdAt) delete item.createdAt;
           if (item.updatedAt) delete item.updatedAt;
-          if(nameMap[value]) value = `${item.name} - ${item.sid}`;
+          if (nameMap[value]) value = `${item.name} - ${item.sid}`;
           item.value = value;
           nameMap[value] = value;
         });
@@ -115,25 +124,45 @@ export default function Search({
     }
   };
 
-  const typeComp = (
+  const TypeComp = (
     <Select
-      open={dropdownOpen}
-      onMouseEnter={() => setDropdownOpen(true)}
-      onSelect={() => setDropdownOpen(false)}
-      onPopupScroll={() => setDropdownOpen(true)}
-      value={isNav ? searchType : exchg}
-      onChange={(val) =>
-        isNav ? setSearchType && setSearchType(val) : setExchg && setExchg(val)
-      }
+      open={typeDropdownOpen}
+      onMouseEnter={() => setTypeDropdownOpen(true)}
+      onSelect={() => setTypeDropdownOpen(false)}
+      onPopupScroll={() => setTypeDropdownOpen(true)}
+      value={searchType}
+      onChange={(val) => setSearchType && setSearchType(val)}
     >
-      {options &&
-        options?.map((item: any) => {
-          return (
-            <Option key={item} value={item}>
-              {item}
-            </Option>
-          );
-        })}
+      <Option key={STOCK} value={STOCK}>
+        {STOCK}
+      </Option>
+      {/* <Option key={BOND} value={BOND}> */}
+        {/* {BOND} */}
+      {/* </Option> */}
+      <Option key={MF} value={MF}>
+        {MF}
+      </Option>
+      <Option key={ETF} value={ETF}>
+        {ETF}
+      </Option>
+    </Select>
+  );
+
+  const ExchgComp = (
+    <Select
+      open={exchgDropdownOpen}
+      onMouseEnter={() => setExchgDropdownOpen(true)}
+      onSelect={() => setExchgDropdownOpen(false)}
+      onPopupScroll={() => setExchgDropdownOpen(true)}
+      value={exchg}
+      onChange={(val) => setExchg && setExchg(val)}
+    >
+      <Option key={"INDIA"} value={"NSE"}>
+        INDIA
+      </Option>
+      <Option key={"US"} value={"US"}>
+        US
+      </Option>
     </Select>
   );
 
@@ -144,19 +173,23 @@ export default function Search({
   return (
     <div className="main-search">
       <AutoComplete
-        onMouseLeave={() => setDropdownOpen(false)}
+        onMouseLeave={() => {
+          setTypeDropdownOpen(false)
+          setExchgDropdownOpen(false)
+        }}
         id="search"
         options={suggestions}
         onChange={(option) => setSearchText(option)}
         onSelect={async (_option: any, obj: any) => {
           let resp = obj;
           if (searchType === CRYPTO) {
-            resp = { id: obj.code, name: obj.name };
+            resp = { id: obj.code, name: obj.name, curr: "USD" };
           }
-          if (searchType === STOCK && exchg === "US") {
+          if (hasExchg(searchType) && exchg === "US") {
             const data = await getExchgRate(obj.sid, exchg);
             resp.price = data.price;
             resp.prev = data.prev;
+            resp.exchg = exchg;
           }
           onClick(resp);
           setSearchText("");
@@ -166,13 +199,14 @@ export default function Search({
         size="large"
         value={searchText}
         onSearch={onSearch}
-        open={options ? open : undefined}
+        open={isNav ? open : undefined}
       >
         <Input
           style={{ width: width ? width : "auto" }}
           size="large"
           placeholder={`Search ${searchType}`}
-          addonAfter={options ? typeComp : ""}
+          addonAfter={isNav ? TypeComp : ""}
+          addonBefore={exchg && hasExchg(searchType) ? ExchgComp : ""}
           prefix={<SearchOutlined />}
         />
       </AutoComplete>

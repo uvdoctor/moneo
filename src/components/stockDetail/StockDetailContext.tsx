@@ -38,6 +38,8 @@ function StockDetailContextProvider({ name, children }: any) {
     }
     const isin = state.data?.General?.ISIN;
     const currency = state.data?.General?.CurrencyCode;
+    const exchg = state.data?.General?.Exchange;
+    if (exchg === 'US') return;
     if (!isin && !currency) return;
     setCurrency(currency);
     loadInstruments([isin], owner).then((allInsData: any) => {
@@ -63,7 +65,7 @@ function StockDetailContextProvider({ name, children }: any) {
     }
     loadInsHoldings(owner).then((result: any) => {
       let quantity = 0;
-      if (result.ins) {
+      if (result?.ins) {
         const instruments = result.ins;
         instruments.forEach((instrument: InstrumentInput) => {
           if (instrument.sid === ticker) quantity += instrument.qty;
@@ -96,7 +98,7 @@ function StockDetailContextProvider({ name, children }: any) {
                         smallSize
                       />
                     ) : (
-                      <Spin />
+                      currency === 'USD' ? <></> : <Spin />
                     )}
                   </>
                 }
@@ -112,7 +114,7 @@ function StockDetailContextProvider({ name, children }: any) {
                       performance={instrumentPerf}
                     />
                   ) : (
-                    <Spin />
+                    currency === 'USD' ? <></> : <Spin />
                   )}
                 </Col>
                 <Col>

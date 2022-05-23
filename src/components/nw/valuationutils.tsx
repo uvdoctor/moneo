@@ -1243,7 +1243,7 @@ export const calculateAlerts = async (
 };
 
 export const isIndISIN = (item: string) =>
-  item.length === 12 && item.startsWith("IN");
+  item?.length === 12 && item?.startsWith("IN");
 
 export const otherISIN = (item: string) =>
   item.length === 12 && !item.startsWith("IN");

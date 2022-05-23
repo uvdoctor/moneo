@@ -3,7 +3,12 @@ import { Button, Col, Divider, List, notification, Row } from "antd";
 import { TAB } from "../nw/NWContext";
 import WatchlistRow from "./WatchlistView";
 import { SaveOutlined } from "@ant-design/icons";
-import { AssetSubType, AssetType, InsWatchInput } from "../../api/goals";
+import {
+  AssetSubType,
+  AssetType,
+  InsType,
+  InsWatchInput,
+} from "../../api/goals";
 import simpleStorage from "simplestorage.js";
 import { filterTabs, getCryptoRate, getExchgRate } from "../nw/nwutils";
 import { DBContext } from "./DBContext";
@@ -28,11 +33,15 @@ export default function Watchlist() {
     if (!watchlist.length) return;
     let filteredData: Array<any> = watchlist.filter(
       (instrument: InsWatchInput) => {
-        const { id, subt } = instrument;
+        const { id, subt, itype, type } = instrument;
         const cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
         const data = cachedData[id];
         if (activeTag === CRYPTO && subt === AssetSubType.C) return true;
-        if (activeTag === STOCK && otherISIN(id) && exchg === "US") return true;
+        if (exchg === "US" && otherISIN(id)) {
+          if (activeTag === STOCK && subt === AssetSubType.S) return true;
+          if (activeTag === ETF && itype === InsType.ETF) return true;
+          if (activeTag === MF && !itype && !subt && !type) return true;
+        }
         if (!cachedData || !data) return;
         if (
           activeTag === "Index" &&
@@ -41,12 +50,8 @@ export default function Watchlist() {
           data.exchg
         )
           return true;
-        if (activeTag === STOCK) {
-          return (
-            exchg !== "US" &&
-            isIndISIN(id) &&
-            filterTabs(cachedData[id], activeTag)
-          );
+        if ([MF, STOCK, ETF].includes(activeTag)) {
+          return exchg !== "US" && isIndISIN(id) && filterTabs(data, activeTag);
         }
         return filterTabs(data, activeTag);
       }
@@ -55,7 +60,7 @@ export default function Watchlist() {
   };
 
   const onSelectInstruments = async (resp: any) => {
-    const { id, name, sid } = resp;
+    const { id, name, sid, type, subt, curr, itype } = resp;
     let data: any = {};
     if (activeTag === CRYPTO) {
       const price = await getCryptoRate(id, defaultCurrency, fxRates);
@@ -68,17 +73,20 @@ export default function Watchlist() {
         prev,
         price,
         name,
+        curr
       };
-    } else if (id.startsWith("US") && activeTag === STOCK) {
+    } else if (otherISIN(id) && [MF, STOCK, ETF].includes(activeTag)) {
       const result = await getExchgRate(sid as string, "US");
       data = {
+        prev: result?.prev,
+        price: result?.price ? result.price : resp.price,
         id,
         sid,
-        type: AssetType.A,
-        subt: AssetSubType.S,
-        prev: result.prev,
-        price: result.price,
         name,
+        type,
+        subt,
+        curr,
+        itype,
       };
     } else {
       data = resp;
@@ -87,8 +95,8 @@ export default function Watchlist() {
       simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
     }
     if (!watchlist.some((item: InsWatchInput) => item.id === data.id)) {
-      const { id, sid, type, subt, itype } = data;
-      watchlist.push({ id, sid, type, subt, itype });
+      const { id, sid, type, subt, itype, curr } = data;
+      watchlist.push({ id, sid, type, subt, itype, curr });
     } else {
       notification.error({
         message: `${name} already exists in the watchlist`,
@@ -117,7 +125,6 @@ export default function Watchlist() {
               <Search
                 searchType={activeTag}
                 onClick={(resp: any) => onSelectInstruments(resp)}
-                options={activeTag === STOCK ? ["INDIA", "US"] : ""}
                 exchg={exchg}
                 setExchg={setExchg}
               />
