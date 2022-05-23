@@ -13,8 +13,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (requestType === "time") {
     res.send(new Date().getTime());
   } else if (requestType === "symbols") {
+    const symbolExchange = await getExchange(symbol);
     const response = await fetch(
-      `https://eodhistoricaldata.com/api/fundamentals/${symbol}.NSE?api_token=${eodKey}`
+      `https://eodhistoricaldata.com/api/fundamentals/${symbol}.${symbolExchange}?api_token=${eodKey}`
     );
 
     data = await response.json();
@@ -40,6 +41,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.send(data);
   }
 };
+
+function getExchange(symbol) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const symbolSearchResponse = await fetch(
+        `https://eodhistoricaldata.com/api/search/${symbol}?api_token=${eodKey}`
+      );
+      const symbolExchange = await symbolSearchResponse.json();
+
+      resolve(symbolExchange[0]?.Exchange || "NSE");
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 function getConfig() {
   return {
@@ -90,10 +106,11 @@ function getSymbolData(symbol: any, to: any, countback: any) {
       const fromDate = new Date(parseInt(to));
 
       fromDate.setDate(fromDate.getDate() - countback);
-      const fromDateStr = stringToEODDate(fromDate.getTime());
 
+      const fromDateStr = stringToEODDate(fromDate.getTime());
+      const symbolExchange = await getExchange(symbol);
       const response = await fetch(
-        `https://eodhistoricaldata.com/api/eod/${symbol}.NSE?api_token=${eodKey}&fmt=json&period=d&from=${fromDateStr}&to=${toDateStr}&order=a`
+        `https://eodhistoricaldata.com/api/eod/${symbol}.${symbolExchange}?api_token=${eodKey}&fmt=json&period=d&from=${fromDateStr}&to=${toDateStr}&order=a`
       );
       const data = await response.json();
       const t = [];
