@@ -2251,6 +2251,7 @@ export const onCreateUserIns = /* GraphQL */ `
         type
         subt
         itype
+        curr
       }
       createdAt
       updatedAt
@@ -2287,6 +2288,7 @@ export const onUpdateUserIns = /* GraphQL */ `
         type
         subt
         itype
+        curr
       }
       createdAt
       updatedAt
@@ -2323,6 +2325,7 @@ export const onDeleteUserIns = /* GraphQL */ `
         type
         subt
         itype
+        curr
       }
       createdAt
       updatedAt

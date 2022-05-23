@@ -728,9 +728,10 @@ type InsWatch {
   sid: String
   hight: Float
   lowt: Float
-  type: AssetType!
-  subt: AssetSubType!
+  type: AssetType
+  subt: AssetSubType
   itype: InsType
+  curr: String
 }
 
 type Balance {

@@ -1802,6 +1802,7 @@ export const getUserIns = /* GraphQL */ `
         type
         subt
         itype
+        curr
       }
       createdAt
       updatedAt
@@ -1844,6 +1845,7 @@ export const listUserInss = /* GraphQL */ `
           type
           subt
           itype
+          curr
         }
         createdAt
         updatedAt
