@@ -71,7 +71,7 @@ export default function WatchlistRow({ record, exchg }: WatchlistRowProps) {
           <Row justify="end">
             <InsPrice
               price={watchIns?.price}
-              currency={record.id.startsWith("US") ? "USD" : defaultCurrency}
+              currency={record.curr ? record.curr : defaultCurrency}
               previousPrice={watchIns?.prev ? watchIns?.prev : null}
             />
           </Row>
@@ -106,7 +106,7 @@ export default function WatchlistRow({ record, exchg }: WatchlistRowProps) {
               }}
               pre="Buy alert at "
               inline
-              currency={defaultCurrency}
+              currency={record.curr ? record.curr : defaultCurrency} 
             />
           </p>
           <p>
@@ -118,7 +118,7 @@ export default function WatchlistRow({ record, exchg }: WatchlistRowProps) {
               }}
               pre="Sell alert at "
               inline
-              currency={defaultCurrency}
+              currency={record.curr ? record.curr : defaultCurrency}
             />
           </p>
         </>
