@@ -23,7 +23,6 @@ function StockDetailContextProvider({ name, children }: any) {
   const [instrumentPerf, setInstrumentPerf] = useState<any | null>(null);
   const [currency, setCurrency] = useState<string>("");
   const ticker = name && name.split(".")?.length ? name.split(".")[0] : name;
-  const insPerfData = simpleStorage.get(LOCAL_INS_PERF_KEY);
 
   useEffect(() => {
     if (!name) return;
@@ -50,6 +49,7 @@ function StockDetailContextProvider({ name, children }: any) {
     setCurrency(currency);
     loadInstruments([isin], owner).then((allInsData: any) => {
       const data = allInsData[isin];
+      const insPerfData = simpleStorage.get(LOCAL_INS_PERF_KEY);
       if (data) {
         setInstrument(data);
         const instrumentPerf = insPerfData
