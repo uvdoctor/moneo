@@ -3,17 +3,17 @@ import { Form, Input } from "antd";
 import { Translations } from "@aws-amplify/ui-components";
 import { useForm } from "antd/lib/form/Form";
 
-interface StepOneProps {
+interface PasswordInputProps {
   setPassword: Function;
   setPasswordError: Function;
   setError?: Function;
 }
 
-export default function StepOne({
+export default function PasswordInput({
   setPassword,
   setPasswordError,
   setError,
-}: StepOneProps) {
+}: PasswordInputProps) {
   const [form] = useForm();
   const [help, setHelp] = useState<Array<string>>([]);
   const [formError, setFormError] = useState<Array<string>>([]);
