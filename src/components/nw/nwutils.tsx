@@ -805,7 +805,6 @@ export const getInstrumentDataWithKey = async (key: { query: any, table: string 
 
   try {
     if (!Object.keys(instrumentData).length) {
-      console.log(1);
       let nextToken = undefined;
       let items: any = [];
       while (nextToken !== null) {
