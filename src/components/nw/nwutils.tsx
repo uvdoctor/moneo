@@ -830,6 +830,7 @@ export const getInstrumentDataWithKey = async (key: { query: any, table: string 
       }
     });
     simpleStorage.set(option, data, LOCAL_DATA_TTL);
+    console.log(data.length);
     return data;
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
