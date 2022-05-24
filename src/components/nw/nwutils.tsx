@@ -805,6 +805,7 @@ export const getInstrumentDataWithKey = async (key: { query: any, table: string 
 
   try {
     if (!Object.keys(instrumentData).length) {
+      console.log(1);
       let nextToken = undefined;
       let items: any = [];
       while (nextToken !== null) {
@@ -830,6 +831,7 @@ export const getInstrumentDataWithKey = async (key: { query: any, table: string 
       }
     });
     simpleStorage.set(option, data, LOCAL_DATA_TTL);
+    console.log(data.length);
     return data;
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
