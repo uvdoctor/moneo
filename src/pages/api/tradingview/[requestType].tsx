@@ -42,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-function getExchange(symbol) {
+function getExchange(symbol: any) {
   return new Promise(async (resolve, reject) => {
     try {
       const symbolSearchResponse = await fetch(
