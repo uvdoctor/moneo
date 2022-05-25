@@ -69,12 +69,26 @@ export const loadInstrumentPrices = async (
   return unmatched;
 };
 
+const getInsPerfIds = (ids: Array<string>, allInsData: any, ) => {
+  let insPerfIds: Array<string> = [];
+  ids.forEach((id: string) => {
+    const data = allInsData[id];
+    if (data && data.subt === AssetSubType.S) {
+      isFund(id)
+        ? insPerfIds.push(id)
+        : data.sid && (data?.beta || data?.yhigh)
+        ? insPerfIds.push(data.sid)
+        : "";
+    }
+  });
+  return insPerfIds
+}
+
 export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   let mfIds: Array<string> = [];
   let bondIds: Array<string> = [];
   let exchangeIds: Array<string> = [];
   let indexIds: Array<string> = [];
-  let insPerfIds: Array<string> = [];
   let gotodb = false;
   let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
   if (!allInsData) allInsData = {};
@@ -86,16 +100,10 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
       ? mfIds.push(id)
       : exchangeIds.push(id);
     const data = allInsData[id];
-    if (data && data.subt === AssetSubType.S) {
-      isFund(id)
-        ? insPerfIds.push(id)
-        : data.sid && (data?.beta || data?.yhigh)
-        ? insPerfIds.push(data.sid)
-        : "";
-    }
     if (!data) gotodb = true;
   });
   if (!gotodb) {
+    let insPerfIds = getInsPerfIds(ids, allInsData)
     await loadInsPerf(insPerfIds);
     return allInsData;
   }
@@ -120,6 +128,7 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
   if (bondIds.length)
     await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
   simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+  let insPerfIds = getInsPerfIds(ids, allInsData)
   await loadInsPerf(insPerfIds);
   return allInsData;
 };
