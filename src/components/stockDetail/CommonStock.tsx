@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import { Image, Row, Col, Card, Tabs } from "antd";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice } from "../utils";
 import StockDetailContext from "./StockDetailContext";
 import Results from "./Results";
 import GridData from "./GridData";
@@ -14,9 +16,13 @@ import {
 export default function CommonStock() {
   const { state }: any = useContext(StockDetailContext);
   const { TabPane } = Tabs;
+  const fsb = useFullScreenBrowser();
 
   return (
-    <Tabs defaultActiveKey="1" tabPosition="left">
+    <Tabs
+      defaultActiveKey="1"
+      tabPosition={isMobileDevice(fsb) ? "top" : "left"}
+    >
       <TabPane tab="Chart" key="chart">
         <iframe
           src={`/static/charting/index.html?code=${state.data.General?.Code}`}
