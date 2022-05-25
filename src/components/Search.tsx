@@ -32,7 +32,7 @@ export default function Search({
   exchg,
   setExchg,
 }: SearchProps) {
-  const { user, appContextLoaded }: any = useContext(AppContext);
+  const { user }: any = useContext(AppContext);
   const { Option } = Select;
   const { CRYPTO, STOCK, MF, BOND, ETF } = TAB;
   const [searchText, setSearchText] = useState("");
@@ -44,11 +44,11 @@ export default function Search({
 
   const hasExchg = (type: string) => [STOCK, MF, BOND, ETF].includes(type);
   const usSearchType = {
-    [STOCK]: 'stock',
-    [MF]: 'fund',
-    [ETF]: 'etf',
-    [BOND]: 'bond'
-  }
+    [STOCK]: "stock",
+    [MF]: "fund",
+    [ETF]: "etf",
+    [BOND]: "bond",
+  };
 
   const onSearch = async (text: any) => {
     setOpen(true);
@@ -71,7 +71,7 @@ export default function Search({
             value: Name,
             key: ISIN,
             itype: searchType === ETF ? "ETF" : null,
-            curr: Currency
+            curr: Currency,
           });
         });
       return setSuggestions(result);
@@ -86,16 +86,16 @@ export default function Search({
   };
 
   useEffect(() => {
-    if(!appContextLoaded) return;
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
     if (!hasExchg(searchType)) setExchg && setExchg("INDIA");
     if (exchg !== "US") getSearchData();
-  }, [searchType, exchg, appContextLoaded]);
+  }, [searchType, exchg]);
 
   useEffect(() => {
     if (!searchText) setOpen(false);
+    if (exchg !== "US" && !data.length) getSearchData();
   }, [searchText]);
 
   const getSearchData = async () => {
@@ -168,12 +168,12 @@ export default function Search({
     return await getInstrumentDataWithKey(optionTableMap[opt], opt, user);
   };
 
-  return (appContextLoaded &&
+  return (
     <div className="main-search">
       <AutoComplete
         onMouseLeave={() => {
-          setTypeDropdownOpen(false)
-          setExchgDropdownOpen(false)
+          setTypeDropdownOpen(false);
+          setExchgDropdownOpen(false);
         }}
         id="search"
         options={suggestions}
