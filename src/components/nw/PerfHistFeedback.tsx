@@ -4,6 +4,8 @@ import simpleStorage from "simplestorage.js";
 import { LOCAL_INDEX_PERF_KEY } from "../../CONSTANTS";
 import SelectInput from "../form/selectinput";
 import { toReadableNumber } from "../utils";
+import LabelWithTooltip from "../form/LabelWithTooltip";
+import { AssetSubType } from "../../api/goals";
 
 interface PerfHistFeedbackProps {
   instrument: any;
@@ -71,9 +73,9 @@ export default function PerfHistFeedback({
     );
   };
 
-  return (
-    <>
-      {ins1y && ins3y ? (
+  return instrument?.mcapt && instrument?.subt === AssetSubType.S ? (
+    ins1y && ins3y && performance ? (
+      <>
         <SelectInput
           pre="Relative performance"
           value={index}
@@ -83,11 +85,13 @@ export default function PerfHistFeedback({
           // @ts-ignore
           info={info()}
         />
-      ) : (
-        "Insufficient Data"
-      )}
-      &nbsp;
-      <Rate value={niftyRating} disabled />
-    </>
+        &nbsp;
+        <Rate value={niftyRating} disabled />
+      </>
+    ) : (
+      <LabelWithTooltip label={"Relative performance: Insufficient Data"} />
+    )
+  ) : (
+    <></>
   );
 }

@@ -113,10 +113,7 @@ export default function Holding({
                       {instrument.crstr}
                     </Tooltip>
                   ) : null}
-                  {!isUploading &&
-                  instrument.mcapt &&
-                  instrument.subt === AssetSubType.S &&
-                  instrumentPerf ? (
+                  {!isUploading ? (
                     <PerfHistFeedback
                       performance={instrumentPerf}
                       instrument={instrument}

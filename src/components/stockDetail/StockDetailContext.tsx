@@ -33,16 +33,17 @@ function StockDetailContextProvider({ name, children }: any) {
     if (state.isLoading) {
       setInstrument(null);
       setCurrency("");
+      setInstrumentPerf(null);
       return;
     }
     const isin = state.data?.General?.ISIN;
     const currency = state.data?.General?.CurrencyCode;
     const country = state.data?.General?.CountryISO;
-    if (country === 'US') {
-      getExchgRate(ticker, "US").then((data: any)=>{
-        setInstrument({ id: ticker, price: data.price, prev: data.prev })
-        setCurrency('USD')
-      })
+    if (country === "US") {
+      getExchgRate(ticker, "US").then((data: any) => {
+        setInstrument({ id: ticker, price: data.price, prev: data.prev });
+        setCurrency("USD");
+      });
       return;
     }
     if (!isin && !currency) return;
@@ -86,7 +87,8 @@ function StockDetailContextProvider({ name, children }: any) {
       value={{
         name,
         state,
-      }}>
+      }}
+    >
       <>
         {name ? (
           <Row className="primary-header">
@@ -114,13 +116,13 @@ function StockDetailContextProvider({ name, children }: any) {
             <Col span={24} className="secondary-header">
               <Row justify="space-between" align="middle">
                 <Col xs={20} sm={12}>
-                  {instrumentPerf ? (
+                  {currency === "USD" ? (
+                    <></>
+                  ) : (
                     <PerfHistFeedback
                       instrument={instrument}
                       performance={instrumentPerf}
                     />
-                  ) : (
-                    "Insufficient Data"
                   )}
                 </Col>
                 <Col>
