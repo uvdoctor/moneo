@@ -9,7 +9,7 @@ import { isMobileDevice } from "./utils";
 export default function SearchInput() {
   const fsb = useFullScreenBrowser();
   const router = useRouter();
-  const [searchType, setSearchType] = useState(TAB.STOCK);
+  const [searchType, setSearchType] = useState(TAB.MF);
   const [exchg, setExchg] = useState<string>("INDIA");
 
   return (
