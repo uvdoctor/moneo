@@ -32,7 +32,7 @@ export default function Search({
   exchg,
   setExchg,
 }: SearchProps) {
-  const { user }: any = useContext(AppContext);
+  const { user, appContextLoaded }: any = useContext(AppContext);
   const { Option } = Select;
   const { CRYPTO, STOCK, MF, BOND, ETF } = TAB;
   const [searchText, setSearchText] = useState("");
@@ -167,7 +167,7 @@ export default function Search({
     return await getInstrumentDataWithKey(optionTableMap[opt], opt, user);
   };
 
-  return (
+  return (appContextLoaded &&
     <div className="main-search">
       <AutoComplete
         onMouseLeave={() => {
