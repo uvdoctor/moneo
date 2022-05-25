@@ -71,21 +71,23 @@ export default function PerfHistFeedback({
     );
   };
 
-  return ins1y && ins3y ? (
+  return (
     <>
-      <SelectInput
-        pre="Relative performance"
-        value={index}
-        changeHandler={setIndex}
-        options={indexMap}
-        inline
-        // @ts-ignore
-        info={info()}
-      />
+      {ins1y && ins3y ? (
+        <SelectInput
+          pre="Relative performance"
+          value={index}
+          changeHandler={setIndex}
+          options={indexMap}
+          inline
+          // @ts-ignore
+          info={info()}
+        />
+      ) : (
+        "Insufficient Data"
+      )}
       &nbsp;
       <Rate value={niftyRating} disabled />
     </>
-  ) : (
-    <></>
   );
 }

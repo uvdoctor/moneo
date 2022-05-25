@@ -120,7 +120,7 @@ function StockDetailContextProvider({ name, children }: any) {
                       performance={instrumentPerf}
                     />
                   ) : (
-                    <></>
+                    "Insufficient Data"
                   )}
                 </Col>
                 <Col>
