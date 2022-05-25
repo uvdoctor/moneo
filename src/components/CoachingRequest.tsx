@@ -19,7 +19,8 @@ import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 
 export default function CoachingRequest() {
   const router = useRouter();
-  const { defaultCurrency, user }: any = useContext(AppContext);
+  const { defaultCurrency, user, validateCaptcha }: any =
+    useContext(AppContext);
   const path = router.pathname;
   const [duration, setDuration] = useState<number>(30);
   const [text, setText] = useState<string>("");
@@ -29,50 +30,53 @@ export default function CoachingRequest() {
   const { TextArea } = Input;
 
   const createRequest = async () => {
-    let newRequest = {
-      dur: duration,
-      page: path,
-      text,
-      type:
-        path === ROUTES.SET || ROUTES.OVERVIEW
-          ? CoachingType.FI
-          : CoachingType.Inv,
-      status: CoachingStatus.P,
-      payment: 0,
-      curr: defaultCurrency,
-      paid: false,
-      email: email ? email : null,
-    };
-    try {
-      const { data } = (await API.graphql({
-        query: mutations.createCoachingReq,
-        variables: {
-          input: newRequest,
-        },
-        authMode: !user
-          ? GRAPHQL_AUTH_MODE.AWS_IAM
-          : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-      })) as {
-        data: CreateCoachingReqMutation;
+    validateCaptcha("coaching_req").then(async (success: boolean) => {
+      if (!success) return;
+      let newRequest = {
+        dur: duration,
+        page: path,
+        text,
+        type:
+          path === ROUTES.SET || ROUTES.OVERVIEW
+            ? CoachingType.FI
+            : CoachingType.Inv,
+        status: CoachingStatus.P,
+        payment: 0,
+        curr: defaultCurrency,
+        paid: false,
+        email: email ? email : null,
       };
-      setText("");
-      setDuration(30);
-      notification.success({
-        message: "Coaching request created",
-        description: "A coach will contact you shortly.",
-      });
-      return data.createCoachingReq as CreateCoachingReqInput;
-    } catch (e) {
-      console.log(e);
-      notification.error({
-        message: "Unable to create coaching request",
-        description:
-          "Sorry! An unexpected error occurred while trying to create a coaching request.",
-      });
-      return null;
-    } finally {
-      setShowModal(false);
-    }
+      try {
+        const { data } = (await API.graphql({
+          query: mutations.createCoachingReq,
+          variables: {
+            input: newRequest,
+          },
+          authMode: !user
+            ? GRAPHQL_AUTH_MODE.AWS_IAM
+            : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+        })) as {
+          data: CreateCoachingReqMutation;
+        };
+        setText("");
+        setDuration(30);
+        notification.success({
+          message: "Coaching request created",
+          description: "A coach will contact you shortly.",
+        });
+        return data.createCoachingReq as CreateCoachingReqInput;
+      } catch (e) {
+        console.log(e);
+        notification.error({
+          message: "Unable to create coaching request",
+          description:
+            "Sorry! An unexpected error occurred while trying to create a coaching request.",
+        });
+        return null;
+      } finally {
+        setShowModal(false);
+      }
+    });
   };
 
   return (

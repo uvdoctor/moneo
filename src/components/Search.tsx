@@ -32,7 +32,7 @@ export default function Search({
   exchg,
   setExchg,
 }: SearchProps) {
-  const { user }: any = useContext(AppContext);
+  const { user, validateCaptcha }: any = useContext(AppContext);
   const { Option } = Select;
   const { CRYPTO, STOCK, MF, BOND, ETF } = TAB;
   const [searchText, setSearchText] = useState("");
@@ -52,37 +52,40 @@ export default function Search({
 
   const onSearch = async (text: any) => {
     setOpen(true);
-    if (exchg === "US") {
-      let response = await fetch(
-        `/api/search?text=${searchText}&type=${usSearchType[searchType]}&exchange=${exchg}`
-      );
-      const data = await response.json();
-      let result: any = [];
-      if (Array.isArray(data))
-        data.map((item: any) => {
-          const { Code, ISIN, Name, previousClose, Currency } = item;
-          result.push({
-            id: ISIN ? ISIN : Code,
-            sid: Code,
-            name: Code,
-            type: searchType === STOCK ? "A" : null,
-            subt: searchType === STOCK ? "S" : null,
-            price: previousClose,
-            value: Name,
-            key: ISIN,
-            itype: searchType === ETF ? "ETF" : null,
-            curr: Currency,
+    validateCaptcha("coaching_req").then(async (success: boolean) => {
+      if (!success) return;
+      if (exchg === "US") {
+        let response = await fetch(
+          `/api/search?text=${searchText}&type=${usSearchType[searchType]}&exchange=${exchg}`
+        );
+        const data = await response.json();
+        let result: any = [];
+        if (Array.isArray(data))
+          data.map((item: any) => {
+            const { Code, ISIN, Name, previousClose, Currency } = item;
+            result.push({
+              id: ISIN ? ISIN : Code,
+              sid: Code,
+              name: Code,
+              type: searchType === STOCK ? "A" : null,
+              subt: searchType === STOCK ? "S" : null,
+              price: previousClose,
+              value: Name,
+              key: ISIN,
+              itype: searchType === ETF ? "ETF" : null,
+              curr: Currency,
+            });
           });
-        });
-      return setSuggestions(result);
-    }
-    if (!data) return;
-    const result = data
-      ? data.filter((item: { name: string }) =>
-          item.name.toLowerCase().includes(text.toLowerCase())
-        )
-      : [];
-    setSuggestions([...result]);
+        return setSuggestions(result);
+      }
+      if (!data) return;
+      const result = data
+        ? data.filter((item: { name: string }) =>
+            item.name.toLowerCase().includes(text.toLowerCase())
+          )
+        : [];
+      setSuggestions([...result]);
+    });
   };
 
   useEffect(() => {
