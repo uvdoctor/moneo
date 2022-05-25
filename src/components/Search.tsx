@@ -134,16 +134,13 @@ export default function Search({
       onChange={(val) => setSearchType && setSearchType(val)}
     >
       <Option key={STOCK} value={STOCK}>
-        {STOCK}
+        STOCK
       </Option>
-      {/* <Option key={BOND} value={BOND}> */}
-        {/* {BOND} */}
-      {/* </Option> */}
       <Option key={MF} value={MF}>
-        {MF}
+        MF
       </Option>
       <Option key={ETF} value={ETF}>
-        {ETF}
+        ETF
       </Option>
     </Select>
   );
