@@ -17,7 +17,7 @@ import { createUserinfo, doesEmailExist } from "./userinfoutils";
 import { AppContext } from "./AppContext";
 import { Button } from "antd";
 import { RiskProfile, TaxLiability } from "../api/goals";
-import StepOne from "./StepOne";
+import PasswordInput from "./form/PasswordInput";
 import StepTwo from "./StepTwo";
 import EmailInput from "./form/EmailInput";
 require("./BasicAuthenticator.less");
@@ -214,7 +214,7 @@ export default function BasicAuthenticator({
                 />
               ) : (
                 <>
-                  <StepOne
+                  <PasswordInput
                     setPassword={setPassword}
                     setPasswordError={setPasswordError}
                     setError={setError}
@@ -261,7 +261,7 @@ export default function BasicAuthenticator({
                   setTaxLiability={setTaxLiability}
                 />
               ) : (
-                <StepOne
+                <PasswordInput
                   setPassword={setPassword}
                   setPasswordError={setPasswordError}
                 />
