@@ -86,12 +86,13 @@ export default function Search({
   };
 
   useEffect(() => {
+    if(!appContextLoaded) return;
     setSearchText("");
     setData([...[]]);
     setSuggestions([...[]]);
     if (!hasExchg(searchType)) setExchg && setExchg("INDIA");
     if (exchg !== "US") getSearchData();
-  }, [searchType, exchg]);
+  }, [searchType, exchg, appContextLoaded]);
 
   useEffect(() => {
     if (!searchText) setOpen(false);
