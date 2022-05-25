@@ -32,7 +32,7 @@ export default function Search({
   exchg,
   setExchg,
 }: SearchProps) {
-  const { owner }: any = useContext(AppContext);
+  const { user }: any = useContext(AppContext);
   const { Option } = Select;
   const { CRYPTO, STOCK, MF, BOND, ETF } = TAB;
   const [searchText, setSearchText] = useState("");
@@ -167,7 +167,7 @@ export default function Search({
   );
 
   const updateOptions = async (opt: string) => {
-    return await getInstrumentDataWithKey(optionTableMap[opt], opt, owner);
+    return await getInstrumentDataWithKey(optionTableMap[opt], opt, user);
   };
 
   return (
