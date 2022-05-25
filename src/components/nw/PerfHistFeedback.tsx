@@ -11,9 +11,9 @@ interface PerfHistFeedbackProps {
 }
 
 const calcDiff = (curr: number, prev: number, years: number) => {
-  if(!curr || !prev) return 0;
+  if (!curr || !prev) return 0;
   return ((curr / prev - 1) * 100) / years;
-}
+};
 
 export default function PerfHistFeedback({
   instrument,
@@ -62,16 +62,16 @@ export default function PerfHistFeedback({
       <>
         {`Performance consistency compared to ${index} index over last 5 years`}
         <br />
-        {ins1y ? diff1() : ''}
+        {ins1y ? diff1() : ""}
         <br />
-        {ins3y ? diff3() : ''}
+        {ins3y ? diff3() : ""}
         <br />
-        {ins5y ? diff5() : ''}
+        {ins5y ? diff5() : ""}
       </>
     );
   };
 
-  return (
+  return ins1y && ins3y ? (
     <>
       <SelectInput
         pre="Relative performance"
@@ -85,5 +85,7 @@ export default function PerfHistFeedback({
       &nbsp;
       <Rate value={niftyRating} disabled />
     </>
+  ) : (
+    <></>
   );
 }
