@@ -353,8 +353,7 @@ type INExchgFun
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -374,8 +373,7 @@ type INExchgPrice
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -422,8 +420,7 @@ type AllIndices
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -448,8 +445,7 @@ type InsHistPerf
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -465,8 +461,7 @@ type IndiceHistPerf
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   name: String!
@@ -491,8 +486,7 @@ type IndexConst
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   name: String!
@@ -506,8 +500,7 @@ type INBondPrice
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -538,8 +531,7 @@ type INMFPrice
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!
@@ -584,8 +576,7 @@ type NPSPrice
   @auth(
     rules: [
       { allow: private, provider: iam, operations: [create, update, delete] }
-      { allow: private, operations: [read] }
-      { allow: public, provider: iam, operations: [read] }
+      { allow: public, operations: [read] }
     ]
   ) {
   id: String!

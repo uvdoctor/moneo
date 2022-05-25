@@ -40,6 +40,14 @@
           "additionalAuthenticationProviders": [
             {
               "authenticationType": "AWS_IAM"
+            },
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 365,
+                "apiKeyExpirationDate": "2023-05-25T07:21:20.408Z",
+                "description": ""
+              }
             }
           ],
           "defaultAuthentication": {
@@ -49,7 +57,16 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "moneobacb277ebacb277e",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     }
   },
   "function": {
