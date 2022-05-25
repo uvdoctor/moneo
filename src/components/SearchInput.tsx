@@ -19,7 +19,8 @@ export default function SearchInput() {
       setSearchType={setSearchType} 
       width={isMobileDevice(fsb) ? '300px' : "400px"}    
       onClick={(item: any)=>{
-        router.push(`${ROUTES.LOOKUP}/${item.sid}.${item.exchg}`);
+        const exchg = item.exchg ? item.exchg : 'NSE';
+        router.push(`${ROUTES.LOOKUP}/${item.sid}.${exchg}`);
       }} 
       exchg={exchg}
       setExchg={setExchg}
