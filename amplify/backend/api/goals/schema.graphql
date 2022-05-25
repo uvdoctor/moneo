@@ -352,11 +352,7 @@ type INExchgFun
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -377,11 +373,7 @@ type INExchgPrice
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -429,11 +421,7 @@ type AllIndices
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -459,11 +447,7 @@ type InsHistPerf
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -480,11 +464,7 @@ type IndiceHistPerf
   @key(fields: ["name"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -510,11 +490,7 @@ type IndexConst
   @key(fields: ["name"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -529,11 +505,7 @@ type INBondPrice
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -565,11 +537,7 @@ type INMFPrice
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
@@ -615,11 +583,7 @@ type NPSPrice
   @key(fields: ["id"])
   @auth(
     rules: [
-      {
-        allow: private
-        provider: iam
-        operations: [create, read, update, delete]
-      }
+      { allow: private, provider: iam, operations: [create, update, delete] }
       { allow: private, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
