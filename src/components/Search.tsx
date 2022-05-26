@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Select, AutoComplete, Input } from "antd";
+import { Select, AutoComplete, Input, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import simpleStorage from "simplestorage.js";
 import {
@@ -41,6 +41,7 @@ export default function Search({
   const [open, setOpen] = useState<boolean>(false);
   const [typeDropdownOpen, setTypeDropdownOpen] = useState<boolean>(false);
   const [exchgDropdownOpen, setExchgDropdownOpen] = useState<boolean>(false);
+  const [isDataLoading, setIsDataLoading] = useState<boolean>(false);
 
   const hasExchg = (type: string) => [STOCK, MF, BOND, ETF].includes(type);
   const usSearchType = {
@@ -98,15 +99,20 @@ export default function Search({
 
   useEffect(() => {
     if (!searchText) setOpen(false);
-    if (exchg !== "US" && !data.length) getSearchData();
+    if (exchg !== "US" && !data.length && !isDataLoading) getSearchData();
   }, [searchText]);
 
+  console.log(isDataLoading);
+  
   const getSearchData = async () => {
+    setIsDataLoading(true);
     try {
       if (searchType === CRYPTO) {
+        setIsDataLoading(true);
         const cryptolist = await getCryptoList();
         setData([...cryptolist]);
         setSuggestions([...cryptolist]);
+        setIsDataLoading(false);
       } else {
         let opt = searchType;
         let cachedData = simpleStorage.get(opt);
@@ -122,9 +128,11 @@ export default function Search({
         });
         setData([...cachedData]);
         setSuggestions([...cachedData]);
+        setIsDataLoading(false);
       }
     } catch (err) {
       console.log(err);
+      setIsDataLoading(false);
     }
   };
 
@@ -208,6 +216,7 @@ export default function Search({
           placeholder={`Search ${searchType}`}
           addonAfter={isNav ? TypeComp : ""}
           addonBefore={exchg && hasExchg(searchType) ? ExchgComp : ""}
+          suffix={!isDataLoading ? <></> : <Spin size='small'/>}
           prefix={<SearchOutlined />}
         />
       </AutoComplete>
