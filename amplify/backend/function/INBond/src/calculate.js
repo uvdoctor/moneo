@@ -123,13 +123,6 @@ const calculateRisk = (creditRating, subt) => {
   return "C";
 };
 
-const calculatePrice = (price, fv) => {
-  if (fv && fv >= 1000 && price < 200) {
-    return parseFloat((price * fv) / 100);
-  }
-  return parseFloat(price);
-};
-
 const decimalCount = (num) => (num.split(".")[1] || []).length;
 const numberBeforeDecimal = (num) => num.split(".")[0];
 
@@ -176,7 +169,7 @@ const calcSchema = (
   schema.id = record[codes.id];
   if (!schema.id.startsWith("IN")) return;
   schema.sid = record[codes.sid].trim();
-  schema.price = calculatePrice(record[codes.price], record[codes.fv]);
+  schema.price = parseFloat(record[codes.price]);
   schema.prev = prevMap[schema.id];
   schema.exchg = typeExchg;
   schema.type = "F";
@@ -229,6 +222,5 @@ module.exports = {
   calculateYTM,
   getRate,
   calculateRisk,
-  calculatePrice,
   calculateFv
 };

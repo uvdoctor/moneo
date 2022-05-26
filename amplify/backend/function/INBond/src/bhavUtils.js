@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-const { calcSchema, calculatePrice } = require("./calculate");
+const { calcSchema } = require("./calculate");
 
 const extractDataFromCSV = async (
   fileName,
@@ -22,9 +22,9 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const price = calculatePrice(record[codes.price], record[codes.fv]);
+        const price = parseFloat(record[codes.price]);
         const id = record[codes.id];
-        if (!id || ["MC", "MF", "US"].includes(record[codes.subt]) || !price) return;
+        if (!id || ["MC", "MF", "US"].includes(record[codes.subt]) || !price || isNaN(price)) return;
         if (isPrevFile) {
           prevMap[record[codes.id]] = price;
           return;

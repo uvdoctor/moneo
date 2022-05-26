@@ -5,7 +5,6 @@ const {
   calculateYTM,
   calculateRisk,
   getRate,
-  calculatePrice,
   calculateFv,
 } = require("../src/calculate");
 
@@ -175,17 +174,6 @@ describe("Calculate Credit Rating", () => {
   test("Without Data", () => {
     const data = calc.calcCR("");
     expect(data).toEqual(null);
-  });
-});
-
-describe("Calculate Price", () => {
-  test("Price in range of fv", () => {
-    const data = calculatePrice("99.6149", "100");
-    expect(data).toEqual(99.6149);
-  });
-  test("Price exceeding fv", () => {
-    const data = calculatePrice("122", "1000");
-    expect(data).toEqual(1220);
   });
 });
 
