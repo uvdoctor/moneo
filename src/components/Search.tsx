@@ -51,42 +51,54 @@ export default function Search({
     [BOND]: "bond",
   };
 
+  const getUSData = async () => {
+    let response = await fetch(
+      `/api/search?text=${searchText}&type=${usSearchType[searchType]}&exchange=${exchg}`
+    );
+    return await response.json();
+  };
+
+  const arrangeUSData = (data: any) => {
+    let result: any = [];
+    if (Array.isArray(data))
+      data.forEach((item: any) => {
+        const { Code, ISIN, Name, previousClose, Currency, Exchange } = item;
+        result.push({
+          id: ISIN ? ISIN : Code,
+          sid: Code,
+          name: Code,
+          type: searchType === STOCK ? "A" : null,
+          subt: searchType === STOCK ? "S" : null,
+          price: previousClose,
+          value: Name,
+          key: ISIN,
+          itype: searchType === ETF ? "ETF" : null,
+          curr: Currency,
+          exchg: Exchange
+        });
+      });
+    return result;
+  };
+
   const onSearch = async (text: any) => {
     setOpen(true);
-    validateCaptcha("coaching_req").then(async (success: boolean) => {
-      if (!success) return;
-      if (exchg === "US") {
-        let response = await fetch(
-          `/api/search?text=${searchText}&type=${usSearchType[searchType]}&exchange=${exchg}`
-        );
-        const data = await response.json();
-        let result: any = [];
-        if (Array.isArray(data))
-          data.map((item: any) => {
-            const { Code, ISIN, Name, previousClose, Currency } = item;
-            result.push({
-              id: ISIN ? ISIN : Code,
-              sid: Code,
-              name: Code,
-              type: searchType === STOCK ? "A" : null,
-              subt: searchType === STOCK ? "S" : null,
-              price: previousClose,
-              value: Name,
-              key: ISIN,
-              itype: searchType === ETF ? "ETF" : null,
-              curr: Currency,
-            });
-          });
-        return setSuggestions(result);
-      }
-      if (!data) return;
-      const result = data
-        ? data.filter((item: { name: string }) =>
-            item.name.toLowerCase().includes(text.toLowerCase())
-          )
-        : [];
-      setSuggestions([...result]);
-    });
+    const success = await validateCaptcha("search");
+    if (!success) return;
+
+    if (exchg === "US") {
+      const data = await getUSData();
+      const arrangedData = arrangeUSData(data);
+      return setSuggestions(arrangedData);
+    }
+
+    if (!data) return;
+
+    const result = data
+      ? data.filter((item: { name: string }) =>
+          item.name.toLowerCase().includes(text.toLowerCase())
+        )
+      : [];
+    setSuggestions([...result]);
   };
 
   useEffect(() => {
@@ -102,8 +114,6 @@ export default function Search({
     if (exchg !== "US" && !data.length && !isDataLoading) getSearchData();
   }, [searchText]);
 
-  console.log(isDataLoading);
-  
   const getSearchData = async () => {
     setIsDataLoading(true);
     try {
@@ -118,7 +128,7 @@ export default function Search({
         let cachedData = simpleStorage.get(opt);
         if (!cachedData) cachedData = await updateOptions(opt);
         const nameMap: any = {};
-        cachedData?.map((item: any) => {
+        cachedData?.forEach((item: any) => {
           let value = item.name;
           if (item.createdAt) delete item.createdAt;
           if (item.updatedAt) delete item.updatedAt;
@@ -179,6 +189,24 @@ export default function Search({
     return await getInstrumentDataWithKey(optionTableMap[opt], opt, user);
   };
 
+  const onSelect = async (obj: any) => {
+    let resp = obj;
+    if (searchType === CRYPTO)
+      resp = { id: obj.code, name: obj.name, curr: "USD" };
+
+    if (hasExchg(searchType) && exchg === "US") {
+      const data = await getExchgRate(obj.sid, exchg);
+      resp.price = data.price;
+      resp.prev = data.prev;
+      resp.exchg = exchg;
+    }
+
+    onClick(resp);
+    setSearchText("");
+    setSuggestions([...[]]);
+    setOpen(false);
+  };
+
   return (
     <div className="main-search">
       <AutoComplete
@@ -190,20 +218,7 @@ export default function Search({
         options={suggestions}
         onChange={(option) => setSearchText(option)}
         onSelect={async (_option: any, obj: any) => {
-          let resp = obj;
-          if (searchType === CRYPTO) {
-            resp = { id: obj.code, name: obj.name, curr: "USD" };
-          }
-          if (hasExchg(searchType) && exchg === "US") {
-            const data = await getExchgRate(obj.sid, exchg);
-            resp.price = data.price;
-            resp.prev = data.prev;
-            resp.exchg = exchg;
-          }
-          onClick(resp);
-          setSearchText("");
-          setSuggestions([...[]]);
-          setOpen(false);
+          await onSelect(obj);
         }}
         size="large"
         value={searchText}
@@ -216,7 +231,7 @@ export default function Search({
           placeholder={`Search ${searchType}`}
           addonAfter={isNav ? TypeComp : ""}
           addonBefore={exchg && hasExchg(searchType) ? ExchgComp : ""}
-          suffix={!isDataLoading ? <></> : <Spin size='small'/>}
+          suffix={!isDataLoading ? <></> : <Spin size="small" />}
           prefix={<SearchOutlined />}
         />
       </AutoComplete>
