@@ -6,11 +6,5 @@
   "license": "Apache-2.0",
   "dependencies": {
     "split": "latest"
-  },
-  "devDependencies": {
-    "jest": "^27.2.0"
-  },
-  "scripts": {
-    "test": "jest --config ../jest.config.json"
   }
 }

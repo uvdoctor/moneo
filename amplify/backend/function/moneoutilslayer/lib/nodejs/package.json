@@ -2,9 +2,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "jest --config ../../jest.config.json"
-  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "latest",
     "@aws-sdk/client-ses": "latest",
@@ -13,8 +10,5 @@
     "extract-zip": "latest",
     "handlebars": "latest",
     "juice": "latest"
-  },
-  "devDependencies": {
-    "jest": "^27.5.1"
   }
 }

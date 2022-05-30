@@ -6,11 +6,5 @@
   "license": "Apache-2.0",
   "dependencies": {
     "india-mutual-fund-info": "latest"
-  },
-  "scripts": {
-    "test": "jest --config ../jest.config.json"
-  },
-  "devDependencies": {
-    "jest": "^27.1.1"
   }
 }
