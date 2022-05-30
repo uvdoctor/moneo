@@ -1,4 +1,4 @@
-const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
+const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
 
 const calc = {
   calcSubType: (subt) => {
@@ -145,16 +145,6 @@ const calculateFv = (price) => {
   if (!fv) calculateFv(price);
   return fv < 100 ? 100 : fv;
 };
-
-/*const calculateFv = (price) => {
-  let fv = 10;
-  let ratio = 0;
-  do {
-    fv *= 10;
-    ratio = price / fv;
-  } while (ratio !== 1 && (String(ratio - Math.floor(ratio))[0] === "0"));
-  return fv;
-}*/
 
 const calcSchema = (
   record,

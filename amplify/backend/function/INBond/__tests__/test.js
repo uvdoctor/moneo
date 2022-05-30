@@ -7,6 +7,10 @@ const {
   getRate,
   calculateFv,
 } = require("../src/calculate");
+const extractDataFromCSV = require("../src/bhavUtils");
+const fs = require("fs");
+
+jest.mock('fs');
 
 describe("CalcSchema", () => {
   test("Schema", () => {
