@@ -11,12 +11,11 @@
 //   pushDataForFeed,
 // } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
 const { getIndexList, getIndexComponents } = require("/opt/nodejs/eod");
-const { divideArrayBySize } = require("/opt/nodejs/utility");
+const { divideArrayBySize, appendGenericFields } = require("/opt/nodejs/utility");
 const {
   getTableNameFromInitialWord,
   pushData,
   pushDataForFeed,
-  appendGenericFields
 } = require("/opt/nodejs/databaseUtils");
 const table = "IndexConst";
 

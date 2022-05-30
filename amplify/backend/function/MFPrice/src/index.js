@@ -2,10 +2,9 @@ const mfData = require("india-mutual-fund-info");
 const {
   pushData,
   pushDataForFeed,
-  getTableNameFromInitialWord,
-  appendGenericFields,
+  getTableNameFromInitialWord
 } = require("/opt/nodejs/databaseUtils");
-const { utility } = require("/opt/nodejs/utility");
+const { utility, appendGenericFields } = require("/opt/nodejs/utility");
 const { directISIN, getDirISIN } = require("./data");
 const {
   getType,

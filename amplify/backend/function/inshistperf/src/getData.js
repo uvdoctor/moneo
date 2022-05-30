@@ -7,11 +7,10 @@ const mfData = require("india-mutual-fund-info");
 //   appendGenericFields,
 // } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
 const { getEODdataByDate } = require("/opt/nodejs/eod");
-const { divideArrayBySize, utility } = require("/opt/nodejs/utility");
+const { divideArrayBySize, utility, appendGenericFields } = require("/opt/nodejs/utility");
 const {
   pushData,
-  pushDataForFeed,
-  appendGenericFields,
+  pushDataForFeed
 } = require("/opt/nodejs/databaseUtils");
 const table = "InsHistPerf";
 

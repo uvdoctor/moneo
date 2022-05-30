@@ -1,4 +1,4 @@
-const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
+const { appendGenericFields } = require("/opt/nodejs/utility");
 const calc = {
   BSE: {
     calcTypeAndSubtype: (type, name, id, subt) => {

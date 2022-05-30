@@ -5,8 +5,7 @@ var pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 // const {
 //   divideArrayBySize,
 // } = require("../../moneoutilslayer/lib/nodejs/utility");
-const { appendGenericFields } = require("/opt/nodejs/databaseUtils");
-const { divideArrayBySize } = require("/opt/nodejs/utility");
+const { divideArrayBySize, appendGenericFields } = require("/opt/nodejs/utility");
 const dataObj = [];
 
 const parseDataFromPDF = async (url, table) => {

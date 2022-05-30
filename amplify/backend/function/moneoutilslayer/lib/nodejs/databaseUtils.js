@@ -7,6 +7,7 @@ const {
   ScanCommand,
   UpdateCommand,
 } = require("@aws-sdk/lib-dynamodb");
+const { appendGenericFields } = require("./utility")
 const marshallOptions = {
   removeUndefinedValues: true,
 };
@@ -115,14 +116,6 @@ const pushData = async (data, table) => {
   }
 };
 
-const appendGenericFields = (schema, tableName) => {
-  let dateStr = new Date().toISOString();
-  schema.createdAt = dateStr;
-  schema.updatedAt = dateStr;
-  schema.__typename = tableName;
-  return schema;
-};
-
 const pushDataForFeed = async (table, data, identifier, url, exchg) => {
   if (!identifier) identifier = "";
   const tableName = await getTableNameFromInitialWord("Feeds");
@@ -149,7 +142,6 @@ module.exports = {
   pushData,
   pushDataForFeed,
   pushDataSingly,
-  appendGenericFields,
   getTableNameFromInitialWord,
   updateItem,
   batchReadItem,

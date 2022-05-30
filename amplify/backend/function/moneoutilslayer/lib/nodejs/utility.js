@@ -86,6 +86,14 @@ const toHumanFriendlyCurrency = (val, currency) => {
   )} ${unit}`;
 };
 
+const appendGenericFields = (schema, tableName) => {
+  let dateStr = new Date().toISOString();
+  schema.createdAt = dateStr;
+  schema.updatedAt = dateStr;
+  schema.__typename = tableName;
+  return schema;
+};
+
 module.exports = {
   utility,
   tempDir,
@@ -94,4 +102,5 @@ module.exports = {
   awsdate,
   toCurrency,
   toHumanFriendlyCurrency,
+  appendGenericFields
 };

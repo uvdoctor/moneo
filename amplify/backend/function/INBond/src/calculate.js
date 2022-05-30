@@ -1,4 +1,4 @@
-const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
 
 const calc = {
   calcSubType: (subt) => {
