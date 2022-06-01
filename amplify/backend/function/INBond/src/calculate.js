@@ -1,5 +1,5 @@
-const { appendGenericFields } = require("/opt/nodejs/utility");
-// const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
+// const { appendGenericFields } = require("/opt/nodejs/utility");
+const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
 
 const calc = {
   calcSubType: (subt) => {
@@ -130,6 +130,7 @@ const numberBeforeDecimal = (num) => num.split(".")[0];
 let num = 100;
 let fv = 0;
 const calculateFv = (price) => {
+  if(!price) return 100;
   const isFloat = (diff) => diff % 1 != 0;
   const diff = price / num;
   const decCount = decimalCount(String(diff));
