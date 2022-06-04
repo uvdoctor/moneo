@@ -1,12 +1,8 @@
 const {
-  batchReadItem,
   getTableNameFromInitialWord,
   filterTableByList,
 } = require("/opt/nodejs/databaseUtils");
-const {
-  divideArrayBySize,
-  toCurrency,
-} = require("/opt/nodejs/utility");
+const { toCurrency } = require("/opt/nodejs/utility");
 const {
   getCommodityPrice,
   getCryptoPrice,
@@ -16,24 +12,28 @@ const {
   convertTroyOunceToGram,
   calculateDiffPercent,
 } = require("/opt/nodejs/alertsVal");
+const { getInstrumentsData } = require("./processData");
+// const {
+//   getTableNameFromInitialWord,
+//   filterTableByList,
+// } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+// const { toCurrency } = require("../../moneoutilslayer/lib/nodejs/utility");
+// const {
+//   getCommodityPrice,
+//   getCryptoPrice,
+//   getFXRate,
+// } = require("../../moneopricelayer/lib/nodejs/eod");
+// const {
+//   convertTroyOunceToGram,
+//   calculateDiffPercent,
+// } = require("../../moneovaluationlayer/lib/nodejs/alertsVal");
 
-const getInstrumentsData = async (ids, table, infoMap) => {
-  let results = [];
-  const splittedArray = divideArrayBySize([...ids], 100);
-  const tableName = await getTableNameFromInitialWord(table);
-  for (arrays of splittedArray) {
-    let keys = [];
-    arrays.map((id) => keys.push({ id: id }));
-    const data = await batchReadItem(tableName, keys);
-    results = [...results, ...data];
-  }
-  results.forEach((item) => {
-    infoMap[item.id] = item;
-    ids.delete(item.id);
-  });
-};
-
-const processInstruments = async (infoMap, usersMap, usersinsMap, usersWatchMap) => {
+const processInstruments = async (
+  infoMap,
+  usersMap,
+  usersinsMap,
+  usersWatchMap
+) => {
   let mfIds = new Set();
   let otherIds = new Set();
   const userinsTableName = await getTableNameFromInitialWord("UserIns");
@@ -45,13 +45,13 @@ const processInstruments = async (infoMap, usersMap, usersinsMap, usersWatchMap)
   );
   for (let item of userinsdata) {
     let instruments = [];
-    if(item.ins) {
+    if (item.ins) {
       usersinsMap[item.uname] = item.ins;
-      instruments = [ ...item.ins ]
-    } 
-    if(item.watch) {
+      instruments = [...item.ins];
+    }
+    if (item.watch) {
       usersWatchMap[item.uname] = item.watch;
-      instruments = [ ...instruments, ...item.watch ]
+      instruments = [...instruments, ...item.watch];
     }
     for (let item of instruments) {
       if (item.id.startsWith("INF")) mfIds.add(item.id);
@@ -68,6 +68,7 @@ const processInstruments = async (infoMap, usersMap, usersinsMap, usersWatchMap)
   if (otherIds.size) {
     await getInstrumentsData(otherIds, "INBondPrice", infoMap);
   }
+  return { usersinsMap, usersWatchMap };
 };
 
 const processHoldings = async (infoMap, usersMap, usersinsMap) => {
@@ -145,7 +146,6 @@ const getCommodityList = async () => {
 };
 
 module.exports = {
-  getInstrumentsData,
   processInstruments,
   processHoldings,
   getCommodityList,
