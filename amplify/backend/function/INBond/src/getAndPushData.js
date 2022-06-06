@@ -49,7 +49,6 @@ const downloadFile = async (apiArray, prevMap, isPrevFile, prevBatch) => {
 };
 
 const getAndPushData = (diff) => {
-  console.log(1);
   return new Promise(async (resolve, reject) => {
     const tableName = await getTableNameFromInitialWord(table);
     console.log("Table name fetched: ", tableName);

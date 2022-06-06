@@ -264,10 +264,10 @@ describe("Get Rate", () => {
 });
 
 describe("Calculate Face Value", () => {
-  // test("Premium", () => {
-  //   const data = calculateFv(1100);
-  //   expect(data).toEqual(1000);
-  // });
+  test("Premium", () => {
+    const data = calculateFv(1100);
+    expect(data).toEqual(1000);
+  });
   test("Discount", () => {
     const data = calculateFv(800.50);
     expect(data).toEqual(1000);
