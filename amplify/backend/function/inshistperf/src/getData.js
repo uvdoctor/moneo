@@ -1,57 +1,6 @@
-const mfData = require("india-mutual-fund-info");
 // const { getEODdataByDate } = require("../../moneopricelayer/lib/nodejs/eod");
-// const { divideArrayBySize, utility } = require("../../moneoutilslayer/lib/nodejs/utility");
-// const {
-//   pushData,
-//   pushDataForFeed,
-//   appendGenericFields,
-// } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+const { arrangeAndPushData, getInfo } = require('./getAndPushData')
 const { getEODdataByDate } = require("/opt/nodejs/eod");
-const { divideArrayBySize, utility, appendGenericFields } = require("/opt/nodejs/utility");
-const {
-  pushData,
-  pushDataForFeed
-} = require("/opt/nodejs/databaseUtils");
-const table = "InsHistPerf";
-
-let mfInfoArray = [];
-const getInfo = async (prev) => {
-  const { date, monthChar, yearFull } = utility(prev);
-  const prevDate = new Date(`${date} ${monthChar} ${yearFull}`);
-  const isWeekend = (date) => date.getDay() % 6 === 0;
-  try {
-    mfInfoArray = await mfData.history(prevDate, prevDate);
-  } catch (error) {
-    console.log(error);
-  }
-  if (mfInfoArray.length < 2000 || isWeekend(prevDate)) {
-    prev++;
-    await getInfo(prev);
-  }
-  return mfInfoArray;
-};
-
-const arrangeAndPushData = async (ids, p1y, p3y, p5y, tableName, type) => {
-  const batch = [];
-  Object.keys(ids).map((key) => {
-    const p1 = p1y.find((item) => item.id === key);
-    const p3 = p3y.find((item) => item.id === key);
-    const p5 = p5y.find((item) => item.id === key);
-    const schema = { id: key, p1y: 0, p3y: 0, p5y: 0 };
-    if (!p1) return;
-    if (p1) schema.p1y = p1.price;
-    if (p3) schema.p3y = p3.price;
-    if (p5) schema.p5y = p5.price;
-    appendGenericFields(schema, tableName);
-    batch.push({ PutRequest: { Item: schema } });
-  });
-  const batches = divideArrayBySize(batch, 25);
-  for (let batch in batches) {
-    const result = await pushData(batches[batch], tableName);
-    console.log(result);
-  }
-  await pushDataForFeed(table, batches, type, "", "");
-};
 
 const getFundData = async (yearsList, tableName) => {
   const fundIds = {};
@@ -73,8 +22,7 @@ const getFundData = async (yearsList, tableName) => {
       if (year === 365 * 5) p5y.push({ id, price });
     });
   }
-  const batch = arrangeAndPushData(fundIds, p1y, p3y, p5y, tableName, "Fund");
-  return batch;
+  return arrangeAndPushData(fundIds, p1y, p3y, p5y, tableName, "Fund");
 };
 
 const getExchgData = async (yearsList, tableName) => {
@@ -100,9 +48,7 @@ const getExchgData = async (yearsList, tableName) => {
       });
     }
   }
-
-  const batch = arrangeAndPushData(exchgIds, p1y, p3y, p5y, tableName, "Exchg");
-  return batch;
+  return arrangeAndPushData(exchgIds, p1y, p3y, p5y, tableName, "Exchg");
 };
 
-module.exports = { getExchgData, getFundData };
+module.exports = { getFundData, getExchgData }
