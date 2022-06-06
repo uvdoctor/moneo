@@ -1396,7 +1396,7 @@ describe("Test calculateDiffPercent", () => {
 describe("Test convertTroyOunceToGram", () => {
   test("Value", () => {
     const data = convertTroyOunceToGram(31100);
-    expect(data).toEqual(1000);
+    expect(data).toEqual(1110);
   });
 });
 
