@@ -1,5 +1,6 @@
 module.exports = {
   //"roots": ["<rootDir>/amplify"],
   "roots": ["<rootDir>/amplify/backend/function/INBond/__tests__"],
-  testRegex: "(/*.test.js?$)",
+  "moduleDirectories": ["node_modules", "amplify/backend/function/INBound/src/node_modules"],
+  "testRegex": "(/*.test.js?$)",
 };
