@@ -8,7 +8,7 @@ const calcInd = (name) => {
 		return 'F';
 	if (name.includes('healthcare')) return 'H';
 	if (name.includes('pharma')) return 'PH';
-	if (name.includes('industrials')) return 'IM';
+	if (name.includes('industrials')) return 'I';
 	if (name.includes('technology') || name.includes('nifty it')) return 'IT';
 	if (name.includes('telecom')) return 'TC';
 	if (name.includes('utilities')) return 'U';

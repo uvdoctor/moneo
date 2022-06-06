@@ -1,20 +1,16 @@
+let { getData, getAndPushData } = require("../src/getData");
 const extractDataFromCSV = require("../src/bhavUtils");
-let { getAndPushData, downloadFile } = require("../src/getAndPushData");
 const constructedApiArray = require("../src/utils");
 const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
 } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const {
-  getPrev,
-  updatePrevByGetItem,
-} = require("../../moneoutilslayer/lib/nodejs/prevUtils");
 
 jest.mock("../src/bhavUtils");
 jest.mock("../../moneoutilslayer/lib/nodejs/databaseUtils");
-jest.mock("../../moneoutilslayer/lib/nodejs/prevUtils");
 jest.mock("../src/utils");
+jest.mock("../../moneoutilslayer/lib/nodejs/utility");
 
 jest.mock("../../moneoutilslayer/lib/nodejs/utility", () => ({
   tempDir: "C:\tmp\temp",
@@ -22,14 +18,12 @@ jest.mock("../../moneoutilslayer/lib/nodejs/utility", () => ({
 
 describe("Test GetAndPushData", () => {
   beforeEach(() => {
-    constructedApiArray.mockReturnValueOnce([]);
-    getTableNameFromInitialWord.mockReturnValue("Inbond");
+    constructedApiArray.mockReturnValue([]);
+    getTableNameFromInitialWord.mockReturnValue("Table");
     extractDataFromCSV.mockReturnValueOnce(true);
-    getPrev.mockReturnValueOnce({});
-    downloadFile = jest.fn();
+    getData = jest.fn();
     pushData.mockReturnValueOnce(true);
-    pushDataForFeed.mockReturnValueOnce(true);
-    updatePrevByGetItem.mockReturnValueOnce(true);
+    pushDataForFeed.mockReturnValue(true);
   });
 
   test("should resolve", async () => {
@@ -43,7 +37,7 @@ describe("Test GetAndPushData", () => {
       await getAndPushData();
     } catch (e) {
       expect(e.toString()).toMatch(
-        "Cannot read property 'length' of undefined"
+        "TypeError: Cannot read properties of undefined (reading 'length')" 
       );
     }
   });

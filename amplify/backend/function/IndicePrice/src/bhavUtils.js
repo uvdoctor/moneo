@@ -2,6 +2,8 @@ const csv = require("csv-parser");
 const fs = require("fs");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { tempDir } = require("/opt/nodejs/utility");
+// const { cleanDirectory } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
+// const { tempDir } = require("../../moneoutilslayer/lib/nodejs/utility");
 
 const extractDataFromCSV = async (fileName) => {
   const end = new Promise((resolve, reject) => {
