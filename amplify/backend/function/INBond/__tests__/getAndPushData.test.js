@@ -1,5 +1,6 @@
 const extractDataFromCSV = require("../src/bhavUtils");
-const { getAndPushData, downloadFile } = require("../src/getAndPushData");
+let { getAndPushData, downloadFile } = require("../src/getAndPushData");
+const constructedApiArray = require("../src/utils");
 const {
   cleanDirectory,
 } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
@@ -15,9 +16,14 @@ const {
 } = require("../../moneoutilslayer/lib/nodejs/prevUtils");
 
 jest.mock("../src/bhavUtils");
-jest.mock("../src/getAndPushData");
+//jest.mock("../src/getAndPushData");
 jest.mock("../../moneoutilslayer/lib/nodejs/databaseUtils");
 jest.mock("../../moneoutilslayer/lib/nodejs/prevUtils");
+jest.mock("../src/utils");
+
+jest.mock("../../moneoutilslayer/lib/nodejs/utility", () => ({
+  tempDir: "C:\tmp\temp",
+}));
 
 // describe("Test DownloadFile", () => {
 //   afterEach(async () => {
@@ -59,25 +65,32 @@ jest.mock("../../moneoutilslayer/lib/nodejs/prevUtils");
 // });
 
 describe("Test GetAndPushData", () => {
-  test("Date", async () => {
+  beforeEach(() => {
+    constructedApiArray.mockReturnValueOnce([]);
     getTableNameFromInitialWord.mockReturnValue("Inbond");
     extractDataFromCSV.mockReturnValueOnce(true);
     getPrev.mockReturnValueOnce({});
-    downloadFile.mockReturnValueOnce([]);
+    downloadFile = jest.fn();
     pushData.mockReturnValueOnce(true);
     pushDataForFeed.mockReturnValueOnce(true);
     updatePrevByGetItem.mockReturnValueOnce(true);
+  });
+
+  test("should resolve", async () => {
+    const data = await getAndPushData();
+
+    expect(data).toBe(1);
+  });
+
+  test("should throw error", async () => {
+    constructedApiArray.mockReturnValueOnce(undefined);
 
     try {
-      const data = await getAndPushData();
-      expect(data).toEqual(1)
-    } catch(e) {
-      console.log(e);
-    // expect(e).rejects.toMatch('error');
+      await getAndPushData();
+    } catch (e) {
+      expect(e.toString()).toMatch(
+        "Cannot read property 'length' of undefined"
+      );
     }
-    // expect(getTableNameFromInitialWord).toBeCalledTimes(1);
-    // expect(extractDataFromCSV).toBeCalledTimes(1);
-    // expect(mockReadStream.on).toBeCalledWith("data", expect.any(Function));
-    // expect(mockReadStream.on).toBeCalledWith("end", expect.any(Function));
   });
 });

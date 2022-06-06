@@ -50,11 +50,11 @@ const downloadFile = async (apiArray, prevMap, isPrevFile, prevBatch) => {
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
-    const tableName = await getTableNameFromInitialWord(table);
-    console.log("Table name fetched: ", tableName);
-    const apiArray = constructedApiArray(diff);
-    for (let i = 0; i < apiArray.length; i++) {
-      try {
+    try {
+      const tableName = await getTableNameFromInitialWord(table);
+      console.log("Table name fetched: ", tableName);
+      const apiArray = constructedApiArray(diff);
+      for (let i = 0; i < apiArray.length; i++) {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
@@ -72,15 +72,16 @@ const getAndPushData = (diff) => {
           await pushData(data[batch], tableName);
         }
         await pushDataForFeed(table, data, `${typeExchg}${i}`, url, typeExchg);
-      } catch (err) {
-        reject(err);
       }
+      console.log("Prev Batch", Object.keys(prevBatch).length);
+      if (!diff) {
+        await updatePrevByGetItem(prevBatch, tableName);
+      }
+
+      resolve(1);
+    } catch (e) {
+      reject(e);
     }
-    console.log("Prev Batch", Object.keys(prevBatch).length);
-    if (!diff) {
-      await updatePrevByGetItem(prevBatch, tableName);
-    }
-    resolve(1);
   });
 };
 
