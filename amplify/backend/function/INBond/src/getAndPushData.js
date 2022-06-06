@@ -3,24 +3,36 @@ const fsPromise = require("fs/promises");
 const constructedApiArray = require("./utils");
 const extractDataFromCSV = require("./bhavUtils");
 const { mkdir } = fsPromise;
+// const {
+//   pushData,
+//   pushDataForFeed,
+//   getTableNameFromInitialWord,
+// } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
+// const {
+//   tempDir,
+//   zipFile,
+// } = require("../../moneoutilslayer/lib/nodejs/utility");
+// const {
+//   cleanDirectory,
+//   downloadZip,
+//   unzipDownloads,
+// } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
+// const {
+//   getPrev,
+//   updatePrevByGetItem,
+// } = require("../../moneoutilslayer/lib/nodejs/prevUtils");
 const {
   pushData,
   pushDataForFeed,
   getTableNameFromInitialWord,
-} = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const {
-  tempDir,
-  zipFile,
-} = require("../../moneoutilslayer/lib/nodejs/utility");
+} = require("/opt/nodejs/databaseUtils");
+const { tempDir, zipFile } = require("/opt/nodejs/utility");
 const {
   cleanDirectory,
   downloadZip,
   unzipDownloads,
-} = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
-const {
-  getPrev,
-  updatePrevByGetItem,
-} = require("../../moneoutilslayer/lib/nodejs/prevUtils");
+} = require("/opt/nodejs/downloadUtils");
+const { getPrev, updatePrevByGetItem } = require("/opt/nodejs/prevUtils");
 const isinMap = {};
 const prevBatch = {};
 const table = "INBondPrice";
@@ -77,8 +89,7 @@ const getAndPushData = (diff) => {
       if (!diff) {
         await updatePrevByGetItem(prevBatch, tableName);
       }
-
-      resolve(1);
+      resolve();
     } catch (e) {
       reject(e);
     }

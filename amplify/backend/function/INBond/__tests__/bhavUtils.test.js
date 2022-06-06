@@ -1,6 +1,5 @@
 const extractDataFromCSV = require("../src/bhavUtils");
 const { calcSchema } = require("../src/calculate");
-
 jest.mock("../src/calculate");
 
 const codes = {
@@ -50,7 +49,6 @@ describe("Test Bhavutils", () => {
     // keep file in tmp/temp folder
     await expect(
       extractDataFromCSV(
-        // "wdmlist_30052022",
         "wdmlist_30052022.csv",
         "NSE",
         codes,
@@ -78,27 +76,27 @@ describe("Test Bhavutils", () => {
     ]);
   });
 
-  test("Empty File", async () => {
-    calcSchema.mockReturnValueOnce({
-      exchg: "NSE",
-      sid: "CG2036",
-      name: "GOI LOAN 8.33% 2036",
-      price: "108.65",
-      id: "IN0020060045",
-      STATUS: "Listed",
-    });
-    await expect(
-      extractDataFromCSV(
-        "empty_wdmlist_30052022.csv",
-        "NSE",
-        codes,
-        schema,
-        {},
-        "INBond",
-        {},
-        false,
-        []
-      )
-    ).resolves.toStrictEqual([]);
-  });
+  // test("Empty File", async () => {
+  //   calcSchema.mockReturnValueOnce({
+  //     exchg: "NSE",
+  //     sid: "CG2036",
+  //     name: "GOI LOAN 8.33% 2036",
+  //     price: "108.65",
+  //     id: "IN0020060045",
+  //     STATUS: "Listed",
+  //   });
+  //   await expect(
+  //     extractDataFromCSV(
+  //       "empty_wdmlist_30052022.csv",
+  //       "NSE",
+  //       codes,
+  //       schema,
+  //       {},
+  //       "INBond",
+  //       {},
+  //       false,
+  //       []
+  //     )
+  //   ).resolves.toStrictEqual([]);
+  // });
 });

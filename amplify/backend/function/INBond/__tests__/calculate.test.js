@@ -7,9 +7,17 @@ const {
   getRate,
   calculateFv,
 } = require("../src/calculate");
+const {
+  appendGenericFields,
+} = require("../../moneoutilslayer/lib/nodejs/utility");
+
+jest.mock("../../moneoutilslayer/lib/nodejs/utility");
 
 describe("CalcSchema", () => {
-  test("Schema", () => {
+  appendGenericFields.mockReturnValue({
+    __typename: "Table",
+  });
+  test("No Prev", () => {
     const data = calcSchema(
       {
         SECURITY: "ABFL24",
@@ -33,25 +41,7 @@ describe("CalcSchema", () => {
         rate: "ISSUE_NAME",
         crstr: "",
       },
-      {
-        id: "",
-        sid: "",
-        name: "",
-        subt: "",
-        price: 0,
-        exchg: "",
-        sm: 0,
-        sy: 0,
-        mm: 0,
-        my: 0,
-        rate: 0,
-        fv: 0,
-        cr: null,
-        crstr: null,
-        ytm: 0,
-        createdAt: "",
-        updatedAt: "",
-      },
+      {},
       "NSE",
       {},
       "Table",
@@ -63,7 +53,7 @@ describe("CalcSchema", () => {
       sid: "ABFL24",
       name: "Aditya Birla Fin 8.65% 24 S C1",
       subt: "CB",
-      price: 100,
+      price: 100.42,
       exchg: "NSE",
       sm: 6,
       sy: 2019,
@@ -74,12 +64,62 @@ describe("CalcSchema", () => {
       rate: 8.65,
       fv: 100,
       cr: null,
-      crstr: null,
-      ytm: 0.087,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      ytm: 0.085,
       type: "F",
-      __typename: "Table",
+      prev: undefined,
+    });
+  });
+
+  test("With Prev", () => {
+    const data = calcSchema(
+      {
+        SECURITY: "ABFL24",
+        "ISIN NO.": "INE860H07GT8",
+        ISSUE_DESC: "Aditya Birla Fin 8.65% 24 S C1",
+        "Last Traded Price (in Rs.)": 100.42,
+        SECTYPE: "DB",
+        ISSUE_NAME: "8.65%",
+        MAT_DATE: "12-Jun-2024",
+        ISSUE_DATE: "12-Jun-2019",
+      },
+      {
+        sid: "SECURITY",
+        id: "ISIN NO.",
+        name: "ISSUE_DESC",
+        price: "Last Traded Price (in Rs.)",
+        subt: "SECTYPE",
+        frate: "ISSUE_NAME",
+        sDate: "ISSUE_DATE",
+        mDate: "MAT_DATE",
+        rate: "ISSUE_NAME",
+        crstr: "",
+      },
+      {},
+      "NSE",
+      {},
+      "Table",
+      { INE860H07GT8: 98 },
+      true
+    );
+    expect(data).toEqual({
+      id: "INE860H07GT8",
+      sid: "ABFL24",
+      name: "Aditya Birla Fin 8.65% 24 S C1",
+      subt: "CB",
+      price: 100.42,
+      exchg: "NSE",
+      sm: 6,
+      sy: 2019,
+      mm: 6,
+      my: 2024,
+      risk: "C",
+      itype: "DEB",
+      rate: 8.65,
+      fv: 100,
+      cr: null,
+      ytm: 0.085,
+      type: "F",
+      prev: 98,
     });
   });
 });
@@ -269,7 +309,7 @@ describe("Calculate Face Value", () => {
     expect(data).toEqual(1000);
   });
   test("Discount", () => {
-    const data = calculateFv(800.50);
+    const data = calculateFv(800.5);
     expect(data).toEqual(1000);
   });
   test("Same", () => {

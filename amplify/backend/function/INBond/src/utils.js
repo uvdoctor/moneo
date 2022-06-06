@@ -1,5 +1,5 @@
-// const { utility } = require('/opt/nodejs/utility');
-const { utility } = require('../../moneoutilslayer/lib/nodejs/utility');
+const { utility } = require('/opt/nodejs/utility');
+// const { utility } = require('../../moneoutilslayer/lib/nodejs/utility');
 const constructedApiArray = (diff) => {
 	const { date, month, monthChar, yearFull } = utility(diff);
 	const nseFileName = `wdmlist_${date}${month}${yearFull}`;

@@ -1,5 +1,7 @@
-// const { appendGenericFields } = require("/opt/nodejs/utility");
-const { appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
+const { appendGenericFields } = require("/opt/nodejs/utility");
+// const {
+//   appendGenericFields,
+// } = require("../../moneoutilslayer/lib/nodejs/utility");
 
 const calc = {
   calcSubType: (subt) => {
@@ -130,7 +132,7 @@ const numberBeforeDecimal = (num) => num.split(".")[0];
 let num = 100;
 let fv = 0;
 const calculateFv = (price) => {
-  if(!price) return 100;
+  if (!price) return 100;
   const isFloat = (diff) => diff % 1 != 0;
   const diff = price / num;
   const decCount = decimalCount(String(diff));
@@ -143,6 +145,9 @@ const calculateFv = (price) => {
     fv = num;
   } else {
     num *= 10;
+  }
+  if (diff > 10 && !isFloat(diff)) {
+    fv = Number("1".padEnd(String(price).length, "0"));
   }
   if (!fv) calculateFv(price);
   return fv < 100 ? 100 : fv;
@@ -203,7 +208,6 @@ const calcSchema = (
   isinMap[record[codes.id]] = record[codes.id];
   if (!schema.prev) {
     prevBatch[schema.id] = JSON.parse(JSON.stringify(schema));
-    return;
   }
   return schema;
 };
@@ -214,5 +218,5 @@ module.exports = {
   calculateYTM,
   getRate,
   calculateRisk,
-  calculateFv
+  calculateFv,
 };
