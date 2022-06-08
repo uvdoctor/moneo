@@ -1,7 +1,10 @@
-const { tr } = require("date-fns/locale");
 const { calc, calcSchema, calculateRisk, calculateIsbond } = require("../src/calculate");
+const { appendGenericFields } = require('../../moneoutilslayer/lib/nodejs/utility')
+
+jest.mock('../../moneoutilslayer/lib/nodejs/utility')
 
 describe("CalcSchema - Incase of Exchange Data", () => {
+  appendGenericFields.mockReturnValue({});
   const { updateSchema, isBond } = calcSchema(
     {
       SYMBOL: "20MICRONS",
@@ -45,9 +48,6 @@ describe("CalcSchema - Incase of Exchange Data", () => {
       price: 85.5,
       prev: 88.15,
       mcapt: "Small",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      __typename: "Table",
       exchg: "NSE",
     });
   });
@@ -57,6 +57,7 @@ describe("CalcSchema - Incase of Exchange Data", () => {
 });
 
 describe("CalcSchema - Incase of Bond Data", () => {
+  appendGenericFields.mockReturnValue({});
   const { updateSchema, isBond } = calcSchema(
     {
       SYMBOL: "BRITANNIA",
@@ -107,9 +108,6 @@ describe("CalcSchema - Incase of Bond Data", () => {
       rate: -1,
       fv: 100,
       ytm: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      __typename: "BondTable",
       exchg: "NSE",
       itype: null,
       prev: 31.2,
