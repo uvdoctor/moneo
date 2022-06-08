@@ -4,6 +4,8 @@ const {
   mergeEodAndExchgData,
 } = require("../src/bhavUtils");
 const { calcSchema } = require("../src/calculate");
+const { cleanDirectory } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
+jest.mock("../../moneoutilslayer/lib/nodejs/downloadUtils");
 
 jest.mock("../src/calculate");
 
@@ -30,6 +32,7 @@ const codes = {
 };
 
 describe("Test Bhavutils", () => {
+  cleanDirectory.mockReturnValue(true)
   test("File Exists", async () => {
     calcSchema.mockReturnValueOnce({
       updateSchema: {
@@ -85,6 +88,7 @@ describe("Test Bhavutils", () => {
 });
 
 describe("Test extractPartOfData", () => {
+  cleanDirectory.mockReturnValue(true)
   test("File Exists", async () => {
     // keep file in tmp/temp folder
     const data = await extractPartOfData(

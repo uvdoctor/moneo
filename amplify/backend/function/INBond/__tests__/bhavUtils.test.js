@@ -1,5 +1,7 @@
 const extractDataFromCSV = require("../src/bhavUtils");
 const { calcSchema } = require("../src/calculate");
+const { cleanDirectory } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
+jest.mock("../../moneoutilslayer/lib/nodejs/downloadUtils");
 jest.mock("../src/calculate");
 
 const codes = {
@@ -38,6 +40,7 @@ const schema = {
 };
 
 describe("Test Bhavutils", () => {
+  cleanDirectory.mockReturnValue(true)
   test("File Exists", async () => {
     calcSchema.mockReturnValueOnce({
       exchg: "NSE",
