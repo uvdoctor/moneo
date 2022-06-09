@@ -59,11 +59,11 @@ const getAndPushData = async () => {
         const result = await pushData(batches[batch], tableName);
         console.log(result);
       }
-      await pushDataForFeed(table, batches, `NSE`, "", "NSE");
+      const response = await pushDataForFeed(table, batches, `NSE`, "", "NSE");
+      resolve(response);
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 

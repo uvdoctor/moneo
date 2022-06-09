@@ -38,6 +38,32 @@ describe("Arrange Data", () => {
     ]);
   });
 
+  test("With IndexList - more than one object", async () => {
+    await expect(
+      arrangeData([
+        { Code: "NIFTY", Name: "Nifty 50" },
+        { Code: "NIFTYNEXT", Name: "Nifty Next" },
+      ])
+    ).resolves.toStrictEqual([
+      {
+        PutRequest: {
+          Item: {
+            comp: ["ITC", "TATA"],
+            name: "Nifty 50",
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            comp: ["ITC", "TATA"],
+            name: "Nifty Next",
+          },
+        },
+      },
+    ]);
+  });
+
   test("With Empty IndexList", async () => {
     await expect(arrangeData([])).resolves.toStrictEqual([]);
   });
@@ -55,7 +81,7 @@ describe("Test GetAndPushData", () => {
 
   test("should resolve", async () => {
     const data = await getAndPushData();
-    expect(data).toBe();
+    expect(data).toBe(true);
   });
 
   test("should throw error", async () => {
