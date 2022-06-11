@@ -1,11 +1,14 @@
 const {
   getTableNameFromInitialWord,
   getTabledata,
-  batchReadItem
+  batchReadItem,
 } = require("/opt/nodejs/databaseUtils");
 const { instrumentValuation } = require("/opt/nodejs/alertsVal");
 const { sendMessage } = require("/opt/nodejs/sqsUtils");
-const { toHumanFriendlyCurrency, divideArrayBySize } = require("/opt/nodejs/utility");
+const {
+  toHumanFriendlyCurrency,
+  divideArrayBySize,
+} = require("/opt/nodejs/utility");
 const { watchlistValuation } = require("/opt/nodejs/watchlistVal");
 // const {
 //   getTableNameFromInitialWord,
@@ -30,6 +33,7 @@ const {
 } = require("./data");
 
 const getInstrumentsData = async (ids, table, infoMap) => {
+  if (!ids.size) return {};
   let results = [];
   const splittedArray = divideArrayBySize([...ids], 100);
   const tableName = await getTableNameFromInitialWord(table);
@@ -155,10 +159,10 @@ const processData = () => {
           }
         }
       }
+      resolve(true);
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 

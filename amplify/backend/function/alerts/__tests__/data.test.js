@@ -44,9 +44,8 @@ describe("processHoldings", () => {
 });
 
 describe("processHoldings", () => {
-  getTableNameFromInitialWord.mockReturnValue("Table");
-
-  test("With", async () => {
+  beforeEach(() => {
+    getTableNameFromInitialWord.mockReturnValue("Table");
     filterTableByList.mockReturnValue([
       { uname: "Mehz", crypto: [{ id: "BTC" }], nps: [{ id: "HDFC" }] },
     ]);
@@ -56,6 +55,9 @@ describe("processHoldings", () => {
     });
     getFXRate.mockReturnValue(74);
     getCryptoPrice.mockReturnValue(75);
+  });
+
+  test("With data", async () => {
     await processHoldings(
       {
         GAIL: { id: "GAIL", price: 100 },
@@ -64,17 +66,28 @@ describe("processHoldings", () => {
       { Mehz: "mehzabeen1526@gmail.com" },
       { Mehz: [{ BTC: { id: "BTC", price: 100 } }] }
     );
-
     expect(filterTableByList).toHaveBeenCalled();
     expect(getInstrumentsData).toHaveBeenCalled();
     expect(getFXRate).toHaveBeenCalled();
     expect(getCryptoPrice).toHaveBeenCalled();
   });
+
+  test("Without data", async () => {
+    try {
+      await processHoldings({}, {}, {});
+    } catch (e) {
+      expect(e.toString()).toMatch(
+        "TypeError: usersinsMap[item.uname] is not iterable"
+      );
+    }
+  });
 });
 
 describe("getCommodityList", () => {
-  test("", async () => {
+  beforeEach(() => { 
     getFXRate.mockReturnValue(74);
+  })
+  test("With commodity Prie", async () => {
     getCommodityPrice.mockReturnValue([4000, 3000]);
     const data = await getCommodityList();
     expect(data).toEqual([
@@ -88,6 +101,25 @@ describe("getCommodityList", () => {
         name: "10 grams of 99.99% Silver:",
         price: "₹79,232.24",
         chg: 25,
+        up: false,
+      },
+    ]);
+  });
+
+  test("Without commodity Prie", async () => {
+    getCommodityPrice.mockReturnValue([]);
+    const data = await getCommodityList();
+    expect(data).toEqual([
+      {
+        name: "10 grams of 24k Gold:",
+        price: "₹0.00",
+        "chg": NaN,
+        up: false,
+      },
+      {
+        name: "10 grams of 99.99% Silver:",
+        price: "₹0.00",
+        "chg": NaN,
         up: false,
       },
     ]);

@@ -58,6 +58,12 @@ describe("getInstrumentsData", () => {
       ITC: { id: "ITC", price: 100 },
     });
   });
+
+  test("Without Infomap && ids", async () => {
+    await expect(
+      getInstrumentsData(new Set(), "Table", {})
+    ).resolves.toStrictEqual({});
+  });
 });
 
 describe("Test GetAndPushData", () => {
@@ -93,7 +99,7 @@ describe("Test GetAndPushData", () => {
 
   test("should resolve", async () => {
     const data = await processData();
-    expect(data).toBe();
+    expect(data).toBe(true);
   });
 
   test("should throw error", async () => {
