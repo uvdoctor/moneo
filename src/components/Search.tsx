@@ -473,7 +473,7 @@ export default function Search({
         onMouseLeave={() => {
           setTypeDropdownOpen(false);
           setExchgDropdownOpen(false);
-          setOpen(false);
+          // setOpen(false);
         }}
         id="search"
         options={suggestions}
