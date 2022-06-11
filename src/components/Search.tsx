@@ -349,12 +349,11 @@ export default function Search({
 
   useEffect(() => {
     if (!searchText) {
-      // setOpen(false);
+      setOpen(false);
       // setData([...[]]);
       // setSuggestions([...[]]);
     }
     if (exchg !== "US" && !data.length && !isDataLoading) {
-      console.log(1);
       getSearchData();
     }
   }, [searchText]);
