@@ -360,6 +360,8 @@ export default function Search({
   }, [searchText]);
 
   const getSearchData = async () => {
+    setData([...[]]);
+    setSuggestions([...[]]);
     setIsDataLoading(true);
     let suggestions = [];
     let data = [];
