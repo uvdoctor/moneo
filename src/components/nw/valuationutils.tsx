@@ -1257,15 +1257,19 @@ export const isIndISIN = (item: string) =>
 export const otherISIN = (item: string) =>
   item.length === 12 && !item.startsWith("IN");
 
+export const NIFTY50 = "Nifty 50";
+export const SENSEX = "BSE30";
+export const BSE500 = "BSE500";
+export const NIFTYNEXT = 'Nifty Next 50';
+export const NIFTY100 = 'Nifty 100';
+
 export const initializeWatchlist = async (
   user: boolean,
   watchIns?: Array<InsWatchInput> | null | undefined,
   userIns?: Array<InstrumentInput> | null | undefined,
   crypto?: Array<HoldingInput> | null | undefined
 ) => {
-  const NIFTY50 = "Nifty 50";
-  const SENSEX = "BSE30";
-  const BSE500 = "BSE500";
+  
   let ids: Array<string> = [NIFTY50, SENSEX, BSE500];
   const isinMap: any = { ["Nifty 50"]: NIFTY50, BSE30: SENSEX, BSE500: BSE500 };
   let insIds: Array<string> = [NIFTY50, SENSEX, BSE500];

@@ -148,7 +148,7 @@ export default function Watchlist() {
           <div
             id="scrollableDiv"
             style={{
-              height: 400,
+              height: 350,
               overflow: "auto",
             }}
           >
