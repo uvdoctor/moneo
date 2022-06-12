@@ -37,10 +37,10 @@ const getAndPushData = (diff) => {
         await pushData(data[batch], tableName);
       }
       await pushDataForFeed(table, data, "", apiArray.url);
+      resolve(true);
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 

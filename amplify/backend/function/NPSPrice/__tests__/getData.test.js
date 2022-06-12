@@ -20,7 +20,7 @@ describe("Test GetAndPushData", () => {
 
   test("should resolve", async () => {
     const data = await getAndPushData(1);
-    expect(data).toBe();
+    expect(data).toBe(true);
   });
 
   test("should throw error", async () => {
