@@ -131,10 +131,10 @@ const getAndPushData = (diff) => {
           item.exchg
         );
       }
+      resolve();
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 
