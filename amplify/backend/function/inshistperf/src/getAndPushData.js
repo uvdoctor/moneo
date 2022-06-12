@@ -1,11 +1,15 @@
 const mfData = require("india-mutual-fund-info");
-// const { divideArrayBySize, utility, appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
+// const {
+//   divideArrayBySize,
+//   utility,
+//   appendGenericFields,
+// } = require("../../moneoutilslayer/lib/nodejs/utility");
 // const {
 //   pushData,
 //   pushDataForFeed,
-// getTableNameFromInitialWord
+//   getTableNameFromInitialWord,
 // } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
-const { getExchgData, getFundData } = require('./getData')
+// const { getExchgData, getFundData } = require("./getData");
 const { divideArrayBySize, utility, appendGenericFields } = require("/opt/nodejs/utility");
 const {
   pushData,
@@ -50,7 +54,7 @@ const arrangeAndPushData = async (ids, p1y, p3y, p5y, tableName, type) => {
     const result = await pushData(batches[batch], tableName);
     console.log(result);
   }
-  await pushDataForFeed(table, batches, type, "", "");
+  return await pushDataForFeed(table, batches, type, "", "");
 };
 
 const getAndPushData = async () => {
@@ -61,10 +65,10 @@ const getAndPushData = async () => {
     try {
       await getExchgData(yearsList, tableName);
       await getFundData(yearsList, tableName);
+      resolve(true);
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 

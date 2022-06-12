@@ -1,7 +1,6 @@
 const { getAndPushData, arrangeAndPushData } = require("../src/getAndPushData");
-const { getExchgData, getFundData } = require('../src/getData')
+const { getExchgData, getFundData } = require("../src/getData");
 const {
-  divideArrayBySize,
   appendGenericFields,
 } = require("../../moneoutilslayer/lib/nodejs/utility");
 const {
@@ -11,25 +10,39 @@ const {
 } = require("../../moneoutilslayer/lib/nodejs/databaseUtils");
 jest.mock("../../moneoutilslayer/lib/nodejs/databaseUtils");
 jest.mock("../../moneoutilslayer/lib/nodejs/utility");
-jest.mock('../src/getData');
+jest.mock("../src/getData");
 
 describe("arrangeAndPushData", () => {
   appendGenericFields.mockReturnValue({});
-  divideArrayBySize.mockReturnValue([[], []]);
   pushDataForFeed.mockReturnValue(true);
   pushData.mockReturnValue(true);
-  test("", async () => {
-    await arrangeAndPushData(
-      ["GAIL"],
+  test("With data", async () => {
+    const data = await arrangeAndPushData(
+      { GAIL: "GAIL" },
       [{ id: "GAIL", price: 100 }],
       [{ id: "GAIL", price: 100 }],
       [{ id: "GAIL", price: 100 }],
       "tableName",
       "type"
     );
-    expect(divideArrayBySize).toHaveBeenCalled();
-    expect(pushDataForFeed).toHaveBeenCalled();
-    expect(pushData).toHaveBeenCalled();
+    expect(data).toEqual(true);
+  });
+
+  test("Without ids", async () => {
+    try {
+      await arrangeAndPushData(
+        undefined,
+        [{ id: "GAIL", price: 100 }],
+        [{ id: "GAIL", price: 100 }],
+        [{ id: "GAIL", price: 100 }],
+        "tableName",
+        "type"
+      );
+    } catch (err) {
+      expect(err.toString()).toEqual(
+        "TypeError: Cannot convert undefined or null to object"
+      );
+    }
   });
 });
 
@@ -39,7 +52,7 @@ describe("getAndPushData", () => {
   getFundData.mockReturnValue(true);
   test("should resolve", async () => {
     const data = await getAndPushData();
-    expect(data).toBe();
+    expect(data).toBe(true);
   });
 
   test("should throw error", async () => {
@@ -53,7 +66,3 @@ describe("getAndPushData", () => {
     }
   });
 });
-
-
-
-
