@@ -120,7 +120,7 @@ export default function Watchlist() {
     >
       <Row justify="center" gutter={[0, 10]} align="middle">
         <Col span={24}>
-          <Row align="middle" justify="space-between">
+          <Row align="middle" justify="space-between" gutter={[0,10]}>
             <Col>
               <Search
                 searchType={activeTag}
