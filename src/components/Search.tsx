@@ -324,6 +324,10 @@ export default function Search({
     const success = await validateCaptcha("search");
     if (!success) return;
 
+    if(!text) {
+      return getSearchData(text)
+    }
+
     if (exchg === "US") {
       const data = await getUSData();
       const arrangedData = arrangeUSData(data);
@@ -344,36 +348,30 @@ export default function Search({
     setData([...[]]);
     setSuggestions([...[]]);
     if (!hasExchg(searchType)) setExchg && setExchg("INDIA");
-    getSearchData();
+    getSearchData(searchText);
   }, [searchType, exchg]);
 
   useEffect(() => {
-    if (!searchText) {
-      setOpen(false);
-      // setData([...[]]);
-      // setSuggestions([...[]]);
-    }
-    if (exchg !== "US" && !data.length && !isDataLoading) {
-      getSearchData();
+    if (!data.length && !isDataLoading) {
+      getSearchData(searchText);
     }
   }, [searchText]);
 
-  const getSearchData = async () => {
-    setData([...[]]);
-    setSuggestions([...[]]);
+  const getSearchData = async (searchText: string) => {
     setIsDataLoading(true);
     let suggestions = [];
-    let data = [];
     try {
       if (exchg === "US") {
         suggestions = favourites.US[searchType];
+        setData([...suggestions]);
+        setSuggestions([...suggestions]);
       } else if (searchType === CRYPTO) {
-        data = await getCryptoList();
+        const data = await getCryptoList();
         suggestions = !searchText
-          ? data.filter((item: any) =>
-              favourites.CRYPTO.includes(item.code)
-            )
+          ? data.filter((item: any) => favourites.CRYPTO.includes(item.code))
           : data;
+        setData([...data]);
+        setSuggestions([...suggestions]);
       } else {
         let opt = searchType;
         let cachedData = simpleStorage.get(opt);
@@ -393,11 +391,9 @@ export default function Search({
                 favourites.INDIA[searchType].includes(item.id)
               )
             : cachedData;
+        setData([...cachedData]);
+        setSuggestions([...suggestions]);
       }
-      if (!suggestions.length) suggestions = data;
-      console.log(suggestions);
-      setData([...data]);
-      setSuggestions([...suggestions]);
       setIsDataLoading(false);
     } catch (err) {
       console.log(err);
@@ -472,7 +468,6 @@ export default function Search({
         onMouseLeave={() => {
           setTypeDropdownOpen(false);
           setExchgDropdownOpen(false);
-          // setOpen(false);
         }}
         id="search"
         options={suggestions}
@@ -493,6 +488,8 @@ export default function Search({
           addonBefore={exchg && hasExchg(searchType) ? ExchgComp : ""}
           suffix={!isDataLoading ? <></> : <Spin size="small" />}
           prefix={<SearchOutlined />}
+          onFocus={() => setOpen(true)}
+          onBlur={()=>setOpen(false)}
         />
       </AutoComplete>
     </div>
