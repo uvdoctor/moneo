@@ -12,11 +12,12 @@ import { getCryptoList } from "./utils";
 import { AppContext } from "./AppContext";
 import {
   BSE500,
+  INDEX,
   NIFTY100,
   NIFTY50,
   NIFTYNEXT,
   SENSEX,
-} from "./nw/valuationutils";
+} from "./dashboard/DBContext";
 
 require("./Search.less");
 
@@ -386,7 +387,7 @@ export default function Search({
           nameMap[value] = value;
         });
         suggesstions =
-          !searchText && hasExchg(searchType)
+          !searchText && (hasExchg(searchType) || searchType === INDEX)
             ? cachedData.filter((item: any) =>
                 favourites.INDIA[searchType].includes(item.id)
               )

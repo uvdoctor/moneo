@@ -11,7 +11,7 @@ import {
 } from "../../api/goals";
 import simpleStorage from "simplestorage.js";
 import { filterTabs, getCryptoRate, getExchgRate } from "../nw/nwutils";
-import { DBContext } from "./DBContext";
+import { DBContext, INDEX } from "./DBContext";
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../../CONSTANTS";
 import Search from "../Search";
 import CardView from "./CardView";
@@ -23,11 +23,11 @@ export default function Watchlist() {
   const { watchlist, setWatchlist, saveWatchlist, fxRates }: any =
     useContext(DBContext);
   const { STOCK, MF, ETF, REIT, CRYPTO } = TAB;
-  const [activeTag, setActiveTag] = useState<string>("Index");
+  const [activeTag, setActiveTag] = useState<string>(INDEX);
   const [exchg, setExchg] = useState<string>("INDIA");
   const [filterByTab, setFilterByTab] = useState<Array<any>>([]);
 
-  const typesList = ["Index", STOCK, MF, ETF, REIT, CRYPTO];
+  const typesList = [INDEX, STOCK, MF, ETF, REIT, CRYPTO];
 
   const loadData = () => {
     if (!watchlist.length) return;
@@ -44,7 +44,7 @@ export default function Watchlist() {
         }
         if (!cachedData || !data) return;
         if (
-          activeTag === "Index" &&
+          activeTag === INDEX &&
           (id.length !== 12 || id.indexOf(" ") >= 0) &&
           subt !== AssetSubType.C &&
           data.exchg

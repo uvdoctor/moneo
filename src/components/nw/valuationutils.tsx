@@ -25,6 +25,7 @@ import {
   LOCAL_NPS_DATA_KEY,
 } from "../../CONSTANTS";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
+import { BSE500, NIFTY50, SENSEX } from "../dashboard/DBContext";
 import { awsdate, getNumberOfDays, includesAny } from "../utils";
 import { ALL_FAMILY } from "./FamilyInput";
 import {
@@ -1256,12 +1257,6 @@ export const isIndISIN = (item: string) =>
 
 export const otherISIN = (item: string) =>
   item.length === 12 && !item.startsWith("IN");
-
-export const NIFTY50 = "Nifty 50";
-export const SENSEX = "BSE30";
-export const BSE500 = "BSE500";
-export const NIFTYNEXT = 'Nifty Next 50';
-export const NIFTY100 = 'Nifty 100';
 
 export const initializeWatchlist = async (
   user: boolean,

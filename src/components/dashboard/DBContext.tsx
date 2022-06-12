@@ -27,6 +27,13 @@ import {
 import DBView from "./DBView";
 const DBContext = createContext({});
 
+export const NIFTY50 = "Nifty 50";
+export const SENSEX = "BSE30";
+export const BSE500 = "BSE500";
+export const NIFTYNEXT = 'Nifty Next 50';
+export const NIFTY100 = 'Nifty 100';
+export const INDEX = "Index";
+
 function DBContextProvider({ fxRates }: any) {
   const { defaultCurrency, owner, user }: any = useContext(AppContext);
   const [totalAssets, setTotalAssets] = useState<number>(0);
