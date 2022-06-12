@@ -147,7 +147,7 @@ const getAndPushData = async (diff) => {
           console.log(err);
         }
       }
-      resolve();
+      resolve(true);
     } catch (e) {
       reject(e);
     }

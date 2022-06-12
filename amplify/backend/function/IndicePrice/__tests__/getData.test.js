@@ -110,6 +110,40 @@ describe("GetData", () => {
     ]);
   });
 
+  test("BSE - Wrong Url", async () => {
+    try {
+      await getData(
+        [],
+        "Table",
+        "https://api.bseindia.com/BseIndiaAPI",
+        "Cat",
+        "BSE",
+        "F",
+        {
+          id: "",
+          name: "",
+          prev: 0,
+          yhigh: 0,
+          ylow: 0,
+          price: 0,
+        },
+        {
+          id: "INDX_CD",
+          name: "IndexName",
+          prev: "Prev_Close",
+          yhigh: "Week52High",
+          ylow: "Week52Low",
+          price: "Curvalue",
+        },
+        "BSE"
+      );
+    } catch (err) {
+      expect(err.toString()).toMatch(
+        "Error: Request failed with status code 403"
+      );
+    }
+  });
+
   test("NSE", async () => {
     const data = await getData(
       [
