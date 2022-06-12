@@ -89,7 +89,7 @@ const getAndPushData = (diff) => {
       if (!diff) {
         await updatePrevByGetItem(prevBatch, tableName);
       }
-      resolve();
+      resolve(true);
     } catch (e) {
       reject(e);
     }
