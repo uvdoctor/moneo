@@ -324,8 +324,8 @@ export default function Search({
     const success = await validateCaptcha("search");
     if (!success) return;
 
-    if(!text) {
-      return getSearchData(text)
+    if (!text) {
+      return getSearchData(text);
     }
 
     if (exchg === "US") {
@@ -391,6 +391,7 @@ export default function Search({
                 favourites.INDIA[searchType].includes(item.id)
               )
             : cachedData;
+        if (!suggestions.length) suggestions = cachedData;
         setData([...cachedData]);
         setSuggestions([...suggestions]);
       }
@@ -489,7 +490,7 @@ export default function Search({
           suffix={!isDataLoading ? <></> : <Spin size="small" />}
           prefix={<SearchOutlined />}
           onFocus={() => setOpen(true)}
-          onBlur={()=>setOpen(false)}
+          onBlur={() => setOpen(false)}
         />
       </AutoComplete>
     </div>
