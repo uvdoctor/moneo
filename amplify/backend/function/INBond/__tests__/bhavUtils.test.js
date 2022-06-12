@@ -79,27 +79,27 @@ describe("Test Bhavutils", () => {
     ]);
   });
 
-  // test("Empty File", async () => {
-  //   calcSchema.mockReturnValueOnce({
-  //     exchg: "NSE",
-  //     sid: "CG2036",
-  //     name: "GOI LOAN 8.33% 2036",
-  //     price: "108.65",
-  //     id: "IN0020060045",
-  //     STATUS: "Listed",
-  //   });
-  //   await expect(
-  //     extractDataFromCSV(
-  //       "empty_wdmlist_30052022.csv",
-  //       "NSE",
-  //       codes,
-  //       schema,
-  //       {},
-  //       "INBond",
-  //       {},
-  //       false,
-  //       []
-  //     )
-  //   ).resolves.toStrictEqual([]);
-  // });
+  test("Empty File", async () => {
+    calcSchema.mockReturnValueOnce({
+      exchg: "NSE",
+      sid: "CG2036",
+      name: "GOI LOAN 8.33% 2036",
+      price: "108.65",
+      id: "IN0020060045",
+      STATUS: "Listed",
+    });
+    await expect(
+      extractDataFromCSV(
+        "empty_wdmlist_30052022.csv",
+        "NSE",
+        codes,
+        schema,
+        {},
+        "INBond",
+        {},
+        false,
+        []
+      )
+    ).resolves.toStrictEqual([]);
+  });
 });

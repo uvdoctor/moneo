@@ -8,8 +8,8 @@ describe("Test DownloadFile", () => {
   afterEach(async () => {
     await cleanDirectory(tempDir, "Directory Cleaned");
   });
-  test("Date", async () => {
-    extractDataFromCSV.mockReturnValueOnce(true);
+  test("should resolve", async () => {
+    extractDataFromCSV.mockReturnValue(true);
     const { date, monthChar, month, yearFull } = utility(3);
     const nseFileName = `wdmlist_${date}${month}${yearFull}`;
     await expect(
@@ -24,5 +24,23 @@ describe("Test DownloadFile", () => {
         []
       )
     ).resolves.toStrictEqual(true);
+  });
+
+  test("should throw error", async () => {
+    extractDataFromCSV.mockRejectedValue(undefined);
+    const { date, monthChar, month, yearFull } = utility(20);
+    const nseFileName = `wdmlist_${date}${month}${yearFull}`;
+    await expect(
+      downloadFile(
+        {
+          typeExchg: "NSE",
+          fileName: nseFileName,
+          url: `https://www1.nseindia.com/content/historical/WDM/${yearFull}/${monthChar}/${nseFileName}.csv`,
+        },
+        {},
+        false,
+        []
+      )
+    ).rejects.toStrictEqual(undefined);
   });
 });
