@@ -36,10 +36,10 @@ const getAndPushData = () => {
           await pushDataForFeed(table, batches, `${exchg}-${i}`, url, exchg);
         }
       }
+    resolve(true);
     } catch (err) {
       reject(err);
     }
-    resolve();
   });
 };
 
