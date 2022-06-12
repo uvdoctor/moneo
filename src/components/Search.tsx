@@ -359,19 +359,19 @@ export default function Search({
 
   const getSearchData = async (searchText: string) => {
     setIsDataLoading(true);
-    let suggestions = [];
+    let suggesstions = [];
     try {
       if (exchg === "US") {
-        suggestions = favourites.US[searchType];
-        setData([...suggestions]);
-        setSuggestions([...suggestions]);
+        suggesstions = favourites.US[searchType];
+        setData([...suggesstions]);
+        setSuggestions([...suggesstions]);
       } else if (searchType === CRYPTO) {
         const data = await getCryptoList();
-        suggestions = !searchText
+        suggesstions = !searchText
           ? data.filter((item: any) => favourites.CRYPTO.includes(item.code))
           : data;
         setData([...data]);
-        setSuggestions([...suggestions]);
+        setSuggestions([...suggesstions]);
       } else {
         let opt = searchType;
         let cachedData = simpleStorage.get(opt);
@@ -385,15 +385,16 @@ export default function Search({
           item.value = value;
           nameMap[value] = value;
         });
-        suggestions =
-          !searchText && searchType !== BOND
+        suggesstions =
+          !searchText && hasExchg(searchType)
             ? cachedData.filter((item: any) =>
                 favourites.INDIA[searchType].includes(item.id)
               )
             : cachedData;
-        if (!suggestions.length) suggestions = cachedData;
+        console.log(suggesstions.length);
+        if (!suggesstions.length) suggesstions = cachedData;
         setData([...cachedData]);
-        setSuggestions([...suggestions]);
+        setSuggestions([...suggesstions]);
       }
       setIsDataLoading(false);
     } catch (err) {
