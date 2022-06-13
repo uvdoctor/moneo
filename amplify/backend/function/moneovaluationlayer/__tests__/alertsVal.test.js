@@ -1383,11 +1383,11 @@ describe("Test instrumentValuation", () => {
 });
 
 describe("Test calculateDiffPercent", () => {
-  test("Value", () => {
+  test("Ex 1", () => {
     const data = calculateDiffPercent(150, 100);
     expect(data).toEqual(50);
   });
-  test("Value", () => {
+  test("Ex 2", () => {
     const data = calculateDiffPercent(180, 150);
     expect(data).toEqual(20);
   });
