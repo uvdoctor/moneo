@@ -19,6 +19,7 @@ export default function SaveButton({ loading, error, onClick, action, disabledFo
 		<Row justify="center">
 			<Col>
 				<Button
+					id='save'
 					type="primary"
 					loading={loading}
 					size='middle'
