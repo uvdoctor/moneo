@@ -82,34 +82,33 @@ export default function BasicAuthenticator({
 
   const handleRegistrationSubmit = async () => {
     setLoading(true);
-    validateCaptcha("registration").then(async (success: boolean) => {
-      if (!success) return;
-      const username = generateFromEmail(email);
-      setUname(username);
-      Auth.signUp({
-        username: username,
-        password: password,
-        attributes: { email: email },
-      })
-        .then((response) => {
-          setCognitoUser(response.user);
-          Hub.dispatch("UI Auth", {
-            event: "AuthStateChange",
-            message: AuthState.ConfirmSignUp,
-            data: {
-              ...response.user,
-              username: username,
-              password: password,
-              attributes: { email: email },
-            },
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-          setError(error.message);
+    const success = await validateCaptcha("registration");
+    if (!success) return;
+    const username = generateFromEmail(email);
+    setUname(username);
+    Auth.signUp({
+      username: username,
+      password: password,
+      attributes: { email: email },
+    })
+      .then((response) => {
+        setCognitoUser(response.user);
+        Hub.dispatch("UI Auth", {
+          event: "AuthStateChange",
+          message: AuthState.ConfirmSignUp,
+          data: {
+            ...response.user,
+            username: username,
+            password: password,
+            attributes: { email: email },
+          },
         });
-    });
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError(error.message);
+      });
   };
 
   const onCancel = () => {
@@ -121,20 +120,19 @@ export default function BasicAuthenticator({
 
   const verifyEmail = async () => {
     setLoading(true);
-    validateCaptcha("verify_email").then(async (success: boolean) => {
-      if (!success) return;
-      if (await doesEmailExist(email, "AWS_IAM")) {
-        setShowPassword(true);
-      } else {
-        Hub.dispatch("UI Auth", {
-          event: "AuthStateChange",
-          message: AuthState.SignUp,
-        });
-        setShowPassword(true);
-      }
-      setLoading(false);
-      setDisable(true);
-    });
+    const success = await validateCaptcha("verify_email");
+    if (!success) return;
+    if (await doesEmailExist(email, "AWS_IAM")) {
+      setShowPassword(true);
+    } else {
+      Hub.dispatch("UI Auth", {
+        event: "AuthStateChange",
+        message: AuthState.SignUp,
+      });
+      setShowPassword(true);
+    }
+    setLoading(false);
+    setDisable(true);
   };
 
   const forgotPassword = () => {
@@ -144,19 +142,18 @@ export default function BasicAuthenticator({
     });
   };
 
-  const signIn = () => {
+  const signIn = async () => {
     setLoading(true);
-    validateCaptcha("sign_in").then(async (success: boolean) => {
-      if (!success) return;
-      try {
-        const user = await Auth.signIn(email, password);
-        console.log(user);
-      } catch (error: any) {
-        setError(error.message);
-        console.log(error);
-      }
-      setLoading(false);
-    });
+    const success = await validateCaptcha("sign_in");
+    if (!success) return;
+    try {
+      const user = await Auth.signIn(email, password);
+      console.log(user);
+    } catch (error: any) {
+      setError(error.message);
+      console.log(error);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -223,7 +220,7 @@ export default function BasicAuthenticator({
                 </>
               )}
             </div>
-            
+
             <div className="steps-action">
               <Row justify={showPassword ? "space-between" : "end"}>
                 {showPassword && (
@@ -233,10 +230,10 @@ export default function BasicAuthenticator({
                 )}
                 <CancelButton />
                 <Button
-                  id='login'
+                  id="login"
                   type="primary"
                   disabled={showPassword ? passwordError : !email || disable}
-                  onClick={showPassword ? signIn : verifyEmail}
+                  onClick={async () => showPassword ? await signIn() : await verifyEmail()}
                   loading={loading}
                 >
                   {showPassword ? Translations.SIGN_IN_TEXT : "Next"}
