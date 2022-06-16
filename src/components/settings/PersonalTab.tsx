@@ -24,17 +24,18 @@ export default function PersonalTab({
   user,
 }: PersonalTabProps) {
   return (
-    <Row gutter={[32, 20]}>
+    <Row gutter={[32, 20]} justify="space-around">
       <Col className="personal-tabpane-image-view">
         <ImageInput user={user} />
       </Col>
       <Col xs={24} sm={24} md={12}>
         <Row
           gutter={[
-            { xs: 0, sm: 0, md: 35 },
-            { xs: 15, sm: 15, md: 15 },
-          ]}>
-          <Col xs={24} md={12}>
+            { xs: 0, sm: 0, md: 32 },
+            { xs: 15, sm: 15, md: 16 },
+          ]}
+        >
+          <Col xs={24}>
             <TextInput
               pre="First Name"
               placeholder="Name"
@@ -58,7 +59,7 @@ export default function PersonalTab({
               style={{ width: 250 }}
             />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24}>
             <TextInput
               pre="Last Name"
               placeholder="Last Name"

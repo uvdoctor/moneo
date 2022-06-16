@@ -283,7 +283,7 @@ export default function UserSettings() {
             type={isMobileDevice(fsb) ? "card" : "line"}
             animated>
             <TabPane className="settings-tabpane-view" tab="Personal" key="1">
-              <Row>
+              <Row gutter={[10,10]}>
                 <Col span={24}>
                   <PersonalTab
                     name={name}
@@ -306,7 +306,7 @@ export default function UserSettings() {
               </Row>
             </TabPane>
             <TabPane className="settings-tabpane-view" tab="Profile" key="2">
-              <Row>
+              <Row gutter={[10,10]}>
                 <Col span={24}>
                   <ProfileTab
                     dispatch={dispatch}
