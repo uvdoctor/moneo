@@ -233,6 +233,7 @@ export default function BasicAuthenticator({
                 )}
                 <CancelButton />
                 <Button
+                  id='login'
                   type="primary"
                   disabled={showPassword ? passwordError : !email || disable}
                   onClick={showPassword ? signIn : verifyEmail}

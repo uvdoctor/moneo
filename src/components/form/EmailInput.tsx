@@ -24,6 +24,7 @@ export default function EmailInput({
 
   return (
     <Form
+      id="email"
       name="emailChange"
       layout="vertical"
       form={form}
