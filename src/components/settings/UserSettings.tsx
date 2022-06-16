@@ -282,7 +282,7 @@ export default function UserSettings() {
             tabPosition={isMobileDevice(fsb) ? "top" : "left"}
             type={isMobileDevice(fsb) ? "card" : "line"}
             animated>
-            <TabPane className="settings-tabpane-view" tab="Personal" key="1">
+            <TabPane className="settings-tabpane-view" tab="Personal" key="1" id="personal">
               <Row gutter={[10,10]}>
                 <Col span={24}>
                   <PersonalTab
@@ -305,7 +305,7 @@ export default function UserSettings() {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane className="settings-tabpane-view" tab="Profile" key="2">
+            <TabPane className="settings-tabpane-view" tab="Profile" key="2" id="profile">
               <Row gutter={[10,10]}>
                 <Col span={24}>
                   <ProfileTab
@@ -326,7 +326,7 @@ export default function UserSettings() {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane className="settings-tabpane-view" tab="Account" key="3">
+            <TabPane className="settings-tabpane-view" tab="Account" key="3" id="account">
               <Row gutter={[0, 24]}>
                 <Col xs={24} sm={24} md={12}>
                   <TextInput
@@ -509,14 +509,14 @@ export default function UserSettings() {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane className="settings-tabpane-view" tab="Password" key="4">
+            <TabPane className="settings-tabpane-view" tab="Password" key="4" id="password">
               <Row justify="start">
                 <Col>
                   <PasswordTab user={user} />
                 </Col>
               </Row>
             </TabPane>
-            <TabPane className="settings-tabpane-view" tab="Delete" key="5">
+            <TabPane className="settings-tabpane-view" tab="Delete" key="5" id='delete'>
               <Row justify="start">
                 <Col>
                   <DeleteAccount />
