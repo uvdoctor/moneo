@@ -12,7 +12,7 @@ const {
 
 jest.mock("@aws-sdk/client-sqs");
 
-describe("Test Divide array by size", () => {
+describe("Send Message", () => {
   test("should call client send function", async () => {
     await sendMessage("shdhasd", "url");
 
@@ -22,16 +22,51 @@ describe("Test Divide array by size", () => {
   test("should call SendMessageCommand with given params", async () => {
     const name = "Moneo";
     const queueUrl = "/testing";
-    const params = {
-      MessageBody: name,
-      QueueUrl: queueUrl,
-    };
-
     await sendMessage(name, queueUrl);
 
     const sendMessageCommandParams =
       SendMessageCommand.prototype.constructor.mock.calls[1];
 
     expect(sendMessageCommandParams[0].QueueUrl).toEqual(queueUrl);
+  });
+});
+
+describe("Receive Message", () => {
+  test("should call client send function", async () => {
+    await receiveMessage("url");
+    expect(SQSClient.prototype.send).toHaveBeenCalled();
+  });
+
+  test("should call receiveMessageCommand with given params", async () => {
+    const queueUrl = "/testing";
+    await receiveMessage(queueUrl);
+
+    const receiveMessageCommandParams =
+      ReceiveMessageCommand.prototype.constructor.mock.calls[1];
+
+    expect(receiveMessageCommandParams[0].QueueUrl).toEqual(queueUrl);
+  });
+
+  test("should return value", async () => {
+    SQSClient.prototype.send.mockReturnValue({ Messages: 'sent' })
+    const data = await receiveMessage("url");
+    expect(data).toEqual('sent');
+  });
+});
+
+describe("Delete Message", () => {
+  test("should call client send function", async () => {
+    await deleteMessage("url", "handle");
+    expect(SQSClient.prototype.send).toHaveBeenCalled();
+  });
+
+  test("should call deleteMessageCommand with given params", async () => {
+    const queueUrl = "/testing";
+    await deleteMessage(queueUrl);
+
+    const deleteMessageCommandParams =
+      DeleteMessageCommand.prototype.constructor.mock.calls[1];
+
+    expect(deleteMessageCommandParams[0].QueueUrl).toEqual(queueUrl);
   });
 });
