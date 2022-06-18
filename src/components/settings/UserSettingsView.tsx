@@ -53,7 +53,6 @@ export default function UserSettingsView() {
     countryCodeWithoutPlusSign,
     countryCode,
     updateImIfSameAsMob,
-    setName,
     isDrManual,
     riskProfile,
   }: any = useContext(UserSettingsContext);
