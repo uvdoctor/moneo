@@ -1,3 +1,4 @@
+import React from "react";
 import { Modal, notification, Input } from "antd";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore

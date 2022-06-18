@@ -1,3 +1,4 @@
+import React from "react";
 import { Menu } from "antd";
 import Link from "next/link";
 import simpleStorage from "simplestorage.js";
@@ -494,7 +495,8 @@ export const menuItem = (
   <Menu.Item
     key={key ? key : path}
     icon={icon ? icon : null}
-    className={multiCol ? "multi-col-submenu" : ""}>
+    className={multiCol ? "multi-col-submenu" : ""}
+  >
     {selectedKey !== path ? (
       <Link href={path}>
         <a>{name}</a>
@@ -835,12 +837,16 @@ export const getPrice = async (
       id: id,
       type: type,
       isPrev: isPrev,
-      exchg: exchg ? exchg : ''
+      exchg: exchg ? exchg : "",
     }),
   })
     .then(async (res: any) => {
       const re = await res.json();
-      simpleStorage.set(isPrev ? `${id}-prev` : id, exchg ? re : re.rate, LOCAL_DATA_TTL);
+      simpleStorage.set(
+        isPrev ? `${id}-prev` : id,
+        exchg ? re : re.rate,
+        LOCAL_DATA_TTL
+      );
       return exchg ? re : re.rate;
     })
     .catch(() => {
