@@ -7,6 +7,7 @@ import TextInput from "../form/textinput";
 import { Auth } from "aws-amplify";
 import { updateUserDetails } from "../userinfoutils";
 import Countdown from "antd/lib/statistic/Countdown";
+import { UserSettingsContext } from "./UserSettingsContext";
 
 interface OtpInputProps {
   onClickAction: Function;
@@ -15,7 +16,6 @@ interface OtpInputProps {
   email?: any;
   mob?: any;
   im?: any;
-  resendOtp?: Function;
 }
 
 export default function OtpDialogue({
@@ -24,9 +24,9 @@ export default function OtpDialogue({
   action,
   email,
   mob,
-  resendOtp,
 }: OtpInputProps) {
   const { validateCaptcha, owner }: any = useContext(AppContext);
+  const { sendOtp }: any = useContext(UserSettingsContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<any>();
@@ -53,7 +53,7 @@ export default function OtpDialogue({
   };
 
   const callResendOtp = async () => {
-    resendOtp && (await resendOtp());
+    await sendOtp();
     setViewResendOtp(false);
   };
 
@@ -118,10 +118,12 @@ export default function OtpDialogue({
             onClick={() => handleOk(action)}
             icon={<SaveOutlined />}
             disabled={!otp}
-            loading={loading}>
+            loading={loading}
+          >
             Submit
           </Button>,
-        ]}>
+        ]}
+      >
         <TextInput pre="Otp" value={otp} changeHandler={setOtp} inline />
       </Modal>
     </Fragment>

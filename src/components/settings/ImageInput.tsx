@@ -4,12 +4,9 @@ import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
 import { UserOutlined, EditOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
-interface ImageInputProps {
-  user: any;
-}
 
-export default function ImageInput({ user }: ImageInputProps) {
-  const { validateCaptcha }: any = useContext(AppContext);
+export default function ImageInput() {
+  const { validateCaptcha, user }: any = useContext(AppContext);
   const [loader, setLoader] = useState<Boolean>(false);
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);

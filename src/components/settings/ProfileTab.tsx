@@ -6,22 +6,19 @@ import RadioInput from "../form/RadioInput";
 import { AppContext } from "../AppContext";
 import TaxLiabilityInput from "../TaxLiabilityInput";
 import RiskProfileInput from "../RiskProfileInput";
+import { UserSettingsContext } from "./UserSettingsContext";
 
-interface ProfileTabProps {
-  isDrManual: boolean;
-  notify: boolean;
-  riskProfile: string;
-  tax: string;
-  dispatch: Function;
-}
-
-export default function ProfileTab({
-  isDrManual,
-  notify,
-  riskProfile,
-  tax,
-  dispatch,
-}: ProfileTabProps) {
+export default function ProfileTab() {
+  const {
+    isDrManual,
+    notify,
+    riskProfile,
+    tax,
+    setIsDrManual,
+    setNotify,
+    setRiskProfile,
+    setTax,
+  }: any = useContext(UserSettingsContext);
   const { discountRate, setDiscountRate }: any = useContext(AppContext);
 
   return (
@@ -29,7 +26,8 @@ export default function ProfileTab({
       gutter={[
         { xs: 0, sm: 0, md: 35 },
         { xs: 15, sm: 15, md: 15 },
-      ]}>
+      ]}
+    >
       <Col xs={24} md={12}>
         <NumberInput
           unit="%"
@@ -42,15 +40,7 @@ export default function ProfileTab({
               pre=""
               value={isDrManual ? "manual" : "auto"}
               options={{ manual: "Manual", auto: "Auto" }}
-              changeHandler={(value: string) =>
-                dispatch({
-                  type: "single",
-                  data: {
-                    field: "isDrManual",
-                    val: value === "manual",
-                  },
-                })
-              }
+              changeHandler={(val: any) => setIsDrManual(val === "manual")}
             />
           }
         />
@@ -59,11 +49,8 @@ export default function ProfileTab({
         <RadioInput
           options={["Send", "Do not send"]}
           value={notify ? "Send" : "Do not send"}
-          changeHandler={(value: string) => 
-            dispatch({
-              type: "single",
-              data: { field: "notify", val: value === "Send" ? true : false },
-            })
+          changeHandler={(value: string) =>
+            setNotify(value === "Send" ? true : false)
           }
         />
         &nbsp; offers and newsletters
@@ -71,23 +58,13 @@ export default function ProfileTab({
       <Col xs={24} md={12}>
         <RiskProfileInput
           value={riskProfile}
-          changeHandler={(val: string) =>
-            dispatch({
-              type: "single",
-              data: { field: "riskProfile", val },
-            })
-          }
+          changeHandler={(val: string) => setRiskProfile(val)}
         />
       </Col>
       <Col xs={24} md={12}>
         <TaxLiabilityInput
           value={tax}
-          changeHandler={(val: string) =>
-            dispatch({
-              type: "single",
-              data: { field: "tax", val },
-            })
-          }
+          changeHandler={(val: string) => setTax(val)}
         />
       </Col>
     </Row>

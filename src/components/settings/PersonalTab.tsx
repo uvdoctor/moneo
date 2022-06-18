@@ -1,32 +1,29 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import TextInput from "../form/textinput";
 import DateInput from "../form/DateInput";
 import ImageInput from "./ImageInput";
+import { UserSettingsContext } from "./UserSettingsContext";
 
-interface PersonalTabProps {
-  name: string;
-  lastName: string;
-  dispatch: Function;
-  dobDate: number;
-  dobMonth: number;
-  dobYear: number;
-  user: any;
-}
-
-export default function PersonalTab({
-  name,
-  lastName,
-  dobDate,
-  dobMonth,
-  dobYear,
-  dispatch,
-  user,
-}: PersonalTabProps) {
+export default function PersonalTab() {
+  const {
+    name,
+    lastName,
+    setName,
+    setError,
+    setLastName,
+    dobDate,
+    setDobDate,
+    dobMonth,
+    setDobMonth,
+    dobYear,
+    setDobYear,
+  }: any = useContext(UserSettingsContext);
+  
   return (
     <Row gutter={[32, 20]} justify="space-around">
       <Col className="personal-tabpane-image-view">
-        <ImageInput user={user} />
+        <ImageInput />
       </Col>
       <Col xs={24} sm={24} md={12}>
         <Row
@@ -40,20 +37,10 @@ export default function PersonalTab({
               pre="First Name"
               placeholder="Name"
               value={name}
-              changeHandler={(val: any) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "name", val },
-                })
-              }
+              changeHandler={setName}
               minLength={2}
               maxLength={20}
-              setError={(val: any) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "error", val },
-                })
-              }
+              setError={setError}
               fieldName="firstname"
               pattern="^[a-zA-Z'-.,]+$"
               style={{ width: 250 }}
@@ -64,20 +51,10 @@ export default function PersonalTab({
               pre="Last Name"
               placeholder="Last Name"
               value={lastName}
-              changeHandler={(val: any) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "lastName", val },
-                })
-              }
+              changeHandler={setLastName}
               minLength={2}
               maxLength={20}
-              setError={(val: any) =>
-                dispatch({
-                  type: "single",
-                  data: { field: "error", val },
-                })
-              }
+              setError={setError}
               fieldName="lastname"
               pattern="^[a-zA-Z'-.,]+$"
               style={{ width: 250 }}
@@ -91,24 +68,9 @@ export default function PersonalTab({
                 startDateValue={dobDate}
                 startMonthValue={dobMonth}
                 startYearValue={dobYear}
-                startYearHandler={(val: number) =>
-                  dispatch({
-                    type: "single",
-                    data: { field: "dobYear", val },
-                  })
-                }
-                startMonthHandler={(val: number) =>
-                  dispatch({
-                    type: "single",
-                    data: { field: "dobMonth", val },
-                  })
-                }
-                startDateHandler={(val: number) =>
-                  dispatch({
-                    type: "single",
-                    data: { field: "dobDate", val },
-                  })
-                }
+                startYearHandler={setDobYear}
+                startMonthHandler={setDobMonth}
+                startDateHandler={setDobDate}
                 size="large"
               />
             </Col>

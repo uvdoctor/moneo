@@ -1,6 +1,7 @@
 import { Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import React from "react";
+import { emailRegex } from "../utils";
 
 interface EmailInputProps {
   setEmail: Function;
@@ -35,8 +36,7 @@ export default function EmailInput({
         label={label}
         rules={[
           {
-            pattern:
-              /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            pattern: emailRegex,
             message: "This is not a valid email address",
           },
         ]}
