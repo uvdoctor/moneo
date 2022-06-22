@@ -1,9 +1,9 @@
 import React from "react";
 import DeleteAccount from "../DeleteAccount";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 import { AppContext } from "../../AppContext";
 
-describe("Settings Page", () => {
+describe("Delete Account", () => {
   let wrapper;
   beforeEach(() => {
     wrapper = mount(
@@ -19,16 +19,19 @@ describe("Settings Page", () => {
     );
   });
 
-  test("should click on delete", () => {
+  test("input fields should change ", () => {
     const input = wrapper.find('input[placeholder="delete"]');
-    input.instance().value = 'delete';
-    input.simulate('change');
-    expect(input.instance().value).toEqual('delete');
-    const button = wrapper.find('button');
-    expect(button.prop('disabled')).toBeFalsy()
-    button.simulate('click');
-    // console.log(button.instance());
-    // wrapper.update()
-    // expect(button.prop('disabled')).toBeTruthy()
+    input.instance().value = "delete";
+    input.simulate("change");
+    expect(input.instance().value).toEqual("delete");
+  });
+
+  test("should click on delete", () => {
+    const wrapper = mount(<DeleteAccount />);
+    const button = wrapper.find("button");
+    expect(button.prop("disabled")).toBeFalsy();
+    button.props().onClick();
+    wrapper.update();
+    expect(wrapper.find(".ant-btn-loading-icon")).toHaveLength(1);
   });
 });
