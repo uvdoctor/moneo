@@ -18,6 +18,7 @@ function UserSettingsContextProvider() {
     discountRate,
     setUserInfo,
     userInfo,
+    validateCaptcha
   }: any = useContext(AppContext);
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<any>("");
@@ -102,6 +103,8 @@ function UserSettingsContextProvider() {
   const updatePersonalTab = async () => {
     setLoading(true);
     try {
+      const success = await validateCaptcha('personal_settings');
+      if(!success) return;
       const getStr = (num: number) => (num < 10 ? `0${num}` : "" + num);
       let input: { [key: string]: string } = {};
       if (user?.attributes.name !== name) input.name = name;
@@ -125,6 +128,8 @@ function UserSettingsContextProvider() {
   const updateProfileTab = async () => {
     setLoading(true);
     try {
+      const success = await validateCaptcha('profile_settings');
+      if(!success) return;
       const results = await updateUserDetails({
         uname: owner,
         dr: isDrManual ? discountRate : 0,

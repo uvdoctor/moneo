@@ -94,7 +94,6 @@ export default function UserSettingsView() {
                     loading={loading}
                     error={error}
                     onClick={updatePersonalTab}
-                    action="personal"
                   />
                 </Col>
               </Row>
@@ -109,7 +108,6 @@ export default function UserSettingsView() {
                     loading={loading}
                     error={error}
                     onClick={updateProfileTab}
-                    action="profile"
                   />
                 </Col>
               </Row>
@@ -257,7 +255,7 @@ export default function UserSettingsView() {
             <TabPane className="settings-tabpane-view" tab="Password" key="4">
               <Row justify="start">
                 <Col>
-                  <PasswordTab user={user} />
+                  <PasswordTab />
                 </Col>
               </Row>
             </TabPane>

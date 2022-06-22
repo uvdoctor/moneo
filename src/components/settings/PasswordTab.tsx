@@ -1,15 +1,13 @@
 import { Col, Form, Input, notification, Row } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Auth } from 'aws-amplify';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormInstance } from 'antd/lib/form';
 import SaveButton from './SaveButton';
+import { AppContext } from '../AppContext';
 
-interface PasswordTabProps {
-	user: any;
-}
-
-export default function PasswordTab({user}: PasswordTabProps) {
+export default function PasswordTab() {
+	const { user }: any = useContext(AppContext);
 	const [ disabledForm, setDisabledForm ] = useState<boolean>(true);
 	const [ form ] = useForm();
 	const inputEl = React.createRef<FormInstance>();
@@ -41,7 +39,7 @@ export default function PasswordTab({user}: PasswordTabProps) {
 				<Row gutter={[ 0, 5 ]}>
 					<Col span={24}>Old Password</Col>
 					<Col xs={24} sm={24}>
-						<Input.Password allowClear />
+						<Input.Password allowClear id='oldPassword'/>
 					</Col>
 				</Row>
 			</Form.Item>
@@ -84,7 +82,7 @@ export default function PasswordTab({user}: PasswordTabProps) {
 				<Row gutter={[ 0, 5 ]}>
 					<Col span={24}>New Password</Col>
 					<Col xs={24} sm={24}>
-						<Input.Password allowClear />
+						<Input.Password allowClear id='newPassword'/>
 					</Col>
 				</Row>
 			</Form.Item>
