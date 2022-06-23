@@ -42,8 +42,8 @@ function UserSettingsContextProvider() {
   const countryCodeWithoutPlusSign = countryCode
     ? countryCode.value.slice(1)
     : "91";
-  const success = (message: any) => notification.success({ message });
-  const failure = (message: any) => notification.error({ message });
+  const notifySuccess = (message: any) => notification.success({ message });
+  const notifyFailure = (message: any) => notification.error({ message });
   const sendOtp = async () =>
     user?.attributes?.phone_number &&
     (await Auth.resendSignUp(user?.attributes?.phone_number));
@@ -58,11 +58,11 @@ function UserSettingsContextProvider() {
       const data =
         attr === "Email" ? input : Number(countryCodeWithoutPlusSign + input);
       if (await func(data)) {
-        failure(`${attr} is already used by another account`);
+        notifyFailure(`${attr} is already used by another account`);
         return false;
       }
       await Auth.updateUserAttributes(user, updateAttr);
-      success(
+      notifySuccess(
         `${attr} updated successfully. ${
           attr === "Whatsapp Number" ? "" : "Enter Otp to verify"
         }`
@@ -76,7 +76,7 @@ function UserSettingsContextProvider() {
       }
       return true;
     } catch (error) {
-      failure(`Unable to update, ${error}`);
+      notifyFailure(`Unable to update, ${error}`);
     }
   };
 
@@ -87,7 +87,7 @@ function UserSettingsContextProvider() {
         nickname: countryCode?.value + mobile,
       });
     } else {
-      failure("Update your mobile, your mobile number is empty.");
+      notifyFailure("Update your mobile, your mobile number is empty.");
     }
   };
 
@@ -96,9 +96,9 @@ function UserSettingsContextProvider() {
       const success = await validateCaptcha('pref_username');
       if(!success) return;
       await Auth.updateUserAttributes(user, { preferred_username: prefuser });
-      success("Preferred username updated successfully");
+      notifySuccess("Preferred username updated successfully");
     } catch (error: any) {
-      failure(`Unable to update ${error.message}`);
+      notifyFailure(`Unable to update ${error.message}`);
     }
   };
 
@@ -120,9 +120,9 @@ function UserSettingsContextProvider() {
         dob: `${dobYear}-${getStr(dobMonth)}-${getStr(dobDate)}`,
       });
       setUserInfo(result);
-      success("Updated Successfully");
+      notifySuccess("Updated Successfully");
     } catch (error) {
-      failure(`Unable to update ${error}`);
+      notifyFailure(`Unable to update ${error}`);
     }
     setLoading(false);
   };
@@ -140,9 +140,9 @@ function UserSettingsContextProvider() {
         tax,
       });
       setUserInfo(results);
-      success("Updated Successfully");
+      notifySuccess("Updated Successfully");
     } catch (error) {
-      failure("Unable to update");
+      notifyFailure("Unable to update");
     }
     setLoading(false);
   };
