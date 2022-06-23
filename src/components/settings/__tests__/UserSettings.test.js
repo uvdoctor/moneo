@@ -33,6 +33,8 @@ describe("Settings Page", () => {
     const value = {
       updatePersonalTab: jest.fn(),
       updateProfileTab: jest.fn(),
+      updatePrefUsername: jest.fn(),
+      updateAccountTab: jest.fn()
     };
 
     beforeEach(() => {
@@ -69,17 +71,47 @@ describe("Settings Page", () => {
       expect(wrapper.find("input").length).toEqual(3);
     });
 
-    test("should call onClick function of Personal Tab", () => {
+    test("should call Save Button Function of Personal Tab", () => {
       const button = wrapper.find(".ant-btn-primary");
       button.simulate("click");
       expect(value.updatePersonalTab).toHaveBeenCalled();
     });
 
-    test("should call onClick function of Profile Tab", () => {
+    test("should call Save Button Function of Profile Tab", () => {
       wrapper.find("#rc-tabs-test-tab-2").simulate("click");
       const button = wrapper.find(".ant-tabs-tabpane-active .ant-btn-primary");
       button.simulate("click");
       expect(value.updateProfileTab).toHaveBeenCalled();
+    });
+
+    test("Account Tab", () => {
+      wrapper.find("#rc-tabs-test-tab-3").simulate("click");
+      wrapper.find(".ant-tabs-tabpane-active .ant-input-group").forEach((node, index) => {
+        if(index === 0) {
+          node.instance().value = "Mehz";
+          node.simulate("change");
+          expect(node.instance().value).toEqual("Mehz");
+          node.find('button').simulate('click');
+          expect(value.updatePrefUsername).toHaveBeenCalled();
+        }
+        if(index === 1) {
+          node.instance().value = "xyz@gmail.com";
+          node.simulate("change");
+          expect(node.instance().value).toEqual("xyz@gmail.com");
+        }
+        if(index === 2) {
+          node.instance().value = "8268552115";
+          node.simulate("change");
+          expect(node.instance().value).toEqual("8268552115");
+        }
+        // if(index === 3) {
+        //   node.instance().value = "8268552115";
+        //   node.simulate("change");
+        //   expect(node.instance().value).toEqual("8268552115");
+        //   node.find('button').simulate('click')
+        //   expect(value.updateAccountTab).toHaveBeenCalled();
+        // }
+      });
     });
   });
 });

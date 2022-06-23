@@ -93,6 +93,8 @@ function UserSettingsContextProvider() {
 
   const updatePrefUsername = async () => {
     try {
+      const success = await validateCaptcha('pref_username');
+      if(!success) return;
       await Auth.updateUserAttributes(user, { preferred_username: prefuser });
       success("Preferred username updated successfully");
     } catch (error: any) {

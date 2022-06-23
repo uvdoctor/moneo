@@ -28,7 +28,6 @@ require("./UserSettings.less");
 export default function UserSettingsView() {
   const {
     user,
-    validateCaptcha,
     appContextLoaded,
     userInfo,
     setDiscountRate,
@@ -118,6 +117,7 @@ export default function UserSettingsView() {
                   <TextInput
                     pre="Preferred login name"
                     value={prefuser}
+                    placeholder="Login Name"
                     changeHandler={setPrefuser}
                     style={{ width: 300 }}
                     fieldName="prefusername"
@@ -128,13 +128,8 @@ export default function UserSettingsView() {
                         style={{ color: COLORS.GREEN }}
                         icon={<SaveOutlined />}
                         disabled={error?.length > 0 ? true : false}
-                        onClick={() => {
-                          validateCaptcha("prefusername_change").then(
-                            (success: boolean) => {
-                              if (!success) return;
-                              updatePrefUsername();
-                            }
-                          );
+                        onClick={async() => {
+                          await updatePrefUsername();
                         }}
                       />
                     }

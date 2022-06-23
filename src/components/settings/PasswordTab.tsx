@@ -7,13 +7,17 @@ import SaveButton from './SaveButton';
 import { AppContext } from '../AppContext';
 
 export default function PasswordTab() {
-	const { user }: any = useContext(AppContext);
+	const { user, validateCaptcha }: any = useContext(AppContext);
 	const [ disabledForm, setDisabledForm ] = useState<boolean>(true);
+	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ form ] = useForm();
 	const inputEl = React.createRef<FormInstance>();
 
 	const updatePassword = async () => {
+		setLoading(true);
 		const value = (name: string) => inputEl.current?.getFieldValue(name);
+		const success = await validateCaptcha('password_settings');
+    if(!success) return;
 		Auth.changePassword(user, value('oldpass'), value('pass'))
 			.then(() => {
 				notification.success({ message: 'Password Updated' });
@@ -21,6 +25,7 @@ export default function PasswordTab() {
 			.catch((err) => {
 				notification.error({ message: 'Wrong Credentials ' + err.message });
 			});
+		setLoading(false);
 	};
 
 	const handleFormChange = () =>
@@ -89,7 +94,7 @@ export default function PasswordTab() {
 			<Form.Item>
 				<Row justify="center">
 					<Col xs={24} sm={24} md={16}>
-						<SaveButton disabledForm={disabledForm} onClick={updatePassword} action={'password'} />
+						<SaveButton disabledForm={disabledForm} onClick={updatePassword} loading={loading}/>
 					</Col>
 				</Row>
 			</Form.Item>

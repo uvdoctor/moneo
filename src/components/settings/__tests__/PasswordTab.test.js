@@ -10,6 +10,7 @@ describe("Settings Page", () => {
       <AppContext.Provider
         value={{
           user: {},
+          validateCaptcha: jest.fn()
         }}
       >
         <PasswordTab />
@@ -30,5 +31,11 @@ describe("Settings Page", () => {
     expect(newPassword.instance().value).toEqual('Mehz@1234');
     // expect(wrapper.find('.ant-form-item-explain-error')).toHaveLength(1);
   
+  });
+
+  test("should click on save button", () => {
+    button.props().onClick();
+    // expect(button.prop("disabled")).toBeTruthy();
+    // expect(wrapper.find(".ant-btn-loading")).toHaveLength(1);
   });
 });
