@@ -2,6 +2,7 @@ import React from "react";
 import PasswordTab from "../PasswordTab";
 import { mount } from "enzyme";
 import { AppContext } from "../../AppContext";
+import { act } from "react-dom/test-utils";
 
 describe("Settings Page", () => {
   let wrapper;
@@ -22,8 +23,13 @@ describe("Settings Page", () => {
     const oldPassword = wrapper.find('input[id="oldPassword"]');
     oldPassword.instance().value = 'Mehz';
     oldPassword.simulate('change');
+    act(()=>{
+      oldPassword.simulate('change');
+    })
     expect(oldPassword.instance().value).toEqual('Mehz');
-    // expect(wrapper.find('.ant-form-item-explain-error')).toHaveLength(1);
+    console.log(wrapper.html());
+
+    expect(wrapper.find('.ant-form-item-explain-error')).toHaveLength(1);
 
     const newPassword = wrapper.find('input[id="newPassword"]');
     newPassword.instance().value = 'Mehz@1234';
