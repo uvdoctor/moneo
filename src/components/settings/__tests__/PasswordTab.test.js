@@ -1,41 +1,84 @@
 import * as React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
-// import { act } from "react-dom/test-utils";
-// import * as ReactDOM from "react-dom";
+import {
+  render,
+  screen,
+  cleanup,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
+
+jest.mock("aws-amplify");
+
 import PasswordTab from "../PasswordTab";
+import { AppContext } from "../../AppContext";
 
 describe("App", function () {
   test("should display pass in number", function () {
-    const { getByPlaceholderText, getByText } = render(
-      <PasswordTab />
-    );
+    render(<PasswordTab />);
 
-    // console.log(getByLabelText("oldpass"));
-    const oldPassword = getByText("Old Password");
-    // console.log(oldPassword.value, oldPassword.firstChild);
-    // fireEvent.change(oldPassword, { target: { value: "Mehz" } });
-    // console.log(getByPlaceholderText("Old Password"), oldPassword);
-    // expect(oldPassword.value).toBe("Mehz");
+    const oldPassword = screen.getByPlaceholderText("Old Password");
 
-    //  expect(getByLabelText("first item").checked).toBe(true);
-    // console.log(container);
+    fireEvent.change(oldPassword, { target: { value: "ABC" } });
+
+    expect(oldPassword.value).toEqual("ABC");
   });
 
-  test("should click on save button", () => {
-    const { getByText, getByRole } = render(<PasswordTab />);
-    const button = getByText('Save')
-    console.log(button);
-    // expect(button).toHaveAttribute('loading', 'true')
-    expect(button).toBeEnabled();
-    fireEvent.click(button)
-    expect(button).toBeDisabled();
+  test("should display error", async function () {
+    render(<PasswordTab />);
 
+    const newPassword = screen.getByPlaceholderText("New Password");
 
+    fireEvent.change(newPassword, { target: { value: "ABC" } });
 
+    await waitFor(() => {
+      const errorDiv = screen.getByText("Atleast one digit");
 
-    //     button.props().onClick();
-    //     // expect(button.prop("disabled")).toBeTruthy();
-    //     // expect(wrapper.find(".ant-btn-loading")).toHaveLength(1);
-    //   });
+      expect(errorDiv.length).not.toBeNull();
+    });
+  });
+
+  test("should disabled save button", async () => {
+    render(<PasswordTab />);
+
+    const button = document.querySelector("#save");
+
+    expect(button.disabled).toEqual(true);
+  });
+
+  test("should enable save button", async () => {
+    render(<PasswordTab />);
+
+    const button = document.querySelector("#save");
+    const oldPassword = screen.getByPlaceholderText("Old Password");
+    const newPassword = screen.getByPlaceholderText("New Password");
+
+    fireEvent.change(oldPassword, { target: { value: "Mehz@123" } });
+    fireEvent.change(newPassword, { target: { value: "Mehz@123" } });
+
+    await waitFor(() => {
+      expect(button.disabled).toEqual(false);
+    });
+  });
+
+  test("should disabled save button on click", async () => {
+    render(
+      <AppContext.Provider value={{ user: {}, validateCaptcha: () => {} }}>
+        <PasswordTab />
+      </AppContext.Provider>
+    );
+
+    const button = document.querySelector("#save");
+
+    const oldPassword = screen.getByPlaceholderText("Old Password");
+    const newPassword = screen.getByPlaceholderText("New Password");
+
+    fireEvent.change(oldPassword, { target: { value: "Mehz@123" } });
+    fireEvent.change(newPassword, { target: { value: "Mehz@123" } });
+
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(button.disabled).toEqual(true);
+    });
+  });
 });
-})

@@ -30,7 +30,7 @@ module.exports = {
   // Test spec file resolution pattern
   // Matches parent folder `__tests__` and filename
   // should contain `test`.
-  testRegex: "(/valuationutils.test.js?$)",
+  testRegex: "(/PasswordTab.test.js?$)",
   // Module file extensions for importing
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 
