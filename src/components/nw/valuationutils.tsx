@@ -70,7 +70,7 @@ export const loadInstrumentPrices = async (
   return unmatched;
 };
 
-const getInsPerfIds = (ids: Array<string>, allInsData: any, ) => {
+export const getInsPerfIds = (ids: Array<string>, allInsData: any, ) => {
   let insPerfIds: Array<string> = [];
   ids.forEach((id: string) => {
     const data = allInsData[id];

@@ -1,47 +1,41 @@
-import React from "react";
+import * as React from "react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
+// import { act } from "react-dom/test-utils";
+// import * as ReactDOM from "react-dom";
 import PasswordTab from "../PasswordTab";
-import { mount } from "enzyme";
-import { AppContext } from "../../AppContext";
-import { act } from "react-dom/test-utils";
 
-describe("Settings Page", () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = mount(
-      <AppContext.Provider
-        value={{
-          user: {},
-          validateCaptcha: jest.fn()
-        }}
-      >
-        <PasswordTab />
-      </AppContext.Provider>
+describe("App", function () {
+  test("should display pass in number", function () {
+    const { getByPlaceholderText, getByText } = render(
+      <PasswordTab />
     );
-  });
 
-  test("should have input values", () => {
-    const oldPassword = wrapper.find('input[id="oldPassword"]');
-    oldPassword.instance().value = 'Mehz';
-    oldPassword.simulate('change');
-    act(()=>{
-      oldPassword.simulate('change');
-    })
-    expect(oldPassword.instance().value).toEqual('Mehz');
-    console.log(wrapper.html());
+    // console.log(getByLabelText("oldpass"));
+    const oldPassword = getByText("Old Password");
+    // console.log(oldPassword.value, oldPassword.firstChild);
+    // fireEvent.change(oldPassword, { target: { value: "Mehz" } });
+    // console.log(getByPlaceholderText("Old Password"), oldPassword);
+    // expect(oldPassword.value).toBe("Mehz");
 
-    expect(wrapper.find('.ant-form-item-explain-error')).toHaveLength(1);
-
-    const newPassword = wrapper.find('input[id="newPassword"]');
-    newPassword.instance().value = 'Mehz@1234';
-    newPassword.simulate('change');
-    expect(newPassword.instance().value).toEqual('Mehz@1234');
-    // expect(wrapper.find('.ant-form-item-explain-error')).toHaveLength(1);
-  
+    //  expect(getByLabelText("first item").checked).toBe(true);
+    // console.log(container);
   });
 
   test("should click on save button", () => {
-    button.props().onClick();
-    // expect(button.prop("disabled")).toBeTruthy();
-    // expect(wrapper.find(".ant-btn-loading")).toHaveLength(1);
-  });
+    const { getByText, getByRole } = render(<PasswordTab />);
+    const button = getByText('Save')
+    console.log(button);
+    // expect(button).toHaveAttribute('loading', 'true')
+    expect(button).toBeEnabled();
+    fireEvent.click(button)
+    expect(button).toBeDisabled();
+
+
+
+
+    //     button.props().onClick();
+    //     // expect(button.prop("disabled")).toBeTruthy();
+    //     // expect(wrapper.find(".ant-btn-loading")).toHaveLength(1);
+    //   });
 });
+})
