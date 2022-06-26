@@ -113,7 +113,7 @@ export default function DeleteAccount() {
   };
 
   return (
-    <Row gutter={[0, 20]}>
+    <Row gutter={[0, 20]} justify='start'>
       <Col>
         <Space direction="vertical">
           <Text strong>Are you sure you want to delete this account?</Text>
@@ -146,7 +146,8 @@ export default function DeleteAccount() {
           danger
           loading={loading}
           disabled={loading}
-          icon={<DeleteOutlined />}>
+          icon={<DeleteOutlined />}
+        >
           Delete Account
         </Button>
       </Col>
