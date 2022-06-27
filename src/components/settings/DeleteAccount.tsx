@@ -70,35 +70,34 @@ export default function DeleteAccount() {
     }
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setLoading(true);
     if (input === "delete") {
       try {
-        validateCaptcha("delete_change").then(async (success: boolean) => {
-          if (!success) return;
-          const user = await Auth.currentAuthenticatedUser();
-          await deleteUserDetails(getGoalsList, "deleteGoal", "Goals");
-          await deleteUserDetails(getFamilysList, "deleteFamily", "FamilyList");
-          await deleteHoldings(owner, "deleteUserHoldings", "AllHoldings");
-          await deleteHoldings(owner, "deleteUserIns", "Instrument Holdings");
-          user.attributes.profile
-            ? await Storage.remove(user.attributes.profile)
-            : null;
-          await deleteContact(owner);
-          user.deleteUser((error: any, data: any) => {
-            if (error) {
-              console.log(error);
-              throw error;
-            }
-            console.log(data);
-            handleLogout();
-          });
-          notification.success({
-            message: "Deleted sucessfully",
-            description: "Your account will be logged out automatically.",
-          });
-          setLoading(false);
+        const success = await validateCaptcha("delete_change");
+        if (!success) return;
+        const user = await Auth.currentAuthenticatedUser();
+        await deleteUserDetails(getGoalsList, "deleteGoal", "Goals");
+        await deleteUserDetails(getFamilysList, "deleteFamily", "FamilyList");
+        await deleteHoldings(owner, "deleteUserHoldings", "AllHoldings");
+        await deleteHoldings(owner, "deleteUserIns", "Instrument Holdings");
+        user.attributes.profile
+          ? await Storage.remove(user.attributes.profile)
+          : null;
+        await deleteContact(owner);
+        user.deleteUser((error: any, data: any) => {
+          if (error) {
+            console.log(error);
+            throw error;
+          }
+          console.log(data);
+          handleLogout();
         });
+        notification.success({
+          message: "Deleted sucessfully",
+          description: "Your account will be logged out automatically.",
+        });
+        setLoading(false);
       } catch (err) {
         notification.error({
           message: "Unable to delete your account",
@@ -113,7 +112,7 @@ export default function DeleteAccount() {
   };
 
   return (
-    <Row gutter={[0, 20]} justify='start'>
+    <Row gutter={[0, 20]} justify="start">
       <Col>
         <Space direction="vertical">
           <Text strong>Are you sure you want to delete this account?</Text>
@@ -140,6 +139,7 @@ export default function DeleteAccount() {
       </Col>
       <Col>
         <Button
+          id="delete"
           key="delete"
           type="primary"
           onClick={handleOk}

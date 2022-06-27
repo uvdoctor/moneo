@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 jest.mock("aws-amplify");
 
@@ -13,7 +7,7 @@ import PasswordTab from "../PasswordTab";
 import { AppContext } from "../../AppContext";
 
 describe("App", function () {
-  test("should display pass in number", function () {
+  test("should change input values", function () {
     render(<PasswordTab />);
 
     const oldPassword = screen.getByPlaceholderText("Old Password");

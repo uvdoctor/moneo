@@ -28,11 +28,11 @@ export default function PasswordTab() {
     setLoading(false);
   };
 
-  const handleFormChange = () =>
+  const handleFormChange = () => {
     setDisabledForm(
       form.getFieldsError().some(({ errors }) => errors.length) ||
         !form.isFieldsTouched(true)
-    );
+  )};
 
   return (
     <Row justify="start">

@@ -1,117 +1,70 @@
-// import React from "react";
-// import { AppContext } from "../../AppContext";
-// import UserSettings from "../UserSettingsView";
-// import { mount } from "enzyme";
-// import { UserSettingsContext } from "../UserSettingsContext";
+import * as React from "react";
+import { render, screen } from "@testing-library/react";
+import UserSettingsView from "../UserSettingsView";
+import { AppContext } from "../../AppContext";
 
-// describe("Settings Page", () => {
-//   describe("before login", () => {
-//     let wrapper;
-//     beforeEach(() => {
-//       wrapper = mount(
-//         <AppContext.Provider
-//           value={{
-//             user: {},
-//             setDiscountRate: jest.fn(),
-//           }}
-//         >
-//           <UserSettings />
-//         </AppContext.Provider>
-//       );
-//     });
+describe("Settings Page - Before login", () => {
+  test("should have title", () => {
+    render(
+      <AppContext.Provider
+        value={{
+          setDiscountRate: jest.fn(),
+          appContextLoaded: true,
+          validateCaptcha: jest.fn(),
+        }}
+      >
+        <UserSettingsView />
+      </AppContext.Provider>
+    );
+    const title = document.querySelector(
+      ".ant-page-header-heading-title"
+    ).textContent;
+    expect(title).toEqual("Settings");
+  });
+});
 
-//     test("should have title", () => {
-//       expect(wrapper.find(".ant-page-header-heading-title").text()).toContain(
-//         "Settings"
-//       );
-//     });
-//   });
+describe("Settings Page - After login", () => {
+  test("should show tabs", () => {
+    render(
+      <AppContext.Provider
+        value={{
+          user: {
+            attributes: {},
+          },
+          setDiscountRate: jest.fn(),
+          appContextLoaded: true,
+          validateCaptcha: jest.fn(),
+        }}
+      >
+        <UserSettingsView />
+      </AppContext.Provider>
+    );
 
-//   describe("after login", () => {
-//     let wrapper;
+    expect(screen.getByText("Personal")).toBeInTheDocument();
+    expect(screen.getByText("Profile")).toBeInTheDocument();
+    expect(screen.getByText("Account")).toBeInTheDocument();
+    expect(screen.getByText("Password")).toBeInTheDocument();
+    expect(screen.getByText("Delete")).toBeInTheDocument();
+  });
 
-//     const value = {
-//       updatePersonalTab: jest.fn(),
-//       updateProfileTab: jest.fn(),
-//       updatePrefUsername: jest.fn(),
-//       updateAccountTab: jest.fn()
-//     };
-
-//     beforeEach(() => {
-//       wrapper = mount(
-//         <AppContext.Provider
-//           value={{
-//             user: {
-//               attributes: {},
-//             },
-//             setDiscountRate: jest.fn(),
-//             appContextLoaded: true,
-//             validateCaptcha: jest.fn(),
-//           }}
-//         >
-//           <UserSettingsContext.Provider value={value}>
-//             <UserSettings />
-//           </UserSettingsContext.Provider>
-//         </AppContext.Provider>
-//       );
-//     });
-//     test("should show tabs", () => {
-//       expect(wrapper.find("#rc-tabs-test-tab-1").text()).toContain("Personal");
-//       expect(wrapper.find("#rc-tabs-test-tab-2").text()).toContain("Profile");
-//       expect(wrapper.find("#rc-tabs-test-tab-3").text()).toContain("Account");
-//       expect(wrapper.find("#rc-tabs-test-tab-4").text()).toContain("Password");
-//       expect(wrapper.find("#rc-tabs-test-tab-5").text()).toContain("Delete");
-//     });
-
-//     test("should show personal tab as active", () => {
-//       expect(wrapper.find(".ant-tabs-tab-active").text()).toEqual("Personal");
-//     });
-
-//     test("should show 3 input fields", () => {
-//       expect(wrapper.find("input").length).toEqual(3);
-//     });
-
-//     test("should call Save Button Function of Personal Tab", () => {
-//       const button = wrapper.find(".ant-btn-primary");
-//       button.simulate("click");
-//       expect(value.updatePersonalTab).toHaveBeenCalled();
-//     });
-
-//     test("should call Save Button Function of Profile Tab", () => {
-//       wrapper.find("#rc-tabs-test-tab-2").simulate("click");
-//       const button = wrapper.find(".ant-tabs-tabpane-active .ant-btn-primary");
-//       button.simulate("click");
-//       expect(value.updateProfileTab).toHaveBeenCalled();
-//     });
-
-//     test("Account Tab", () => {
-//       wrapper.find("#rc-tabs-test-tab-3").simulate("click");
-//       wrapper.find(".ant-tabs-tabpane-active .ant-input-group").forEach((node, index) => {
-//         if(index === 0) {
-//           node.instance().value = "Mehz";
-//           node.simulate("change");
-//           expect(node.instance().value).toEqual("Mehz");
-//           node.find('button').simulate('click');
-//           expect(value.updatePrefUsername).toHaveBeenCalled();
-//         }
-//         if(index === 1) {
-//           node.instance().value = "xyz@gmail.com";
-//           node.simulate("change");
-//           expect(node.instance().value).toEqual("xyz@gmail.com");
-//         }
-//         if(index === 2) {
-//           node.instance().value = "8268552115";
-//           node.simulate("change");
-//           expect(node.instance().value).toEqual("8268552115");
-//         }
-//         // if(index === 3) {
-//         //   node.instance().value = "8268552115";
-//         //   node.simulate("change");
-//         //   expect(node.instance().value).toEqual("8268552115");
-//         //   node.find('button').simulate('click')
-//         //   expect(value.updateAccountTab).toHaveBeenCalled();
-//         // }
-//       });
-//     });
-//   });
-// });
+  test("should show personal tab as active", () => {
+    render(
+      <AppContext.Provider
+        value={{
+          user: {
+            attributes: {},
+          },
+          setDiscountRate: jest.fn(),
+          appContextLoaded: true,
+          validateCaptcha: jest.fn(),
+        }}
+      >
+        <UserSettingsView />
+      </AppContext.Provider>
+    );
+    expect(screen.getByText("Personal")).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
+  });
+});

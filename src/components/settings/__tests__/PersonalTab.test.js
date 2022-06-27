@@ -1,41 +1,92 @@
-// import React from "react";
-// import PersonalTab from "../PersonalTab";
-// import { mount } from "enzyme";
-// import { UserSettingsContext } from "../UserSettingsContext";
+import * as React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-// describe("Personal Tab", () => {
-//   let wrapper;
-//   wrapper = mount(
-//     <UserSettingsContext.Provider
-//       value={{
-//         name: "Mehz",
-//         lastName: "Choudhari",
-//         setName: jest.fn(),
-//         setError: jest.fn(),
-//         setLastName: jest.fn(),
-//         dobDate: 19,
-//         setDobDate: jest.fn(),
-//         dobMonth: 4,
-//         setDobMonth: jest.fn(),
-//         dobYear: 2000,
-//         setDobYear: jest.fn(),
-//       }}
-//     >
-//       <PersonalTab />
-//     </UserSettingsContext.Provider>
-//   );
+jest.mock("aws-amplify");
 
-//   test("should have state values", () => {
-//     expect(
-//       wrapper.find('input[placeholder="Name"]').get(0).props.value
-//     ).toEqual("Mehz");
-//     expect(
-//       wrapper.find('input[placeholder="Last Name"]').get(0).props.value
-//     ).toEqual("Choudhari");
-//     expect(wrapper.find('input[placeholder="Select date"]').get(0).props.value).toEqual("19-Apr-2000");
-//   });
+import PersonalTab from "../PersonalTab";
+import { UserSettingsContext } from "../UserSettingsContext";
 
-//   test("should have image input", () => {
-//     expect(wrapper.find(".image-holder").length).toEqual(1);
-//   });
-// });
+describe("App", function () {
+  const value = {
+    name: "Mehz",
+    lastName: "Choudhari",
+    setName: jest.fn(),
+    setError: jest.fn(),
+    setLastName: jest.fn(),
+    dobDate: 1,
+    setDobDate: jest.fn(),
+    dobMonth: 4,
+    setDobMonth: jest.fn(),
+    dobYear: 2000,
+    setDobYear: jest.fn(),
+    updatePersonalTab: jest.fn(),
+  };
+
+  test("should have state value", function () {
+    render(
+      <UserSettingsContext.Provider value={value}>
+        <PersonalTab />
+      </UserSettingsContext.Provider>
+    );
+
+    const name = screen.getByPlaceholderText("Name");
+    expect(name.value).toEqual("Mehz");
+    const lastName = screen.getByPlaceholderText("Last Name");
+    expect(lastName.value).toEqual("Choudhari");
+    const dob = screen.getByPlaceholderText("Select date");
+    expect(dob.value).toEqual("01-Apr-2000");
+  });
+
+  test("should have image input", () => {
+    render(<PersonalTab />);
+    const imageInput = document.querySelector(".image-holder");
+    expect(imageInput).not.toBe(null);
+  });
+
+  test("should call onclick function on save button click", async () => {
+    render(
+      <UserSettingsContext.Provider value={value}>
+        <PersonalTab />
+      </UserSettingsContext.Provider>
+    );
+
+    const button = document.querySelector("#save");
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(value.updatePersonalTab).toHaveBeenCalled();
+    });
+  });
+
+  test("should change input values on change", async () => {
+    render(
+      <UserSettingsContext.Provider
+        value={{
+          setName: jest.fn(),
+          setError: jest.fn(),
+          setLastName: jest.fn(),
+          dobDate: 1,
+          setDobDate: jest.fn(),
+          dobMonth: 4,
+          setDobMonth: jest.fn(),
+          dobYear: 2000,
+          setDobYear: jest.fn(),
+          updatePersonalTab: jest.fn(),
+        }}
+      >
+        <PersonalTab />
+      </UserSettingsContext.Provider>
+    );
+
+    const name = screen.getByPlaceholderText("Name");
+    const lastName = screen.getByPlaceholderText("Last Name");
+
+    fireEvent.change(name, { target: { value: "abc" } });
+    fireEvent.change(lastName, { target: { value: "xyz" } });
+
+    await waitFor(() => {
+      expect(name.value).toEqual("abc");
+      expect(lastName.value).toEqual("xyz");
+    });
+  });
+});

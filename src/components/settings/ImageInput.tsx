@@ -93,7 +93,7 @@ export default function ImageInput() {
 
   return (
     <>
-      <div className="image-holder">
+      <div className="image-holder"> 
         <div
           onClick={
             user?.attributes.picture

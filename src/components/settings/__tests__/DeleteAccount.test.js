@@ -1,37 +1,35 @@
-// import React from "react";
-// import DeleteAccount from "../DeleteAccount";
-// import { mount } from "enzyme";
-// import { AppContext } from "../../AppContext";
+import * as React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-// describe("Delete Account", () => {
-//   let wrapper;
-//   beforeEach(() => {
-//     wrapper = mount(
-//       <AppContext.Provider
-//         value={{
-//           setUser: jest.fn(),
-//           owner: "mehz",
-//           validateCaptcha: jest.fn(),
-//         }}
-//       >
-//         <DeleteAccount />
-//       </AppContext.Provider>
-//     );
-//   });
+jest.mock("aws-amplify");
 
-//   test("input fields should change ", () => {
-//     const input = wrapper.find('input[placeholder="delete"]');
-//     input.instance().value = "delete";
-//     input.simulate("change");
-//     expect(input.instance().value).toEqual("delete");
-//   });
+import DeleteAccount from "../DeleteAccount";
+import { AppContext } from "../../AppContext";
 
-//   test("should click on delete", () => {
-//     const wrapper = mount(<DeleteAccount />);
-//     const button = wrapper.find("button");
-//     expect(button.prop("disabled")).toBeFalsy();
-//     button.props().onClick();
-//     wrapper.update();
-//     expect(wrapper.find(".ant-btn-loading-icon")).toHaveLength(1);
-//   });
-// });
+describe("App", function () {
+  test("should change input value", function () {
+    render(<DeleteAccount />);
+
+    const deleteInput = screen.getByPlaceholderText("delete");
+    fireEvent.change(deleteInput, { target: { value: "delete" } });
+    expect(deleteInput.value).toEqual("delete");
+  });
+
+  test("should disable delete button on click", async () => {
+    render(
+      <AppContext.Provider
+        value={{ owner: "", setUser: jest.fn(), validateCaptcha: () => {} }}
+      >
+        <DeleteAccount />
+      </AppContext.Provider>
+    );
+
+    const button = document.querySelector("#delete");
+    const deleteInput = screen.getByPlaceholderText("delete");
+    fireEvent.change(deleteInput, { target: { value: "delete" } });
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(button.disabled).toEqual(true);
+    });
+  });
+});
