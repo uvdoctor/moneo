@@ -29,7 +29,7 @@ export default function AccountTab() {
   }: any = useContext(UserSettingsContext);
   const { user }: any = useContext(AppContext);
 
-  const disableButton = (prevValue: any, currValue: any) =>
+  const disableButton = (prevValue: any, currValue: any) => 
     prevValue === currValue ? true : error?.length > 0 ? true : false;
 
   return (
@@ -47,6 +47,7 @@ export default function AccountTab() {
             <Button
               type="link"
               style={{ color: COLORS.GREEN }}
+              id='login_save'
               icon={<SaveOutlined />}
               disabled={error?.length > 0 ? true : false}
               onClick={async () => {
@@ -94,6 +95,7 @@ export default function AccountTab() {
           setError={setError}
           minLength={10}
           maxLength={10}
+          placeholder='Mobile'
           post={
             <OtpDialogue
               disableButton={disableButton(
@@ -123,6 +125,7 @@ export default function AccountTab() {
               pattern="^[0-9]"
               setError={setError}
               minLength={10}
+              placeholder='Whatsapp'
               maxLength={10}
               post={
                 <OtpDialogue

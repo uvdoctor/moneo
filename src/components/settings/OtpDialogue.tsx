@@ -25,7 +25,7 @@ export default function OtpDialogue({
   email,
   mob,
 }: OtpInputProps) {
-  const { validateCaptcha, owner }: any = useContext(AppContext);
+  const { owner }: any = useContext(AppContext);
   const { sendOtp }: any = useContext(UserSettingsContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,15 +68,12 @@ export default function OtpDialogue({
     setIsModalVisible(false);
   };
 
-  const onClick = () => {
+  const onClick = async () => {
     setLoading(true);
-    validateCaptcha(action).then(async (success: boolean) => {
-      if (!success) return;
-      const data = await onClickAction();
-      setLoading(false);
-      if (!data) return;
-      setIsModalVisible(true);
-    });
+    const data = await onClickAction();
+    setLoading(false);
+    if (!data) return;
+    setIsModalVisible(true);
   };
 
   return (
@@ -86,6 +83,7 @@ export default function OtpDialogue({
           type="link"
           style={{ color: COLORS.GREEN }}
           icon={<SaveOutlined />}
+          id={action}
           disabled={disableButton}
           onClick={onClick}
           loading={loading}

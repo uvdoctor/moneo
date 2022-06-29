@@ -1,4 +1,14 @@
-import { loadInstrumentPrices, getInsPerfIds } from "../valuationutils";
+import {
+  loadInstrumentPrices,
+  getInsPerfIds,
+  loadInstruments,
+  loadInsPerf,
+} from "../valuationutils";
+import { loadIndexPerf } from "../nwutils";
+import simpleStorage from "simplestorage.js";
+
+jest.mock("aws-amplify");
+jest.mock("simplestorage.js");
 
 describe("LoadInstrumentPrices", () => {
   test("No unmatched ids", async () => {
@@ -125,4 +135,112 @@ describe("GetInsPerfIds", () => {
     const data = getInsPerfIds(ids, allInsData);
     expect(data).toEqual([]);
   });
+});
+
+describe("loadInstruments", () => {
+  const insData = {
+    INE129A01019: {
+      id: "INE129A01019",
+      sid: "GAIL",
+      subt: "S",
+      beta: 1,
+      yhigh: 10,
+    },
+    INE114A01011: {
+      id: "INE114A01011",
+      subt: "S",
+      sid: "SAIL",
+      beta: 1,
+      yhigh: 10,
+    },
+    INF114A01011: {
+      id: "INF114A01011",
+      subt: "S",
+      sid: "ABC",
+    },
+  };
+  test("Without cache - ( MF and Stock Ids ) ", async () => {
+    loadIndexPerf = jest.fn();
+    loadInstrumentPrices = jest.fn();
+    getInsPerfIds = jest.fn();
+    loadInsPerf = jest.fn();
+
+    const ids = ["INE129A01019", "INE114A01011", "INF114A01011"];
+    await loadInstruments(ids, true);
+    expect(loadInstrumentPrices).toBeCalledTimes(2);
+    expect(getInsPerfIds).toHaveBeenCalled();
+  });
+
+  // test("Without cache - unmatched ids", async () => {
+  //   loadIndexPerf = jest.fn();
+  //   loadInstrumentPrices.mockReturnValue(["INE114A01011"]);
+  //   getInsPerfIds = jest.fn();
+  //   loadInsPerf = jest.fn();
+
+  //   const ids = [ "INF114A01011" ];
+  //   await loadInstruments(ids, true);
+  //   expect(loadInstrumentPrices).toBeCalledTimes(4)
+  //   expect(getInsPerfIds).toHaveBeenCalled();
+  // });
+
+  test("With cache data", async () => {
+    loadIndexPerf = jest.fn();
+    loadInstrumentPrices = jest.fn();
+    getInsPerfIds = jest.fn();
+    loadInsPerf = jest.fn();
+    simpleStorage.get.mockReturnValue(insData);
+    const ids = ["INE129A01019", "INE114A01011", "INF114A01011"];
+    const data = await loadInstruments(ids, true);
+    expect(data).toEqual(insData);
+    expect(getInsPerfIds).toHaveBeenCalled();
+    expect(loadInsPerf).toHaveBeenCalled();
+  });
+
+  test("Without ids and cache data", async () => {
+    loadIndexPerf = jest.fn();
+    loadInstrumentPrices = jest.fn();
+    getInsPerfIds = jest.fn();
+    loadInsPerf = jest.fn();
+
+    const ids = [];
+    const data = await loadInstruments(ids, true);
+    expect(data).toEqual(insData);
+    expect(getInsPerfIds).toHaveBeenCalled();
+    expect(loadInsPerf).toHaveBeenCalled();
+  });
+});
+
+describe("loadInsPerf", async () => {
+  const insperfData = {
+    INE129A01019: {
+      id: "INE129A01019",
+      sid: "GAIL",
+      subt: "S",
+      beta: 1,
+      yhigh: 10,
+    },
+    INE114A01011: {
+      id: "INE114A01011",
+      subt: "S",
+      sid: "SAIL",
+      beta: 1,
+      yhigh: 10,
+    },
+  };
+  test("Without cache", async () => {
+    loadInstrumentPrices = jest.fn();
+    const ids = ["INE129A01019", "INE114A01011"];
+    await loadInsPerf(ids);
+    expect(loadInstrumentPrices).toHaveBeenCalled();
+  });
+
+  test("With cache data", async () => {
+    loadInstrumentPrices = jest.fn();
+    simpleStorage.get.mockReturnValue(insperfData);
+    const ids = ["INE129A01019", "INE114A01011" ];
+    const data = await loadInsPerf(ids);
+    expect(data).toEqual(insperfData);
+    expect(loadInstrumentPrices).toHaveBeenCalled(0);
+  });
+
 });

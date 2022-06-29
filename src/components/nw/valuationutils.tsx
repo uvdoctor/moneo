@@ -119,7 +119,6 @@ export const loadInstruments = async (ids: Array<string>, user: boolean) => {
       allInsData
     );
   if (unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
-  if (exchangeIds.length)
     unmatchedIds = await loadInstrumentPrices(
       loadMatchingINExchange,
       exchangeIds,

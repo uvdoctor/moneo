@@ -36,7 +36,10 @@ export default function ImageInput() {
           goalImgStorage.validateImg(file);
           const result: any = await goalImgStorage.storeGoalImg(file);
           const url = await goalImgStorage.getUrlFromKey(result.key);
-          if (user?.attributes?.profile && user?.attributes.profile !== result.key) {
+          if (
+            user?.attributes?.profile &&
+            user?.attributes.profile !== result.key
+          ) {
             await goalImgStorage.removeGoalImg(user?.attributes.profile);
           }
           await updateProfile(url, result.key);
@@ -93,8 +96,9 @@ export default function ImageInput() {
 
   return (
     <>
-      <div className="image-holder"> 
+      <div className="image-holder">
         <div
+          id="image_input"
           onClick={
             user?.attributes.picture
               ? () => setIsModalVisible(true)
@@ -124,6 +128,7 @@ export default function ImageInput() {
           <Button
             type="link"
             key="close"
+            id='cancel'
             className="image-upload-modal-button"
             onClick={() => setIsModalVisible(false)}
             disabled={isButtonVisible}
@@ -134,6 +139,7 @@ export default function ImageInput() {
             <Button
               type="link"
               key="Cancel"
+              id='remove'
               className="image-upload-modal-button"
               disabled={isButtonVisible}
               onClick={removeImage}
@@ -158,10 +164,10 @@ export default function ImageInput() {
               <Spin size="large" />
             </span>
           )}
-          <div className="preview-image">
+          <div className="preview-image" id="modal">
             {user?.attributes.picture ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={user?.attributes.picture} alt="profile picture" />
+              <img src={user?.attributes.picture} alt="profile picture" id="profile"/>
             ) : (
               <span onClick={openBrowse}>{avatar(1000)}</span>
             )}
