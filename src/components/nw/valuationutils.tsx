@@ -149,7 +149,7 @@ export const loadInsPerf = async (ids: Array<string>) => {
   return allInsPrefData;
 };
 
-const initializeInsData = async (
+export const initializeInsData = async (
   instruments: Array<InstrumentInput>,
   user: boolean
 ) => {
@@ -158,7 +158,7 @@ const initializeInsData = async (
   return await loadInstruments(ids, user);
 };
 
-const getCashFlows = (
+export const getCashFlows = (
   amt: number,
   bygoneDuration: number,
   remainingDuration: number,
