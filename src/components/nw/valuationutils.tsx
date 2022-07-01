@@ -331,12 +331,13 @@ export const calculateCompundingIncome = (holding: HoldingInput) => {
     presentMonth,
     presentYear
   );
-  if (remainingDuration < 0) return { valuation, maturityAmt };
+  if (remainingDuration < 0) return { valuation, maturityAmt, isShortTerm };
   if (remainingDuration >= 1) isShortTerm = false;
   if (!holding.chgF)
     return {
       valuation: holding.amt as number,
       maturityAmt: holding.amt as number,
+      isShortTerm
     };
   const duration = calculateDifferenceInYears(
     presentMonth,
@@ -410,29 +411,35 @@ export const calculateVehicle = (holding: HoldingInput) => {
   );
 };
 
-export const calculateCrypto = (
+export const calculateCrypto = async (
   holding: HoldingInput,
   selectedCurrency: string,
   fxRates: any
 ) => {
-  return getCryptoRate(holding.name as string, selectedCurrency, fxRates)
-    .then((rate) => holding.qty * rate)
-    .catch(() => 0);
+  try {
+    const rate = await getCryptoRate(holding.name as string, selectedCurrency, fxRates);
+    return holding.qty * rate;
+  } catch {
+    return 0;
+  }
 };
 
-export const calculatePM = (
+export const calculatePM = async (
   holding: HoldingInput,
   selectedCurrency: string,
   fxRates: any
 ) => {
-  return getCommodityRate(
-    holding.subt as string,
-    holding.name as string,
-    selectedCurrency,
-    fxRates
-  )
-    .then((rate) => holding.qty * rate)
-    .catch(() => 0);
+  try {
+    const rate = await getCommodityRate(
+      holding.subt as string,
+      holding.name as string,
+      selectedCurrency,
+      fxRates
+    );
+    return holding.qty * rate;
+  } catch {
+    return 0;
+  }
 };
 
 export const calculateProvidentFund = (holding: HoldingInput) => {
@@ -704,7 +711,7 @@ export const priceP2P = (
   return total;
 };
 
-const calculateBalance = (
+export const calculateBalance = (
   holdings: Array<HoldingInput>,
   selectedMembers: Array<string>,
   selectedCurrency: string
@@ -1138,15 +1145,15 @@ export const calculateTotalLiabilities = (
   return totalLiabilities;
 };
 
-export const calculateDiffPercent = (curr: number, prev: number) => {
+const calculateDiffPercent = (curr: number, prev: number) => {
   const diff = (100 * (curr - prev)) / prev;
   return Math.round(diff * 100) / 100;
 };
 
-export const sortDescending = (array: any[], key: string) =>
+const sortDescending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(b[key]) - parseFloat(a[key]));
 
-export const sortAscending = (array: any[], key: string) =>
+const sortAscending = (array: any[], key: string) =>
   array.sort((a, b) => parseFloat(a[key]) - parseFloat(b[key]));
 
 const checkDate = (date: any) => {

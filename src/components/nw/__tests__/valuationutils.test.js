@@ -10,8 +10,37 @@ import {
   calculateAddYears,
   calculateInsurance,
   calculateLoan,
+  calculateCompundingIncome,
+  calculateProperty,
+  calculateVehicle,
+  calculateCrypto,
+  calculatePM,
+  calculateProvidentFund,
+  calculateNPS,
+  priceInstruments,
+  pricePM,
+  priceProperties,
+  priceLoans,
+  priceLendings,
+  priceLtdep,
+  calculateBalance,
+  priceInsurance,
+  priceCrypto,
+  pricePF,
+  priceNPS,
+  calculateTotalAssets,
+  priceVehicles,
+  priceSavings,
+  priceOthers,
+  priceAngel,
+  priceP2P,
 } from "../valuationutils";
-import { loadIndexPerf } from "../nwutils";
+import {
+  getCommodityRate,
+  getCryptoRate,
+  initializeNPSData,
+  loadIndexPerf,
+} from "../nwutils";
 import simpleStorage from "simplestorage.js";
 
 jest.mock("aws-amplify");
@@ -568,3 +597,1818 @@ describe("calculateLoan", () => {
     }
   });
 });
+
+describe("calculateCompundingIncome", () => {
+  test("Without chgF", () => {
+    const data = calculateCompundingIncome({
+      amt: 1000,
+      chg: 0,
+      chgF: 0,
+      curr: "INR",
+      em: 12,
+      ey: 2023,
+      fId: "",
+      sm: 1,
+      subt: "P2P",
+      sy: 2022,
+    });
+    expect(data).toEqual({
+      maturityAmt: 1000,
+      valuation: 1000,
+      isShortTerm: false,
+    });
+  });
+
+  test("Maturity less than one year", () => {
+    const data = calculateCompundingIncome({
+      amt: 1000,
+      chg: 0,
+      chgF: 0,
+      curr: "INR",
+      em: 12,
+      ey: 2022,
+      fId: "",
+      sm: 1,
+      subt: "P2P",
+      sy: 2021,
+    });
+    expect(data).toEqual({
+      maturityAmt: 1000,
+      valuation: 1000,
+      isShortTerm: true,
+    });
+  });
+
+  test("With chgF", () => {
+    const data = calculateCompundingIncome({
+      amt: 1000,
+      chg: 0,
+      chgF: 1,
+      curr: "INR",
+      em: 12,
+      ey: 2024,
+      fId: "",
+      sm: 1,
+      subt: "P2P",
+      sy: 2022,
+    });
+    expect(data).toEqual({
+      maturityAmt: 1000,
+      valuation: 1000,
+      isShortTerm: false,
+    });
+  });
+
+  test("With rate", () => {
+    const data = calculateCompundingIncome({
+      amt: 1000,
+      chg: 10,
+      chgF: 1,
+      curr: "INR",
+      em: 12,
+      ey: 2024,
+      fId: "",
+      sm: 1,
+      subt: "P2P",
+      sy: 2022,
+    });
+
+    expect(data.maturityAmt).toBeCloseTo(1210);
+    expect(data.valuation).toBeCloseTo(1000);
+  });
+
+  test("With rate - with different year", () => {
+    const data = calculateCompundingIncome({
+      amt: 1000,
+      chg: 10,
+      chgF: 1,
+      curr: "INR",
+      em: 12,
+      ey: 2024,
+      fId: "",
+      sm: 1,
+      subt: "P2P",
+      sy: 2020,
+    });
+    expect(data.maturityAmt).toBeCloseTo(1464.1);
+    expect(data.valuation).toBeCloseTo(1210);
+  });
+
+  test("Without data", () => {
+    try {
+      calculateCompundingIncome();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'em')"
+      );
+    }
+  });
+});
+
+describe("calculateProperty", () => {
+  test("With chnage mvm and mvy", () => {
+    const data = calculateProperty(
+      {
+        curr: "INR",
+        mv: "500000",
+        mvm: "1",
+        mvy: "2021",
+        own: [
+          {
+            fId: "one",
+            per: "100",
+          },
+        ],
+        pin: "382480",
+        purchase: {
+          amt: "450000",
+          month: "1",
+          qty: "1",
+          year: "2020",
+        },
+        rate: "8",
+        res: false,
+        state: "Gujarat",
+        type: "A",
+      },
+      ["All"]
+    );
+    expect(data).toEqual({
+      total: 540000,
+      valuationByMembers: [],
+    });
+  });
+
+  test("With one member", () => {
+    const data = calculateProperty(
+      {
+        curr: "INR",
+        mv: "500000",
+        mvm: "6",
+        mvy: "2022",
+        own: [
+          {
+            fId: "one",
+            per: "100",
+          },
+        ],
+        pin: "382480",
+        purchase: {
+          amt: "450000",
+          month: "1",
+          qty: "1",
+          year: "2020",
+        },
+        rate: "8",
+        res: false,
+        state: "Gujarat",
+        type: "A",
+      },
+      ["All"]
+    );
+    expect(data).toEqual({
+      total: 500000,
+      valuationByMembers: [],
+    });
+  });
+
+  test("All member selected ", () => {
+    const data = calculateProperty(
+      {
+        curr: "INR",
+        mv: "500000",
+        mvm: "6",
+        mvy: "2022",
+        own: [
+          {
+            fId: "one",
+            per: "50",
+          },
+          {
+            fId: "two",
+            per: "50",
+          },
+        ],
+        pin: "382480",
+        purchase: {
+          amt: "450000",
+          month: "1",
+          qty: "1",
+          year: "2020",
+        },
+        rate: "8",
+        res: false,
+        state: "Gujarat",
+        type: "P",
+      },
+      ["All"]
+    );
+    expect(data).toEqual({
+      total: 500000,
+      valuationByMembers: [],
+    });
+  });
+
+  test("With selected member", () => {
+    const data = calculateProperty(
+      {
+        curr: "INR",
+        mv: "500000",
+        mvm: "6",
+        mvy: "2022",
+        own: [
+          {
+            fId: "one",
+            per: "50",
+          },
+          {
+            fId: "two",
+            per: "50",
+          },
+        ],
+        pin: "382480",
+        purchase: {
+          amt: "450000",
+          month: "1",
+          qty: "1",
+          year: "2020",
+        },
+        rate: "8",
+        res: false,
+        state: "Gujarat",
+        type: "P",
+      },
+      ["one"]
+    );
+    expect(data).toEqual({
+      total: 500000,
+      valuationByMembers: [
+        {
+          fid: "one",
+          value: 250000,
+        },
+      ],
+    });
+  });
+
+  test("Without data", () => {
+    try {
+      calculateProperty();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'mvm')"
+      );
+    }
+  });
+});
+
+describe("calculateVehicle", () => {
+  test("With data - purchase year other than present year", () => {
+    const data = calculateVehicle({
+      amt: 10000,
+      chg: 15,
+      chgF: 1,
+      curr: "INR",
+      fId: "",
+      sm: 1,
+      subt: "2",
+      sy: 2020,
+    });
+    expect(data).toBeCloseTo(7224.999999999999);
+  });
+
+  test("With data - purchase in present year", () => {
+    const data = calculateVehicle({
+      amt: 10000,
+      chg: 15,
+      chgF: 1,
+      curr: "INR",
+      fId: "",
+      sm: 1,
+      subt: "2",
+      sy: new Date().getFullYear(),
+    });
+    expect(data).toBeCloseTo(10000);
+  });
+
+  test("Without data", () => {
+    try {
+      calculateVehicle();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'sm')"
+      );
+    }
+  });
+});
+
+describe("calculateCrypto", () => {
+  test("Resolved Value", async () => {
+    getCryptoRate = jest.fn();
+    getCryptoRate.mockReturnValueOnce(1000);
+    const data = await calculateCrypto(
+      {
+        type: "A",
+        subt: "C",
+        name: "BTC-USD",
+        curr: "INR",
+        fId: "",
+        qty: 10,
+      },
+      "INR",
+      75
+    );
+    expect(data).toBeCloseTo(10000);
+  });
+
+  test("Rejected Value", async () => {
+    getCryptoRate = jest.fn();
+    getCryptoRate.mockRejectedValue(0);
+    try {
+      const data = await calculateCrypto(
+        {
+          type: "A",
+          subt: "C",
+          name: "BTC-USD",
+          curr: "INR",
+          fId: "",
+          qty: 10,
+        },
+        "INR",
+        75
+      );
+    } catch (e) {
+      expect(e.toString()).toEqual(0);
+    }
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculateCrypto();
+    } catch (e) {
+      expect(e.toString()).toEqual(0);
+    }
+  });
+});
+
+describe("calculatePM", () => {
+  test("Resolved Value", async () => {
+    getCommodityRate = jest.fn();
+    getCommodityRate.mockReturnValueOnce(1000);
+    const data = await calculatePM(
+      {
+        type: "A",
+        subt: "Gold",
+        name: "8",
+        curr: "INR",
+        fId: "",
+        qty: 10,
+      },
+      "INR",
+      75
+    );
+    expect(data).toBeCloseTo(10000);
+  });
+
+  test("Rejected Value", async () => {
+    getCommodityRate = jest.fn();
+    getCommodityRate.mockRejectedValue(0);
+    try {
+      const data = await calculatePM(
+        {
+          type: "A",
+          subt: "Gold",
+          name: "8",
+          curr: "INR",
+          fId: "",
+          qty: 10,
+        },
+        "INR",
+        75
+      );
+    } catch (e) {
+      expect(e.toString()).toEqual(0);
+    }
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculatePM();
+    } catch (e) {
+      expect(e.toString()).toEqual(0);
+    }
+  });
+});
+
+describe("calculateProvidentFund", () => {
+  test("With data", () => {
+    const data = calculateProvidentFund({
+      amt: 10000,
+      chg: 10,
+      chgF: 1,
+      curr: "INR",
+      fId: "",
+      sm: 1,
+      sy: 2020,
+      em: 12,
+      ey: 2024,
+    });
+    expect(data).toBeCloseTo(10000);
+  });
+
+  test("Without data", () => {
+    try {
+      calculateProvidentFund();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'amt')"
+      );
+    }
+  });
+});
+
+describe("calculateNPS", () => {
+  test("With data - equity", async () => {
+    initializeNPSData = jest.fn();
+    initializeNPSData.mockReturnValueOnce([
+      {
+        price: 23.48,
+        id: "SM003010",
+        type: "E",
+      },
+    ]);
+    const data = await calculateNPS({
+      subt: "L",
+      name: "SM003010",
+      qty: 10,
+    });
+    expect(data).toEqual({
+      equity: 234.8,
+      fixed: 0,
+      value: 234.8,
+    });
+  });
+
+  test("With data - fixed", async () => {
+    initializeNPSData = jest.fn();
+    initializeNPSData.mockReturnValueOnce([
+      {
+        price: 23.48,
+        id: "SM003010",
+        type: "F",
+      },
+    ]);
+    const data = await calculateNPS({
+      subt: "L",
+      name: "SM003010",
+      qty: 10,
+    });
+    expect(data).toEqual({
+      equity: 0,
+      fixed: 234.8,
+      value: 234.8,
+    });
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculateNPS();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'amt')"
+      );
+    }
+  });
+});
+
+describe("priceInstruments", () => {
+  const insData = {
+    INF879O01027: {
+      id: "INF879O01027",
+      sid: "122639",
+      tid: "",
+      dir: null,
+      name: "Parag Parikh Flexi Cap Fund - Direct Plan - Growth",
+      type: "E",
+      subt: "S",
+      price: 47.3139,
+      prev: 47.5907,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+    },
+    INF277K01Z77: {
+      id: "INF277K01Z77",
+      sid: "135800",
+      tid: "",
+      dir: null,
+      name: "Tata Digital India Fund-Direct Plan-Growth",
+      type: "E",
+      subt: "S",
+      price: 34.4705,
+      prev: 34.379,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+    },
+    INE129A01019: {
+      id: "INE129A01019",
+      sid: "GAIL",
+      name: "GAIL (India) Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 139.25,
+      prev: 136.9,
+      fv: null,
+      under: null,
+      yhigh: 173.5,
+      yhighd: "2022-04-19",
+      ylow: 125.2,
+      ylowd: "2021-12-20",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.7622,
+      mcap: 607889391616,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 9917657,
+      prevol: 6604729,
+    },
+    INE028A01039: {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      name: "Bank of Baroda",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 101.15,
+      prev: 101.55,
+      fv: null,
+      under: null,
+      yhigh: 122.7,
+      yhighd: "2022-04-11",
+      ylow: 72.5,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.8139,
+      mcap: 518469943296,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 16407378,
+      prevol: 16394684,
+    },
+    INE752E01010: {
+      id: "INE752E01010",
+      sid: "POWERGRID",
+      name: "Power Grid Corporation of India Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 211.1,
+      prev: 210.3,
+      fv: null,
+      under: null,
+      yhigh: 248.35,
+      yhighd: "2022-05-10",
+      ylow: 167.15,
+      ylowd: "2021-07-29",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.2348,
+      mcap: 1472517505024,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 31125548,
+      prevol: 5077566,
+    },
+    INE522F01014: {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      name: "Coal India Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 188.75,
+      prev: 186.4,
+      fv: null,
+      under: null,
+      yhigh: 209,
+      yhighd: "2022-04-22",
+      ylow: 132.75,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.4535,
+      mcap: 1144727142400,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 16855901,
+      prevol: 9844211,
+    },
+  };
+  const ins = [
+    {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 0,
+    },
+    {
+      id: "INE752E01010",
+      sid: "POWERGRID",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 1,
+    },
+    {
+      id: "INE129A01019",
+      sid: "GAIL",
+      exchg: "NSE",
+      qty: 43,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 3,
+    },
+    {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      exchg: "NSE",
+      qty: 50,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 6,
+    },
+    {
+      id: "INF277K01Z77",
+      sid: "135800",
+      exchg: null,
+      qty: 63.779,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 7,
+    },
+    {
+      id: "INF109K01Z48",
+      sid: "120594",
+      exchg: null,
+      qty: 12.653,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 8,
+    },
+    {
+      id: "INF879O01027",
+      sid: "122639",
+      exchg: null,
+      qty: 158.769,
+      pur: null,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 9,
+    },
+  ];
+  const blankdata = {
+    total: 0,
+    totalFGold: 0,
+    totalFEquity: 0,
+    totalFRE: 0,
+    totalFFixed: 0,
+    totalInv: 0,
+    totalStocks: 0,
+    totalBondsAllocation: 0,
+    totalBonds: 0,
+    totalETFs: 0,
+    totalMFs: 0,
+    largeCapStocks: 0,
+    largeCapFunds: 0,
+    largeCapETFs: 0,
+    multiCap: 0,
+    indexFunds: 0,
+    fmp: 0,
+    intervalFunds: 0,
+    liquidFunds: 0,
+    riskTotals: {
+      VC: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      C: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      M: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      A: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      VA: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+    },
+  };
+
+  test("With data", async () => {
+    initializeInsData = jest.fn();
+    initializeInsData.mockReturnValueOnce(insData);
+    const data = await priceInstruments(
+      ins,
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      true
+    );
+    expect(data).toEqual({
+      total: 24754.2246086,
+      totalFGold: 0,
+      totalFEquity: 24754.2246086,
+      totalFRE: 0,
+      totalFFixed: 0,
+      totalInv: 0,
+      totalStocks: 15043.75,
+      totalBondsAllocation: 0,
+      totalBonds: 0,
+      totalETFs: 0,
+      totalMFs: 9710.4746086,
+      largeCapStocks: 15043.75,
+      largeCapFunds: 0,
+      largeCapETFs: 0,
+      multiCap: 9710.4746086,
+      indexFunds: 0,
+      fmp: 0,
+      intervalFunds: 0,
+      liquidFunds: 0,
+      riskTotals: {
+        VC: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        C: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        M: { stocks: 15043.75, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        A: {
+          stocks: 0,
+          bonds: 0,
+          mfs: 9710.4746086,
+          etfs: 0,
+          reit: 0,
+          others: 0,
+        },
+        VA: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      },
+    });
+  });
+
+  test("Without selected members", async () => {
+    initializeInsData = jest.fn();
+    initializeInsData.mockReturnValueOnce(insData);
+    const data = await priceInstruments(ins, [], "INR", true);
+    expect(data).toEqual(blankdata);
+  });
+
+  test("Without cached data", async () => {
+    initializeInsData = jest.fn();
+    initializeInsData.mockReturnValueOnce({});
+    const data = await priceInstruments(
+      ins,
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      true
+    );
+    expect(data).toEqual(blankdata);
+  });
+
+  test("With blank instruments", async () => {
+    initializeInsData = jest.fn();
+    initializeInsData.mockReturnValueOnce(insData);
+    const data = await priceInstruments(
+      [],
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      true
+    );
+    expect(data).toEqual(blankdata);
+  });
+
+  test("Without data", async () => {
+    try {
+      await priceInstruments();
+    } catch (e) {
+      expect(e.toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'forEach')"
+      );
+    }
+  });
+});
+
+describe("pricePM", () => {
+  const pmdata = [
+    {
+      id: "",
+      qty: 10,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "USD",
+      type: "A",
+      subt: "Gold",
+      name: "8",
+    },
+    {
+      id: "",
+      qty: 10,
+      fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+      curr: "USD",
+      type: "A",
+      subt: "SI",
+      name: "100",
+    },
+  ];
+
+  test("With data", async () => {
+    calculatePM = jest.fn();
+    calculatePM.mockReturnValue(10);
+    const data = await pricePM(
+      pmdata,
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      75
+    );
+    expect(data).toEqual({ total: 20, totalPGold: 10 });
+  });
+
+  test("Without calculatePM data", async () => {
+    calculatePM = jest.fn();
+    calculatePM.mockReturnValue(0);
+    const data = await pricePM(
+      pmdata,
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      75
+    );
+    expect(data).toEqual({ total: 0, totalPGold: 0 });
+  });
+
+  test("Without holdings", async () => {
+    initializeInsData = jest.fn();
+    initializeInsData.mockReturnValueOnce(10);
+    const data = await pricePM(
+      [],
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR",
+      75
+    );
+    expect(data).toEqual({ total: 0, totalPGold: 0 });
+  });
+
+  test("Without data", async () => {
+    try {
+      await pricePM();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceProperties", () => {
+  const propertiesData = [
+    {
+      country: "India",
+      curr: "INR",
+      mv: 1469.3280768000006,
+      mvm: 6,
+      mvy: 2022,
+      name: "",
+      own: [
+        {
+          fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+          per: 100,
+        },
+      ],
+      pin: 0,
+      purchase: { amt: 10000, month: 4, year: 2017, qty: 1 },
+      rate: 8,
+      res: false,
+      type: "P",
+    },
+  ];
+
+  test("With data", () => {
+    calculateProperty = jest.fn();
+    calculateProperty.mockReturnValue({
+      total: 50000,
+      valuationByMembers: [],
+    });
+    const data = priceProperties(propertiesData, ["All"], "INR");
+    expect(data).toEqual({
+      total: 50000,
+      totalCommercial: 0,
+      totalOtherProperty: 0,
+      totalPlot: 50000,
+      totalResidential: 0,
+    });
+  });
+
+  test("With multiple holdings", () => {
+    calculateProperty = jest.fn();
+    calculateProperty.mockReturnValue({
+      total: 50000,
+      valuationByMembers: [],
+    });
+    const data = priceProperties(
+      [
+        ...propertiesData,
+        ...[
+          {
+            country: "India",
+            curr: "INR",
+            mv: 1469.3280768000006,
+            mvm: 6,
+            mvy: 2022,
+            name: "",
+            own: [
+              {
+                fId: "70ec5237-133f-4f45-bfda-3aa516f7de26",
+                per: 100,
+              },
+            ],
+            pin: 0,
+            purchase: { amt: 10000, month: 4, year: 2017, qty: 1 },
+            rate: 8,
+            res: false,
+            type: "COMM",
+          },
+        ],
+      ],
+      ["All"],
+      "INR"
+    );
+    expect(data).toEqual({
+      total: 100000,
+      totalCommercial: 50000,
+      totalOtherProperty: 0,
+      totalPlot: 50000,
+      totalResidential: 0,
+    });
+  });
+
+  test("With selected members", async () => {
+    calculateProperty = jest.fn();
+    calculateProperty.mockReturnValue({
+      total: 50000,
+      valuationByMembers: [
+        {
+          fid: "one",
+          value: 50000,
+        },
+      ],
+    });
+    const data = priceProperties(
+      [
+        {
+          country: "India",
+          curr: "INR",
+          mv: 1469.3280768000006,
+          mvm: 6,
+          mvy: 2022,
+          name: "",
+          own: [
+            {
+              fId: "one",
+              per: 50,
+            },
+            {
+              fId: "two",
+              per: 50,
+            },
+          ],
+          pin: 0,
+          purchase: { amt: 10000, month: 4, year: 2017, qty: 1 },
+          rate: 8,
+          res: false,
+          state: "",
+          type: "H",
+        },
+      ],
+      ["one"],
+      "INR"
+    );
+    expect(data).toEqual({
+      total: 50000,
+      totalCommercial: 0,
+      totalOtherProperty: 0,
+      totalPlot: 0,
+      totalResidential: 50000,
+    });
+  });
+
+  test("Without holdings", async () => {
+    calculateProperty = jest.fn();
+    calculateProperty.mockReturnValue({
+      total: 50000,
+      valuationByMembers: ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+    });
+    const data = priceProperties(
+      [],
+      ["70ec5237-133f-4f45-bfda-3aa516f7de26"],
+      "INR"
+    );
+    expect(data).toEqual({
+      total: 0,
+      totalCommercial: 0,
+      totalOtherProperty: 0,
+      totalPlot: 0,
+      totalResidential: 0,
+    });
+  });
+
+  test("Without data", async () => {
+    try {
+      priceProperties();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceLoans", () => {
+  const holdings = [
+    {
+      amt: 1000,
+      curr: "INR",
+      fId: "one",
+    },
+    {
+      amt: 1000,
+      curr: "INR",
+      fId: "two",
+    },
+  ];
+
+  test("With data", () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValue(10000);
+    const data = priceLoans(holdings, ["All"], "INR");
+    expect(data).toEqual(20000);
+  });
+
+  test("With selected members", () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValue(10000);
+    const data = priceLoans(holdings, ["one"], "INR");
+    expect(data).toEqual(10000);
+  });
+
+  test("Without holdings", async () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValue(10000);
+    const data = priceLoans([], ["All"], "INR");
+    expect(data).toEqual(0);
+  });
+
+  test("Without data", async () => {
+    try {
+      priceLoans();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceLendings", () => {
+  const holdings = [
+    {
+      amt: 1000,
+      curr: "INR",
+      fId: "one",
+    },
+    {
+      amt: 1000,
+      curr: "INR",
+      fId: "two",
+    },
+  ];
+
+  test("With data", () => {
+    calculateCompundingIncome = jest.fn();
+    calculateCompundingIncome.mockReturnValue({
+      valuation: 1000,
+      isShortTerm: true,
+    });
+    const data = priceLendings(holdings, ["All"], "INR");
+    expect(data).toEqual({ total: 2000, totalShortTerm: 2000 });
+  });
+
+  test("With selected members", () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValueOnce({ valuation: 1000, isShortTerm: true });
+    const data = priceLendings(holdings, ["one"], "INR");
+    expect(data).toEqual({ total: 1000, totalShortTerm: 1000 });
+  });
+
+  test("Without holdings", async () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValue({ valuation: 1000, isShortTerm: false });
+    const data = priceLendings([], ["All"], "INR");
+    expect(data).toEqual({ total: 0, totalShortTerm: 0 });
+  });
+
+  test("Without data", async () => {
+    try {
+      priceLendings();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceLtdep", () => {
+  const holdings = [
+    { amt: 1000, curr: "INR", fId: "one" },
+    { amt: 1000, curr: "INR", fId: "two" },
+  ];
+
+  test("With data", () => {
+    calculateCompundingIncome = jest.fn();
+    calculateCompundingIncome.mockReturnValue({
+      valuation: 1000,
+    });
+    const data = priceLtdep(holdings, ["All"], "INR");
+    expect(data).toEqual(2000);
+  });
+
+  test("With selected members", () => {
+    calculateLoan = jest.fn();
+    calculateLoan.mockReturnValueOnce({ valuation: 1000 });
+    const data = priceLtdep(holdings, ["one"], "INR");
+    expect(data).toEqual(1000);
+  });
+
+  test("Without holdings", async () => {
+    const data = priceLtdep([], ["All"], "INR");
+    expect(data).toEqual(0);
+  });
+
+  test("Without data", async () => {
+    try {
+      priceLtdep();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("calculateBalance", () => {
+  const holdings = [
+    { amt: 1000, curr: "INR", fId: "one" },
+    { amt: 1000, curr: "INR", fId: "two" },
+  ];
+
+  test("With data", () => {
+    const data = calculateBalance(holdings, ["All"], "INR");
+    expect(data).toEqual(2000);
+  });
+
+  test("With selected members", () => {
+    const data = calculateBalance(holdings, ["one"], "INR");
+    expect(data).toEqual(1000);
+  });
+
+  test("Without holdings", async () => {
+    const data = calculateBalance([], ["All"], "INR");
+    expect(data).toEqual(0);
+  });
+
+  test("Without data", async () => {
+    try {
+      calculateBalance();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceInsurance", () => {
+  const holdings = [
+    { amt: 1000, curr: "INR", fId: "one", subt: "L" },
+    { amt: 1000, curr: "INR", fId: "two", subt: "L" },
+  ];
+
+  test("With data", () => {
+    calculateInsurance = jest.fn();
+    calculateInsurance.mockReturnValue({
+      subt: "L",
+      cashflows: [1000, 1000, 1000, 10000],
+    });
+    const data = priceInsurance(holdings, ["All"], "INR", {}, 50);
+    expect(data).toEqual({
+      presentYearValue: { L: 1000 },
+      yearlyCashflow: { 2022: 2000, 2023: 2000, 2024: 2000, 2025: 20000 },
+    });
+  });
+
+  test("With selected members", () => {
+    const data = priceInsurance(holdings, ["one"], "INR");
+    expect(data).toEqual({
+      presentYearValue: { L: 1000 },
+      yearlyCashflow: { 2022: 1000, 2023: 1000, 2024: 1000, 2025: 10000 },
+    });
+  });
+
+  test("Without holdings", async () => {
+    const data = priceInsurance([], ["All"], "INR");
+    expect(data).toEqual({ presentYearValue: {}, yearlyCashflow: {} });
+  });
+
+  test("Without data", async () => {
+    try {
+      priceInsurance();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceCrypto", () => {
+  const cryptoData = [
+    {
+      type: "A",
+      subt: "C",
+      name: "BTC-USD",
+      curr: "INR",
+      fId: "one",
+      qty: 10,
+    },
+    {
+      type: "A",
+      subt: "C",
+      name: "BTC-USD",
+      curr: "INR",
+      fId: "two",
+      qty: 10,
+    },
+  ];
+
+  test("With data", async () => {
+    calculateCrypto = jest.fn();
+    calculateCrypto.mockReturnValue(100);
+    const data = await priceCrypto(cryptoData, ["All"], "INR", 75);
+    expect(data).toEqual(200);
+  });
+
+  test("With selected members", async () => {
+    calculateCrypto = jest.fn();
+    calculateCrypto.mockReturnValue(100);
+    const data = await priceCrypto(cryptoData, ["one"], "INR", 75);
+    expect(data).toEqual(100);
+  });
+
+  test("Without holdings", async () => {
+    const data = await priceCrypto([], ["All"], "INR", 75);
+    expect(data).toEqual(0);
+  });
+
+  test("Without data", async () => {
+    try {
+      await priceCrypto();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("pricePF", () => {
+  const holdings = [
+    { amt: 1000, curr: "INR", fId: "one", subt: "PF" },
+    { amt: 1000, curr: "INR", fId: "two", subt: "PF" },
+  ];
+
+  test("With data", () => {
+    calculateProvidentFund = jest.fn();
+    calculateProvidentFund.mockReturnValue(1000);
+    const data = pricePF(holdings, ["All"], "INR");
+    expect(data).toEqual({
+      total: 2000,
+      totalEPF: 0,
+      totalPPF: 2000,
+      totalVPF: 0,
+    });
+  });
+
+  test("With different subt type", () => {
+    calculateProvidentFund = jest.fn();
+    calculateProvidentFund.mockReturnValue(1000);
+    const holdings = [
+      { amt: 1000, curr: "INR", fId: "one", subt: "VF" },
+      { amt: 1000, curr: "INR", fId: "two", subt: "EF" },
+    ];
+    const data = pricePF(holdings, ["All"], "INR");
+    expect(data).toEqual({
+      total: 2000,
+      totalEPF: 1000,
+      totalPPF: 0,
+      totalVPF: 1000,
+    });
+  });
+
+  test("With selected members", () => {
+    calculateProvidentFund = jest.fn();
+    calculateProvidentFund.mockReturnValue(1000);
+    const data = pricePF(holdings, ["one"], "INR");
+    expect(data).toEqual({
+      total: 1000,
+      totalEPF: 0,
+      totalPPF: 1000,
+      totalVPF: 0,
+    });
+  });
+
+  test("Without holdings", async () => {
+    const data = pricePF([], ["All"], "INR");
+    expect(data).toEqual({ total: 0, totalEPF: 0, totalPPF: 0, totalVPF: 0 });
+  });
+
+  test("Without data", async () => {
+    try {
+      pricePF();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("priceNPS", () => {
+  const holdings = [
+    { name: "SM003010", curr: "INR", fId: "one", subt: "", qty: 10 },
+    { name: "SM003011", curr: "INR", fId: "two", subt: "CB", qty: 10 },
+  ];
+
+  test("With data", async () => {
+    calculateNPS = jest.fn();
+    calculateNPS.mockReturnValue({
+      equity: 240,
+      fixed: 0,
+      value: 240,
+    });
+    const data = await priceNPS(holdings, ["All"], "INR");
+    expect(data).toEqual({
+      total: 480,
+      totalNPSCFixed: 0,
+      totalNPSEquity: 480,
+      totalNPSGFixed: 0,
+    });
+  });
+
+  test("With different subt type", async () => {
+    calculateNPS = jest.fn();
+    calculateNPS.mockReturnValue({
+      equity: 0,
+      fixed: 240,
+      value: 240,
+    });
+    const data = await priceNPS(holdings, ["All"], "INR");
+    expect(data).toEqual({
+      total: 480,
+      totalNPSCFixed: 240,
+      totalNPSEquity: 0,
+      totalNPSGFixed: 240,
+    });
+  });
+
+  test("With selected members", async () => {
+    calculateNPS = jest.fn();
+    calculateNPS.mockReturnValue({
+      equity: 240,
+      fixed: 0,
+      value: 240,
+    });
+    const data = await priceNPS(holdings, ["one"], "INR");
+    expect(data).toEqual({
+      total: 240,
+      totalNPSCFixed: 0,
+      totalNPSEquity: 240,
+      totalNPSGFixed: 0,
+    });
+  });
+
+  test("Without holdings", async () => {
+    const data = await priceNPS([], ["All"], "INR");
+    expect(data).toEqual({
+      total: 0,
+      totalNPSCFixed: 0,
+      totalNPSEquity: 0,
+      totalNPSGFixed: 0,
+    });
+  });
+
+  test("Without data", async () => {
+    try {
+      await priceNPS();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("calculateTotalAssets", () => {
+  const ins = [
+    {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 0,
+    },
+    {
+      id: "INE752E01010",
+      sid: "POWERGRID",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 1,
+    },
+    {
+      id: "INE129A01019",
+      sid: "GAIL",
+      exchg: "NSE",
+      qty: 43,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 3,
+    },
+    {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      exchg: "NSE",
+      qty: 50,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 6,
+    },
+    {
+      id: "INF277K01Z77",
+      sid: "135800",
+      exchg: null,
+      qty: 63.779,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 7,
+    },
+    {
+      id: "INF109K01Z48",
+      sid: "120594",
+      exchg: null,
+      qty: 12.653,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 8,
+    },
+    {
+      id: "INF879O01027",
+      sid: "122639",
+      exchg: null,
+      qty: 158.769,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 9,
+    },
+  ];
+
+  const holdings = {
+    uname: "abc",
+    dep: [
+      {
+        amt: 1000,
+        chg: 0,
+        chgF: 0,
+        curr: "INR",
+        em: 12,
+        ey: 2023,
+        fId: "two",
+        sm: 1,
+        subt: "BD",
+        sy: 2022,
+      },
+    ],
+    pm: [
+      {
+        id: "",
+        qty: 10,
+        fId: "one",
+        type: "A",
+        subt: "Gold",
+        name: "8",
+      },
+    ],
+    crypto: [
+      {
+        type: "A",
+        subt: "C",
+        name: "BTC-USD",
+        curr: "INR",
+        fId: "two",
+        qty: 10,
+      },
+    ],
+    pf: [{ amt: 1000, curr: "INR", fId: "two", subt: "PF" }],
+    nps: [{ name: "SM003010", curr: "INR", fId: "one", subt: "", qty: 10 }],
+    vehicles: [
+      {
+        amt: 10000,
+        chg: 15,
+        chgF: 1,
+        curr: "INR",
+        fId: "one",
+        sm: 1,
+        subt: "2",
+        sy: 2020,
+      },
+    ],
+    property: [
+      {
+        country: "India",
+        curr: "INR",
+        mv: 1500,
+        mvm: 6,
+        mvy: 2022,
+        name: "",
+        own: [
+          {
+            fId: "two",
+            per: 100,
+          },
+        ],
+        pin: 0,
+        purchase: { amt: 10000, month: 4, year: 2017, qty: 1 },
+        rate: 8,
+        res: false,
+        type: "P",
+      },
+    ],
+    savings: [{ amt: 1000, curr: "INR", fId: "two" }],
+    other: [{ amt: 1000, curr: "INR", fId: "one" }],
+    ltdep: [
+      {
+        amt: 1000,
+        chg: 0,
+        chgF: 0,
+        curr: "INR",
+        em: 12,
+        ey: 2023,
+        fId: "one",
+        sm: 1,
+        subt: "SSY",
+        sy: 2022,
+      },
+    ],
+    angel: [{ amt: 1000, curr: "INR", fId: "one" }],
+    p2p: [
+      {
+        amt: 1000,
+        chg: 0,
+        chgF: 0,
+        curr: "INR",
+        em: 12,
+        ey: 2023,
+        fId: "two",
+        sm: 1,
+        subt: "P2P",
+        sy: 2022,
+      },
+    ],
+  };
+
+  test("With data", async () => {
+    priceInstruments = jest.fn();
+    pricePM = jest.fn();
+    priceCrypto = jest.fn();
+    pricePM = jest.fn();
+    priceCrypto = jest.fn();
+    pricePF = jest.fn();
+    priceNPS = jest.fn();
+    priceVehicles = jest.fn();
+    priceProperties = jest.fn();
+    priceSavings = jest.fn();
+    priceLendings = jest.fn();
+    priceLtdep = jest.fn();
+    priceOthers = jest.fn();
+    priceAngel = jest.fn();
+    priceP2P = jest.fn();
+
+    priceInstruments.mockReturnValue({
+      total: 24754.2246086,
+      totalFGold: 0,
+      totalFEquity: 24754.2246086,
+      totalFRE: 0,
+      totalFFixed: 0,
+      totalInv: 0,
+      totalStocks: 15043.75,
+      totalBondsAllocation: 0,
+      totalBonds: 0,
+      totalETFs: 0,
+      totalMFs: 9710.4746086,
+      largeCapStocks: 15043.75,
+      largeCapFunds: 0,
+      largeCapETFs: 0,
+      multiCap: 9710.4746086,
+      indexFunds: 0,
+      fmp: 0,
+      intervalFunds: 0,
+      liquidFunds: 0,
+      riskTotals: {
+        VC: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        C: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        M: { stocks: 15043.75, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        A: {
+          stocks: 0,
+          bonds: 0,
+          mfs: 9710.4746086,
+          etfs: 0,
+          reit: 0,
+          others: 0,
+        },
+        VA: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      },
+    });
+    pricePM.mockReturnValue({ total: 20, totalPGold: 10 });
+    priceCrypto.mockReturnValue(2000);
+    pricePF.mockReturnValue({
+      total: 2000,
+      totalEPF: 0,
+      totalPPF: 2000,
+      totalVPF: 0,
+    });
+    priceNPS.mockReturnValue({
+      total: 480,
+      totalNPSCFixed: 0,
+      totalNPSEquity: 480,
+      totalNPSGFixed: 0,
+    });
+    priceVehicles.mockReturnValue(1000);
+    priceProperties.mockReturnValue({
+      total: 5000,
+      totalOtherProperty: 1000,
+      totalCommercial: 1000,
+      totalResidential: 2000,
+      totalPlot: 1000,
+    });
+    priceSavings.mockReturnValue(1000);
+    priceLendings.mockReturnValue({ total: 1000, totalShortTerm: 500 });
+    priceLtdep.mockReturnValue(1000);
+    priceOthers.mockReturnValue(1000);
+    priceAngel.mockReturnValue(1000);
+    priceP2P.mockReturnValue(1000);
+
+    const data = await calculateTotalAssets(
+      holdings,
+      { uname: "abc", ins: ins },
+      ["All"],
+      "INR",
+      75,
+      true
+    );
+
+    expect(data.totalCash).toEqual(5000)
+    expect(data.totalSavings).toEqual(1000)
+    expect(data.totalAssets).toEqual(41254.2246086)
+    expect(data.totalMultiCap).toBeCloseTo(9710.4746086)
+  });
+
+  test("Without holdings data", async () => {
+    priceInstruments = jest.fn();
+    priceInstruments.mockReturnValue({
+      total: 24754.2246086,
+      totalFGold: 0,
+      totalFEquity: 24754.2246086,
+      totalFRE: 0,
+      totalFFixed: 0,
+      totalInv: 0,
+      totalStocks: 15043.75,
+      totalBondsAllocation: 0,
+      totalBonds: 0,
+      totalETFs: 0,
+      totalMFs: 9710.4746086,
+      largeCapStocks: 15043.75,
+      largeCapFunds: 0,
+      largeCapETFs: 0,
+      multiCap: 9710.4746086,
+      indexFunds: 0,
+      fmp: 0,
+      intervalFunds: 0,
+      liquidFunds: 0,
+      riskTotals: {
+        VC: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        C: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        M: { stocks: 15043.75, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+        A: {
+          stocks: 0,
+          bonds: 0,
+          mfs: 9710.4746086,
+          etfs: 0,
+          reit: 0,
+          others: 0,
+        },
+        VA: { stocks: 0, bonds: 0, mfs: 0, etfs: 0, reit: 0, others: 0 },
+      },
+    });
+
+    const data = await calculateTotalAssets(
+      null,
+      { uname: "abc", ins: ins },
+      ["one"],
+      "INR",
+      75,
+      true
+    );
+
+    expect(data.totalCash).toEqual(0)
+    expect(data.totalSavings).toEqual(0)
+    expect(data.totalAssets).toEqual(24754.2246086)
+    expect(data.totalMultiCap).toBeCloseTo(9710.4746086)
+  });
+
+  test("Without parameters", async () => {
+    const data = await calculateTotalAssets({}, {}, ["All"], "INR", 75, true);
+    expect(data.totalCash).toEqual(0)
+    expect(data.totalSavings).toEqual(0)
+    expect(data.totalAssets).toEqual(0)
+    expect(data.totalMultiCap).toBeCloseTo(0)
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculateTotalAssets();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+// calculateTotalLiabilities
+// calculatePrice
+// calculateAlerts
+// isIndISIN
+// otherISIN
+// initializeWatchlist
