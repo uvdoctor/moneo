@@ -34,6 +34,13 @@ import {
   priceOthers,
   priceAngel,
   priceP2P,
+  priceCredit,
+  calculateTotalLiabilities,
+  calculatePrice,
+  calculateAlerts,
+  isIndISIN,
+  otherISIN,
+  initializeWatchlist,
 } from "../valuationutils";
 import {
   getCommodityRate,
@@ -323,7 +330,7 @@ describe("getCashFlows", () => {
 
   test("Life Insurance - Monthly", () => {
     const data = getCashFlows(1000, 6, 12, 10, true, "L");
-    expect(data).toEqual([12000, 6000]);
+    expect(data).toEqual([12000, 7000]);
   });
 
   test("Life Insurance - Monthly - With zero remaining duration", () => {
@@ -568,7 +575,7 @@ describe("calculateLoan", () => {
       subt: "L",
       sy: 2022,
     });
-    expect(data).toEqual(16651);
+    expect(data).toEqual(15790);
   });
 
   test("With data - without rate", () => {
@@ -584,7 +591,7 @@ describe("calculateLoan", () => {
       subt: "L",
       sy: 2022,
     });
-    expect(data).toEqual(18000);
+    expect(data).toEqual(17000);
   });
 
   test("Without data", () => {
@@ -2330,10 +2337,10 @@ describe("calculateTotalAssets", () => {
       true
     );
 
-    expect(data.totalCash).toEqual(5000)
-    expect(data.totalSavings).toEqual(1000)
-    expect(data.totalAssets).toEqual(41254.2246086)
-    expect(data.totalMultiCap).toBeCloseTo(9710.4746086)
+    expect(data.totalCash).toEqual(5000);
+    expect(data.totalSavings).toEqual(1000);
+    expect(data.totalAssets).toEqual(41254.2246086);
+    expect(data.totalMultiCap).toBeCloseTo(9710.4746086);
   });
 
   test("Without holdings data", async () => {
@@ -2383,18 +2390,18 @@ describe("calculateTotalAssets", () => {
       true
     );
 
-    expect(data.totalCash).toEqual(0)
-    expect(data.totalSavings).toEqual(0)
-    expect(data.totalAssets).toEqual(24754.2246086)
-    expect(data.totalMultiCap).toBeCloseTo(9710.4746086)
+    expect(data.totalCash).toEqual(0);
+    expect(data.totalSavings).toEqual(0);
+    expect(data.totalAssets).toEqual(24754.2246086);
+    expect(data.totalMultiCap).toBeCloseTo(9710.4746086);
   });
 
-  test("Without parameters", async () => {
+  test("Without holdings and ins data", async () => {
     const data = await calculateTotalAssets({}, {}, ["All"], "INR", 75, true);
-    expect(data.totalCash).toEqual(0)
-    expect(data.totalSavings).toEqual(0)
-    expect(data.totalAssets).toEqual(0)
-    expect(data.totalMultiCap).toBeCloseTo(0)
+    expect(data.totalCash).toEqual(0);
+    expect(data.totalSavings).toEqual(0);
+    expect(data.totalAssets).toEqual(0);
+    expect(data.totalMultiCap).toBeCloseTo(0);
   });
 
   test("Without data", async () => {
@@ -2406,9 +2413,962 @@ describe("calculateTotalAssets", () => {
   });
 });
 
-// calculateTotalLiabilities
-// calculatePrice
-// calculateAlerts
-// isIndISIN
-// otherISIN
-// initializeWatchlist
+describe("calculateTotalLiabilities", () => {
+  const holdings = {
+    uname: "abc",
+    loans: [
+      {
+        amt: 1000,
+        chg: 0,
+        chgF: 1,
+        curr: "INR",
+        em: 12,
+        ey: 2023,
+        fId: "two",
+        sm: 1,
+        subt: "L",
+        sy: 2022,
+      },
+    ],
+    credit: [
+      {
+        id: "",
+        amt: 100000,
+        fId: "one",
+      },
+    ],
+  };
+
+  test("With data", () => {
+    priceLoans = jest.fn();
+    priceCredit = jest.fn();
+
+    priceLoans.mockReturnValue(0);
+    priceCredit.mockReturnValue(10000);
+
+    const data = calculateTotalLiabilities(holdings, ["All"], "INR");
+    expect(data).toEqual(10000);
+  });
+
+  test("Without holdings data", () => {
+    const data = calculateTotalLiabilities(null, ["All"], "INR");
+    expect(data).toEqual(0);
+  });
+
+  test("With selected members", async () => {
+    priceLoans = jest.fn();
+    priceCredit = jest.fn();
+
+    priceLoans.mockReturnValue(10000);
+    priceCredit.mockReturnValue(10000);
+
+    const data = calculateTotalLiabilities(holdings, ["one"], "INR");
+    expect(data).toEqual(20000);
+  });
+
+  test("Without data", () => {
+    try {
+      calculateTotalLiabilities();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("calculatePrice", () => {
+  const ins = [
+    {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 0,
+    },
+    {
+      id: "INE129A01019",
+      sid: "GAIL",
+      exchg: "NSE",
+      qty: 43,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 3,
+    },
+    {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      exchg: "NSE",
+      qty: 50,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 6,
+    },
+    {
+      id: "INF109K01Z48",
+      sid: "120594",
+      exchg: null,
+      qty: 12.653,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 8,
+    },
+    {
+      id: "INF879O01027",
+      sid: "122639",
+      exchg: null,
+      qty: 158.769,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 9,
+    },
+  ];
+
+  const insData = {
+    INF879O01027: {
+      id: "INF879O01027",
+      sid: "122639",
+      tid: "",
+      dir: null,
+      name: "Parag Parikh Flexi Cap Fund - Direct Plan - Growth",
+      type: "E",
+      subt: "S",
+      price: 46.8274,
+      prev: 46.715,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+      createdAt: "2022-07-01T13:30:42.082Z",
+      updatedAt: "2022-07-01T13:30:42.082Z",
+    },
+    INF109K01Z48: {
+      id: "INF109K01Z48",
+      sid: "120594",
+      tid: "",
+      dir: null,
+      name: "ICICI Prudential Technology Fund - Direct Plan -  Growth",
+      type: "E",
+      subt: "S",
+      price: 139.49,
+      prev: 140.45,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+      createdAt: "2022-07-01T13:30:35.222Z",
+      updatedAt: "2022-07-01T13:30:35.222Z",
+    },
+    INE129A01019: {
+      id: "INE129A01019",
+      sid: "GAIL",
+      name: "GAIL (India) Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 132.35,
+      prev: 135.2,
+      fv: null,
+      under: null,
+      yhigh: 173.5,
+      yhighd: "2022-04-19",
+      ylow: 125.2,
+      ylowd: "2021-12-20",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.7622,
+      mcap: 592635625472,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 10075505,
+      prevol: 9851023,
+      createdAt: "2022-07-01T13:30:58.747Z",
+      updatedAt: "2022-07-01T13:30:58.747Z",
+    },
+    INE028A01039: {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      name: "Bank of Baroda",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 96.95,
+      prev: 97.4,
+      fv: null,
+      under: null,
+      yhigh: 122.7,
+      yhighd: "2022-04-11",
+      ylow: 72.5,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.8139,
+      mcap: 497484791808,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 32281337,
+      prevol: 24612161,
+      createdAt: "2022-07-01T13:30:58.407Z",
+      updatedAt: "2022-07-01T13:30:58.407Z",
+    },
+    INE522F01014: {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      name: "Coal India Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 183.25,
+      prev: 185.6,
+      fv: null,
+      under: null,
+      yhigh: 209,
+      yhighd: "2022-04-22",
+      ylow: 132.75,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.4535,
+      mcap: 1095733411840,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 17245911,
+      prevol: 8693744,
+      createdAt: "2022-07-01T13:30:58.665Z",
+      updatedAt: "2022-07-01T13:30:58.665Z",
+    },
+  };
+
+  const crypto = [
+    {
+      type: "A",
+      subt: "C",
+      name: "BTC-USD",
+      curr: "INR",
+      fId: "one",
+      qty: 10,
+    },
+  ];
+
+  const nps = [
+    { name: "SM003010", curr: "INR", fId: "one", subt: "", qty: 10 },
+  ];
+
+  test("With data", async () => {
+    simpleStorage.get.mockReturnValue(insData);
+    const data = await calculatePrice(ins, [], [], 75, "INR");
+    expect(data).toEqual({
+      gainers: [
+        {
+          name: "Parag Parikh Flexi Cap Fund - Direct Plan - Growth",
+          result: 0.24,
+          id: "INF879O01027",
+          value: 46.8274,
+        },
+      ],
+      losers: [
+        {
+          name: "GAIL (India) Limited",
+          result: -2.11,
+          id: "INE129A01019",
+          value: 132.35,
+        },
+        {
+          name: "Coal India Limited",
+          result: -1.27,
+          id: "INE522F01014",
+          value: 183.25,
+        },
+        {
+          name: "ICICI Prudential Technology Fund - Direct Plan -  Growth",
+          result: -0.68,
+          id: "INF109K01Z48",
+          value: 139.49,
+        },
+      ],
+      yhighList: [],
+      ylowList: [],
+      volGainers: [
+        {
+          name: "Coal India Limited",
+          result: 98.37,
+          id: "INE522F01014",
+          value: 17245911,
+        },
+        {
+          name: "Bank of Baroda",
+          result: 31.16,
+          id: "INE028A01039",
+          value: 32281337,
+        },
+        {
+          name: "GAIL (India) Limited",
+          result: 2.28,
+          id: "INE129A01019",
+          value: 10075505,
+        },
+      ],
+      volLosers: [],
+    });
+  });
+
+  test("With blank data", async () => {
+    getCryptoRate.mockReturnValue(1000);
+    const data = await calculatePrice([], [], [], 75, "INR");
+    expect(data).toEqual({
+      gainers: [],
+      losers: [],
+      volGainers: [],
+      volLosers: [],
+      yhighList: [],
+      ylowList: [],
+    });
+  });
+
+  test("With nps and crypto data", async () => {
+    simpleStorage.get.mockReturnValue([
+      {
+        price: 23,
+        id: "SM003010",
+        name: "LIC",
+        prev: 24,
+        type: "F",
+      },
+    ]);
+    getCryptoRate = jest.fn();
+    getCryptoRate.mockReturnValue(1000);
+    const data = await calculatePrice([], crypto, nps, 75, "INR");
+    expect(data).toEqual({
+      gainers: [],
+      losers: [
+        { id: "SM003010", name: "LIC", result: -4.17, value: 23 },
+        { id: "BTC-USD", name: "BTC-USD", result: 0, value: 1000 },
+      ],
+      volGainers: [],
+      volLosers: [],
+      yhighList: [],
+      ylowList: [],
+    });
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculatePrice();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("calculateAlerts", () => {
+  const ins = [
+    {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      exchg: "NSE",
+      qty: 10,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 0,
+    },
+    {
+      id: "INE129A01019",
+      sid: "GAIL",
+      exchg: "NSE",
+      qty: 43,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 3,
+    },
+    {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      exchg: "NSE",
+      qty: 50,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 6,
+    },
+    {
+      id: "INF109K01Z48",
+      sid: "120594",
+      exchg: null,
+      qty: 12.653,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 8,
+    },
+    {
+      id: "INF879O01027",
+      sid: "122639",
+      exchg: null,
+      qty: 158.769,
+      pur: null,
+      fId: "one",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      key: 9,
+    },
+  ];
+
+  const holdings = {
+    uname: "abc",
+    crypto: [
+      {
+        type: "A",
+        subt: "C",
+        name: "BTC-USD",
+        curr: "INR",
+        fId: "two",
+        qty: 10,
+      },
+    ],
+    nps: [{ name: "SM003010", curr: "INR", fId: "one", subt: "", qty: 10 }],
+  };
+
+  test("With data", async () => {
+    simpleStorage.get.mockReturnValue(null);
+    initializeInsData = jest.fn();
+    initializeNPSData = jest.fn();
+    calculatePrice = jest.fn();
+    initializeInsData.mockReturnValue(true);
+    initializeNPSData.mockReturnValue(true);
+    calculatePrice.mockReturnValue(true);
+    await calculateAlerts(
+      holdings,
+      { uname: "abc", ins: ins },
+      75,
+      "INR",
+      true
+    );
+
+    expect(initializeInsData).toHaveBeenCalled();
+    expect(initializeNPSData).toHaveBeenCalled();
+    expect(calculatePrice).toHaveBeenCalled();
+  });
+
+  test("Without ins data", async () => {
+    initializeInsData = jest.fn();
+    initializeNPSData = jest.fn();
+    calculatePrice = jest.fn();
+    initializeInsData.mockReturnValue(true);
+    initializeNPSData.mockReturnValue(true);
+    calculatePrice.mockReturnValue(true);
+    await calculateAlerts(holdings, null, 75, "INR", true);
+
+    expect(initializeInsData).toBeCalledTimes(0);
+    expect(initializeNPSData).toHaveBeenCalled();
+    expect(calculatePrice).toHaveBeenCalled();
+  });
+
+  test("Without holding data", async () => {
+    initializeInsData = jest.fn();
+    initializeNPSData = jest.fn();
+    calculatePrice = jest.fn();
+    initializeInsData.mockReturnValue(true);
+    initializeNPSData.mockReturnValue(true);
+    calculatePrice.mockReturnValue(true);
+    await calculateAlerts(null, { uname: "abc", ins }, 75, "INR", true);
+
+    expect(initializeInsData).toHaveBeenCalled();
+    expect(initializeNPSData).toBeCalledTimes(0);
+    expect(calculatePrice).toHaveBeenCalled();
+  });
+
+  test("Without data", async () => {
+    try {
+      await calculateAlerts();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("isIndISIN", () => {
+  test("With indian isin - ex 1", () => {
+    expect(isIndISIN("INE522F01014")).toEqual(true);
+  });
+
+  test("With indian isin - ex 2", () => {
+    expect(isIndISIN("INF522F01014")).toEqual(true);
+  });
+
+  test("other isin", () => {
+    expect(isIndISIN("IPE522F01014")).toEqual(false);
+  });
+
+  test("less than 12 char", () => {
+    expect(isIndISIN("IPE522F0114")).toEqual(false);
+  });
+
+  test("Without id", () => {
+    try {
+      isIndISIN();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("otherISIN", () => {
+  test("With indian isin - ex 1", () => {
+    expect(otherISIN("INE522F01014")).toEqual(false);
+  });
+
+  test("With indian isin - ex 2", () => {
+    expect(otherISIN("INF522F01014")).toEqual(false);
+  });
+
+  test("other isin - ex 1", () => {
+    expect(otherISIN("USE522F01014")).toEqual(true);
+  });
+
+  test("other isin - ex 2", () => {
+    expect(otherISIN("CAE522F01014")).toEqual(true);
+  });
+
+  test("less than 12 char", () => {
+    expect(otherISIN("IPE522F0114")).toEqual(false);
+  });
+
+  test("Without id", () => {
+    try {
+      otherISIN();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
+
+describe("initializeWatchlist", () => {
+  const insData = {
+    INF879O01027: {
+      id: "INF879O01027",
+      sid: "122639",
+      tid: "",
+      dir: null,
+      name: "Parag Parikh Flexi Cap Fund - Direct Plan - Growth",
+      type: "E",
+      subt: "S",
+      price: 46.8274,
+      prev: 46.715,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+      createdAt: "2022-07-01T13:30:42.082Z",
+      updatedAt: "2022-07-01T13:30:42.082Z",
+    },
+    INF109K01Z48: {
+      id: "INF109K01Z48",
+      sid: "120594",
+      tid: "",
+      dir: null,
+      name: "ICICI Prudential Technology Fund - Direct Plan -  Growth",
+      type: "E",
+      subt: "S",
+      price: 139.49,
+      prev: 140.45,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+      createdAt: "2022-07-01T13:30:35.222Z",
+      updatedAt: "2022-07-01T13:30:35.222Z",
+    },
+    INE129A01019: {
+      id: "INE129A01019",
+      sid: "GAIL",
+      name: "GAIL (India) Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 132.35,
+      prev: 135.2,
+      fv: null,
+      under: null,
+      yhigh: 173.5,
+      yhighd: "2022-04-19",
+      ylow: 125.2,
+      ylowd: "2021-12-20",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.7622,
+      mcap: 592635625472,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 10075505,
+      prevol: 9851023,
+      createdAt: "2022-07-01T13:30:58.747Z",
+      updatedAt: "2022-07-01T13:30:58.747Z",
+    },
+    INE028A01039: {
+      id: "INE028A01039",
+      sid: "BANKBARODA",
+      name: "Bank of Baroda",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 96.95,
+      prev: 97.4,
+      fv: null,
+      under: null,
+      yhigh: 122.7,
+      yhighd: "2022-04-11",
+      ylow: 72.5,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.8139,
+      mcap: 497484791808,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 32281337,
+      prevol: 24612161,
+      createdAt: "2022-07-01T13:30:58.407Z",
+      updatedAt: "2022-07-01T13:30:58.407Z",
+    },
+    INE522F01014: {
+      id: "INE522F01014",
+      sid: "COALINDIA",
+      name: "Coal India Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 183.25,
+      prev: 185.6,
+      fv: null,
+      under: null,
+      yhigh: 209,
+      yhighd: "2022-04-22",
+      ylow: 132.75,
+      ylowd: "2021-08-23",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.4535,
+      mcap: 1095733411840,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 17245911,
+      prevol: 8693744,
+      createdAt: "2022-07-01T13:30:58.665Z",
+      updatedAt: "2022-07-01T13:30:58.665Z",
+    },
+    INF277K01Z77: {
+      id: "INF277K01Z77",
+      sid: "135800",
+      tid: "",
+      dir: null,
+      name: "Tata Digital India Fund-Direct Plan-Growth",
+      type: "E",
+      subt: "S",
+      price: 33.7926,
+      prev: 34.1017,
+      mftype: "O",
+      mcapt: "Hybrid",
+      tf: false,
+      risk: "A",
+      createdAt: "2022-07-01T13:30:35.482Z",
+      updatedAt: "2022-07-01T13:30:35.482Z",
+    },
+    INE752E01010: {
+      id: "INE752E01010",
+      sid: "POWERGRID",
+      name: "Power Grid Corporation of India Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 206.5,
+      prev: 211.9,
+      fv: null,
+      under: null,
+      yhigh: 248.35,
+      yhighd: "2022-05-10",
+      ylow: 167.15,
+      ylowd: "2021-07-29",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.2348,
+      mcap: 1440430424064,
+      mcapt: "Large",
+      sector: null,
+      ind: null,
+      risk: "M",
+      vol: 8345302,
+      prevol: 16695542,
+      createdAt: "2022-07-01T13:30:59.447Z",
+      updatedAt: "2022-07-01T13:30:59.447Z",
+    },
+
+    INE848E01016: {
+      id: "INE848E01016",
+      sid: "NHPC",
+      name: "NHPC Limited",
+      exchg: "NSE",
+      type: "E",
+      subt: "S",
+      itype: null,
+      price: 30.85,
+      prev: 30.75,
+      fv: null,
+      under: null,
+      yhigh: 37.6,
+      yhighd: "2022-04-22",
+      ylow: 25.3,
+      ylowd: "2021-08-11",
+      split: null,
+      div: null,
+      splitd: null,
+      divdd: null,
+      divrd: null,
+      divpd: null,
+      beta: 0.1209,
+      mcap: 308883750912,
+      mcapt: "Mid",
+      sector: null,
+      ind: null,
+      risk: "A",
+      vol: 6808255,
+      prevol: 8400492,
+      createdAt: "2022-07-01T13:30:59.328Z",
+      updatedAt: "2022-07-01T13:30:59.328Z",
+    },
+  };
+
+  const watchlist = [
+    {
+      id: "INF277K01Z77",
+      sid: "135800",
+      curr: "INR",
+      type: null,
+      subt: null,
+      itype: null,
+    },
+    {
+      id: "INE752E01010",
+      sid: "POWERGRID",
+      curr: "INR",
+      type: "E",
+      subt: "S",
+      itype: null,
+    },
+    {
+      id: "INE848E01016",
+      sid: "NHPC",
+      type: "E",
+      subt: "S",
+      itype: null,
+    },
+  ];
+
+  test("With ins and crypto data", async () => {
+    loadInstruments = jest.fn();
+    simpleStorage.get.mockReturnValue(insData);
+
+    const ins = [
+      {
+        id: "INE522F01014",
+        sid: "COALINDIA",
+        exchg: "NSE",
+        fId: "one",
+        curr: "INR",
+        type: "E",
+        subt: "S",
+        key: 0,
+      },
+      {
+        id: "INE129A01019",
+        sid: "GAIL",
+        exchg: "NSE",
+        fId: "one",
+        curr: "INR",
+        type: "E",
+        subt: "S",
+        key: 3,
+      },
+      {
+        id: "INE028A01039",
+        sid: "BANKBARODA",
+        exchg: "NSE",
+        qty: 50,
+        pur: null,
+        fId: "one",
+        curr: "INR",
+        type: "E",
+        subt: "S",
+        key: 6,
+      },
+      {
+        id: "INF109K01Z48",
+        sid: "120594",
+        exchg: null,
+        qty: 12.653,
+        pur: null,
+        fId: "one",
+        curr: "INR",
+        type: "E",
+        subt: "S",
+        key: 8,
+      },
+      {
+        id: "INF879O01027",
+        sid: "122639",
+        exchg: null,
+        qty: 158.769,
+        pur: null,
+        fId: "one",
+        curr: "INR",
+        type: "E",
+        subt: "S",
+        key: 9,
+      },
+    ];
+    const data = await initializeWatchlist(true, watchlist, ins, [
+      {
+        type: "A",
+        subt: "C",
+        name: "BTC-USD",
+        curr: "INR",
+      },
+    ]);
+    expect(loadInstruments).toHaveBeenCalled();
+    expect(data).toEqual([
+      {
+        id: "INE522F01014",
+        type: "E",
+        subt: "S",
+        itype: null,
+        sid: "COALINDIA",
+      },
+      {
+        id: "INE129A01019",
+        type: "E",
+        subt: "S",
+        itype: null,
+        sid: "GAIL",
+      },
+      {
+        id: "INE028A01039",
+        type: "E",
+        subt: "S",
+        itype: null,
+        sid: "BANKBARODA",
+      },
+      {
+        id: "INF109K01Z48",
+        type: "E",
+        subt: "S",
+        itype: undefined,
+        sid: "120594",
+      },
+      {
+        id: "INF879O01027",
+        type: "E",
+        subt: "S",
+        itype: undefined,
+        sid: "122639",
+      },
+      { id: "BTC-USD", sid: "BTC-USD", type: "A", subt: "C" },
+    ]);
+  });
+
+  test("Without ins and crypto data", async () => {
+    loadInstruments = jest.fn();
+    simpleStorage.get.mockReturnValue(insData);
+    const data = await initializeWatchlist(true, watchlist, [], []);
+    expect(loadInstruments).toHaveBeenCalled();
+    expect(data).toEqual([]);
+  });
+
+  test("With blank data", async () => {
+    loadInstruments = jest.fn();
+    simpleStorage.get.mockReturnValue(insData);
+
+    const data = await initializeWatchlist(true, [], [], []);
+    expect(loadInstruments).toBeCalledTimes(1);
+    expect(data).toEqual([]);
+  });
+
+  test("Without data", async () => {
+    try {
+      await initializeWatchlist();
+    } catch (e) {
+      expect(e.toString()).toContain("TypeError:");
+    }
+  });
+});
