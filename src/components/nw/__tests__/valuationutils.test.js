@@ -2,9 +2,9 @@ import {
   loadInstrumentPrices,
   getInsPerfIds,
   loadInstruments,
-  loadInsPerf,
   initializeInsData,
   getCashFlows,
+  loadInsPerf,
   calculateDifferenceInYears,
   calculateDifferenceInMonths,
   calculateAddYears,
@@ -214,18 +214,6 @@ describe("loadInstruments", () => {
     expect(getInsPerfIds).toHaveBeenCalled();
   });
 
-  // test("Without cache - unmatched ids", async () => {
-  //   loadIndexPerf = jest.fn();
-  //   loadInstrumentPrices.mockReturnValue(["INE114A01011"]);
-  //   getInsPerfIds = jest.fn();
-  //   loadInsPerf = jest.fn();
-
-  //   const ids = [ "INF114A01011" ];
-  //   await loadInstruments(ids, true);
-  //   expect(loadInstrumentPrices).toBeCalledTimes(4)
-  //   expect(getInsPerfIds).toHaveBeenCalled();
-  // });
-
   test("With cache data", async () => {
     loadIndexPerf = jest.fn();
     loadInstrumentPrices = jest.fn();
@@ -252,41 +240,6 @@ describe("loadInstruments", () => {
     expect(loadInsPerf).toHaveBeenCalled();
   });
 });
-
-// describe("loadInsPerf", async () => {
-//   const insperfData = {
-//     INE129A01019: {
-//       id: "INE129A01019",
-//       sid: "GAIL",
-//       subt: "S",
-//       beta: 1,
-//       yhigh: 10,
-//     },
-//     INE114A01011: {
-//       id: "INE114A01011",
-//       subt: "S",
-//       sid: "SAIL",
-//       beta: 1,
-//       yhigh: 10,
-//     },
-//   };
-//   test("Without cache", async () => {
-//     loadInstrumentPrices = jest.fn();
-//     const ids = ["INE129A01019", "INE114A01011"];
-//     await loadInsPerf(ids);
-//     expect(loadInstrumentPrices).toHaveBeenCalled();
-//   });
-
-//   test("With cache data", async () => {
-//     loadInstrumentPrices = jest.fn();
-//     simpleStorage.get.mockReturnValue(insperfData);
-//     const ids = ["INE129A01019", "INE114A01011" ];
-//     const data = await loadInsPerf(ids);
-//     expect(data).toEqual(insperfData);
-//     expect(loadInstrumentPrices).toHaveBeenCalled(0);
-//   });
-
-// });
 
 describe("initializeInsData", () => {
   test("With data", async () => {
@@ -344,7 +297,14 @@ describe("getCashFlows", () => {
   });
 
   test("Life Insurance - Monthly - With zero bygone duration", () => {
-    const data = getCashFlows(1000, 0, 6, 10, true, "L");
+    const data = getCashFlows(
+      1000,
+      0,
+      12 - (new Date().getMonth() + 1),
+      10,
+      true,
+      "L"
+    );
     expect(data).toEqual([12000]);
   });
 
@@ -359,13 +319,20 @@ describe("getCashFlows", () => {
   });
 
   test("Others Insurance - Monthly", () => {
-    const data = getCashFlows(1000, 6, 12, 10, true, "V");
-    expect(data).toEqual([13256.556809295562, 6966.673978813547]);
+    const data = getCashFlows(
+      1000,
+      6,
+      12 - (new Date().getMonth() + 1),
+      10,
+      true,
+      "V"
+    );
+    expect(data).toEqual([13146.998488557585]);
   });
 
   test("Others Insurance - Monthly - With zero remaining duration", () => {
     const data = getCashFlows(1000, 6, 0, 10, true, "P");
-    expect(data).toEqual([13256.556809295562]);
+    expect(data.length).toEqual(1);
   });
 
   test("Others Insurance - Yearly - With zero remaining duration", () => {
@@ -374,8 +341,15 @@ describe("getCashFlows", () => {
   });
 
   test("Others Insurance - Monthly - With zero bygone duration", () => {
-    const data = getCashFlows(1000, 0, 6, 10, true, "P");
-    expect(data).toEqual([12612.639759841979]);
+    const data = getCashFlows(
+      1000,
+      0,
+      12 - (new Date().getMonth() + 1),
+      10,
+      true,
+      "P"
+    );
+    expect(data.length).toEqual(1);
   });
 
   test("Others Insurance - Yearly - With zero bygone duration", () => {
