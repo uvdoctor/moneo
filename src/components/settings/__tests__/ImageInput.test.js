@@ -4,7 +4,6 @@ import {
   screen,
   fireEvent,
   waitFor,
-  waitForElementToBeRemoved,
 } from "@testing-library/react";
 
 jest.mock("aws-amplify");
@@ -66,73 +65,39 @@ describe("App", function () {
     expect(document.querySelector("#modal")).toBeInTheDocument();
   });
 
-  test("should close modal on cancel", async () => {
-    render(
-      <AppContext.Provider
-        value={{
-          user: {
-            attributes: {
-              picture:
-                "https://media.istockphoto.com/photos/paperless-workplace-idea-esigning-electronic-signature-document-an-picture-id1349390515?s=612x612",
-            },
-          },
-          validateCaptcha: () => {},
-        }}
-      >
-        <ImageInput />
-      </AppContext.Provider>
-    );
-
-    const button = screen.getByRole("button", { name: /edit/i });
-    // await waitFor(() => {
-      fireEvent.click(button);
-    // });
-  //   await waitFor( () => {
-  //   const modal = document.querySelector("#modal");
-  //   const cancelButton = document.querySelector("#cancel");
-  //   fireEvent.click(cancelButton);
-  //   await waitFor(() => {
-  //     expect(document.querySelector("#modal")).not.toBeInTheDocument();
-  //     // expect(document.querySelector("#cancel")).not.toBeInTheDocument();
-  //   });
-  // })
-    // await waitForElementToBeRemoved(() => {
-    //   modal;
-    // });
-  });
-
-  // test("should remove image", async () => {
-  //   const value = {
-  //     user: {
-  //       attributes: {
-  //         picture:
-  //           "https://media.istockphoto.com/photos/paperless-workplace-idea-esigning-electronic-signature-document-an-picture-id1349390515?s=612x612",
-  //       },
-  //     },
-  //     validateCaptcha: () => {},
-  //   };
+  // test("should close modal on cancel", async () => {
   //   render(
-  //     <AppContext.Provider value={value}>
+  //     <AppContext.Provider
+  //       value={{
+  //         user: {
+  //           attributes: {
+  //             picture:
+  //               "https://media.istockphoto.com/photos/paperless-workplace-idea-esigning-electronic-signature-document-an-picture-id1349390515?s=612x612",
+  //           },
+  //         },
+  //         validateCaptcha: () => {},
+  //       }}
+  //     >
   //       <ImageInput />
   //     </AppContext.Provider>
   //   );
 
   //   const button = screen.getByRole("button", { name: /edit/i });
-  //   await waitFor(() => {
-  //     fireEvent.click(button);
-  //   });
-  //   const modal = document.querySelector("#modal");
-  //   const cancelButton = document.querySelector("#remove");
-  //   await waitFor(() => {
-  //     fireEvent.click(cancelButton);
-  //   });
-    
   //   // await waitFor(() => {
-  //     // expect().not.toBeInTheDocument();
-  //     // expect(document.querySelector("#cancel")).not.toBeInTheDocument();
+  //     fireEvent.click(button);
   //   // });
+  // //   await waitFor( () => {
+  // //   const modal = document.querySelector("#modal");
+  // //   const cancelButton = document.querySelector("#cancel");
+  // //   fireEvent.click(cancelButton);
+  // //   await waitFor(() => {
+  // //     expect(document.querySelector("#modal")).not.toBeInTheDocument();
+  // //     // expect(document.querySelector("#cancel")).not.toBeInTheDocument();
+  // //   });
+  // // })
   //   // await waitForElementToBeRemoved(() => {
-  //     // modal;
+  //   //   modal;
   //   // });
   // });
+
 });
