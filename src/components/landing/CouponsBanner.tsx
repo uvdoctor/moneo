@@ -41,7 +41,8 @@ export default function CouponsBanner() {
 					<h3>
 						<strong>Plan More, Save More!</strong>
 					</h3>
-					<p className="brand-coupon">
+					<br/>
+					<div className="brand-coupon">
 						<Row
 							align="middle"
 							gutter={[
@@ -60,7 +61,7 @@ export default function CouponsBanner() {
 								</Button>
 							</Col>
 						</Row>
-					</p>
+					</div>
 				</Col>
 				<Col xs={24} sm={24} md={24} lg={12}>
 					<Carousel
@@ -75,8 +76,9 @@ export default function CouponsBanner() {
 						infiniteLoop
 					>
 						{banners.map((imageName) => (
-							<div key={imageName}>
-								<Image src={`/images/${imageName}`} width={583} height={531} alt='' layout="responsive"/>
+							<div key={imageName} style={{height: '531px', position: 'relative'}}>
+								{/* <Image src={`/images/${imageName}`} width={583} height={531} alt='' layout="responsive"/> */}
+								<Image src={`/images/${imageName}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw" alt='' priority />
 							</div>
 						))}
 					</Carousel>

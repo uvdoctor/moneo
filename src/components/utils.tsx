@@ -499,7 +499,7 @@ export const menuItem = (
   >
     {selectedKey !== path ? (
       <Link href={path}>
-        <a>{name}</a>
+        {name}
       </Link>
     ) : (
       <label style={{ color: COLORS.GREEN }}>{name}</label>

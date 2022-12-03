@@ -14,7 +14,8 @@ export default function FinancialIndependence() {
 	return (
 		<Content>
 			<div className="site-banner">
-				<Image src={imgPath} alt='' layout="responsive" height={620} width={1120}/>
+				{/* <Image src={imgPath} alt='' layout="responsive" height={620} width={1120}/> */}
+				<Image src={imgPath} alt='' fill sizes='100vw' priority />
 				<div className="site-banner-content">
 					<h2>Break-free to live on your terms</h2>
 					<h3>Just 15 minutes for a personalized financial plan</h3>

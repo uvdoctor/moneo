@@ -16,8 +16,9 @@ export default function Security() {
 						We have implemented the highest standard for fraud protection and compliance with 256-bit encryption. We take data privacy seriously, and promise to never sell your data.
 					</p>
 				</Col>
-				<Col xs={24} sm={24} md={12}>
-					<Image src="/images/security.jpg" alt='' height={313} width={565} layout='responsive'/>
+				<Col xs={24} sm={24} md={12} style={{height: "313px"}}>
+					{/* <Image src="/images/security.jpg" alt='' height={313} width={565} layout='responsive'/> */}
+					<Image src="/images/security.jpg" alt='' fill sizes='(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw' priority/>
 				</Col>
 			</Row>
 		</Content>

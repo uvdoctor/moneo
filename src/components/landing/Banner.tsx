@@ -14,7 +14,8 @@ import { COLORS } from "../../CONSTANTS";
 export default function Banner() {
   return (
     <div className="site-banner">
-      <ResImg name="cover" width={1264} height={650} />
+      {/* <ResImg name="cover" width={1264} height={650} /> */}
+      <ResImg name="cover" />
       <div className="site-banner-content">
         <BannerContent />
         <p>
