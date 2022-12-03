@@ -47,7 +47,7 @@ export default function Policies({ type }: PoliciesProps) {
 											)
 										}
 									>
-										<a>{key}</a>
+										{key}
 									</Link>
 								}
 							>

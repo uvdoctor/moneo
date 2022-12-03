@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/link-passhref */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext } from "react";
 import { ROUTES } from "../CONSTANTS";
@@ -22,9 +23,7 @@ export default function Logo({ onBack, hideBackArrow }: LogoProps) {
     <div style={{ cursor: "pointer" }} className="logo">
       {hideBackArrow ? (
         <Link href={ROUTES.HOME}>
-          <a>
             <MainLogo />
-          </a>
         </Link>
       ) : (
         <Fragment>
@@ -42,9 +41,7 @@ export default function Logo({ onBack, hideBackArrow }: LogoProps) {
             />
           )}
           <Link href={ROUTES.HOME}>
-            <a>
               <MainLogo />
-            </a>
           </Link>
         </Fragment>
       )}

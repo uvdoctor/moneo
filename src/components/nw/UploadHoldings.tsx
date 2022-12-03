@@ -348,7 +348,7 @@ export default function UploadHoldings() {
         placement="right"
         closable={false}
         onClose={resetState}
-        visible={showInsUpload}
+        open={showInsUpload}
         destroyOnClose
       >
         <Dragger {...getUploaderSettings(parseHoldings)}>
@@ -398,7 +398,7 @@ export default function UploadHoldings() {
         }
         placement="right"
         closable={false}
-        visible={showUploadDrawer}
+        open={showUploadDrawer}
         footer={
           <div className="text-right">
             <Button

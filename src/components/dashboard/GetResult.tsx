@@ -12,7 +12,6 @@ export default function GetResult() {
   const { defaultCurrency }: any = useContext(AppContext);
   return (
     <Link href={ROUTES.GET}>
-      <a>
         <Row>
           <Col span={24}>
             <ItemDisplay
@@ -52,7 +51,6 @@ export default function GetResult() {
             />
           </Col>
         </Row>
-      </a>
     </Link>
   );
 }

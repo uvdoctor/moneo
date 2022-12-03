@@ -64,7 +64,7 @@ export default function Nav({
             placement="right"
             closable
             onClose={onCloseDrawer}
-            visible={showDrawer}
+            open={showDrawer}
           >
             <MainMenu mode="inline" />
           </Drawer>
@@ -72,7 +72,7 @@ export default function Nav({
             placement="right"
             closable
             onClose={onCloseSearchDrawer}
-            visible={showSearchDrawer}
+            open={showSearchDrawer}
           >
             <SearchInput />
           </Drawer>

@@ -50,7 +50,6 @@ export default function SetResult() {
 
   return (
     <Link href={ROUTES.SET}>
-      <a>
         <Row>
           <Col span={24}>
             <ItemDisplay
@@ -92,7 +91,6 @@ export default function SetResult() {
             />
           </Col>
         </Row>
-      </a>
     </Link>
   );
 }
