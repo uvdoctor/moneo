@@ -2,13 +2,6 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
 const { tempDir, awsdate } = require("/opt/nodejs/utility");
-// const {
-//   cleanDirectory,
-// } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
-// const {
-//   tempDir,
-//   awsdate,
-// } = require("../../moneoutilslayer/lib/nodejs/utility");
 const { calcSchema, calculateRisk } = require("./calculate");
 
 const extractDataFromCSV = async (
@@ -132,11 +125,10 @@ const extractPartOfData = async (
         if (fileName.includes("CM_52_wk_High_low")) {
           if (record[codes.sid].length > 20) return;
           const yhigh = parse(record[codes.yhigh]);
-          const ylow = parse(record[codes.ylow]);
-          if (!yhigh && !ylow) return;
+          if (isNaN(yhigh)) return;
           weekHLMap[record[codes.sid]] = {
-            yhigh: isNaN(yhigh) ? 0 : yhigh,
-            ylow: isNaN(ylow) ? 0 : ylow,
+            yhigh: yhigh,
+            ylow: parse(record[codes.ylow]),
             yhighd: record[codes.yhighd] ? record[codes.yhighd] : "",
             ylowd: record[codes.ylowd] ? record[codes.ylowd] : "",
           };
@@ -166,13 +158,7 @@ const extractPartOfData = async (
   return await end;
 };
 
-const mergeEodAndExchgData = (
-  exchgData,
-  eodData,
-  splitData,
-  dividendData,
-  prevEodData
-) => {
+const mergeEodAndExchgData = (exchgData, eodData, splitData, dividendData, prevEodData) => {
   if (!(eodData || splitData || dividendData)) return exchgData;
   exchgData.map((element) => {
     element.map((item) => {
@@ -218,7 +204,7 @@ const mergeEodAndExchgData = (
         Item.beta = Beta;
         Item.mcap = MarketCapitalization;
         Item.vol = volume;
-        if (prevEod && prevEod.volume) Item.prevol = prevEod.volume;
+        if(prevEod && prevEod.volume) Item.prevol = prevEod.volume;
       }
       Item.risk = calculateRisk(
         Item.beta ? Item.beta : "",

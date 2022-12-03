@@ -2,8 +2,6 @@ const fs = require("fs");
 const split = require("split");
 const { tempDir, appendGenericFields } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/downloadUtils");
-// const { tempDir, appendGenericFields } = require("../../moneoutilslayer/lib/nodejs/utility");
-// const { cleanDirectory } = require("../../moneoutilslayer/lib/nodejs/downloadUtils");
 const calc = require('./calculate');
 
 const getDataFromTxtFile = async (fileName, table, prevMap, isPrevFile) => {

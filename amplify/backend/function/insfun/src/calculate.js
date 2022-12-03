@@ -1,7 +1,4 @@
 const { appendGenericFields } = require("/opt/nodejs/utility");
-// const {
-  // appendGenericFields,
-// } = require("../../moneoutilslayer/lib/nodejs/utility");
 const calculateSchema = (data, isinMap, exchg, table) => {
   let count = 0;
   let batches = [];

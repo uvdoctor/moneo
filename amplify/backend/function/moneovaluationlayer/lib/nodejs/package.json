@@ -1,5 +1,11 @@
 {
   "version": "1.0.0",
   "description": "",
-  "main": "index.js"
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --config ../../jest.config.json"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
 }
