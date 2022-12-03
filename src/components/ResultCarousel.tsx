@@ -31,6 +31,7 @@ export default function ResultCarousel({ results }: ResultCarouselProps) {
           itemsToScroll: desktopSlideCount,
         },
       ]}
+      isRTL
       showArrows={false}>
       {results && results instanceof Array && results.length > 0 ? (
         results.map((result, i) =>

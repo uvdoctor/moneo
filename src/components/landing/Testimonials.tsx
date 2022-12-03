@@ -68,6 +68,7 @@ export default function Testimonials() {
 					},
 				]}
 				showArrows={false}
+				isRTL
 			>
 				{testimonials.map(
 					({ title, name, location, imageName, content }, index: number) => (
