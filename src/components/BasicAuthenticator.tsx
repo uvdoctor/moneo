@@ -1,16 +1,8 @@
 import {
-  AmplifyAuthContainer,
-  AmplifyAuthenticator,
-  AmplifyConfirmSignUp,
-  AmplifySection,
+  Authenticator,
 } from "@aws-amplify/ui-react";
 import { Auth, Hub } from "aws-amplify";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  AuthState,
-  Translations,
-  onAuthUIStateChange,
-} from "@aws-amplify/ui-components";
 import { Alert, Row, Skeleton } from "antd";
 import Title from "antd/lib/typography/Title";
 import { createUserinfo, doesEmailExist } from "./userinfoutils";
@@ -40,7 +32,7 @@ export default function BasicAuthenticator({
   const [email, setEmail] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
-  const [authState, setAuthState] = useState<string>(AuthState.SignIn);
+  const [authState, setAuthState] = useState<string>("signin");
   const [riskProfile, setRiskProfile] = useState<RiskProfile>(RiskProfile.M);
   const [taxLiability, setTaxLiability] = useState<TaxLiability>(
     TaxLiability.M
@@ -49,7 +41,6 @@ export default function BasicAuthenticator({
   const [DOB, setDOB] = useState<string>(
     `${new Date().getFullYear() - 25}-06-01`
   );
-  const [cognitoUser, setCognitoUser] = useState<any | null>(null);
 
   const generateFromEmail = (email: string) => {
     // Retrive name from email address
@@ -59,25 +50,6 @@ export default function BasicAuthenticator({
     if (name.length > 5) name = name.substring(0, 5);
     name = name + ("" + Math.random()).substring(2, 7);
     return name.toLocaleLowerCase();
-  };
-
-  const handleConfirmSignUp = async () => {
-    const user = await Auth.signIn(uname, password);
-    await createUserinfo({
-      uname,
-      email,
-      notify,
-      dob: DOB,
-      tax: taxLiability,
-      rp: riskProfile,
-      dr: 0,
-      tc: new Date().toISOString(),
-    });
-    Hub.dispatch("UI Auth", {
-      event: "AuthStateChange",
-      message: AuthState.SignedIn,
-      data: user,
-    });
   };
 
   const handleRegistrationSubmit = async () => {
@@ -90,18 +62,20 @@ export default function BasicAuthenticator({
       username: username,
       password: password,
       attributes: { email: email },
+      autoSignIn: {
+        enabled: true
+      }
     })
-      .then((response) => {
-        setCognitoUser(response.user);
-        Hub.dispatch("UI Auth", {
-          event: "AuthStateChange",
-          message: AuthState.ConfirmSignUp,
-          data: {
-            ...response.user,
-            username: username,
-            password: password,
-            attributes: { email: email },
-          },
+      .then(async() => {
+        await createUserinfo({
+          uname,
+          email,
+          notify,
+          dob: DOB,
+          tax: taxLiability,
+          rp: riskProfile,
+          dr: 0,
+          tc: new Date().toISOString(),
         });
         setLoading(false);
       })
@@ -114,7 +88,7 @@ export default function BasicAuthenticator({
   const onCancel = () => {
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",
-      message: AuthState.SignIn,
+      message: "signin",
     });
   };
 
@@ -127,7 +101,7 @@ export default function BasicAuthenticator({
     } else {
       Hub.dispatch("UI Auth", {
         event: "AuthStateChange",
-        message: AuthState.SignUp,
+        message: "signup",
       });
       setShowPassword(true);
     }
@@ -138,7 +112,7 @@ export default function BasicAuthenticator({
   const forgotPassword = () => {
     Hub.dispatch("UI Auth", {
       event: "AuthStateChange",
-      message: AuthState.ForgotPassword,
+      message: "forgotpassword",
     });
   };
 
@@ -157,23 +131,24 @@ export default function BasicAuthenticator({
   };
 
   useEffect(() => {
-    return onAuthUIStateChange((nextAuthState) => {
-      if (nextAuthState === AuthState.SignIn) setShowPassword(false);
-      setAuthState(nextAuthState);
-    });
+  //   return onAuthUIStateChange((nextAuthState) => {
+  //     if (nextAuthState === "signin") setShowPassword(false);
+  //     setAuthState(nextAuthState);
+  //   });
+    Hub.listen('auth', (data) => setAuthState(data.payload.event));
   }, []);
 
   useEffect(() => {
-    if (authState === AuthState.SignIn) setShowPassword(false);
+    if (authState === "signin") setShowPassword(false);
   }, [authState]);
 
   const CancelButton = () => {
-    return showPassword || authState === AuthState.SignUp ? (
+    return showPassword || authState === "signup" ? (
       <Button
         type="link"
         onClick={() => {
           showPassword ? setShowPassword(false) : setShowPassword(true);
-          if (showPassword && authState === AuthState.SignUp) onCancel();
+          if (showPassword && authState === "signup") onCancel();
         }}
       >
         Cancel
@@ -184,29 +159,15 @@ export default function BasicAuthenticator({
   };
 
   return (
-    <AmplifyAuthContainer>
-      <AmplifyAuthenticator>
-        {authState === AuthState.ConfirmSignUp && (
-          <AmplifyConfirmSignUp
-            slot="confirm-sign-up"
-            user={cognitoUser}
-            handleAuthStateChange={async () => await handleConfirmSignUp()}
-            formFields={[
-              {
-                type: "code",
-              },
-            ]}
-          />
-        )}
-
-        {authState === AuthState.SignIn && (
-          <AmplifySection slot="sign-in">
+      <Authenticator>
+        {authState === "signin" && (
+          <div slot="sign-in">
             <Title level={5}>My Account</Title>
             <div className="steps-content">
               {!showPassword ? (
                 <EmailInput
                   setEmail={setEmail}
-                  label={Translations.EMAIL_LABEL}
+                  label="Email Address *"
                   setDisable={setDisable}
                 />
               ) : (
@@ -225,7 +186,7 @@ export default function BasicAuthenticator({
               <Row justify={showPassword ? "space-between" : "end"}>
                 {showPassword && (
                   <Button type="link" onClick={forgotPassword}>
-                    {Translations.FORGOT_PASSWORD_TEXT}
+                    Forgot your password
                   </Button>
                 )}
                 <CancelButton />
@@ -236,16 +197,16 @@ export default function BasicAuthenticator({
                   onClick={async () => showPassword ? await signIn() : await verifyEmail()}
                   loading={loading}
                 >
-                  {showPassword ? Translations.SIGN_IN_TEXT : "Next"}
+                  {showPassword ? "Sign in" : "Next"}
                 </Button>
               </Row>
             </div>
-          </AmplifySection>
+          </div>
         )}
 
-        {authState === AuthState.SignUp && (
-          <AmplifySection slot="sign-up">
-            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+        {authState === "signup" && (
+          <div slot="sign-up">
+            <Title level={5}>Create a new account</Title>
             <div className="steps-content">
               {!showPassword ? (
                 <StepTwo
@@ -283,10 +244,9 @@ export default function BasicAuthenticator({
                 </Button>
               </Row>
             </div>
-          </AmplifySection>
+          </div>
         )}
         {appContextLoaded ? children : <Skeleton active />}
-      </AmplifyAuthenticator>
-    </AmplifyAuthContainer>
+      </Authenticator>
   );
 }
