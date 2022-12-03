@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from "react";
 import { Form, Input } from "antd";
-import { Translations } from "@aws-amplify/ui-components";
 import { useForm } from "antd/lib/form/Form";
 
 interface PasswordInputProps {
@@ -55,7 +54,7 @@ export default function PasswordInput({
               <br />
             </text>
           ))}
-          label={Translations.PASSWORD_LABEL}
+          label="Password *"
           rules={[
             {
               min: 8,

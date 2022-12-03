@@ -1,4 +1,4 @@
-import "@aws-amplify/ui/dist/style.css";
+import "@aws-amplify/ui-react/styles.css";
 import * as gtag from "../lib/gtag";
 import { Router } from "next/router";
 import React from "react";

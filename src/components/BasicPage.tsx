@@ -4,9 +4,6 @@ import Head from "next/head";
 import BasicLayout from "./BasicLayout";
 import { AppContext } from "./AppContext";
 import { CognitoUser } from "@aws-amplify/auth";
-import { AuthState } from "@aws-amplify/ui-components";
-// import { useRouter } from "next/router";
-// import { includesAny } from "./utils";
 
 interface BasicPageProps {
   className?: string;
@@ -28,7 +25,7 @@ export default function BasicPage(props: BasicPageProps) {
   const listener = (data: any) => {
     const { payload } = data;
     if (
-      payload.message === AuthState.SignedIn &&
+      payload.message === "signedin" &&
       payload.data instanceof CognitoUser
     )
       setUser(payload.data);
