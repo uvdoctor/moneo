@@ -1,6 +1,6 @@
 import React from "react";
 import { NWContextProvider } from "../components/nw/NWContext";
-import Amplify from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import awsexports from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 import { InferGetStaticPropsType } from "next";

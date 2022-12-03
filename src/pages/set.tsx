@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SetPlan from "../components/goals/SetPlan";
-import Amplify from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import awsexports from "../aws-exports";
 import { CreateGoalInput } from "../api/goals";
 import { PlanContextProvider } from "../components/goals/PlanContext";
