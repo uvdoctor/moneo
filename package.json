@@ -37,13 +37,13 @@
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.4",
-    "react-elastic-carousel": "^0.9.5",
+    "react-elastic-carousel": "^0.11.5",
     "react-google-recaptcha-v3": "^1.9.7",
     "react-player": "^2.10.0",
     "react-responsive-carousel": "^3.2.23",
     "react-share": "^4.4.0",
     "simplestorage.js": "^0.2.1",
-    "styled-components": "^5.3.5",
+    "styled-components": "^5.3.6",
     "xirr": "^1.1.0"
   },
   "devDependencies": {
