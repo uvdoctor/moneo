@@ -161,7 +161,7 @@ export default function BasicAuthenticator({
   return (
       <Authenticator>
         {authState === "signin" && (
-          <div slot="sign-in">
+          <div slot="signin">
             <Title level={5}>My Account</Title>
             <div className="steps-content">
               {!showPassword ? (
